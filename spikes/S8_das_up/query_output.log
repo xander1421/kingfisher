@@ -1,0 +1,3 @@
+2026-08-16 14:12:31 | INFO | Received answer: QueryAnswer<1,1> [[(Similarity "human" "monkey")]] {(S: "monkey")} (0.000000, 0.000000)
+2026-08-16 14:12:31 | INFO | Received answer: QueryAnswer<1,1> [[(Similarity "human" "chimp")]] {(S: "chimp")} (0.000000, 0.000000)
+2026-08-16 14:12:31 | INFO | Received answer: QueryAnswer<1,1> [[(Similarity "human" "ent")]] {(S: "ent")} (0.000000, 0.000000)

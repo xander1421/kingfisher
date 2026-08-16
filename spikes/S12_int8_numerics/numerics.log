@@ -1,0 +1,13 @@
+D=256    f32==i32 True  peak2=294    peak3=426    partial=294    int16_final=True  int16_use=  1.3%
+D=512    f32==i32 True  peak2=550    peak3=800    partial=550    int16_final=True  int16_use=  2.4%
+D=1024   f32==i32 True  peak2=1094   peak3=1596   partial=1094   int16_final=True  int16_use=  4.9%
+D=2048   f32==i32 True  peak2=2136   peak3=3152   partial=2136   int16_final=True  int16_use=  9.6%
+D=4096   f32==i32 True  peak2=4190   peak3=6242   partial=4190   int16_final=True  int16_use= 19.0%
+D=10000  f32==i32 True  peak2=10226  peak3=15228  partial=10226  int16_final=True  int16_use= 46.5%
+
+ideal int32            {'exact_rule_holds': True, 'recall_at_threshold': 1.0, 'false_positives': 0, 'true_matches': 76, 'nonmatches_colliding_with_match_score': 0}
+int16 wrapping accum   {'exact_rule_holds': True, 'recall_at_threshold': 1.0, 'false_positives': 0, 'true_matches': 76, 'nonmatches_colliding_with_match_score': 0, 'differs_from_ideal': False}
+int16 saturating accum {'exact_rule_holds': True, 'recall_at_threshold': 1.0, 'false_positives': 0, 'true_matches': 76, 'nonmatches_colliding_with_match_score': 0, 'differs_from_ideal': False}
+int8 output requant    {'exact_rule_holds': True, 'recall_at_threshold': 0.5395, 'false_positives': 0, 'true_matches': 76, 'nonmatches_colliding_with_match_score': 0, 'differs_from_ideal': True, 'distinct_score_values_before': 397, 'distinct_score_values_after': 107, 'recall_at_rounded_cutoff': 1.0, 'false_positives_at_rounded_cutoff': 0, 'note': 'threshold rule is stated in raw score units; after requantisation the cutoff must be rescaled, and ties between match and non-match become possible'}
+
+wrote numerics.json

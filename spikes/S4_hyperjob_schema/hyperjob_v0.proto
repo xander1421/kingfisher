@@ -1,0 +1,189 @@
+// Hyperjob v0 — the job tuple and result envelope for hypergraph jobs on a
+// consumer-device fleet.
+//
+// Naming deliberately mirrors NuNet's EnsembleConfig vocabulary
+// (elders/nunet-dms/dms/jobs/ensemble.md) so that a future DMS integration is
+// an additive extension rather than a parallel schema:
+//   - "allocation" is their word for a unit of work placed on a node
+//   - "redundancy" and "failure_recovery" are their field names
+//   - version is a leading string field, as in their `version: "V1"`
+//
+// Copyright note: no NuNet code is copied here. The vocabulary is mirrored on
+// purpose; NuNet is Apache-2.0 and is credited in NOTICE regardless.
+
+syntax = "proto3";
+
+package hyperjob.v0;
+
+// ---------------------------------------------------------------- addressing
+
+// A content identifier. Multibase/multihash bytes, as in IPLD; kept opaque so
+// the hash function can change without a schema break.
+message Cid {
+  bytes multihash = 1;
+  // Human-readable form for logs and manifests, e.g. "bafy...". Advisory only;
+  // `multihash` is authoritative.
+  string text = 2;
+}
+
+// ---------------------------------------------------------------- the job
+
+enum EngineKind {
+  ENGINE_UNSPECIFIED = 0;
+  ENGINE_METTA_EXACT = 1;   // hyperon-experimental / MORK: deterministic, rung 1
+  ENGINE_HDC_SIMILARITY = 2; // INT8 hypervector pre-filter: rung 2
+  ENGINE_SHAPING = 3;        // layout/locality job: product is a better shard
+}
+
+enum ReplicationMode {
+  REPLICATION_UNSPECIFIED = 0;
+  // Run once, accept optimistically, expose to staked challenge for
+  // `challenge_window_secs`. Gensyn-Verde-shaped. Cheapest.
+  REPLICATION_OPTIMISTIC = 1;
+  // Run on `redundancy` devices, accept when `quorum` results agree byte for
+  // byte. BOINC-shaped. Most expensive, no dispute machinery needed.
+  REPLICATION_QUORUM = 2;
+  // Run once; a verifier re-executes with probability `audit_rate`.
+  REPLICATION_SAMPLED_AUDIT = 3;
+}
+
+message ReplicationPolicy {
+  ReplicationMode mode = 1;
+  // QUORUM: how many devices run it. Mirrors NuNet nodes.<n>.redundancy.
+  uint32 redundancy = 2;
+  // QUORUM: how many must agree. BOINC uses min_quorum/2+1; we make it explicit.
+  uint32 quorum = 3;
+  // OPTIMISTIC: how long the result stays challengeable.
+  uint32 challenge_window_secs = 4;
+  // SAMPLED_AUDIT: probability in [0,1] that a second device re-executes.
+  double audit_rate = 5;
+  // Devices that must NOT be given a replica (same operator, same attestation
+  // root, same physical location) — the anti-collusion knob.
+  repeated string exclude_device_groups = 6;
+}
+
+// Fuel is the deterministic work unit: one MeTTa reduction step, as counted by
+// hyperon's interpret_step / MORK's "executing N steps".  It is NOT wall clock
+// and NOT FLOPs; two honest devices must report the identical number.
+message FuelLimit {
+  uint64 max_steps = 1;
+  // Belt-and-braces wall clock, only to reclaim a wedged device. Exceeding it
+  // is an infrastructure failure, not a result.
+  uint32 deadline_secs = 2;
+  // Hard ceiling on interpreter heap; exceeding aborts deterministically.
+  uint64 max_heap_bytes = 3;
+}
+
+// Everything a device needs in order to run, and nothing that could make two
+// devices disagree. Any field added here must be deterministic.
+message Hyperjob {
+  string version = 1;             // "v0"
+  string job_id = 2;              // caller-assigned, opaque
+
+  Cid shard_cid = 3;              // the Atomspace subgraph to run against
+  Cid metta_program_cid = 4;      // program bytes by CID ...
+  bytes metta_program_inline = 5; // ... or inline, for programs of a few KB
+
+  EngineKind engine = 6;
+  FuelLimit fuel = 7;
+  // Seeds every nondeterministic primitive the engine exposes (rand, iteration
+  // order of unordered collections). An engine with no such primitive must
+  // still echo it back in the envelope.
+  uint64 seed = 8;
+  ReplicationPolicy replication = 9;
+
+  // Scheduling hints. Advisory: they may change placement, never the result.
+  DevicePreferences device = 10;
+  map<string, string> labels = 11;
+}
+
+// The capability vocabulary NuNet's types/capability.go lacks: power state,
+// thermal headroom, and NPUs. Advisory to the matcher, never an input to
+// evaluation.
+message DevicePreferences {
+  bool require_charging = 1;
+  bool require_unmetered_network = 2;
+  bool require_device_idle = 3;
+  uint32 min_battery_pct = 4;      // BOINC's Android default is 90
+  double max_thermal_status = 5;   // Android PowerManager thermal status ceiling
+  bool require_npu_int8 = 6;       // engine=HDC_SIMILARITY wants this
+  uint64 min_ram_bytes = 7;
+  // Data locality: prefer devices that already hold these CIDs. This is the
+  // field NuNet has no analogue for — they match on network locality
+  // (region/asn/rtt), never on which data a node already has.
+  repeated Cid prefer_cached_cids = 8;
+}
+
+// ---------------------------------------------------------------- the result
+
+enum ResultStatus {
+  RESULT_UNSPECIFIED = 0;
+  RESULT_OK = 1;
+  RESULT_FUEL_EXHAUSTED = 2;   // deterministic: every honest device agrees
+  RESULT_DEADLINE_EXCEEDED = 3; // nondeterministic: infrastructure, unpaid
+  RESULT_ENGINE_ERROR = 4;
+  RESULT_SHARD_UNAVAILABLE = 5;
+}
+
+// A TOPLOC-style top-k commitment (PrimeIntellect-ai/toploc, MIT), adapted for
+// exact integer outputs: see spikes/S7_toploc_adapt/RESULT.md. `modulus` MUST
+// be prime — upstream's search does not enforce this and honest proofs fail
+// when it lands on a composite.
+message LshCommitment {
+  uint32 k = 1;
+  uint32 modulus = 2;          // prime, data-dependent, must be transmitted
+  repeated uint32 nodes = 3;   // committed indices, reduced mod `modulus`
+  repeated uint32 coeffs = 4;  // Newton coefficients
+}
+
+message Timings {
+  uint64 queue_ms = 1;
+  uint64 fetch_shard_ms = 2;
+  uint64 execute_ms = 3;
+  uint64 total_ms = 4;
+}
+
+message ResultEnvelope {
+  string version = 1;          // "v0"
+  string job_id = 2;
+  ResultStatus status = 3;
+
+  // The claim. For ENGINE_METTA_EXACT this is a hash of the canonical
+  // serialisation of the resulting space; two honest devices MUST match byte
+  // for byte, which is what makes rung 1 free.
+  bytes result_hash = 4;
+  Cid result_cid = 5;          // optional: where the full result can be fetched
+
+  // Fuel actually consumed. Deterministic, and compared alongside result_hash:
+  // MORK's differential harness already pins "executing N steps" for exactly
+  // this reason (elders/MORK/differential/README.md).
+  uint64 fuel_used = 6;
+  uint64 seed_echo = 7;        // must equal Hyperjob.seed
+
+  LshCommitment lsh_commitment = 8;  // rung-2 jobs only
+  Timings timings = 9;
+
+  // Who ran it, and under what authority. did:key or did:prism, matching
+  // NuNet's lib/ucan trust model; the attestation blob is Play Integrity /
+  // App Attest, treated as one more capability anchor.
+  string device_did = 10;
+  bytes attestation = 11;
+  bytes signature = 12;        // over the canonical encoding of fields 1..11
+}
+
+// ---------------------------------------------------------------- disputes
+
+// Step-bisection challenge (Gensyn Verde shape). Only meaningful for engines
+// whose execution is a deterministic sequence of discrete steps — which is
+// exactly why MeTTa suits this better than ML does.
+message BisectionProbe {
+  string job_id = 1;
+  uint64 step_index = 2;       // "what was your state after N steps?"
+}
+
+message BisectionResponse {
+  string job_id = 1;
+  uint64 step_index = 2;
+  bytes state_hash = 3;        // hash of the space after `step_index` steps
+  bytes signature = 4;
+}

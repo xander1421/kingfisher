@@ -1,0 +1,63 @@
+# RISKS — top 10, with mitigations
+
+Ordered by (probability × damage). Every risk is anchored to something observed in this recon, not imagined.
+
+---
+
+## 1. Verification economics: nobody pays for the second run
+**Observed:** S7 measured it directly — verifying a rung-2 job costs **85 ms of recomputation** against 0.005–0.688 ms of commitment checking. The commitment is free; **re-execution is the entire cost**. TOPLOC's advertised "100× faster validation" is a latency artefact of autoregressive decode that our workload does not have. Verde names the same problem as unsolved: *"incentives are needed to compensate trainers both for running the original"* computation and verifying it.
+**Damage:** if every job is replicated, the network's useful throughput halves and our price per unit of work doubles against centralised compute. If no job is replicated, results are unverified and the token is a lottery.
+**Mitigation:** never replicate by default. Ship `REPLICATION_SAMPLED_AUDIT` with a tunable `audit_rate` as the normal mode (S4 schema), and make the *penalty*, not the *probability*, carry the deterrence: stake seizure sized so that `audit_rate × stake > expected gain from cheating`. Reserve full quorum for jobs the requestor explicitly pays extra for (PoCo's per-job `trust`). Use the free signals first: fuel-count mismatch is a cheat detector that costs nothing to check.
+**Early warning:** model the economics *before* M3.5, with real numbers from M1's measured job costs.
+
+## 2. MORK's missing licence
+**Observed:** no LICENSE file, no `license` key in any of 12 `Cargo.toml`s, zero grep hits for "license" in any `.md`. Verified three ways (`analysis/LICENSE_LEDGER.md`).
+**Damage:** the fastest exact engine, the fuel counter, the differential harness and the crossover benchmarks are all legally untouchable. Six GAP rows sit at SPEC that could be PORT. Worse, an incautious contributor may copy from it anyway, contaminating the codebase.
+**Mitigation:** M0.1 — ask. It is almost certainly an oversight in an otherwise open ecosystem. Until then: hyperon on phones (MIT, and it already cross-compiles), MORK only as a black box behind a process boundary on desktops, and every MORK-derived document in this workspace written as a behavioural description rather than a transcription. Add a CI check that no file in our tree carries MORK provenance.
+**Do not** assume "SingularityNET ecosystem" implies a licence grant. It does not.
+
+## 3. MORK's portability: nightly + jemalloc + `/dev/shm`
+**Observed:** `kernel/src/space.rs:35` hardcodes `ACT_PATH = "/dev/shm/"` — absent on macOS *and* Android; `mork test` panics on it. Edition 2024 plus a dep using `feature(core_intrinsics)` means **nightly is mandatory and undeclared** (no `rust-toolchain.toml`). PathMap is pulled with the `jemalloc` feature, untested against Android's 16 KB pages. Cargo already flags `mork` itself as future-incompatible.
+**Damage:** any plan that puts MORK on a phone is a plan to fork and maintain three separate patches, on a nightly pin, in a codebase we may not legally modify (risk 2).
+**Mitigation:** treat MORK as Linux-desktop-only for at least a year. The `/dev/shm` fix is one line and worth reporting (M0.6). Do not let the device agent inherit a nightly pin — hyperon builds on stable and that is a feature worth protecting.
+
+## 4. The NPU may not be bit-exact
+**Observed:** S5's entire result — recall 1.0, zero false positives, an analytic threshold — assumes INT8×INT8→INT32 with exact integer accumulation. That is true of numpy and of the ISA; it is **not guaranteed** of an NNAPI or Core ML delegate, which may requantise, saturate, or accumulate narrow. **Nothing in this mission ran on an NPU.**
+**Damage:** if inexact, the analytic threshold stops being a proof, rung 2 stops collapsing into rung 1, and TOPLOC's tolerance model (with its accept/reject threshold, its grey-zone disputes, and its tuning) comes back.
+**Mitigation:** M2.1 measures this before anything else in M2 — same input, phone vs desktop, byte-compare. Cheap, decisive, and it is written into the plan as a gate. Fallback is known and small: TOPLOC is MIT and 1,200 lines.
+
+## 5. iOS is not addressable, and half the premium fleet is iOS
+**Observed:** `BGProcessingTaskRequest` (`requiresExternalPower`, `requiresNetworkConnectivity`) grants runtime opportunistically with no completion guarantee and a hard expiration handler. BOINC — twenty years of consumer-device scheduling — **ships no iOS client**, and this is why.
+**Damage:** the addressable fleet shrinks to Android, and the devices with the best NPUs per watt are largely excluded. It also weakens the pitch: "every phone" becomes "some phones".
+**Mitigation:** be explicit rather than optimistic. Android-only through M3. If iOS is attempted, scope it to small best-effort rung-2 pre-filter jobs that are never on a critical path, and design the market so a device that vanishes mid-job costs the requestor nothing (Akash's `ReclamationWindow` + `LeaseStartReclaim` is the pattern).
+
+## 6. NuNet coupling: we extend a stack we do not control
+**Observed:** our plan puts a power/thermal/NPU dimension into `types/capability.go`, a `metta` executor next to `executor/null/`, and a seventh payment model into `tokenomics/contracts/processors/`. All three are additive — and all three require upstream to accept them. NuNet's DMS is 165k LOC of Go with its own roadmap, and its build matrix is Linux/macOS/Windows with a `.deb` + systemd packaging model that assumes a daemon (`reports/REPORT_NuNet_DMS.md` blocker #2).
+**Damage:** if the capability-model MR is rejected or stalls, we either fork (and inherit 165k LOC) or maintain a patch set against a moving target. Golem is the cautionary tale in this very report set: **the yagna monorepo was deleted from GitHub**, and anyone who had built on it lost their upstream entirely.
+**Mitigation:** propose M3.1 as an MR **in week 1 of M3, before any of our code depends on it** — it is small, self-contained, and useful to them independent of us. Keep our own components (device agent, shard store, hyperjob schema) behind interfaces that do not name NuNet types, so a fork or a switch costs weeks rather than quarters. Mirror our own clone of the DMS.
+
+## 7. Licence contamination
+**Observed:** the two elders richest in operational wisdom — BOINC (LGPL-3.0) and Golem (GPL-3.0/GPL-2.0/LGPL-3.0) — are both copyleft, and MORK is all-rights-reserved. Meanwhile our `S6` scheduler spec quotes BOINC's constants and file paths extensively, because that is what makes it a usable spec.
+**Damage:** a single copied function from BOINC's `cs_prefs.cpp` or MORK's `differential/run.py` obliges us to relicense, or exposes us to a claim.
+**Mitigation:** the discipline is already established in this workspace — `analysis/LICENSE_LEDGER.md` records that **zero files were copied**, and the specs are written as behavioural descriptions with citations rather than transcriptions. Keep it: a NOTICE file from day one, a CI grep for copied identifiers from copyleft elders, and a rule that anyone implementing from `SCHEDULER_SPEC.md` or `REPORT_MORK.md` works from the spec, not from the elder's source, and says so in the commit.
+
+## 8. Charge-time windows are rarer and shorter than the model assumes
+**Observed:** S6 — `setRequiresDeviceIdle(true)` combined with `setRequiresCharging(true)` and `NetworkType.UNMETERED` is a genuinely narrow intersection, Doze defers work, and WorkManager can stop a worker at any moment with no guaranteed runtime.
+**Damage:** the effective fleet is a nightly batch, not a live pool. A market whose latency expectation is "minutes" cannot be served by devices available for one multi-hour window per day. Job sizing, replication timing, and challenge windows all inherit this.
+**Mitigation:** design for the batch, not the pool: jobs must fit a window or checkpoint at fuel boundaries (M1.3); challenge windows measured in **days**, not minutes; desktops as the always-on tier for anything latency-sensitive. Offer a relaxed "screen off, charging" mode as a user preference (BOINC's `suspendWhenScreenOn`), accepting the UX risk knowingly.
+
+## 9. Sybil and collusion in replica placement
+**Observed:** replication only verifies anything if replicas fail independently. Verde says so explicitly: *"a robust ecosystem of trainers is needed, which are unlikely to collude or suffer related faults (e.g. by running the same third party data center)"*. **No elder implements this** — BOINC assumes a trusted project server, NuNet has no notion of correlated devices, and our own `exclude_device_groups` field (S4) is a placeholder with no enforcement behind it.
+**Damage:** three phones on one desk, one operator, one attestation root, produce three identical wrong answers and a unanimous quorum.
+**Mitigation:** attestation raises Sybil cost but does not prove independence — a real device farm passes Play Integrity. Enforce diversity on the axes we can observe: operator DID, attestation root, network origin/ASN, and timing correlation. Bittensor's clipped stake-weighted median limits the payoff even when collusion succeeds. Treat unanimity from correlated devices as *weaker* evidence than disagreement between uncorrelated ones.
+
+## 10. Our own schema is missing commit/reveal
+**Observed:** PoCo binds a submitted `resultHash` to a `resultSeal` derived from the worker's identity, precisely so a second worker cannot copy the first's hash off-chain (`IexecPoco2Facet.sol:106`). **Our S4 `ResultEnvelope` has `result_hash` and a signature, but no seal binding the hash to this worker before disclosure.**
+**Damage:** in an optimistic or sampled-audit mode, a lazy device can observe another's published hash and submit it as its own, earning payment for nothing and — worse — manufacturing false agreement that suppresses a genuine dispute.
+**Mitigation:** add it in M3.4; it is a small schema change (commitment = H(result_hash ‖ device_did ‖ nonce), revealed later) and it is the highest-value single fix this recon surfaced. Until it exists, do not present replication as a security property.
+
+---
+
+## Two risks deliberately *not* on this list
+- **"MeTTa might not be deterministic enough to verify."** It is. MORK's differential harness compares two independently-written query engines byte for byte over 98 programs and passes in 1.4 s (S3). This was the mission's central bet and it is the best-evidenced claim in the whole recon.
+- **"MeTTa might not fit on a phone."** It does. 4.00 MiB, cross-compiled in 15 seconds, on stable Rust, first attempt (S2).

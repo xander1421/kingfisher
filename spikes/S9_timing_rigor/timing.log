@@ -1,0 +1,8 @@
+matmul D=256                 cold    35.568 ms | warm_med    13.057 ms | rsd  5.2% | cold/warm   2.72x | inner 1 | cold   144.0 GOP/s warm   392.1 GOP/s
+matmul D=512                 cold    48.606 ms | warm_med    21.984 ms | rsd  8.5% | cold/warm   2.21x | inner 1 | cold   210.7 GOP/s warm   465.8 GOP/s
+matmul D=1024                cold    90.857 ms | warm_med    40.932 ms | rsd  1.1% | cold/warm   2.22x | inner 1 | cold   225.4 GOP/s warm   500.3 GOP/s
+matmul D=2048                cold    76.851 ms | warm_med    76.947 ms | rsd  0.7% | cold/warm   1.00x | inner 1 | cold   533.0 GOP/s warm   532.3 GOP/s
+matmul D=4096                cold   186.784 ms | warm_med   155.420 ms | rsd  1.1% | cold/warm   1.20x | inner 1 | cold   438.6 GOP/s warm   527.1 GOP/s
+matmul D=10000               cold   436.021 ms | warm_med   409.657 ms | rsd  6.5% | cold/warm   1.06x | inner 1 | cold   458.7 GOP/s warm   488.2 GOP/s
+
+wrote timing.json

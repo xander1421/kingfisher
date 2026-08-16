@@ -1,0 +1,17 @@
++ cargo build --release -p mork
+    Finished `release` profile [optimized] target(s) in 0.89s
+warning: the following packages contain code that will be rejected by a future version of Rust: mork v0.1.0 (/Users/victorianikolenko/kingfisher/elders/MORK/kernel)
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
++ cargo build --release -p mork --features leapfrog
+   Compiling mork v0.1.0 (/Users/victorianikolenko/kingfisher/elders/MORK/kernel)
+    Finished `release` profile [optimized] target(s) in 7.94s
+warning: the following packages contain code that will be rejected by a future version of Rust: mork v0.1.0 (/Users/victorianikolenko/kingfisher/elders/MORK/kernel)
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+corpus  : /Users/victorianikolenko/kingfisher/elders/MORK/differential/corpus, /Users/victorianikolenko/kingfisher/elders/MORK/kernel/resources
+pz      : /Users/victorianikolenko/kingfisher/elders/MORK/target/differential/mork-pz
+lf      : /Users/victorianikolenko/kingfisher/elders/MORK/target/differential/mork-leapfrog
+programs: 103
+
+
+98 ok, 0 failed, 5 skipped in 1.4s
+DIFF_EXIT=0

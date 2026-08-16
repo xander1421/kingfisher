@@ -1,0 +1,57 @@
+{
+  "config": {
+    "D": 1024,
+    "n_triples": 100000,
+    "n_queries": 20,
+    "modulus": 65497
+  },
+  "by_k": {
+    "8": {
+      "proof_bytes_mean": 34.0,
+      "full_scores_bytes": 400000,
+      "compression_vs_full_scores": 11764.7,
+      "build_ms_per_query": 0.072,
+      "verify_ms_per_query_excl_recompute": 0.005,
+      "honest_accepted": "20/20",
+      "tampered_rejected": "20/20"
+    },
+    "16": {
+      "proof_bytes_mean": 66.0,
+      "full_scores_bytes": 400000,
+      "compression_vs_full_scores": 6060.6,
+      "build_ms_per_query": 0.082,
+      "verify_ms_per_query_excl_recompute": 0.014,
+      "honest_accepted": "20/20",
+      "tampered_rejected": "20/20"
+    },
+    "32": {
+      "proof_bytes_mean": 130.0,
+      "full_scores_bytes": 400000,
+      "compression_vs_full_scores": 3076.9,
+      "build_ms_per_query": 0.319,
+      "verify_ms_per_query_excl_recompute": 0.048,
+      "honest_accepted": "20/20",
+      "tampered_rejected": "20/20"
+    },
+    "64": {
+      "proof_bytes_mean": 258.0,
+      "full_scores_bytes": 400000,
+      "compression_vs_full_scores": 1550.4,
+      "build_ms_per_query": 1.255,
+      "verify_ms_per_query_excl_recompute": 0.175,
+      "honest_accepted": "20/20",
+      "tampered_rejected": "20/20"
+    },
+    "128": {
+      "proof_bytes_mean": 514.0,
+      "full_scores_bytes": 400000,
+      "compression_vs_full_scores": 778.2,
+      "build_ms_per_query": 5.042,
+      "verify_ms_per_query_excl_recompute": 0.688,
+      "honest_accepted": "20/20",
+      "tampered_rejected": "20/20"
+    }
+  },
+  "recompute_ms_one_query": 85.3,
+  "digest_scores": "6c8fe8a5669d6cbc9bee0fe05a2e37af7905d56b8d932ed83c2afa208f8051f8"
+}

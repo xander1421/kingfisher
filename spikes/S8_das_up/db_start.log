@@ -1,0 +1,6 @@
+Starting Redis service...
+Redis has started successfully on port 40020 at localhost, operating under the server user victorianikolenko.
+Starting MongoDB service...
+MongoDB has started successfully on port 40021 at localhost, operating under the server user victorianikolenko.
+Database services started successfully.
+EXIT=0

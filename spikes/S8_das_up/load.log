@@ -1,0 +1,9 @@
+das-cli-mongodb-40021 is running on port 40021
+das-cli-redis-40020 is running on port 40020
+Loading metta file /Users/victorianikolenko/kingfisher/spikes/S8_das_up/animals.metta...
+Validating syntax...
+Syntax validation passed.
+Done loading /Users/victorianikolenko/kingfisher/spikes/S8_das_up/animals.metta.
+Syntax check OK
+MeTTa loaded successfully from '/Users/victorianikolenko/kingfisher/spikes/S8_das_up/animals.metta'.
+EXIT=0

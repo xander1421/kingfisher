@@ -1,0 +1,113 @@
+{
+  "config": {
+    "n_triples": 20000,
+    "n_queries": 32,
+    "seed": 12648430
+  },
+  "headroom": [
+    {
+      "D": 256,
+      "float32_path_matches_int32_reference": true,
+      "peak_abs_score_2bound": 294,
+      "peak_abs_score_3bound": 426,
+      "worst_abs_partial_sum_tile64": 294,
+      "theoretical_max_3bound": 768,
+      "fits_int16_final": true,
+      "fits_int16_partial": true,
+      "int16_headroom_pct": 1.3
+    },
+    {
+      "D": 512,
+      "float32_path_matches_int32_reference": true,
+      "peak_abs_score_2bound": 550,
+      "peak_abs_score_3bound": 800,
+      "worst_abs_partial_sum_tile64": 550,
+      "theoretical_max_3bound": 1536,
+      "fits_int16_final": true,
+      "fits_int16_partial": true,
+      "int16_headroom_pct": 2.4
+    },
+    {
+      "D": 1024,
+      "float32_path_matches_int32_reference": true,
+      "peak_abs_score_2bound": 1094,
+      "peak_abs_score_3bound": 1596,
+      "worst_abs_partial_sum_tile64": 1094,
+      "theoretical_max_3bound": 3072,
+      "fits_int16_final": true,
+      "fits_int16_partial": true,
+      "int16_headroom_pct": 4.9
+    },
+    {
+      "D": 2048,
+      "float32_path_matches_int32_reference": true,
+      "peak_abs_score_2bound": 2136,
+      "peak_abs_score_3bound": 3152,
+      "worst_abs_partial_sum_tile64": 2136,
+      "theoretical_max_3bound": 6144,
+      "fits_int16_final": true,
+      "fits_int16_partial": true,
+      "int16_headroom_pct": 9.6
+    },
+    {
+      "D": 4096,
+      "float32_path_matches_int32_reference": true,
+      "peak_abs_score_2bound": 4190,
+      "peak_abs_score_3bound": 6242,
+      "worst_abs_partial_sum_tile64": 4190,
+      "theoretical_max_3bound": 12288,
+      "fits_int16_final": true,
+      "fits_int16_partial": true,
+      "int16_headroom_pct": 19.0
+    },
+    {
+      "D": 10000,
+      "float32_path_matches_int32_reference": true,
+      "peak_abs_score_2bound": 10226,
+      "peak_abs_score_3bound": 15228,
+      "worst_abs_partial_sum_tile64": 10226,
+      "theoretical_max_3bound": 30000,
+      "fits_int16_final": true,
+      "fits_int16_partial": true,
+      "int16_headroom_pct": 46.5
+    }
+  ],
+  "deviations": {
+    "ideal_int32": {
+      "exact_rule_holds": true,
+      "recall_at_threshold": 1.0,
+      "false_positives": 0,
+      "true_matches": 76,
+      "nonmatches_colliding_with_match_score": 0
+    },
+    "int16_wrapping_accum": {
+      "exact_rule_holds": true,
+      "recall_at_threshold": 1.0,
+      "false_positives": 0,
+      "true_matches": 76,
+      "nonmatches_colliding_with_match_score": 0,
+      "differs_from_ideal": false
+    },
+    "int16_saturating_accum": {
+      "exact_rule_holds": true,
+      "recall_at_threshold": 1.0,
+      "false_positives": 0,
+      "true_matches": 76,
+      "nonmatches_colliding_with_match_score": 0,
+      "differs_from_ideal": false
+    },
+    "int8_output_requantisation": {
+      "exact_rule_holds": true,
+      "recall_at_threshold": 0.5395,
+      "false_positives": 0,
+      "true_matches": 76,
+      "nonmatches_colliding_with_match_score": 0,
+      "differs_from_ideal": true,
+      "distinct_score_values_before": 397,
+      "distinct_score_values_after": 107,
+      "recall_at_rounded_cutoff": 1.0,
+      "false_positives_at_rounded_cutoff": 0,
+      "note": "threshold rule is stated in raw score units; after requantisation the cutoff must be rescaled, and ties between match and non-match become possible"
+    }
+  }
+}

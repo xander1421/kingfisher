@@ -1,0 +1,88 @@
+{
+  "config": {
+    "D": 10000,
+    "n_triples": 100000,
+    "n_pred": 10,
+    "n_subj": 1000,
+    "n_obj": 1000,
+    "n_queries": 100,
+    "seed": 12648430
+  },
+  "answers_per_query": {
+    "min": 2,
+    "max": 21,
+    "mean": 10.31
+  },
+  "timing_s": {
+    "encode": 1.712,
+    "matmul": 7.731,
+    "verify": 0.439,
+    "total": 10.062
+  },
+  "matmul_gops": 25.9,
+  "int8_bytes_scanned": 1000000000,
+  "separation": {
+    "match_mean": 10040.0,
+    "match_min": 10040,
+    "nonmatch_mean": 480.75359535953595,
+    "nonmatch_max": 5472,
+    "nonmatch_std": 1524.7309624329155
+  },
+  "analytic_threshold": {
+    "every_match_scores_exactly_2x_nonzero_dims": true,
+    "threshold_min": 9746,
+    "threshold_max": 10194,
+    "false_positives_total": 0,
+    "true_matches_total": 1031,
+    "recall_at_threshold": 1.0
+  },
+  "by_k": {
+    "10": {
+      "recall_at_k_mean": 0.8948,
+      "recall_at_k_min": 0.4762,
+      "perfect_recall_queries": 56,
+      "precision_at_k_mean": 0.877,
+      "candidate_reduction": 10000.0,
+      "exact_checks_per_query": 10
+    },
+    "50": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.2062,
+      "candidate_reduction": 2000.0,
+      "exact_checks_per_query": 50
+    },
+    "100": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.1031,
+      "candidate_reduction": 1000.0,
+      "exact_checks_per_query": 100
+    },
+    "500": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0206,
+      "candidate_reduction": 200.0,
+      "exact_checks_per_query": 500
+    },
+    "1000": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0103,
+      "candidate_reduction": 100.0,
+      "exact_checks_per_query": 1000
+    }
+  },
+  "digests": {
+    "codebooks": "678375160071bd73020968abb8391a1199bf5634560de6792eae350d7d47e275",
+    "triples": "e2b2918a601a87e16ea9743c37b20c7a6c739cbc223fcfe1fadbbc49fa2e2564",
+    "encoded_T": "1bd5b22067812f981b0ab1049119ec6f2302624db1af8cc087849ef9af0ff513",
+    "queries": "de0245c9dd17ccf204579ec5a5ebef48c9afa85890b03ba73c50c58d1e48960c",
+    "scores": "995dec1228506a3bbffc8498633bd13258322429317af7b1d3f1792355541436"
+  }
+}

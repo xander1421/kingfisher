@@ -1,0 +1,88 @@
+{
+  "config": {
+    "D": 2048,
+    "n_triples": 100000,
+    "n_pred": 10,
+    "n_subj": 1000,
+    "n_obj": 1000,
+    "n_queries": 100,
+    "seed": 12648430
+  },
+  "answers_per_query": {
+    "min": 4,
+    "max": 22,
+    "mean": 9.83
+  },
+  "timing_s": {
+    "encode": 0.218,
+    "matmul": 0.153,
+    "verify": 0.356,
+    "total": 0.766
+  },
+  "matmul_gops": 268.4,
+  "int8_bytes_scanned": 204800000,
+  "separation": {
+    "match_mean": 2102.0,
+    "match_min": 2102,
+    "nonmatch_mean": 117.62484998799904,
+    "nonmatch_max": 1266,
+    "nonmatch_std": 319.2298402859636
+  },
+  "analytic_threshold": {
+    "every_match_scores_exactly_2x_nonzero_dims": true,
+    "threshold_min": 1922,
+    "threshold_max": 2158,
+    "false_positives_total": 0,
+    "true_matches_total": 983,
+    "recall_at_threshold": 1.0
+  },
+  "by_k": {
+    "10": {
+      "recall_at_k_mean": 0.9066,
+      "recall_at_k_min": 0.4545,
+      "perfect_recall_queries": 56,
+      "precision_at_k_mean": 0.851,
+      "candidate_reduction": 10000.0,
+      "exact_checks_per_query": 10
+    },
+    "50": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.1966,
+      "candidate_reduction": 2000.0,
+      "exact_checks_per_query": 50
+    },
+    "100": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0983,
+      "candidate_reduction": 1000.0,
+      "exact_checks_per_query": 100
+    },
+    "500": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0197,
+      "candidate_reduction": 200.0,
+      "exact_checks_per_query": 500
+    },
+    "1000": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0098,
+      "candidate_reduction": 100.0,
+      "exact_checks_per_query": 1000
+    }
+  },
+  "digests": {
+    "codebooks": "1df927429693fdbd0c75b4f894927a7151b12cceedbf1c7bf3f61cb60e5da80c",
+    "triples": "8fe785dca5d435723b9928166cb5b5c135e47aa9be8bd05362ceeeec3846f5ff",
+    "encoded_T": "d45f3dd840678c17db68b5a83ad5c33dc5075faeb3a42a47d530aa4c037ab007",
+    "queries": "6abd97e7d368c034b2a5b798e5150da15ee2d4690f34625487c0e6d0f8b2ee0a",
+    "scores": "8df5413ea1ac5d5e40402b2d240eea9a90f60c10edd43eb4f6d7d269ce413956"
+  }
+}

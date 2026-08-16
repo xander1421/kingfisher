@@ -1,0 +1,21 @@
+# foreign clones — read-only, re-cloneable, and not ours to redistribute
+elders/
+
+# third-party papers: local reading copies, not for redistribution
+papers/*.pdf
+
+# build artefacts
+**/target/
+**/.venv/
+__pycache__/
+*.pyc
+*_pb2.py
+
+# large generated space dumps from the cross-arch differential
+spikes/S10_mork_android/crossrun/
+
+# S14 cloned MORK's `server` branch for comparison — a foreign repo, like elders/
+spikes/S14_mork_server/mork-server/
+
+# cross-arch space dumps (48 MB+) — regenerate with crossrun.py
+spikes/S16_mork_android/crossrun/

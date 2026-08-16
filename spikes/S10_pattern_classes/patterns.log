@@ -1,0 +1,14 @@
+[uniform] C1_(p s ?o)    m=2 ans/q=    10.4 exact=True  recall@thr=1.0    fp=0       r@100=1.0
+[uniform] C2_(p ?s o)    m=2 ans/q=    10.3 exact=True  recall@thr=1.0    fp=0       r@100=1.0
+[uniform] C3_(? s o)     m=2 ans/q=     1.0 exact=True  recall@thr=1.0    fp=0       r@100=1.0
+[uniform] C4_(p ?s ?o)   m=1 ans/q= 10000.0 exact=-     recall@thr=-      fp=-       r@100=0.01
+[uniform] C5_(? s ?o)    m=1 ans/q=    98.4 exact=-     recall@thr=-      fp=-       r@100=0.9689
+[uniform] C6_(p s o)     m=3 ans/q=     1.0 exact=True  recall@thr=1.0    fp=0       r@100=1.0
+[zipf_a1.0] C1_(p s ?o)    m=2 ans/q=     9.2 exact=True  recall@thr=1.0    fp=0       r@100=0.9995
+[zipf_a1.0] C2_(p ?s o)    m=2 ans/q=    17.4 exact=True  recall@thr=1.0    fp=0       r@100=0.9812
+[zipf_a1.0] C3_(? s o)     m=2 ans/q=     2.2 exact=True  recall@thr=1.0    fp=0       r@100=1.0
+[zipf_a1.0] C4_(p ?s ?o)   m=1 ans/q= 10000.0 exact=-     recall@thr=-      fp=-       r@100=0.01
+[zipf_a1.0] C5_(? s ?o)    m=1 ans/q=    87.4 exact=-     recall@thr=-      fp=-       r@100=0.9641
+[zipf_a1.0] C6_(p s o)     m=3 ans/q=     1.6 exact=True  recall@thr=1.0    fp=0       r@100=1.0
+
+wrote patterns.json

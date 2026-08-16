@@ -1,0 +1,16 @@
+B=1   random      102.4 MB (  1.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks   0.01% of store  ties 0.000
+B=1   clustered   102.4 MB (  1.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks   0.01% of store  ties 0.000
+B=2   random       51.2 MB (  2.0x)  recall 0.0913 (min 0.0000, perfect 0/100)  cpu_checks   0.00% of store  ties 0.486
+B=2   clustered    51.2 MB (  2.0x)  recall 0.9957 (min 0.8889, perfect 95/100)  cpu_checks   0.01% of store  ties 0.262
+B=4   random       25.6 MB (  4.0x)  recall 0.2245 (min 0.0000, perfect 0/100)  cpu_checks   0.36% of store  ties 0.355
+B=4   clustered    25.6 MB (  4.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks   6.87% of store  ties 0.190
+B=8   random       12.8 MB (  8.0x)  recall 0.4845 (min 0.0000, perfect 1/100)  cpu_checks   3.96% of store  ties 0.246
+B=8   clustered    12.8 MB (  8.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks  10.08% of store  ties 0.124
+B=16  random        6.4 MB ( 16.0x)  recall 0.6897 (min 0.3333, perfect 5/100)  cpu_checks  18.89% of store  ties 0.162
+B=16  clustered     6.4 MB ( 16.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks  10.10% of store  ties 0.064
+B=32  random        3.2 MB ( 32.0x)  recall 0.8564 (min 0.4000, perfect 33/100)  cpu_checks  52.02% of store  ties 0.101
+B=32  clustered     3.2 MB ( 32.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks  10.12% of store  ties 0.024
+B=64  random        1.6 MB ( 64.0x)  recall 0.9635 (min 0.6364, perfect 76/100)  cpu_checks  85.80% of store  ties 0.058
+B=64  clustered     1.6 MB ( 64.0x)  recall 1.0000 (min 1.0000, perfect 100/100)  cpu_checks  11.82% of store  ties 0.005
+
+wrote bundling.json

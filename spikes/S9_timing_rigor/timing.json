@@ -1,0 +1,135 @@
+{
+  "methodology": {
+    "reps_per_D": 7,
+    "cold_sample": "first rep, reported separately",
+    "warm_statistic": "median of reps 2..N",
+    "note": "arithmetic intensity is constant in D (~2*n_queries ops/byte); GOP/s variation across D is GEMM efficiency at short inner dimension, not memory bandwidth"
+  },
+  "config": {
+    "n_triples": 100000,
+    "n_queries": 100,
+    "seed": 12648430
+  },
+  "rows": [
+    {
+      "D": 256,
+      "T_bytes": 25600000,
+      "encode_s": 0.0315,
+      "cold_s": 0.0356,
+      "warm_median_s": 0.0131,
+      "warm_rsd_pct": 5.18,
+      "cold_over_warm": 2.72,
+      "cold_gops": 144.0,
+      "warm_gops": 392.1,
+      "all_s": [
+        0.0356,
+        0.0149,
+        0.0129,
+        0.013,
+        0.0131,
+        0.0131,
+        0.013
+      ]
+    },
+    {
+      "D": 512,
+      "T_bytes": 51200000,
+      "encode_s": 0.0618,
+      "cold_s": 0.0486,
+      "warm_median_s": 0.022,
+      "warm_rsd_pct": 8.46,
+      "cold_over_warm": 2.21,
+      "cold_gops": 210.7,
+      "warm_gops": 465.8,
+      "all_s": [
+        0.0486,
+        0.0227,
+        0.0272,
+        0.0218,
+        0.0222,
+        0.0218,
+        0.0217
+      ]
+    },
+    {
+      "D": 1024,
+      "T_bytes": 102400000,
+      "encode_s": 0.1451,
+      "cold_s": 0.0909,
+      "warm_median_s": 0.0409,
+      "warm_rsd_pct": 1.13,
+      "cold_over_warm": 2.22,
+      "cold_gops": 225.4,
+      "warm_gops": 500.3,
+      "all_s": [
+        0.0909,
+        0.0413,
+        0.041,
+        0.0409,
+        0.0406,
+        0.041,
+        0.0398
+      ]
+    },
+    {
+      "D": 2048,
+      "T_bytes": 204800000,
+      "encode_s": 0.1716,
+      "cold_s": 0.0769,
+      "warm_median_s": 0.0769,
+      "warm_rsd_pct": 0.74,
+      "cold_over_warm": 1.0,
+      "cold_gops": 533.0,
+      "warm_gops": 532.3,
+      "all_s": [
+        0.0769,
+        0.077,
+        0.0766,
+        0.0769,
+        0.0768,
+        0.077,
+        0.0784
+      ]
+    },
+    {
+      "D": 4096,
+      "T_bytes": 409600000,
+      "encode_s": 0.3828,
+      "cold_s": 0.1868,
+      "warm_median_s": 0.1554,
+      "warm_rsd_pct": 1.13,
+      "cold_over_warm": 1.2,
+      "cold_gops": 438.6,
+      "warm_gops": 527.1,
+      "all_s": [
+        0.1868,
+        0.1554,
+        0.1532,
+        0.153,
+        0.1581,
+        0.1563,
+        0.1555
+      ]
+    },
+    {
+      "D": 10000,
+      "T_bytes": 1000000000,
+      "encode_s": 0.968,
+      "cold_s": 0.436,
+      "warm_median_s": 0.4097,
+      "warm_rsd_pct": 6.48,
+      "cold_over_warm": 1.06,
+      "cold_gops": 458.7,
+      "warm_gops": 488.2,
+      "all_s": [
+        0.436,
+        0.3755,
+        0.3807,
+        0.4259,
+        0.4534,
+        0.414,
+        0.4053
+      ]
+    }
+  ]
+}

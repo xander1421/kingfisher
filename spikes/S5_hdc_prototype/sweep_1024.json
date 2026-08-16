@@ -1,0 +1,88 @@
+{
+  "config": {
+    "D": 1024,
+    "n_triples": 100000,
+    "n_pred": 10,
+    "n_subj": 1000,
+    "n_obj": 1000,
+    "n_queries": 100,
+    "seed": 12648430
+  },
+  "answers_per_query": {
+    "min": 2,
+    "max": 19,
+    "mean": 10.44
+  },
+  "timing_s": {
+    "encode": 0.219,
+    "matmul": 0.373,
+    "verify": 0.282,
+    "total": 0.914
+  },
+  "matmul_gops": 54.9,
+  "int8_bytes_scanned": 102400000,
+  "separation": {
+    "match_mean": 1036.0,
+    "match_min": 1036,
+    "nonmatch_mean": 53.73808690434522,
+    "nonmatch_max": 656,
+    "nonmatch_std": 162.50248600516284
+  },
+  "analytic_threshold": {
+    "every_match_scores_exactly_2x_nonzero_dims": true,
+    "threshold_min": 960,
+    "threshold_max": 1092,
+    "false_positives_total": 0,
+    "true_matches_total": 1044,
+    "recall_at_threshold": 1.0
+  },
+  "by_k": {
+    "10": {
+      "recall_at_k_mean": 0.8996,
+      "recall_at_k_min": 0.5263,
+      "perfect_recall_queries": 56,
+      "precision_at_k_mean": 0.901,
+      "candidate_reduction": 10000.0,
+      "exact_checks_per_query": 10
+    },
+    "50": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.2088,
+      "candidate_reduction": 2000.0,
+      "exact_checks_per_query": 50
+    },
+    "100": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.1044,
+      "candidate_reduction": 1000.0,
+      "exact_checks_per_query": 100
+    },
+    "500": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0209,
+      "candidate_reduction": 200.0,
+      "exact_checks_per_query": 500
+    },
+    "1000": {
+      "recall_at_k_mean": 1.0,
+      "recall_at_k_min": 1.0,
+      "perfect_recall_queries": 100,
+      "precision_at_k_mean": 0.0104,
+      "candidate_reduction": 100.0,
+      "exact_checks_per_query": 1000
+    }
+  },
+  "digests": {
+    "codebooks": "96f1e4a3b0fd441fafb70b4511c5ae6d6c2bd5f4a57ac97fbe1e9126fee84b7d",
+    "triples": "f229e82a5d5c75138c13bf98b9a9c09890913072aee970466295d9891515da5f",
+    "encoded_T": "a8db0108c9bac014268a1a1f739fda48b027b9aa6faed061b063377f95a97476",
+    "queries": "62d636d88e53a6435ebf8bae8f61927eb7f6687be6917ac4aa69b6ffe446755d",
+    "scores": "8aba3d409add2be422ecdfd6ec4cf5277431981348c9115d31ca31a6cdd65df6"
+  }
+}
