@@ -1,6 +1,8 @@
 # S55 — MORK in-process: my grade-E claim was false, and it gated the query path
 
-**Verdict: GREEN. Stage 2 in-process costs 0.310 ms against 5.66 ms as a subprocess — 18.3×. `LEDGER` line 41 is disproven by execution.**
+**Verdict: GREEN on the yes/no question, and CORRECTED on every magnitude by S56 the same day.**
+
+> **S56 supersedes the numbers below.** 0.310 ms was one point in a **1.66× DVFS band (0.19–0.32 ms)** reported to three digits; the speedup is **18–30×**, not 18.3×; and the caveat at the bottom of this file — *"a resident agent would amortise it"* — is **false**: `Space::new()` is 0.83 µs, 0.3% of stage 2. What survives is the claim that matters: **MORK is callable in-process, and `LEDGER` line 41 is disproven by execution.**
 
 I wrote: *"MORK has no library surface — CLI only, so it cannot be a per-query in-process engine"*, graded it **E** (read, not measured), and let it gate the biggest cost in the query path. A reviewer checked and found `kernel/src/lib.rs` exporting `pub mod space`, with `experiments/unification_test_laws` already calling `mork::space::Space::new()` in-process. I had read `main.rs` and never looked for `lib.rs`.
 
