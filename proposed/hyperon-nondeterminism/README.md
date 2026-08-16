@@ -1,98 +1,139 @@
-# Proposed upstream reports — hyperon-experimental
+# `intersection-atom` / `subtraction-atom` return wrong cardinality on ~40% of runs
 
-Two defects found while measuring cross-ISA determinism of MeTTa evaluation
-(`spikes/S57_hyperon_corpus`, `spikes/S58_fuel_branching`). Both are reproducible
-with stock `fuelrun`-style harnesses on unmodified `hyperon-experimental` at
-`3f76dc4`. **Drafts only — nothing filed, per mission §11 "no publishing".**
+Two defects in `hyperon-experimental`, found while measuring cross-platform
+determinism of MeTTa evaluation. The first is a **correctness** bug: a pure
+function returns a different number of elements on identical input, depending on
+heap layout. The second breaks output reproducibility for anything that hashes
+or diffs MeTTa results.
 
-The first is a correctness bug. The second is a reproducibility bug that matters
-for anyone hashing MeTTa output.
+Reproduced against `3f76dc4`. Patches attached; all three apply clean to a
+pristine tree. `cargo test -p hyperon` — **319 passed, 0 failed**.
 
 ---
 
-## Issue 1 — `intersection-atom` returns different results, with different cardinality, on identical input
+## Issue 1 — set intersection silently drops members
 
 ### Reproduce
 ```metta
 !(intersection-atom (A $x B $y C) ($y C A $x B))
 ```
-Ten runs, unmodified binary, no randomness anywhere in the program:
+Both sides contain `A`, `B`, `C`, `$x`, `$y`, so the intersection is all five
+atoms. Fifteen runs of the same binary on the same machine:
 
 ```
-1c6f9da9 8d80a7c0 1c6f9da9 8d80a7c0 a2430baa 1c6f9da9 1c6f9da9 8d80a7c0 1c6f9da9 1c6f9da9
+ 9 x  card=5  (A $x B $y C)     <- correct
+ 4 x  card=3  ($x B C)          <- two members dropped
+ 2 x  card=3  (B $y C)          <- two different members dropped
 ```
-(SHA-256 prefixes of the result set.) Observed bodies include `(A $x B $y C)`,
-`(B $y C)` and `($x B C)` — **not merely reordered, different lengths.**
 
-### Cause
-`hyperon-common/src/multitrie.rs:308`:
-```rust
-end_of_expr: HashMap<*mut Self, Shared<Self>>,
-```
-The map is **keyed by raw pointer**. `:363` iterates `self.end_of_expr.values()`
-in the wildcard arm, so traversal order follows allocation addresses, which vary
-per process. `lib/src/metta/runner/stdlib/atom.rs` then takes results off that
-unordered traversal.
+**40% of runs return the wrong answer.** Not a reordering — a different
+cardinality, so elements are being lost. `subtraction-atom` shares the code path
+and the defect.
 
-Triggered whenever either argument contains a variable. Via `stdlib.metta:644-663`
-the same path backs `subtraction-atom`, `intersection` and `subtraction`.
+It needs **two** variables to show. `(A $x C)` against `($x C A)` is correct;
+`(A $x B $y)` against `($y A $x B)` is not.
 
-### Why it is a correctness bug and not a cosmetic one
-Set intersection is a pure function of its arguments. Returning a different
-*cardinality* on repeat calls means results are being dropped or added depending
-on heap layout. Any program branching on `(size-atom (intersection-atom …))` is
-nondeterministic today.
+### Root cause
+`atom_to_trie_key` maps **every** variable to the same `TrieToken::Wildcard`, and
+a wildcard query matches any stored key. Two consequences, in
+`lib/src/metta/runner/stdlib/atom.rs`:
 
-### Suggested fix
-Key the map by a content-derived identifier, or use `BTreeMap`/`IndexMap`, or sort
-before consuming the iterator. Address-derived ordering should not be observable
-from the language.
+1. **During index construction.** The build loop calls `rhs_index.get(&k).next()`
+   to find an existing bucket to merge into. With a wildcard key that returns an
+   *unrelated* bucket — symbol `A`'s, say — which is then removed and re-inserted
+   under the wildcard key. `A` is no longer findable under its own key and is
+   lost from the result.
+2. **At lookup.** `get(&k).next()` picks one of several matching buckets in
+   `HashMap` iteration order and gives up if that bucket holds no equal atom.
+   `remove(&k, &bucket)` then removes under the *candidate's* key — again the
+   shared wildcard — evicting a different atom's bucket.
+
+Both paths are order-sensitive, which is why the result varies between
+processes rather than being consistently wrong.
+
+### Fix (patch 01)
+Both operations become straightforward multiset operations over a consumed-index
+set. The `MultiTrie` was only ever a lookup index; correctness never depended on
+it, and the wildcard collapse is what made it unsafe here.
+
+**Cost, stated plainly:** this is `O(|lhs| * |rhs|)` rather than sub-quadratic. If
+that matters for large inputs, the alternative is to key the index so distinct
+variables do not collide — the wildcard collapse is the problem, not the trie.
+The patch is written so the correctness fix is separable from that decision.
+
+### A negative result, recorded so nobody repeats it
+**Making the trie's iteration order deterministic does not fix this.** We tried
+it first — `end_of_expr` is a `HashMap<*mut Self, Shared<Self>>` iterated in
+pointer order, which looks like the obvious culprit. Converting it to an
+insertion-ordered `Vec` left the failure completely unchanged at 9/4/2. A second
+attempt, searching all matching buckets instead of taking `.next()`, improved it
+to 5/4 but still dropped one element.
+
+Ordered iteration only makes the *wrong* answer consistent. The wildcard collapse
+has to be addressed directly.
+
+Patch 03 ships that ordering change anyway, as optional hardening — it is no
+longer required by patches 01/02, but pointer-order iteration remains a latent
+nondeterminism source for any other `MultiTrie` consumer.
 
 ---
 
-## Issue 2 — `Display` for `GroundingSpace`, `RandomGenerator` and `FileHandle` prints heap addresses
+## Issue 2 — three `Display` impls print heap addresses
 
 ### Reproduce
 ```metta
 !(new-space)
 ```
-Five runs, five distinct outputs — no imports, core stdlib only:
+No imports, core stdlib only. Five runs, five different outputs:
 ```
-2e6458f1 1dd286f0 db166c1d 5201ba4f d2fc6a41
+GroundingSpace-0xbf0df03d8   GroundingSpace-0x9aee2c158   GroundingSpace-0x9ccd943d8
+GroundingSpace-0x90ee1c3d8   GroundingSpace-0xa60d943d8
 ```
 
-### Cause
-- `lib/src/space/grounding/mod.rs:217-227` — `{self:p}` → `GroundingSpace-0x…`
-- `lib/src/metta/runner/builtin_mods/random.rs:64` — `self.0.as_ptr()`
-- `lib/src/metta/runner/stdlib/fileio.rs:94` — `FileHandle-0x…`
+Sites:
+- `lib/src/space/grounding/mod.rs` — `{self:p}`, in both `Debug` and `Display`
+- `lib/src/metta/runner/builtin_mods/random.rs` — `self.0.as_ptr()`
+- `lib/src/metta/runner/builtin_mods/fileio.rs` — `FileHandle-{:?}`
 
 ### Impact
 Any pipeline that hashes or diffs MeTTa output — regression corpora, differential
 testing across builds, replicated execution — sees spurious differences. It is
-also reachable **accidentally**, because a grounded atom is printed inside error
+also reachable **accidentally**, because grounded atoms are printed inside error
 atoms:
+
 ```
 (Error (random-int RandomGenerator-0xb34ddc018 5 0) RangeIsEmpty)
 ```
-so a program that never intends to print a handle still emits an address whenever
-it hits an error involving one.
 
-### Suggested fix
-Content-derived or stable-counter identifiers. If a unique tag is needed for
-debugging, a per-runner monotonic id is stable and just as useful.
+so a program that never intends to print a handle still emits an address the
+moment it hits an error involving one.
+
+### Fix (patch 02)
+A creation-ordered `stable_id()` in place of the address. Ids are handed out in
+creation order, so they reproduce for a deterministic program. An id is keyed by
+address, so a freed object may lend its id to a later one — harmless for display,
+and it keeps the change out of the constructors.
 
 ---
 
-## Related non-bug, recorded for completeness
-Variable naming in `match` is also `HashMap`-iteration dependent
-(`hyperon-atom/src/matcher.rs:193-756`): `(pair $z $z)` matched by `(pair $x $y)`
-returns `($x $x)` or `($y $y)` across runs. Arguably alpha-equivalent and therefore
-not a correctness bug — but it has the same practical effect on any output-hashing
-pipeline, and the same fix (ordered traversal) addresses it.
+## Verification
 
-## What is NOT affected — checked, and worth stating
-Atomspace iteration, `match` result order, `superpose` and `unique-atom` are
-deterministic and byte-identical across aarch64-macOS, x86_64-macOS and
-aarch64-Android: `hyperon-space/src/index/trie.rs` walks insertion-ordered
-`SmallVec`s, and its `HashMap` at `:204` is lookup-only. The problem is specific
-to the two sites above.
+| check | result |
+|---|---|
+| `cargo test -p hyperon` | **319 passed, 0 failed** |
+| `cargo test -p hyperon-common` | 20 passed, 0 failed |
+| Issue 1 after patch, 30 runs | `(A $x B $y C)` **30/30** |
+| Issue 2 after patch, 6 runs | `GroundingSpace-#1` **6/6** |
+| 67-program regression corpus | **0 rows differing**; 235 passing assertions and 29 error atoms unchanged |
+
+Correctness suite, all passing after the fix:
+`(A B C D)∩(B D E)=(B D)` · `(A A B)∩(A B B)=(A B)` · `(X Y)∩(P Q)=()` ·
+`()∩(A B)=()` · `(A $x)∩($x A)=(A $x)` · `($x $y)∩($y $x)=($x $y)` ·
+`(A A A)∩(A A)=(A A)` · `((f $x) A)∩(A (f $x))=((f $x) A)`
+
+## Not addressed here
+- Variable naming in `match` is `HashMap`-iteration dependent
+  (`hyperon-atom/src/matcher.rs`): `(pair $z $z)` matched by `(pair $x $y)`
+  returns `($x $x)` or `($y $y)`. Arguably alpha-equivalent rather than
+  incorrect, but it has the same effect on an output-hashing pipeline.
+- `Variables({…})` hash-set ordering leaks into `RunnerState`'s `Debug` output.

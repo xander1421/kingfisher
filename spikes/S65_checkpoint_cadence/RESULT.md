@@ -13,6 +13,16 @@ S60 went RED for four reasons. Three are now fixed and this spike answers what i
 
 Everything reported below is a **count or a digest**. Both are load-insensitive, so the measurement is valid while the gate refuses.
 
+## Engine state — pin this, it matters
+Measured against **hyperon `3f76dc4` + the three patches** in
+`proposed/hyperon-nondeterminism/`, applied in place. That is not incidental:
+**stock hyperon and patched hyperon are two different determinism regimes**, and
+the reproducibility result below is a property of the patched one. On stock, the
+commitments do not reproduce — that was S60's blocker.
+
+S57's regression comparison ran the other way round: patched output against a
+**stock-measured** baseline, 0 rows differing, which is the correct test.
+
 ## Measured — 6 corpus programs, 3–5 runs each
 
 | program | steps | checkpoints | interval | retained | bisect probes | reproducible |

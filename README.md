@@ -18,7 +18,7 @@ spikes/       S1..S8 (recon) · S9..S14 (verification) · S15..S16 (real device)
               bench.py   shared timing harness — cold/warm split, autoscaled samples
               hdcore.py  the S5 encoding, factored out so S9..S12 measure the same thing
 papers/       7 PDFs + INDEX.md
-elders/       21 shallow clones, read-only; all left at pristine HEAD
+elders/       21 shallow clones, read-only; all left at pristine HEAD **except `hyperon-experimental`, which carries the three patches in `proposed/hyperon-nondeterminism/patches/` (applied in place, 2026-08-16). Restore stock with `git -C elders/hyperon-experimental checkout -- .`**
 DECISIONS.log 23 entries · BLOCKED.log 5 entries
 ```
 
