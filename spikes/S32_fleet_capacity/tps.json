@@ -1,0 +1,77 @@
+{
+  "measured": {
+    "single_thread_sustained_steps_s": 383000,
+    "eight_way_burst_steps_s": 2954450,
+    "eight_way_sustained_steps_s_range": [
+      1963190,
+      3867536
+    ],
+    "eight_way_sustained_steps_s_used": 2300000,
+    "host_single_thread_steps_s": 1440000,
+    "job_steps": 100082
+  },
+  "per_device": {
+    "phone, 1 thread, sustained": 3.8268619731819906,
+    "phone, 1 thread, duty-cycled": 6.574608820766971,
+    "phone, 8-way, burst": 29.520293359445255,
+    "phone, 8-way, sustained (est)": 22.981155452528927,
+    "phone, 8-way, sustained (worst round)": 19.61581503167403,
+    "M4 Pro laptop, 1 thread": 14.388201674626806
+  },
+  "fleet": {
+    "optimistic+audit": {
+      "1000": {
+        "eight_way": 5222.989875574756,
+        "one_thread": 869.7413575413615
+      },
+      "10000": {
+        "eight_way": 52229.898755747556,
+        "one_thread": 8697.413575413613
+      },
+      "100000": {
+        "eight_way": 522298.9875574756,
+        "one_thread": 86974.13575413615
+      },
+      "1000000": {
+        "eight_way": 5222989.8755747555,
+        "one_thread": 869741.3575413614
+      }
+    },
+    "2-of-2 quorum": {
+      "1000": {
+        "eight_way": 2872.644431566116,
+        "one_thread": 478.35774664774885
+      },
+      "10000": {
+        "eight_way": 28726.44431566116,
+        "one_thread": 4783.577466477488
+      },
+      "100000": {
+        "eight_way": 287264.4431566116,
+        "one_thread": 47835.774664774886
+      },
+      "1000000": {
+        "eight_way": 2872644.431566116,
+        "one_thread": 478357.7466477488
+      }
+    },
+    "conservative": {
+      "1000": {
+        "eight_way": 1094.3407358347108,
+        "one_thread": 182.23152253247574
+      },
+      "10000": {
+        "eight_way": 10943.407358347109,
+        "one_thread": 1822.3152253247574
+      },
+      "100000": {
+        "eight_way": 109434.07358347108,
+        "one_thread": 18223.152253247572
+      },
+      "1000000": {
+        "eight_way": 1094340.7358347108,
+        "one_thread": 182231.52253247576
+      }
+    }
+  }
+}
