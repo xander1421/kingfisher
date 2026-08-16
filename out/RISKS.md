@@ -125,3 +125,57 @@ Refusing may still be right — TEEs get broken, and a vendor-rooted revocation 
 - Whether Acurast's `report` is mandatory for every job class or only one-shot deployments. `finalize_job` is marked *"DEPRECATED: cleanup logic has been moved to the final report call"* — "final" implies reports are per execution with settlement at the end, which would mean their `report` path carries more traffic than this analysis assumes.
 - Whether reports batch. No batching extrinsic found; `hooks.rs` not fully read.
 - Our own numbers assume an Acurast-shaped parachain. A different DA layer or a rollup changes the PoV budget, and that has not been explored at all.
+
+## R-NEW addendum — the succinct-proof answer, measured from `risc0`
+
+**38 KB per result is not a floor. It is an artefact of settling per job. A Groth16 proof is 256 bytes and its size does not depend on how much computation it attests to.**
+
+Cloned `risc0/risc0` and `succinctlabs/sp1` (both **Apache-2.0**, licence read from `LICENSE-APACHE` in the git object). Measured from `risc0` `groth16_proof/groth16/verifier.sol`, not from documentation:
+
+```solidity
+function verifyProof(
+    uint256[2]    calldata _pA,          //  64 B
+    uint256[2][2] calldata _pB,          // 128 B
+    uint256[2]    calldata _pC,          //  64 B
+    uint256[5]    calldata _pubSignals   // 160 B
+) public view returns (bool)
+```
+
+`Seal { a: [Fp;2], b: [Fp;4], c: [Fp;2] }` (`risc0/groth16-sys/src/lib.rs:102-104`) = 8 field elements = **256-byte proof**. The pairing check is `staticcall(…, 8, _pPairing, 768, …)` — 768 bytes = **4 pairings**, standard Groth16, via Ethereum's `ecPairing` precompile.
+
+**The property that matters: 256 bytes is constant.** One proof attests to a hundred reduction steps or a hundred billion, at the same size. `risc0/circuit/recursion-*` provides the composition that folds N proofs into one.
+
+### The correct comparison, stated carefully
+38,282 is **PoV** — the storage proof a parachain collator supplies for the state a `report` extrinsic touches. 420 bytes is **calldata**. They are not the same unit and I will not pretend they are.
+
+The real saving is structural: **per-result state access disappears.** Settling a batch of N results is one verification and one state write, so PoV per result becomes `PoV_batch / N`. The verification key is a fixed, cacheable read.
+
+| batch N | proof bytes/result | settlement ceiling (Acurast-shaped chain) |
+|---|---|---|
+| — (report-shaped, per job) | 38,282 PoV | **17/s**, 8.6/s with replication |
+| 1 | 420 | — |
+| 1,000 | 0.42 | ~10⁶/s |
+| 100,000 | 0.0042 | ~10⁸/s |
+
+**Even a batch of one is 91× smaller than our current per-job record**, because 38 KB is not a proof of anything — it is the cost of touching per-job chain state.
+
+### Why this fits our workload specifically
+A zkVM can only prove a **deterministic** computation. S57 and S58 established exactly that for MeTTa: byte-identical reduction and identical fuel counts across two ISAs and three platforms, 360,847 steps. **The determinism work is the precondition for this route, and it is already done.** The fuel count is the natural public input.
+
+We also do not need *zero-knowledge* — nothing is secret. We need **succinctness**, which is strictly weaker and admits more constructions.
+
+### The honest costs, none of them measured here
+1. **Proving is expensive** — zkVM proving runs on the order of 10⁵–10⁶× native execution. **A phone cannot prove.** This relocates cost from the chain to a prover; it does not remove it. Unmeasured and now the gating question for this route.
+2. **Groth16 needs a per-circuit trusted setup.** STARK-based (risc0's native receipts) and PLONK-family avoid it at larger proof size. Ours would be one circuit — the MeTTa interpreter — so a single ceremony, but it is a real ceremony.
+3. **Gas figures are not locally verified.** The contract structure above is measured; EIP-1108 pricing (`ecPairing` = 45,000 + 34,000·k, so ~181,000 gas at k=4, ~250k total) is stated from knowledge and should be confirmed against a client before use.
+4. Our chain is Substrate, not EVM. `risc0/groth16/src/` is Rust and a pallet verifier is plausible, but nobody has checked `no_std` compatibility or benchmarked its PoV.
+
+### The combination that actually resolves R-NEW
+Optimistic settlement with **proof only on challenge**:
+
+- Happy path: post nothing per result beyond a bond and a commitment. **Zero proofs, Acurast's cost.**
+- Disputed path: the challenged party produces one succinct proof, 256 bytes, verified in constant time.
+
+That is Acurast's throughput with our trust model, and it needs no TEE, no vendor attestation and no revocation list. It is also the natural completion of the rung-1 optimistic bisection already in `PORT_PLAN` — bisection finds *which* step is wrong; a succinct proof removes the need to re-execute in order to check it.
+
+**This is now the recommended direction for M3.5**, superseding `pay_per_verified_result`. Gating unknown: prover cost and who bears it.
