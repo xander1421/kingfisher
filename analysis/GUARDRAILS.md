@@ -284,3 +284,26 @@ function is to stop people re-checking. This is A7 applied one level up: **A7 sa
 caveat you did not run is not a caveat; A9 says a citation you did not re-check is
 not a citation.** Every citation here now carries grade and date, and a retracted
 or rewritten source invalidates the guardrail until re-derived.
+
+---
+
+### A10. A benchmark harness records machine state and REFUSES to run when the machine is not quiet.
+
+A5 says *abort if the environment is not controlled*. That was a habit, and the
+habit failed three times — S9, S18, and S62/S63, whose own commit message records
+*"I contended with my own adversarial agent on the same device."*
+
+The structural gap: spikes declared contention using `uptime`, **and `uptime` does
+not show containers.** A machine can read loadavg 1.2 with eleven services
+resident holding memory and cache. Checked while writing this rule: loadavg 3.94,
+**11 containers up** from an unrelated project, and `rustc` at 100% — during the
+window in which S62 and S63 were measured and committed.
+
+`spikes/quiet.sh` implements it. It refuses if loadavg > ncores/4, **or any
+container is up**, or a compiler is in the top 3 by CPU, and `--json` emits the
+capture (loadavg, container names, top-3 processes, thermal state) so the refusal
+criteria stay auditable after the fact. `QUIET_ALLOW_CONTAINERS=1` overrides and
+is recorded in the output.
+
+**Not "declare contention" — refuse.** Every spike that produces a timing number
+calls it first and embeds the `--json` capture in its results.

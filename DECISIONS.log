@@ -50,3 +50,6 @@
 46 | 2026-08-16 | Found ~/alex/oflineAI (one f). On-device AI core already exists and is measured: llama.cpp + ggml-hexagon on HTP0, 103.9 tok/s on v79/SM8750 in airplane mode. Closes three kingfisher unknowns (pointer-tagging manifest shipped, APK exists, Qualcomm redistribution solved). It has no determinism story; kingfisher has no AI core. Decisive joint experiment: byte-compare Q4_0 logits from its own NPU path.
 
 51 | 2026-08-16 | Both hyperon bugs verified and FIXED locally. intersection-atom was returning wrong cardinality in 40% of runs; root cause was variable-to-Wildcard collapse in atom_to_trie_key corrupting index construction, not the pointer-keyed HashMap first blamed. Three patches in proposed/hyperon-nondeterminism/patches, 319 tests pass, S57 corpus unchanged. Not filed per ss11.
+
+52 | 2026-08-16 | A10 added: spikes/quiet.sh refuses to benchmark when loadavg>ncores/4, any container is up, or a compiler is in the top 3. Manual A5 failed three times (S9, S18, S62/S63). Machine was measurably non-quiet during S62/S63.
+53 | 2026-08-16 | S32 RESULT.md written retrospectively, verdict RED as citation source: 28,700 is a 10k-device projection not a measurement (~2.9 jobs/s per device). R-NEW corrected.

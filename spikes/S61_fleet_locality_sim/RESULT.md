@@ -1,4 +1,4 @@
-# S55 — fleet scaling in size and N, and the first measurement of wedge #2
+# S61 — fleet scaling / locality simulation *(renumbered from S55; the directory was renamed to resolve a collision with `S55_mork_inproc` and this title lagged behind)*
 
 **Verdict: GREEN for locality-aware matching, and RED for the naive version of it.**
 Locality matching is worth **2.8× fewer shard fetches** at the realistic operating
