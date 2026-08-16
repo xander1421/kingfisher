@@ -81,3 +81,69 @@ With a subprocess stage 2 it is **73 queries/s**, 3.7× *worse* than the project
 - `best of 9` after a cold sample; the phone was plugged in and cool. Sustained behaviour under thermal load not measured for this kernel.
 - The in-process figure is a projection: MORK's 0.5 ms of internal work added to the measured prefilter. Nothing was actually linked in-process.
 - No NPU. This is CPU NEON throughout.
+
+---
+
+# S45b — why it scales like that (asked, then measured)
+
+The T=4 > T=8 reversal had three candidate causes: bandwidth saturation, core heterogeneity, or thread-spawn overhead. Measured all three rather than picking one.
+
+## Cause 1 — thread spawn, and it was the big one
+
+`threadcost.c` on the device, spawn+join of no-op threads:
+
+| threads | spawn+join | per thread |
+|---|---|---|
+| 1 | 54.0 µs | 54.0 |
+| 4 | 133.7 µs | 33.4 |
+| 8 | **285.6 µs** | 35.7 |
+
+The T=8 query measured 483 µs total. **285.6 µs of it — 59% — was `pthread_create`.** Spawn cost grows ~35 µs per thread while the work per thread shrinks, so past 4 threads the overhead wins and the curve turns over. Nothing to do with memory.
+
+**This is the third instance today of the same failure**: per-query setup dominating sub-millisecond work. The 13 ms `exec()` for stage 2, the S18 BLAS call overhead that masqueraded as a memory roof, and now this. At 0.25 ms of work, *any* per-query setup is the entire budget.
+
+Fixed with a persistent pool — spawn once, signal per query via condvar:
+
+| threads | per-query spawn | pool | gain |
+|---|---|---|---|
+| 1 | 0.639 ms | 0.594 ms | 1.08× |
+| 2 | 0.401 | 0.333 | 1.20× |
+| **4** | 0.349 | **0.252** | **1.39×** |
+| 8 | 0.483 | 0.287 | **1.68×** |
+
+Digest `2e2ac64c1d9cff91` unchanged. **Best is now 0.252 ms = 50.8 GB/s = 3,968 queries/s.**
+
+## Cause 2 — the memory system itself peaks at 4 threads
+
+`streamroof.c`: a pure NEON read loop over 128 MB, zero arithmetic, nothing but streaming.
+
+| threads | read roof | prefilter | prefilter as % of roof |
+|---|---|---|---|
+| 1 | 22.7 GB/s | 21.5 | 95 % |
+| 2 | 45.0 | 38.5 | 86 % |
+| **4** | **58.9** | **50.8** | **86 %** |
+| 8 | **49.7 ↓** | 44.5 ↓ | 90 % |
+
+**The roof itself declines from 4 to 8 threads.** A loop that does nothing but read shows the same shape as the prefilter, so the residual T=8 penalty is a property of this phone's memory system, not of the kernel.
+
+## Cause 3 — heterogeneous cores, secondary
+`cpu6`/`cpu7` run at 4.47 GHz, `cpu0–5` at 3.53 GHz (2 prime + 6 performance Oryon). Chunks are equal-sized, so the 3.53 GHz cores are stragglers and the fast cores idle at the barrier. Real, but small next to causes 1 and 2, and fixable with work-stealing rather than static chunks. Not attempted.
+
+## The consequence: the CPU kernel is finished
+
+**The prefilter runs at 86% of this device's measured achievable read bandwidth.** There is at most 16% left on the CPU, and no amount of instruction-level work will find more, because the kernel already reads each byte exactly once and does three ops on it.
+
+That reframes the NPU case on measured ground, replacing the arithmetic-shortfall argument from S33/S34:
+
+> The CPU is not slow. It is **at its memory roof**. The only two ways forward are to *read less* (bundling — S11/S43) or to use a memory system the CPU cannot reach (**VTCM residency**).
+
+And a hard constraint on the second, which nobody has stated: **VTCM is 8 MB and the packed B=1 store is 12.8 MB — it does not fit.** VTCM residency therefore *requires* bundling; the ~400 KB B=64 two-bitplane store fits 20× over. So the NPU path and the bundling path are not alternatives, they are a single dependency chain: **bundle → fits VTCM → resident → escapes the roof that S45b just measured.**
+
+## Fleet, corrected once more
+| | queries/s/device |
+|---|---|
+| S44 projection | 272 |
+| S45 measured (per-query spawn) | 2,866 |
+| **S45b measured (pooled)** | **3,968** |
+
+14.6× above the projection. The projection was not conservative — it was scaling the wrong pipeline.

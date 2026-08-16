@@ -60,8 +60,49 @@ static uint64_t fnv(const void *p, size_t n) {
 
 typedef struct { int lo, hi; } range_t;
 
-static void *worker(void *arg) {
-    range_t *r = arg;
+/* Persistent worker pool.
+ *
+ * The first version created and joined N pthreads per query. Measured on the
+ * device (threadcost.c): 285.6 us to spawn+join 8 threads, ~35 us each, against
+ * a total query of 483 us. 59% of the T=8 measurement was thread creation, and
+ * it is why "scaling" appeared to REVERSE at 8 -- spawn cost grows linearly
+ * while the work per thread shrinks. Same failure mode as invoking the stage-2
+ * engine per query: at sub-millisecond work, every per-query setup cost IS the
+ * budget. Spawn once, signal per query. */
+static pthread_mutex_t pool_mx = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t  pool_go = PTHREAD_COND_INITIALIZER;
+static pthread_cond_t  pool_done = PTHREAD_COND_INITIALIZER;
+static int pool_gen = 0, pool_busy = 0, pool_stop = 0, pool_n = 0;
+static range_t pool_rg[64];
+
+static void run_chunk(const range_t *r);
+
+static void *pool_worker(void *arg) {
+    int id = (int)(intptr_t)arg, seen = 0;
+    for (;;) {
+        pthread_mutex_lock(&pool_mx);
+        while (pool_gen == seen && !pool_stop) pthread_cond_wait(&pool_go, &pool_mx);
+        if (pool_stop) { pthread_mutex_unlock(&pool_mx); return NULL; }
+        seen = pool_gen;
+        pthread_mutex_unlock(&pool_mx);
+
+        run_chunk(&pool_rg[id]);
+
+        pthread_mutex_lock(&pool_mx);
+        if (--pool_busy == 0) pthread_cond_signal(&pool_done);
+        pthread_mutex_unlock(&pool_mx);
+    }
+}
+
+static void pool_dispatch(void) {
+    pthread_mutex_lock(&pool_mx);
+    pool_busy = pool_n; pool_gen++;
+    pthread_cond_broadcast(&pool_go);
+    while (pool_busy) pthread_cond_wait(&pool_done, &pool_mx);
+    pthread_mutex_unlock(&pool_mx);
+}
+
+static void run_chunk(const range_t *r) {
     for (int i = r->lo; i < r->hi; i++) {
         const uint64_t *tp = Tp + (size_t)i * WORDS;
         uint8x16_t vsum = vdupq_n_u8(0);
@@ -74,7 +115,6 @@ static void *worker(void *arg) {
         }
         scores[i] = 2 * Qnnz - 4 * (int32_t)vaddlvq_u8(vsum);
     }
-    return NULL;
 }
 
 int main(int argc, char **argv) {
@@ -136,20 +176,26 @@ int main(int argc, char **argv) {
     printf("store packed %.1f MB   query nnz %d   ground-truth answers %d\n",
            (double)NROWS * WORDS * 8 / 1e6, Qnnz, truth);
 
-    pthread_t th[64]; range_t rg[64];
+    pthread_t th[64];
+    int chunk = (NROWS + nthreads - 1) / nthreads;
+    for (int t = 0; t < nthreads; t++) {
+        pool_rg[t].lo = t * chunk;
+        pool_rg[t].hi = (t + 1) * chunk > NROWS ? NROWS : (t + 1) * chunk;
+    }
+    pool_n = nthreads;
+    for (int t = 0; t < nthreads; t++)
+        pthread_create(&th[t], NULL, pool_worker, (void *)(intptr_t)t);
+
     double best = 1e18, cold = 0;
     for (int r = 0; r < REPS; r++) {
         double t0 = now_s();
-        int chunk = (NROWS + nthreads - 1) / nthreads;
-        for (int t = 0; t < nthreads; t++) {
-            rg[t].lo = t * chunk;
-            rg[t].hi = (t + 1) * chunk > NROWS ? NROWS : (t + 1) * chunk;
-            pthread_create(&th[t], NULL, worker, &rg[t]);
-        }
-        for (int t = 0; t < nthreads; t++) pthread_join(th[t], NULL);
+        pool_dispatch();                 /* spawn cost already paid */
         double el = now_s() - t0;
         if (r == 0) cold = el; else if (el < best) best = el;
     }
+    pthread_mutex_lock(&pool_mx); pool_stop = 1;
+    pthread_cond_broadcast(&pool_go); pthread_mutex_unlock(&pool_mx);
+    for (int t = 0; t < nthreads; t++) pthread_join(th[t], NULL);
 
     /* shortlist by the analytic cutoff */
     int nshort = 0;
