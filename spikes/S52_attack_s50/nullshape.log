@@ -1,0 +1,7 @@
+S50 null bracket   (static inline, as written) :    0.400 ns/iter
+same call INDIRECT (as the measurement is)     :    0.511 ns/iter
+understated by                                  :      1.3x
+
+S50 smallest store = 195 rows ~ 1100 ns/iter
+  gate uses null = 0.400 ns  -> 0.0364% of result  -> never fires
+  true call shape = 0.511 ns  -> 0.0465% of result

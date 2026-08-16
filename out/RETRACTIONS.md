@@ -118,3 +118,22 @@ Three of these — 2, 4, 6 — are the same error the workspace has now hit **se
 4. Digests identical across core types, with the UB removed — reproducible by construction rather than by two compilers agreeing.
 
 **And a new gap:** `bench.h` pins one core by design, so there is now **no defensible multi-threaded throughput number in this workspace.** S32's 5.87× scaling and every fleet projection built on it (the 28,700 jobs/s model) are unsupported until a correct multi-core harness — spin barrier, per-core affinity — exists.
+
+---
+
+## Addendum 2 — S51 closes the multi-thread gap, and finds a cliff
+
+`spikes/S51_multicore/` — spin barrier, one thread pinned per core, amortised, barrier null measured, digest at every thread count.
+
+| T | GB/s (static) | scaling | barrier null |
+|---|---|---|---|
+| 4 | 73.1 | 3.97× | 0.2 µs |
+| **7** | **115.8** | **6.30×** | 0.9 µs |
+| 8 | **1.3** | **0.07×** | **10,850 µs** |
+
+1. **The real figure is 115.8 GB/s, not 50.8** — 2.28× S45b, and 1.97× the "roof" S45b measured itself against. Independent confirmation of the attacker's 2.2×, by a different route. Per-device query throughput goes **3,968 → ~9,050 q/s**.
+2. **Eight cores is 89× worse than seven.** With a spin barrier and a worker on every core, no core is left for the coordinator. The barrier null alone (10.8 ms) exceeds the entire T=7 query. **Never size the pool to `nproc`** — which is exactly what S32 and S45b both did. It also re-explains S45b's T=8 reversal: not memory contention, the onset of coordinator starvation, softened because a condvar sleeps where a spin barrier does not.
+3. **The barrier is now ≤1% of the measurement** at every usable T, against ~40 µs (16% at T=4) for the condvar.
+4. Digest identical at every T and under both split strategies. Determinism now holds across architectures, engines, build profiles, core types, thread counts and scheduling strategies.
+
+**Caveat:** clocks ended at 1,996/1,958 MHz against 3,532/4,474 maxima — the part was throttled, so 115.8 GB/s is a floor. A sustained-vs-burst arm is still missing.
