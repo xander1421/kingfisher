@@ -29,6 +29,10 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 
 | claim | grade | note |
 |---|---|---|
+| **LLM inference is byte-deterministic within a backend** | **B** | **S62**, on the operator's own stack on the S25 Ultra. 4 runs each: CPU `-t 1/4/8` all `4e5b2619c0fb`, Hexagon NPU `81cef5aacba9`, Adreno `028aee58fa2d`. **Thread count does not change the CPU result** — llama.cpp fixes reduction order by design |
+| **No two backends agree, and not subtly** | **B** | S62. Entirely different generations, not last-ULP drift — greedy sampling turns one flipped argmax into a permanently divergent sequence. **No tolerance model saves this** |
+| **Neural work needs homogeneous redundancy; the class is the BACKEND** | **B** | S62. Corrects my repeated claim that S57 lets us delete BOINC's `sched/hr.cpp`. True for **symbolic** work (cross-ISA, S57). False for **neural** — there HR is required, keyed on backend not CPU model. Mechanism is a `backend_class` job field plus a matcher constraint; BOINC's `hr_unknown_class()` fail-closed pattern applies |
+| **Neural inference verifiable by byte comparison, no TEE and no ZK** | **B** | S62, conditional on backend-matched replicas. This is the cheapest possible answer to the neural verification question and it needs no new cryptography |
 | **Transcendental libm DIVERGES across ISAs — the no-float branch has a hole** | **B** | **S59.** 11/197 evaluations differ arm64-vs-x86-64, 14/197 macOS-libSystem-vs-bionic, **max 2 ULP**. Per-**implementation**, not per-ISA: `sin`/`cos` split on ISA but agree across libms, `atan` the reverse, `tan` fails both (9/20 on bionic). Permitted by IEEE-754 — the libms are correct, our assumption was not |
 | `sqrt-math` is exact cross-platform **by specification** | **A** | 0/20 both comparisons, and IEEE-754 *requires* correctly-rounded sqrt. Guaranteed, not observed |
 | `log-math` / `pow-math` clean in sample — **not cleared** | **C** | 0/60 and 0/25, but `pow` is the hardest function to round correctly and the sweep was 5×5. Untested-clean, not proven-safe |
