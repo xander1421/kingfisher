@@ -47,9 +47,28 @@ The whole S32a table was in `archive/chat.log:1560-1568` and is now in
 | 6 | 275 | 2,183,607 | 4.34× | 1 distinct OK |
 | 8 | 271 | 2,954,450 | 5.87× | 1 distinct OK |
 
-**Identical digests at every thread count** — parallelism does not move the
-result. That is a determinism finding in its own right and nobody carried it
-forward; it corroborates S51's "determinism across thread counts" independently.
+**Identical digests at every N** — and this is a different property from S51's,
+which I initially conflated with it.
+
+`fuelrun` is single-threaded, so S32a runs **N independent copies of the whole
+job** on one contended device. S51 splits **one** computation across T threads
+under static and dynamic strategies. S32a never decomposes anything, so its
+agreement is near-tautological as a reduction-order claim — it fails only under
+shared mutable state, ASLR-dependent output, or timing leaking into the artefact.
+
+What it *does* establish, and nothing else in the workspace does:
+
+> **A deterministic MeTTa job yields an identical digest when 8 copies run
+> concurrently on one contended device. Co-tenancy does not perturb results.**
+
+That is direct evidence a phone can serve multiple requestors at once without
+cross-contamination — a fleet-design property, not a threading one.
+
+**And it survives S54.** S54 invalidated the throughput columns above (8-way, on
+cores a background worker cannot reach). The digest column is untouched: a hash
+does not care which core produced it.
+
+So S32a takes a **split verdict** — timing columns INVALID, digest column B.
 
 ## The 5.87× is correct — it was a provenance gap, now closed
 `tps.py:11` states *"8-way burst — 5.87x scaling"*. That is

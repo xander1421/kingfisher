@@ -287,6 +287,14 @@ was **falsified** by a clone already on disk, §D's shard row was re-scoped, and
 it. **All four were invisible from inside the document**; you had to leave it to
 discover the rule was standing on a withdrawn claim.
 
+**A9 has a third axis: claims whose scope is fixed by an ambiguous word.** Four
+instances now — S15's "cross-architecture" (cross-OS read as cross-ISA), S35's
+"31.6×" (two differently-bracketed timers), S45's 5.66 ms comparand (from a
+disqualified instrument), and S32a's digest column read as corroborating S51
+(independent copies read as thread decomposition). In every case the conflation
+survived review because nobody asked what the noun meant. **Before citing a
+claim, state the property in a sentence that does not reuse its label.**
+
 Guardrails are the highest-leverage place for staleness precisely because their
 function is to stop people re-checking. This is A7 applied one level up: **A7 says a
 caveat you did not run is not a caveat; A9 says a citation you did not re-check is
