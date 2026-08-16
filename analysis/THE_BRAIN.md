@@ -11,7 +11,7 @@ assembly, not invention.
 | brain function | our component | state | evidence |
 |---|---|---|---|
 | **neuron** — a unit that computes | device running a module | **works** | MeTTa in-process 0.25 ms (measured here). *oflineAI's 103.9 tok/s is **READ** from `~/alex/oflineAI/ALPHA.md`, not measured in this workspace* |
-| **signal** — a result that means the same thing everywhere | deterministic reduction | **proven** | S57: 66/67 identical across two ISAs, 360,847 steps |
+| **signal** — a result that means the same thing everywhere | deterministic reduction | **proven for the admissible job class** | S57: 66/67 identical across two ISAs, 360,847 steps. **Condition (S59):** that corpus contains **zero transcendental evaluations**, and `sin/cos/tan/asin/acos/atan` diverge across libms. Proven under the ban list, not in general |
 | **synapse** — the connection substrate | hypergraph atomspace | works | MORK 33/33 byte-identical; DAS is a running service |
 | **module interface** — how a specialised region attaches | `pub trait Grounded` | **exists, in use** | hyperon already binds external services, a network atomspace, Python, agents |
 | **cortical code** — distributed representation | HDC / VSA | **integer, bit-exact** | S34 digest `f4e64fb7d70b9b0c` on two machines; torchhd `MAP`/`BSC`/`MCR`/`CGR` |
@@ -59,8 +59,16 @@ integer matmul was fine, **requantization rounding** was where vendors diverged.
 Same law here. Decay, spreading and rent are **multiplications by rates in
 [0,1]**, and fixed-point multiply rounds, so `(a·r) + (b·r) ≠ (a+b)·r` by a bit.
 Worse, threaded read-modify-write reorders *which* importance a spreading step
-reads mid-epoch, and the trie walk runs straight through the pointer-keyed
-`HashMap` bug.
+reads mid-epoch.
+
+*(An earlier draft of this section blamed the trie walk on hyperon's
+pointer-keyed `HashMap`. That is wrong twice over: this workspace **measured and
+eliminated** that mechanism — making `end_of_expr` insertion-ordered did not fix
+`intersection-atom`, the real cause was every variable collapsing to one
+`Wildcard` key during index construction — and DAS's `HandleTrie`
+(`elders/das/src/commons/`) is a different structure entirely, with no
+pointer-keyed map found. Its fold order is **unaudited**, which is why the spec
+below requires content-hash ordering by construction rather than as a fix.)*
 
 The surgery has a spec:
 
@@ -84,13 +92,18 @@ A quarter-billion devices settles the *capacity* question and settles nothing
 else. Two constraints do not improve with scale, and one gets worse:
 
 - **Settlement — and the wall is a door.** "Saturated at three devices" prices
-  *per-job on-chain posting*, which was never the design. The happy path is
+  *per-job on-chain posting* — which is exactly what `PORT_PLAN` M3.5 specifies as
+  written (`pay_per_verified_result`), and is why R-NEW exists to supersede it.
+  So the framing was accurate about the specification and stale about the
+  recommendation. The happy path is
   **Merkle-batched commitments plus payment channels — no ZK, near-zero chain
   footprint**, and that removes the wall outright. Proofs only price the
   **dispute** path, where bisection over identical fuel counts reduces the job
   to proving **one interpreter step**, not a trace. So "cost the proof
   economics" scopes to exactly two measurements: **one-step proving cost on
-  risc0**, and **checkpoint-hashing cadence**. Scale still converts a capacity
+  risc0**, and **checkpoint-hashing cadence** — and the second is not optional,
+  because one-step proving requires the state at step *k* to be committed, so
+  cadence is what defines *what "one step" even means*. Scale still converts a capacity
   problem into a settlement problem; it just turns out settlement has a known
   key.
 - **Demand does not scale into existence.** BOINC ran 24 years with volunteers
@@ -120,10 +133,18 @@ row above is the first joint: Acurast's matcher has no locality keys.
 
 Sequencing:
 
-**0. File the hyperon nondeterminism PR.** Everything queues behind it. It gates
-checkpoint hashing, bisection, **and** the canonical fold order amendment 1
-requires. Patches are written and tested — 319 tests pass, S57 corpus unchanged.
-It is unfiled only because mission §11 forbids publishing.
+**0. File `proposed/hyperon-nondeterminism/` upstream — as a correctness bug.**
+The patches already exist, are measured, and pass: `cargo test -p hyperon` 319
+passed / 0 failed, S57 corpus 0 rows differing with 235 assertions intact
+(commit `0c7aec6`). Unfiled only because §11 forbids publishing.
+
+**Frame it correctly or it will be ignored.** *"Your `HashMap` iterates in
+address order"* earns a shrug. *"`intersection-atom` returns cardinality 3
+instead of 5 on 40% of runs — root cause is every variable collapsing to one
+`Wildcard` key during index construction; patch attached, 319 tests pass"* gets
+merged. The weaker framing was in this document until it was checked.
+
+It gates checkpoint hashing and bisection.
 
 **1. Cost the two dispute-path numbers** — one-step risc0 proving, checkpoint
 cadence. Days.
