@@ -48,3 +48,5 @@
 45 | 2026-08-16 | User pushback correct twice over. The NPU quantizer config space is integer-only (8a8w..16a16w, one fp option), integer accumulation is exact, so quantized/graph/HDC models keep bit-determinism. "Neural destroys determinism" applies to float only. Decisive experiment is now cross-VENDOR requantization rounding, not TOPLOC tolerance.
 
 46 | 2026-08-16 | Found ~/alex/oflineAI (one f). On-device AI core already exists and is measured: llama.cpp + ggml-hexagon on HTP0, 103.9 tok/s on v79/SM8750 in airplane mode. Closes three kingfisher unknowns (pointer-tagging manifest shipped, APK exists, Qualcomm redistribution solved). It has no determinism story; kingfisher has no AI core. Decisive joint experiment: byte-compare Q4_0 logits from its own NPU path.
+
+51 | 2026-08-16 | Both hyperon bugs verified and FIXED locally. intersection-atom was returning wrong cardinality in 40% of runs; root cause was variable-to-Wildcard collapse in atom_to_trie_key corrupting index construction, not the pointer-keyed HashMap first blamed. Three patches in proposed/hyperon-nondeterminism/patches, 319 tests pass, S57 corpus unchanged. Not filed per ss11.
