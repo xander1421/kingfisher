@@ -109,10 +109,15 @@ so a program that never intends to print a handle still emits an address the
 moment it hits an error involving one.
 
 ### Fix (patch 02)
-A creation-ordered `stable_id()` in place of the address. Ids are handed out in
-creation order, so they reproduce for a deterministic program. An id is keyed by
-address, so a freed object may lend its id to a later one — harmless for display,
-and it keeps the change out of the constructors.
+`Display` carries **no address-derived identity at all**: an unnamed
+`GroundingSpace` prints `GroundingSpace`, and the generator and file handle print
+their type names. `Debug` keeps the pointer for interactive use.
+
+We first tried a creation-ordered `stable_id()` and it was wrong — a
+process-global registry keyed by address, never reset, so ids drifted with
+allocator reuse across runs in one process (5 runs, 5 different digests). An
+identity that is not reproducible is not worth printing into a hash, and no
+counter keyed by address can be. Removing it is both simpler and correct.
 
 ---
 
