@@ -101,6 +101,9 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 
 | claim | grade | note |
 |---|---|---|
+| **The NPU is descoped from the critical path** | **B** | The prefilter it was meant to accelerate costs ~50 µs, and the CPU runs it bit-exactly using `asimddp`+`i8mm` (**verified present on device**) at 13.9× scalar (S34). Measured on this silicon: NPU prefill 700 t/s vs CPU 48, but decode **18.8 vs 22 — worse**. It is a prefill/batch engine, not a per-query one |
+| Descoping **retires** the biggest grade-E claim rather than testing it | **B** | Cross-vendor requantisation bit-exactness was the single largest unmeasured assumption in the architecture. Removing the NPU from the critical path removes the claim. Cheaper resolution, same risk retired |
+| NPU tok/s figures are **READ**, not measured here | **E** | Sourced to `~/alex/oflineAI` (CPU 6-thread 48/22; NPU HTP0 v79 700/18.8). No NPU code has ever run in this workspace |
 | `background` cpuset = `0-1,4-5` | **B** | S54, read from `/dev/cpuset` on device |
 | NNAPI exposes no accelerator on SM8750 | **A** | S31; a second agent independently searched HAL/VINTF — for a negative existence claim, an independent search *is* the attack |
 | Rule: **scale ≥ 2·nnz(Q)/126** — pick the scale from the cutoff, not the observed range | **B** | S31. v1 had the symptom (recall 0/8), not the rule |
