@@ -20,7 +20,7 @@ assembly, not invention.
 | **memory consolidation** | shaping job class | **1 of 18 BUILD rows** | 4.1–5.6× on FB15k-237 |
 | **co-tenancy** — many requests, one body | — | **proven, re-measured** | S32a's table was *recovered* from `chat.log` and never re-run, so it was re-measured: 8 concurrent copies on macOS, **8/8 identical and equal to the single-copy baseline** (`4937b20a…`). Now holds on two platforms |
 | **routing** — which region gets which work | locality matcher | **ADAPT, not PORT** — Acurast routes by attestation class and has **no concept of shard locality or residency**, which is the half we need | Acurast `pallets/marketplace`, public domain, 260k devices |
-| **circulation** — carrying results out | settlement | **the wall** | 8.6 results/s; **three devices saturate it** |
+| **circulation** — carrying results out | settlement | **a door, not a wall** | Per-job on-chain posting saturates at 3 devices — but that was never the design. Happy path is **Merkle-batched commitments + payment channels**, no ZK; proofs price only the dispute path |
 
 ## What the brain actually is, once you stop metaphorising
 
@@ -107,8 +107,10 @@ arithmetic anyone can repeat, is real and measured.
 
 **But "we just need the brain" understates one thing and overstates another.**
 It overstates what is left to invent — 17 of 18 capabilities have a production
-reference, and the missing organ is a fixed-point conversion in someone else's
-public-domain code. It understates the two things a brain does not fix: a body
+reference, and the missing organ is a **bounded rewrite** of someone else's
+public-domain code, to a written spec with an acceptance oracle. (Not merely "a
+fixed-point conversion" — see above; that phrasing was the error this document
+was amended to remove.) It understates the two things a brain does not fix: a body
 with no circulatory system settles nothing, and an organism with no niche does
 not survive being clever.
 
