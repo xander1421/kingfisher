@@ -69,14 +69,14 @@ This is the only claim group nothing has dented in four rounds, and it is what t
 | "the read roof declines at 8 threads" | `pthread_create` inside my own timed region |
 | "22.6 GB/s/core, ~2 IPC" | DVFS artefact of an unpinned process; the IPC was fitted to it |
 | "flat within 1.8%" | below the instrument's resolution (52.08 ns tick) |
-| "residency buys nothing" | true single-core, false multi-core (1.80×) |
+| "residency buys nothing" | true at T=1–2 (1.00×), false above — **1.17× at T=4, 1.52× at T=6** (S53) |
 | "no defensible multi-thread number exists" | S51 and the attacker both produced one |
 
 ## NEVER MEASURED — the gaps that matter
 
 | gap | status |
 |---|---|
-| **Any NPU code** | nothing has ever run on the Hexagon. N2 (HVX popcount width) is still the single unknown the NPU case reduces to — and residency being worth 1.80× multi-core makes VTCM interesting again |
+| **Any NPU code** | nothing has ever run on the Hexagon. N2 (HVX popcount width) is still the single unknown the NPU case reduces to — and residency being worth 1.52× at six cores makes VTCM interesting again, on the quantitative condition that a unit can saturate memory the way six perf cores can and one cannot |
 | **Energy per job** | blocked: `current_now` needs root, `dumpsys` gives level/temp only. Gates the entire "users opt in" story |
 | **WorkManager's real limits** | ~10 min per worker, 6 h/24 h dataSync cap on Android 15. `SCHEDULER_SPEC` has neither, and every fleet projection assumes long runs |
 | **Play Integrity's 10k/day quota** | an attestation ceiling nobody had costed |
