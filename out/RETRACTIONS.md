@@ -157,3 +157,40 @@ FB15k-237, 272,115 real Freebase triples, 237 predicates, 14,505 entities. 120 s
 4. Finding 3 replicates mildly: selective queries still prefer random, at 1.2–1.45× rather than 5.3×.
 
 **M4 keeps a justification, at a tenth of the advertised size, and for the first time on data nobody here authored.**
+
+---
+
+## Addendum 4 — S50 attacked. Three fatals accepted, one un-retraction owed, and residency comes back.
+
+Fourth adversarial subagent, the most sophisticated so far. It built the multi-thread harness `bench.h` declines to provide and measured cycles/row with memory traffic removed.
+
+### Accepted, fatal
+
+1. **Claim C is backwards, and S45b was right.** Measured under S50's own methodology: 4 pinned threads = 63.1 GB/s, all 8 = 67.9, against a 73.7 GB/s streaming roof — **92% of it, 8% left**. S45b's *"86% of roof, ≤16% left"*, which I declared "dead twice over", is **vindicated and was conservative**. My "the headroom is scheduling" was 1.43×, not a large multiple.
+2. **Claim B's 2.26× is NEON issue width, not core placement.** A dependency-free `cnt` probe with zero memory traffic: the performance cluster issues **2 NEON ops/cycle**, the prime cluster **4**. Cycles/row is 16.85 vs 8.35 = **2.018×**, invariant across every clock and thermal state, × 1.125 clock ratio = 2.27×. So ~90% microarchitecture, ~10% clock, 0% scheduling — and *"scheduling, not instruction selection"* is exactly inverted: the gap **is** instruction throughput.
+3. **The headline is not reproducible from the same binary.** Three runs today: cpu7 gives **40.1 GB/s, not 49.8**, because the clock is 2649 MHz not 3283. 49.8/40.1 = 1.242 = 3283/2649 to three digits. **Pure DVFS.** `bench.h` reports the clock and does nothing to hold it — S46's sin recommitted on a *pinned* core. The invariant I should have led with is **cycles/row**, which held to three digits everywhere, and it is absent from the report.
+4. **The null control is dead code.** `bench_noop` is an inlined empty function; disassembly shows the loop eliminated between the two `clock_gettime` calls. `DISQUALIFIED` is structurally incapable of firing — and it shrinks as `inner` grows, so it can only fire if amortisation has already failed. The control I advertised most loudly does nothing.
+5. **MAD over 15 back-to-back reps is not an error bar** (0.1–0.4% while the run-to-run figure moves 20%), and my write-up **dropped the min/max columns** `bench_report` prints — hiding a `min 615.9 max 1614.9` outlier inside a bracket presented as 0.1%-tight.
+
+### Survived attack
+Amortisation did **not** manufacture the flatness (cold-sequential ≈ hot at every size, verified with `dc civac`). No illegitimate hoisting — disassembly confirms `Tp` loads and `scores` stores stay in the loop. The FNV digest is not a hidden floor (<1.5%). Pinning verified 8/8 with `sched_getcpu`.
+
+### The measurement that changes the conclusion: residency is back, multi-core
+
+The attacker's roof (73.7 GB/s) and my S51 (115.8 GB/s) looked contradictory. They are not — **store size** was the uncontrolled variable. Swept, 7 threads, same kernel:
+
+| store | GB/s |
+|---|---|
+| 12.8 MB | **128.5** |
+| 25.6 MB | 96.1 |
+| 51.2 MB | 84.4 |
+| 102.4 MB | **71.5** |
+
+S51's 115.8 was a 12.8 MB store; the roof is at 102 MB. Both correct at their own size.
+
+**But this kills S50's claim A far harder than the attacker did.** S50 measured *single-core* flatness across 4,102× of size and concluded "residency buys nothing". At 7 threads throughput falls **1.80×** from 12.8 MB to 102 MB. Single-core is flat only because one core is too slow to notice the memory system; put the whole SoC on it and residency is worth 1.8×.
+
+**So S46's retraction of the residency chain was wrong on the same evidence-vs-conclusion split as claim D.** Residency does matter — just not to one core. The VTCM argument I buried in S46 and again in S50 is partially rehabilitated: a unit fast enough to be memory-starved *does* benefit, which is exactly the HVX condition N2 was going to test.
+
+### Standing change
+Report **cycles/row**, not GB/s. On this device GB/s is a function of the governor; cycles/row held to three digits across every clock, thermal state and run the attacker could produce.
