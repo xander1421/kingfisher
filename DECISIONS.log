@@ -46,3 +46,5 @@
 44 | 2026-08-16 | Corrected the symbolic-vs-neural framing after user pushback: the fork is per-module verification rung, not two products. Grounded trait is user-implementable so neural modules attach as atoms; S7 deleted TOPLOC tolerance model which is exactly what verifies them. Next decisive test: does exponent-exact/mantissa-tolerant absorb S59 2-ULP divergence.
 
 45 | 2026-08-16 | User pushback correct twice over. The NPU quantizer config space is integer-only (8a8w..16a16w, one fp option), integer accumulation is exact, so quantized/graph/HDC models keep bit-determinism. "Neural destroys determinism" applies to float only. Decisive experiment is now cross-VENDOR requantization rounding, not TOPLOC tolerance.
+
+46 | 2026-08-16 | Found ~/alex/oflineAI (one f). On-device AI core already exists and is measured: llama.cpp + ggml-hexagon on HTP0, 103.9 tok/s on v79/SM8750 in airplane mode. Closes three kingfisher unknowns (pointer-tagging manifest shipped, APK exists, Qualcomm redistribution solved). It has no determinism story; kingfisher has no AI core. Decisive joint experiment: byte-compare Q4_0 logits from its own NPU path.
