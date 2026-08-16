@@ -137,3 +137,23 @@ Three of these — 2, 4, 6 — are the same error the workspace has now hit **se
 4. Digest identical at every T and under both split strategies. Determinism now holds across architectures, engines, build profiles, core types, thread counts and scheduling strategies.
 
 **Caveat:** clocks ended at 1,996/1,958 MHz against 3,532/4,474 maxima — the part was throttled, so 115.8 GB/s is a floor. A sustained-vs-burst arm is still missing.
+
+---
+
+## Addendum 3 — S52: real data, and a partial un-retraction
+
+FB15k-237, 272,115 real Freebase triples, 237 predicates, 14,505 entities. 120 sampled queries per cell instead of S48's single literal. Shortlist reported as **% of store checked**.
+
+| cluster key | `(p s ?o)` | `(p ?s o)` | `(?p s o)` |
+|---|---|---|---|
+| (pred,subj) | 13.5 µs (0.2%) | 14.4 (1.0%) | 23.0 (8.8%) |
+| (pred,obj) | 14.3 (0.9%) | 13.5 (0.2%) | 27.6 (12.9%) |
+| (subj,obj) | 13.4 (0.0%) | 67.5 (49.2%) | 13.3 (0.0%) |
+| RANDOM | 58.8 (41.4%) | 76.2 (57.2%) | 19.0 (5.2%) |
+
+1. **Direction survives, magnitude is 10× smaller.** Shaping is worth **4.1–5.6×**, not 54× or 12.8×. Shaped cells check 0.0–1.0% of the store; random checks 41–57%. **Any proposal quoting 54× is quoting an artefact of a uniform synthetic graph.**
+2. **Claim D is partially un-retracted, against my interest in a tidy story.** On real data the worst mismatch (67.5) is still *better* than random (76.2); shaping beats random in four of six off-diagonal cells; the worst case where it loses is **1.45×**, not the 16× the synthetic reseeds showed. The catastrophic collapse was a synthetic artefact — 1,000 objects made `(subj,obj)` near-unique so every `(?p s o)` query had exactly one answer to bury. Real data's 14,505 entities with a heavy tail put hub entities in many buckets.
+3. So the retraction was right about the *evidence* and wrong about the *conclusion*. S48's claim D was unsupported by S48; it happens to be approximately true on data S48 never used.
+4. Finding 3 replicates mildly: selective queries still prefer random, at 1.2–1.45× rather than 5.3×.
+
+**M4 keeps a justification, at a tenth of the advertised size, and for the first time on data nobody here authored.**
