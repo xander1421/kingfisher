@@ -55,10 +55,11 @@ arithmetic — and runs 6 epochs two ways.
 ```
 serialised (async enqueue path)   62f3d55a454977bd
 concurrent (inline dispatch), 8 trials:
-    9b28730ea0c7dfaa  x7
-    db10f65e6bc28f50  x1
+    9b28730ea0c7dfaa  x6
+    e3057eb3f939a7f3  x1
+    f5436eb5a1086319  x1
 
-distinct concurrent outcomes : 2
+distinct concurrent outcomes : 3
 trials matching serialised   : 0/8
 ```
 
@@ -72,15 +73,40 @@ the atomspace retains. An importance value that depends on gRPC thread
 scheduling means two brokers fed identical stimulus histories diverge in what
 they remember.
 
-## Suggested fixes, in increasing order of change
+## Fix — patch attached (`01-epoch-mutex.patch`)
 
-1. **Restore the async enqueue.** If the worker-thread path serialises requests,
-   the defect disappears with no algorithmic change. This is presumably why the
-   code is written that way.
-2. **An epoch-level lock** around `spread_stimuli`, if inline dispatch is wanted.
-   Coarse, but correct, and the epoch is already O(nodes).
-3. **BSP double-buffering** — read importance at epoch *t*, write *t+1* — which
-   also makes concurrent epochs well-defined rather than merely excluded.
+**Restoring the async enqueue does not fix this**, which we assumed at first and
+then checked. Two reasons:
+
+1. The worker casts `request.second` back to a `dasproto::HandleCount*`
+   (`WorkerThreads.cc:58`) — a gRPC-owned message freed when the handler
+   returns. Enqueueing the pointer and processing it later is a use-after-free,
+   which may well be why these lines were commented out in the first place.
+2. It would not help anyway: `WORKER_THREADS_COUNT` workers pull from one queue
+   and each calls `spread_stimuli` on the same network
+   (`WorkerThreads.cc:22-24,58`). The concurrency moves from gRPC threads to
+   worker threads and the hazard is identical.
+
+The attached patch adds a **per-network epoch mutex** — `HebbianNetwork::epoch_mutex`
+— held for the duration of `spread_stimuli`, `correlation` and
+`asymmetric_correlation`, the three inline-dispatched entry points that mutate
+importance.
+
+Per network rather than global, so distinct contexts (`select_hebbian_network`)
+still proceed in parallel. Neither entry point calls the other and nothing
+re-enters, so there is no deadlock path. The epoch is already `O(nodes)`, so the
+lock does not change the complexity of anything.
+
+Verified in the model:
+```
+concurrent, unpatched            3 distinct outcomes, 0/8 match serialised
+concurrent, with epoch_mutex     1 distinct outcome,  8/8 match serialised
+```
+
+A longer-term alternative is **BSP double-buffering** — read importance at epoch
+*t*, write *t+1* — which makes concurrent epochs well-defined rather than merely
+excluded, and would let them actually run in parallel. That is a larger change
+and we have not attempted it.
 
 ## Optional hardening, not required for the above
 A fixed-point (Q32.32) importance type makes the broker immune to compiler

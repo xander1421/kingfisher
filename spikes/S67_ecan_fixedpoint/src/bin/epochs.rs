@@ -49,6 +49,12 @@ fn epoch(net: &[Mutex<f64>], stim: &[u64], total_wages: u128) {
     }
 }
 
+/// The proposed fix: HebbianNetwork::epoch_mutex, held for the whole epoch.
+fn epoch_locked(net: &[Mutex<f64>], stim: &[u64], tw: u128, epoch_lock: &Mutex<()>) {
+    let _g = epoch_lock.lock().unwrap();
+    epoch(net, stim, tw);
+}
+
 fn snapshot(net: &[Mutex<f64>]) -> Vec<f64> { net.iter().map(|m| *m.lock().unwrap()).collect() }
 fn fresh() -> Vec<Mutex<f64>> { (0..N).map(|i| Mutex::new(1.0 + (i % 97) as f64 * 0.013)).collect() }
 
@@ -73,6 +79,22 @@ fn main() {
     for (d, n) in &seen {
         println!("      {d}  x{n}{}", if *d == serial { "   == serialised" } else { "" });
     }
+    // WITH the proposed epoch_mutex
+    let mut fixed = std::collections::BTreeMap::new();
+    for _ in 0..8 {
+        let net = fresh();
+        let lk = Mutex::new(());
+        thread::scope(|s| { for _ in 0..EPOCHS { s.spawn(|| epoch_locked(&net, &stim, tw, &lk)); } });
+        *fixed.entry(digest(&snapshot(&net))).or_insert(0) += 1;
+    }
+    println!("  concurrent WITH epoch_mutex (the patch), 8 trials:");
+    for (d, n) in &fixed {
+        println!("      {d}  x{n}{}", if *d == serial { "   == serialised" } else { "" });
+    }
+    let fm = fixed.get(&serial).copied().unwrap_or(0);
+    println!("      patched: {} distinct, {fm}/8 match serialised -> {}",
+        fixed.len(), if fixed.len()==1 && fm==8 {"PASS"} else {"*** STILL FAILS ***"});
+
     let m = seen.get(&serial).copied().unwrap_or(0);
     println!("\n  distinct concurrent outcomes : {}", seen.len());
     println!("  trials matching serialised   : {m}/8");

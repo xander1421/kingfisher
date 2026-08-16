@@ -1,0 +1,84 @@
+diff --git a/src/attention_broker/HebbianNetwork.h b/src/attention_broker/HebbianNetwork.h
+index 1df69b7..5fedbe0 100644
+--- a/src/attention_broker/HebbianNetwork.h
++++ b/src/attention_broker/HebbianNetwork.h
+@@ -47,6 +47,27 @@ class HebbianNetwork : public Serializable {
+     unsigned int largest_arity;  /// Largest arity among nodes in this network.
+     mutex largest_arity_mutex;
+ 
++    /**
++     * Serialises whole attention epochs against this network.
++     *
++     * `trie_node_mutex` makes each individual node access atomic but says
++     * nothing about the aggregate. `collect_rent` sums importance across a full
++     * traversal (StimulusSpreader.cc:51-52) while another epoch is writing it
++     * via the read-modify-write at :67-68, so `total_rent` can sum a torn state
++     * that never existed as a consistent snapshot, and each epoch's per-node
++     * rent is computed from reads another epoch has already superseded.
++     *
++     * Both dispatch paths hit this: `spread_stimuli` is called inline from the
++     * gRPC handler (AttentionBrokerServer.cc:65) so gRPC worker threads run
++     * concurrent epochs, and the async path is no better -- WORKER_THREADS_COUNT
++     * workers pull from one queue and call `spread_stimuli` on the same network
++     * (WorkerThreads.cc:22-24,58).
++     *
++     * Held per network rather than globally, so distinct contexts
++     * (`select_hebbian_network`) still proceed in parallel.
++     */
++    mutex epoch_mutex;
++
+     // Node and Link don't inherit from a common "Atom" class to avoid having virtual methods,
+     // which couldn't be properly inlined.
+ 
+diff --git a/src/attention_broker/HebbianNetworkUpdater.cc b/src/attention_broker/HebbianNetworkUpdater.cc
+index 4134009..512eaa5 100644
+--- a/src/attention_broker/HebbianNetworkUpdater.cc
++++ b/src/attention_broker/HebbianNetworkUpdater.cc
+@@ -54,6 +54,16 @@ ExactCountHebbianUpdater::ExactCountHebbianUpdater() {}
+ ExactCountHebbianUpdater::~ExactCountHebbianUpdater() {}
+ 
+ void ExactCountHebbianUpdater::correlation(const dasproto::HandleList* request) {
++    // Correlation mutates the same network as spread_stimuli and runs on the
++    // same threads (AttentionBrokerServer.cc:96,:118 dispatch inline).
++    HebbianNetwork* corr_network = (HebbianNetwork*) request->hebbian_network();
++    if (corr_network != NULL) {
++        corr_network->epoch_mutex.lock();
++    }
++    struct CorrEpochUnlock {
++        HebbianNetwork* n;
++        ~CorrEpochUnlock() { if (n != NULL) n->epoch_mutex.unlock(); }
++    } corr_epoch_unlock{corr_network};
+     HebbianNetwork* network = (HebbianNetwork*) request->hebbian_network();
+     if (network != NULL) {
+         for (const string& s : ((dasproto::HandleList*) request)->list()) {
+@@ -75,6 +85,16 @@ void ExactCountHebbianUpdater::correlation(const dasproto::HandleList* request)
+ }
+ 
+ void ExactCountHebbianUpdater::asymmetric_correlation(const dasproto::HandleList* request) {
++    // Same hazard as correlation(); dispatched inline at
++    // AttentionBrokerServer.cc:118.
++    HebbianNetwork* asym_network = (HebbianNetwork*) request->hebbian_network();
++    if (asym_network != NULL) {
++        asym_network->epoch_mutex.lock();
++    }
++    struct AsymEpochUnlock {
++        HebbianNetwork* n;
++        ~AsymEpochUnlock() { if (n != NULL) n->epoch_mutex.unlock(); }
++    } asym_epoch_unlock{asym_network};
+     HebbianNetwork* network = (HebbianNetwork*) request->hebbian_network();
+     if (network != NULL) {
+         for (const string& s : ((dasproto::HandleList*) request)->list()) {
+diff --git a/src/attention_broker/StimulusSpreader.cc b/src/attention_broker/StimulusSpreader.cc
+index c0e1425..8c340ed 100644
+--- a/src/attention_broker/StimulusSpreader.cc
++++ b/src/attention_broker/StimulusSpreader.cc
+@@ -158,6 +158,9 @@ void TokenSpreader::spread_stimuli(const dasproto::HandleCount* request) {
+     if (network == NULL) {
+         return;
+     }
++    // Whole-epoch exclusion: see HebbianNetwork::epoch_mutex. Per-node locking
++    // is not sufficient because collect_rent aggregates across a traversal.
++    lock_guard<mutex> epoch_lock(network->epoch_mutex);
+     DATA data;
+     data.importance_changes = new HandleTrie(HANDLE_HASH_SIZE - 1);
+     data.rent_rate = AttentionBrokerServer::RENT_RATE;
