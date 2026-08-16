@@ -240,6 +240,12 @@ Rules that can be enforced mechanically, in the order they should land.
 - [ ] **A4**: name the safe direction for every default in the scheduler.
 - [ ] **C5**: set `min_quorum` ≥ 3 and require a majority, before any seal work.
 
+### A7. A caveat that would change the verdict if true is not a caveat — it is an unfinished experiment.
+S60 v1 listed three caveats (n=1, unsound digest, workload dependence) and delivered its verdict as if none fired. **Each one, run, flipped a headline number.** Before publishing, take every caveat in the draft and ask: if this is true, does the headline change? If yes, it is not ready. Writing the limitation down does not discharge it.
+
+### A8. Reuse of expensive setup across benchmark iterations is a correctness bug, not an optimisation.
+S60 v1 built one `Metta` and reused it, so iterations 2+ ran against a polluted atomspace and aborted at 5,709 of 50,794 steps — silently, because the abort path returns `Ok(())`. **Construct fresh state per iteration and exclude setup from the clock**; if that is too slow, the window is too short. Assert the work done per iteration is constant, and print it.
+
 ---
 
 ## Provenance
