@@ -11,6 +11,7 @@ v1 was audited and **the grading scheme itself was the defect**. Rewritten.
 | **C** | laptop only |
 | **D** | projected, or composed from measured parts plus arithmetic |
 | **E** | read from source or an API, never measured |
+| **INVALID** | **failed a plausibility or provenance check — do not cite.** Distinct from E: an E claim is merely unverified, an INVALID one is known not to support the weight placed on it. Adopted 2026-08-16 after `GUARDRAILS` E/B2 survived the entire v2 rewrite unimplemented. Taken from BOINC's `PFC_MODE_INVALID` (`sched/credit.cpp:207`), which clamps **and** poisons the sample rather than merely downgrading it |
 
 Three rules v1 broke:
 1. **Being measured *by* an attacker is not surviving one.**
@@ -155,7 +156,7 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 | **No cleanup/GC budget in M3** | Four `cleanup_*` extrinsics are ~⅓ of Acurast's marketplace surface. On a phone fleet abandonment is the common case |
 | **Commit registry has `close()` but no clock** | No real deadline |
 | **Worst-case recall** | S17: 0.97 mean with a **0/100 minimum** — at least one query loses everything. Nobody has tuned for worst case |
-| **S32's 5.87× / 28,700 jobs/s** | **RESULT.md now written (2026-08-16), verdict RED as a citation source.** 28,726 = 10,000 devices × 2-of-2 quorum, i.e. a projection; per device ~2.9 jobs/s. `tps.py` claims 5.87× scaling but `tps.json` gives 7.71× burst / 6.01× sustained — **not derivable from its own data**. All `eight_way` rows are on cores S54 proved unreachable. Previously: `tps.py` still prints it under "MEASURED"; S33/S34 consume it. S34's "1.2× short" inherits it, so its NPU-necessity conclusion is unsupported |
+| **S32's 28,700 jobs/s** | **INVALID** | **RESULT.md now written (2026-08-16), verdict RED as a citation source.** 28,726 = 10,000 devices × 2-of-2 quorum, i.e. a projection; per device ~2.9 jobs/s. `tps.py` claims 5.87× scaling but `tps.json` gives 7.71× burst / 6.01× sustained — **not derivable from its own data**. All `eight_way` rows are on cores S54 proved unreachable. Previously: `tps.py` still prints it under "MEASURED"; S33/S34 consume it. S34's "1.2× short" inherits it, so its NPU-necessity conclusion is unsupported |
 | **Step-level bisection IS reachable on hyperon's public API** | **B** | S60 v2. `impl Debug for RunnerState` (`mod.rs:527-534`) exposes `interpreter_state` incl. the plan stack; it changes on **50,786 of 50,794 steps** (corpus median 1.0000). Also `interpret_init`/`interpret_step` and `Metta::space()`. v1 claimed the opposite |
 | **Bisection commitment cost is UNPRICED** | **D** | S60 v1's 11.6% timed a **5,709-step aborted re-run** — the harness reused one `Metta`, so iterations 2+ ran against a polluted space and terminated on an assertion error that `run_step` returns `Ok(())` for. Honest run: `lazy` 37.6%, and ~94% of that is `to_string()` not hashing; an O(1) probe gives 4.1%; a true per-step plan commitment costs **200×**. Cost is also **O(n²)** in accumulated results — 24.8× on a real payload |
 | `Variables({…})` hash-set iteration order is a **second** nondeterminism source | **B** | S60. After masking every `0x…` address, 386 diff hunks remain between runs of the same program. `proposed/hyperon-nondeterminism/` covers addresses and `intersection-atom`, not this |

@@ -53,3 +53,5 @@
 
 52 | 2026-08-16 | A10 added: spikes/quiet.sh refuses to benchmark when loadavg>ncores/4, any container is up, or a compiler is in the top 3. Manual A5 failed three times (S9, S18, S62/S63). Machine was measurably non-quiet during S62/S63.
 53 | 2026-08-16 | S32 RESULT.md written retrospectively, verdict RED as citation source: 28,700 is a 10k-device projection not a measurement (~2.9 jobs/s per device). R-NEW corrected.
+
+54 | 2026-08-16 | 5.87x was a provenance gap not an inconsistency: denominator 502,924 recovered from archive/chat.log:1564 along with the full S32a table (hashes identical at every N). B5 extended to cover measurements. INVALID grade finally adopted; S32 headline marked INVALID. R-NEW reframed: three devices saturate settlement, not ten thousand.

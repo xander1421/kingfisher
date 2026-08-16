@@ -93,7 +93,11 @@ S32 device-side claim                28,700 jobs/s
 shortfall                                3,353x
 ```
 
-**Correction (S32 RESULT.md, written 2026-08-16): 28,726 is 10,000 hypothetical devices under a 2-of-2 quorum, not a device measurement.** Per device S32 gives ~2.9 jobs/s, so against *one* device an 8.6 jobs/s settlement layer is ahead and the crossover is around **three devices**. The shortfall is real for a fleet but the ratio is a fleet projection against a measured chain, and stating it as "device-side" was wrong. S32 is also already flagged in `LEDGER` as unadjudicated and falsified three times — but even taken at face value it describes a device fleet feeding a settlement layer four orders of magnitude too small. **The bottleneck was never the phones.**
+**Correction (S32 RESULT.md, written 2026-08-16): 28,726 is 10,000 hypothetical devices under a 2-of-2 quorum, not a device measurement.** Per device S32 gives **2.87 jobs/s**, so the correction removes a fake ratio and replaces it with something harder to dismiss:
+
+> **`8.6 / 2.87 = 3.0`. Three devices saturate the settlement layer M3.5 proposes.**
+
+You do not need ten thousand phones to hit this wall — you need three, and that is testable next week rather than at scale. A three-device demo is already over the line. The shortfall is real for a fleet but the ratio is a fleet projection against a measured chain, and stating it as "device-side" was wrong. S32 is also already flagged in `LEDGER` as unadjudicated and falsified three times — but even taken at face value it describes a device fleet feeding a settlement layer four orders of magnitude too small. **The bottleneck was never the phones.**
 
 ## What Acurast did instead, and why it is the whole game
 

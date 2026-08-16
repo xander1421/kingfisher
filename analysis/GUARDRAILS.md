@@ -138,6 +138,14 @@ efficient one observed across the fleet.
 Where it came from, what was actually observed, and which way they rounded. **Every
 tuned constant in our tree gets this comment or it does not ship.**
 
+**And this covers measurements, not only tuned constants.** S32's headline 5.87×
+is `2,954,450 / 502,924` and is entirely correct — but the denominator appeared
+nowhere in the spike directory. It lived in a chat message, so for weeks the
+figure looked un-derivable from its own artefact and was written off as an
+internal inconsistency. It was a missing field, not a wrong number. **A measured
+value cited in a result must have every input present in the artefact**, or the
+result is unfalsifiable by anyone who was not in the room.
+
 > **Prevented:** the oracle-fitted cutoff, which sat unlabelled through six spikes
 > before `LEDGER` rule 5 forced it onto the row.
 

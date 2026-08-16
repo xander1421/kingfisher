@@ -1,6 +1,8 @@
 {
   "measured": {
     "single_thread_sustained_steps_s": 383000,
+    "single_thread_burst_steps_s": 502924,
+    "single_thread_burst_provenance": "S32a T=1 burst row; recovered from archive/chat.log:1564 (`1  199  502,924  1.00x  1 distinct OK`). Not re-measured. This is the denominator of the 5.87x scaling claim in tps.py:11.",
     "eight_way_burst_steps_s": 2954450,
     "eight_way_sustained_steps_s_range": [
       1963190,
@@ -73,5 +75,57 @@
         "one_thread": 182231.52253247576
       }
     }
+  },
+  "scaling_ratios_note": {
+    "burst_over_burst_5.87x": "2,954,450 / 502,924 \u2014 the claim in tps.py:11. Same regime both sides. Correct.",
+    "burst_over_sustained_7.71x": "2,954,450 / 383,000 \u2014 REGIME-MIXED, do not cite.",
+    "sustained_over_sustained_6.01x": "2,300,000 / 383,000 \u2014 same regime, but the numerator is one pick from a 1.97x-wide measured band."
+  },
+  "s32a_scaling_table": {
+    "source": "archive/chat.log:1560-1568, recovered 2026-08-16. N concurrent copies of the identical fuelrun job, digest checked every process.",
+    "columns": [
+      "n",
+      "slowest_ms",
+      "agg_steps_s",
+      "speedup",
+      "hashes"
+    ],
+    "rows": [
+      [
+        1,
+        199,
+        502924,
+        1.0,
+        "1 distinct OK"
+      ],
+      [
+        2,
+        195,
+        1026482,
+        2.04,
+        "1 distinct OK"
+      ],
+      [
+        4,
+        258,
+        1551658,
+        3.09,
+        "1 distinct OK"
+      ],
+      [
+        6,
+        275,
+        2183607,
+        4.34,
+        "1 distinct OK"
+      ],
+      [
+        8,
+        271,
+        2954450,
+        5.87,
+        "1 distinct OK"
+      ]
+    ]
   }
 }

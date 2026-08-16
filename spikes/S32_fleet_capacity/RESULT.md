@@ -34,10 +34,44 @@ would outrun the chain, but the ratio is not device-vs-chain and R-NEW should sa
 so. Against **one** device at 2.9 jobs/s, an 8.6 jobs/s settlement layer is
 *ahead*, and the crossover is around **3 devices**.
 
-## Internal inconsistency
-`tps.py:11` states *"8-way burst — 5.87x scaling"*. `tps.json` gives
-burst/single = **7.71×** and sustained/single = **6.01×**. The 5.87 figure is not
-derivable from the data file in this directory. Unresolved.
+## The measurement that was actually here, recovered
+The whole S32a table was in `archive/chat.log:1560-1568` and is now in
+`tps.json` as `s32a_scaling_table`. N concurrent copies of the identical
+`fuelrun` job, digest checked on every process:
+
+| N | slowest ms | agg steps/s | speedup | hashes |
+|---|---|---|---|---|
+| 1 | 199 | 502,924 | 1.00× | 1 distinct OK |
+| 2 | 195 | 1,026,482 | 2.04× | 1 distinct OK |
+| 4 | 258 | 1,551,658 | 3.09× | 1 distinct OK |
+| 6 | 275 | 2,183,607 | 4.34× | 1 distinct OK |
+| 8 | 271 | 2,954,450 | 5.87× | 1 distinct OK |
+
+**Identical digests at every thread count** — parallelism does not move the
+result. That is a determinism finding in its own right and nobody carried it
+forward; it corroborates S51's "determinism across thread counts" independently.
+
+## The 5.87× is correct — it was a provenance gap, now closed
+`tps.py:11` states *"8-way burst — 5.87x scaling"*. That is
+`2,954,450 / 502,924 = 5.87`, burst over **burst**, same regime both sides, and
+it is right. The denominator — the T=1 burst baseline — simply appeared nowhere
+in this directory; it lived in a chat message. Recovered from
+`archive/chat.log:1564` (`1  199  502,924  1.00x  1 distinct OK`) and written
+into `tps.json` as `single_thread_burst_steps_s`, flagged as recovered rather
+than re-measured.
+
+With the baseline present, the other two ratios are visibly regime-mixed rather
+than contradictory:
+
+| ratio | value | verdict |
+|---|---|---|
+| burst / burst | **5.87×** | the claim. Same regime. Correct |
+| burst / sustained | 7.71× | **regime-mixed, do not cite** |
+| sustained / sustained | 6.01× | same regime, but the numerator is one pick from a 1.97×-wide band |
+
+This is `GUARDRAILS` B5 — *constants carry their provenance inline* — applied to
+a **measurement**. B5 only covered tuned constants; a measured denominator that
+lives in a chat log is the same defect.
 
 ## Falsified inputs
 - **The 8-way premise is dead.** S51 measured 6.30× at T=7 and **0.07× at T=8** —
@@ -60,3 +94,12 @@ labelled "eight_way" is on cores the deployable configuration cannot reach.
 
 The honest deployable figure needs re-deriving from S54's 4-core background
 cpuset, and nobody has done it.
+
+## The sharpest form of the settlement consequence
+Per device, **2.87 jobs/s**. Settlement with 2× replication, **8.6 jobs/s**.
+
+> **Three devices saturate the settlement layer M3.5 proposes.** 8.6 / 2.87 = 3.0.
+
+That is a far harder statement than the 3,353× fleet ratio it replaces: you do
+not need ten thousand phones to hit the wall, you need three — and it is
+testable next week rather than at scale.
