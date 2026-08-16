@@ -1,0 +1,20 @@
+S43 bit-pack  n=100,000 D=1024
+contention at start: {'loadavg_1m': 1.3, 'loadavg_5m': 1.72, 'competing': ['python']}
+
+EXACTNESS GATE  bipolar OK, ternary OK  (2000 vectors, ternary zero-rate 0.0000)
+
+store  int8    102.4 MB   packed     12.8 MB   8.0x smaller
+
+STREAM roof  int8 store    8.3 GB/s   packed store    8.3 GB/s
+  (a kernel far below this is not memory-bound, whatever it claims)
+
+    q   float32 (S18)      packed   speedup   GOP/s f32   GOP/s pk  ms/query pk
+    1         26.5 ms      2.1 ms    12.70x         7.7       98.1       2.087
+    4         32.2 ms      8.3 ms     3.86x        25.5       98.2       2.085
+   16         29.1 ms     33.3 ms     0.87x       112.5       98.3       2.083
+   64         33.1 ms    134.0 ms     0.25x       395.9       97.8       2.093
+  256         49.9 ms    536.8 ms     0.09x      1051.4       97.7       2.097
+
+float32 path == packed path on the full 100,000 store: True
+contention at end:   {'loadavg_1m': 1.41, 'loadavg_5m': 1.72, 'competing': ['python']}
+!! competing processes present - these numbers are soft

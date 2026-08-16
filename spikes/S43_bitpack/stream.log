@@ -1,0 +1,5 @@
+os.cpu_count=14
+copy  int8 102.4MB        1.476 ms    138.8 GB/s  rsd 0.3%
+copy  packed 12.8MB       0.150 ms    171.2 GB/s  rsd 0.6%
+scan  packed read-only       0.276 ms     46.4 GB/s
+kernel packed q=1            2.070 ms      6.2 GB/s effective
