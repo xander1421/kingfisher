@@ -1,0 +1,13 @@
+Arithmetic intensity of the pre-filter kernel = 2*q ops/byte.
+NPUs win on compute-bound work. Does a phone serving ONE query have anything to accelerate?
+
+ queries   intensity   warm_ms     GOP/s   ms/query
+       1         2 o/B      28.0       7.3      28.03
+       2         4 o/B      29.5      13.9      14.76
+       4         8 o/B      30.0      27.3       7.51
+       8        16 o/B      31.0      52.8       3.88
+      16        32 o/B      30.6     107.2       1.91
+      32        64 o/B      31.5     208.3       0.98
+      64       128 o/B      33.9     386.4       0.53
+     100       200 o/B      38.4     532.8       0.38
+     256       512 o/B      50.8    1032.1       0.20

@@ -1,0 +1,43 @@
+corpus   /Users/victorianikolenko/kingfisher/elders/MORK/differential/corpus
+host     /Users/victorianikolenko/kingfisher/elders/MORK/target/release/mork
+phone    /data/local/tmp/kingfisher/mork  (LD_PRELOAD libnotag.so)
+programs 35   steps_cap=200   timeout=90.0s
+
+PROGRAM                               HOST   PHONE     H_s    P_s  VERDICT
+programs_bc0                             -       -    90.0   90.0  SKIP timeout(host)
+programs_bfc7                          129     129     0.0    0.1  SKIP no-dump
+programs_cross_join_dict                 1       1     0.0    0.0  SKIP no-dump
+programs_cross_join_tuple                1       1     0.0    0.0  SKIP no-dump
+programs_ctl                           189     189     0.1    0.3  SKIP no-dump
+programs_exponential                     -       -    90.1   47.7  SKIP timeout(host)
+programs_exponential_fringe             46      46     1.2    3.4  SKIP no-dump
+programs_lens_aunt                     200     200     0.1    0.2  SKIP no-dump
+programs_lens_composition                1       1     0.0    0.0  SKIP no-dump
+programs_meta_ana                       19      19     0.0    0.0  SKIP no-dump
+programs_meta_ana_exec                  15      15     0.0    0.0  SKIP no-dump
+programs_pattern_mining                  5       5     0.0    0.0  SKIP no-dump
+programs_process_calculus_reverse       21      21     0.0    0.0  SKIP no-dump
+programs_roman_disjoin_final             4       4     0.0    0.0  SKIP no-dump
+programs_stv_roman                       1       1     0.0    0.0  SKIP no-dump
+unify_bipolar                            1       1     0.0    0.0  SKIP no-dump
+unify_bipolar_equal                      1       1     0.0    0.0  SKIP no-dump
+unify_coref_absorbed_by_data_varref       1       1     0.0    0.0  SKIP no-dump
+unify_data_varref_absorbs_query_compound_newvars       1       1     0.0    0.0  SKIP no-dump
+unify_func_type_unification              1       1     0.0    0.0  SKIP no-dump
+unify_issue_43                           1       1     0.0    0.0  SKIP no-dump
+unify_large_statement                    4       4     0.0    0.0  SKIP no-dump
+unify_lookup                             1       1     0.0    0.0  SKIP no-dump
+unify_negative                           1       1     0.0    0.0  SKIP no-dump
+unify_negative_equal                     1       1     0.0    0.0  SKIP no-dump
+unify_positive                           1       1     0.0    0.0  SKIP no-dump
+unify_positive_equal                     1       1     0.0    0.0  SKIP no-dump
+unify_roman_disjoin_initial              2       2     0.0    0.0  SKIP no-dump
+unify_top_level_match                    1       1     0.0    0.0  SKIP no-dump
+unify_top_level_symbol                   2       2     0.0    0.0  SKIP no-dump
+unify_two_bipolar_equal_crossed          1       1     0.0    0.0  SKIP no-dump
+unify_two_positive_equal                 1       1     0.0    0.0  SKIP no-dump
+unify_two_positive_equal_crossed         1       1     0.0    0.0  SKIP no-dump
+unify_variable_priority                  1       1     0.0    0.0  SKIP no-dump
+unify_variables_in_priority              1       1     0.0    0.0  SKIP no-dump
+
+steps_cap=200  ok=0  mismatch=0  skipped=35

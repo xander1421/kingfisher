@@ -1,0 +1,36 @@
+D=1024  B=16  buckets=6250  store 102.4 MB -> 6.4 MB (16x)
+
+layout        pattern          recall     min  perfect    cpu%
+random        C1_(p s ?o)      1.0000  1.0000   100/100   78.04
+random        C2_(p ?s o)      0.9976  0.8333    98/100   75.39
+random        C3_(? s o)       1.0000  1.0000   100/100   10.68
+random        C6_(p s o)       1.0000  1.0000   100/100   64.22
+
+by_pred_subj  C1_(p s ?o)      1.0000  1.0000   100/100   21.88
+by_pred_subj  C2_(p ?s o)      1.0000  1.0000   100/100   20.86
+by_pred_subj  C3_(? s o)       0.9700  0.0000    97/100    9.06
+by_pred_subj  C6_(p s o)       1.0000  1.0000   100/100   16.09
+
+by_pred_obj   C1_(p s ?o)      1.0000  1.0000   100/100   22.26
+by_pred_obj   C2_(p ?s o)      1.0000  1.0000   100/100   20.45
+by_pred_obj   C3_(? s o)       0.9800  0.0000    98/100    8.99
+by_pred_obj   C6_(p s o)       1.0000  1.0000   100/100   16.00
+
+by_subj       C1_(p s ?o)      0.9992  0.9231    99/100   34.41
+by_subj       C2_(p ?s o)      0.6741  0.3333     2/100   33.24
+by_subj       C3_(? s o)       1.0000  1.0000   100/100    8.30
+by_subj       C6_(p s o)       1.0000  1.0000   100/100   19.56
+
+interleaved   C1_(p s ?o)      1.0000  1.0000   100/100   22.30
+interleaved   C2_(p ?s o)      1.0000  1.0000   100/100   20.91
+interleaved   C3_(? s o)       0.9000  0.0000    90/100    8.76
+interleaved   C6_(p s o)       1.0000  1.0000   100/100   16.31
+
+VERDICT — one store, all patterns
+  random         worst_recall 0.9976  worst_cpu  78.04%  recall-1.0 on 3/4 patterns
+  by_pred_subj   worst_recall 0.9700  worst_cpu  21.88%  recall-1.0 on 3/4 patterns
+  by_pred_obj    worst_recall 0.9800  worst_cpu  22.26%  recall-1.0 on 3/4 patterns
+  by_subj        worst_recall 0.6741  worst_cpu  34.41%  recall-1.0 on 2/4 patterns
+  interleaved    worst_recall 0.9000  worst_cpu  22.30%  recall-1.0 on 3/4 patterns
+
+wrote multipattern_B.json
