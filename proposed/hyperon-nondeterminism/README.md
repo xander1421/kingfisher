@@ -128,7 +128,7 @@ counter keyed by address can be. Removing it is both simpler and correct.
 | `cargo test -p hyperon` | **319 passed, 0 failed** |
 | `cargo test -p hyperon-common` | 20 passed, 0 failed |
 | Issue 1 after patch, 30 runs | `(A $x B $y C)` **30/30** |
-| Issue 2 after patch, 6 runs | `GroundingSpace-#1` **6/6** |
+| Issue 2 after patch, 5 runs **in one process** | `GroundingSpace` **5/5** — the multi-run case that defeated the first attempt |
 | 67-program regression corpus | **0 rows differing**; 235 passing assertions and 29 error atoms unchanged |
 
 Correctness suite, all passing after the fix:
