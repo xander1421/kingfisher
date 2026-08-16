@@ -30,7 +30,7 @@ Where the world computer stands on 2026-08-16, one layer per page. Everything be
 - **MeTTa runs on Android today.** S2: `cargo ndk -t arm64-v8a --platform 28 build --release -p hyperonc` → a stripped ARM64 ELF, **4.00 MiB**, 162 C functions exported, **15 seconds**, stable Rust, zero patches. Even the gRPC-carrying default build cross-compiles (6.46 MiB). Only the `git` feature fails (openssl-sys).
 - **Stepwise evaluation is already in the C ABI**: `interpret_init`, `interpret_step`, `step_has_next`, `step_get_result`, `step_to_str`. Fuel metering and dispute bisection both fall out of this for free.
 - **A foreign Space can back the interpreter.** `space_new` takes a C callback table + opaque payload; `c/tests/c_space.c` is a working Space written entirely in C. The phone's shard cache plugs in here without touching Rust.
-- **A fast exact engine exists but is not ours to use.** MORK: 32,720 LOC, two independent query engines, WCO leapfrog join, PathMap zipper store. **No licence file anywhere** → all rights reserved.
+- **A fast exact engine exists but is not ours to use.** MORK: 32,720 LOC, two independent query engines, WCO leapfrog join, PathMap zipper store. **No licence file anywhere** → all rights reserved. Its author *did* declare MIT publicly — issue #2, closed 2025-05-21, *"Yes! It's now under MIT."* — but never committed the file, and GitHub still reports the repo as unlicensed. So the ask is small and the answer is already yes; the gate stays shut until a file exists at HEAD.
 
 ### What the spikes proved
 - **S1**: hyperon builds clean on stable Rust in 60 s; **472 tests pass, 0 fail**. Dropping the `das` feature cuts the shared library 5.83 → **3.53 MiB**.
