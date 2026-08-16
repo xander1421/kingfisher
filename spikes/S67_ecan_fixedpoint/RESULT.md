@@ -1,3 +1,13 @@
+> **CORRECTED BEFORE PUBLICATION — read this first.**
+>
+> **My `double` harness parallelised a reduction DAS does not parallelise.** I checked after building it, and should have checked before: `visit_nodes` calls `nodes->traverse(...)`, a **serial** trie walk (`HebbianNetwork.cc:113-117`), and the trie is a fixed 16-way alphabet array indexed by nibbles of the handle (`HandleTrie.h:9,177`) — so traversal order is **content-determined, not pointer-determined**. `WorkerThreads` schedules *requests*, not one traversal. Within a single epoch there is no parallel reduction and no ordering hazard.
+>
+> **So the intra-epoch mechanism I claimed is false, and the T=1/2/4/8 divergence below is a property of my harness, not of DAS.**
+>
+> **A real hazard does exist, and it is a different one.** `spread_stimuli` is invoked **inline from the gRPC handler** — the async enqueue at `AttentionBrokerServer.cc:64` is commented out — so gRPC's thread pool runs *whole epochs concurrently* on one shared `HebbianNetwork`, protected only by per-trie-node mutexes. Two interleaved epochs do not equal two sequential epochs: rent is collected from importance another epoch is mid-way through updating. That is **read-modify-write interleaving across epochs**, not reduction order within one.
+>
+> The A11 spec still fixes it — **BSP double-buffering and epoch serialisation are the relevant clauses**, not wide accumulation. The implementation and oracle below remain useful; the diagnosis attached to them was wrong. Corrected disposition is in "What this actually establishes" at the end.
+
 # S67 — deterministic fixed-point ECAN: the failing test and the passing one
 
 **Verdict: GREEN. A11's prediction is confirmed by construction — DAS's `double` attention broker fails the N-thread==1-thread oracle, and a fixed-point implementation to the A11 spec passes it. Reference implementation and oracle are in this directory.**
@@ -52,6 +62,25 @@ S58 `b4` lesson. `cargo test --release` asserts, on one epoch, that rent is
 collected, that **more than half the nodes actually move**, that there are more
 than 100 distinct resulting values, and that nothing saturates to zero. Passes.
 
+## What this actually establishes, post-correction
+
+| claim | status |
+|---|---|
+| DAS's intra-epoch rent sum is order-dependent | **FALSE** — serial, content-ordered traversal |
+| DAS runs whole epochs concurrently with no epoch lock | **TRUE** — inline gRPC dispatch, per-node mutexes only |
+| Float rate-multiplication rounds | true arithmetic, but **does not bite** given fixed traversal order |
+| A fixed-point BSP implementation is deterministic under concurrency | **demonstrated here**, for the harness's failure mode |
+| `double` + parallel reduction fails the oracle | **true of my harness**, not of DAS as shipped |
+
+The honest one-line version: **DAS's attention broker is probably deterministic
+for serialised requests, and probably not under concurrent ones — and the second
+was never measured, only the first was mis-modelled.**
+
+What the oracle is genuinely good for: it is a **regression test DAS does not
+have**. Any future parallelisation of the traversal, or any epoch-interleaving
+under load, fails it immediately. That is worth contributing regardless of
+whether the bug is present today.
+
 ## What this is worth beyond the fix
 Per `THE_BRAIN`, a deterministic fixed-point ECAN contributed upstream to
 DAS/Hyperon is three things in one artifact: the organ this architecture is
@@ -61,11 +90,12 @@ half of that contribution** — a reproducible failing test for the current desi
 and a passing implementation of the replacement.
 
 ## Caveats, stated precisely
-- **What failed is thread-count sensitivity, not run-to-run jitter.** The
-  `double` hashes are stable per T across runs in this harness, because chunk
-  submission order is fixed. Real DAS, under contention, would additionally vary
-  run to run at fixed T. Both are disqualifying; only the first is demonstrated
-  here, and it is the stronger evidence for a maintainer because it reproduces.
+- **The `double` failure is my harness's, not DAS's** — see the correction at the
+  top. It demonstrates the arithmetic law truthfully and misattributes the
+  mechanism to shipped code.
+- **The concurrent-epoch hazard is identified but NOT measured.** Demonstrating it
+  needs two gRPC clients hitting one broker, which means building DAS (bazel +
+  gRPC). Until then it is a code-reading claim, grade E.
 - This is a **reference implementation of the semantics**, not a patch to DAS's
   C++. Porting means editing `StimulusSpreader.cc`, `HebbianNetwork.h` and the
   `HandleTrie` fold, and building DAS (bazel + gRPC) — not attempted.

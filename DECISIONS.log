@@ -69,3 +69,5 @@
 63 | 2026-08-17 | S66: zkVM feasibility is structurally GREEN. First test used riscv32im-unknown-none-elf (bare metal) and would have been a false negative - risc0 guests target riscv32im-risc0-zkvm-elf which has std. Real question is which std features are missing: interpreter.rs and the three core crates use zero fs/threads/time/net; all 75 fs sites are in the runner. Port is bounded to the runner boundary.
 
 64 | 2026-08-17 | S67: implemented the ECAN surgery A11 specifies. double fails the oracle (4 thread counts, 4 hashes), fixed-point Q32.32 with u128 accumulation and BSP epochs passes. Anti-degeneracy guard included. This is the demonstration half of the upstream contribution and the Deep Funding deliverable.
+
+65 | 2026-08-17 | S67 corrected before publication: my double harness parallelised a reduction DAS does not parallelise. visit_nodes is a serial content-ordered trie walk, so the intra-epoch mechanism is FALSE. Real hazard is different and unmeasured: spread_stimuli runs inline from the gRPC handler so whole epochs interleave. Oracle retained as a regression test DAS lacks.
