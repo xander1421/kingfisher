@@ -34,3 +34,5 @@
 [2026-08-17T01:18Z] DECISION npu-retarget-evidence | options: keep GAP row 6 as BUILD/"nothing targets a phone NPU" / retarget | chose: retarget | why: pytorch/executorch ships backends/qualcomm AND backends/samsung (BSD-3); llama.cpp ships ggml/src/ggml-hexagon upstream (MIT) | reversible: y
 
 35 | 2026-08-16 | pallets/compute read: it is stake/delegation, not fuel metering. Metrics are device-self-reported and hardware-attested, never fleet-normalised. Recorded as an architectural fork vs BOINC rather than a port target.
+
+36 | 2026-08-16 | Two hyperon defects drafted in proposed/hyperon-nondeterminism (pointer-keyed HashMap in multitrie causing wrong intersection-atom cardinality; three address-leaking Display impls). Not filed - mission ss11 no publishing. Both block using raw output hashes as a replication oracle.
