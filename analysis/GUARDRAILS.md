@@ -164,12 +164,24 @@ part of the spec.**
 `boinc/sched/sample_bitwise_validator.cpp:17-22` — *"useful only if either 1) your
 application does no floating-point math, or 2) you use homogeneous redundancy."*
 
-We claim branch (1): MeTTa reduction is integer/symbolic, and S15 measured
-byte-identical output plus identical fuel counts across aarch64 and x86-64. That is
-the correct branch **and it is the single most valuable property this project has**
-— BOINC needs a whole host-classification subsystem (`sched/hr.cpp`) that we get to
-delete. Guardrail: any feature that introduces floating point into the reduction
-path costs us `hr.cpp`, and must be priced that way.
+We claim branch (1), **conditionally**. Cited correctly: **S57** (grade B, 2026-08-16)
+— aarch64-macOS / x86_64-macOS / aarch64-Android, **67/67 identical fuel counts,
+66/67 identical results, 360,847 terminating steps**. *Not* S15, which compared
+aarch64-macOS to aarch64-**Android** — same ISA — and whose "across architectures"
+wording is struck through at `LEDGER.md:39`.
+
+**The condition is not optional.** S57's corpus contains **zero transcendental
+calls**, so it would not have caught S59, which measured real divergence:
+11/197 evaluations differ arm64-vs-x86-64 and 14/197 macOS-vs-bionic, max 2 ULP.
+Branch (1) therefore holds only under the S58+S59 ban list — no `flip`, `&rng`,
+`reset-random-generator`, `sin/cos/tan/asin/acos/atan-math` — and with a seeded,
+version-pinned RNG.
+
+Under those conditions this is **still the single most valuable property this
+project has**: BOINC needs an entire host-classification subsystem (`sched/hr.cpp`)
+that we get to delete. Guardrail: any feature that puts floating point — or an
+unpinned libm call — into the reduction path costs us `hr.cpp`, and must be priced
+that way.
 
 ### C3. If a host's class cannot be determined, exclude it. Fail closed.
 `boinc/sched/hr.cpp:132,144` — `hr_class()` carries *"call this ONLY if
@@ -215,9 +227,9 @@ Being honest about the boundary, so this document is not used as cover.
 | need | why no elder covers it |
 |---|---|
 | **short-event in-process timing** | BOINC never does it (A1). Our stage-2 figure is ~250 µs and there is no production precedent for measuring that on a phone. Own methodology required — which is exactly where the failures were. |
-| **NPU / HVX** | Nothing in any elder targets a phone NPU. Confirmed in `GAP_MATRIX` row 6. |
+| ~~**NPU / HVX**~~ | **FALSIFIED 2026-08-16, row removed from this table.** `elders/executorch/backends/qualcomm/` names **SM8750** (39 mentions) and HTP (716) — our exact SoC — and `backends/samsung/` exists too. `GAP_MATRIX` row 6 is rewritten to PORT. This row was cover in a section whose first line promises not to be. |
 | **shaping as a job class** | `GAP_MATRIX` row 17 — genuinely novel, nothing to copy. |
-| **content-addressed Atomspace shards** | `GAP_MATRIX` row 9 — DAS addresses atoms by handle inside a database, not shards by hash. |
+| **content-addressed Atomspace shards** | *Partially stale.* `GAP_MATRIX` row 9 was re-scoped: `iroh-blobs` may supply this outright, collapsing M1.5 and M1.7, and S14 found MORK's `server` branch already ships a canonical `.paths` format. The residual gap is smaller than this row implied. |
 
 For the first row the honest guardrail is A1's contrapositive: **if the quantity is
 too short to measure BOINC's way, restructure the experiment until it isn't.**
@@ -233,7 +245,7 @@ Rules that can be enforced mechanically, in the order they should land.
 - [ ] **A6/B1**: benchmark runner takes ≥12 processes × ≥10 s each; refuses to print a figure otherwise.
 - [ ] **A2**: every worker reports CPU time consumed; samples under 20% of a core are dropped, and the drop is logged with a count.
 - [ ] **B3**: every derived quantity gets a plausibility interval; violations clamp **and** poison the sample.
-- [ ] **B2**: add `INVALID` to the `LEDGER` grade scale; INVALID rows are deleted, not demoted.
+- [ ] **B2**: add `INVALID` to the `LEDGER` grade scale; INVALID rows are deleted, not demoted. **Still open — LEDGER v2 rewrote the grading scheme from scratch and still shipped A/B/C/D/E with no INVALID. The rewrite was the moment to land this and it passed.**
 - [ ] **B5**: audit every tuned constant in `spikes/` for a provenance comment.
 - [ ] **C1**: `hyperjob` canonical form gains an explicit exclusion list; `verifier2.py` strips before hashing.
 - [ ] **C4**: stand up a differential corpus for our own engine wrapper — two builds, byte-compare, pinned fuel.
@@ -255,3 +267,20 @@ cloned trees on 2026-08-16 (`analysis/` commit). BOINC is LGPL-3.0: **these are
 rules read from it, not code copied from it** — no BOINC source enters our tree,
 per the §7 licence gate. MORK is unlicensed; `differential/run.py` is likewise
 read for its design, not copied.
+
+---
+
+### A9. A guardrail that cites a claim must carry that claim's grade and date. A citation you did not re-check is not a citation.
+
+This document cites `GAP_MATRIX` rows and spikes by bare number. Four of those
+citations went stale within days — §C2 rested on a **retracted** S15, §D's NPU row
+was **falsified** by a clone already on disk, §D's shard row was re-scoped, and an
+§E checklist item was silently skipped by the very rewrite that should have landed
+it. **All four were invisible from inside the document**; you had to leave it to
+discover the rule was standing on a withdrawn claim.
+
+Guardrails are the highest-leverage place for staleness precisely because their
+function is to stop people re-checking. This is A7 applied one level up: **A7 says a
+caveat you did not run is not a caveat; A9 says a citation you did not re-check is
+not a citation.** Every citation here now carries grade and date, and a retracted
+or rewritten source invalidates the guardrail until re-derived.
