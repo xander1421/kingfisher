@@ -100,3 +100,21 @@ Also: `residency.c:126` divides by `g_threads` on the documented `g_threads == 0
 6. **One draw is not a measurement.** The RANDOM baseline swings 79→127 µs on a reshuffle; I reported it as a constant.
 
 Three of these — 2, 4, 6 — are the same error the workspace has now hit **seven times**: a per-query or per-run cost masquerading as a property of the hardware or the algorithm.
+
+---
+
+## Addendum — S50 replaces the numbers, and adds one nobody had
+
+`spikes/S50_harness/` — a harness that enforces every control the three attacks showed missing, built with `-Werror`. Re-measured, pinned and amortised:
+
+| | cpu0 (performance, 2.9 GHz) | cpu7 (prime, 3.28 GHz) |
+|---|---|---|
+| prefilter, 24 KB → 102 MB | 21.7 → 22.1 GB/s | 50.2 → 49.8 GB/s |
+| MAD | 0.0–2.2% | 0.1–0.2% |
+
+1. **The residency conclusion is now properly established**: flat across **4,300×** of store size on both core types at **MAD ≤0.2%**. S46's "1.8%" was below its instrument's resolution; the true figure is ≤0.5%. Right answer, worthless evidence, now fixed.
+2. **Core placement is worth 2.26×** — 22.1 vs 49.8 GB/s, same binary, same instant, only affinity differs. S46's "22.6 GB/s/core" was cpu0 unpinned, reported as a property of the kernel.
+3. **"≤16% left on the CPU" dies a second way**: *one prime core alone (49.8) nearly equals S45b's entire four-thread figure (50.8)*. Four threads on performance cores barely beat one prime core. The headroom is scheduling, not instructions. cpu7 also never boosted past 3,283 of 4,474 MHz, so even 49.8 is not the ceiling.
+4. Digests identical across core types, with the UB removed — reproducible by construction rather than by two compilers agreeing.
+
+**And a new gap:** `bench.h` pins one core by design, so there is now **no defensible multi-threaded throughput number in this workspace.** S32's 5.87× scaling and every fleet projection built on it (the 28,700 jobs/s model) are unsupported until a correct multi-core harness — spin barrier, per-core affinity — exists.
