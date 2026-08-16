@@ -1,0 +1,25 @@
+S44 stacked  n=100,000 D=1024 threads=10
+contention at start: {'loadavg_1m': 1.46, 'competing': []}
+
+query (p s ?o)  answers=11  nnz(Q)=515  store int8=102.4 MB
+packed store = 12.8 MB  (8.0x smaller)
+
+GATE  v0==v1==v2==v3 exactly;  stage2 recovers 11/11 answers, 0 false positives
+      prefilter shortlist = 11 rows = 0.0110% of store  (9,091x reduction)
+
+variant                                wall       per query                                  rsd
+V0 float32 GEMM (S18/S5)             26.847 ms    26.847 ms/q        7.6 GOP/s       37.2 q/s    0.5%
+V1 packed popcount u8                 4.887 ms     4.887 ms/q       41.9 GOP/s      204.6 q/s    0.5%
+V2 packed popcount u64                3.221 ms     3.221 ms/q       63.6 GOP/s      310.5 q/s    0.8%
+V3 V2 x 10 threads                    0.938 ms     0.938 ms/q      218.4 GOP/s     1066.6 q/s    0.9%
+V4 V3 + stage2 (full query)           0.995 ms     0.995 ms/q      205.9 GOP/s     1005.3 q/s    1.2%
+B  float32 GEMM q=256 (batch)        50.787 ms     0.198 ms/q     1032.3 GOP/s     5040.7 q/s    2.2%
+
+stacked speedup, full query vs S18 baseline: 27.0x
+  V0->V1 pack   5.5x | V1->V2 u64 lanes  1.5x | V2->V3 threads  3.4x | stage2 costs +0.057 ms
+
+full-machine query rate  1,005 queries/s
+phone projection @3.7x sustained (S30)  272 queries/s/device
+batch regime  0.1984 ms/query  = 5,041 queries/s
+
+contention at end: {'loadavg_1m': 1.58, 'competing': []}
