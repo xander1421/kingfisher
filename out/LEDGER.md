@@ -29,6 +29,12 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 
 | claim | grade | note |
 |---|---|---|
+| **Transcendental libm DIVERGES across ISAs — the no-float branch has a hole** | **B** | **S59.** 11/197 evaluations differ arm64-vs-x86-64, 14/197 macOS-libSystem-vs-bionic, **max 2 ULP**. Per-**implementation**, not per-ISA: `sin`/`cos` split on ISA but agree across libms, `atan` the reverse, `tan` fails both (9/20 on bionic). Permitted by IEEE-754 — the libms are correct, our assumption was not |
+| `sqrt-math` is exact cross-platform **by specification** | **A** | 0/20 both comparisons, and IEEE-754 *requires* correctly-rounded sqrt. Guaranteed, not observed |
+| `log-math` / `pow-math` clean in sample — **not cleared** | **C** | 0/60 and 0/25, but `pow` is the hardest function to round correctly and the sweep was 5×5. Untested-clean, not proven-safe |
+| **Ban `sin/cos/tan/asin/acos/atan-math` from replicable jobs** | **B** | S59. Statically checkable over the transitive import closure, alongside S58's `flip`/`&rng`/`reset-random-generator`. Alternative: ship a software libm so every device runs the same implementation |
+| **S57's 66/66 never tested transcendentals** | **B** | The corpus contains **zero** transcendental evaluations — the only matching file is `stdlib.metta`, where every hit is an `@doc` block producing 0 results. S57 stands for symbolic reduction and `+ - * /`; its scope read wider than it was |
+| Product hot path unaffected | **B** | HDC prefilter is integer popcount (S34, digest `f4e64fb7d70b9b0c`). No transcendental in the query path. This constrains the **job class**, not the engine |
 | MeTTa byte-identical **across ISAs** — aarch64 and x86-64, libSystem and bionic, two OSes — incl. evaluation order and fuel count | **B** | **S57**, on hyperon's own 67-program corpus: **fuel identical on 67/67**, results on 66/67, **360,847 genuinely-terminating steps**, **235 `assertEqual` results and 29 error atoms identical on all three platforms**. Engine is hyperon, the one we can legally ship. **Attacked and survived in narrowed form**: 560,847 included a 200k fuel cap; result hashes are low-entropy (35 distinct/67) so the discrimination is the assertions, not the hash; evaluation-order reproducibility is *not* established; floats limited to `+ - * /` (no libm, no FMA, no float formatting); x86-64 is Rosetta |
 | ~~S15 proved this "across architectures"~~ | **corrected** | S15 compared aarch64-macOS to aarch64-**Android** (`S15/RESULT.md:11,16`) — **same ISA**. It proved cross-OS/cross-libc, which is real and is not what the ledger said. Three reviews missed it because nobody asked what "architecture" meant |
 | **Fuel does NOT survive branching randomness** — 4.5× swing (954→4269) on one program | **B** | S58, matched control. Corrects S57. Rung 1 bisects over step counts, so an unpinned nondeterministic job is **unverifiable, not merely unbillable** |
@@ -123,7 +129,6 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 
 | gap | note |
 |---|---|
-| **Transcendental libm across ISAs** | `pow/log/sin/cos/tan/asin/acos/atan-math` delegate to platform libm and are **not** IEEE-754 correctly-rounded. Last-ULP drift is possible and unmeasured. `sqrt-math` exempt. The one cross-ISA risk nobody has closed |
 | **`fuelrun` runs unpinned** | `Metta::new(None)` executes the host config dir's `init.metta`/`environment.metta`. Inert on this Mac so it did not confound S57/S58, but it is a user-writable silently-executed input. Fix: `EnvBuilder::test_env()` |
 | **Bundling's magnitude on real data** | 54× was B=1→B=64 compression; S52 measured clustering-vs-random only. First link in the VTCM chain, so the NPU gap rests on a premise v1 believed retired |
 | **`verifier2.py` untested by anyone but its author** | 17 self-authored cases — *exactly v1's evidentiary profile*, and v1's 13/13 contained a test that never called the verifier. Grade **E**, highest-risk artefact here |
@@ -137,6 +142,7 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 | **S32's 5.87× / 28,700 jobs/s unadjudicated** | No RESULT.md; `tps.py` still prints it under "MEASURED"; S33/S34 consume it. S34's "1.2× short" inherits it, so its NPU-necessity conclusion is unsupported |
 | **Any NPU code** | And **VTCM is 8 MB vs a 12.8 MB packed store — it does not fit**, so bundling is a *prerequisite* for residency |
 | **Energy per job** | *diagnosis was wrong*: not root. Battery sat at 100% and plugged, so the charge counter is static. Needs wireless adb + physical unplug, or a USB power meter |
+| **Android vendor-libm variation across devices** | S59 shows every libm build is its own equivalence class. A fleet of Androids with different vendor libms could diverge with no ISA change. More product-relevant than the ISA question and untested |
 | **Whether an APK can actually disable heap pointer tagging** | Gates in-process MORK entirely (see platform table). Two-line manifest change, never executed — no APK has ever been built in this workspace (`M1.1`) |
 | **Shard-parse vs query-parse** | S56 put parse at 31% of stage 2, the only amortisable part, but its 13-expression program cannot separate the two |
 | **WorkManager limits** | ~10 min/worker, 6 h per 24 h dataSync |
