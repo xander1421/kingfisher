@@ -68,3 +68,64 @@ This product includes software developed by:
   - Gensyn — rl-swarm (MIT)
 ```
 BOINC, Golem and MORK are deliberately absent: nothing of theirs is included.
+
+## Wave 2 — added 2026-08-17
+
+The original manifest sampled *analogous* systems and missed the *identical*
+one. Ten repos added; **every one is permissive, none copyleft, none UNKNOWN.**
+Licences read from the file on disk, per the gate — never from GitHub metadata,
+which reported `NOASSERTION` for four of these.
+
+| repo | HEAD | SPDX | evidence | verdict |
+|---|---|---|---|---|
+| Acurast/acurast-substrate | `b59f7d8` | **Unlicense** | `LICENSE`: *"free and unencumbered software released into the public domain"* | **PORT** ✅ *(public domain — no attribution obligation)* |
+| Acurast/acurast-core | `26d5688` | **MIT** | `LICENSE.md`, verbatim MIT, © 2023 Acurast Association | **PORT** ✅ |
+| Acurast/acurast-docs | `66e8a83` | **MIT** | `LICENSE.md`, © 2022 Acurast Association | **PORT** ✅ |
+| Acurast/acurast-kotlin-sdk | `408429f` | **MIT** | `LICENSE` | **PORT** ✅ |
+| PrimeIntellect-ai/prime | `433c505` | **MIT** | `LICENSE` | **PORT** ✅ |
+| bacalhau-project/bacalhau | `29d1206` | **Apache-2.0** | `LICENSE` | **PORT** ✅ |
+| n0-computer/iroh | `8455111` | **Apache-2.0 OR MIT** | dual: `LICENSE-APACHE` + `LICENSE-MIT` | **PORT** ✅ |
+| hyperdimensional-computing/torchhd | `9d73e1b` | **MIT** | `LICENSE` | **PORT** ✅ |
+| ggml-org/llama.cpp | `4df29be` | **MIT** | `LICENSE`; sparse-checkout `ggml/src/ggml-hexagon` | **PORT** ✅ |
+| pytorch/executorch | `42ebbc3` | **BSD-3-Clause** | `LICENSE`, *"Neither the name Meta nor the names of its contributors…"* | **PORT** ✅ |
+
+Checked and clean: no GPL or LGPL text anywhere in the sparse-checked-out
+`executorch/backends/{qualcomm,samsung}` or `llama.cpp/ggml/src/ggml-hexagon`.
+
+**Not cloned, and why** — `ipfs/kubo` and `GraphBLAS`/`LAGraph` skipped
+(`DECISIONS.log` 01:14Z: iroh supersedes kubo for a phone-side store; MORK's
+`linalg` already covers the semiring angle). `gensyn-ai/genrl` abandoned
+(01:16Z: **no licence file** and last push 2025-11-12 — it would enter this
+ledger as UNKNOWN and is stale).
+
+**Still zero files copied from any elder, wave 1 or wave 2.**
+
+
+---
+
+## Round 2 additions — 2026-08-16
+
+Ten repos the original manifest missed. **Every licence below was read from the
+file content in the git object, not from a hosting API.**
+
+| repo | licence | evidence | §7 class |
+|---|---|---|---|
+| **acurast-substrate** | **Unlicense (public domain)** | `LICENSE`, *"free and unencumbered software released into the public domain"*, closing with `unlicense.org` | **PORT**, attribution not even required |
+| acurast-core | MIT | `LICENSE.md` — verbatim MIT body, no title line | PORT with attribution |
+| acurast-kotlin-sdk | MIT | `LICENSE` | PORT with attribution |
+| executorch | BSD-3-Clause | `LICENSE` + `pyproject.toml: license = {text = "BSD-3-Clause"}` | PORT with attribution |
+| llama.cpp | MIT | `LICENSE` | PORT with attribution |
+| prime | MIT | `LICENSE` | PORT with attribution |
+| bacalhau | Apache-2.0 | `LICENSE` | PORT with attribution |
+| iroh | Apache-2.0 OR MIT | `LICENSE-APACHE`, `LICENSE-MIT` | PORT, take either |
+| torchhd | MIT | `LICENSE` | PORT with attribution |
+| acurast-docs | n/a | prose | reference only |
+
+**Zero copyleft, zero UNKNOWN in this round** — against round 1's two copyleft
+elders holding the operational wisdom and one UNKNOWN blocking the fastest engine.
+
+**Copies made during this mission: still None.** These are read, not vendored.
+
+**Closed as a dead end:** `gensyn-ai/genrl` — the Verde implementation hunt in
+`BLOCKED.log`. Unlicensed *and* stale (last push 2025-11-12). Under §7 an UNKNOWN
+licence is all-rights-reserved; combined with staleness there is nothing to pursue.
