@@ -29,6 +29,7 @@ fn main() {
     let mut best = f64::MAX;
     let mut loaded = 0usize;
     let mut dumped = 0usize;
+    let mut all: Vec<f64> = Vec::with_capacity(reps);
     for i in 0..reps {
         let t = Instant::now();
         let mut s = mork::space::Space::new();
@@ -37,6 +38,7 @@ fn main() {
         let mut out: Vec<u8> = Vec::with_capacity(1 << 16);
         dumped = s.dump_all_sexpr(&mut out).expect("dump");
         let el = now_ms(t);
+        all.push(el);
         if i > 0 && el < best { best = el; }
         if i == reps - 1 {
             let mut f = std::fs::File::create("s55_inproc_out.txt").unwrap();
@@ -50,6 +52,22 @@ fn main() {
     println!("  dumped         {} expressions", dumped);
     println!("  best of {:<3}    {:.3} ms   (whole stage 2: new + load + run + dump)", reps, best);
     println!();
-    println!("  S45 subprocess  5.66 ms, of which ~5.25 ms was process creation");
-    println!("  speedup         {:.1}x", 5.66 / best);
+    // full distribution: best-of-N is a biased estimator, print everything
+    print!("  samples ms    ");
+    for (i, v) in all.iter().enumerate() {
+        if i % 10 == 0 && i > 0 { print!("\n                "); }
+        print!("{:.3} ", v);
+    }
+    println!();
+    let mut sorted = all.clone();
+    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let n = sorted.len();
+    let med = if n % 2 == 1 { sorted[n/2] } else { (sorted[n/2-1]+sorted[n/2])/2.0 };
+    let mean = all.iter().sum::<f64>() / n as f64;
+    println!("  first (cold)  {:.3} ms", all[0]);
+    println!("  min           {:.3} ms   (incl. i=0)", sorted[0]);
+    println!("  median        {:.3} ms", med);
+    println!("  mean          {:.3} ms", mean);
+    println!("  p90           {:.3} ms", sorted[(n*9/10).min(n-1)]);
+    println!("  max           {:.3} ms", sorted[n-1]);
 }

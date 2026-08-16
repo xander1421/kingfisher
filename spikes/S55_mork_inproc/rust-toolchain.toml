@@ -1,0 +1,6 @@
+# ponytail: pin the nightly the S55/S56 measurements were taken on.
+# DECISIONS.log "nightly-acceptable" required a pin and it was never created.
+# Upstream MORK has no rust-toolchain.toml anywhere; the only pin was a rustup
+# directory override in ~/.rustup on one machine, which does not travel.
+[toolchain]
+channel = "nightly-2026-08-15"

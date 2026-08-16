@@ -47,8 +47,10 @@ Mechanical, so nobody has to re-derive it:
 | `reports/REPORT_MORK.md` §1 | licence line, and drop the "read for ideas, copy nothing" framing |
 | `out/STATE_OF_THE_UNION.md` | the Layer-2 paragraph on MORK |
 
-**Two things do NOT flip.** MORK still has no library surface, so it cannot be
-the phone's per-query stage-2 engine (S45: 13 ms of `exec()` per invocation
+****[2026-08-16] The paragraph below is now wrong on its first point.** S55 linked `mork = { path = "kernel" }` and ran `Space::new` / `add_all_sexpr` / `metta_calculus` / `dump_all_sexpr` in-process on an Android phone. MORK **does** have a library surface. The rest of the paragraph stands.
+
+Two things do NOT flip.** MORK still has no library surface, so it cannot be
+the phone's per-query stage-2 engine (S45: 5.66 ms (corrected; the 13 ms figure timed a SIGABRT tombstone, see `out/RETRACTIONS.md`) of `exec()` per invocation
 against ~0.5 ms of work). And it is still nightly-only with a hardcoded
 `/dev/shm` on `main`. The licence was never the only blocker, just the
 absolute one.
