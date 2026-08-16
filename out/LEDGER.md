@@ -29,7 +29,10 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 
 | claim | grade | note |
 |---|---|---|
-| MeTTa byte-identical across architectures, incl. evaluation order and fuel count | **B** | S15. `RETRACTIONS.md:28` says *"untouched by all three reviews"*; v1 graded it A |
+| MeTTa byte-identical **across ISAs** — aarch64 and x86-64, libSystem and bionic, two OSes — incl. evaluation order and fuel count | **B** | **S57**, on hyperon's own 67-program corpus: **66/66 deterministic programs identical** on fuel + order-sensitive hash + sorted hash + result count, **560,847 interpreter steps**. Engine is hyperon, the one we can legally ship. Caveat: x86-64 is Rosetta, not native Intel |
+| ~~S15 proved this "across architectures"~~ | **corrected** | S15 compared aarch64-macOS to aarch64-**Android** (`S15/RESULT.md:11,16`) — **same ISA**. It proved cross-OS/cross-libc, which is real and is not what the ledger said. Three reviews missed it because nobody asked what "architecture" meant |
+| **Fuel is deterministic even when output is not** | **B** | S57. `test_gnd_conv.metta` calls `(flip)`: three different result hashes across three platforms, `fuel_used = 1012` on all three. **The meter is separable from the result** — a nondeterministic job can still be billed, replicated and fuel-audited. Rung 1 needs step counts to agree, not values |
+| S57's harness has a **null control that fires** | **B** | The corpus supplied it. `test_gnd_conv` diverges from itself on one machine, 4 distinct hashes in 5 runs, against a control stable 5/5. Rule 4 satisfied without my having to construct it — the argument for elder corpora, concretely |
 | MORK 33/33 corpus byte-identical, incl. 48 MB dump | **B** | S16. Independently *replicated*, never attacked |
 | Packed popcount bit-exact vs scalar and SDOT, both machines | **A** | S34. The UB sweep hunted unsequenced modification across every device program; `kernels.c` was clean |
 | Determinism across build profiles (stock / LTO / oryon-1) | **B** | S30, 12/12 cells. Missing from v1 |
