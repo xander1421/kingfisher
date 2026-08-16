@@ -55,3 +55,5 @@
 53 | 2026-08-16 | S32 RESULT.md written retrospectively, verdict RED as citation source: 28,700 is a 10k-device projection not a measurement (~2.9 jobs/s per device). R-NEW corrected.
 
 54 | 2026-08-16 | 5.87x was a provenance gap not an inconsistency: denominator 502,924 recovered from archive/chat.log:1564 along with the full S32a table (hashes identical at every N). B5 extended to cover measurements. INVALID grade finally adopted; S32 headline marked INVALID. R-NEW reframed: three devices saturate settlement, not ten thousand.
+
+58 | 2026-08-16 | S62 attacker findings applied and independently reproduced: equivalence class for AI inference is binary + runtime env (7 classes inside "HTP0" via env vars, plus --fit reading free memory). S62 claim D marked INVALID - backend_class is self-reported and reintroduces the trust assumption. S63 key also insufficient. Comparator fabricated agreement; fixed in extract.sh. CEO brief corrected and republished.

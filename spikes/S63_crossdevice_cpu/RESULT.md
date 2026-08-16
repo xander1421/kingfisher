@@ -1,3 +1,11 @@
+> **SUPERSEDED IN PART, 2026-08-16, by adversarial review — read this first.**
+>
+> **The equivalence class is the binary *plus its runtime environment*, and that is not observable from outside the device.** Same binary/model/seed on one phone, varying only env vars: `81cef5aacba9` (default), `3b3c15512896` (`GGML_HEXAGON_USE_HMX=0`), `01e11bb3e178` (`MM_SELECT=1`), `d3848a54d223` (`ARCH=v75`) — **seven classes inside one "HTP0" label**, and `--fit` adds another by reading free memory at launch. Reproduced independently.
+>
+> Consequences: S62's claim (D) — `backend_class` plus byte comparison, "no TEE, no ZK" — is **INVALID**; a backend label is self-reported and unverifiable, which reintroduces the trust assumption. S63's "source commit + compile flags" key is **also insufficient**, since these are runtime settings. S62's published "CPU" row is in fact the **Adreno** hash (the CPU row needs an undocumented `-dev none`). And the comparator used by both **fabricated agreement** — see `extract.sh`.
+>
+> What survives: each configuration is self-deterministic (10/10 per backend, 256-token and 2B-model runs included), the NPU session is genuine (falsification-tested), and thread count does not change the CPU result. **Symbolic determinism (S57) is untouched by all of this.**
+
 # S63 — cross-device LLM determinism: the equivalence class is the **binary**, not the backend
 
 **Verdict: AMBER-GREEN. One decisive clean observation — macOS-aarch64 and Android-aarch64 produce byte-identical LLM output when compile flags match. This corrects S62. Multi-prompt confirmation is pending a quiet device.**
