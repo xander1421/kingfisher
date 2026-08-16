@@ -324,6 +324,12 @@ is recorded in the output.
 **Not "declare contention" — refuse.** Every spike that produces a timing number
 calls it first and embeds the `--json` capture in its results.
 
+**Scope, added after S65:** A10 gates **timing**. Counts, digests and
+determinism comparisons do not move with load, and a spike measuring only those
+may proceed on a busy machine — provided it says so and still records the
+capture. A rule that blocks valid work gets routed around; one that names its
+own scope gets obeyed.
+
 ---
 
 ### A11. Accumulate wide, round canonically, update synchronously.
