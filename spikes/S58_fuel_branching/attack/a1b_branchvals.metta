@@ -1,0 +1,6 @@
+!(import! &self random)
+(= (g) (new-random-generator 42))
+!(random-int (g) 0 2)
+!(random-int (g) 0 2)
+!(random-int (g) 0 2)
+!(== (random-int (g) 0 2) 0)

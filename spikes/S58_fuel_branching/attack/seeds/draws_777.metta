@@ -1,0 +1,5 @@
+!(import! &self random)
+!(bind! &g (new-random-generator 777))
+!(random-int &g 0 2)
+!(random-int &g 0 2)
+!(random-int &g 0 2)

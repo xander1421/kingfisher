@@ -1,0 +1,5 @@
+!(import! &self random)
+!(bind! &g (new-random-generator 42))
+!(Gen &g)
+!(new-random-generator 7)
+!(Pair (new-random-generator 7) (new-random-generator 7))

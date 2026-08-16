@@ -1,0 +1,6 @@
+; same, via nested let (the form the hyperon stdlib test uses)
+!(import! &self random)
+!(let $g (new-random-generator 42)
+   (let $a (random-int $g 0 1000)
+     (let $b (random-int $g 0 1000)
+       (let $c (random-int $g 0 1000) ($a $b $c)))))
