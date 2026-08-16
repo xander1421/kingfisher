@@ -1,0 +1,13 @@
+[package]
+name = "bisectcommit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hyperon = { path = "../../elders/hyperon-experimental/lib", default-features = false, features = ["pkg_mgmt"] }
+hyperon-atom = { path = "../../elders/hyperon-experimental/hyperon-atom" }
+hyperon-space = { path = "../../elders/hyperon-experimental/hyperon-space" }
+sha2 = "0.10"
+
+[profile.release]
+opt-level = 3

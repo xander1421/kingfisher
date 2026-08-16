@@ -140,8 +140,11 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 | **Commit registry has `close()` but no clock** | No real deadline |
 | **Worst-case recall** | S17: 0.97 mean with a **0/100 minimum** — at least one query loses everything. Nobody has tuned for worst case |
 | **S32's 5.87× / 28,700 jobs/s unadjudicated** | No RESULT.md; `tps.py` still prints it under "MEASURED"; S33/S34 consume it. S34's "1.2× short" inherits it, so its NPU-necessity conclusion is unsupported |
+| **Bisection commitment costs 11.6% of throughput** | **B** | S60, 12 processes × 3 s, spread 1.02×. Naive per-step hashing costs 20.8% and buys nothing — 824 of 825 hashes fold an unchanged string |
+| **Step-level bisection is impossible on hyperon's public API** | **B** | S60. `RunnerState` exposes only `run_step`/`is_complete`/`current_results`; the plan stack is private, so the observable state changes **once per 825 steps**. A challenge resolves to an ~825-step *interval*, not a step. Bisection gets cheaper (3 probes, not 13); the zkVM must prove an interval. Alternative is forking hyperon |
 | **zkVM prover cost for a MeTTa trace** | The gating unknown for the succinct-settlement route. Proving runs ~10⁵–10⁶× native; **a phone cannot prove**, so this relocates cost rather than removing it. Unmeasured |
 | **`risc0/groth16` `no_std` / Substrate pallet viability** | Our chain is not EVM. Rust verifier exists; nobody has checked pallet compatibility or its PoV |
+| **Whether a results-only commitment is sound at all** | S60 commits over `atom.to_string()`, which S58 showed embeds heap addresses and is subject to `HashMap`-ordered variable naming. **Unsound today** — blocked on `proposed/hyperon-nondeterminism/` |
 | **Any NPU code** | And **VTCM is 8 MB vs a 12.8 MB packed store — it does not fit**, so bundling is a *prerequisite* for residency |
 | **Energy per job** | *diagnosis was wrong*: not root. Battery sat at 100% and plugged, so the charge counter is static. Needs wireless adb + physical unplug, or a USB power meter |
 | **Android vendor-libm variation across devices** | S59 shows every libm build is its own equivalence class. A fleet of Androids with different vendor libms could diverge with no ISA change. More product-relevant than the ISA question and untested |
