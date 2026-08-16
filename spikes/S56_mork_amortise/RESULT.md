@@ -33,7 +33,13 @@ The space reaches a **fixed point after one step**, so 199 of 200 timed calls di
 
 It also confirms the converse, which S55 needed and never checked: `metta_calculus(1)` **does** do real work — 12 expressions to 22.
 
-## 3. S55's "0.310 ms" is one point in a 1.66× band, reported to three digits
+> **[corrected the same day by an attacker] My diagnosis in this section is wrong.** I called the 1.66× band DVFS. A reviewer pinned it: three 20,000-rep runs (~6 s each, governor fully settled, `scaling_cur_freq` reading **2,918,400 kHz in all three**) gave medians of 0.302 / 0.275 / **0.170** — same cores, same measured clock, **1.78× apart**. It is not the governor. It is **process-scoped** — ASLR / arena placement in PathMap, most likely — and it is fixed for the life of a process.
+>
+> This matters because it changes the remedy, and my remedy would not have worked. "Report cycles, not milliseconds" (standing rule 1) fixes a governor problem. It does **nothing** here: a cycle count taken inside one process inherits that process's placement. The correct remedy is **many processes**, which is what the reviewer did — 12 processes × 3000 reps, median-of-medians **0.247 ms, sd 0.057, CV 23%**.
+>
+> Proof that repetition within a process cannot reach it: best-of-N must be non-increasing in N for i.i.d. samples, and measured it wanders — N=2 → 0.224, N=5 → 0.172, N=20 → 0.199, N=100 → 0.264, N=500 → 0.335, N=2000 → 0.137. Within a single process the distribution is *tight* (CV ~3%). All the variance is between processes.
+
+## 3. S55's "0.310 ms" is one point in a 2.1× band, reported to three digits
 Across the runs above, total stage 2 ranged **191.88 to 319.01 µs — 1.66×** — while the *within-run* MAD was ~1%. Same binary, same program, same device, minutes apart. Re-running S55's own binary: best-of-20 gave 0.309 / 0.302 / 0.301 ms (stable), but best-of-200 gave 0.263 and 0.176 ms.
 
 This is DVFS, and it is the **fifth** time this workspace has been caught by it. `LEDGER` standing rule 1 says *report cycles/row, not GB/s, because GB/s is a function of the governor* — and I then reported stage 2 in milliseconds. The rule was written about the prefilter and I did not generalise it: **any absolute time on this device is a governor reading unless it is normalised or bracketed by three invocations.**

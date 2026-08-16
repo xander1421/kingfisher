@@ -2,6 +2,8 @@
 
 **Verdict: GREEN on the yes/no question, and CORRECTED on every magnitude by S56 the same day.**
 
+> **Superseded by S56 and by two adversarial reviews.** Final numbers: stage 2 **0.25 ms** (12 processes × 3000 reps, CV 23%) against a *controlled* **7.07 ms** spawn (n=30, `fork`+`execve`+`waitpid`, same session/cores) = **~29×**. The 5.66 ms denominator I used came from a harness the workspace had already disqualified, and is below that harness's own noise floor. Output verified byte-identical to `mork run` and to S45 ground truth (md5 `5befd44b…`).
+>
 > **S56 supersedes the numbers below.** 0.310 ms was one point in a **1.66× DVFS band (0.19–0.32 ms)** reported to three digits; the speedup is **18–30×**, not 18.3×; and the caveat at the bottom of this file — *"a resident agent would amortise it"* — is **false**: `Space::new()` is 0.83 µs, 0.3% of stage 2. What survives is the claim that matters: **MORK is callable in-process, and `LEDGER` line 41 is disproven by execution.**
 
 I wrote: *"MORK has no library surface — CLI only, so it cannot be a per-query in-process engine"*, graded it **E** (read, not measured), and let it gate the biggest cost in the query path. A reviewer checked and found `kernel/src/lib.rs` exporting `pub mod space`, with `experiments/unification_test_laws` already calling `mork::space::Space::new()` in-process. I had read `main.rs` and never looked for `lib.rs`.
