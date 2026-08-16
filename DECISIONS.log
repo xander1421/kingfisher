@@ -71,3 +71,5 @@
 64 | 2026-08-17 | S67: implemented the ECAN surgery A11 specifies. double fails the oracle (4 thread counts, 4 hashes), fixed-point Q32.32 with u128 accumulation and BSP epochs passes. Anti-degeneracy guard included. This is the demonstration half of the upstream contribution and the Deep Funding deliverable.
 
 65 | 2026-08-17 | S67 corrected before publication: my double harness parallelised a reduction DAS does not parallelise. visit_nodes is a serial content-ordered trie walk, so the intra-epoch mechanism is FALSE. Real hazard is different and unmeasured: spread_stimuli runs inline from the gRPC handler so whole epochs interleave. Oracle retained as a regression test DAS lacks.
+
+66 | 2026-08-17 | S67b: rebuilt the oracle to model DAS shipping config (concurrent epochs vs serialised) instead of a thread-pool DAS never spawns. Concurrent gives 2 distinct outcomes over 8 trials, 0/8 matching serialised. Defect is a torn aggregate, not rounding - fixed-point does not fix it. FMA question closed negative: no a*b+c in the hot path. Upstream report in proposed/das-concurrency, opening with a neutral question about whether the async path was meant to be restored.
