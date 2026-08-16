@@ -84,8 +84,32 @@ Battery temperature barely moves (37.8 → 38.3 °C) because the battery thermis
 
 ---
 
-## Status of the cooldown experiment
-A follow-up run (`--reps 5 --cooldown 25 --jobs job_kb`) tests whether a 25 s idle gap between samples restores the cold rate. If it does, the effect is thermal/governor and the mitigation is duty-cycling; if it does not, something in the process (allocator growth, page cache) is responsible and the mitigation is different. Result appended below when it lands.
+## The cooldown experiment settles it: thermal, and fully recoverable
+
+`--reps 5 --cooldown 25 --jobs job_kb`, i.e. a 25 s idle gap between samples:
+
+```
+job_kb  host   v0  cold 1352.0  warm_med 1386.5  rsd 0.8%  c/w 0.98  1.00x  OK
+job_kb  host   v1  cold 1234.0  warm_med 1227.0  rsd 1.0%  c/w 1.01  1.13x  OK
+job_kb  host   v2  cold 1268.0  warm_med 1241.5  rsd 0.3%  c/w 1.02  1.12x  OK
+job_kb  phone  v0  cold 3666.0  warm_med 3648.5  rsd 0.1%  c/w 1.00  1.00x  OK  36.4->37.5C
+job_kb  phone  v1  cold 3562.0  warm_med 3543.0  rsd 0.3%  c/w 1.01  1.03x  OK  36.5->37.6C
+job_kb  phone  v2  cold 3044.0  warm_med 3041.5  rsd 0.2%  c/w 1.20  1.20x  OK  36.6->37.7C
+```
+
+**The 40 % penalty vanishes completely.** Back-to-back the phone's warm median was 6244 ms; with 25 s of idle between samples it is 3648 ms — the same as its cold sample — and the spread collapses from 14.0 % to **0.1 %**. `cold_over_warm` goes 0.58 → 1.00.
+
+So the effect is **thermal/governor recovery, not process degradation**: nothing accumulates inside the process (no allocator growth, no page-cache effect), the SoC simply cannot hold the clock. And v2's advantage is unchanged at **1.20×**, now measured at 0.2 % spread — the cleanest number in this spike.
+
+### The fleet-capacity consequence
+| regime | phone v2 | vs host v0 (1.44 M steps/s) |
+|---|---|---|
+| duty-cycled (25 s idle per 3 s of work) | **658 k steps/s** | 2.2× slower |
+| continuous, back-to-back | **383 k steps/s** | 3.7× slower |
+
+Both are true; they answer different questions. **Per-job latency** and anything priced per second of work should use 658 k. **Total nightly throughput** — the number that matters for a charge-time fleet — must use 383 k, because a device that is plugged in for eight hours will be running continuously, not duty-cycled. Any capacity model has to state which regime it assumes; the workspace previously stated neither, and S15's 2.7× was implicitly the burst figure on a 100 ms job.
+
+The scheduler consequence is concrete: **`SCHEDULER_SPEC.md` should add a duty-cycle knob.** Running flat out yields the most work per night, but at 60 % efficiency and with the SoC pinned hot next to a sleeping user's head; running at a duty cycle recovers full per-job speed and lower temperatures at the cost of total throughput. That is a policy choice the spec currently does not expose, and it cannot be made without these two numbers.
 
 ## Reproducing
 ```sh
