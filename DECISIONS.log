@@ -42,3 +42,5 @@
 38 | 2026-08-16 | Succinct-proof route identified for R-NEW: Groth16 seal is 256 bytes CONSTANT in computation size (risc0 verifier.sol, 4 pairings). Recommended M3.5 shape is optimistic settlement with proof-on-challenge - zero proofs on the happy path, Acurast throughput with our trust model. Gating unknown moves from chain cost to prover cost.
 
 43 | 2026-08-16 | GUARDRAILS A9 added after four citation drifts found in it (C2 on retracted S15, D NPU row falsified by a cloned elder, D shard row re-scoped, E B2 skipped by the LEDGER v2 rewrite). Citations now carry grade+date.
+
+44 | 2026-08-16 | Corrected the symbolic-vs-neural framing after user pushback: the fork is per-module verification rung, not two products. Grounded trait is user-implementable so neural modules attach as atoms; S7 deleted TOPLOC tolerance model which is exactly what verifies them. Next decisive test: does exponent-exact/mantissa-tolerant absorb S59 2-ULP divergence.
