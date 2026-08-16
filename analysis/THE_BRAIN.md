@@ -10,16 +10,16 @@ assembly, not invention.
 
 | brain function | our component | state | evidence |
 |---|---|---|---|
-| **neuron** — a unit that computes | device running a module | **works** | oflineAI 103.9 tok/s on the NPU; MeTTa in-process 0.25 ms |
+| **neuron** — a unit that computes | device running a module | **works** | MeTTa in-process 0.25 ms (measured here). *oflineAI's 103.9 tok/s is **READ** from `~/alex/oflineAI/ALPHA.md`, not measured in this workspace* |
 | **signal** — a result that means the same thing everywhere | deterministic reduction | **proven** | S57: 66/67 identical across two ISAs, 360,847 steps |
 | **synapse** — the connection substrate | hypergraph atomspace | works | MORK 33/33 byte-identical; DAS is a running service |
 | **module interface** — how a specialised region attaches | `pub trait Grounded` | **exists, in use** | hyperon already binds external services, a network atomspace, Python, agents |
 | **cortical code** — distributed representation | HDC / VSA | **integer, bit-exact** | S34 digest `f4e64fb7d70b9b0c` on two machines; torchhd `MAP`/`BSC`/`MCR`/`CGR` |
 | **deliberation** | MeTTa + PLN | **verifiable today** | `c3_pln_stv`, 37,788 steps, identical on three platforms |
-| **salience / attention** | DAS attention broker | **exists, nondeterministic** | `typedef double ImportanceType`; threaded accumulation |
+| **salience / attention** | DAS attention broker | **exists, nondeterministic** — and **inside the verified perimeter**, because importance feeds *state* (consolidation, forgetting, what the graph becomes), not just routing. If it only routed work, nondeterminism would cost efficiency rather than truth and the `double` version could ship today | `typedef double ImportanceType`; threaded accumulation |
 | **memory consolidation** | shaping job class | **1 of 18 BUILD rows** | 4.1–5.6× on FB15k-237 |
-| **co-tenancy** — many requests, one body | — | **proven** | 8 concurrent copies, identical digest at every N |
-| **routing** — which region gets which work | locality matcher | **not built; exists elsewhere** | Acurast `pallets/marketplace`, public domain, 260k devices |
+| **co-tenancy** — many requests, one body | — | **proven, re-measured** | S32a's table was *recovered* from `chat.log` and never re-run, so it was re-measured: 8 concurrent copies on macOS, **8/8 identical and equal to the single-copy baseline** (`4937b20a…`). Now holds on two platforms |
+| **routing** — which region gets which work | locality matcher | **ADAPT, not PORT** — Acurast routes by attestation class and has **no concept of shard locality or residency**, which is the half we need | Acurast `pallets/marketplace`, public domain, 260k devices |
 | **circulation** — carrying results out | settlement | **the wall** | 8.6 results/s; **three devices saturate it** |
 
 ## What the brain actually is, once you stop metaphorising
@@ -48,27 +48,51 @@ NPU runs fastest anyway.
 Every row above is either measured, or has a public-domain implementation we have
 read and not ported. The exception:
 
-> **Attention is the missing organ, and it is one contained fix away.**
-> DAS's Hebbian broker is a real neural mechanism — importance decays as rent,
-> redistributes as wages, spreads along edges. It is nondeterministic only
-> because importance is `double` accumulated across a threaded trie walk.
-> Stimulus already arrives as `unsigned int`, and the rates are bounded in
-> [0,1], so fixed-point integer importance makes it bit-exact. Integer addition
-> is associative; thread order stops mattering.
+> **Attention is the missing organ.** DAS's Hebbian broker is a real neural
+> mechanism — importance decays as rent, redistributes as wages, spreads along
+> edges. Nothing else in the stack does salience.
 
-That is the difference between a fleet of devices running jobs and a brain that
-decides what matters. Nothing else in the stack does salience.
+**And "just use fixed point" is wrong, for a reason this project already learned
+one rung down.** Integer *addition* is associative, so thread order stops
+mattering — but additions were never the danger. The neural rung taught it:
+integer matmul was fine, **requantization rounding** was where vendors diverged.
+Same law here. Decay, spreading and rent are **multiplications by rates in
+[0,1]**, and fixed-point multiply rounds, so `(a·r) + (b·r) ≠ (a+b)·r` by a bit.
+Worse, threaded read-modify-write reorders *which* importance a spreading step
+reads mid-epoch, and the trie walk runs straight through the pointer-keyed
+`HashMap` bug.
+
+The surgery has a spec:
+
+| requirement | why |
+|---|---|
+| **accumulate wide** — int64/int128 intermediates | keeps the rounding out of the inner loop |
+| **round only at canonical points** | one rounding site, not one per edge |
+| **BSP double-buffered epochs** — read state *t*, write *t+1* | removes read-modify-write interleaving |
+| **fold order keyed by content hash, never by pointer** | the multitrie defect, avoided by construction |
+| **one pinned rounding mode** | S49's exact-rational lesson |
+| **seeded or removed stochastic selection** | S58's rule |
+
+**Acceptance oracle: N threads and 1 thread must produce an identical per-epoch
+state hash.** That is the whole determinism law of this project in one sentence —
+**accumulate wide, round canonically, update synchronously** — now covering the
+neural rung and the attention organ with the same physics.
 
 ## Where the scale argument breaks
 
 A quarter-billion devices settles the *capacity* question and settles nothing
 else. Two constraints do not improve with scale, and one gets worse:
 
-- **Settlement is saturated at three devices.** 2.87 results/s per device against
-  8.6/s of chain. At 250M devices, throughput is infinite and the bottleneck is
-  100% settlement. **Scale converts a capacity problem into a settlement
-  problem — it does not solve one.** The fix exists (constant-size proofs,
-  256 bytes regardless of work proven, posted only on dispute) and is uncosted.
+- **Settlement — and the wall is a door.** "Saturated at three devices" prices
+  *per-job on-chain posting*, which was never the design. The happy path is
+  **Merkle-batched commitments plus payment channels — no ZK, near-zero chain
+  footprint**, and that removes the wall outright. Proofs only price the
+  **dispute** path, where bisection over identical fuel counts reduces the job
+  to proving **one interpreter step**, not a trace. So "cost the proof
+  economics" scopes to exactly two measurements: **one-step proving cost on
+  risc0**, and **checkpoint-hashing cadence**. Scale still converts a capacity
+  problem into a settlement problem; it just turns out settlement has a known
+  key.
 - **Demand does not scale into existence.** BOINC ran 24 years with volunteers
   and never built a market. Golem built one and deleted the repository.
 - **Heterogeneity gets worse.** The AI-module equivalence class already includes
@@ -88,7 +112,27 @@ public-domain code. It understates the two things a brain does not fix: a body
 with no circulatory system settles nothing, and an organism with no niche does
 not survive being clever.
 
-**Build the brain. It is close, and it is mostly assembly.** But the sequencing
-should be: cost the proof economics (days), port attention with fixed-point
-importance (contained), and in parallel find one buyer — because the brain is
-the part we know how to build, and the other two are the parts we do not.
+**Build the brain. It is close, and it is mostly assembly** — but assembly of 17
+references *is itself the invention*. Systems die in the joints, and the routing
+row above is the first joint: Acurast's matcher has no locality keys.
+
+Sequencing:
+
+**0. File the hyperon nondeterminism PR.** Everything queues behind it. It gates
+checkpoint hashing, bisection, **and** the canonical fold order amendment 1
+requires. Patches are written and tested — 319 tests pass, S57 corpus unchanged.
+It is unfiled only because mission §11 forbids publishing.
+
+**1. Cost the two dispute-path numbers** — one-step risc0 proving, checkpoint
+cadence. Days.
+
+**2. Port attention** to the spec above, with the N-thread==1-thread oracle.
+
+**3. Find one buyer**, in parallel with all of it.
+
+### The attention port is also the market entry
+A deterministic, fixed-point ECAN contributed **upstream to DAS/Hyperon** is
+three things at once: the organ this brain is missing, the most legible possible
+Deep Funding deliverable, and the ecosystem paying — in money or standing — for
+engineering we were going to do anyway. It is the rare item where the
+build and the go-to-market are the same commit.

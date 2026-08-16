@@ -323,3 +323,25 @@ is recorded in the output.
 
 **Not "declare contention" — refuse.** Every spike that produces a timing number
 calls it first and embeds the `--json` capture in its results.
+
+---
+
+### A11. Accumulate wide, round canonically, update synchronously.
+
+The determinism law, stated once, covering every rung.
+
+Integer *addition* is associative, so thread order is harmless — **but additions
+were never the danger.** The neural rung taught it first: integer matmul is fine,
+**requantization rounding** is where implementations diverge. The same law
+governs the attention broker: decay, rent and spreading are multiplications by
+rates in [0,1], and fixed-point multiply rounds, so `(a·r) + (b·r) ≠ (a+b)·r`.
+
+So "use fixed point" is never the whole fix. The fix is:
+**accumulate wide** (int64/128 intermediates), **round only at canonical points**
+(one rounding site, one pinned mode), and **update synchronously** (BSP
+double-buffered epochs; read state *t*, write *t+1*), with fold order keyed by
+content hash and never by pointer.
+
+**Acceptance oracle, for any parallel component: N threads and 1 thread must
+produce an identical state hash.** If that test does not exist, the component is
+not known to be deterministic — it is merely untested.
