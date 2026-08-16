@@ -43,7 +43,7 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 | claim | grade | note |
 |---|---|---|
 | **Stage 2 must run in-process** | **B** | S45. Hardest requirement in the workspace, **absent from v1**. Subprocess = 5.66 ms, of which ~5.25 is generic process creation |
-| **Any stage-2 engine swap is capped at ~1.06×** | **B** | S44, confirmed on device by S45. v1 listed MORK's 31.6× without this bound |
+| ~~Any stage-2 engine swap is capped at ~1.06×~~ **RE-OPENED** | **D** | S44 computed this against a laptop prefilter and a numpy exact-match. Against the deployable prefilter (S54: 0.168 ms) and in-process MORK (S55: 0.310 ms), stage 2 is **65% of the query**, not 5.7%. Bound invalid for the deployable configuration |
 | **Never size a spin-barrier pool to `nproc`** | **A** | S51: T=8 collapses 89×; S53 hit the same starvation at T=1 (14× error) one spike later. Corroborated twice, by accident |
 | 4 background cores − 1 coordinator = **3 workers**, or the barrier must block | **B** | S54 |
 | Custody is justified by **network fetch**, not bandwidth (~4,500 queries per 12.8 MB fetch) | **D** | S34. Retires S18's argument |
@@ -59,7 +59,7 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 | Pointer tagging aborts PathMap's `slim_ptrs` | **B** | S16; *used* in an attack, never targeted. v1 said A |
 | Perf cluster 2 NEON ops/cycle, prime 4 (2.018×) | **B** | Attacker-produced, unattacked — **and unbankable**, prime is outside the background cpuset |
 | MORK unlicensed at HEAD; MIT declared in issue #2, file never committed | **E** | Read from GitHub. v1 said A, which shows the scale was applied by confidence |
-| MORK has no library surface | **E** | `kernel/src/main.rs` |
+| **MORK IS callable in-process** — `kernel/src/lib.rs` exports `pub mod space`; stage 2 in-process = **0.310 ms vs 5.66 ms subprocess, 18.3×** | **B** | **S55.** v2 said the opposite at grade E and let it gate the query path. `Space::new` / `add_all_sexpr` / `metta_calculus` / `dump_all_sexpr` are all public, and an in-tree crate already uses them. MORK's blockers drop from two to one: licence only |
 | MORK ~31.6× faster on join work | **B** | S35 — subject to the 1.06× bound. Fast, unshippable, uncallable |
 
 ## LIVE — magnitude survives, mechanism did not
@@ -125,3 +125,4 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 7. **Verify the control, gate it on plausibility.** **Five** were silently broken: an eliminated null loop; a clock calibration folded to a closed form (769,190,472 MHz); a `date`-bracketed timer costing two process spawns; a coordinator sharing a core; a null bracket understating by 1.3×.
 8. **Finding a failure mode does not inoculate you against it.**
 9. **Measure the configuration the product can reach, before optimising one it cannot.**
+10. **An E-grade claim must never be load-bearing.** "MORK has no library surface" was flagged as unverified and still gated the largest cost in the query path for a week. If an unmeasured claim gates a decision, promote it to a measurement before deciding.
