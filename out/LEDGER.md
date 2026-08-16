@@ -50,7 +50,7 @@ This is the only claim group nothing has dented in four rounds, and it is what t
 | Shaping is worth **4.1–5.6×** on a real KG; shaped layouts check 0.0–1.0% of the store, random checks 41–57% | B | S52 on FB15k-237, 120 queries/cell. **Supersedes the 54× and 12.8× from synthetic data, which were artefacts** |
 | Worst mis-shaping on real data is **1.45×** worse than random; shaping beats random in 4 of 6 off-diagonal cells | B | S52. Un-retracts S48's claim D at a tenth of the size |
 | The prefilter is at **92% of the 8-thread streaming roof, 8% left** | A | attacker's multi-thread measurement. **Vindicates S45b's "≤16% left", which I wrongly retracted** |
-| Residency is worth **1.80×** multi-threaded (128.5 GB/s at 12.8 MB → 71.5 at 102 MB, 7 threads) | B | mine, just measured. **Un-retracts S46's chain: single-core is flat only because one core is too slow to see the memory system** |
+| Residency is worth **1.00× at 1 thread, 1.17× at 4, 1.52× at 6** — it is a function of thread count, not of the workload | B+ | **S53**, superseding my own 1.80×. Four thread counts × four sizes, in cycles/row, clock measured and plausibility-gated, coordinator isolated. The earlier 1.80× was inflated by mixing a prime core into a perf-cluster measurement and by using GB/s. S46's "buys nothing" is true at T=1–2 and false above; both it and my un-retraction over-generalised from one configuration |
 | MORK is ~31.6× faster than hyperon end-to-end on join-shaped work | B | S35, 400 nodes/1200 edges. Not generalisable past join work |
 
 ## DEAD
@@ -80,6 +80,7 @@ This is the only claim group nothing has dented in four rounds, and it is what t
 | **Energy per job** | blocked: `current_now` needs root, `dumpsys` gives level/temp only. Gates the entire "users opt in" story |
 | **WorkManager's real limits** | ~10 min per worker, 6 h/24 h dataSync cap on Android 15. `SCHEDULER_SPEC` has neither, and every fleet projection assumes long runs |
 | **Play Integrity's 10k/day quota** | an attestation ceiling nobody had costed |
+| **Cross-cluster scaling** | S53 deliberately used perf cores only, because the prime cluster issues NEON at twice the width; mixing them makes cycles/row meaningless without per-cluster accounting. No honest whole-SoC scaling number exists |
 | **Sustained vs burst, multi-core** | S51 ended with cores at 1,996/1,958 MHz against 3,532/4,474 maxima. Every multi-core number is a throttled floor |
 | **A fixed (non-oracle) cutoff** | every bundling result uses a cutoff fitted to the ground truth. A deployed prefilter cannot |
 | M1.1/1.3/1.5/1.7 | app, worker, shard store, transport — still nothing built |
@@ -92,4 +93,6 @@ This is the only claim group nothing has dented in four rounds, and it is what t
 4. **Measure the null and prove it can fire.** Mine was eliminated dead code.
 5. **A parameter fitted to ground truth is an oracle** — label it and report its cost.
 6. **One draw is not a measurement**, and one *configuration* is not either: both un-retractions came from generalising from a setup that could not see the effect.
-7. **Grade the evidence.** Nothing at grade A has fallen; almost everything that died was B or C presented as if it were A.
+7. **Verify the control itself, and gate it on plausibility.** Four controls in this workspace were silently broken — an eliminated null loop, a clock calibration the compiler folded to a closed form (769,190,472 MHz), a `date`-bracketed timer costing two process spawns, and a coordinator sharing a core with a worker. A one-line range check would have caught all four.
+8. **Finding a failure mode does not inoculate you against it.** S51 discovered coordinator starvation at T=8; S53 walked into it at T=1 one spike later, for a 14× error. Only a control prevents recurrence.
+9. **Grade the evidence.** Nothing at grade A has fallen; almost everything that died was B or C presented as if it were A.
