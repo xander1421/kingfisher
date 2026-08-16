@@ -17,54 +17,58 @@ configuration.
 this->stimulus_spreader->spread_stimuli(request);
 ```
 
-`spread_stimuli` now runs **inline inside the gRPC handler**, so gRPC's worker
-threads execute *entire epochs* concurrently against one shared
-`HebbianNetwork`. The only synchronisation is `trie_node_mutex`, taken per node
-inside `HandleTrie::traverse`.
+`spread_stimuli` runs **inline inside the gRPC handler**. The service is a plain
+synchronous `AttentionBroker::Service` registered with a bare
+`RegisterService()` — no `SetSyncServerOption`, `ResourceQuota` or `num_cqs` — so
+gRPC's default pool dispatches handlers concurrently.
 
-Per-node locking makes each individual read and write atomic. It guarantees
-nothing about the **aggregate**:
+**The hazard is between phases, not inside one.** Each `visit_nodes` pass *is*
+atomic: `HandleTrie::traverse` is called with `keep_root_locked=true`, and
+`HandleTrie.cc:227-233` skips unlocking root inside the walk, releasing it only
+after the pass completes. Since `insert()` and `fetch()` both lock root first,
+one traversal excludes every other traversal, insert and lookup. There is no
+torn read inside `collect_rent`.
 
-```cpp
-// StimulusSpreader.cc:51-52   — collect_rent, across a full traversal
-ImportanceType rent = data->rent_rate * node->value->importance;
-data->total_rent += rent;
+But `spread_stimuli` performs **several root-locked passes and releases root
+between them** — `collect_rent` (:177), then `alienate_tokens` (:181),
+`distribute_wages` (:185), then `consolidate` (:192). Two epochs can interleave
+at those boundaries:
 
-// StimulusSpreader.cc:67-68   — consolidate, a read-modify-write
-value->importance -= changes->rent;
-value->importance += changes->wages;
+```
+A: collect_rent            (rent_A computed from state S0)
+B: collect_rent            (rent_B also from S0)
+B: consolidate             (state now S1)
+A: consolidate             (applies rent_A, computed from S0, to S1)
 ```
 
-While epoch A traverses to collect rent, epoch B is writing importance behind
-it. `total_rent` therefore sums a **torn state that never existed as a
-consistent snapshot**, and A's per-node `rent` values are computed from stale
-reads that B has already superseded.
-
-**This is not a floating-point rounding-order issue.** We checked that first and
-it does not apply: `HandleTrie::traverse` is serial, the trie is a fixed 16-way
-alphabet keyed by handle content (`HandleTrie.h:9,177`), and the broker uses
-only `+ - * /`, which IEEE-754 requires to be correctly rounded. Intra-epoch
-order is fully determined. The defect is cross-epoch interleaving.
+A applies rent derived from a state B has already superseded. Each traversal is
+atomic; **the epoch is not.**
 
 ## Reproduction
 
-`epochs.rs` in this directory models `spread_stimuli` faithfully — serial
-content-ordered traversal, per-node mutexes, the same rent/wages/consolidate
-arithmetic — and runs 6 epochs two ways.
+`epochs2.rs` models the real synchronisation — root lock per pass, released
+between passes — with `RENT_RATE = 0.75` (`AttentionBrokerServer.cc:8`). `GAP`
+widens the inter-phase window, which in DAS contains `alienate_tokens` and
+`distribute_wages`. 2,048 nodes, 6 epochs, 50 trials:
 
-```
-serialised (async enqueue path)   62f3d55a454977bd
-concurrent (inline dispatch), 8 trials:
-    9b28730ea0c7dfaa  x6
-    e3057eb3f939a7f3  x1
-    f5436eb5a1086319  x1
+| inter-phase window | unpatched `match_serialised` | with the patch |
+|---|---|---|
+| GAP = 0 (tightest possible) | 47/50 | **50/50** |
+| GAP = 100 | 20/50 | **50/50** |
+| GAP = 2000 | **0/50** | **50/50** |
 
-distinct concurrent outcomes : 3
-trials matching serialised   : 0/8
-```
+**Frequency scales with the width of the window between passes**, which is why a
+short synthetic model understates it and the real four-pass epoch will not.
 
-**Concurrent execution never reproduces the serialised result, and does not
-reproduce itself.** 2,048 nodes, 6 epochs, `rent_rate = 0.03`.
+We report `match_serialised` rather than a count of distinct outcomes: the
+distinct count varies with core count, allocator timing and N, and is not a
+stable statistic. Below roughly N≈2048 the epoch completes before the next
+thread starts and nothing overlaps at all.
+
+**Two controls.** A global lock around the epoch restores 50/50 — and since all
+epochs here are identical, ordering cannot matter, which isolates the cause as
+*interleaving* rather than order. And an integer (Q32.32) version of the same
+model also diverges, confirming this is not a rounding-order artefact.
 
 ## Why it matters beyond reproducibility
 
@@ -75,38 +79,47 @@ they remember.
 
 ## Fix — patch attached (`01-epoch-mutex.patch`)
 
-**Restoring the async enqueue does not fix this**, which we assumed at first and
-then checked. Two reasons:
+**Restoring the async enqueue does not fix this.** We assumed it would, then
+checked:
 
-1. The worker casts `request.second` back to a `dasproto::HandleCount*`
-   (`WorkerThreads.cc:58`) — a gRPC-owned message freed when the handler
-   returns. Enqueueing the pointer and processing it later is a use-after-free,
-   which may well be why these lines were commented out in the first place.
-2. It would not help anyway: `WORKER_THREADS_COUNT` workers pull from one queue
-   and each calls `spread_stimuli` on the same network
-   (`WorkerThreads.cc:22-24,58`). The concurrency moves from gRPC threads to
-   worker threads and the hazard is identical.
+1. `SharedQueue` stores a bare `void*` (`SharedQueue.cc:33-41`) and the worker
+   casts it back to `dasproto::HandleCount*` (`WorkerThreads.cc:59`) — a
+   gRPC-owned message freed when the handler returns. **Use-after-free**, which
+   is very likely why these three lines were commented out.
+2. It would not help regardless. `WORKER_THREADS_COUNT = 10`
+   (`AttentionBrokerServer.h:58`), and `RequestSelector` gives the five
+   even-numbered threads the stimulus queue (`RequestSelector.cc:24,46-48`), each
+   calling `spread_stimuli` on the shared network. **The async path is more
+   concurrent, not less.**
 
-The attached patch adds a **per-network epoch mutex** — `HebbianNetwork::epoch_mutex`
-— held for the duration of `spread_stimuli`, `correlation` and
-`asymmetric_correlation`, the three inline-dispatched entry points that mutate
-importance.
+The patch adds a **per-network `HebbianNetwork::epoch_mutex`**, held across
+`spread_stimuli`, `correlation` and `asymmetric_correlation` — the three
+inline-dispatched entry points that mutate importance. Per network rather than
+global, so distinct contexts (`select_hebbian_network`) still run in parallel.
+No entry point calls another and nothing re-enters, so there is no deadlock path,
+and the epoch is already `O(nodes)` so complexity is unchanged.
 
-Per network rather than global, so distinct contexts (`select_hebbian_network`)
-still proceed in parallel. Neither entry point calls the other and nothing
-re-enters, so there is no deadlock path. The epoch is already `O(nodes)`, so the
-lock does not change the complexity of anything.
+## A more severe bug in the same file, which we did not patch
 
-Verified in the model:
-```
-concurrent, unpatched            3 distinct outcomes, 0/8 match serialised
-concurrent, with epoch_mutex     1 distinct outcome,  8/8 match serialised
-```
+`AttentionBrokerServer.h:213` is `unordered_map<string, HebbianNetwork*> hebbian_network;`
+with **no mutex anywhere in the class**, and `select_hebbian_network`
+(`:377-380`) does `this->hebbian_network[context] = network;` from every
+concurrent handler. Concurrent `operator[]` insertion is a rehash race — a crash
+or a silently lost network, not merely a wrong number. This is strictly worse
+than the issue above and wants its own fix.
 
-A longer-term alternative is **BSP double-buffering** — read importance at epoch
-*t*, write *t+1* — which makes concurrent epochs well-defined rather than merely
-excluded, and would let them actually run in parallel. That is a larger change
-and we have not attempted it.
+Also unsynchronised: `network->largest_arity` is read at `StimulusSpreader.cc:167`
+while `add_asymmetric_edge` writes it under `largest_arity_mutex`
+(`HebbianNetwork.cc:57-61`), and the static `RENT_RATE` / `SPREADING_RATE_*` are
+written by `set_parameters` while epochs read them.
+
+## Your own test suite asserts the property this breaks
+
+`src/tests/cpp/stimulus_spreader_test.cc:150-236` reimplements the algorithm
+arithmetically and asserts each node's importance against a closed-form
+expectation to within `1e-3`. **DAS's test suite already treats importance as
+exactly determined by the stimulus sequence** — which is the property concurrent
+epochs violate.
 
 ## Optional hardening, not required for the above
 A fixed-point (Q32.32) importance type makes the broker immune to compiler
@@ -114,8 +127,22 @@ flags, which matters if the network is ever replicated across heterogeneous
 hardware. **This is not needed to fix the bug above** and we flag it only
 because we built it: `ecan.rs` here is a reference implementation.
 
-We checked whether current `double` arithmetic could diverge across platforms
-via FMA contraction and concluded it cannot as written — every float operation
-in the hot path is a bare multiply or a bare add in its own statement
-(`StimulusSpreader.cc:51,67,68,76,77`), so there is no `a*b+c` for clang's
-default `-ffp-contract=on` to contract, and `src/.bazelrc` sets no FP flags.
+We initially claimed the `double` arithmetic could not diverge across platforms
+via FMA contraction. **That was wrong**, and wrong because our line list omitted
+the one contractable expression. `StimulusSpreader.cc:74-75` is:
+
+```cpp
+ImportanceType spreading_rate = data->spreading_rate_lowerbound +
+                                (data->spreading_rate_range_size * arity_ratio);
+```
+
+an `a + b*c`. Bazel's `compilation_mode=opt` is `-O2` and `src/.bazelrc` sets no
+FP flags, so clang's default `-ffp-contract=on` applies: aarch64 emits `fmadd`,
+baseline x86-64 emits `mulsd` + `addsd`. An ARM node and an x86-64 node compute
+different `spreading_rate`.
+
+It is numerically inert **only while** `SPREADING_RATE_LOWERBOUND == UPPERBOUND`
+(both default to 0.10, so `range_size == 0.0`). A client calling `set_parameters`
+with different bounds makes it live. Note your own test computes
+`lb + (arity_ratio * (ub - lb))` with a `1e-3` tolerance, so it would not catch
+this either.

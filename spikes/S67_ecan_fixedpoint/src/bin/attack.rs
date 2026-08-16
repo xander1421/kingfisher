@@ -288,4 +288,52 @@ fn main() {
         }
         report("faithful float N=2048 E=6", &serial, &seen, trials);
     }
+
+    corrected();
+}
+
+// ==================================================================================
+// E. CORRECTED model. HandleTrie::traverse(keep_root_locked=true) holds the ROOT
+// mutex for the WHOLE traversal (HandleTrie.cc:208,227-233), so each visit_nodes()
+// pass is atomic against every other traversal/insert/lookup on the same trie.
+// Interleaving is therefore only possible BETWEEN the phases of spread_stimuli,
+// never inside collect_rent. Does divergence survive that?
+#[allow(dead_code)]
+pub fn corrected() {
+    use std::sync::Mutex as M;
+    let (n, e, trials) = (2048usize, 6usize, 50u32);
+    let (stim, tw) = stimuli(n);
+
+    struct Net { imp: Vec<M<f64>>, root: M<()> }
+    let mk = || Net { imp: fresh_f(n), root: M::new(()) };
+
+    let epoch = |net: &Net| {
+        let mut rent = vec![0.0f64; n];
+        let mut total_rent = 0.0f64;
+        {   // visit_nodes(true, collect_rent) -- ATOMIC, root held
+            let _g = net.root.lock().unwrap();
+            for i in 0..n { rent[i] = RENT_RATE * *net.imp[i].lock().unwrap(); total_rent += rent[i]; }
+        }
+        // <-- root released here; another epoch can run its whole collect_rent+consolidate
+        {   // visit_nodes(true, consolidate_rent_and_wages) -- ATOMIC, root held
+            let _g = net.root.lock().unwrap();
+            for i in 0..n {
+                let wages = (stim[i] as f64) * total_rent / (tw as f64);
+                let mut v = net.imp[i].lock().unwrap();
+                *v -= rent[i]; *v += wages;
+            }
+        }
+    };
+
+    let net = mk();
+    for _ in 0..e { epoch(&net); }
+    let serial = digf(&snap_f(&net.imp));
+    let mut seen = BTreeMap::new();
+    for _ in 0..trials {
+        let net = mk();
+        thread::scope(|s| { for _ in 0..e { s.spawn(|| epoch(&net)); } });
+        *seen.entry(digf(&snap_f(&net.imp))).or_insert(0) += 1;
+    }
+    println!("\n=== E. CORRECTED (root lock makes each traversal atomic) ===");
+    report("phase-atomic float N=2048 E=6", &serial, &seen, trials);
 }
