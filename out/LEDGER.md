@@ -60,7 +60,8 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 | `background` cpuset = `0-1,4-5` | **B** | S54, read from `/dev/cpuset` on device |
 | NNAPI exposes no accelerator on SM8750 | **A** | S31; a second agent independently searched HAL/VINTF — for a negative existence claim, an independent search *is* the attack |
 | Rule: **scale ≥ 2·nnz(Q)/126** — pick the scale from the cutoff, not the observed range | **B** | S31. v1 had the symptom (recall 0/8), not the rule |
-| Transmit the scale as an **exact rational**, never a float | **B** | S49: the boundary sat on .5, so float-vs-double splits two honest verifiers. `rint` in a spec is insufficient — rounding modes differ across Python/C/Go/JS |
+| Transmit the scale as an **exact rational**, never a float | **A** | **Independently confirmed from outside this workspace**: Acurast ships `MetricInput = (PoolId, u128, u128)` → `FixedU128` as `numerator/denominator` at 260k devices (`acurast/common/src/types.rs:558-561`). First external confirmation any claim here has received. **And `hyperjob_v1.proto` still declares `quant_scale` as `double`** |
+| *(original note)* | | S49: the boundary sat on .5, so float-vs-double splits two honest verifiers. `rint` in a spec is insufficient — rounding modes differ across Python/C/Go/JS |
 | Pointer tagging aborts PathMap's `slim_ptrs` | **B** | S16; *used* in an attack, never targeted. v1 said A |
 | Perf cluster 2 NEON ops/cycle, prime 4 (2.018×) | **B** | Attacker-produced, unattacked — **and unbankable**, prime is outside the background cpuset |
 | MIT declared in MORK issue #2, file never committed | **B** | See the row below; `analysis/MORK_LICENCE_CHECK.md` |
@@ -97,6 +98,12 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 | **1.00× at T=1–2, 1.06× at T=3, 1.16× at T=4** in the deployable cpuset | **B** | S54. Supersedes S53's 1.52× and my earlier 1.80×, both on unreachable cores |
 | Whole-SoC (unreachable): 1.17× at T=4, 1.52× at T=6 | **B** | S53 — **one run, thermal uncontrolled**, its own caveat which v1 omitted while reciting its strengths |
 
+## DEAD — added this round
+
+**"Verification is nearly free because reduction is deterministic" is no longer a differentiator.** Acurast made verification nearly free *without* determinism: TEE + hardware key attestation + slashing, no second run — 366+ slash references against **0** occurrences of quorum, redundancy, challenge or dispute. What survives is narrower and is now the whole pitch: **their model requires trusting Qualcomm/Google/Samsung silicon and a centrally-maintained revocation list; ours requires trusting nothing.**
+
+**"Metering time is the wrong unit for a device you cannot audit"** (`STATE_OF_THE_UNION`) — Acurast prices per millisecond (`marketplace/src/lib.rs:877`). True only under *our* trust model; attestation makes time auditable. Conditional claim published as general.
+
 ## DEAD
 
 The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shaping" *as argued in S48* · the *retraction* of "≤16% left" · "the headroom is scheduling" (mechanism only) · "59% of T=8 was pthread_create" (41%; subtraction invalid) · "stage 2 is 13 ms of exec()" (5.66 ms; control timed a SIGABRT tombstone) · "the read roof declines at 8 threads" (spawn inside my own timed region) · "22.6 GB/s/core at ~2 IPC" (DVFS artefact, IPC fitted) · "residency buys nothing" (true at T≤2 only) · "no defensible multi-thread number exists".
@@ -109,7 +116,10 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 |---|---|
 | **Bundling's magnitude on real data** | 54× was B=1→B=64 compression; S52 measured clustering-vs-random only. First link in the VTCM chain, so the NPU gap rests on a premise v1 believed retired |
 | **`verifier2.py` untested by anyone but its author** | 17 self-authored cases — *exactly v1's evidentiary profile*, and v1's 13/13 contained a test that never called the verifier. Grade **E**, highest-risk artefact here |
-| **`hyperjob_v1.proto` still declares `quant_scale` as `double`** | The schema cannot express the rational scale the fix depends on |
+| **`hyperjob_v1.proto` still declares `quant_scale` as `double`** | Now unambiguous: production practice at 260k devices uses an exact rational. Defect, not a gap |
+| **No stake funding model for a phone** | Devices have no capital. Acurast solves it with third-party delegation (`offer_backing`/`delegate`); `PORT_PLAN` and `PROPOSAL_DRAFT` never pose the question |
+| **No acknowledgement step in `hyperjob`** | Acurast is two-phase: `propose_matching` → `acknowledge_match`. A phone can vanish mid-negotiation |
+| **No cleanup/GC budget in M3** | Four `cleanup_*` extrinsics are ~⅓ of Acurast's marketplace surface. On a phone fleet abandonment is the common case |
 | **Commit registry has `close()` but no clock** | No real deadline |
 | **Worst-case recall** | S17: 0.97 mean with a **0/100 minimum** — at least one query loses everything. Nobody has tuned for worst case |
 | **S32's 5.87× / 28,700 jobs/s unadjudicated** | No RESULT.md; `tps.py` still prints it under "MEASURED"; S33/S34 consume it. S34's "1.2× short" inherits it, so its NPU-necessity conclusion is unsupported |
