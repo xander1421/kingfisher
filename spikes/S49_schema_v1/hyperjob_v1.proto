@@ -1,0 +1,129 @@
+// Hyperjob v1 — the schema fixes the device work forced.
+//
+// v0 (S4) compiled and round-tripped, but six device spikes since then found
+// five things it cannot express, each of which breaks consensus in a way that
+// is indistinguishable from cheating:
+//
+//   1. NO WORKER-BOUND SEAL. v0 has result_hash and a signature, but nothing
+//      binds the hash to the worker BEFORE disclosure, so replica two can echo
+//      replica one's hash and manufacture agreement. Replication as specified
+//      in v0 is theatre. (Found by the recon in its own design; iExec PoCo
+//      solves it with commit/reveal, IexecPoco2Facet.sol:106.)
+//   2. NO QUANTISATION SCALE. S12 showed a naive int8 output scale drops recall
+//      to 0.5395; S31 measured it on device dropping recall to 0/8, silently,
+//      because the analytic cutoff landed on the int8 saturation boundary. The
+//      scale must be pinned BY THE JOB or honest replicas disagree.
+//   3. NO ENGINE FLAGS. S35: `mork run --timing` writes a nanosecond count
+//      INTO the hashed space. A replica with the flag and one without disagree
+//      forever, and a --timing replica cannot even agree with itself.
+//   4. NO UNIT DISCRIMINATOR. Exact units (CPU, HVX popcount) may produce
+//      consensus results; inexact units (GPU float) may only produce hints.
+//      Which one ran has to be in the envelope.
+//   5. NO CANONICALISATION RULE. S35/S45: MORK's space is a SET, hyperon's
+//      match returns a BAG. Cross-engine comparison needs a declared canonical
+//      form; cross-architecture comparison (S15/S16) does not.
+//
+// Everything from v0 is preserved with its field numbers. New fields only.
+
+syntax = "proto3";
+
+package hyperjob.v1;
+
+// ---------------------------------------------------------------- fix 1
+
+// Commit/reveal, worker-bound. The worker publishes `commitment` first and can
+// only reveal later; because the commitment binds device_did and a nonce, a
+// second worker cannot copy the first's published value and pass it off as an
+// independently computed result.
+//
+//   commitment = SHA256(result_hash || fuel_used_le || device_did || nonce)
+//
+// Verification is: recompute the commitment from the revealed parts and require
+// equality, THEN compare result_hash across replicas. A replica that reveals a
+// result_hash matching another worker's but whose commitment does not recompute
+// is an echo attack and must be slashed, not merely rejected.
+message ResultCommitment {
+  bytes commitment = 1;        // published in the commit phase
+  bytes nonce = 2;             // revealed only in the reveal phase, >= 16 bytes
+  uint64 committed_at_unix = 3;
+}
+
+// ---------------------------------------------------------------- fix 2, 3, 4
+
+// Everything that must be byte-identical across replicas for their outputs to
+// be comparable at all. This is the "same experiment" declaration: if two
+// envelopes disagree on any field here, their result_hashes are not evidence
+// of anything and the verifier must abstain rather than slash.
+message ExecutionContract {
+  // fix 3: the engine AND its flags. S35's `--timing` is the worked example;
+  // any option that injects state into the hashed space belongs here.
+  string engine = 1;              // "hyperon-0.2.10" | "mork-main-0653b50"
+  repeated string engine_flags = 2;   // sorted, e.g. ["--steps=1"]
+
+  // fix 2: quantisation, pinned by the job, never chosen by the backend.
+  // cutoff MUST be computed as rint(2*nnz(Q)/quant_scale) and MUST satisfy
+  // cutoff <= 126 so it cannot land on the int8 saturation boundary (S31).
+  double quant_scale = 3;
+  int32 quant_zero_point = 4;
+  uint32 output_bits = 5;         // 8, 16 or 32
+
+  // fix 5: how results are canonicalised before hashing.
+  CanonicalForm canonical_form = 6;
+
+  // The layout the shard was in. S48: layout changes the COST of a query by up
+  // to 24x but never its answers, so this is recorded for accounting and
+  // scheduling, and is deliberately NOT part of the consensus comparison.
+  string shard_layout = 7;        // "raw" | "clustered:pred,subj" | ...
+}
+
+enum CanonicalForm {
+  CANON_UNSPECIFIED = 0;
+  // Byte-compare the engine's output verbatim. Valid only when both replicas
+  // ran the SAME engine — proven sufficient across architectures, libcs and
+  // build profiles by S15/S16/S30 (33/33 dumps, 12/12 cells).
+  CANON_VERBATIM = 1;
+  // Sort and deduplicate before hashing. Required for cross-ENGINE comparison
+  // because MORK dedupes into a set and hyperon returns a bag (S35).
+  CANON_SORTED_SET = 2;
+  // Sort but keep duplicates.
+  CANON_SORTED_BAG = 3;
+}
+
+// fix 4: which compute unit produced this, and whether it may vote.
+enum ComputeUnit {
+  UNIT_UNSPECIFIED = 0;
+  UNIT_CPU_SCALAR = 1;      // exact
+  UNIT_CPU_SIMD = 2;        // exact — S34: NEON popcount is bit-identical to scalar
+  UNIT_NPU_POPCOUNT = 3;    // exact by construction: bit ops, no quantisation
+  UNIT_NPU_QUANT_MATMUL = 4;// exact ONLY with quant_scale pinned; see S31
+  UNIT_GPU_FLOAT = 5;       // INEXACT — may produce hints, may never vote
+}
+
+// ---------------------------------------------------------------- envelope
+
+message ResultEnvelope {
+  string version = 1;                  // "v1"
+  string job_id = 2;
+  ResultStatus status = 3;
+
+  bytes result_hash = 4;
+  uint64 fuel_used = 6;
+  uint64 seed_echo = 7;
+
+  ExecutionContract contract = 20;     // fixes 2,3,5
+  ComputeUnit unit_used = 21;          // fix 4
+  ResultCommitment commitment = 22;    // fix 1
+
+  string device_did = 10;
+  bytes attestation = 11;
+  bytes signature = 12;                // over fields 1..11 and 20..22
+}
+
+enum ResultStatus {
+  RESULT_UNSPECIFIED = 0;
+  RESULT_OK = 1;
+  RESULT_FUEL_EXHAUSTED = 2;    // deterministic, agreed, PAYABLE
+  RESULT_DEADLINE_EXCEEDED = 3; // infrastructure, unpaid
+  RESULT_ENGINE_ERROR = 4;
+  RESULT_SHARD_UNAVAILABLE = 5;
+}
