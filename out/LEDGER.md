@@ -143,6 +143,7 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 | **Any NPU code** | And **VTCM is 8 MB vs a 12.8 MB packed store — it does not fit**, so bundling is a *prerequisite* for residency |
 | **Energy per job** | *diagnosis was wrong*: not root. Battery sat at 100% and plugged, so the charge counter is static. Needs wireless adb + physical unplug, or a USB power meter |
 | **Android vendor-libm variation across devices** | S59 shows every libm build is its own equivalence class. A fleet of Androids with different vendor libms could diverge with no ISA change. More product-relevant than the ISA question and untested |
+| **The settlement layer has never been costed** | **Gating, and possibly the biggest hole in the plan.** Report-shaped per-job settlement caps at **17.1 jobs/s** (PoV-bound, re-derived from Acurast's runtime), **8.6/s** with the replication we require, against S32's 28,700 device-side. **3,353× shortfall.** PoV binds by 2–3 orders over ref_time, so a faster chain buys nothing — only smaller or fewer proofs. See `RISKS.md` R-NEW |
 | **Whether an APK can actually disable heap pointer tagging** | Gates in-process MORK entirely (see platform table). Two-line manifest change, never executed — no APK has ever been built in this workspace (`M1.1`) |
 | **Shard-parse vs query-parse** | S56 put parse at 31% of stage 2, the only amortisable part, but its 13-expression program cannot separate the two |
 | **WorkManager limits** | ~10 min/worker, 6 h per 24 h dataSync |

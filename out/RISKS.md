@@ -61,3 +61,67 @@ Ordered by (probability × damage). Every risk is anchored to something observed
 ## Two risks deliberately *not* on this list
 - **"MeTTa might not be deterministic enough to verify."** It is. MORK's differential harness compares two independently-written query engines byte for byte over 98 programs and passes in 1.4 s (S3). This was the mission's central bet and it is the best-evidenced claim in the whole recon.
 - **"MeTTa might not fit on a phone."** It does. 4.00 MiB, cross-compiled in 15 seconds, on stable Rust, first attempt (S2).
+
+---
+
+# R-NEW — The settlement layer has never been costed, and built the obvious way it caps ~3,350× below the device capacity we measured
+
+**Added 2026-08-16 (S59-adjacent, from reading `acurast-substrate`). Arguably the largest hole in the plan, and it was invisible because nobody costed the chain.**
+
+Every figure below was re-derived from the cloned runtime, not taken on trust.
+
+## The arithmetic
+
+Acurast's runtime: 6 s blocks (`runtime/common/src/constants.rs:19`), `MAXIMUM_BLOCK_WEIGHT = (2 s ref_time, MAX_POV_SIZE)` (`acurast-mainnet/src/constants.rs:48-51`), `NORMAL_DISPATCH_RATIO = 75%` (`:45`). Benchmarked weights:
+
+| extrinsic | PoV bytes | PoV-bound | ref-bound | **ceiling** |
+|---|---|---|---|---|
+| `report` | 38,282 | 103/block | 8,190/block | **17.1/s** |
+| `heartbeat_with_metrics` | 15,088 | 261/block | 30,051/block | **43.4/s** |
+| `heartbeat` | 4,990 | 788/block | 83,333/block | **131.3/s** |
+
+**PoV binds in every case, by two to three orders of magnitude.** That determines the shape of any fix: the constraint is *proof size*, not execution time, so a faster chain buys nothing. Only smaller or fewer proofs do.
+
+## Why it is our problem specifically
+
+`PORT_PLAN` M3.5 proposes `pay_per_verified_result`, and our design puts `result_hash` + `fuel_used` on the settlement path **per job**. That is precisely the `report` shape.
+
+```
+report-shaped settlement, 1x            17.1 jobs/s
+with 2x replication (we require it)      8.6 jobs/s
+S32 device-side claim                28,700 jobs/s
+shortfall                                3,353x
+```
+
+S32's 28,700 jobs/s is already flagged in `LEDGER` as unadjudicated and falsified three times — but even taken at face value it describes a device fleet feeding a settlement layer four orders of magnitude too small. **The bottleneck was never the phones.**
+
+## What Acurast did instead, and why it is the whole game
+
+They made the unit of payment **committed capacity, measured periodically, weighted by stake** — not a verified result. Three mechanisms:
+
+1. **Schedule amortisation.** `MAX_EXECUTIONS_PER_JOB = 6_308_000` (`marketplace/src/types.rs:15`, commented *"run a job every 5 seconds for a year"*). One `propose_matching` covers all of them, so match cost per execution falls to ~0.06 bytes of PoV.
+2. **Reward bypasses the job path.** `pallets/compute` is staking, not a work queue. Payment is a share of an epoch's `RewardBudget` proportional to stake-weighted × reported metric — **one `MetricCommit` per processor per epoch**, and the epoch is `131072` blocks = **9.1 days** (`acurast-mainnet/src/constants.rs:153`). At 250k devices against 43.4 metric-heartbeats/s, each device reports roughly every **1.6 h** — ample, and the off-chain compute between reports is unbounded.
+3. **Verification is one-time.** `submit_attestation` validates an X.509 chain once at pairing; after that the device is trusted, with slashing as enforcement.
+
+**The chain never sees the work.** Compute throughput is deliberately decoupled from chain throughput.
+
+## The fork, now concrete rather than philosophical
+
+> Acurast's architecture is what you build once you decide verification is a one-time hardware fact. Ours is what you build when you refuse to trust the hardware. **The price of refusing is ~38 KB of proof per result, and nobody here had priced it.**
+
+Refusing may still be right — TEEs get broken, and a vendor-rooted revocation list is a central kill switch that we specifically do not want. But it now has to be argued against a known cost.
+
+## Directions, none of them costed yet
+
+- **Aggregate.** Commit a Merkle root of N results per epoch instead of N reports. Turns per-job PoV into per-epoch PoV; verification becomes an inclusion proof presented only on challenge. This is the obvious fix and directly matches the optimistic rung-1 design we already have.
+- **Copy the epoch.** 9.1 days of reward granularity is far coarser than anything we assumed, and it is what makes their numbers work.
+- **Settle off-chain**, anchoring periodically. Moves the problem rather than solving it, but the problem it moves is the binding one.
+- **Challenge-only settlement.** Post nothing per job; post a bond, and let anyone force a reveal. Fraud-proof shape, and it is the only one of these that preserves trustlessness at the same PoV cost as Acurast's trusted design.
+
+## Status
+**Unresolved, unassigned, and gating.** M3.5 cannot be specified until one of the above is costed. Add to `LEDGER` NEVER MEASURED.
+
+## Open questions I could not close
+- Whether Acurast's `report` is mandatory for every job class or only one-shot deployments. `finalize_job` is marked *"DEPRECATED: cleanup logic has been moved to the final report call"* — "final" implies reports are per execution with settlement at the end, which would mean their `report` path carries more traffic than this analysis assumes.
+- Whether reports batch. No batching extrinsic found; `hooks.rs` not fully read.
+- Our own numbers assume an Acurast-shaped parachain. A different DA layer or a rollup changes the PoV budget, and that has not been explored at all.

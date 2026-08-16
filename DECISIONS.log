@@ -36,3 +36,5 @@
 35 | 2026-08-16 | pallets/compute read: it is stake/delegation, not fuel metering. Metrics are device-self-reported and hardware-attested, never fleet-normalised. Recorded as an architectural fork vs BOINC rather than a port target.
 
 36 | 2026-08-16 | Two hyperon defects drafted in proposed/hyperon-nondeterminism (pointer-keyed HashMap in multitrie causing wrong intersection-atom cardinality; three address-leaking Display impls). Not filed - mission ss11 no publishing. Both block using raw output hashes as a replication oracle.
+
+37 | 2026-08-16 | Settlement cost derived from Acurast runtime constants: PoV binds at 17.1 report/s (8.6 with replication) vs S32 28,700 jobs/s device-side. Recorded as RISKS.md R-NEW and a gating LEDGER gap. Fix direction is fewer/smaller proofs (Merkle root per epoch), not a faster chain.
