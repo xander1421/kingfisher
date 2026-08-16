@@ -1,0 +1,102 @@
+# RETRACTIONS — three adversarial subagents, 2026-08-17
+
+The operator moved adversarial review from a shared log to spawned subagents. First application, three attackers on my last five spikes. **They killed more of my work in twenty minutes than four agents did all day.** Every finding below was verified independently before acceptance; where I could not reproduce a claim I say so.
+
+Read this before `DEVICE_ADDENDUM.md`, `S45`, `S46`, `S47`, `S48` or `S49` — where they disagree, this file is later.
+
+---
+
+## Dead
+
+| claim | spike | why |
+|---|---|---|
+| "the seal defeats the echo attack, 13/13" | S49 | seal bound `result_hash`, verdict computed from `payload`, nothing tied them; no commit-before-reveal ordering; unprefixed preimage collides. Retracted in `S49_schema_v1/RESULT.md` §S49b, fixed in `verifier2.py`. |
+| **"bad shaping == no shaping; bounded downside"** | S48 | **falsified, and my own published matrix already contained the counterexample.** |
+| **"the driver is prefix coverage"** | S48 | the single 0.6 µs comparison it rests on reverses at B=4, B=16 and at two of five reseeds. A layout-only property cannot depend on B. |
+| "bundling 54×, clustering 12.8× of that" | S47 | direction survives; both numbers are functions of a `per_check` constant that varies 2× run-to-run and was measured on the most favourable access pattern. Correcting it moves the two figures in **opposite** directions. |
+| "clustered bundling does not collapse on mismatch" | S47 | true only for mismatches preserving the bucket-constant slot. S48's own `(subj,obj)`/`(p ?s o)` cell collapses to ~1×. |
+| "prefilter at 86% of the roof; ≤16% left on the CPU" | S45 | the attacker got **2.2×** more out of my own kernel by moving the barrier and pinning threads — without touching one instruction in `run_chunk`. |
+| "59% of the T=8 query was `pthread_create`" | S45b | my own two tables say **41%** (483→287 µs). Subtracting a separate `threadcost` measurement is invalid because spawn overlaps with work. And the pool did **not** fix the reversal: pooled T=8 (287) is still worse than pooled T=4 (252). |
+| **"stage 2 is 13 ms of `exec()`"** | S45 | it is **5.66 ms**, and it is not `exec()`. |
+| "the read roof peaks at 4 threads and declines at 8 — a property of the memory system" | S45b | **my own harness error.** `streamroof.c:20-24` puts `pthread_create` *inside* the timed region — the exact mistake I diagnose two sections earlier and then never applied to the instrument I used as ground truth. With spawn moved out: 65.7 → **69.1** GB/s from 4 to 8 threads. No decline. |
+| "22.6 GB/s/core, compute-bound at ~2 IPC" | S46 | a DVFS artefact of an unpinned short-lived process. Same binary pinned to cpu7: **39.3–43.6 GB/s**. My IPC derivation was fitted to the artefact — measured on cpu7 it is 3.3 IPC, not 2. |
+| "flat within 1.8%" | S46 | below the instrument's resolution. The arch timer granularity is **52.08 ns**; the smallest point (1.1 µs) is 21 ticks = ±4.8% quantisation, and best-of-14 systematically selects the favourable rounding at the small end. |
+
+## Survives
+
+- **S34's bit-exactness.** Three kernels, two machines, one digest. `kernels.c` is the one device file with **zero** unsequenced warnings, so the UB below does not touch it. This is the load-bearing determinism claim and it is intact.
+- **S15/S16 cross-architecture determinism.** Untouched by all three reviews.
+- **S46's conclusion**, on better evidence than mine: the attacker extended the sweep to **750 MB — 60× past my largest point, a 30,000× range** — and it stays flat within 10%. A variant with one extra op per 16 B halves throughput at every size. So the kernel is issue-bound per core and residency buys ~10%, not 0%. Right answer, wrong number, wrong reasoning.
+- **S45's architectural requirement, directionally.** Stage 2 is still ~96% of the query; the ratio is **9×, not 16×**; subprocess throughput is **169 q/s, not 73**. "Stage 2 must run in-process" stands. *"13 ms of `exec()`"* must be struck.
+- **S48 claim C's mechanical half.** The attacker instrumented the sweep exit: `recall = 1.000` and converged at **every** cell of both spikes. My tables were not lying about recall.
+
+---
+
+## The four findings that hurt most
+
+### 1. My own matrix contradicted my own headline, on the same page
+S48 finding 1: *"a shard shaped for the wrong queries is no worse than a shard nobody shaped"*, evidenced by one pair, 127.8 vs 127.4.
+S48 finding 3, twelve lines later: *"random (4.2 µs) beats two of the three shaped layouts"* — 10.5 and 22.3.
+
+**Finding 3 falsifies finding 1 and I wrote them next to each other.**
+
+Challenged on asserting this off one reseed — correctly, since single draws are the error being retracted — I instrumented the sweep and ran five seeds. The `(?p s o)` column, total µs with `[truth, shortlist, exit cutoff]`:
+
+| seed | (pred,subj) | (pred,obj) | **RANDOM** |
+|---|---|---|---|
+| 0xC0FFEE | 10.5 `[t=1, sl=80]` | 22.2 `[sl=223]` | **4.2** `[sl=3]` |
+| 1 | 59.0 `[sl=713, cut=−6]` | 58.9 `[sl=711]` | **25.5** `[sl=280]` |
+| 2 | 118.7 `[sl=1481, cut=−60]` | 118.7 `[sl=1481]` | **7.3** `[sl=40]` |
+| 3 | 17.1 `[sl=158]` | 7.7 `[sl=43]` | **4.7** `[sl=6]` |
+| 5 | 135.9 `[sl=1277, cut=−58]` | 133.4 `[sl=1253]` | **20.2** `[sl=134]` |
+
+**Random wins in five of five, by 1.6× to 16×.** Not a fluke draw — and the mechanism is now visible in the instrumentation:
+
+`truth = 1` in every seed, because `(?p s o)` binds subj+obj over 1000×1000. It is a find-the-single-row query. Cluster by `(pred,subj)` and that row sits in a bucket with 63 rows **sharing its pred and subj**; the majority-bundle is dominated by their coherent shared signal, which drowns the target's obj contribution. The cutoff descends to −58 and shortlists 1,481 of 1,563 buckets — **95% of the store**. In a random bucket the 63 neighbours are unrelated, cancel, and the target survives.
+
+So clustering does not merely fail to help off-key queries: **homogeneous buckets actively bury outliers, and incoherent buckets do not.** That is a mechanism, and it kills "bad shaping == no shaping" properly rather than on the single 127.8/127.4 coincidence — which was two cells saturated against the `checked ≤ NROWS` clamp at `decay.c:158`.
+
+It also exposes what the oracle sweep concealed: at `cut = −58`, "recall 1.0" is a 95% scan. That is not a prefilter, and reporting it as a 127.8 µs query was only possible because the cutoff was fitted to the answer.
+
+### 2. The cutoff was chosen by an oracle reading the ground truth
+`decay.c:146` computes `truth` from the answers; `:156` breaks when `found >= truth`. **Every cost I reported is the cost of a query whose answer was already known.** A deployed prefilter has one fixed cutoff and cannot do this. The excluded sweep is ~18 ms to produce a "127.8 µs" query. I also called it the "loosest" cutoff giving recall 1.0 — it is the **tightest** on an 8-wide grid.
+
+This is what actually kills S47's economic claim. *"Recall is recoverable on any layout; what layout buys is the price of recovering it"* — recovery requires the answer, so the price is not one a deployed system pays.
+
+### 3. My stage-2 control measured a crash
+`mork run` **aborts** without `LD_PRELOAD=libnotag.so` — the pointer-tagging bug I found and fixed in S16 — and ~12 ms of my 12.84 ms "empty program" control was Android's debuggerd tombstone path. I had the fix in the same directory and did not apply it to the control. With it:
+
+```
+tiny 5.6 KB C binary        5.25 ms
+mork run empty.mm2          5.43 ms
+mork run shortlist.mm2      5.66 ms   ← the whole of stage 2
+```
+
+Generic Android process creation is 5.25 ms of that; **everything MORK does is ~0.4 ms.** And my `date +%s%N` bracket is itself two process spawns — the harness doing nothing costs 6.0–6.9 ms against a 13.3 ms result. By **my own rule** (`S46/RESULT.md:63`), that measurement is disqualified.
+
+### 4. Undefined behaviour in two of my device programs
+`#define NEXT() (s ^= s<<13, s ^= s>>17, s ^= s<<5, s)` used **twice in one expression**: `((uint64_t)NEXT()<<32)|NEXT()`. Unsequenced modification of `s`. Clang warns; I never read the warning.
+
+```
+kernels.c   (S34)  0 warnings   ← the bit-exactness result is safe
+prefilter.c (S45)  6 warnings
+residency.c (S46)  3 warnings
+bundle.c/decay.c/qsweep.c  0
+```
+
+S45's cross-silicon digest `2e2ac64c1d9cff91` matched because two different compilers happened to order the UB identically. The *agreement* between machines is still real evidence — had the inputs differed the digests would have differed — but the experiment is not reproducible by construction, and I claimed it was ("seeded so the host reproduces them exactly").
+
+Also: `residency.c:126` divides by `g_threads` on the documented `g_threads == 0` inline path (UB, silently 0 on aarch64), and `residency.c:151` hashes 780 bytes while labelling it `digest(scores, 100k rows)` — so **no large-store run in S46 has any correctness check at all.**
+
+---
+
+## What I am changing in how I work
+
+1. **Read the compiler warnings.** Six warnings sat in a file whose headline claim was bit-exactness.
+2. **Never subtract a separately-measured overhead.** Measure with and without, and take the difference of the *controlled* pair — my 59% became 41% precisely because subtraction ignores overlap.
+3. **Pin the core and check DVFS** before any single-threaded per-core claim.
+4. **Report the null.** I wrote that rule in S46 and then failed to apply it to S45's stage-2 control and to S46's own inline path.
+5. **A cutoff, threshold or parameter fitted to the ground truth must be labelled as an oracle** and its cost reported.
+6. **One draw is not a measurement.** The RANDOM baseline swings 79→127 µs on a reshuffle; I reported it as a constant.
+
+Three of these — 2, 4, 6 — are the same error the workspace has now hit **seven times**: a per-query or per-run cost masquerading as a property of the hardware or the algorithm.
