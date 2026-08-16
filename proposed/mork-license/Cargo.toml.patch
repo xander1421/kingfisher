@@ -1,0 +1,9 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -15,7 +15,8 @@
+ 
+ [workspace.package]
+ edition = "2024"
++license = "MIT"
+ 
+ [workspace.dependencies]
