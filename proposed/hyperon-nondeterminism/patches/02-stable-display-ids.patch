@@ -37,15 +37,13 @@ index a128d56..1f738a6 100644
  }
  
 diff --git a/lib/src/space/grounding/mod.rs b/lib/src/space/grounding/mod.rs
-index 78259d5..fa50f81 100644
+index 78259d5..45f4fde 100644
 --- a/lib/src/space/grounding/mod.rs
 +++ b/lib/src/space/grounding/mod.rs
-@@ -220,11 +220,17 @@ impl<D: DuplicationStrategy> Debug for GroundingSpace<D> {
+@@ -220,11 +220,15 @@ impl<D: DuplicationStrategy> Debug for GroundingSpace<D> {
      }
  }
  
-+impl<D: DuplicationStrategy> GroundingSpace<D> {
-+}
 +
  impl<D: DuplicationStrategy> Display for GroundingSpace<D> {
      fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

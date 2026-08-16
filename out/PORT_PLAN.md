@@ -24,6 +24,9 @@ The critical path, in dependency order. Nothing here is research; S1/S2/S4/S6 ha
 - Why first: it is the unit of work, the unit of payment, the unit of interruption, and the unit of dispute. Everything downstream depends on it existing.
 
 ### M1.3 — Charge-time worker **[SPEC→code, S]**
+
+> **Process lifetime is a hard requirement, with two independent derivations.** The worker must **fork a fresh process per job**, not reuse a runner. (1) S60/A8: a reused `Metta` pollutes the atomspace and silently aborts — 50,794 steps became 5,709 with the abort returning `Ok(())`. (2) `NEXT_VARIABLE_ID` is process-global, so the same program as job N occupies a different variable-id space than as job 1, changing binding-map iteration order. Two reasons, same constraint.
+
 - Source: `spikes/S6_scheduler/SCHEDULER_SPEC.md` (derived from BOINC, LGPL — **no code copied**).
 - Tasks: `CoroutineWorker` + the five declarative constraints; in-worker preflight for thermal status (`PowerManager.getCurrentThermalStatus()`), battery floor (default 90 %), and cache space; `BackoffPolicy.EXPONENTIAL, 5 min`; honour `onStopped()` by checkpointing at a fuel boundary.
 

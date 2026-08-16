@@ -136,9 +136,46 @@ Correctness suite, all passing after the fix:
 `()∩(A B)=()` · `(A $x)∩($x A)=(A $x)` · `($x $y)∩($y $x)=($x $y)` ·
 `(A A A)∩(A A)=(A A)` · `((f $x) A)∩(A (f $x))=((f $x) A)`
 
+## Issue 3 — variable binding order depends on process history (reported, not patched)
+
+`(pair $z $z)` matched by `(pair $x $y)` returns `($x $x)` or `($y $y)` across
+runs. That is usually described as `HashMap`-iteration dependence, but the cause
+is more specific and worth stating:
+
+```rust
+// hyperon-atom/src/lib.rs:229-233
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct VariableAtom { name: UniqueString, id: usize }
+
+// :222,:226,:330
+static NEXT_VARIABLE_ID: AtomicUsize = AtomicUsize::new(1);
+fn next_variable_id() -> usize { NEXT_VARIABLE_ID.fetch_add(1, Ordering::Relaxed) }
+pub fn make_unique(mut self) -> Self { self.id = next_variable_id(); self }
+```
+
+`id` participates in the **derived `Hash` and `Eq`**, and the doc comment at
+`:236-240` notes `VariableAtom` is used as a key in `matcher::Bindings`. So the
+counter determines bucket assignment, and therefore iteration order, of the maps
+holding bindings. **Binding-map layout depends on how many variables the process
+created beforehand.**
+
+Scope, so this is not overstated:
+- `VariableAtom::new` leaves `id: 0`; only `make_unique()` draws a fresh id, so
+  the hazard is confined to atoms that have been through
+  `make_variables_unique` — the rule-instantiation path.
+- The id **never reaches printed output** (`Display for VariableAtom` at `:335`
+  prints `${name}` only), which is why a 67-program output-hash corpus shows
+  nothing. This is an ordering hazard, not an output-content one.
+
+Two practical consequences for anyone embedding hyperon:
+- **A long-lived runner is not equivalent to a fresh one.** The same program run
+  as job N occupies a different id space than as job 1.
+- `Ordering::Relaxed` keeps ids unique but leaves *which* thread gets which id
+  scheduling-dependent, so in-process concurrent evaluation is exposed in a way
+  separate processes are not.
+
 ## Not addressed here
-- Variable naming in `match` is `HashMap`-iteration dependent
-  (`hyperon-atom/src/matcher.rs`): `(pair $z $z)` matched by `(pair $x $y)`
-  returns `($x $x)` or `($y $y)`. Arguably alpha-equivalent rather than
-  incorrect, but it has the same effect on an output-hashing pipeline.
 - `Variables({…})` hash-set ordering leaks into `RunnerState`'s `Debug` output.
+- Issue 3 above is reported without a patch: fixing it means either excluding
+  `id` from `Hash` (changing `Bindings` semantics) or using an ordered map, and
+  that is upstream's call, not a drive-by change.
