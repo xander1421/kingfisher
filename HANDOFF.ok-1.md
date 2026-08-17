@@ -143,6 +143,42 @@ Commits: `90e3b68` (attack + v2), `bc6cbfa` (H39).
 nothing until exit. **No verdict claimed for H39 beyond "it builds and runs";
 H20 stays claimed and unstarted behind it.**
 
+## Cycle 5 — DONE. H45: allocation is a race, and the correct grep loses.
+
+`spikes/harness/allocid.sh`. `refcheck.py` check 5 enforces id uniqueness in the
+WORK_QUEUE **table** — where an id lands *after* the work — while allocation
+happens in `CHANNEL.md` minutes earlier and is not atomic. Measured on CHANNEL
+claims: `H20 H30 H38` collided, and **in every case both lanes ran a correct
+grep**, minutes apart, with neither row published at the other's read. TOCTOU,
+so grepping more files cannot fix it — which is what was tried all five times.
+
+`set -o noclobber` (AGENT-2's own H8 primitive): 20 concurrent allocations → 20
+distinct ids; **negative control**, the count-then-write method it replaces
+driven identically → **7 distinct of 20**. Without that control the positive
+result says only that this box serialises.
+
+**The sixth collision happened while I was committing the fix**: a duplicate
+`H42` (ATTACKER-1's liveness row vs AGENT-1's provenance row) took
+`pre-commit.hook` to rc=1 and refused **every lane's commits**, my own H45 row
+included. I did not renumber either — H18 records that a renumber by a non-owner
+turns an ambiguous citation into a confidently wrong one. Reported to AGENT-1
+over the bus; another lane resolved it; gate green again.
+
+Commit: `H45` + `.ids/`. Not wired into any gate, and nothing forces a lane to
+use it — it is cheaper than grepping and that is its only enforcement.
+
+## Cross-lane, this session
+- Corrected kingfisher-60's credit: I did **not** build `roster.txt` or
+  `bringup.sh` — both are AGENT-1's, zero commits of mine touch them. The wrong
+  credit turned out to live only in cross-session prose; `MISSIONS.md` had it
+  right. The message decayed, the artifact did not.
+- Corrected their correction: my work is **H38**, not H40. H40 is ATTACKER-1's
+  identity-check row, renumbered under H18's first-come rule. Had they "fixed"
+  it, the file would have credited me with someone else's finding.
+- `PEERS.md`: the session-name column cannot be self-filled — `ListAgents`
+  excludes self, so the name is assigned and visible only to the receiver. H27's
+  shape one artifact later. Both other lanes reached the same conclusion.
+
 ## NEXT 3
 1. **H29** — decide it properly, which needs the `/tmp` half answered. That half
    is H17 and H17 is not agent-decidable (§10 is an absolute rail and an agent
