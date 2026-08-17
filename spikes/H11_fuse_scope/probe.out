@@ -1,0 +1,21 @@
+H11 — what the fuse counts. 3 spans per launcher arm.
+
+  A1 within one span, MAX_BLOCKS=3   counter after each stop: 1,2,3,4,5   exit marker: LOOP-FUSE
+
+  A2 across spans, the agent RUNS and ends two turns per span:
+      span 1: 2
+      span 2: 2
+      span 3: 2
+      after the loop: .loop_blocks=2  .loop_fails=3
+
+  A3 across spans, CRASH LOOP — claude exits instantly, no turn ever ends:
+      span 1: ABSENT
+      span 2: ABSENT
+      span 3: ABSENT
+      after the loop: .loop_blocks=ABSENT  .loop_fails=3
+
+FA/FD ok: inside one span the counter climbs 1,2,3,4,5 and the hook writes LOOP-FUSE past MAX_BLOCKS. The mechanism works where it is driven, so the arms below measure SCOPE and not breakage.
+FC did not fire: each span STARTS at 2 and the two turn ends inside it leave 2 — the span sequence is ['2', '2', '2'], so the count never accumulates across spans.
+FB did not fire, and this is the row: across 3 crash-loop spans the fuse counter is ABSENT at every observation while .loop_fails reaches 3. The fuse counts BLOCKED STOPS, and a blocked stop exists only when the agent RAN and tried to end a turn. In the runaway this fleet actually had — 18 consecutive instant-exit spans on "You've hit your session limit" (H56) — claude never ran, so the counter never moved.
+
+VERDICT: H11 STANDS, and it is narrower and sharper than filed. The fuse is not broken and its per-span scope is not wrong: it bounds ONE span, which is exactly what MISSION_LOOP §7 says LOOP-FUSE means ("a session span ended"). What is wrong is `loop_gate.sh`'s name for it — "runaway fuse" — and the reading that follows from it. It cannot see a runaway in which the agent never runs, which is the only kind this repo has recorded. The counter for that already exists and is a different mechanism: `.loop_fails.$CALLSIGN` (H56, run_loop.sh v9 defect 12).

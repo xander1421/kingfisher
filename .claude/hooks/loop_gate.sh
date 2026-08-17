@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# loop_gate.sh v7 — Stop hook for MISSION_LOOP continuous mode.
-# v7 (ok-1, H13) locks the runaway-fuse increment; see section 4's block.
+# loop_gate.sh v8 — Stop hook for MISSION_LOOP continuous mode.
+# v7 (ok-1, H13) locks the span-cap increment; see section 4's block.
+# v8 (ok-1, H11) renames that counter: it is a SPAN CAP, not a runaway
+# fuse. Measured, not renamed by taste -- section 4 carries the numbers.
 # Terminal signals are FILES, not prose: to end legally, the agent must
 # write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.$CALLSIGN.
 # Bare .loop_signal is NO LONGER ACCEPTED -- see v5 below.
@@ -88,13 +90,33 @@ for SIGFILE in ".loop_signal.${LANE}"; do
   esac
 done
 
-# 4 · Runaway fuse: cap blocked stops per TURN, not per session.
-#     The comment said "per session" and was wrong: run_loop.sh clears
-#     .loop_blocks.$CALLSIGN at every turn start, so 400 blocked stops would
-#     have to occur inside ONE turn for this to blow. As written it cannot fire
-#     for the runaway it exists to stop. Left per-turn and relabelled rather
-#     than moved to per-session, because changing the semantics under two live
-#     lanes is a cutover change; opened as H11.
+# 4 · SPAN CAP: bound the number of blocked stops inside ONE `claude -p`.
+#     Called a "runaway fuse" from v1 to v7 and that name is withdrawn (v8,
+#     ok-1, H11, 2026-08-17). MISSION_LOOP §7 already describes what it really
+#     is -- "LOOP-FUSE ... means a session span ended, not that work finished"
+#     -- and the two descriptions had been sitting in the tree disagreeing.
+#
+#     WHAT IT COUNTS, measured in `spikes/H11_fuse_scope/probe.out`, three arms:
+#       * inside one span the counter climbs 1,2,3,4,5 and LOOP-FUSE is written
+#         past MAX_BLOCKS -- the mechanism works where it is driven;
+#       * across spans it does NOT accumulate. run_loop.sh:387 clears it at every
+#         span start, so three spans of two turn ends each read 2, 2, 2 -- not 6;
+#       * IN A CRASH LOOP IT NEVER MOVES AT ALL. The counter is ABSENT at every
+#         observation across three spans in which `claude` exits instantly, while
+#         .loop_fails reaches 3.
+#
+#     That last arm is the row. A blocked stop exists only when the agent RAN and
+#     tried to end a turn, so a span in which claude never starts increments
+#     nothing -- and that is the only runaway this fleet has actually recorded:
+#     18 consecutive instant-exit spans on "You've hit your session limit" (H56,
+#     14:29-15:56, five lanes). This counter was blind to all 86 minutes of it.
+#
+#     NOT FIXED BY MAKING IT PERSIST, and that is the whole decision: per-span is
+#     the correct scope for a per-span bound, and the cross-span counter already
+#     exists as a DIFFERENT mechanism -- `.loop_fails.$CALLSIGN`, written by
+#     run_loop.sh v9 (defect 12) and read by bringup.sh, which refuses quorum on
+#     it. Two counters, two scopes, and the defect was one of them wearing the
+#     other's name. Pinned by test_loop_gate.sh so the scope cannot drift back.
 # A non-numeric counter used to be written back unchanged, so bash arithmetic
 # errored, the -gt comparison errored, and the hook fell through to block --
 # permanently, with a fuse that could never trip. `printf '3x' > .loop_blocks.L5`

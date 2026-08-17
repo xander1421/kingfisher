@@ -425,6 +425,20 @@ FALSIFIERS = [
   done''',
      '  sleep 1',
      'refused BY THE PARENT'),
+
+    # --- H11, 2026-08-17 (ok-1). The span cap's SCOPE had no falsifier because it
+    # had no check: section 7 of the suite proves the cap FIRES and says nothing
+    # about what it counts. Making the counter persist converts a per-span bound
+    # into a lifetime one -- silently, since LOOP-FUSE's launcher branch just
+    # resumes. Measured first in `spikes/H11_fuse_scope/probe.out`.
+    ('F30',
+     'the launcher stops clearing the span counter, so blocked stops accumulate '
+     'over a lane\'s whole life and LOOP-FUSE stops meaning "a session span '
+     'ended" -- MISSION_LOOP §7\'s own definition of it',
+     LAUNCHER,
+     'rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK" ".loop_signal.${CALLSIGN}"',
+     'rm -f "$EXIT_MARK" ".loop_signal.${CALLSIGN}"',
+     'does NOT accumulate'),
 ]
 
 

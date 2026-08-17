@@ -857,6 +857,85 @@ for lkpid in $(cat .loop_lock.RACE-2 2>/dev/null); do kill "$lkpid" 2>/dev/null;
 rm -f roster.txt prompts/RACE-2.md reached_claude race.log run_loop.sh \
       detach_RACE-2.log loop_RACE-2.log .loop_lock.* .loop_exit.* .loop_blocks.*
 
+# WHAT THE SPAN CAP COUNTS, AND WHAT IT CANNOT SEE. ok-1, H11.
+#
+# Section 7 above drives the hook directly and proves the cap FIRES. It says
+# nothing about scope, and scope is the row: `run_loop.sh:387` clears
+# .loop_blocks.$CALLSIGN at every span start, so the count bounds ONE `claude -p`
+# and not a lane's life. That is the right scope -- MISSION_LOOP §7 defines
+# LOOP-FUSE as "a session span ended" -- but nothing pinned it, so a future
+# "fix" that made the counter persist would silently convert a span bound into a
+# lifetime bound and no check would notice.
+#
+# The second arm is the finding: a blocked stop exists only when the agent RAN
+# and tried to end a turn, so a span in which `claude` exits instantly increments
+# NOTHING. That is the only runaway this fleet has recorded -- 18 consecutive
+# instant-exit spans on "You've hit your session limit" (H56). The counter that
+# does see it is a different file, .loop_fails.$CALLSIGN, and this block asserts
+# both halves so neither can be quietly re-attributed to the other.
+#
+# Measured first, in `spikes/H11_fuse_scope/probe.out`: 2,2,2 across three spans
+# for the running arm, ABSENT at every observation for the crash-loop arm.
+# ITS OWN STUB DIRECTORY, AND THAT IS NOT TIDINESS. Every launcher block above
+# writes `$T/bin/claude` and starts launchers that DETACH; those survive the
+# block that started them, and each new span re-resolves `claude` on the PATH
+# they inherited. So a lane from an earlier block runs THIS block's stub. It is
+# not a hypothesis: with a shared `bin/`, the crash-loop arm below read
+# `ABSENT,ABSENT,ABSENT` while `.loop_fails.FUSE-1` read 2 — three stub runs, two
+# of them this block's — reproducibly, twice. A stale lane cannot forge the
+# per-lane files, so the contamination shows up as an extra line from a lane that
+# is not mine, which is why every line is TAGGED with the callsign that wrote it
+# and the checks read only their own. Filed as a queue row for the general case;
+# fixed here for this block. ok-1, H11.
+cp "$ROOT/run_loop.sh" ./run_loop.sh; chmod +x run_loop.sh
+mkdir -p bin11 prompts
+printf '# scratch roster for this check only\nFUSE-1\n' > roster.txt
+printf '# scratch\n' > prompts/FUSE-1.md
+mine() { grep -c "^FUSE-1 $1\$" seen.log; }
+cat > bin11/claude <<'STUB'
+#!/usr/bin/env bash
+# an agent that RUNS and ends two turns, which is what invokes the Stop hook
+n=$(( $(cat spans 2>/dev/null || echo 0) + 1 )); echo "$n" > spans
+bash ./gate.sh </dev/null >/dev/null 2>&1
+bash ./gate.sh </dev/null >/dev/null 2>&1
+echo "${CALLSIGN} $(cat ".loop_blocks.${CALLSIGN}" 2>/dev/null || echo ABSENT)" >> seen.log
+[ "$n" -ge 2 ] && touch "STOP.${CALLSIGN}"
+exit 0
+STUB
+chmod +x bin11/claude
+: > seen.log; rm -f spans .loop_fails.FUSE-1
+PATH="$T/bin11:$PATH" KF_DETACHED=1 CALLSIGN=FUSE-1 MAX_TURN=30 BACKOFF_STEP=1 \
+  bash ./run_loop.sh >/dev/null 2>&1
+# Two spans, each ending two turns. Accumulating would read 2 then 4.
+check "the span cap counts two turn ends per span and does NOT accumulate"     \
+      "$(mine 2)/$(mine 4)" "2/0"
+rm -f STOP.FUSE-1 spans seen.log .loop_blocks.* .loop_exit.* .loop_fails.*
+
+cat > bin11/claude <<'STUB'
+#!/usr/bin/env bash
+# THE RUNAWAY THAT ACTUALLY HAPPENED: claude exits instantly, the agent never
+# runs, no turn ever ends, and so the Stop hook is never invoked.
+n=$(( $(cat spans 2>/dev/null || echo 0) + 1 )); echo "$n" > spans
+echo "${CALLSIGN} $(cat ".loop_blocks.${CALLSIGN}" 2>/dev/null || echo ABSENT)" >> seen.log
+[ "$n" -ge 2 ] && touch "STOP.${CALLSIGN}"
+echo "You've hit your session limit"
+exit 1
+STUB
+chmod +x bin11/claude
+: > seen.log; rm -f spans .loop_fails.FUSE-1
+PATH="$T/bin11:$PATH" KF_DETACHED=1 CALLSIGN=FUSE-1 MAX_TURN=30 BACKOFF_STEP=1 \
+  bash ./run_loop.sh >/dev/null 2>&1
+check "  and a crash loop increments it NOT AT ALL"                            \
+      "$(mine ABSENT)/$(grep -c '^FUSE-1 [0-9]' seen.log)" "2/0"
+# The other half of the same fact: the counter that DOES see a crash loop is a
+# different file. Without this the check above is satisfied by a launcher that
+# has stopped counting anything, and by one that never ran a second span.
+check "  while .loop_fails counts every one of those spans"                    \
+      "$(cat .loop_fails.FUSE-1 2>/dev/null)" "2"
+rm -f STOP.FUSE-1 spans seen.log run_loop.sh roster.txt prompts/FUSE-1.md \
+      loop_FUSE-1.log .loop_blocks.* .loop_exit.* .loop_fails.* .loop_lock.*
+rm -rf bin11
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "loop_gate.sh: ${pass} checks pass"

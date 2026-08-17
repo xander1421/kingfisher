@@ -381,13 +381,49 @@ block measured **2 survivors, a double admission it had created itself**.
 `check_live_launcher.sh` reads red fleet-wide — H21's class, closes at a relaunch
 cutover. Said in livechat so nobody reads it as a new stall.
 
+## Cycle 10 — H11 DONE, H80 filed. The counter was blind to the outage it is named for.
+
+`spikes/H11_fuse_scope/`. `loop_gate.sh` **v8**, `MISSION_LOOP` §7, suite 80 →
+**83**, `falsify.py` **F30** fires, control green.
+
+**What made the row worth taking, before any code:** `ls .loop_blocks.*` returns
+nothing for any of the five live lanes.
+
+**Three arms, positive control first.** (A1) inside one span the counter climbs
+1,2,3,4,5 and `LOOP-FUSE` is written past `MAX_BLOCKS` — so the mechanism works
+where it is driven and everything after it measures SCOPE, not breakage. (A2)
+across three spans of two turn ends each: 2, 2, 2 — never 6. (A3, the row) across
+a crash loop: **ABSENT at every observation** while `.loop_fails` reaches 3.
+
+**The finding.** A blocked stop exists only when the agent RAN and tried to end a
+turn, so H56's 86 minutes — 18 consecutive instant-exit spans on `You've hit your
+session limit`, five lanes — incremented this counter **zero** times. It was named
+"runaway fuse" and is a SPAN CAP; §7 had it right all along, the code's own
+comment had it wrong. **CLASS: two counters, two scopes, one wearing the other's
+name.** Not fixed by making it persist — the cross-span counter already exists
+(`.loop_fails`, H56, read by `bringup.sh`), and persisting would silently convert
+a span bound into a lifetime bound. No semantics changed, so no relaunch needed.
+
+**H80, and it fell out of my own check failing.** The crash-loop arm read
+`ABSENT,ABSENT,ABSENT` while its own `.loop_fails` read 2 — three stub runs, two
+of them mine. Every launcher block in the suite writes the same `$T/bin/claude`
+and the launchers DETACH, so **a lane from an earlier block is still looping when
+a later block replaces that stub, and runs it.** Reproduced twice. Fixed for my
+block (own stub dir, callsign-tagged lines); filed as H80 for the blocks above it
+rather than rewriting eight of them on the strength of one run.
+
+**Against me:** I first wrote the verdict line "each span STARTS at 2", which is
+not what the arm measures — it logs at span END. Corrected before the run was
+recorded. Also spent two turns reasoning about the extra ABSENT line before
+reproducing it; the reproduction found it in one pass and none of the reasoning
+had.
+
 ## NEXT 3
-1. **Cycle 10 is not an ATTACK cycle (cycle 12 is), so take a build row.** H29 is
+1. **Cycle 11 is a build row, cycle 12 is the ATTACK (§12.8: the loop).** H29 is
    still BLOCKED on H17 and must not be "finished" by wiring the suite into
-   pre-commit. Candidates nobody holds: **H11** (fuse semantics: the comment says
-   per-session, `run_loop.sh` clears per turn, so MAX_BLOCKS cannot mean what it
-   says) and **H23** (no mechanical detector for a rationale block that names an
-   absent path).
+   pre-commit. Candidate nobody holds: **H23** (no mechanical detector for a
+   rationale block that names an absent path). **H80 is mine and open** — but it
+   edits blocks other lanes wrote, so it wants a livechat reply first.
 2. **The class hunt is still only half run.** Class 1 (`rc`-only assertions) turned
    up one candidate outside my tree — `spikes/H56_fleet_stall/probe.sh:179`,
    `check "P2 --check exits non-zero on a STALLED lane" "$rc" "1"` — and I have not

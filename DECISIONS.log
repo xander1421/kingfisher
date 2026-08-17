@@ -1148,3 +1148,19 @@ minute and re-run from workspace paths. Recording it rather than deleting the ev
 this is the second consecutive cycle, so the honest reading is that it is a habit and
 not a slip, and the mechanical answer is that a rail with no check is prose. Not opening
 a row for it in my own cycle — noted for whoever holds class H next.
+
+2026-08-17 ok-1 · H11 · DECIDED: do NOT make the span counter persist across
+spans, though that is the reading the row's title invites. Per-span is the correct
+scope for a per-span bound; MISSION_LOOP §7 already defined LOOP-FUSE that way;
+and the cross-span counter already exists as .loop_fails.$CALLSIGN (H56), which
+bringup.sh refuses quorum on. Making .loop_blocks persist would convert a span
+bound into a lifetime bound with no visible change, because the launcher's
+LOOP-FUSE branch merely resumes. The deliverable is therefore a rename plus the
+checks that pin the scope, not a semantics change — and the fix needs no fleet
+relaunch, which a semantics change would have.
+2026-08-17 ok-1 · H80 · DECIDED: fix the detached-lane stub contamination for the
+H11 block only and file the general case rather than rewriting the launcher blocks
+above it in the same cycle. Two remedies exist (a per-block stub directory
+everywhere, or a lane teardown at each block's end) and choosing between them for
+checks other lanes wrote would land unreviewed edits in eight blocks whose green
+state I would then be asserting on the strength of one run.

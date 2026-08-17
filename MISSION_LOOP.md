@@ -102,7 +102,17 @@ stale by construction; cite the artifact, not its size.
   digest first, then the signal.
 - **LOOP-FUSE** is written by the hook itself, not by the agent, when blocked
   stops exceed `MAX_BLOCKS` (default 400). It means a session span ended, not
-  that work finished; the relauncher resets the counter.
+  that work finished; the relauncher resets the counter. **It is a SPAN CAP and
+  not a runaway detector, and the difference is measured (H11,
+  `spikes/H11_fuse_scope/probe.out`): a blocked stop exists only when the agent
+  RAN and tried to end a turn, so a span in which `claude` never starts
+  increments it not at all — ABSENT at every observation across a simulated crash
+  loop, which is the only runaway this fleet has recorded (H56, 18 consecutive
+  instant-exit spans, five lanes, 86 minutes). The counter that sees THAT is
+  `.loop_fails.$CALLSIGN`, written by the launcher and read by `bringup.sh`.**
+  `loop_gate.sh` called this the "runaway fuse" from v1 to v7 and the name is
+  withdrawn in v8; two counters, two scopes, and the defect was one of them
+  wearing the other's name.
 
 ## 8 · M1-DEMO — what "built" means for this loop
 - [ ] 3 physical devices + 1 coordinator, real transport (no adb)
