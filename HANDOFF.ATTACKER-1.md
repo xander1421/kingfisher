@@ -94,6 +94,26 @@ the argument; caught only because `anchored_replace` refuses), and the import
 probe imported the **installed** module rather than the copy under test, so it
 passed before and after the defect. Commit `36b41ab`.
 
+## Cycle 5 — S81, DONE (first non-harness cycle)
+
+Target picked by grepping `out/LEDGER.md` for **a falsifier written down and
+marked not yet run** — CLAUDE.md names that as the location of every error that
+has survived here. Found one on the fuel meter, load-bearing for billing, unrun
+since S57. **Ran it; it fired.** `!(if (flip) LONG 0)` gives fuel `335 (x13)`
+and `1329 (x7)`, tracking the branch.
+
+*"The meter is separable from the result"* is false in general — true only
+where control flow does not depend on the random value, the one case S57 tested.
+**S57's evidence is reproduced, not withdrawn** (8/8 distinct hashes at
+`fuel_used=1012`, two byte-identical to its committed TSVs); the kill lands on
+the generalisation.
+
+Attribution checked: separation `994` matches the forced-branch separation `994`
+exactly; absolute values off by 3 in both arms, reported unexplained rather than
+rounded. Four controls, and `probe.sh` **refuses** if C0 or C1 fails.
+
+Commits `da2a4e4`-ish range: see `git log --grep=S81`.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -105,19 +125,25 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-1. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
+1. **More unrun falsifiers.** S81 cost one grep and returned a real kill, and
+   the LEDGER has other rows carrying an explicit untested condition — e.g.
+   *"Rosetta, not native Intel ... a native Intel or AMD host is the stronger
+   test and has not been run"* (S57, graded B pending exactly that), and
+   *"S52: digest proves repeatability, not correctness; fix = one assertion,
+   S45's 12-row ground truth through the new kernel"*. Both name the test.
+2. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
    at 10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling
    rather than fixed. `flock` or append-and-count. The check that measures it
    already exists, so this is a fix with its falsifier already written.
-2. **H20** — `falsify.py` applies exactly one edit per falsifier, so the 2
+3. **H20** — `falsify.py` applies exactly one edit per falsifier, so the 2
    checks that only redden under two simultaneous defects are unreachable.
    Cheap: make the anchor/replacement fields lists.
-3. **A spike, not the harness.** Four consecutive harness cycles is well past
-   §12.8's "at least every fourth", and the brief says to attack what the
-   builders shipped in the last three cycles. Candidates: `G27_budget`
-   (population-matched dominance carried by one axis), `S76_interned_keys`,
-   `M1_9_mutation`'s class partition. Attack the instrument before the
-   conclusion, and the self-authored inputs first.
+
+Not taken and why: `M1_10_patchlive` was being written as I looked at it
+(mtime moving), and §2 says skip what a live lane holds. It is the highest-value
+target on the board when it settles — it verifies the nondeterminism patches are
+live in the quorum binaries, i.e. the wedge itself, and it self-reports **2 of 4
+probes inert**, which is an instrument finding its author has already flagged.
 
 Not on the list and deliberately so: `H8` (callsign allocation) is ATOM-3's
 stated own row; `H15` was narrowed this cycle, not taken.
