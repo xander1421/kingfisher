@@ -57,9 +57,14 @@ def newest_source_mtime(path):
     # consequence is the exact case A24 exists for: patch a source, do not commit
     # it, run a binary built before the patch -- and the floor stayed at the last
     # commit, so nothing fired. Resolve against the root and scope the pathspec.
+    # ...and a third bug in the same three lines: `_run` strips the whole output,
+    # which eats the leading space of porcelain's two-column status field, so the
+    # fixed `l[3:]` slice was off by one on the first line. Split on whitespace
+    # instead, which is correct whether or not the line was stripped.
     root = _run(['git', 'rev-parse', '--show-toplevel'], cwd=path) or path
-    dirty = [l[3:] for l in _run(['git', 'status', '--porcelain', '--', '.'],
-                                 cwd=path).splitlines()]
+    dirty = [l.split(None, 1)[-1]
+             for l in _run(['git', 'status', '--porcelain', '--', '.'],
+                           cwd=path).splitlines() if l.split(None, 1)]
     for f in dirty:
         fp = os.path.join(root, f)
         if not os.path.exists(fp):
@@ -352,6 +357,41 @@ def demo():
         ok, p = record(d, deps=[kf], artifacts=[fresh],
                        controls=[c_good], allow_dirty=True)
         assert ok, p['problems']
+
+    # --- the DIRTY-FILE half of the staleness floor, in a throwaway git repo.
+    # This is the A24 case: patch a source, do not commit it, run an artifact
+    # built before the patch. It was DEAD until 2026-08-17 (porcelain prints
+    # repo-root-relative paths; they were joined onto the dep dir, so every
+    # getmtime raised OSError and was swallowed). The old assertion above could
+    # not see it, because a year-2020 artifact fails on the HEAD floor alone --
+    # a control that only exercises one of two mechanisms cannot detect the
+    # other one being broken.
+    g = tempfile.mkdtemp()
+    _run(['git', 'init', '-q'], cwd=g)
+    _run(['git', 'config', 'user.email', 't@example.invalid'], cwd=g)
+    _run(['git', 'config', 'user.name', 'test'], cwd=g)
+    src = os.path.join(g, 'src.c')
+    with open(src, 'w') as f:
+        f.write('int main(void){return 0;}\n')
+    _run(['git', 'add', '.'], cwd=g)
+    _run(['git', 'commit', '-qm', 'init'], cwd=g)
+    head = _run(['git', 'log', '-1', '--format=%ct', '--', '.'], cwd=g)
+    head = int(head) if head.isdigit() else 0
+    art = os.path.join(d, 'built_before_patch.bin')
+    with open(art, 'wb') as f:
+        f.write(b'x')
+    os.utime(art, (head + 10, head + 10))          # built AFTER the commit
+    ok, p = record(d, deps=[g], artifacts=[art], controls=[c_good],
+                   allow_dirty=True)
+    assert ok, ('an artifact newer than the dep commit must pass', p['problems'])
+    with open(src, 'a') as f:                      # patch, do NOT commit
+        f.write('// patched after the build\n')
+    os.utime(src, (head + 20, head + 20))
+    ok, p = record(d, deps=[g], artifacts=[art], controls=[c_good],
+                   allow_dirty=True)
+    assert not ok and any('STALE ARTIFACT' in x for x in p['problems']), \
+        ('the dirty-file staleness floor did not fire -- the A24 loop is dead',
+         p['problems'])
 
     print('provenance: all assertions pass')
 

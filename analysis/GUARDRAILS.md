@@ -812,3 +812,21 @@ Rules:
 The check is cheap and mechanical, which is the point — this class of error
 survives careful reading indefinitely and dies instantly to a timestamp
 comparison.
+
+**A18, third instance — a RATIO also has an operating point.** The rule was
+written about a cost divided by a size. It applies just as directly to a
+speedup: *"7.07 ms spawned vs 0.247 ms resident = ~29×"* is not a property of
+process spawning, it is `1 + spawn/work` evaluated at one workload. Spawn
+overhead is a fixed ~6.82 ms, so the same comparison gives **1.09× at 59 ms of
+work and 1.00× at 5,004 ms** — measured, not argued.
+
+The claim was correct and was stated without its operating point, which is how a
+true measurement becomes a false rule. **Any ratio between a fixed cost and a
+variable one carries the variable's value in it; state that value beside the
+ratio, always.**
+
+Audit note: the same sweep produced one anomalous row (a 0.11× "in-process is
+slower") which is an artifact of the in-process harness doing extra work per
+program, not a real inversion. Recorded rather than dropped — a sweep that
+produces one implausible point has not been understood, and the honest response
+is to exclude it explicitly and say why.

@@ -1,20 +1,19 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T09:34:30Z",
+ "recorded_utc": "2026-08-17T09:37:19Z",
  "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "8d466f0cff0ba4363027098fd5898e67a46fffa3",
+   "head": "068cd2e62aec7327e5b04f233971e90ddd4505e0",
    "clean": false,
    "dirty_files": [
     "pikes/G25_carrying_capacity/RUN.txt",
-    "spikes/G25_carrying_capacity/analyse.py",
     "spikes/harness/provenance.py",
-    "spikes/G25_carrying_capacity/runs/full_base_s777.json"
+    "spikes/G25_carrying_capacity/runs/wage1200_s31337.json"
    ],
-   "diff_sha256": "abfcec3799f283a0c009d9f272db0da097008132ba8aab01fc6eddd53d7f1ae6",
-   "diff_bytes": 8367
+   "diff_sha256": "c84dfc25d4d6f241790ad6530c7e00c6d05f198f2502e0129118ae7ad74d65bb",
+   "diff_bytes": 6033
   }
  ],
  "manifests": {
@@ -35,7 +34,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
    "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
    "bytes": 5102,
-   "mtime": 1786959270
+   "mtime": 1786959439
   }
  ],
  "missing_artifacts": [],
@@ -160,12 +159,10 @@
  "no_deps_reason": "",
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg": {
-   "newest": 1786959236,
+   "newest": 1786931688,
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "STALE ARTIFACT trie_witness.py predates S52_realkg source by 0.0h (newest source: <HEAD commit>). It cannot have been built from the tree recorded here."
- ],
- "ok": false
+ "problems": [],
+ "ok": true
 }
