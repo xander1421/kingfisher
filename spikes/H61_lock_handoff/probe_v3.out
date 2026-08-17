@@ -1,0 +1,22 @@
+H61 v3 — 20 launchers on one callsign, counted after a 8s settle
+
+  control (as in tree)       survivors=1   refused_by_parent=19  refused_by_child=0   one lane
+  POSITIVE CTL: no sleep     survivors=4   refused_by_parent=0   refused_by_child=16  TWO LANES ON ONE CALLSIGN
+  slow child, `sleep 1`      survivors=1   refused_by_parent=19  refused_by_child=0   one lane
+  wait fix                   survivors=1   refused_by_parent=19  refused_by_child=0   one lane
+  wait fix + slow child      survivors=1   refused_by_parent=19  refused_by_child=0   one lane
+
+STAGGERED ARRIVAL — a second launcher arriving INSIDE the handoff window
+  sleep 1 + slow child       survivors=1   refused_by_parent=0   refused_by_child=1   one lane
+  wait fix + slow child      survivors=1   refused_by_parent=1   refused_by_child=0   one lane
+  control, no slow child     survivors=1   refused_by_parent=1   refused_by_child=0   one lane
+
+FB ok: the positive control admits 4 lanes on one callsign, so a double admission IS visible to this probe.
+FA: slow child under `sleep 1`, 20 at once -> survivors=1, parent-refused=19, child-refused=0
+FC: the wait fix -> 1/19/0 clean, 1/19/0 with the slow child (survivors/parent/child)
+FD/FE  stagger sleep 1 + slow child     survivors=1 parent-refused=0 child-refused=1
+FD/FE  stagger wait fix + slow child    survivors=1 parent-refused=1 child-refused=0
+FD/FE  stagger control, no slow child   survivors=1 parent-refused=1 child-refused=0
+
+H61 IS RESTATED, AGAINST THE ROW AS I FILED IT, AND IT IS NOT A DOUBLE ADMISSION. Under `sleep 1` + a slow child the second launcher IS refused — but by the CHILD, into `detach_$CALLSIGN.log`, seconds after its parent printed `detached` and exited 0. The caller is told the lane launched and it did not. That is verbatim the failure `run_loop.sh:232-234` says the pre-fork acquisition exists to prevent. Under the condition wait the refusal is back in the PARENT (1 parent-refused, 0 child-refused), in front of the caller, with a non-zero exit.
+THE FIX HOLDS AND DOES NOT REGRESS SIMULTANEITY: exactly one survivor and 19 parent-side refusals with and without the slow child.

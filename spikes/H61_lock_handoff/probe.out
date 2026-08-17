@@ -1,0 +1,14 @@
+H61 — the parent->child lock handoff, under a slow child
+
+  control (as in tree)    75 pass /  0 fail   lock checks red: 0/3
+  slow child              73 pass /  2 fail   lock checks red: 2/3
+      20 simultaneous launchers on one callsign leave ONE survivor (want '1', got '0')
+      every launcher is accounted for (want '20', got '19')
+  wait fix                75 pass /  0 fail   lock checks red: 0/3
+  wait fix + slow child   75 pass /  0 fail   lock checks red: 0/3
+
+FA  slow child under `sleep 1`:        2/3 lock checks red
+FB  slow child under the wait:         0/3 lock checks red
+FC  wait fix on a clean tree:          all-green
+
+H61 STANDS AND THE FIX HOLDS: a slow child breaks the lock under `sleep 1` (2/3 lock checks red) and does not break it under the condition wait (0/3), which is also all-green on a clean tree.

@@ -1,0 +1,30 @@
+H61 v2 — 20 launchers on one callsign, counted after a 8s settle
+
+  control (as in tree)       survivors=1   HELD=19  one lane
+  POSITIVE CTL: no sleep     survivors=11  HELD=0   TWO LANES ON ONE CALLSIGN  UNACCOUNTED: 11+0 != 20
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+  slow child, `sleep 1`      survivors=1   HELD=19  one lane
+  wait fix                   survivors=1   HELD=19  one lane
+  wait fix + slow child      survivors=1   HELD=19  one lane
+
+STAGGERED ARRIVAL — a second launcher arriving INSIDE the handoff window
+  sleep 1 + slow child       survivors=1   HELD=0   one lane  UNACCOUNTED: 1+0 != 2
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+        | run_loop: RACE-1 detached (survives caller teardown); log detach_RACE-1.log
+  wait fix + slow child      survivors=1   HELD=1   one lane
+  control, no slow child     survivors=1   HELD=1   one lane
+
+FB ok: the positive control admits 11 lanes on one callsign, so a double admission IS visible to this probe.
+FA: slow child under `sleep 1` -> survivors=1, HELD=19
+FC: the wait fix -> survivors=1/HELD=19 clean, survivors=1/HELD=19 with the slow child
+STAGGER: sleep 1 + slow child -> survivors=1 HELD=0; wait fix -> survivors=1 HELD=1; no slow child -> survivors=1 HELD=1
+
+H61 IS WITHDRAWN AS FILED: neither simultaneous nor staggered arrival opens the window with the sleep in place. It is reachable by an EDIT to that line (positive control) and by nothing this probe could construct from timing. The fix is still correct, but the row must not claim a live risk it cannot demonstrate.
+THE FIX HOLDS: exactly one survivor and 19 HELD, with and without the slow child. It also removes the reason a slow child yields NO admission — the parent waits for the handoff instead of sleeping through it.

@@ -113,6 +113,22 @@ is what keeps that window closed, and its comment does not say so. **Whether 1 s
 is enough under fleet load is UNMEASURED**, and this result is not a claim that
 it is not.
 
+> **CORRECTED 2026-08-17 (ok-1) under H61, and the correction is against my own
+> reading of this result.** The measurement above is reproducible and the
+> inference drawn from it in H61's row was not. *"A competing launcher takes the
+> callsign"* is what the code reads like; it is not what happens. Eight arms,
+> every launcher accounted for (`spikes/H61_lock_handoff/probe_v3.out`): **no
+> arrival time produces a double admission** while the sleep is present, because
+> the CHILD performs the same lock check and refuses the second lane. The 4
+> survivors above come from DELETING the line — an edit, not a load.
+>
+> What the window really costs is where the refusal is printed: the second
+> launcher is refused by its own child, into `detach_$CALLSIGN.log`, after its
+> parent printed `detached` and exited 0. Fixed in `run_loop.sh` v10 (defect 13)
+> by waiting on the condition rather than the duration. The unmeasured-under-load
+> caveat above was the right caveat and it was still not conservative enough: the
+> mechanism named in the sentence it qualifies was the wrong one.
+
 ## What H29 still blocks on
 
 Only H17: the suite `mktemp -d`s into `/tmp`, and §10 says nothing outside the
