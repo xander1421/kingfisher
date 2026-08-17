@@ -15,6 +15,7 @@ from shardstore import ShardStore
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'harness'))
 from canon import canon, canon_alpha_strict, is_ground, AlphaLossy
+import bansurface
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_3_worker'))
 import preflight
@@ -130,9 +131,25 @@ def main():
     # M1.5: ingest the corpus into the content-addressed store first. The job
     # carries a CID; nothing downstream ever names a path.
     store = ShardStore(a.store, cap_bytes=a.cap_mb << 20)
-    cids = []
+    # ADMISSION (S59 ban surface). M1.8b: quorum-of-3 launders a
+    # nondeterministic job 21.5% of the time, so replication cannot be the
+    # control -- this is where it has to be stopped.
+    cids, refused_admission = [], []
+    kept = []
     for p in progs:
-        cids.append(store.put(open(os.path.join(a.corpus, p), 'rb').read()))
+        data = open(os.path.join(a.corpus, p), 'rb').read()
+        ok, why = bansurface.admit(data)
+        if not ok:
+            refused_admission.append((p, [k for k, _ in why]))
+            continue
+        kept.append(p)
+        cids.append(store.put(data))
+    if refused_admission:
+        print(f'admission: REFUSED {len(refused_admission)} program(s) on the '
+              f'nondeterminism ban surface')
+        for p, k in refused_admission:
+            print(f'  - {p}  ({", ".join(k)})')
+    progs = kept
     uniq = len(set(cids))
     print(f'store: {len(progs)} programs -> {uniq} distinct CIDs, '
           f'{store.total_bytes()/1024:.1f} KiB, cap {a.cap_mb} MiB')
@@ -220,6 +237,8 @@ def main():
     json.dump({'gate': gate, 'fuel': a.fuel, 'bytes_pushed': pushed,
                'normalisation': 'canon_alpha' if ALPHA else 'canon',
                'sessions': sessions, 'chunk': a.chunk, 'refusals': refusals,
+               'admission_refused': [{'program': p, 'reasons': k}
+                                     for p, k in refused_admission],
                'workers': [w[0] for w in workers],
                'tally': dict(tally),
                'rows': [{'program': p, 'verdict': v, 'agree': n,

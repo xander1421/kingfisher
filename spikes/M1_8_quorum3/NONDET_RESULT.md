@@ -47,3 +47,57 @@ canonicalisation work — it would have happened under the original key.
   would be far worse and a high-entropy result far better.
 - Nothing here says an admitted, deterministic job is unsafe. The point is
   precisely that safety rests on admission having excluded this class.
+
+---
+
+## Closed — the gate exists, and it is validated in both directions
+
+`spikes/harness/bansurface.py`, wired into `q3.py`'s ingest.
+
+The surface is **enumerated from the shipped build**, not guessed
+(`builtin_mods/random.rs:99-132`): `flip`, `random-int`, `random-float`,
+`new-random-generator`, `set-random-seed`, `reset-random-generator`, and the
+ambient `&rng` token.
+
+**The ban is deliberately not blanket.** LEDGER carries a grade-A row that a job
+with a correctly-bound *seeded* generator is bit-identical across two ISAs, and
+S58's rule is "seeded or removed", not "removed". So the gate separates them:
+
+| | |
+|---|---|
+| REJECT | `flip` (takes no generator, cannot be seeded) |
+| REJECT | ambient `&rng` — the module-level generator, not seeded by the job |
+| REJECT | `random-int`/`random-float` with no `(new-random-generator <seed>)` in the job |
+| REJECT | `reset-random-generator` / `set-random-seed` — mutate state mid-job, so the result depends on evaluation order |
+| **ADMIT** | a generator explicitly built with `(new-random-generator 42)` and threaded through |
+
+### Both directions measured
+```
+corpus 67:  ADMIT 66   REJECT 1
+  REJECT python__sandbox__test_gnd_conv.metta  (flip)
+```
+It catches the exact program that was being laundered, and rejects **nothing
+else**. Contrast the variable-aliasing gate, refuted earlier at 51% rejection:
+a gate is only useful if both its error rates are known.
+
+### Pipeline result after the gate
+```
+admission: REFUSED 1 program(s) on the nondeterminism ban surface
+store: 66 programs -> 66 distinct CIDs
+UNANIMOUS=66   accepted 66/66
+alpha: 0 envelope(s) non-ground
+```
+
+The headline changes from *"66/67 with one NO_QUORUM"* to **"66/66 unanimous,
+one refused at admission"** — and the difference is not cosmetic. Under the old
+pipeline that program reached a quorum and was accepted 21.5% of the time.
+
+### Still open
+- The gate is **syntactic**. A program that reaches randomness through
+  `import!` of a module we have not enumerated, or through a Python extension,
+  is not caught. LEDGER's grade-A row already says the real enforcement is
+  **by build** — ship a runtime with no unseeded random ops registered — and
+  this gate is defence in depth, not the primary control.
+- Nondeterminism from sources other than the random module (thread scheduling,
+  the two variable-id mechanisms in M1.1c) is out of this gate's scope and
+  handled elsewhere.
