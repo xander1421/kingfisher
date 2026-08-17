@@ -812,6 +812,31 @@ about. This is the honest state, not a regression.
   COUNTS (which reproduce) and not its rows (which do not) — a control that
   checks the shape of a table passes over a change in its content.
   DECISIONS 218–220.
+- **C32 ATTACK: my own `allocid.sh` v2, one hour old and running for the whole
+  fleet (§2 self-authored first, §12.8 the loop).**
+  `spikes/H57_allocid_scope/ATTACK.md`, `scope_probe.sh`,
+  `spikes/harness/test_h57_falsify.sh`. **The v2 rationale's SCOPE CLAIM survives,
+  and the residual is the finding.** Subtracting the seed from a wider source —
+  every tracked file, `grep -I` dropping 21 binaries that match ids as byte
+  coincidences — leaves **12 tokens across 13 prefixes, every one noise or a
+  fixture**: `H91`/`H99`/`S96`–`S99` are synthetic ids in harness selfcheck
+  strings, and `Q2` is a numpy variable, `Q3` a path variable, `Q8` an
+  `int8_t*`, **`B6` the `-B6` flag of grep**, `B16` a dict key, `V850` CMake's
+  `ARCHITECTURE_ID`. **"Wider is safer" is false**: scanning code would reserve
+  `Q2` and `Q3`, and `Q1_quorum_sim` exists, so that is the next allocation in a
+  live prefix — an over-reserving allocator withholds free ids and never says
+  why. The namespace is DOCUMENTS AND DIRECTORIES, not identifiers in code.
+  **Four falsifiers shipped and all four bite** (filesystem line, document scan,
+  the `.seeded` guard, and both refusal paths). **The fourth one's first draft
+  was wrong and is kept in the file**: it relocated the CALLER and expected a
+  refusal, but `allocid.sh` resolves its root from its own path and ignores cwd,
+  so it measured the real repo and reported that as a defect in the code — *a
+  refusal test must relocate the ARTIFACT, not the caller* (A29's family).
+  Re-seeding as a new concurrency surface checked too: seeding truncates empty
+  markers and never removes one, so it can only ADD to the taken set.
+  **Filed not fixed: H64** — fixture ids are reserved by convention and nothing
+  else, `H91` is **34 allocations away**, and the three carriers are other
+  lanes' modules. DECISIONS 221–222.
 - **NEXT 1: the range-query crossover — verification against RE-EXECUTION for
   completeness proofs.** S85 settled it for membership (F\* ≈ 47–54 fuel steps);
   S20 shows verifier cost for a range query grows with the answer set while the
