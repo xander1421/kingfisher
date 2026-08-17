@@ -1,0 +1,98 @@
+{
+ "spike": "H65_falsifier_prose",
+ "recorded_utc": "2026-08-17T15:36:46Z",
+ "note": "H65: ATTACK on the loop \u2014 is G33's defect class gateable?",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H65_falsifier_prose/probe.py",
+   "sha256": "cd4c97fbb55ec4e6120cb67ea2400f42ef8fb8273b7dcdb030c64e39a7e85464",
+   "bytes": 10075,
+   "mtime": 1786981003
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H65_falsifier_prose/probe.json",
+   "sha256": "d6ab1246fdb584c6ac2f032f37f4e26ace9c6c33b7187f641592debefbcb2dae",
+   "bytes": 2938,
+   "mtime": 1786981006
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_probe_finds_the_known_instance",
+   "must_fire_because": "a negative result is only evidence if the search could have found something; G30's F2 is the one instance known to be real",
+   "can_fail_because": "a wrong paragraph matcher, or reading the wrong provenance key, would return a clean tree for every spike including the one already proven defective",
+   "null_must_contain": "G30's F2 explanation matching its own observations",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "spike": "G30_external_yardstick",
+    "falsifier": "F2_top12_heuristic_inversion",
+    "cited": 3,
+    "missing": 3,
+    "examples": [
+     "0.0508",
+     "0.0631",
+     "80.55"
+    ]
+   }
+  },
+  {
+   "name": "C2_probe_B_reaches_real_falsifiers",
+   "must_fire_because": "check B reporting zero must mean 'no contradictions', not 'nothing was examined'",
+   "can_fail_because": "if no RESULT.md paragraph named a falsifier, B would print 0 contradictions while having checked nothing",
+   "null_must_contain": "zero unambiguous verdicts examined",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "unambiguous_verdicts": 7
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_check_A_is_too_noisy_to_ship",
+   "must_fire_because": null,
+   "can_fail_because": "the share of cited numbers absent from their falsifier's observations is >= 25% across the tree, i.e. the ordinary case looks like the defect",
+   "null_must_contain": "a low absent-rate with the known instance still flagged",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rate_pct": 83.8,
+    "known_flagged": true
+   },
+   "refutes": "REFUSE check A if it cannot separate the known defect from ordinary derived numbers",
+   "fires_when": "the share of cited numbers absent from their falsifier's observations is >= 25% across the tree, i.e. the ordinary case looks like the defect",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_check_A_is_too_noisy_to_ship"
+ ],
+ "no_deps_reason": "reads every spike's committed provenance.json and RESULT.md; it has no single upstream spike",
+ "problems": [],
+ "ok": true,
+ "falsifier": "Check A separates the known instance from derived numbers at a usable rate, or check B finds a contradiction somewhere in the tree"
+}

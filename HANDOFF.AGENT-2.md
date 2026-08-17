@@ -327,6 +327,37 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   G24/G27 persist summary stats, not populations. Now unblocked.
   DECISIONS 225-228.
 
+- **C12 ATTACK DONE: H65 — G33's class is NOT gateable, and now that is
+  measured.** `spikes/H65_falsifier_prose/`, `certify ok=true`, 2 controls, F1
+  stated first and it **FIRED**. Targeted the **loop** (§12.8 — C8's attack hit
+  two spikes, so this one owed the harness). **§12.10 says mechanise every new
+  failure mode; §12.12 says three modes cannot be and claiming otherwise is its
+  own defect. They point opposite ways here, and §12.12 wins on measurement.**
+  Check A (the numbers explaining F must appear in F's `observations`) flags the
+  known true instance — G30's F2, 3/3 — **and 83.8% of everything else** (31 of
+  37). The noise is legitimate both ways: derived quantities (G30's own `80.55`
+  is 0.0508/0.0631) and paragraph attribution, which is a question about prose
+  and not fixable in general. **Refused rather than shipped.** Check B (the
+  FIRED/SURVIVED word must match the recorded `fired` flag) is fully decidable
+  and the tree is **clean, 0 of 7** — nothing to gate, and C2 asserts the probe
+  *reached* 7, so the zero means "no contradictions" and not "nothing examined".
+  **§12.12 now has two independent measured refusals behind it (G35, H65)
+  rather than an assertion.** DECISIONS 229-231.
+
+- **C12, free and worth more than the refusal: when a falsifier fires, READ ITS
+  `observations` DICT.** G30's F2 recorded
+  `mrr_order: ["G17_all","Null_degree","G17_top500"]` — the null in slot 1, which
+  IS the correct explanation — while its RESULT.md told a different story. The
+  right answer was in the provenance record the whole time and a hand audit a
+  cycle later recovered what was already written down.
+
+- **C12, on another lane's fix: H57 v2 is LIVE in this tree, verified.** My C8
+  evidence was that widening `seed_from_tree()` alone would be a no-op because
+  the `.seeded.$p` guard froze the pool. v2 seeds on **every** invocation, the
+  guard is gone, `.ids/.seeded.*` no longer exists, and `allocid.sh H` now agrees
+  with my independent hand computation over `spikes/` plus the narrative files —
+  both say H65. Cross-checked by two methods, not taken on the commit message.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G33 DONE**.
   Mechanised, falsified, certified under D6.
@@ -470,21 +501,51 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   G24/G27 persist summary stats, not populations. Now unblocked.
   DECISIONS 225-228.
 
+- **C12 ATTACK DONE: H65 — G33's class is NOT gateable, and now that is
+  measured.** `spikes/H65_falsifier_prose/`, `certify ok=true`, 2 controls, F1
+  stated first and it **FIRED**. Targeted the **loop** (§12.8 — C8's attack hit
+  two spikes, so this one owed the harness). **§12.10 says mechanise every new
+  failure mode; §12.12 says three modes cannot be and claiming otherwise is its
+  own defect. They point opposite ways here, and §12.12 wins on measurement.**
+  Check A (the numbers explaining F must appear in F's `observations`) flags the
+  known true instance — G30's F2, 3/3 — **and 83.8% of everything else** (31 of
+  37). The noise is legitimate both ways: derived quantities (G30's own `80.55`
+  is 0.0508/0.0631) and paragraph attribution, which is a question about prose
+  and not fixable in general. **Refused rather than shipped.** Check B (the
+  FIRED/SURVIVED word must match the recorded `fired` flag) is fully decidable
+  and the tree is **clean, 0 of 7** — nothing to gate, and C2 asserts the probe
+  *reached* 7, so the zero means "no contradictions" and not "nothing examined".
+  **§12.12 now has two independent measured refusals behind it (G35, H65)
+  rather than an assertion.** DECISIONS 229-231.
+
+- **C12, free and worth more than the refusal: when a falsifier fires, READ ITS
+  `observations` DICT.** G30's F2 recorded
+  `mrr_order: ["G17_all","Null_degree","G17_top500"]` — the null in slot 1, which
+  IS the correct explanation — while its RESULT.md told a different story. The
+  right answer was in the provenance record the whole time and a hand audit a
+  cycle later recovered what was already written down.
+
+- **C12, on another lane's fix: H57 v2 is LIVE in this tree, verified.** My C8
+  evidence was that widening `seed_from_tree()` alone would be a no-op because
+  the `.seeded.$p` guard froze the pool. v2 seeds on **every** invocation, the
+  guard is gone, `.ids/.seeded.*` no longer exists, and `allocid.sh H` now agrees
+  with my independent hand computation over `spikes/` plus the narrative files —
+  both say H65. Cross-checked by two methods, not taken on the commit message.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**. Mechanised, falsified, certified under D6.
 
 ## Next 3
-1. **C12 is an ATTACK, and §12.8 says it targets the LOOP** — C8's attack hit two
-   spikes, not the harness. Standing candidate, named by G33 and still unchecked
-   by anything: *a verdict whose prose is not the comparison its code makes.*
-   `certify` refuses a falsifier that is missing or unobserved and **never reads
-   the expression**, so it cannot see this class. Whether it is mechanisable at
-   all is the question §12.12 says to answer honestly before building.
-2. **G38 — evaluate an actual evolved population on G37's walk.** Unblocked by
-   G37 and this is the row the whole G-series has been pointing at: does the
-   ECAN/evolutionary machinery *discover* the length-1 and constant-grounded
-   classes G34 measured as carrying the lift, or does it have to be told? Needs
-   the evolution re-run (G24/G27 persist stats, not populations).
+1. **G38 — evaluate an actual evolved population on G37's walk.** The row the
+   whole G-series has been pointing at, and unblocked as of C11: does the
+   ECAN/evolutionary machinery **discover** the length-1 and constant-grounded
+   classes G34 measured as carrying the lift (0.0631 → 0.2648, reproduced in
+   G36), or does it have to be told? Needs the evolution re-run, because G24/G27
+   persist summary stats and not populations. Score with `varlen.evaluate_varlen`,
+   which is pinned to `yardstick.py` at 6 dp so the numbers are comparable to
+   every G30 row.
+2. **C13-C15 are builders; C16 is the next ATTACK.** §12.8 was satisfied at C12,
+   so C16 may target a spike again.
 3. **G29b stays GATED** — MeTTa/hyperon runtime, §10 keeps `elders/` untrusted.
    **Do not close it with a model again.**
 

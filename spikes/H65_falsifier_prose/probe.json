@@ -1,0 +1,127 @@
+{
+  "A_numbers_vs_observations": {
+    "absent_from_observations": 31,
+    "explanations": 9,
+    "known_true_instance": {
+      "cited": 3,
+      "examples": [
+        "0.0508",
+        "0.0631",
+        "80.55"
+      ],
+      "falsifier": "F2_top12_heuristic_inversion",
+      "missing": 3,
+      "spike": "G30_external_yardstick"
+    },
+    "known_true_instance_flagged": true,
+    "numbers_cited": 37,
+    "rate_pct": 83.8,
+    "rows": [
+      {
+        "cited": 8,
+        "examples": [
+          "0.03",
+          "0.1239",
+          "0.1870",
+          "0.1980"
+        ],
+        "falsifier": "F1_length1_lift",
+        "missing": 7,
+        "spike": "G34_length1_and_constants"
+      },
+      {
+        "cited": 8,
+        "examples": [
+          "0.03",
+          "0.0631",
+          "0.1239",
+          "0.1870"
+        ],
+        "falsifier": "F2_constants_lift",
+        "missing": 7,
+        "spike": "G34_length1_and_constants"
+      },
+      {
+        "cited": 8,
+        "examples": [
+          "0.03",
+          "0.0631",
+          "0.1239",
+          "0.1870"
+        ],
+        "falsifier": "F3_literature_parity",
+        "missing": 7,
+        "spike": "G34_length1_and_constants"
+      },
+      {
+        "cited": 3,
+        "examples": [
+          "0.0508",
+          "0.0631",
+          "80.55"
+        ],
+        "falsifier": "F2_top12_heuristic_inversion",
+        "missing": 3,
+        "spike": "G30_external_yardstick"
+      },
+      {
+        "cited": 4,
+        "examples": [
+          "1.49",
+          "6.04",
+          "75.37"
+        ],
+        "falsifier": "F_no_memory_advantage",
+        "missing": 3,
+        "spike": "W6_incremental_witness"
+      },
+      {
+        "cited": 3,
+        "examples": [
+          "80.55"
+        ],
+        "falsifier": "F1_null_dominance",
+        "missing": 1,
+        "spike": "G30_external_yardstick"
+      },
+      {
+        "cited": 1,
+        "examples": [
+          "0.85"
+        ],
+        "falsifier": "F1_f2_expression_matches_its_reported_condition",
+        "missing": 1,
+        "spike": "G33_yardstick_audit"
+      },
+      {
+        "cited": 1,
+        "examples": [
+          "1.0000"
+        ],
+        "falsifier": "F1_instrument_drift",
+        "missing": 1,
+        "spike": "G37_varlen_bodies"
+      },
+      {
+        "cited": 1,
+        "examples": [
+          "95.14"
+        ],
+        "falsifier": "F_no_crossover",
+        "missing": 1,
+        "spike": "S85_verify_vs_reexec"
+      }
+    ]
+  },
+  "B_verdict_vs_flag": {
+    "contradictions": 0,
+    "rows": [],
+    "unambiguous_verdicts": 7
+  },
+  "verdict": {
+    "check_A_shippable": false,
+    "check_B_found_anything": false,
+    "check_B_shippable": true,
+    "conclusion": "A is REFUSED: it flags the known instance and 83% of everything else, so it cannot separate a defect from a derived number. B is decidable and clean across the tree, so there is nothing for it to gate."
+  }
+}
