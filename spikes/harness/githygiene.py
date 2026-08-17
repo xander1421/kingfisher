@@ -210,8 +210,33 @@ def main():
     # where a control penalised the arm that succeeded.
     staged = sh("git", "diff", "--cached", "--name-only",
                 "--diff-filter=ACMR").splitlines()
+    # H35, ATTACKER-1: THE SIZES COME FROM THE INDEX, NOT FROM THE TREE.
+    # `check_paths` defaults to `os.path.getsize`, so the PATHS were the
+    # commit's and the BYTES were the working tree's. MEASURED, not argued:
+    # stage a 3 MB file, shrink the tree copy to 6 bytes, and this module
+    # printed "clean -- nothing you are about to commit violates §13" at exit 0
+    # while the commit carried 3,000,000 bytes. Same class as pre-commit.hook
+    # v2's F1 -- a checker reading the tree while its verdict is attributed to
+    # the commit -- landing in the one checker whose comment above advertises
+    # index-awareness: `git ls-files`/`git diff --cached` gave it the right
+    # paths and nothing gave it the right bytes.
+    staged_sizes, fellback = {}, []
+    for p in staged:
+        s = sh("git", "cat-file", "-s", f":{p}")
+        if s.isdigit():
+            staged_sizes[p] = int(s)
+        else:
+            # Loud, not silent: a size this tool could not read from the index
+            # is exactly the case the paragraph above is about.
+            fellback.append(p)
+            staged_sizes[p] = (os.path.getsize(p)
+                               if os.path.exists(p) else None)
+    if fellback:
+        print(f"\nNOTE: index size unreadable for {fellback} — "
+              f"fell back to the working-tree size, which may not be what "
+              f"you are committing")
     if staged:
-        violations += check_paths(staged, "STAGED")
+        violations += check_paths(staged, "STAGED", sizes=staged_sizes)
     else:
         print("nothing staged")
 
@@ -428,6 +453,17 @@ def selfcheck():
 
     rc, out = run_in(lambda d: stage(d, "big.txt", b"0" * (2 * 1024 * 1024)))
     ck("staged oversized file fails", rc == 1 and "exceeds" in out, f"rc={rc}")
+
+    # H35, ATTACKER-1. The case the check above cannot construct, because it
+    # leaves the tree copy equal to the staged copy: STAGE the 2 MB, then shrink
+    # the TREE copy. The commit still carries 2 MB. Verified RED with the
+    # `staged_sizes` block deleted from an isolated copy.
+    def _stage_then_shrink(d):
+        stage(d, "big.txt", b"0" * (2 * 1024 * 1024))
+        open(os.path.join(d, "big.txt"), "wb").write(b"small\n")
+    rc, out = run_in(_stage_then_shrink)
+    ck("oversized STAGED blob fails even when the tree copy has shrunk",
+       rc == 1 and "exceeds" in out, f"rc={rc}")
 
     # NOTE the assertion, which was wrong first: it demanded the words "build
     # tree", but `.pyc` is caught by the EXTENSION rule before the path rule ever

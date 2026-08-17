@@ -1,5 +1,61 @@
 #!/bin/sh
-# pre-commit.hook v1 — 2026-08-17, AGENT-1, H15.
+# pre-commit.hook v2 — 2026-08-17. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35).
+#
+# ==== v2, AND IT IS A CORRECTION AGAINST v1's HEADER (§12.7) ================
+# DEFECT REMOVED: THE GATE JUDGED THE WORKING TREE WHILE SAYING IT JUDGED THE
+# COMMIT. v1's header below ends "The gate judges the content of your commit,
+# and on a shared file that content is not only yours." `refcheck.py` and
+# `journalcheck.py` read files with plain `open()`, so their verdict is a
+# function of the TREE. Both halves measured in `spikes/H35_gate_scope/`, run
+# against v1, four controls held:
+#
+#   F1  the gate PASSED a commit whose own blob carried a duplicate WORK_QUEUE
+#       row id -- `git add` the broken file, repair the tree copy, commit the
+#       index. refcheck check 5 exists to refuse exactly that content and was
+#       inert on it. Family C, the artifact is not what you think, sitting in
+#       the gate. FIXED HERE, fail-closed: see UNSOUND below.
+#   F2  the gate REFUSED a `git commit --only <unrelated path>` whose content
+#       does not include the broken file at all. v1's header records this exact
+#       scenario -- "one lane blocked by another lane's UNCOMMITTED edit" -- as
+#       investigated and disproved. The disproof holds only for a SHARED file,
+#       where `--only` does commit the co-editor's edits to that file. The
+#       general case needs no shared file and it reproduces. NOT "FIXED": see
+#       the F2 paragraph below. The reading is what died, not the design.
+#
+# THE UNSOUNDNESS GUARD, and why it is a refusal and not a materialization.
+# Making the gate judge the commit exactly means running the checkers on the
+# committed content. Materializing it is `git checkout-index -a --prefix=`, and
+# that was MEASURED rather than assumed: 614 ms, 164 MB, 3482 files per commit,
+# on top of three lanes. So v2 does not materialize. It computes the exact
+# condition under which the cheap tree-based verdict IS the commit's verdict --
+# every path in the commit has the same content in the tree as in the index --
+# and REFUSES when that fails, naming the paths. A gate that cannot see the
+# artifact must refuse, not guess: that is family B's remedy applied to itself.
+# The guard cannot fire under `git commit --only`, which §13 mandates, because
+# `--only` takes those paths FROM the tree; it fires on `git add` + edit +
+# `git commit`, which is the workflow §13 forbids and nothing enforced until now.
+#
+# WHY F2 IS DOCUMENTED AND NOT REMOVED. Scoping the two document checkers to the
+# commit's paths would make a duplicate row id in a shared WORK_QUEUE.md
+# invisible to every lane not committing that file, and v1's own experience is
+# that the fleet-wide reading caught a real duplicate `H27`. Narrowing a gate is
+# not a defect I get to fix by weakening it (§10). So the behaviour stands and
+# the DESCRIPTION is corrected: for `refcheck.py` and `journalcheck.py` this is a
+# gate on the state of the shared documents in the tree, which any lane can trip
+# and any lane can clear. `githygiene.py` is different -- it reads the INDEX via
+# `git ls-files` and is already scoped to the commit. What v2 adds is
+# DIAGNOSABILITY: a refusal now prints the paths your commit actually carries, so
+# a blocked lane can see in one line whether the violation is even its own.
+#
+# VERIFIED MECHANICALLY rather than by eye (§12.4): git exports `GIT_INDEX_FILE`
+# to `pre-commit` -- `.git/index` for a plain commit, `.git/next-index-<pid>.lock`
+# for `git commit --only` -- so `git diff --cached` inside this hook reads the
+# index that is about to become the commit, under both workflows.
+# Cites: man:githooks "pre-commit"
+# Cites: file:MISSION_LOOP.md "13"
+# ===========================================================================
+#
+# v1 header follows, unedited except where marked.
 #
 # EVERY MECHANICAL CHECK IN THIS REPO WAS ADVISORY. H15's row: "a check that
 # REPORTS but does not GATE is a stronger version of a prose NOTE, not a
@@ -42,9 +98,14 @@
 # 161 MB of worktree per commit) before the reading was checked. It was wrong:
 # `git commit --only` on a SHARED file commits the other lane's in-flight edits
 # to that file as well, which is §13's blast-radius point, so the duplicate was
-# genuinely in the content being authored and refusing was correct. The gate
-# judges the content of your commit, and on a shared file that content is not
-# only yours. Measured before believed; the machinery was not built.
+# genuinely in the content being authored and refusing was correct.
+# >>> CORRECTED 2026-08-17 (ATTACKER-1, H35) under §12.4 and §5. The next
+# >>> sentence read "The gate judges the content of your commit, and on a shared
+# >>> file that content is not only yours." The first clause is false and the
+# >>> H35 probe refutes it in both directions (F1, F2 above). The gate judges the
+# >>> TREE for two of its three checkers. The paragraph above is otherwise
+# >>> correct and is why F2 is documented rather than removed.
+# Measured before believed; the machinery was not built.
 #
 # FAIL-CLOSED ON THE CHECKS, FAIL-OPEN ON THE ENVIRONMENT. A checker that is
 # missing or that cannot start is NOT a violation -- it is a broken clone, and
@@ -58,6 +119,7 @@
 #
 # Installed by spikes/harness/install_hooks.sh; drift-checked by
 # spikes/harness/test_loop_gate.sh. Selfcheck: sh pre-commit.hook --selfcheck
+# Finding and falsifiers: spikes/H35_gate_scope/ (sh probe.sh [alt-hook]).
 set -e
 cd "$(git rev-parse --show-toplevel)"
 
@@ -65,7 +127,30 @@ CHECKS='spikes/harness/refcheck.py
 spikes/harness/journalcheck.py
 spikes/harness/githygiene.py'
 
+# Paths this commit carries whose WORKING-TREE copy is not the copy being
+# committed. While that set is empty the tree-based verdict below is exactly the
+# commit's verdict; while it is not, the checkers are reading a different
+# artifact and the gate must say so rather than guess.
+unsound_paths() {
+  _in=$(git diff --cached --name-only 2>/dev/null || true)
+  [ -n "$_in" ] || return 0
+  git diff --name-only 2>/dev/null | while IFS= read -r p; do
+    if [ -n "$p" ] && printf '%s\n' "$_in" | grep -qxF -- "$p"; then
+      printf '%s\n' "$p"
+    fi
+  done
+}
+
 run_checks() {
+  _u=$(unsound_paths || true)
+  if [ -n "$_u" ]; then
+    echo "pre-commit REFUSED — the content you are committing is not the content on disk:"
+    printf '  %s\n' $_u
+    echo "  These checkers read the tree, so their verdict would be about a file"
+    echo "  you are not committing. Stage what you mean:  git commit --only <paths>"
+    echo "  (MISSION_LOOP §13). Bypass: git commit --no-verify"
+    return 1
+  fi
   _bad=''
   for c in $CHECKS; do
     [ -f "$c" ] || { echo "  SKIP  $c is absent — broken clone, not a violation"; continue; }
@@ -75,7 +160,16 @@ run_checks() {
       echo "$out" | tail -12
     fi
   done
-  [ -z "$_bad" ] || { echo "pre-commit REFUSED —$_bad"; echo "Bypass: git commit --no-verify"; return 1; }
+  if [ -n "$_bad" ]; then
+    echo "pre-commit REFUSED —$_bad"
+    # F2 diagnosability: refcheck and journalcheck judge the SHARED TREE, so the
+    # violation may be in a file this commit does not carry. Print what it does
+    # carry, so a blocked lane does not have to guess whose edit stopped it.
+    echo "  your commit carries: $(git diff --cached --name-only 2>/dev/null | tr '\n' ' ')"
+    echo "  refcheck/journalcheck judge the shared tree, not only these paths."
+    echo "Bypass: git commit --no-verify"
+    return 1
+  fi
   return 0
 }
 
@@ -99,9 +193,37 @@ if [ "$1" = "--selfcheck" ]; then
   CHECKS="$d/red.py"
   run_checks >/dev/null 2>&1 || fail3=1
   [ "$fail3" = 1 ] || echo "  FAIL  a RED checker must refuse — the gate is inert"
+
+  # v2, H35. The guard above is worthless if it cannot fire, and a guard whose
+  # falsifier is "the current tree happens to be clean" is family A. So drive it
+  # in a THROWAWAY repo with a real staged-then-edited file, and drive the
+  # negative case too: a `--only` commit with an unrelated dirty tracked file
+  # must NOT trip it, or the guard would block the workflow §13 mandates.
+  fail4=0; fail5=0; fail6=0
+  t="$d/repo"; mkdir -p "$t"
+  (
+    cd "$t"
+    git init -q .; git config user.email a@b; git config user.name a
+    echo one > f.md; echo two > g.md
+    git add f.md g.md; git commit -q -m base
+    echo staged > f.md; git add f.md; echo 'EDITED AFTER STAGING' > f.md
+    export GIT_INDEX_FILE="$t/.git/index"
+    exit 0
+  )
+  # `unsound_paths` and `run_checks` are functions in THIS shell, so run them
+  # with cwd inside the throwaway repo rather than reimplementing them there.
+  CHECKS=''
+  ( cd "$t" && u=$(unsound_paths); [ "$u" = "f.md" ] ) || fail4=1
+  [ "$fail4" = 0 ] || echo "  FAIL  staged-then-edited f.md must be reported unsound (got: $(cd "$t" && unsound_paths | tr '\n' ' '))"
+  ( cd "$t" && run_checks >/dev/null 2>&1 ) && fail5=1
+  [ "$fail5" = 0 ] || echo "  FAIL  an unsound path must REFUSE the commit"
+  ( cd "$t" && git checkout -q -- f.md 2>/dev/null; git reset -q; echo dirty >> g.md
+    u=$(unsound_paths); [ -z "$u" ] ) || fail6=1
+  [ "$fail6" = 0 ] || echo "  FAIL  a dirty file that is NOT in the commit must not be reported unsound"
+
   rm -rf "$d"
-  bad=$(( fail + fail2 + (1 - fail3) ))
-  [ "$bad" = 0 ] && echo "pre-commit selfcheck: red reachable, green passes, absent skips"
+  bad=$(( fail + fail2 + (1 - fail3) + fail4 + fail5 + fail6 ))
+  [ "$bad" = 0 ] && echo "pre-commit selfcheck: red reachable, green passes, absent skips, unsound refuses, unrelated dirt does not"
   [ "$bad" = 0 ]
   exit $?
 fi

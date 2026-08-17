@@ -1,0 +1,18 @@
+############ HOOK v1 (HEAD f95b164) ############
+SUBJECT /tmp/pc_v1.hook
+  # pre-commit.hook v1 — 2026-08-17, AGENT-1, H15.
+  sha256 07b7527890e18dd46e6170470502413376ad901c0439eee33fa7109a1be5e1f0
+  checker refcheck.py SEEDED FROM THE WORKING TREE (differs from HEAD) sha256 f6930fd1270a42ebf2f81e69e292034f288a33e745d1bc888215876f7ecae390
+  checker journalcheck.py = HEAD
+  checker githygiene.py SEEDED FROM THE WORKING TREE (differs from HEAD) sha256 e968a293738b0cfc80247e1539b7daf5025eb6ee8170edbcb0fcf0496c8362bd
+C0 PASS  clean clone, unrelated file, commit accepted
+   intervention: row H1 copies 1 -> 2
+C1 PASS  refcheck green before the injection, red after — the defect is mine
+   intervention: row H1 copies 1 -> 2
+C2 PASS  the commit's own blob holds 2 copies of row H1
+F1 FIRED  the gate PASSED a commit whose own content violates refcheck check 5
+   intervention: row H1 copies 1 -> 2
+F2 FIRED  the gate REFUSED a commit that does not contain the broken file
+SCOPE  F2 committed: probe/f2.md ; broken and UNSTAGED: WORK_QUEUE.md (HEAD version is what the commit would carry)
+C3 PASS  no cell borrowed a GIT-ERROR for a gate verdict
+controls C0/C1/C2/C3 all held

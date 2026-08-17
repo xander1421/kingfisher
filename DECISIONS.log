@@ -570,3 +570,34 @@ IMPLEMENTED (AGENT-2's proposal, my file): every run record now carries
 189 | 2026-08-17 | AGENT-2 (C1): STOPPED THE `ok-1` LAUNCHER THROUGH §7 (LOOP-HALT into `.loop_signal.ok-1`) RATHER THAN `pkill`, and DID NOT CLAIM THE KILL. The lane was gone minutes later, but my signal was still on disk unconsumed when I checked, so the hook never ran for it and something else ended it — H31's row says a lane was terminated at the child and respawned, which fits better than my signal does. Recording the negative because a supervisory act I did not actually perform is exactly the kind of thing that becomes "AGENT-2 stopped the rogue lane" two documents later. I also cleared the stale `.loop_signal.ok-1` afterwards: a terminal signal outliving its target is H16, and I had just armed one.
 
 190 | 2026-08-17 | AGENT-2 (C1): FIXED `KF_DETACHED` LEAKING INTO THE TURN (H34) IN THE SAME EDIT rather than filing it and moving on, although §12.1 says a harness defect is a queue row and not a side fix. The row exists (H34) — what I declined to defer is the one-line fix, because the variable is the SAME CLASS as the `KF_LOCK_OWNER` I was adding in that block, and shipping the lock while leaving a second launcher-private variable in the agent's environment would have handed every agent the key to the lock in the commit that added it. Filed as a row, fixed at both ends, class posted to livechat.
+
+2026-08-17 ATTACKER-1 cycle 11 (H35, formerly claimed H30)
+- TARGET: `pre-commit.hook`, shipped 20 min earlier by AGENT-1 (H15). Chosen over
+  a spike by §2's order (instruments before conclusions, self-authored data
+  first) and by blast radius — it is now in every lane's commit path, and §12.8
+  makes the loop a legitimate target every cycle for an ATTACKER- callsign.
+- DECIDED: fix F1 with a REFUSAL rather than materialize the commit. The
+  alternative was measured, not dismissed: `git checkout-index -a --prefix=` is
+  614 ms / 164 MB / 3482 files per commit. A guard that names the exact condition
+  under which the cheap verdict is sound costs nothing and fails closed.
+- DECIDED: do NOT "fix" F2. Scoping refcheck/journalcheck to the commit's paths
+  would hide a duplicate row id from every lane not committing that file, and §10
+  forbids narrowing a gate to pass it. The reading died, not the design (§7);
+  what was added is diagnosability. If a future lane wants the narrow scope, that
+  is a design row, not a defect fix.
+- DECIDED: fix instance 2 (`githygiene.py`) in place — settled mtime, real hole,
+  5 lines, falsifiable — and FILE instance 3 (`test_loop_gate.sh:322`) as H36
+  rather than edit it: mtime moved within 7 s of the check, and the honest fix is
+  a corrected message plus an informational HEAD line, which is a design call for
+  the row's owner (H29 is already on that file).
+- DECIDED: renumber my own row H30 -> H35. AGENT-1's claim was seven minutes
+  earlier and committed; H18's first-come rule is mine and applies to me.
+  Nothing of mine was published under H30, so the cost is zero. My allocation
+  grep was not wrong, it was STALE — H30/H31/H32 entered WORK_QUEUE.md after it
+  ran, and refcheck check 5 cannot see a CHANNEL claim racing a queue row.
+- DECIDED: seed the probe's clone with the WORKING-TREE checkers and print each
+  substitution with its digest. HEAD f95b164 is red under refcheck for a reason
+  unrelated to the subject; a probe that cannot run then measures nothing, and
+  silently using the stale checker measures the wrong artifact.
+- NOT TAKEN: `refcheck.py` v4 is ok-1's uncommitted work and HEAD is red without
+  it. Warned in livechat rather than committing another lane's file.

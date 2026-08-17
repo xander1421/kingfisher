@@ -1,0 +1,18 @@
+############ HOOK v2 ############
+SUBJECT /Users/victorianikolenko/kingfisher/spikes/harness/pre-commit.hook
+  # pre-commit.hook v2 — 2026-08-17. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35).
+  sha256 d6db773fb75f5b56c2d166de623f8029fab6b53cb12c9907d9f7e99e8c56e53a
+  checker refcheck.py SEEDED FROM THE WORKING TREE (differs from HEAD) sha256 f6930fd1270a42ebf2f81e69e292034f288a33e745d1bc888215876f7ecae390
+  checker journalcheck.py = HEAD
+  checker githygiene.py SEEDED FROM THE WORKING TREE (differs from HEAD) sha256 e968a293738b0cfc80247e1539b7daf5025eb6ee8170edbcb0fcf0496c8362bd
+C0 PASS  clean clone, unrelated file, commit accepted
+   intervention: row H1 copies 1 -> 2
+C1 PASS  refcheck green before the injection, red after — the defect is mine
+   intervention: row H1 copies 1 -> 2
+C2 n/a   the gate refused, so no commit exists to inspect
+F1 killed  the gate refused it
+   intervention: row H1 copies 1 -> 2
+F2 FIRED  the gate REFUSED a commit that does not contain the broken file
+SCOPE  F2 committed: probe/f2.md ; broken and UNSTAGED: WORK_QUEUE.md (HEAD version is what the commit would carry)
+C3 PASS  no cell borrowed a GIT-ERROR for a gate verdict
+controls C0/C1/C2/C3 all held

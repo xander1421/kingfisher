@@ -227,6 +227,58 @@ read as an empty status cell and **defaulted to OPEN**, manufacturing a divergen
 of the checker's own. Verdicts are now searched for, and a row with none is
 `UNPARSEABLE`.
 
+## Cycle 11 — H35, DONE (`pre-commit.hook` v2 + `spikes/H35_gate_scope/`)
+
+Attacked the gate AGENT-1 installed 20 minutes earlier (H15), by §2's order and by
+blast radius: it is in **every** lane's commit path.
+
+**The claim that died, and it is a reading and not a design (§7).** v1's header:
+*"the gate judges the content of your commit."* `refcheck.py` and
+`journalcheck.py` read files with plain `open()`. Two falsifiers stated first,
+**neither killed the row**, four controls held:
+
+- **F1** the gate **PASSED** a commit whose own blob carried a duplicate
+  `WORK_QUEUE` row id. refcheck check 5 — mine, from cycle 8 — was inert on the
+  content actually committed.
+- **F2** the gate **REFUSED** a `git commit --only <unrelated path>` whose content
+  does not contain the broken file. That is the cross-lane fleet-stop v1's header
+  records as investigated and disproved; the disproof holds only for a *shared*
+  file.
+
+**Fix is a refusal, not a materialization, and the alternative was measured:**
+`git checkout-index -a --prefix=` = **614 ms, 164 MB, 3482 files per commit**. v2
+computes the exact soundness condition and refuses naming the paths. It **cannot
+fire under `git commit --only`**, so it mechanises §13's own rule for the first
+time. F2 documented, **not** removed (§10), plus the commit's path list printed on
+refusal. `--selfcheck` 3 -> 6, falsified twice against a green control.
+
+**§12.2 sweep. Instance 2 fixed:** `githygiene.py` took STAGED paths from the
+index and STAGED bytes from `os.path.getsize` — stage 3 MB, shrink the tree copy
+to 6 bytes, and it printed *"clean"* at exit 0 while the commit carried
+**3,000,000 bytes**, in the one gate against this repo's own headline problem.
+**Instance 3 filed as H36 and deliberately not touched** (`test_loop_gate.sh:322`
+compares the installed gate to the *tree* source and says *"tracked"*): live
+writer, and the honest fix is a design call for the row's owner.
+
+**Three defects of my own, each of which voided a run I had already believed** —
+an exit code attributed to one stage of a pipeline every stage can produce; an
+intervention that reported a verdict without reporting its own size (BSD grep will
+not write to a file it is reading: **+0 bytes**, and a one-sided control passed
+anyway); and a path argument resolved after a `cd`, which made two "v1 vs v2"
+comparisons the same artifact twice and made the fix look like it had failed. All
+three are in the probe header and `RESULT.md`.
+
+**Renumbered H30 -> H35** under my own H18 rule: AGENT-1's claim was seven minutes
+earlier and committed. My allocation grep was **stale, not wrong** — the rows
+entered the queue after it ran, and refcheck check 5 cannot see a CHANNEL claim
+racing a queue row.
+
+**Reported, not taken:** HEAD `f95b164` is **RED** under the pre-commit gate on a
+clean clone — `refcheck.py` refuses two `prompts/$CALLSIGN.md` citations, and the
+live tree is green only because ok-1's **uncommitted** refcheck v4 resolves them.
+A fresh clone cannot commit. Warned in `livechat.log`; not fixed, because it is
+another lane's file in flight.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -238,6 +290,12 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
+0. **Attack the launcher, which now has four lanes and a roster.** `ok-1` exists,
+   `run_loop.sh` gained roster bring-up (`f95b164`) and self-detach (H6), and
+   `H31`/`H32`/`H34` are all open rows against that machinery — a respawning
+   detached wrapper, a lane with no brief, and launcher variables leaking into the
+   agent turn. None of it has been attacked, and it is the component whose failure
+   ends a lane rather than producing a wrong number.
 1. **Keep grepping the LEDGER for unrun tests — two for two.** S81 killed a
    generalisation, S82 closed an open finding *and* found a worse defect beside
    it. Remaining rows that name their own untested condition include S57's
