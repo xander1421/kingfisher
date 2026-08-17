@@ -42,6 +42,22 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H81 — the first audit of LEDGER standing rule 12, and it comes back CLEAN.**
+  `spikes/H81_rule12_audit/`. 23 dead claims quoted in `out/RETRACTIONS.md`, 5
+  with verbatim survivors elsewhere, 15 sites, **zero violations** — every site
+  carries its retraction, adjudicated one at a time by reading. **The
+  preregistered falsifier fired at every site**, so the row closes on the
+  measurement and no checker is built (H54). Also verified a prose assertion that
+  turns out TRUE: `HANDOFF.md:353`'s *"propagated to both RESULT pages, both
+  WORK_QUEUE rows, `out/RETRACTIONS.md` and `out/LEDGER.md`"* — all six carry it.
+  **The row's real output is three method defects, each of which would have
+  shipped a false verdict**: a ±12-line proximity proxy went FALSE GREEN on
+  `WORK_QUEUE.md` (one row is one line, so ±12 lines is ±12 unrelated rows) and
+  FALSE RED on `S50_harness/RESULT.md` (the line IS the refutation and never says
+  "retract"); and **I read a truncated row and had already written S75 up as a
+  live violation** — see error 25. §12.12 costs exactly this: the mechanical
+  stage cut 232 LEDGER rows to 15 sites and was worth nothing after that.
+
 - **H79** *(filed as H76 for nine minutes; see the id note below)* —
   `spikes/harness/stranded.sh` v1 + `spikes/H79_stranded_work/`, 6 controls.
   **CLASS: an uncommitted edit has no owner and the harness has no mechanism to
@@ -597,3 +613,24 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     **That is the one form of this check that has worked today**, and it is the
     third mechanism I proposed for the same problem in twenty minutes — the first
     returned empty, the second over-reported, and this one I ran before posting.
+25. **I read a truncated row and had already written another lane's work up as a
+    live violation.** Auditing rule 12 (H81) I inspected `WORK_QUEUE.md`'s S75 and
+    S76 rows with `grep -oE '.{0,900}'`. Those rows are **1,598 and 2,184
+    characters**, and `RETRACTED IN PART by S77` is in the tail I never saw. I had
+    the finding drafted — *"the authoritative file carries a retracted number as a
+    live result"* — before checking the rest of the line. **Third truncation error
+    of this span (13, 17, 25) and the first that would have landed on ANOTHER
+    LANE'S work as an accusation.** The two before it cost me a verdict about my
+    own run; this one would have cost AGENT-1 a false public finding. Caught only
+    because H81's own CLAIM committed me, in writing and before running anything,
+    to reading every site individually. **CLASS: a truncating read presented as a
+    complete one** — and it was not the pipe this time, it was a `{0,N}` bound I
+    chose. Three instances, three different mechanisms, one shape.
+26. **Two mechanical proxies for "is this claim retracted at its site", both
+    wrong, in opposite directions, inside ten minutes.** A retraction word within
+    ±12 lines went FALSE GREEN on `WORK_QUEUE.md` — one row is one line there, so
+    the window spans unrelated rows — and FALSE RED on `S50_harness/RESULT.md`,
+    which IS the refutation, written in plain English with no keyword in it.
+    Neither shipped. Recorded because the obvious next step for anyone reading H81
+    is to re-invent one of them, and both are named in `rule12.sh`'s header for
+    exactly that reason.
