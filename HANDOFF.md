@@ -26,7 +26,18 @@ at session start, so this takes effect on the next restart.** Until then use
 To stop legally: write exactly `LOOP-DONE` / `LOOP-HALT` / `LOOP-IDLE` into
 `.loop_signal`. Human kill switch: `touch STOP`.
 
-## State of the M1 chain — complete, and correctly refusing
+## State of the M1 chain — complete, correctly refusing, verified 2026-08-17 10:2x
+```
+admission REFUSED 2 (flip, fileio) -> 65 CIDs -> 5 preflight sessions
+  -> host-arm64 + host-x86_64 + phone -> canon_alpha -> quorum-3
+65/65 agreed 3/3 byte-identically.  Verdict INSUFFICIENT_DOMAINS x65, accepted 0/65.
+binary 3 | manifest 1 (binding) | host 2 | os 2 | isa 2 | operator 1 (binding)
+```
+Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
+(no attestation root) and `manifest` (all binaries from one Cargo.toml, which
+FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
+
+## Older summary
 ```
 admission gate -> CID shard store -> session preflight
   -> phone + host workers -> canon/canon_alpha -> quorum-3

@@ -10,16 +10,38 @@ admission gate  ->  CID shard store  ->  session preflight
                 ->  phone + 2 host workers  ->  canon_alpha  ->  quorum-3
 ```
 
-## The run
+## The run — current, with every gate and axis in place
 ```
-gate:       cpu_busy 0.6%, thermal 36600m, battery status=5 level=100
-admission:  REFUSED 1 program on the nondeterminism ban surface
-store:      66 programs -> 66 distinct CIDs, 173.2 KiB
-dispatch:   66 jobs in 5 work sessions, 0 preflight refusals
-alpha:      0 envelopes non-ground -> 0 fell back to canon
-transfer:   173.2 KiB to device (cold cache)
-result:     UNANIMOUS=66, accepted 66/66
+gate:       cpu_busy 2.1%, thermal 36600m, battery charging=true powered=1
+admission:  REFUSED 2  (test_gnd_conv.metta on `flip`, mkdocs.metta on fileio)
+store:      65 programs -> 65 distinct CIDs, 170.7 KiB
+dispatch:   65 jobs in 5 work sessions, 0 preflight refusals
+residency:  65/65 held, observed on device (never worker-reported)
+normalise:  canon_alpha
+agreement:  65/65 agreed 3/3
+verdict:    INSUFFICIENT_DOMAINS x65, accepted 0/65
 ```
+
+**Every job agreed byte-identically across host-arm64, host-x86_64 and the
+phone. Every job was refused.** The refusal is on independence, never on
+divergence, and the chain now distinguishes those cleanly:
+
+```
+binary    3 domain(s)
+manifest  1 domain(s)  <-- binding
+host      2 domain(s)
+os        2 domain(s)
+isa       2 domain(s)
+operator  1 domain(s)  <-- binding
+```
+
+Two axes bind at 1. `operator` because no attestation root exists; `manifest`
+because all three binaries come from one Cargo.toml, and after
+`analysis/FEATURE_EQUIVALENCE.md` that is known to be a real fault class rather
+than a formality — a feature flag moved one program from fuel 107 to 580.
+
+The earlier "66/66 accepted" is superseded: it was the same agreement counted
+before the independence axes existed.
 
 ## Provenance
 `provenance.json`, written before the write-up:
