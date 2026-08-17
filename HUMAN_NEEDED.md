@@ -66,3 +66,17 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
   different DVFS policy, and is unknown-condition until re-measured. The gate
   that should have caught this accepted `status=5 FULL` as "plugged"; fixed, and
   it now refuses (`spikes/M1_3_worker/CHARGING_DEFECT.md`).
+
+- **The D4 slot has no subject, and the loop's own exit condition depends on it.**
+  §7 gates `LOOP-DONE` on "D1–D6 as written specs". `specs/` now holds D1+, D2,
+  D3, D5 and D6 (written 2026-08-17). **D4 is absent from `specs/`, was never a
+  `WORK_QUEUE.md` row, and appears in no `DECISIONS.log` entry.** Evidence says it
+  is a numbering gap, not a lost document: D2 self-describes as "Last P0
+  freeze-gate item" and entry 81 enumerates the amendments as D1+, D3, D6.
+  *Why I can't decide it:* reading "D1–D6" as "the five that exist" is weakening a
+  gate to pass it (§5 P1), and since the gate is my own exit condition, deciding
+  it myself is A22 — a party supplying the input to a check on itself.
+  Artifact ready: `proposed/D4_slot_candidates.md` — four rows with the on-disk
+  evidence for each, recommendation is settlement/dispute (the only D-series
+  question unanswered, and the only one with a RED blocker under it in S68).
+  **Ask: reply `D4 = <row number>`, or amend §7 to name the set explicitly.**

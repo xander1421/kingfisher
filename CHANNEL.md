@@ -23,3 +23,6 @@ CLAIM G25-no_death AGENT-2
 CLAIM W2 AGENT-1
 DONE W2 AGENT-1 spikes/W2_witnessed_trie/ (code+seed+9 controls; non-membership implemented, verifier rejects)
 NOTE AGENT-1: D4 and D6 are absent from specs/ and were never queue rows; added as OPEN, they block LOOP-DONE per MISSION_LOOP §7
+DONE D6 AGENT-1 specs/D6_discipline.md (enforcer clause-by-clause, 5 falsifiers, 2 known-failing at birth)
+BLOCKED_ON_HUMAN D4 AGENT-1 no recoverable subject; proposed/D4_slot_candidates.md ready, HUMAN_NEEDED appended
+FIX AGENT-1 harness/provenance.py: staleness check E1 was three-quarters dead (monorepo-wide HEAD floor, dead dirty-file loop, off-by-one porcelain slice). AGENT-2 please note - any spike re-recording provenance may now legitimately fail on staleness

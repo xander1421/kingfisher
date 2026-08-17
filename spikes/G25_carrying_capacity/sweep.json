@@ -13,7 +13,9 @@
    "delta": 2842,
    "cov_per_rule": 37.67272727272727,
    "a15": true,
-   "capped": 273
+   "capped": 273,
+   "base": "full_base",
+   "seed": 1234
   },
   "full_cap2000": {
    "name": "full_cap2000",
@@ -28,7 +30,9 @@
    "delta": 2842,
    "cov_per_rule": 37.67272727272727,
    "a15": true,
-   "capped": 273
+   "capped": 273,
+   "base": "full_cap2000",
+   "seed": 1234
   },
   "nodeath": {
    "name": "nodeath",
@@ -43,7 +47,9 @@
    "delta": 5059,
    "cov_per_rule": 11.420107719928186,
    "a15": true,
-   "capped": 548
+   "capped": 548,
+   "base": "nodeath",
+   "seed": 1234
   },
   "nodeath_noabduct": {
    "name": "nodeath_noabduct",
@@ -58,7 +64,9 @@
    "delta": 212,
    "cov_per_rule": 2.8512241054613936,
    "a15": false,
-   "capped": 167
+   "capped": 167,
+   "base": "nodeath_noabduct",
+   "seed": 1234
   },
   "wage1200": {
    "name": "wage1200",
@@ -73,7 +81,9 @@
    "delta": 4632,
    "cov_per_rule": 25.912663755458514,
    "a15": true,
-   "capped": 265
+   "capped": 265,
+   "base": "wage1200",
+   "seed": 1234
   },
   "wage2400": {
    "name": "wage2400",
@@ -88,7 +98,9 @@
    "delta": 4422,
    "cov_per_rule": 25.105263157894736,
    "a15": true,
-   "capped": 246
+   "capped": 246,
+   "base": "wage2400",
+   "seed": 1234
   },
   "wage300": {
    "name": "wage300",
@@ -103,7 +115,9 @@
    "delta": 3679,
    "cov_per_rule": 32.55555555555556,
    "a15": true,
-   "capped": 328
+   "capped": 328,
+   "base": "wage300",
+   "seed": 1234
   },
   "wage4800": {
    "name": "wage4800",
@@ -118,7 +132,9 @@
    "delta": 4678,
    "cov_per_rule": 25.02092050209205,
    "a15": true,
-   "capped": 289
+   "capped": 289,
+   "base": "wage4800",
+   "seed": 1234
   },
   "wage600": {
    "name": "wage600",
@@ -133,7 +149,9 @@
    "delta": 3153,
    "cov_per_rule": 26.05263157894737,
    "a15": true,
-   "capped": 284
+   "capped": 284,
+   "base": "wage600",
+   "seed": 1234
   },
   "wage600_noabduct": {
    "name": "wage600_noabduct",
@@ -148,10 +166,12 @@
    "delta": 231,
    "cov_per_rule": 8.331521739130435,
    "a15": false,
-   "capped": 120
+   "capped": 120,
+   "base": "wage600_noabduct",
+   "seed": 1234
   }
  },
- "verdict": "CALIBRATION, PARTLY \u2014 turning WAGE_POOL alone closes 83% of the coverage gap G24 attributed to death (4144 -> 5980 vs no_death's 6361) while asserting 2.6x fewer predictions and holding 2.5x the precision. Neither point dominates the other, so death is not shown to cost coverage; the published capacity was simply low. The remaining 17% is not reachable by this dial: selection saturates at pop 239. ATTRIBUTION: at matched population and NO selection either side (531 vs 557), dropping abduction costs 4847 correct triples (6361 -> 1514). no_death's coverage is problem-directed proposal, not population volume \u2014 so 'coverage rises with population size almost mechanically' is false as stated in G24.",
+ "verdict": "CALIBRATION, PARTLY \u2014 turning WAGE_POOL alone closes 83% of the coverage gap G24 attributed to death (4144 -> 5980 vs no_death's 6361) while asserting 2.6x fewer predictions and holding 2.5x the precision. Neither point dominates the other, so death is not shown to cost coverage; the published capacity was simply low. The remaining 17% is not reachable by this dial: selection saturates at pop 239. Across 3 run seeds the gap closed by WAGE_POOL alone is 51%-85% (wage1200 vs full_base vs no_death, same three configs each seed), so the fraction is a band, not the single 83%. ATTRIBUTION: at matched population and NO selection either side (531 vs 557), dropping abduction costs 4847 correct triples (6361 -> 1514). no_death's coverage is problem-directed proposal, not population volume \u2014 so 'coverage rises with population size almost mechanically' is false as stated in G24.",
  "conditions": {
   "data": "real:FB15k-237+planted",
   "split": "70/15/15",
