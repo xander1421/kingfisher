@@ -1,7 +1,7 @@
 {
  "spike": "M1_8_quorum3",
- "recorded_utc": "2026-08-17T05:58:45Z",
- "note": "M1 full-system run: admission gate -> CID shard store -> session preflight -> phone + 2 host workers -> canon_alpha -> quorum-3. elders tree carries our 3 unfiled nondeterminism patches (recorded, not silent); fuelrun binaries are prebuilt from an unconfirmed commit.",
+ "recorded_utc": "2026-08-17T06:44:15Z",
+ "note": "M1 re-run on KNOWN-PROVENANCE binaries, both built from the elders tree recorded below. Supersedes runs using S30 fuelrun.v2.* (built 16:16 the previous day, before every patch) -- those measured a stock binary against a patched tree.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
@@ -9,25 +9,26 @@
    "clean": false,
    "dirty_files": [
     "yperon-common/src/multitrie.rs",
+    "hyperon-space/src/index/trie.rs",
     "lib/src/metta/runner/builtin_mods/fileio.rs",
     "lib/src/metta/runner/builtin_mods/random.rs",
     "lib/src/metta/runner/stdlib/atom.rs",
     "lib/src/space/grounding/mod.rs"
    ],
-   "diff_sha256": "2a38d23f5150ab70834003b774ba2f5f8b88e191d45fe574cecd58bf40227397",
-   "diff_bytes": 11661
+   "diff_sha256": "04189487f726a26df787823055ddd11e12261894b41118411b1fe2d8e083234c",
+   "diff_bytes": 12070
   }
  ],
  "artifacts": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/fuelrun.v2.android",
-   "sha256": "deb4ee9b93f842bdef88f3bbf48cb6e7510c7157981cbc2fd6425ff47e1bcec2",
-   "bytes": 2894416
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host",
+   "sha256": "97d24cce709fdca29b73ef611f67e58ba0b0a18b264d4f29e5c38ac9d7c5aa6b",
+   "bytes": 3604032
   },
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/fuelrun.v2.host",
-   "sha256": "78d874f976748cb67ad1717995d6e8c57a84ed9b03cbb4b8ecca5b8f13290ed7",
-   "bytes": 2425952
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.android",
+   "sha256": "409cae61351830e93435ca391897e70094b9a450e549539726e58958c14e7261",
+   "bytes": 3954864
   }
  ],
  "missing_artifacts": [],
@@ -48,7 +49,7 @@
  "controls": [
   {
    "name": "admission-gate",
-   "must_fire_because": "a gate that never refuses is indistinguishable from no gate (A15)",
+   "must_fire_because": "a gate that never refuses is indistinguishable from no gate",
    "null_must_contain": null,
    "fired": true,
    "detail": "refused 1 of 67",
@@ -62,17 +63,31 @@
    ]
   },
   {
-   "name": "adjudicator-can-refuse",
-   "must_fire_because": "the quorum must be able to return every non-accepting verdict, or 66/66 means only that nothing was tested",
+   "name": "domain-mismatch-detector",
+   "must_fire_because": "must be able to report a worker claiming a domain we did not observe",
    "null_must_contain": null,
    "fired": true,
-   "detail": "each verdict reachable from a constructed envelope set",
-   "observations": {
-    "UNANIMOUS": "UNANIMOUS",
-    "REDUCED_QUORUM": "REDUCED_QUORUM",
-    "AGREED_FAILURE": "AGREED_FAILURE",
-    "NO_QUORUM": "NO_QUORUM"
-   }
+   "detail": "198 envelopes flagged on the operator axis",
+   "observations": [
+    {
+     "operator": {
+      "declared": "operator:self",
+      "observed": "UNATTESTED"
+     }
+    },
+    {
+     "operator": {
+      "declared": "operator:self",
+      "observed": "UNATTESTED"
+     }
+    },
+    {
+     "operator": {
+      "declared": "operator:self",
+      "observed": "UNATTESTED"
+     }
+    }
+   ]
   }
  ],
  "problems": [],

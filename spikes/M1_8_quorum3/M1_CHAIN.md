@@ -208,6 +208,33 @@ axis, `maxSkew` bounds concentration within it.
 Honest consequence: **this project has never run a 3-domain quorum.** It has one
 phone. That was listed as a hardware gap; it is a validity gap.
 
+## Binary provenance closed — and the earlier runs had the trap
+
+Every M1 result before this point ran on `S30/bin/fuelrun.v2.{host,android}`,
+**built 16:16 the previous day — before every patch in the tree they were
+reasoning about.** The provenance file disclosed it (*"prebuilt from an
+unconfirmed commit"*), which is better than hiding it and is not the same as
+closing it. The other agent hit the identical trap on G18 from the other side:
+a stale binary measured against a patched tree, producing a real symptom with
+the wrong attribution.
+
+Both binaries are now built from the recorded tree and live in `bin/known/`:
+
+| | sha256 |
+|---|---|
+| `fuelrun.host` | `97d24cce709f…` |
+| `fuelrun.android` | `409cae613518…` |
+
+**Re-run result: all 66 jobs agree 3/3, byte-identically, host and phone.** The
+determinism claim survives the binary change; the refusal is on independence
+(`isa 1`, `operator 1`), never on divergence. Those are different failures and
+the run now distinguishes them.
+
+**Recording an artifact's hash is not recording its provenance.** The old
+provenance entry had the right sha256 of the wrong binary — the digest was
+accurate and told nobody it predated the source. A hash pins *which* artifact;
+only building it from a recorded tree pins *what it contains*.
+
 ## Still open
 - **Process-per-job.** WorkManager reuses the app process; M1.1c measured that
   job N differs from job 1. Three options recorded, none implemented.

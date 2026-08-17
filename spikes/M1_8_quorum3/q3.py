@@ -21,7 +21,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
 import preflight
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin')
+# known-provenance binaries, built from the tree recorded in provenance.json.
+# The old S30 fuelrun.v2.* were prebuilt 16:16 the previous day -- BEFORE every
+# patch -- so earlier M1 runs measured a stock binary against a patched tree.
+BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin', 'known')
 DEVDIR = '/data/local/tmp/m18'
 
 ALPHA = False   # set by --alpha; opt-in per job class, never the default
@@ -233,16 +236,16 @@ def main():
         if g.returncode != 0:
             print('device gate REFUSED:', gate); sys.exit(2)
         print('gate:', gate)
-        stage_device(os.path.join(BIN, 'fuelrun.v2.android'))
+        stage_device(os.path.join(BIN, 'fuelrun.android'))
 
     workers = [
-        ('host-a', os.path.join(BIN, 'fuelrun.v2.host'), 'local'),
-        ('host-b', os.path.join(BIN, 'fuelrun.v2.host'), 'local'),
+        ('host-a', os.path.join(BIN, 'fuelrun.host'), 'local'),
+        ('host-b', os.path.join(BIN, 'fuelrun.host'), 'local'),
     ]
     if not a.no_device:
-        workers.append(('phone', os.path.join(BIN, 'fuelrun.v2.android'), 'adb'))
+        workers.append(('phone', os.path.join(BIN, 'fuelrun.android'), 'adb'))
     else:
-        workers.append(('host-c', os.path.join(BIN, 'fuelrun.v2.host'), 'local'))
+        workers.append(('host-c', os.path.join(BIN, 'fuelrun.host'), 'local'))
 
     # Fill the coordinator-observed domain table BEFORE any worker runs, so
     # nothing a worker says can influence it.
