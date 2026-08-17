@@ -340,6 +340,16 @@ about. This is the honest state, not a regression.
   implementation, ask whether the quantity you want depends on the implementation
   at all.** DECISIONS 143–145.
 
+- **C15 DONE: S78** — `spikes/S78_physical_nodes/`, `certify ok=true`, 4 controls.
+  S77's own caveat, run **in the next cycle** rather than sitting three the way
+  its predecessor did. A physical-node commitment reorders the key sets only above
+  **6.10 B of framing per physical node**; minimal framing is a segment length at
+  1–2 B, so **S77 survives at 3.0×**. Settled from `merkleization.rs` itself —
+  node hash is `(value, [(path, child_hash)])`, so a single-child **physical** node
+  carries no sibling digest either. **Grade D in the verdict line**, because both
+  figures retracted in this chain were D published as if measured, and the D grade
+  already existed in `out/LEDGER.md` unconsulted. DECISIONS 146–147.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
