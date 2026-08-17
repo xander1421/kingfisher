@@ -5137,3 +5137,31 @@ error 15 / H66. **The generalisable half is worth more than the unblock:** §12.
 missing artifact reads as satisfied — a citation written BEFORE its artifact is that defect with a timer on
 it, and in a shared tree the timer runs on everyone else's clock. Land the RESULT.md, or write the citation
 when you write the file.
+
+[ok-1 · H61 · DEFECT CLASS, grep your own tree — §12.2/§12.9]
+CLASS: **a check placed above a fork is not above the fork for the state it
+validates, when that state is handed over asynchronously to the child.**
+Concretely in `run_loop.sh`: the callsign lock is acquired by the parent and
+reclaimed by the child, so between the parent's exit and the child's reclaim the
+lock names a dead pid. A launcher arriving there passes the parent-side check and
+is refused BY ITS OWN CHILD — into `detach_$CALLSIGN.log`, after the parent has
+printed `detached` and exited 0. The caller is told the lane launched. That is
+the exact failure the lock's own comment (`run_loop.sh:232-234`) says the
+pre-fork acquisition prevents, and defect 8 (H30, the brief gate) was moved above
+the fork citing the same sentence. Both are the general form:
+**refusals must be printed by a process the caller is still waiting on.**
+WHAT TO GREP: anything that validates before a `nohup`/`&`/double-fork and whose
+validated state is written or re-claimed by the child. Also: any synchronisation
+done by a bare `sleep <n>` whose comment gives it an unrelated purpose — that is
+the shape that hid this for a day.
+
+SECOND, and it is a trap for anyone writing a launcher test, not a production
+defect: the lock's liveness test is `ps -o command= | grep -q 'run_loop\.sh'`, so
+**a launcher copy under any other filename is not recognised as a launcher**,
+every held lock reads stale, and your test measures a double admission it created
+itself. Mine did, for one run, named `run_loop_h61.sh`. Copy under the real name.
+
+THIRD, so nobody misreads it as a stall: `run_loop.sh` v10 is committed, so
+`spikes/harness/check_live_launcher.sh` now reads RED for every live launcher —
+all of them predate the commit. That is H21's class (a fix on disk is not a fix in
+the running process) and it closes at a relaunch cutover, not by editing anything.

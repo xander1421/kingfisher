@@ -36,6 +36,20 @@
 # 20-launcher lock check from 1 survivor to 4, so the launcher's parent->child
 # lock handoff is synchronised by a timing constant whose comment gives it an
 # unrelated purpose. That is a defect in `run_loop.sh`, not in this suite.
+#   CORRECTED 2026-08-17 (ok-1, H61), against the sentence above: the timing
+#   constant is real and what it hides is NOT a lost mutual exclusion. Deleting
+#   it is an EDIT, and no load reproduced a double admission across 8 arms
+#   (`spikes/H61_lock_handoff/probe_v3.out`). What the constant hides is that a
+#   launcher arriving in the handoff window is refused BY ITS OWN CHILD, into
+#   detach_$CALLSIGN.log, after the parent printed `detached` and exited 0 — a
+#   launch failure reported as a success. And the 20-launcher block cited above
+#   reads 1 survivor / 19 parent refusals with the defect present AND absent, so
+#   it never covered this; the STAGGERED block at the bottom of this file does.
+#
+# v3 RATIONALE (§12.7) — ok-1, H61, 2026-08-17. ONE DEFECT REMOVED: this suite's
+# only lock check could not distinguish the two states of the launcher's lock
+# handoff, while the row that named the defect cited it as the check that would
+# catch it. 75 -> 80 checks; the new block asserts WHERE a refusal is printed.
 #
 # usage: bash spikes/harness/test_loop_gate.sh
 # exit 0 = all pass. Non-zero = the loop contract is not enforceable as written.
@@ -759,6 +773,89 @@ check "  every launcher is accounted for"                                     \
 for lkpid in $(cat .loop_lock.RACE-1 2>/dev/null); do kill "$lkpid" 2>/dev/null; done
 rm -f roster.txt prompts/RACE-1.md reached_claude race.log
 rm -rf fake run_loop.sh launcher_reached_claude loop_L9.log loop_RACE-1.log .loop_lock.* .loop_exit.* .loop_blocks.*
+
+# STAGGERED ARRIVAL — THE WINDOW THE BLOCK ABOVE CANNOT SEE. ok-1, H61.
+#
+# The simultaneity block is 20 launchers at ONE instant, and that is the one
+# arrival time the old `sleep 1` did cover: all 20 hit the lock while the first
+# parent is still inside its sleep, so 19 are correctly refused. Measured across
+# 8 arms in `spikes/H61_lock_handoff/probe_v3.out`, 20-at-once reads
+# `1 survivor / 19 parent refusals` with the defect present AND with it fixed —
+# i.e. THIS SUITE'S ONLY LOCK CHECK WAS BLIND TO THE DEFECT, which is why the row
+# was filed claiming "the check that fails when it breaks already exists". It did
+# not. A second arrival time is a different check, not a variant of this one.
+#
+# The window is between the PARENT's exit and the CHILD's reclaim: the lock names
+# a dead pid, the liveness test correctly calls it stale, and a launcher arriving
+# there is admitted by the parent and refused later BY ITS OWN CHILD — into
+# detach_$CALLSIGN.log, after the parent printed `detached` and exited 0.
+#
+# FALSIFIER, STATED BEFORE THE RUN and run: revert run_loop.sh's condition wait
+# to `sleep 1` and this block must go RED. It does — `refused_by_parent` reads 0
+# and `refused_by_child` reads 1. Evidence: `spikes/H61_lock_handoff/RESULT.md`.
+#
+# WHAT THIS BLOCK DOES NOT ASSERT, deliberately: a double admission. There isn't
+# one — the child's own lock check still catches the second lane. The defect is
+# WHERE the refusal is printed, so that is what is asserted. Asserting the
+# survivor count alone would be green under the defect (it is: 1 either way).
+awk '{ if ($0 ~ /^LOCK="\.loop_lock\.\$\{CALLSIGN\}"$/)
+         print "[ -n \"${KF_DETACHED:-}\" ] && sleep 3   # H61: a slow child";
+       print }' "$ROOT/run_loop.sh" > run_loop.sh
+chmod +x run_loop.sh              # `nohup "$0"` re-execs BY PATH: a 644 copy
+                                  # detaches a child that dies at exec, which is
+                                  # how this block first ran (0 survivors, 0
+                                  # refusals) — caught by the accounting check.
+                                  # AND THE NAME IS LOAD-BEARING: the lock's
+                                  # liveness test is `ps -o command= | grep -q
+                                  # 'run_loop\.sh'`, so a copy under any other
+                                  # name is not recognised as a launcher, every
+                                  # held lock reads stale, and this block
+                                  # measured 2 survivors — a double admission it
+                                  # had manufactured itself.
+# An injection that missed its anchor leaves a block testing an unmodified
+# launcher and reporting a pass — H62 class 1, and `edits.anchored_replace` exists
+# because a str.replace no-op shipped that way. So the injection is asserted.
+check "H61: the slow-child injection reached the launcher copy"               \
+      "$(grep -c 'H61: a slow child' run_loop.sh)" "1"
+mkdir -p bin prompts
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo "$$" >> reached_claude
+sleep 8                       # hold the turn: lane A is ALIVE when B arrives.
+echo LOOP-HALT > ".loop_exit.${CALLSIGN}"
+STUB
+chmod +x bin/claude
+printf '# scratch roster for this check only\nRACE-2\n' > roster.txt
+printf '# scratch\n' > prompts/RACE-2.md
+: > reached_claude; : > race.log
+( PATH="$T/bin:$PATH" CALLSIGN=RACE-2 MAX_TURN=60 bash ./run_loop.sh >>race.log 2>&1 ) &
+sleep 1.5          # after a 1 s parent sleep, before a 3 s child's reclaim
+( PATH="$T/bin:$PATH" CALLSIGN=RACE-2 MAX_TURN=60 bash ./run_loop.sh >>race.log 2>&1 ) &
+wait
+sleep 4
+h61_surv=$(sort -u reached_claude | grep -c .)
+h61_parent=$(grep -c 'is HELD by live launcher' race.log)
+h61_child=$(grep -c 'is HELD by live launcher' detach_RACE-2.log 2>/dev/null)
+h61_child=${h61_child:-0}         # `grep -c` exits 1 on zero matches, so `|| echo
+                                  # 0` appends a SECOND 0 and the arithmetic below
+                                  # dies on "0\n0". Absent file -> empty -> 0.
+check "H61: a launcher arriving in the handoff window is refused BY THE PARENT"  \
+      "$h61_parent" "1"
+check "  and not in the detach log the caller never reads"                       \
+      "$h61_child" "0"
+# The bounded wait's own report, in the direction it must NOT fire: a healthy
+# handoff completes well inside 10 s, so this going non-zero means the wait was
+# shortened or the child stopped reclaiming.
+check "  and the parent does not warn about an unclaimed lock"                   \
+      "$(grep -c 'has not claimed' race.log)" "0"
+# Same accounting rule as the block above, for the same reason: 1 survivor is not
+# evidence on its own, and here the two refusal counts are the finding, so a
+# launcher that is neither admitted nor refused invalidates both of them.
+check "  every launcher is accounted for"                                        \
+      "$(( h61_surv + h61_parent + h61_child ))" "2"
+for lkpid in $(cat .loop_lock.RACE-2 2>/dev/null); do kill "$lkpid" 2>/dev/null; done
+rm -f roster.txt prompts/RACE-2.md reached_claude race.log run_loop.sh \
+      detach_RACE-2.log loop_RACE-2.log .loop_lock.* .loop_exit.* .loop_blocks.*
 
 echo
 if [ "$fail" -eq 0 ]; then

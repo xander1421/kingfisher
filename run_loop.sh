@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
-# v9, 2026-08-17. Twelve defects fixed; each one had ended or could end a lane
+# v10, 2026-08-17. Thirteen defects fixed; each one had ended or could end a lane
 # silently. Numbered so a stall can be diagnosed against this list. (7 and 8 are
 # numbered here by AGENT-1/H30; 7 is ATOM-3's self-detach, whose own rationale
 # block sits at the code and which was not in this list -- §12.7 asks a harness
@@ -269,10 +269,53 @@ LOCK=".loop_lock.${CALLSIGN}"
   # because the double fork reparents it to init, and reusing KF_DETACHED for
   # this was the first attempt and was wrong -- see below.
   export KF_LOCK_OWNER=$$
+# 13. VALIDATING ABOVE THE DETACH IS NOT ENOUGH WHEN THE VALIDATED STATE IS
+#     HANDED OVER ASYNCHRONOUSLY (v10, ok-1, H61). Defect 8 moved the brief gate
+#     above the fork for a stated reason -- "a refusal there goes to
+#     detach_$CALLSIGN.log while the parent has already printed detached and
+#     exited 0" -- and the callsign lock was already above it for the same one
+#     (see the acquisition comment). It still landed in the child, because the
+#     lock is ACQUIRED by this process and RECLAIMED by the child, so from this
+#     process's exit until that reclaim the lock names a dead pid, which the
+#     liveness test at the acquisition correctly reads as stale. A launcher
+#     arriving in that window passes the parent-side check and is refused later by
+#     its OWN CHILD, into the detach log, with the caller already told the lane
+#     launched.
+#
+#     The window was held shut by `sleep 1` -- one line whose comment gave it no
+#     such purpose, so nothing protected it and nothing knew it was load-bearing.
+#     MEASURED (`spikes/H61_lock_handoff/probe.py`, `probe_v3.out`, 8 arms, every
+#     launcher accounted for): staggered arrival at 1.5 s against a 3 s child is
+#     `refused_by_parent=0 refused_by_child=1` under the sleep and `1 / 0` under
+#     the wait below; 20-at-once is `1 survivor / 19 parent refusals` under both,
+#     which is why the suite's simultaneity block could not see this and a
+#     staggered block was added beside it. NOT a double admission -- the row was
+#     filed claiming one and that half is withdrawn; the child's own lock check
+#     still catches it. It is a LAUNCH FAILURE REPORTED AS A SUCCESS.
+#
+#     Sleeping longer would have been a bigger bet, not a fix: a duration cannot
+#     be right on a box whose load it does not measure. The wait is on the
+#     condition -- the lock no longer names me -- and is bounded.
 if [ -z "${KF_DETACHED:-}" ]; then
   export KF_DETACHED=1
   ( nohup "$0" "$@" >>"detach_${CALLSIGN:-unset}.log" 2>&1 & ) &
-  sleep 1
+  _h61=0
+  while [ "$_h61" -lt 100 ]; do                  # bounded: 10 s, then report
+    [ "$(cat "$LOCK" 2>/dev/null)" = "$$" ] || break
+    sleep 0.1; _h61=$((_h61 + 1))
+  done
+  # A report rather than a mechanism: the loop above expiring means the child
+  # never reached its reclaim, i.e. the lane died in the detach log. Announcing
+  # `detached` over that is this defect's own shape, so it is said out loud.
+  # Exit stays 0 because the child may yet be starting and every launcher check
+  # in the suite reads rc=0 from a detach. Written unexercised, and exercised
+  # within the hour by accident: test_loop_gate.sh's H61 block built its launcher
+  # copy with `awk >`, so the copy was 644, `nohup "$0"` died at exec, and this
+  # line is what said so — `race.log` carried the warning while `detach_*.log`
+  # carried `Permission denied`. test_loop_gate.sh asserts it stays silent on a
+  # healthy handoff.
+  [ "$(cat "$LOCK" 2>/dev/null)" = "$$" ] && \
+    echo "run_loop: WARNING ${CALLSIGN:-unset} child has not claimed ${LOCK} after 10s; check detach_${CALLSIGN:-unset}.log" >&2
   echo "run_loop: ${CALLSIGN:-unset} detached (survives caller teardown); log detach_${CALLSIGN:-unset}.log"
   exit 0
 fi

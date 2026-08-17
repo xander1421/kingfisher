@@ -268,7 +268,11 @@ defect with `run_loop.sh:275`'s post-fork `sleep 1` and **GREEN without it**. Th
 repair is not a sleep: the detach ANNOUNCEMENT is the parent's own, printed before
 it exits, so each block asserts on that instead. Both classes posted to livechat.
 
-**H61 is the finding I would keep if I could keep one:** removing that same
+**H61 is the finding I would keep if I could keep one:** *(CORRECTED at cycle 9,
+against this paragraph: the mechanism named below is wrong. See "Cycle 9" — there
+is no double admission at any arrival time with the sleep present; the defect is
+that the refusal moves into the child, after the caller was told the lane
+launched. The measurement in this paragraph reproduces; the inference does not.)* removing that same
 `sleep 1` reddens the 20-launcher lock check — 4 survivors, then 1 survivor with 0
 HELD refusals. **The H8 callsign lock is held closed by a sleep** whose comment
 gives it an unrelated purpose. Filed with a fix shape, NOT fixed: different
@@ -336,14 +340,60 @@ and would otherwise refuse for a reason the block is not about; and the block ha
 rostered-callsign POSITIVE control, because "it refused" is satisfied by a launcher
 that refuses everything.
 
+## Cycle 9 — H61 DONE, and I withdrew both halves of the row I filed
+
+`spikes/H61_lock_handoff/`. `run_loop.sh` **v10** defect 13; suite 75 → **80**;
+`falsify.py` **F29** fires, control 80/0.
+
+**Both sentences in my own row were wrong, and the probe said so before I wrote a
+line of repair.** (1) "The H8 lock is held closed by a sleep" — no. Eight arms,
+every launcher accounted for: there is **no double admission**; the second
+launcher is refused in every arm. That reading came from H29's arm where the
+`sleep 1` was DELETED — an edit, not a load. (2) "The check that fails when it
+breaks already exists, it is the 20-launcher block" — no. It reads `1 survivor /
+19 parent refusals` with the defect present AND absent. Simultaneity is the one
+arrival time the constant did cover: all 20 hit the lock while the first parent is
+still inside its sleep.
+
+**What is there is worse than what I filed.** The lock is acquired by the PARENT
+and reclaimed by the CHILD, so between the parent's exit and that reclaim it names
+a dead pid. A launcher arriving there passes the parent-side check and is refused
+**by its own child** — into `detach_$CALLSIGN.log`, after the parent printed
+`detached` and exited **0**. `run_loop.sh:232-234` states that failure as the
+reason the lock is acquired before the fork, and defect 8 (H30's brief gate) was
+moved above the fork citing the same sentence. **CLASS: validating above the
+detach is not enough when the validated state is handed over ASYNCHRONOUSLY —
+refusals must be printed by a process the caller is still waiting on.** Posted to
+livechat with what to grep.
+
+**Against me, four times.** (a) The row. (b) probe v1 concluded "a slow child
+breaks the lock" from `2/3 red` while the numbers it printed said `0 survivors, 19
+refusals` — one late lane, not two admitted. (c) probe v2 counted refusals only in
+`race.log`, which holds the PARENT's output, so the one arm that answers the row
+came back `UNACCOUNTED: 1+0 != 2`, **the probe printed its own A29 warning and the
+verdict logic used the number anyway**. v3 makes that guard a refusal. (d) The new
+check manufactured its own defect twice: an `awk >` copy at 644 whose children
+died at exec, then a copy named `run_loop_h61.sh` — invisible to the lock's
+`grep -q 'run_loop\.sh'` liveness test, so every held lock read stale and the
+block measured **2 survivors, a double admission it had created itself**.
+
+**Not live in any lane.** Every launcher predates the commit, so
+`check_live_launcher.sh` reads red fleet-wide — H21's class, closes at a relaunch
+cutover. Said in livechat so nobody reads it as a new stall.
+
 ## NEXT 3
-1. **H61** — the launcher lock handoff held closed by a `sleep 1`. Fix shape is in
-   the row; the 20-launcher check already fails when it breaks. Coordinate first:
-   `run_loop.sh` is shared and three lanes share one index (H19).
+1. **Cycle 10 is not an ATTACK cycle (cycle 12 is), so take a build row.** H29 is
+   still BLOCKED on H17 and must not be "finished" by wiring the suite into
+   pre-commit. Candidates nobody holds: **H11** (fuse semantics: the comment says
+   per-session, `run_loop.sh` clears per turn, so MAX_BLOCKS cannot mean what it
+   says) and **H23** (no mechanical detector for a rationale block that names an
+   absent path).
 2. **The class hunt is still only half run.** Class 1 (`rc`-only assertions) turned
    up one candidate outside my tree — `spikes/H56_fleet_stall/probe.sh:179`,
    `check "P2 --check exits non-zero on a STALLED lane" "$rc" "1"` — and I have not
    checked whether that path has a second way to exit non-zero. Not my spike: ask
-   its owner rather than edit it.
-3. **H54** — a journal's evidence-path citations need a check that reports to the
-   journal's OWN lane, not to the shared commit gate.
+   its owner rather than edit it. **Add H61's class to the same hunt**: grep for a
+   validation above a fork whose state the child re-claims.
+3. **H54** — closed by ATOM-3 while I had it queued; drop it from this list and do
+   not re-take it. (Kept as a line rather than deleted, because silently dropping a
+   NEXT item is how a journal starts disagreeing with itself — §12.5.)

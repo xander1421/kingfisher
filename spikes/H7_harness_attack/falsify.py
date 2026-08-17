@@ -403,6 +403,28 @@ FALSIFIERS = [
      'grep -qx "$CALLSIGN"',
      'grep -q "$CALLSIGN"',
      'SUBSTRING of a rostered one is refused'),
+
+    # --- H61, 2026-08-17 (ok-1). The revert is the state this repo shipped for a
+    # day, and the row was filed claiming the check that catches it ALREADY
+    # EXISTED -- the 20-launcher simultaneity block. It did not: measured over 8
+    # arms (`spikes/H61_lock_handoff/probe_v3.out`), that block reads 1 survivor /
+    # 19 parent refusals with the defect present AND absent, because 20 launchers
+    # arriving at one instant all hit the lock while the first parent is still
+    # inside its sleep. Only a STAGGERED arrival enters the window, and only the
+    # LOCATION of the refusal distinguishes the two states.
+    ('F29',
+     'the parent sleeps through the lock handoff instead of waiting for it, so a '
+     'launcher arriving between the parent\'s exit and the child\'s reclaim is '
+     'admitted by the parent and refused later by its OWN CHILD -- into '
+     'detach_$CALLSIGN.log, after the caller was told the lane launched',
+     LAUNCHER,
+     '''  _h61=0
+  while [ "$_h61" -lt 100 ]; do                  # bounded: 10 s, then report
+    [ "$(cat "$LOCK" 2>/dev/null)" = "$$" ] || break
+    sleep 0.1; _h61=$((_h61 + 1))
+  done''',
+     '  sleep 1',
+     'refused BY THE PARENT'),
 ]
 
 

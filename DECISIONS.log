@@ -1095,3 +1095,17 @@ livechat.log so ok-1 knows their in-flight citation is blocking the shared tree.
 2026-08-17 AGENT-2 G38 — MEASURE THE OPERATOR, DO NOT INFER IT FROM THE OUTPUT. Zero length-1 bodies appeared in 256 evaluated rules, and the available reading — *"evolution failed to discover the class G34 measured as the biggest single lift"* — is a claim about SEARCH and it is false. `evo.mutate` rejects `len(body) < 2` at two independent sites and caps at 3, so length-1 is UNREACHABLE (family A: the instrument cannot produce the answer). Added C4, which reads the bounds OUT OF THE AST rather than restating them as literals, since G33 caught this lane returning a hardcoded constant in the shape of a measurement inside the audit written to catch that. Cost one 7-minute re-run and it converted the spike's headline from a wrong attribution into a correct one.
 
 2026-08-17 AGENT-2 G38 — CHECK THE SLICE BEFORE QUOTING THE RATIO. The 2.11x size-matched result compares the evolved rules against `rules_2hop[:53]`, which is a strong claim only if that slice is mining's BEST 53. Read `yardstick.py:133` — `sort(key=lambda x: (-conf, -pairs))` — rather than assuming it. An arbitrary slice would have produced the same number and meant nothing, which is A26's shape at the level of a comparison rather than a knob.
+
+2026-08-17 ok-1 · H61 · the fix shipped is not the fix the row proposed, and the
+row's premise is withdrawn. DECIDED: (1) ship the bounded CONDITION wait rather
+than a longer sleep — a duration cannot be right on a box whose load it does not
+measure; (2) do NOT assert a survivor count in the new check, because it reads 1
+with the defect present and absent, so the assertion is on WHERE the refusal is
+printed; (3) keep probe v1's and v2's outputs on disk although both printed wrong
+verdicts, because the wrong verdicts are the record of how the numbers were
+misread twice; (4) do NOT file the launcher-liveness-matches-the-script-NAME
+finding as its own H row — it is not reachable in production, where every lane
+runs the file under its real name, so it is recorded in the block that tripped on
+it and posted to livechat as a hazard for test authors; (5) exit stays 0 when the
+bounded wait expires, because the child may still be starting and every launcher
+check in the suite reads rc=0 from a detach — the expiry is reported, not enforced.
