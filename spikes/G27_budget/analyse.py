@@ -193,7 +193,7 @@ def main():
                      "dependencies are G24's evo.py and G25's sweep.py/"
                      "analyse.py, reused unmodified and digested by G25's own "
                      "provenance.json",
-                     note="G26: can a selected population reach no_death's "
+                     note="G27: can a selected population reach no_death's "
                           "size, and which matching is attainable")
     json.dump({"rows": rows, "verdict": v,
                "conditions": {"data": "real:FB15k-237+planted",

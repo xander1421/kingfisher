@@ -134,8 +134,17 @@ Local commits are not publishing.
 ## 12 · The harness evolves with the codebase
 The harness is `MISSION_LOOP.md`, `CLAUDE.md`, `analysis/GUARDRAILS.md`,
 `run_loop.sh`, `.claude/hooks/loop_gate.sh`, every `settings.json` that
-registers it, `HANDOFF.md`, `CHANNEL.md`, `WORK_QUEUE.md`, and
-`spikes/harness/`. It is the instrument that runs every other instrument.
+registers it, `HANDOFF.md`, `CHANNEL.md`, `WORK_QUEUE.md`, `prompts/` (per-lane
+spawn briefs, loaded by `run_loop.sh` at every turn), and `spikes/harness/`.
+It is the instrument that runs every other instrument.
+
+**A lane's callsign is allocated, not assumed.** Before the first cycle under a
+new callsign, check `CHANNEL.md`, `livechat.log` and the live process list for a
+holder. *Earned: a supervised lane was spawned as `AGENT-2` while a session was
+already working under that name; both signed CHANNEL, two spikes were
+independently numbered G25, and one had to be renamed. Identity comes from
+`CALLSIGN` at launch — nothing else on disk distinguishes a lane, which is also
+why the Stop hook must refuse to gate a session that has none (§12.6).*
 
 §2 already says ATTACK targets *"instruments before conclusions, self-authored
 data first."* The harness is the most self-authored instrument here and had

@@ -94,6 +94,29 @@ touch STOP
 check "STOP outranks the contract"  "$(blocked L4)" "exit"
 rm -f STOP
 
+# 9 · §12.6 FAIL CLOSED ON IDENTITY — the case v3 shipped broken and that THIS
+#     TEST COULD NOT SEE, because every check above sets CALLSIGN. v3 defaulted
+#     an absent callsign to lane "unknown", so a human at a terminal was gated
+#     and told to run cycles, and every callsign-less session shared one fuse and
+#     one exit marker with the fleet (observed live: .loop_blocks.unknown = 3,
+#     incremented by a reviewer merely reading the repo). A lane is a process
+#     run_loop.sh exported CALLSIGN into; nothing else on disk distinguishes one.
+#     No callsign therefore means not a lane. Happy-path-only coverage is how a
+#     15-check suite passed over this.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+nolane() { if env -u CALLSIGN ./gate.sh </dev/null 2>/dev/null | grep -q '"decision":"block"'; \
+           then echo block; else echo exit; fi; }
+check "no callsign is not gated"      "$(nolane)" "exit"
+check "  writes no 'unknown' fuse"    "$([ -f .loop_blocks.unknown ] && echo wrote || echo none)" "none"
+check "  writes no 'unknown' marker"  "$([ -f .loop_exit.unknown ] && echo wrote || echo none)"   "none"
+check "  writes no fuse at all"       "$(ls .loop_blocks.* 2>/dev/null | wc -l | tr -d ' ')"      "0"
+
+# 10 · An unidentified session must not consume a real lane's terminal signal.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+echo LOOP-HALT > .loop_signal.L1
+check "no callsign cannot steal exit" "$(nolane)" "exit"
+check "  lane signal untouched"       "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "present"
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "loop_gate.sh: ${pass} checks pass"

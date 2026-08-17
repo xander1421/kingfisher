@@ -28,6 +28,14 @@ BEAT=".heartbeat.${CALLSIGN}"             # mtime = last turn start; watch this 
 MAX_TURN=${MAX_TURN:-3600}                # seconds before a turn is called wedged
 command -v claude >/dev/null || { echo "claude CLI not found"; exit 1; }
 
+# Per-lane spawn brief. A lane's role, its reading order and its first cycles
+# belong in a tracked reviewable file, not in one operator's chat scrollback --
+# AGENT-2's lane definition lived only inside HANDOFF.md, which is contested by
+# two writers, and a lane was spawned onto an already-held callsign because
+# nothing at launch said who was live. Read fresh every turn so an edit to the
+# brief reaches the lane on its next cycle without a relaunch.
+BRIEF_FILE="prompts/${CALLSIGN}.md"
+
 fails=0
 while [ ! -f STOP ]; do
   rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK"
@@ -41,7 +49,8 @@ while [ ! -f STOP ]; do
 
 The harness evolves with the codebase (MISSION_LOOP §12, CLAUDE.md §6). It is the instrument that runs every other instrument, and it had never been attacked before 2026-08-17 — it was carrying an inert Stop hook, a launcher that had never been run, and re-entry that depended on remembering one call per turn. So: a harness defect is a class-H WORK_QUEUE row, not a fix you make in passing. Fix the CLASS and not the site — name the defect class in one line, grep the whole harness for it, and post the class to livechat.log so the other lane greps its own tree. Resolve every reference to a section, spec or file mechanically rather than by eye. Any harness component you touch keeps a runnable check that fails when it breaks, and gains a version bump with a rationale block naming the defect removed. At least every fourth ATTACK cycle targets the loop itself rather than a spike.
 
-A wrong number gets retracted by the next cycle. A dead lane has no next cycle." \
+A wrong number gets retracted by the next cycle. A dead lane has no next cycle.
+$([ -f "$BRIEF_FILE" ] && printf '\n--- your spawn brief, %s ---\n' "$BRIEF_FILE" && cat "$BRIEF_FILE")" \
       --dangerously-skip-permissions 2>&1 | tee -a "$LOG" ) &
   turn=$!
   # Watchdog: convert a hang into a crash, which the loop below already handles.

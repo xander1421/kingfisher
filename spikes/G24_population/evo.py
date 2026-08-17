@@ -279,6 +279,20 @@ def heads_at(idx, cand, rng, sample=300):
     return c
 
 
+def pick_parent(pop, rng, repro):
+    """Fitness-proportional reproduction when `repro`, uniform otherwise.
+
+    Weight is accumulated importance, floored just above zero so a rule that
+    has not yet earned can still occasionally reproduce -- that floor is the
+    neutral-drift channel, and without it a population converges on whatever
+    paid first and stops exploring.
+    """
+    if not repro:
+        return rng.choice(pop)
+    w = [max(r["imp"], 0.05) for r in pop]
+    return rng.choices(pop, weights=w, k=1)[0]
+
+
 def abduct(idx, unsolved, rng, tries=40):
     """PROBLEM-DIRECTED VARIATION. Take a problem the population cannot solve,
     find a path in the graph between its endpoints, and propose the rule that
@@ -455,6 +469,23 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
     coevo = "static_adv" not in abl
     waves = "no_waves" not in abl
     abduction = "no_abduct" not in abl
+    # REPRODUCTIVE selection, separate from SURVIVAL selection.
+    #
+    # Agent-1's correction to G24 was right and the cause is structural: `imp`
+    # had exactly ONE consumer, the death filter. Parents were drawn
+    # rng.choice(pop) UNIFORMLY, so with death off, wages still accumulated
+    # into `imp` and nothing ever read them. `no_death` was therefore not "the
+    # full system minus carrying capacity" -- it was propose-and-keep-
+    # everything, an algorithm with no selection at all, and "death is what
+    # makes fitness differential" was measured against the wrong baseline.
+    #
+    # The deeper error is a missing mechanism, not a bad parameter. Biology
+    # selects twice: who survives, and who reproduces. I had only the first.
+    # With parent choice weighted by importance, `no_death` keeps reproductive
+    # selection while losing survival selection, and the ablation finally
+    # means what its name says. It is also the ECAN-faithful design: STI is
+    # supposed to drive attention allocation, not only eviction.
+    repro = "uniform_parents" not in abl
 
     adv_idx = Idx(R.shuffled(train, 555))
     tbl = build_bias(idx)   # (follows, precedes)
@@ -474,7 +505,8 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
                     k = ({"body": a_[0], "head": a_[1], "imp": START_IMP,
                           "parent": None, "op": "abduct"} if a_ else None)
                 else:
-                    k = mutate(rng.choice(pop), preds, rng, pop, tbl, idx, ev)
+                    k = mutate(pick_parent(pop, rng, repro), preds, rng,
+                               pop, tbl, idx, ev)
                 if k:
                     k["id"] = nid
                     nid += 1
@@ -595,7 +627,10 @@ def main():
     train, p_dev, p_test, npred, planted = dataset()
 
     out = {}
+    # The 2x2 on SELECTION TYPE that G24 could not express. Its old `no_death`
+    # is this table's `no_death+uniform_parents` -- neither kind of selection.
     for arm in ("full", "no_variation", "no_abduct", "no_death",
+                "uniform_parents", "no_death+uniform_parents",
                 "static_adv", "no_waves"):
         print(f"ARM {arm}")
         h, capped, _pop = run(arm, train, p_dev, p_test, npred, planted)

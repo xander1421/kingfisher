@@ -103,7 +103,13 @@ public class MainActivity extends Activity {
                 .setRequiresBatteryNotLow(true)                         // rule 2 (partial)
                 .setRequiresStorageNotLow(true)
                 .build();
-        Data in = new Data.Builder().putString("program",
+        // An Android app does NOT inherit the shell environment from `am start`,
+        // so the token arrives as an intent extra:
+        //   am start -n net.kingfisher/.MainActivity --es token <tok>
+        String kfTok = getIntent() == null ? null : getIntent().getStringExtra("token");
+        Data in = new Data.Builder()
+                .putString("token", kfTok == null ? "" : kfTok)
+                .putString("program",
                 "!(+ 1 2)\n!(intersection-atom (A B C) (B C D))\n").build();
 
         WorkManager wm = WorkManager.getInstance(this);

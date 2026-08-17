@@ -70,10 +70,13 @@ The loop machinery is a first-class artifact under D6. It had no queue rows and
 no tests while being the only thing between the fleet and a silent stall.
 | id | item | status |
 |---|---|---|
-| H1 | Stop hook enforceable as written; per-lane signals; exit marker the launcher can read | **DONE** — `loop_gate.sh` v3, `spikes/harness/test_loop_gate.sh` 15 checks pass |
+| H1 | Stop hook enforceable as written; per-lane signals; exit marker the launcher can read | **REOPENED then DONE** — v3 was marked DONE and was wrong: `LANE="${CALLSIGN:-unknown}"` collapsed every callsign-less session into one shared lane, so humans and reviewers were gated and incremented the fleet fuse (`.loop_blocks.unknown`=3 observed). v4 fails closed on identity. The 15-check suite passed over it because every check set CALLSIGN — happy path only. Now `loop_gate.sh` v4, 21 checks |
 | H2 | launcher must not end a lane on prose; backoff; hang watchdog | **DONE** — `run_loop.sh` v2, 4 numbered defects in its header. **Live wrappers still run v1 (bash parsed at spawn); needs a STOP/relaunch cutover** |
 | H3 | §11 publishing rail cited by 7 files never existed; §10 split so every citation resolves | **DONE** — MISSION_LOOP §11 |
-| H4 | mechanical reference resolver: every §N / spec / file citation in the harness must resolve, per §12.4 | OPEN — the D1–D6 and §11 defects were both this class, found by eye |
+| H4 | mechanical reference resolver: every §N / spec / file citation in the harness must resolve, per §12.4 | OPEN — **regressed twice more within the hour**: `CLAUDE.md` cited §10 for publishing after H3 moved it to §11 (fixed), MISSION_LOOP carried two §9 (renumbered to §13), and §13 pointed at a `CLAUDE.md §2` that the rewrite deleted (fixed). All three found by eye. `grep -E '^## [0-9]+ ·' \| uniq -d` is a third of this row |
 | H5 | journal self-contradiction check: nothing in both a DONE list and a NEXT list, per §12.5 | OPEN — HANDOFF NEXT 1/2 were DONE above them |
 | H6 | external liveness alarm — a lane dead for an hour is currently silent | OPEN — `launchd` KeepAlive per lane is the native form; `.heartbeat.$CALLSIGN` now exists to watch |
 | H7 | first ATTACK cycle aimed at the harness rather than a spike, per §12.8 | OPEN |
+| H8 | callsign allocation: a lane must not be spawned onto a held callsign | OPEN — CLIENT-3 spawned an `AGENT-2` lane over a live `AGENT-2` session; both signed CHANNEL, two G25 spikes resulted, one renamed to G26_abstain. Allocation rule now in §12; no mechanical check yet |
+| H9 | drop bare `.loop_signal` from hook and §7 — the last shared-state loophole | OPEN — deliberately NOT done live: §7 still documents it and a lane mid-turn may write it, so removing it now could wedge a running lane. Do it at the v2 cutover |
+| H10 | one journal per lane (`HANDOFF.$CALLSIGN.md`), single writer each | OPEN — HANDOFF is 255 lines with two NEXT lists and two writers; §12.5 forbids the self-contradiction it keeps producing |

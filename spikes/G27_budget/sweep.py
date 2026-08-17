@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""G26 — can a SELECTED population reach no_death's size, and which matching is
+"""G27 — can a SELECTED population reach no_death's size, and which matching is
 even attainable?
 
 G25 left exactly one hole. It wanted to compare a selected population of 557

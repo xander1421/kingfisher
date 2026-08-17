@@ -75,7 +75,7 @@ Correct in the LEDGER, in place, with what was withdrawn and why. Several
 findings here got *better* when their falsifier fired. A retraction that
 improves the result is the normal case, not an embarrassment.
 
-## Safety rails (MISSION_LOOP §10) — non-negotiable
+## Safety rails (MISSION_LOOP §10 devices/keys, §11 publishing) — non-negotiable
 No publishing: no pushes, PRs, package uploads, issue comments, posts. External
 artifacts go to `proposed/` for a human. No wallets, keys, seed phrases, tokens,
 mainnets or testnets. No miners. Device jobs honour charging + idle + UNMETERED,

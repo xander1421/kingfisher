@@ -104,6 +104,25 @@ about. This is the honest state, not a regression.
   **Does NOT unblock bisection** — interpreter state stays RED per S68, and the
   item was split for exactly that reason. DECISIONS 111–114. New guardrail **A25**.
 
+- **C4 ATTACK: soundness bug found in the shared trie instrument, and fixed.**
+  W2 and S73 rest on one prover/verifier codebase, so a bug there is invisible to
+  all 20 of their controls *and* to quorum (A22) — that is why the instrument was
+  the target, not the numbers. `walk` returned `COVER` when a query was exhausted
+  **inside** a node's compressed prefix, and non-membership then read `node.term`,
+  which describes a key ending at the prefix's *end*:
+  `prove_non_membership(root, b'ab')` returned `None` ("present") for a trie
+  holding only `b'abc'`. **A prover could deny any key that is a proper prefix of a
+  stored key and the verifier would agree, both sides making the same mistake.**
+  Latent in both spikes (W2 fixed-length keys, S73 prefix-free encoding) — every
+  published number is byte-identical after the fix, which is the evidence it was
+  latent, not that it was harmless. Also: an independent second trie
+  implementation agrees 7/7; 5 omission shapes W2's `C_omit` never tested are all
+  rejected (the gap was the control set, not the verifier); D6's F2 shown
+  one-directional and restated with a changelog line.
+  **My own A4 probe reported SURVIVES without reaching its target** — blocked by
+  the very bug it hunted. New guardrail **A29**.
+  `spikes/W2_witnessed_trie/ATTACK.md`, `attack.py`, `attack.json`.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows

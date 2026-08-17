@@ -76,7 +76,7 @@ public class MettaWorker extends Worker {
         // Preflight is re-checked per job -- measured at 98.5 us in M1.1, so
         // per-job is viable and SCHEDULER_SPEC marks it required.
         int port = getInputData().getInt("port", 18080);
-        Transport net = new Transport(port);
+        Transport net = new Transport(port, getInputData().getString("token"));
         String dir = getApplicationContext().getFilesDir().getAbsolutePath();
         java.io.File cache = new java.io.File(dir, "shards");
         cache.mkdirs();

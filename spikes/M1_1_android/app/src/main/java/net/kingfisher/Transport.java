@@ -21,8 +21,17 @@ import java.net.URL;
 public final class Transport {
     static final String TAG = "KFNET";
     private final String base;
+    private final String token;
 
-    public Transport(int port) { this.base = "http://127.0.0.1:" + port; }
+    public Transport(int port, String token) {
+        this.base = "http://127.0.0.1:" + port;
+        // The coordinator requires a bearer token on every endpoint. Adding
+        // that requirement server-side and to the shell agent, and missing THIS
+        // client, produced `okhttp: unexpected end of stream` -- an error that
+        // names neither auth nor the 401 behind it. A security requirement
+        // added to N-1 of N clients fails in the one place, opaquely.
+        this.token = token == null ? "" : token;
+    }
 
     private static byte[] readAll(InputStream in) throws Exception {
         ByteArrayOutputStream o = new ByteArrayOutputStream();
@@ -43,6 +52,8 @@ public final class Transport {
         try {
             c = (HttpURLConnection) new URL(base + "/job?worker=" + worker).openConnection();
             c.setConnectTimeout(5000);
+            if (!token.isEmpty())
+                c.setRequestProperty("Authorization", "Bearer " + token);
             // do not reuse pooled sockets across long-polls
             c.setRequestProperty("Connection", "close");
             c.setReadTimeout(timeoutMs);
@@ -69,6 +80,8 @@ public final class Transport {
         try {
             c = (HttpURLConnection) new URL(base + "/shard/" + cid).openConnection();
             c.setConnectTimeout(5000);
+            if (!token.isEmpty())
+                c.setRequestProperty("Authorization", "Bearer " + token);
             // do not reuse pooled sockets across long-polls
             c.setRequestProperty("Connection", "close");
             c.setReadTimeout(60000);
@@ -91,6 +104,8 @@ public final class Transport {
             c.setRequestMethod("POST");
             c.setDoOutput(true);
             c.setConnectTimeout(5000);
+            if (!token.isEmpty())
+                c.setRequestProperty("Authorization", "Bearer " + token);
             // do not reuse pooled sockets across long-polls
             c.setRequestProperty("Connection", "close");
             c.setReadTimeout(30000);

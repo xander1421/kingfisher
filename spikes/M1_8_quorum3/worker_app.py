@@ -11,9 +11,10 @@ different manifest (`libhyperonc` takes workspace defaults; `fuelrun` has its
 own Cargo.toml), so it raises `binary` and `manifest` honestly rather than by
 relabelling the same artifact.
 """
-import argparse, hashlib, json, os, subprocess, sys, time
+import argparse, hashlib, json, os, secrets, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+os.environ.setdefault('KF_TOKEN', secrets.token_urlsafe(24))
 sys.path.insert(0, os.path.join(HERE, '..', 'M1_5_shardstore'))
 sys.path.insert(0, os.path.join(HERE, '..', 'M1_7_transport'))
 from shardstore import ShardStore, cid_of
@@ -42,6 +43,7 @@ def main():
     os.makedirs(a.outbox, exist_ok=True)
     store = ShardStore(a.store)
 
+    print(f'[shim] serving on 127.0.0.1:{a.port}', flush=True)
     server.serve(a.port)
     sh('adb', 'reverse', f'tcp:{a.port}', f'tcp:{a.port}')
     sh('adb', 'install', '-r', a.apk)
@@ -71,16 +73,27 @@ def main():
             n += 1
         return n
 
+    print('[shim] adb reverse + install done', flush=True)
     waited = 0
     while load_inbox() == 0 and waited < 300:
         time.sleep(0.1)
         waited += 1
-    sh('adb', 'shell', 'am force-stop net.kingfisher')
-    sh('adb', 'shell', 'am start -n net.kingfisher/.MainActivity')
+    print(f'[shim] queue depth {server.JOBS.qsize()}, shards {len(server.SHARDS)}; launching app', flush=True)
+    # `pm clear`, not `force-stop`. WorkManager persists its work database, so
+    # a force-stopped app re-launches into whatever state prior runs left --
+    # including backoff windows from earlier Result.retry()s. `run_app.py` did
+    # `pm clear` from the start and worked; this shim did `force-stop` and saw
+    # ZERO requests reach the server while curl from the same device got 200.
+    sh('adb', 'shell', 'pm clear net.kingfisher')
+    tok = os.environ.get('KF_TOKEN', '')
+    sh('adb', 'shell',
+       f'am start -n net.kingfisher/.MainActivity --es token {tok}')
 
     seen, idle = set(), 0
     while idle < 400:                       # ~40 s of no new work
         idle = 0 if load_inbox() else idle + 1
+        if idle and idle % 100 == 0:
+            print(f'[shim] idle={idle} stats={server.STATS} results={len(server.RESULTS)}', flush=True)
         # drain whatever the app has posted back
         while server.RESULTS:
             env = server.RESULTS.pop(0)

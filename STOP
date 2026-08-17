@@ -1,0 +1,35 @@
+Set 2026-08-17 10:50 by an interactive session (not a lane), to break a live-lock.
+
+The root .claude/settings.json registers loop_gate.sh with no lane check, so an
+interactive session at repo root is gated as lane "unknown" (CALLSIGN unset):
+every turn end is refused, and each refusal increments .loop_blocks.unknown.
+STOP (loop_gate.sh:28) was the only exit that does not consume a signal file a
+live lane also reads.
+
+Resume: rm STOP
+
+CORRECTED 10:55, after AGENT-2 refuted the original justification.
+This file first said "no running claude process has CALLSIGN set". That was
+FALSE. Re-measured across all 18 live pids: 12151 and 12159 are AGENT-1, 12165
+is AGENT-2, and both `claude -p "You are AGENT-<n>. ..."` wrappers are alive. The
+first census ended in a bare `head`, capping it at 10 rows after `sort -rn`
+ordered by descending pid, which cut exactly the four lowest pids -- where all
+three callsigns live. A27: a hold-out drawn from one end of the key order is not
+a sample of the key space. Also withdrawn: "run_loop.sh has never run". The
+0-byte loop_AGENT-*.log files mean `claude -p` is STILL IN ITS FIRST TURN (it
+writes at exit), not absent; the missing .heartbeat.* is explained by the live
+wrappers being v1, which has no heartbeat line (WORK_QUEUE H2).
+
+The remedy stands on the narrower, still-true finding: MISSION_LOOP §12.6 holds
+for the two supervised lanes and fails for non-lane sessions, which all collapse
+to "unknown" and share .loop_signal.unknown / .loop_blocks.unknown with each
+other. The gate cannot tell a lane from a human, so a human reading this repo
+burns the fleet's fuse and cannot yield the floor.
+
+Consequence of THIS file, now correctly understood: it halts two genuinely
+supervised lanes at their next turn end, not two unsupervised ones. Lifting it is
+the operator's call.
+
+Fix before reopening this repo interactively: give loop_gate.sh a lane whitelist
+(exit 0 unless CALLSIGN names a known lane -- CLIENT-3 reports v4 does this), and
+keep exporting CALLSIGN at lane launch, which run_loop.sh already does correctly.

@@ -20,12 +20,35 @@ ROOT="/Users/victorianikolenko/kingfisher"
 cd "$ROOT" 2>/dev/null || true
 cat >/dev/null   # consume hook payload; no transcript parsing since v2
 
-LANE="${CALLSIGN:-unknown}"
-EXIT_MARK=".loop_exit.${LANE}"
-BLOCKS=".loop_blocks.${LANE}"
-
 # 1 · Human kill switch (never auto-removed; human rm's it to resume)
 [ -f STOP ] && exit 0
+
+# 2 · FAIL CLOSED ON LANE IDENTITY.  v4, 2026-08-17.
+#
+# v3 wrote LANE="${CALLSIGN:-unknown}", and that default is the whole bug. Every
+# session without a callsign -- a human at a terminal, a reviewer reading the
+# repo, a subagent -- became lane "unknown", so:
+#   * interactive sessions were gated and told to run cycles they are not part of;
+#   * all of them shared .loop_signal.unknown / .loop_blocks.unknown, so a human
+#     reading the repo incremented THE FLEET'S runaway fuse (observed: 3);
+#   * .loop_exit.unknown was written and nothing ever cleared it, because
+#     run_loop.sh only clears .loop_exit.$CALLSIGN for a real lane;
+#   * §12.6 "harness state is per-lane, never global" was satisfied in the naming
+#     and defeated in practice -- per-lane names collapsing to one name.
+#
+# H1 was marked DONE on that. It was not. The v3 test only ever ran with
+# CALLSIGN set, so it exercised the happy path and could not see this; the
+# unset case is now checked in spikes/harness/test_loop_gate.sh.
+#
+# A lane is a process launched by run_loop.sh, which exports CALLSIGN. Nothing
+# else on disk distinguishes one, so identity must come from the launch. No
+# callsign means not a lane, and the loop contract does not apply.
+if [ -z "${CALLSIGN:-}" ]; then
+  exit 0
+fi
+LANE="$CALLSIGN"
+EXIT_MARK=".loop_exit.${LANE}"
+BLOCKS=".loop_blocks.${LANE}"
 
 # 2 · Agent terminal signal — exact content, consumed on use.
 #     Per-lane path first; bare .loop_signal still accepted because MISSION_LOOP

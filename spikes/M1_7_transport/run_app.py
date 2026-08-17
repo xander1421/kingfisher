@@ -6,10 +6,11 @@ dials the coordinator, pulls shards by CID, evaluates MeTTa IN-PROCESS via JNI,
 and posts envelopes. No adb push of programs, no adb-driven execution: adb only
 provides the loopback tunnel and launches the app.
 """
-import json, os, subprocess, sys, time
+import json, os, secrets, subprocess, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'M1_5_shardstore'))
 sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
+os.environ.setdefault('KF_TOKEN', secrets.token_urlsafe(16))
 from shardstore import cid_of
 import bansurface, server
 
@@ -44,7 +45,8 @@ if 'Success' not in r.stdout:
 print(f'installed app-debug.apk sha256 {apk_sha}')
 sh('adb', 'shell', 'pm clear net.kingfisher')     # cold shard cache in app storage
 sh('adb', 'logcat', '-c')
-sh('adb', 'shell', 'am start -n net.kingfisher/.MainActivity')
+sh('adb', 'shell',
+   f'am start -n net.kingfisher/.MainActivity --es token {os.environ["KF_TOKEN"]}')
 print(f'{len(progs)} jobs queued; app launched, WorkManager will schedule the worker')
 
 # give the verifier the SAME working dir the app uses, so filesystem-touching
