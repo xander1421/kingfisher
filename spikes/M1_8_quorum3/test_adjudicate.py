@@ -152,12 +152,12 @@ for _label, _e in [('empty results_text', _with(results_text='')),
                    ('blank results_text', _with(results_text='   ')),
                    ('empty sorted_hash',  _with(results_text=None, sorted_hash='')),
                    ('null  sorted_hash',  _with(results_text=None, sorted_hash=None))]:
-    assert key(_e) is None, f'{_label}: an empty result member produced an agreement key'
+    assert q3.key(_e) is None, f'{_label}: an empty result member produced an agreement key'
     assert adj([_with(**{}), _e, _e])[0] != 'UNANIMOUS', f'{_label}: adjudicated UNANIMOUS'
     assert adj([_e, _e, _e])[0] in ('NO_RESULTS', 'REDUCED_QUORUM'), _label
 
 # The empty-hash CONSTANT arriving as if it were a result is refused too.
-assert key(_with(results_text=None,
+assert q3.key(_with(results_text=None,
                  sorted_hash='e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')) is None
 
 # A FAILED worker legitimately has no result member, and agreement that a job
