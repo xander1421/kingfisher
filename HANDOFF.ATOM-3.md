@@ -119,17 +119,34 @@ the changelog line the brief asks for:**
   could carry, then a refusal on a committed fix that genuinely is not running.
   v1 could not have told those apart. Commit `f9d1e86`.
 
+- **H43** — `bringup.sh` **v3** + `spikes/H6_liveness/test_h43_work_signal.sh`,
+  7 checks. **The cure for the wedged lane had a trigger that cannot fire for
+  it**, decidable from the code with no run: `.loop_fails` climbs only where
+  `elapsed < 60` and STALLED needs `nfail >= 2`, so a lane with slow
+  unproductive turns resets the counter every turn and reports plain UP. Wider
+  half: **nothing in the harness observed WORK** — every signal watched the
+  supervisor, the turn boundary, or the turn's duration, which is H56's own
+  class inside the fix for it. Fixed with §14.2's observable, as a column with
+  **no threshold** (C5 fails if it ever gates quorum). **Not commit recency** —
+  ok-1 measured at 16:25 with a 2h-old commit while writing its journal.
+  **F2 fired against my own first fix**: a distance from the end of an
+  append-only file freezes on a silent fleet, so an absolute fleet-output age
+  was added. Commit `5437981`.
+
 ## NEXT, in order
 
-1. **H43 — the cure half of H6.** Detector shipped; the cure needs a decision,
-   not code. Killing a wedged lane's `claude` child does **not** kill the lane
-   (H31: the detached wrapper respawns it), and an automatic cure acts on a live
-   lane, so a false positive costs another lane's cycle.
-2. **H58 — the two `bringup.sh` are still two implementations.** Filed this
-   cycle, not started. H44 settled which is the entry point and made them agree
+1. **H58 — the two `bringup.sh` are still two implementations.** Filed, not
+   started. H44 settled which is the entry point and made them agree
    about the fleet; it did not merge them. Merging means one script with a mode
    flag, and H44's own finding is that this file's last mode flag wrote to
    `.git/hooks`. Any merge that moves the entry point goes to `proposed/` (§10).
+2. **A turn-level productivity test in `run_loop.sh`.** H43's residual, recorded
+   in `DECISIONS.log` rather than left implied: the `elapsed >= 60` reset is the
+   natural site for "did this turn produce anything", and today was the wrong
+   day to edit that file — three lanes touched it this hour and H59 measured 25
+   of 25 processes predating the current commit. Needs a fleet-quiet moment.
+3. **`headcheck.sh` is still red on five paths owned by other lanes** (H60).
+   Not mine to commit; re-check it each cycle and chase if it persists.
 
 ## Standing question each cycle (the one no rowing lane asks)
 
