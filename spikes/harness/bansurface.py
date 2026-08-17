@@ -45,6 +45,22 @@ IMPORT_RANDOM = re.compile(r'\(\s*import!\s+\S+\s+random\s*\)')
 # no \b after the trailing `!`: `!` and the following space are both
 # non-word characters, so there is no word boundary there and the pattern
 # never matched. Caught by the assertion below, which is why it exists.
+# Modules whose EXISTENCE depends on a Cargo feature, from
+# builtin_mods/mod.rs `#[cfg(feature = ...)]` gates:
+#   pkg_mgmt -> catalog        das -> das
+# A program importing one of these behaves differently on two honest workers
+# built with different feature sets -- measured: `integration_tests__das__test`
+# gives fuel 580 with `das` and fuel 107 without, and both are correct answers
+# from their own runtime.
+#
+# This is the price of INDEPENDENCE, not a defect. Two workers built from
+# different manifests are two failure domains, which is what the quorum needs;
+# admitting feature-dependent programs is what stops them agreeing. Banning
+# these buys `manifest = 2` at a cost of one program in 65.
+FEATURE_MODULES = ('das', 'catalog')
+IMPORT_FEATURE = re.compile(
+    r'\(\s*import!\s+\S+\s+(' + '|'.join(FEATURE_MODULES) + r')\s*\)')
+
 FILEIO = re.compile(r'\(\s*(file-open!|file-read-exact!|file-read-to-string!'
                     r'|file-write!|file-seek!|file-get-size!)(?=[\s)])')
 
@@ -76,6 +92,11 @@ def scan(text):
         bad.append(('reseed', 'reset-random-generator/set-random-seed mutate '
                               'generator state mid-job; the result then depends '
                               'on evaluation order'))
+    m = IMPORT_FEATURE.search(t)
+    if m:
+        bad.append(('feature-gated-module',
+                    f'module `{m.group(1)}` exists only under a Cargo feature, so '
+                    f'two honest workers built differently give different results'))
     m = FILEIO.search(t)
     if m:
         bad.append(('filesystem', f'{m.group(1)} resolves paths against the '
@@ -135,7 +156,18 @@ def demo():
         assert not ok, op
     ok, _ = admit(b'; !(file-open! "x" "w")\n!(+ 1 2)\n')
     assert ok, 'a commented-out fileio call must not trigger'
-    print('bansurface: 16 assertions pass')
+
+    # feature-gated modules: the program is fine, the runtime differs
+    ok, v = admit(b'!(import! &self das)\n')
+    assert not ok and v[0][0] == 'feature-gated-module', v
+    ok, v = admit(b'!(import! &self catalog)\n')
+    assert not ok, v
+    # a module that is NOT feature-gated must still be admitted
+    ok, _ = admit(b'!(import! &self json)\n')
+    assert ok, 'json is unconditional -- must not be banned'
+    ok, _ = admit(b'; !(import! &self das)\n!(+ 1 2)\n')
+    assert ok, 'commented-out import must not trigger'
+    print('bansurface: 20 assertions pass')
 
 
 if __name__ == '__main__':

@@ -111,7 +111,12 @@ def observed_domains(wid, binary, via):
         # the app is built from the hyperon workspace (libhyperonc takes
         # workspace defaults); fuelrun has its own Cargo.toml. Different
         # manifests, so this axis rises honestly rather than by relabelling.
-        src = HYPERON_SRC if via == 'app' else FUELRUN_SRC
+        if via == 'app':
+            src = HYPERON_SRC
+        elif 'min' in os.path.basename(binary):
+            src = os.path.join(HERE, '..', 'S15_android_device', 'fuelrun_min')
+        else:
+            src = FUELRUN_SRC
         man = manifest_state(src)['combined_sha256'] if os.path.isdir(src) else 'unknown'
     except Exception:
         man = 'unknown'
@@ -294,8 +299,19 @@ def main():
     # distinct `binary` and `isa` domain and the SAME `host` and `os` domain --
     # which is exactly why the count is per-axis. It restores the cross-ISA
     # property S57's headline had and this quorum had lost.
+    # host-min is built from a DIFFERENT manifest (pkg_mgmt only, no das), so it
+    # is a second `manifest` domain. That axis was binding at 1; the cost is one
+    # program in 65, now banned at admission as feature-gated.
+    # Each worker exists to raise a DIFFERENT axis, not to add a seat:
+    #   host-a    das build, arm64      -- baseline
+    #   host-min  pkg_mgmt-only build   -- second `manifest` domain
+    #   host-x86  das build, x86_64     -- second `isa` domain
+    #   phone     android               -- second `host` and `os` domain
+    # Replacing rather than adding cost `isa` when `host-min` went in, which is
+    # what the per-axis vector is for: it made the regression visible.
     workers = [
         ('host-a', os.path.join(BIN, 'fuelrun.host'), 'local'),
+        ('host-min', os.path.join(BIN, 'fuelrun.host.min'), 'local'),
         ('host-x86', os.path.join(BIN, 'fuelrun.host.x86_64'), 'local'),
     ]
     if not a.no_device:

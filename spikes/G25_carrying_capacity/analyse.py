@@ -12,9 +12,13 @@ motivated the run -- if a selected population at no_death's size fails to beat
 no_death, this prints TRADEOFF and G24's reading stands.
 """
 
+import itertools
 import json
 import os
 import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'harness'))
+import provenance as P  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RUNS = os.path.join(HERE, "runs")
@@ -100,12 +104,19 @@ def main():
         print(f"  C2 CAP     {'PASS' if same else 'FAIL'} — cap 200->2000 "
               f"gives pop {a['pop']}->{b['pop']}, correct "
               f"{a['correct']}->{b['correct']}. {note}")
-    # ---- C3 A15
+    # ---- C3 A15. Scope: arms with ABDUCTION ON, which are exactly the arms
+    # this spike ranks. G24 established that the plant is reachable by
+    # problem-directed proposal and not by blind mutation -- both its
+    # `no_abduct` arm and both of mine miss it -- so demanding it from an
+    # abduction-off arm makes the gate permanently red and therefore useless,
+    # not strict. Exempt arms are still printed and are still unranked.
+    exempt = [n for n, r in rows.items() if "no_abduct" in r["arm"]]
     bad = [n for n, r in rows.items()
-           if "no_variation" not in r["arm"] and not r["a15"]]
-    print(f"  C3 A15     {'PASS' if not bad else 'PARTIAL'} — "
-          f"{'all variation arms found the plant' if not bad else 'missing in ' + str(bad)}"
-          f"{'' if not bad else ' (reported, not ranked)'}")
+           if "no_variation" not in r["arm"] and "no_abduct" not in r["arm"]
+           and not r["a15"]]
+    print(f"  C3 A15     {'PASS' if not bad else 'FAIL'} — "
+          f"{'every ranked (abduction-on) arm found the plant' if not bad else 'missing in ' + str(bad)}"
+          f"; exempt and unranked: {exempt}")
     # ---- C4 NULL: attribution of no_death's coverage.
     if "nodeath_noabduct" in rows and "nodeath" in rows:
         nd, nn = rows["nodeath"], rows["nodeath_noabduct"]
@@ -220,6 +231,28 @@ def main():
         if fracs:
             print("  gap closed by WAGE_POOL alone, per seed: "
                   + ", ".join(f"{s}: {v:.0%}" for s, v in fracs.items()))
+        # Is the capacity effect bigger than seed noise at all? full_base's own
+        # range across seeds is wide, so this is not rhetorical. Exact
+        # permutation over the 20 ways to split six runs into two groups of
+        # three -- with n=3 per group the smallest attainable one-sided p is
+        # 1/20 = 0.05, and that floor is stated rather than hidden.
+        a = [x["correct"] for x in allrows.values() if x["base"] == "full_base"]
+        b = [x["correct"] for x in allrows.values() if x["base"] == "wage1200"]
+        if len(a) == len(b) == len(seeds) >= 3:
+            obs = sum(b) / len(b) - sum(a) / len(a)
+            pool = a + b
+            ge = 0
+            splits = list(itertools.combinations(range(len(pool)), len(a)))
+            for c in splits:
+                g1 = [pool[i] for i in c]
+                g2 = [pool[i] for i in range(len(pool)) if i not in c]
+                if sum(g2) / len(g2) - sum(g1) / len(g1) >= obs - 1e-9:
+                    ge += 1
+            print(f"  capacity effect wage1200 - full_base: {obs:+.0f} correct, "
+                  f"exact permutation p = {ge}/{len(splits)} = {ge / len(splits):.3f} "
+                  f"one-sided (floor 1/{len(splits)} at this n); ranges "
+                  f"full_base {min(a)}-{max(a)}, wage1200 {min(b)}-{max(b)}, "
+                  f"{'DISJOINT' if min(b) > max(a) else 'OVERLAPPING'}")
 
     base = rows.get("full_base")
     if dom:
@@ -259,6 +292,69 @@ def main():
               f"'coverage rises with population size almost mechanically' is "
               f"false as stated in G24.")
     print(f"\nVERDICT: {v}")
+
+    # ---- persist the controls' OBSERVATIONS, not their verdicts (A20).
+    ctl = []
+    if "full_base" in rows:
+        r = rows["full_base"]
+        c = P.Control("C1_repro", "the arm-set refactor and the monkeypatched "
+                      "globals must not change evo.py's behaviour",
+                      null_must_contain="any deviation from G24's published "
+                      "full arm 110/4144/0.0355")
+        c.observe(r["pop"] == 110 and r["correct"] == 4144,
+                  {"pop": r["pop"], "correct": r["correct"], "prec": r["prec"],
+                   "g24": g24}, "line-identical to G24 RUN.txt full arm")
+        ctl.append(c)
+    if "full_cap2000" in rows:
+        a, b = rows["full_base"], rows["full_cap2000"]
+        c = P.Control("C2_cap_not_binding", "the capacity sweep turns "
+                      "WAGE_POOL; if MAX_POP were the binding constraint the "
+                      "sweep would be aimed at the wrong knob",
+                      null_must_contain="a population above 200 once the cap "
+                      "is lifted to 2000")
+        c.observe(a["pop"] == b["pop"],
+                  {"pop_cap200": a["pop"], "pop_cap2000": b["pop"],
+                   "correct_cap200": a["correct"],
+                   "correct_cap2000": b["correct"]})
+        ctl.append(c)
+    c = P.Control("C3_a15_plant", "a ranked arm that never discovers the "
+                  "planted rule has an unproven instrument (G24's gate, scoped "
+                  "to abduction-on arms because the plant is known unreachable "
+                  "by blind mutation)",
+                  null_must_contain="a ranked abduction-on arm that misses the "
+                  "plant -- e.g. a capacity setting large enough to swamp it")
+    c.observe(not bad, {n: rows[n]["a15"] for n in rows},
+              f"ranked misses {bad}; exempt (abduction off) {exempt}")
+    ctl.append(c)
+    if "nodeath_noabduct" in rows:
+        nn = rows["nodeath_noabduct"]
+        c = P.Control("C4_volume_null", "tests whether no_death's coverage is "
+                      "population volume: an unselected population of the same "
+                      "size, without problem-directed proposal",
+                      null_must_contain="coverage near no_death's 6361 at pop "
+                      "~531, which is what 'coverage rises with population "
+                      "size almost mechanically' predicts")
+        c.observe(nn["correct"] < 0.5 * nd["correct"],
+                  {"nodeath_noabduct": [nn["pop"], nn["preds"], nn["correct"]],
+                   "nodeath": [nd["pop"], nd["preds"], nd["correct"]],
+                   "g24_no_abduct_with_death": [134, 40414, 1359]},
+                  "volume hypothesis REFUTED: 1514 vs 6361 at matched pop")
+        ctl.append(c)
+    ok, _ = P.record(HERE, artifacts=[os.path.join(HERE, "sweep.json"),
+                                      os.path.join(HERE, "sweep.py"),
+                                      os.path.join(HERE, "analyse.py"),
+                                      os.path.join(HERE, "..", "G24_population",
+                                                   "evo.py")]
+                     + [os.path.join(RUNS, f) for f in sorted(os.listdir(RUNS))],
+                     controls=ctl, allow_dirty=True,
+                     no_deps_reason="pure Python inside the workspace: no "
+                     "external repo, no built binary, no device. The only "
+                     "dependency is G24's evo.py, whose digest is recorded "
+                     "under artifacts so A24 pins the code state that produced "
+                     "these runs.",
+                     note="G25: is no_death's +5059 a tradeoff or a rent "
+                          "calibration artefact")
+    print(f"provenance.json ok={ok}")
     json.dump({"rows": rows, "verdict": v,
                "conditions": {"data": "real:FB15k-237+planted",
                               "split": "70/15/15", "split_seed": "0xC0FFEE",

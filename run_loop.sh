@@ -34,7 +34,14 @@ while [ ! -f STOP ]; do
   date +%s > "$BEAT"
   started=$(date +%s)
 
-  ( claude -p "You are ${CALLSIGN}. Read MISSION_LOOP.md, then HANDOFF.md if present, then run cycles per the loop contract." \
+  # The prompt MUST keep the literal "You are ${CALLSIGN}." prefix — the watchdog
+  # below targets the turn with pkill -f on exactly that string, so that it can
+  # never match the other lane or a human's interactive session.
+  ( claude -p "You are ${CALLSIGN}. Read CLAUDE.md, then MISSION_LOOP.md, then HANDOFF.md if present, then run cycles per the loop contract.
+
+The harness evolves with the codebase (MISSION_LOOP §12, CLAUDE.md §6). It is the instrument that runs every other instrument, and it had never been attacked before 2026-08-17 — it was carrying an inert Stop hook, a launcher that had never been run, and re-entry that depended on remembering one call per turn. So: a harness defect is a class-H WORK_QUEUE row, not a fix you make in passing. Fix the CLASS and not the site — name the defect class in one line, grep the whole harness for it, and post the class to livechat.log so the other lane greps its own tree. Resolve every reference to a section, spec or file mechanically rather than by eye. Any harness component you touch keeps a runnable check that fails when it breaks, and gains a version bump with a rationale block naming the defect removed. At least every fourth ATTACK cycle targets the loop itself rather than a spike.
+
+A wrong number gets retracted by the next cycle. A dead lane has no next cycle." \
       --dangerously-skip-permissions 2>&1 | tee -a "$LOG" ) &
   turn=$!
   # Watchdog: convert a hang into a crash, which the loop below already handles.

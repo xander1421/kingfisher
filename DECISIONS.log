@@ -168,3 +168,48 @@
 109 | 2026-08-17 | D4: appended to HUMAN_NEEDED instead of deciding. Options: read "D1-D6" as the five specs that exist / invent a D4 subject / ask. Chose: ask, with a four-row candidate artifact in proposed/D4_slot_candidates.md and a recommendation (settlement/dispute, the only D-series question unanswered and the only one with a RED blocker under it in S68). Why: the evidence says D4 is a numbering gap - D2 self-describes as "Last P0 freeze-gate item" and entry 81 lists the amendments as D1+/D3/D6 - but §7 makes D4 part of MY OWN exit condition, so deciding it myself is A22, a party supplying the input to a check on itself. Loop continues per §9; this does not idle. | reversible: y
 
 110 | 2026-08-17 | Co-agent commit collision. Commits 8d466f0, 068cd2e, 6019a5b, c5be060 landed during my cycles 1-2 and swept spikes/W2_witnessed_trie/, specs/D6_discipline.md, the harness/provenance.py staleness fix and proposed/D4_slot_candidates.md into commits titled M1.7d / A18-audit / domain-axis-limits. Effect: the work is committed, so D6 R1 is technically satisfied, but git history no longer attributes it and cannot be used as the pre-run state record A19 asks for. Second, sharper hazard: a repo-wide add commits SHARED files mid-edit - had one landed between my two provenance.py edits, the committed harness would have been broken for both lanes. Chose: warn on CHANNEL, keep committing my own paths explicitly, do not add a lock file (cannot change the other agent's behaviour from here and a lock nobody reads is worse than a note). | reversible: n (history)
+
+2026-08-17 ~10:5x  AGENT-2  G25 carrying capacity — no_death explained
+DECISION: attack the no_death +5059 by the two knobs it actually confounds
+  (population size, which is WAGE_POOL/RENT and mine to set; and abduction,
+  which no_death retains without limit) rather than by re-arguing the
+  dominance test G24 already ran.
+FOUND FIRST, IN G24'S OWN CODE: the no_death arm has no selection in it at
+  all. Nothing removed, MAX_POP never applied, parents drawn rng.choice(pop)
+  uniformly, and `imp` read by exactly one statement — the one death uses. So
+  "carrying capacity is what MAKES fitness differential" was measured against
+  a baseline with no fitness. Recorded as the general fault: AN ABLATION THAT
+  REMOVES MORE THAN IT NAMES CANNOT MEASURE THE NAMED PART.
+DECISION: two edits to evo.py instead of a fork — RUN_SEED hoisted out of
+  run(), and `arm` parsed as a "+"-joined set so the missing death x abduction
+  cell is expressible. C1 control reproduces G24's full arm line-for-line to
+  show behaviour did not move. Refactored dataset() out of main() for the same
+  reason: re-deriving the split in a second file is how two spikes drift.
+RESULT: at matched population and no selection either side (531 vs 557),
+  dropping abduction costs 4847 of the 5059 (6361 -> 1514). Volume is worth
+  ~155. G24's analyse.py premise — coverage rises with population size almost
+  mechanically — is measured false at this scale.
+RESULT: keeping death and raising WAGE_POOL alone closes 51-85% of the gap
+  (3 seeds), at 2.6x fewer predictions and 2.5x the precision.
+DECISION: quote the gap-closing fraction as a BAND, not the 83% the reference
+  seed gives. full_base spans 3381-4719 across seeds; the single-seed dial
+  points wage600 and wage2400 both came out BELOW their smaller neighbours,
+  which is inside that band. Exact permutation over 20 splits: +1753, disjoint
+  ranges, p = 1/20 = 0.050 one-sided, stated as the floor at n=3.
+DECISION: C3 (A15 plant) scoped to abduction-ON arms. G24 established the
+  plant is unreachable by blind mutation, so requiring it from a no_abduct arm
+  makes the gate permanently red rather than strict — and every arm G25 RANKS
+  is abduction-on, so nothing ranked escapes the gate. Exempt arms reported,
+  unranked. Not a weakened gate; a correctly scoped one, argued in code.
+UNREACHABLE, RECORDED AS THE HOLE: selected-557 vs unselected-557 cannot be
+  run by this dial. 40x the wage pool buys 2.17x the population and saturates
+  at ~239, because a rule draws a wage only if it beats the co-evolving
+  adversary and money cannot manufacture more such rules. So CALIBRATION rests
+  on a trade, not a dominance. Follow-up is ROUNDS, not WAGE_POOL.
+VERDICT ON THE QUESTION THAT WAS ASKED (does ECAN belong in the loop): yes as
+  a precision mechanism — every death setting holds 2.5-5.4x no_death's
+  precision — no as a coverage cost, and that framing was mine to retract.
+  G24's "abduction is the load-bearing operator" survives and strengthens.
+
+[2026-08-17T10:4xZ] DECISION harness-is-first-class | options: keep fixing harness bugs ad hoc / put the harness under the same discipline as a spike | chose: discipline, written into MISSION_LOOP §12, CLAUDE.md §6 and the run_loop.sh agent prompt | why: the harness took the same CLASS of defect as the science with none of the science's controls. The prose-matching bug was fixed in loop_gate.sh v2 and the identical bug sat at run_loop.sh:12 all session because nobody grepped the class; zero tests existed for the loop machinery; §7 gated LOOP-DONE on D1-D6 while D4/D6 were never written; 7 files cited a §11 that did not exist. A wrong number is retracted by the next cycle, a dead lane has no next cycle, so a harness defect costs strictly more | reversible: y
+[2026-08-17T10:4xZ] DECISION section-11-split-not-citation-fix | options: edit 7 files to say §10 / split §10 so §11 exists | chose: split | why: the 7 citations were mutually consistent and only the source of truth disagreed; splitting makes all of them correct with one edit instead of seven, and the publishing rail is a distinct rail from the device/key rails anyway | reversible: y

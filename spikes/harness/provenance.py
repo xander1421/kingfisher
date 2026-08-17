@@ -154,8 +154,17 @@ class Control:
     provenance.json where a third party can recompute the verdict.
     """
 
-    def __init__(self, name, why, null_must_contain=None):
+    def __init__(self, name, why, null_must_contain=None, can_fail_because=None):
         self.name, self.why = name, why
+        # HOW this control could have come out the other way. A control whose
+        # failure mode cannot be described is usually one that has none --
+        # three dead controls in one session each read as a clean null.
+        if not can_fail_because:
+            raise ValueError(
+                f'control {name}: state `can_fail_because` -- what observation '
+                f'would have made this control NOT fire? If you cannot say, it '
+                f'may not be able to fail at all (A15).')
+        self.can_fail_because = can_fail_because
         # what the null/baseline must be CAPABLE of producing. A null that
         # cannot contain the structure under test is not a null: it will always
         # be beaten, and "beats null" then restates the structure's existence.
@@ -169,13 +178,22 @@ class Control:
                 f'verdict -- a control reported only in prose cannot be rechecked')
         self.fired = bool(fired)
         self.values = list(values) if not isinstance(values, dict) else values
+        # A control whose observations are all identical distinguished nothing,
+        # whatever verdict it reported.
+        if isinstance(self.values, list) and len(self.values) > 1 \
+                and len(set(map(str, self.values))) == 1:
+            self.constant = True
+        else:
+            self.constant = False
         self.detail = detail
         return self.fired
 
     def as_dict(self):
         return {'name': self.name, 'must_fire_because': self.why,
+                'can_fail_because': self.can_fail_because,
                 'null_must_contain': self.null_must_contain,
                 'fired': self.fired, 'detail': self.detail,
+                'constant_observations': getattr(self, 'constant', None),
                 'observations': self.values}
 
 
@@ -243,6 +261,10 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
     for c in prov['controls']:
         if c['fired'] is None:
             problems.append(f"CONTROL {c['name']} never observed")
+        elif c.get('constant_observations'):
+            problems.append(
+                f"CONTROL {c['name']} has CONSTANT observations across all arms "
+                f"-- it distinguished nothing, whatever it reported")
         elif c.get('observations') in (None, [], {}):
             problems.append(
                 f"CONTROL {c['name']} carries no observations -- a control "
@@ -277,7 +299,8 @@ def demo():
     NR = 'synthetic control test, there is no source tree'
 
     def ctl(name='posctl', why='must vary or the instrument is blind'):
-        return Control(name, why, null_must_contain='40 identical hashes')
+        return Control(name, why, null_must_contain='40 identical hashes',
+                       can_fail_because='a deterministic program would give 40 identical hashes')
 
     c_good = ctl()
     c_good.observe(True, [f'hash{i}' for i in range(40)], '40/40 distinct')
@@ -289,22 +312,27 @@ def demo():
     assert not ok and 'NO DEPS DECLARED' in p['problems'][0], p['problems']
 
     # null_must_contain was recorded and never checked
-    c_nonull = Control('posctl', 'why')
+    c_nonull = Control('posctl', 'why', can_fail_because='x')
     c_nonull.observe(True, ['v'])
     ok, p = record(d, controls=[c_nonull], no_deps_reason=NR)
     assert not ok and 'null_must_contain' in p['problems'][0], p['problems']
 
     c_dead = ctl()
     c_dead.observe(False, ['same'] * 40, '1/40 distinct')
+    ok, p = record(d, controls=[c_dead])
+    assert not ok and any('CONSTANT' in x or 'VOID' in x for x in p['problems']), p['problems']
 
     # a control asserted with no data is refused at the point of observation
     try:
-        Control('x', 'y').observe(True, None)
+        Control('x', 'y', can_fail_because='declared').observe(True, None)
         raise AssertionError('should have refused a control with no observations')
     except ValueError:
         pass
     ok, p = record(d, controls=[c_dead], no_deps_reason=NR)
-    assert not ok and 'VOID' in p['problems'][0], p['problems']
+    # either diagnosis is correct: it did not fire, AND its observations were
+    # constant. The constant check is the stronger one and reports first.
+    assert not ok and any(('VOID' in x or 'CONSTANT' in x) for x in p['problems']), \
+        p['problems']
 
     c_unobs = ctl()
     ok, p = record(d, controls=[c_unobs], no_deps_reason=NR)

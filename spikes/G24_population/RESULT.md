@@ -44,7 +44,8 @@ no_waves     DOMINATED by full
   rules die unreplaced. This is G22's shape, and it degrades.
 - **no_death** — population explodes 94 → 557; precision collapses to 0.0066,
   **5.4× worse than full**. Removing carrying capacity converts accuracy into
-  volume.
+  volume. **CORRECTED by G25 — see the changelog at the bottom of this file. The
+  last sentence is wrong: it is not volume, and this arm contains no selection.**
 - **static_adv** and **no_waves** — both strictly dominated. A co-evolving
   adversary and activation-directed wages each pay for themselves.
 
@@ -146,3 +147,39 @@ python3 evo.py          # ~25 min, six arms
 python3 analyse.py      # the fair comparison
 ```
 `RUN_v1.txt` / `evo_v1.json` retain the invalid-scoring run for comparison.
+
+## Changelog
+
+**2026-08-17 — corrected by `spikes/G25_carrying_capacity/`.** Numbers, arms and
+verdict above stand as run; three statements about *why* do not.
+
+1. **The `no_death` arm has no selection in it.** `death` off means nothing is
+   removed, `MAX_POP` never applies, and parents are drawn uniformly
+   (`rng.choice(pop)`); `imp` is read by exactly one statement, the one death
+   uses. So this arm is not "the full system minus carrying capacity", it is
+   propose-and-keep-everything, and "finite carrying capacity is what MAKES
+   fitness differential" was compared against a baseline with no fitness at all.
+   An ablation that removes more than it names cannot measure the named part.
+2. **"Removing carrying capacity converts accuracy into volume" is wrong.** The
+   2×2 cell this spike never ran — `no_death+no_abduct` — gets **1514** correct
+   at population 531, against `no_death`'s 6361 at 557. At matched population
+   with selection absent from both sides, **abduction is worth 4847 correct
+   triples** and volume is worth ~155. The premise `analyse.py` reasons from,
+   "`test solved` rises with population size almost mechanically", is measured
+   false at this scale (coverage per rule: full 37.7, no_death 11.4,
+   no_death+no_abduct 2.9).
+3. **The +5059 is substantially a constant I picked.** Population size is set by
+   `WAGE_POOL / RENT`; keeping death and raising `WAGE_POOL` alone closes 51–85%
+   of the coverage gap across three run seeds, at 2.6× fewer predictions and 2.5×
+   the precision. The published `WAGE_POOL = 120` put the full arm at ~110 rules
+   because 120/1.05 ≈ 114, not because 110 was right.
+
+Also from G25, bearing on the "one seed per arm" limitation listed above:
+`full_base` re-run under seeds 777 / 1234 / 31337 gives **4719 / 4144 / 3381**
+correct. The +2842 headline sits mid-range of a 1338-wide band, and any
+between-arm coverage difference smaller than that band — `static_adv` vs
+`no_waves` was already flagged, but this now also covers reading anything into
+`no_abduct`'s exact +57 — is noise. `evo.py` gained two backward-compatible
+changes for that work: `RUN_SEED` hoisted out of `run()`, and `arm` parsed as a
+`+`-joined ablation set. G25's C1 control reproduces this file's full arm
+line-for-line to show nothing else moved.

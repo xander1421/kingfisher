@@ -76,10 +76,18 @@ Lives in WORK_QUEUE.md. Rebuild from that file; it is authoritative.
 ## the loop)
 
 **Terminal signals are FILES, not prose.** A legal exit requires writing
-exactly one of `LOOP-DONE`, `LOOP-HALT`, `LOOP-IDLE` into `.loop_signal`.
-The hook consumes it to `.loop_signal.last`. **Saying a marker word in a
-message does nothing** — v1 grepped the transcript and would fire on a
-mere mention; v2 does not read the transcript at all.
+exactly one of `LOOP-DONE`, `LOOP-HALT`, `LOOP-IDLE` into
+`.loop_signal.$CALLSIGN` — or bare `.loop_signal`, still accepted. **Saying a
+marker word in a message does nothing** — v1 grepped the transcript and would
+fire on a mere mention; v2 does not read the transcript at all.
+
+The hook records the kind in `.loop_exit.$CALLSIGN` and moves the signal aside
+to `<signal>.last`. `run_loop.sh` reads that marker and clears it; nothing
+reads `.loop_signal.last`. **Corrected 2026-08-17 per §12.4** — this paragraph
+said the hook "consumes it to `.loop_signal.last`", which no process read, and
+that dead end is exactly why the launcher fell back to grepping its own log for
+the marker words and killed lanes on the hook's own refusal text (§12.2).
+Enforced by `spikes/harness/test_loop_gate.sh`, 15 checks.
 
 - **STOP file exists** → finish the current write, `echo LOOP-HALT > .loop_signal`.
 - **LOOP-DONE** → M1-DEMO (§8) passes AND D1–D6 exist as written specs AND
@@ -176,6 +184,41 @@ dated 2026-08-17; none is a precaution.
   default; either rower may fix one. Whoever fixes it **posts the defect class
   to `livechat.log`**, because 12.2 only works if the other lane knows what to
   grep its own tree for.
+
+*(12.10-12.13 added 2026-08-17. They were first written as 12.5-12.8 and
+collided with existing bullets — §12.4 says references are resolved
+mechanically, never by eye, and this was added by eye. Caught by grep, which
+is what 12.4 asks for.)*
+
+- **12.10 · A guardrail that is written but not MECHANISED will be violated
+  again by its own author, usually the same day.** *Earned three times:
+  A18 twice (a cost divided by a size, then a ratio without its operating
+  point), A24 twice (both agents ran stale binaries within hours of each
+  other), and four domain keys that each overstated their own independence.*
+  So the cycle for a new failure mode is fixed: correct the LEDGER row in
+  place → add the guardrail → **mechanise it in `spikes/harness/` with a test
+  that fails before the fix** → wire it into `kfcheck.certify` → record which
+  FAMILY it belongs to in `CLAUDE.md`.
+- **12.11 · Group defects by FAMILY, not by symptom.** Several errors here looked
+  unrelated and were one bug in different clothes. The five families, each with
+  its module: **A** the instrument cannot produce the answer (`provenance`,
+  `power`) · **B** the instrument reports fiction (`instrument`) · **C** the
+  artifact is not what you think (`provenance`) · **D** self-reported inputs
+  (`provenance`, and observe-don't-declare at every call site) · **E** the number
+  is real, the model is wrong (`units`).
+- **12.12 · Three failure modes are NOT mechanisable, and claiming otherwise is
+  its own defect.** Claim decay across documents; correct numbers pointing at
+  the wrong cause; the right measurement of the wrong question. All three were
+  caught by reading. The only defence is §7's: **state the falsifier before
+  running, then run it.** Every error that survived in this project is one whose
+  falsifier was written and marked *"not yet run"*; every one that was caught is
+  one where it was run.
+- **12.13 · One entry point.** `spikes/harness/kfcheck.py::certify` refuses
+  rather than warns, on: an unacknowledged dirty dependency, a stale artifact, a
+  control that did not fire or has no observations or no stated failure mode,
+  non-affine data reported as a rate, an unattributed intercept, a frozen
+  instrument, an empty capture, and a missing falsifier.
+
 
 **The harness is not scaffolding around the work. A stalled loop produces
 nothing, so a defect here costs more than a wrong number in a spike — a wrong

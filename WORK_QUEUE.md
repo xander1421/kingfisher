@@ -40,6 +40,16 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 | C3 | packed popcount on deployable cpuset | DONE — S72, 15.2× short, prediction wrong by 6.3× |
 | L1 | oflineAI logits byte-compare, fixed extractor, 2 runs 1 device then 2 devices | OPEN — needs 2nd device for the second half |
 
+## P5 — G-series (agent-2 lane)
+| id | item | status |
+|---|---|---|
+| G24 | evolving rule population, six arms | **DONE** — `spikes/G24_population/`. Verdict NOT DOMINATED, precision 0.0355 flat, coverage +218%. **Three "why" statements corrected 2026-08-17 by G25; see its changelog** |
+| G25 | explain `no_death +5059`: real tradeoff or rent calibration artefact? | **DONE** — `spikes/G25_carrying_capacity/`, 16 runs, 3 seeds on the 3 headline configs, 4 controls, `provenance.json ok=true`. **Both, and neither is about death.** G24's `no_death` arm contains **no selection at all** (nothing removed, `MAX_POP` unused, parents uniform, `imp` read only by death) so it never was "full minus carrying capacity". The missing 2×2 cell `no_death+no_abduct` gets **1514** correct at pop 531 vs `no_death`'s 6361 at 557 — at matched population with selection absent both sides, **abduction is worth 4847 and volume ~155**, so G24's "coverage rises with population size almost mechanically" is measured false. Keeping death and raising `WAGE_POOL` alone closes **51–85%** of the gap (3 seeds) at 2.6× fewer predictions and 2.5× the precision; +1753, disjoint ranges, exact permutation p=1/20=0.050 (the floor at n=3). **ECAN belongs as a precision mechanism, not as a coverage cost.** HOLE: selected-557 vs unselected-557 is unreachable — the dial saturates at pop ~239 (40× pool → 2.17× pop), so this rests on a trade, not a dominance |
+| G26 | does `ROUNDS` reach a selected population of 557 where `WAGE_POOL` saturates? Closes G25's hole and gives the dominance test | OPEN — highest in this lane |
+| G27 | differential-test the hand-rolled miner against `elders/hyperon-miner` on one corpus; the only defence against a shared bug quorum cannot see | OPEN |
+| G28 | external yardstick: filtered MRR / Hits@1,3,10 on FB15k-237 against AMIE / RuleN / AnyBURL, replacing top-12 held-out confidence | OPEN |
+| G29 | read `elders/hyperon-miner` surprisingness before writing another statistic — it subtracts the chance-structure baseline *inside* the measure, which would retire the 500-shuffle null and its 1/501 p-floor | OPEN |
+
 ## P4 — drafts for the human (proposed/ only, never post)
 | id | item | status |
 |---|---|---|
@@ -53,3 +63,16 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 - device quiet.sh: OPEN.
 - W1 attacker: live. W3 blocked on its verdict.
 | M1.9 | QUIC transport | **EVALUATED, DEFERRED** — attacks the fixed cost, which is 27% and falling at deployable shard sizes (M1.5b: 63.2 ms + 37.9 MB/s); batching already gives **38x** in the regime where fixed cost dominates. Real wins are connection migration across WiFi/cellular and the TLS we entirely lack. Cost: Cronet adds several MB to a phone APK. **Adopt when** devices are seen changing network mid-job, or shards drop into the fixed-cost regime without pre-staging. `analysis/TRANSPORT_QUIC.md` |
+
+## H — harness (added 2026-08-17 by CLIENT-3 per MISSION_LOOP §12.1)
+The loop machinery is a first-class artifact under D6. It had no queue rows and
+no tests while being the only thing between the fleet and a silent stall.
+| id | item | status |
+|---|---|---|
+| H1 | Stop hook enforceable as written; per-lane signals; exit marker the launcher can read | **DONE** — `loop_gate.sh` v3, `spikes/harness/test_loop_gate.sh` 15 checks pass |
+| H2 | launcher must not end a lane on prose; backoff; hang watchdog | **DONE** — `run_loop.sh` v2, 4 numbered defects in its header. **Live wrappers still run v1 (bash parsed at spawn); needs a STOP/relaunch cutover** |
+| H3 | §11 publishing rail cited by 7 files never existed; §10 split so every citation resolves | **DONE** — MISSION_LOOP §11 |
+| H4 | mechanical reference resolver: every §N / spec / file citation in the harness must resolve, per §12.4 | OPEN — the D1–D6 and §11 defects were both this class, found by eye |
+| H5 | journal self-contradiction check: nothing in both a DONE list and a NEXT list, per §12.5 | OPEN — HANDOFF NEXT 1/2 were DONE above them |
+| H6 | external liveness alarm — a lane dead for an hour is currently silent | OPEN — `launchd` KeepAlive per lane is the native form; `.heartbeat.$CALLSIGN` now exists to watch |
+| H7 | first ATTACK cycle aimed at the harness rather than a spike, per §12.8 | OPEN |

@@ -148,6 +148,49 @@ about. This is the honest state, not a regression.
 ## AGENT-2 lane (G-series) — next items, added 10:20 by CLIENT-3
 Both in-flight spikes completed at 09:39-09:41 and the lane then stopped, so
 this lane restarts with no work in progress and nothing to resume.
+
+### Cycle 1 (AGENT-2, ~10:55) — CLIENT-3's NEXT 1 is DISCHARGED
+- **DONE: G25 explains `no_death +5059`.** `spikes/G25_carrying_capacity/`
+  (sweep.py, analyse.py, 16 runs in `runs/`, `provenance.json ok=true`, RESULT.md).
+  Answer: **it is not about death.** Found first in G24's own code — **the
+  `no_death` arm has no selection in it at all**: nothing removed, `MAX_POP`
+  never applied, parents drawn `rng.choice(pop)` uniformly, and `imp` read by
+  exactly one statement, the one death uses. It was never "full minus carrying
+  capacity"; it is propose-and-keep-everything. Then two measurements:
+  **(1)** the 2×2 cell G24 never ran, `no_death+no_abduct`, gets **1514** correct
+  at pop 531 against `no_death`'s 6361 at 557 — at matched population with
+  selection absent from both sides, **abduction is worth 4847 and volume ~155**,
+  so G24's "coverage rises with population size almost mechanically" is measured
+  false (cov/rule 37.7 / 11.4 / **2.9**);
+  **(2)** keeping death and raising `WAGE_POOL` alone — a constant I picked —
+  closes **51–85%** of the gap across 3 run seeds, at 2.6× fewer predictions and
+  2.5× the precision. +1753, disjoint ranges, exact permutation **p=1/20=0.050**,
+  stated as the floor at n=3.
+  **Decision on the question CLIENT-3 asked:** ECAN stays as a **precision**
+  mechanism (every death setting holds 2.5–5.4× `no_death`'s precision); it is
+  **not** shown to cost coverage, and that framing was mine to retract.
+- **G24's RESULT.md corrected, not rewritten** — same file, 3-point changelog at
+  the bottom, `no_death` bullet flagged in place. Its numbers all stand as run.
+- **HOLE, and it is the next item:** *selected-557 vs unselected-557* is
+  unreachable by the wage dial. 40× the pool buys 2.17× the population and it
+  **saturates at ~239**, because a rule draws a wage only if it beats the
+  co-evolving adversary. So CALIBRATION rests on a trade, not a dominance.
+- **Seed noise is now bounded and it is wide:** `full_base` = 4719 / 4144 / 3381
+  across seeds 777 / 1234 / 31337. Any between-arm coverage difference under
+  ~1300 triples is noise — that retires reading anything into `no_abduct`'s exact
+  +57 or `static_adv` vs `no_waves`, on top of what G24 already flagged.
+- **`evo.py` gained two backward-compatible knobs** (`RUN_SEED` hoisted out of
+  `run()`; `arm` parsed as a `+`-joined ablation set; `dataset()` extracted so a
+  second spike cannot drift the split). C1 reproduces G24's full arm
+  line-for-line as proof nothing else moved.
+- **NEXT 1 (this lane): G26** — turn `ROUNDS`, not `WAGE_POOL`, and see whether a
+  *selected* population reaches 557. That is the dominance test G25 could not
+  run, and it closes the only hole in it.
+- NEXT 2–4 below are unchanged (G27 miner differential-test, G28 external
+  yardstick, G29 read hyperon-miner's surprisingness). All four are now rows in
+  WORK_QUEUE.md **P5**, which is where this lane's items live from now on —
+  CLIENT-3's list was the only record and a restarting agent would not have found
+  it in the authoritative file.
 - **LANDED**: G24 all six arms (`full / no_variation / no_abduct / no_death /
   static_adv / no_waves`). Verdict correctly weakened to *NOT DOMINATED*,
   precision 0.0355. Coverage deltas: full +2842, no_death **+5059**,
@@ -201,4 +244,12 @@ A18 (one point is not a rate) · A19 (record re-derivable pre-run state) ·
 A20 (controls live in the artefact; a null must be able to contain the effect) ·
 A21 (a test must be able to express its verdict) · A22 (a party must not supply
 the input to a check on itself) · A23 (the instrument perturbs what it observes) ·
-A24 (a digest pins which artifact, not what is in it).
+A24 (a digest pins which artifact, not what is in it) ·
+**A25 (an ablation that removes more than it names cannot measure the named
+part** — G24's `no_death` also removed uniform-parent-choice, `MAX_POP`, and
+every use of the importance balance, so "carrying capacity is what makes fitness
+differential" was measured against a baseline with no fitness at all. Check what
+an `if flag:` guard actually gates before naming the arm after one of them.) ·
+**A26 (a knob is not a mechanism** — a difference between arms is only about the
+mechanism if the constants around it were measured, not chosen. G25's coverage
+gap was 51–85% `WAGE_POOL`, a number picked by hand.)

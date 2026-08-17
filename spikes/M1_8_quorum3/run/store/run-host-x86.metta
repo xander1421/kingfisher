@@ -1,16 +1,47 @@
+(@doc file-open!
+  (@desc "Function takes path to the file and open options (r, w, c, a, t) both in form of string, creates filehandle and
+    returns it")
+  (@params (
+    (@param "Filepath (string atom)")
+    (@param "Open options (string atom), r - read, w - write, c - create if file doesn't exist, a - append to file,
+        t - truncate file")))
+  (@return "Filehandle or error if combination of path and open options is wrong (e.g. file doesn't exist and no 'c'
+    in options; or 'rc' option provided, since 'c' demands for 'w')"))
 
-; !(change-state! &ReplHistoryMaxLen 500) ; TODO: enable this when I have value bridging implemented.
+(@doc file-read-to-string!
+  (@desc "Function takes filehandle provided by file-open! reads its content from current cursor place till the end of
+    file and returns content in form of string.")
+  (@params (
+    (@param "Filehandle")))
+  (@return "File's content"))
 
-!(change-state! &ReplPrompt "> ")
-!(change-state! &ReplStyledPrompt "\x1b[1;32m> \x1b[0m") ;
+(@doc file-write!
+  (@desc "Function takes filehandle provided by file-open!, content to be written (string atom) and puts content into
+    file associated with filehandle")
+  (@params (
+    (@param "Filehandle")
+    (@param "Content (string atom)")))
+  (@return "Unit atom"))
 
-; TODO: somebody with better design sense should tweak these, and also provide dark-mode setings
-; ANSI escape codes to configure the syntax highlighter
-!(change-state! &ReplBracketStyles ("36" "35" "33" "32")) ; 36: cyan, 35: magenta, 33: yellow, 32: green
-!(change-state! &ReplCommentStyle "90")                   ; 90: light gray
-!(change-state! &ReplVariableStyle "33")                  ; 33: yellow
-!(change-state! &ReplSymbolStyle "0")                     ; 0:  default text (as per terminal setting)
-!(change-state! &ReplStringStyle "31")                    ; 31: dark red
-!(change-state! &ReplErrorStyle "91")                     ; 91: bright red
-!(change-state! &ReplBracketMatchStyle "1;7")             ; 1:  bold, 7: reverse (swap background and foreground colors)
-; !(change-state! &ReplBracketMatchEnabled True) ;TODO: enable this when I have a reliable value interchange path built.  Another use for https://github.com/trueagi-io/hyperon-experimental/issues/351
+(@doc file-seek!
+  (@desc "Function takes filehandle provided by file-open! and desired cursor position (number) and sets cursor to
+    provided position")
+  (@params (
+    (@param "Filehandle")
+    (@param "Desired cursor position (number)")))
+  (@return "Unit atom"))
+
+(@doc file-read-exact!
+  (@desc "Function takes filehandle provided by file-open! and desired number of bytes to read (number), reads content
+  of file from current cursor position (number of read bytes <= input number of bytes to read) and returns it in form of
+  string")
+  (@params (
+    (@param "Filehandle")
+    (@param "Number of bytes to read")))
+  (@return "File's content"))
+
+(@doc file-get-size!
+  (@desc "Function takes filehandle provided by file-open! and returns size of file")
+  (@params (
+    (@param "Filehandle")))
+  (@return "Size of file"))
