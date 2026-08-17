@@ -224,17 +224,28 @@ is what 12.4 asks for.)*
 nothing, so a defect here costs more than a wrong number in a spike — a wrong
 number gets retracted by the next cycle, and a dead lane has no next cycle.**
 
-## 9 · Git hygiene — the history is training data
+## 13 · Git hygiene — the history is training data
 
-Full policy in `CLAUDE.md` §2. The loop-level obligations:
+*Renumbered from a second §9 on 2026-08-17 per §12.4 — this section and
+HUMAN_NEEDED both carried the number, making every "§9" reference ambiguous.
+Found by `grep -E '^## [0-9]+ ·' | uniq -d`, which is the H4 check in one line;
+no citation to either §9 existed yet, so the renumber cost nothing. The
+"`CLAUDE.md` §2" pointer this section opened with is also gone: that section was
+dropped when CLAUDE.md was rewritten, so the loop-level rules below plus
+`githygiene.py` are now the whole of the policy that is actually enforced.*
+
+The obligations:
 
 - **RECORD is not done until it is committed.** A cycle's evidence lives in
   tracked text files. An uncommitted result is indistinguishable from one that
   was never run, and it is invisible to every other agent.
 - **Run `python3 spikes/harness/githygiene.py` before committing.** It is
   mechanical: binary/model extensions, build trees, oversized additions, and
-  actionless commit subjects fail it. Measured 2026-08-17, 86% of history bytes
-  were files >1 MB while every result in the workspace is plain text.
+  actionless commit subjects fail it. Measured 2026-08-17: 86% of UNCOMPRESSED
+  blob bytes are files >1 MB (158.1 of 183.7 MB); packed on disk is 104.63 MiB.
+  Say which measure you mean. The stronger argument is blast radius, not size:
+  a repo-wide `git add` commits other lanes' in-progress files, and can capture
+  a shared file mid-edit.
 - **The commit subject states the FINDING**, with its number, in the same voice
   as a LEDGER row: `A18 audit: the 29x in-process advantage is 1.09x at real
   job sizes`. Not `wip`, not `update files`.

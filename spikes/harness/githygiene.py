@@ -3,11 +3,20 @@
 
 Measured on this repo 2026-08-17, before this checker existed:
 
-    total blob bytes 183.7 MB, files >1MB 158.1 MB (86%)
+    uncompressed blob total   183.7 MB, of which 158.1 MB (86%) is files >1 MB
+    packed on disk            104.63 MiB   (`git count-objects -vH`)
 
-86% of the history is opaque binaries, while every RESULT in the workspace is
-plain text. A reader — human or model — learns nothing from a 92 MB GGUF blob,
-and every clone pays for it.
+BOTH numbers are true and they are different measurements; agent-1 flagged that
+quoting only the first invites the next reader to run the obvious command and
+conclude the figure is wrong. 86% is the share of UNCOMPRESSED blob bytes in
+files over 1 MB, while every RESULT in the workspace is plain text.
+
+Size is the weaker argument anyway. The stronger one is BLAST RADIUS: a
+repo-wide `git add` sweeps other lanes' in-progress files into a commit titled
+for unrelated work, and can commit a SHARED file mid-edit. That happened here --
+four commits absorbed another agent's uncommitted spikes -- and had one landed
+between two edits of a shared harness file, the committed harness would have
+been broken for every lane.
 
 WHAT THIS ENFORCES
   * no binary / model / archive extensions added
