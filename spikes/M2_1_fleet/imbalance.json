@@ -1,0 +1,56 @@
+[
+ {
+  "fleet": 8,
+  "policy": "random",
+  "imbalance": 1.6842105263157894,
+  "save": 0.0,
+  "unanimous": 66,
+  "load_max": 32,
+  "load_min": 19
+ },
+ {
+  "fleet": 8,
+  "policy": "locality_pure",
+  "imbalance": 1.4,
+  "save": 59.5,
+  "unanimous": 66,
+  "load_max": 28,
+  "load_min": 20
+ },
+ {
+  "fleet": 8,
+  "policy": "locality_lb",
+  "imbalance": 1.125,
+  "save": 59.5,
+  "unanimous": 66,
+  "load_max": 27,
+  "load_min": 24
+ },
+ {
+  "fleet": 16,
+  "policy": "random",
+  "imbalance": 3.1666666666666665,
+  "save": 0.0,
+  "unanimous": 66,
+  "load_max": 19,
+  "load_min": 6
+ },
+ {
+  "fleet": 16,
+  "policy": "locality_pure",
+  "imbalance": 2.0,
+  "save": 88.9,
+  "unanimous": 66,
+  "load_max": 16,
+  "load_min": 8
+ },
+ {
+  "fleet": 16,
+  "policy": "locality_lb",
+  "imbalance": 1.2727272727272727,
+  "save": 88.9,
+  "unanimous": 66,
+  "load_max": 14,
+  "load_min": 11
+ }
+]

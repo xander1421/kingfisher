@@ -1,0 +1,134 @@
+[
+ {
+  "fleet": 8,
+  "prefill": 0.5,
+  "coverage": 4.0,
+  "save": 91.6,
+  "imb_random": 2.17,
+  "imb_pure": 1.57,
+  "imb_lb": 1.25,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 8,
+  "prefill": 0.25,
+  "coverage": 2.0,
+  "save": 61.4,
+  "imb_random": 2.8,
+  "imb_pure": 1.71,
+  "imb_lb": 1.25,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 8,
+  "prefill": 0.1,
+  "coverage": 0.8,
+  "save": 27.3,
+  "imb_random": 2.2,
+  "imb_pure": 1.71,
+  "imb_lb": 1.0,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 8,
+  "prefill": 0.05,
+  "coverage": 0.4,
+  "save": 3.3,
+  "imb_random": 2.4,
+  "imb_pure": 2.4,
+  "imb_lb": 1.0,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 16,
+  "prefill": 0.5,
+  "coverage": 8.0,
+  "save": 100.0,
+  "imb_random": 5.5,
+  "imb_pure": 2.33,
+  "imb_lb": 1.25,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 16,
+  "prefill": 0.25,
+  "coverage": 4.0,
+  "save": 93.7,
+  "imb_random": 9.0,
+  "imb_pure": 3.5,
+  "imb_lb": 2.0,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 16,
+  "prefill": 0.1,
+  "coverage": 1.6,
+  "save": 58.1,
+  "imb_random": 5.5,
+  "imb_pure": 3.5,
+  "imb_lb": 1.25,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 16,
+  "prefill": 0.05,
+  "coverage": 0.8,
+  "save": 27.8,
+  "imb_random": 7.0,
+  "imb_pure": 8.0,
+  "imb_lb": 1.25,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 32,
+  "prefill": 0.5,
+  "coverage": 16.0,
+  "save": 100.0,
+  "imb_random": 5.0,
+  "imb_pure": 6.0,
+  "imb_lb": 1.5,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 32,
+  "prefill": 0.25,
+  "coverage": 8.0,
+  "save": 100.0,
+  "imb_random": 6.0,
+  "imb_pure": 5.0,
+  "imb_lb": 1.5,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 32,
+  "prefill": 0.1,
+  "coverage": 3.2,
+  "save": 89.8,
+  "imb_random": 6.0,
+  "imb_pure": 4.0,
+  "imb_lb": 1.5,
+  "unanimous": 24,
+  "n": 24
+ },
+ {
+  "fleet": 32,
+  "prefill": 0.05,
+  "coverage": 1.6,
+  "save": 45.3,
+  "imb_random": 6.0,
+  "imb_pure": 5.0,
+  "imb_lb": 1.5,
+  "unanimous": 24,
+  "n": 24
+ }
+]

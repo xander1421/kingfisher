@@ -1,0 +1,33 @@
+split  train 190480  dev 40817  test 40818   (237 predicates, 14505 entities)
+
+ROUND 0   3109 rules minable from train
+          top-12 conf on test 0.2922  (the G17 statistic)
+
+REWRITE   2688 edges written from 12 rules
+          2688 were eligible; caps dropped 0  (MAX_BODY=20000, DERIVED_CAP=60000)
+            rule (121, 4, 5)  conf 0.372  eligible     43  written     43
+            rule (78, 58, 15)  conf 0.347  eligible     49  written     49
+            rule (121, 5, 4)  conf 0.320  eligible     50  written     50
+            rule (127, 205, 133)  conf 0.303  eligible     66  written     66
+            rule (106, 219, 34)  conf 0.303  eligible     33  written     33
+
+ROUND 1   3117 rules minable from train+derived
+          18 of them were NOT minable in round 0
+          new-rule top-12 conf on test 0.0093
+            (133,205)=>135  n=   36  conf 0.083
+            (199,133)=>16  n=   36  conf 0.028
+            (24,133)=>159  n= 1059  conf 0.000
+            (22,48)=>133  n=  543  conf 0.000
+            (133,234)=>128  n=  431  conf 0.000
+
+CONTROL   same 2688 edges, objects permuted within predicate
+          24 rules not minable in round 0
+          new-rule top-12 conf on test 0.0274
+
+A15       planted a second-order chain: 400 (s,c,d) edges into train,
+          400 (t,a,d) conclusions into the scored set. Body (r,s) has
+          support only via materialised r-edges.
+          NOT RECOVERED — the pipeline cannot see a second-order rule that
+          is present by construction. Every null result above is void.
+
+VERDICT: VOID — positive control failed; the machinery is blind

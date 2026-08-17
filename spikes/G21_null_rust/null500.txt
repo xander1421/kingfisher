@@ -1,0 +1,5 @@
+real statistic 0.4405469705   (Python 0.4405469705)
+EQUIVALENCE GATE: PASS — same statistic as the Python implementation   (delta 1.110e-16)
+null n=500  mean 0.3281  sd 0.0121  max 0.3634
+  >= real 0/500   permutation p = 0.0020   (floor 0.0020)
+  VERDICT: ABOVE NULL but p is STILL at the floor — no null reached real

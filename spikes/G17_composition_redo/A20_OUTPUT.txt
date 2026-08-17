@@ -1,0 +1,13 @@
+body chosen by measurement: (45,45), 3998 pairs in the shuffled graph
+null statistic 0.3478   (real graph 0.4405, G17)
+
+plant (45,45)=>0: 10% of body pairs into TRAIN, frac of the rest into TEST
+
+  frac=0.2  train-seed  410  test-signal  714  statistic 0.3478  [rank 38, ho_conf 0.199]
+  frac=0.5  train-seed  410  test-signal 1790  statistic 0.3659  [rank 1, ho_conf 0.499]
+  frac=0.9  train-seed  410  test-signal 3212  statistic 0.3989  [rank 1, ho_conf 0.895]
+
+A20 VERDICT: PASS — the null CAN contain the effect; recovered strength tracks planted strength to <0.02
+
+SENSITIVITY. One rule at frac=0.9 moves the statistic +0.0511. One at frac=0.2 moves it +0.0000 — it is recovered (rank 38) but never enters the top 12, so the statistic cannot see it.
+G17's real-vs-null gap is +0.0927, about 1.8 planted rules at frac=0.9. So the real effect is a BROAD lift across the top 12, not one strong rule the shuffle missed.

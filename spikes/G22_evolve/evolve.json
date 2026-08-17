@@ -1,0 +1,159 @@
+{
+ "split": [
+  190480,
+  40817,
+  40818
+ ],
+ "round0_rules": 3109,
+ "round0_top_conf": 0.2921785606527921,
+ "derived": 2688,
+ "eligible": 2688,
+ "caps": {
+  "max_body": 20000,
+  "derived_cap": 60000
+ },
+ "materialised": [
+  {
+   "rule": [
+    121,
+    4,
+    5
+   ],
+   "conf": 0.37209302325581395,
+   "eligible": 43,
+   "written": 43
+  },
+  {
+   "rule": [
+    78,
+    58,
+    15
+   ],
+   "conf": 0.3469387755102041,
+   "eligible": 49,
+   "written": 49
+  },
+  {
+   "rule": [
+    121,
+    5,
+    4
+   ],
+   "conf": 0.32,
+   "eligible": 50,
+   "written": 50
+  },
+  {
+   "rule": [
+    127,
+    205,
+    133
+   ],
+   "conf": 0.30303030303030304,
+   "eligible": 66,
+   "written": 66
+  },
+  {
+   "rule": [
+    106,
+    219,
+    34
+   ],
+   "conf": 0.30303030303030304,
+   "eligible": 33,
+   "written": 33
+  },
+  {
+   "rule": [
+    86,
+    198,
+    14
+   ],
+   "conf": 0.29545454545454547,
+   "eligible": 44,
+   "written": 44
+  },
+  {
+   "rule": [
+    127,
+    62,
+    133
+   ],
+   "conf": 0.2807017543859649,
+   "eligible": 57,
+   "written": 57
+  },
+  {
+   "rule": [
+    127,
+    135,
+    133
+   ],
+   "conf": 0.2765957446808511,
+   "eligible": 47,
+   "written": 47
+  },
+  {
+   "rule": [
+    10,
+    210,
+    182
+   ],
+   "conf": 0.2711864406779661,
+   "eligible": 59,
+   "written": 59
+  },
+  {
+   "rule": [
+    74,
+    48,
+    13
+   ],
+   "conf": 0.2708333333333333,
+   "eligible": 48,
+   "written": 48
+  },
+  {
+   "rule": [
+    4,
+    178,
+    5
+   ],
+   "conf": 0.2589928057553957,
+   "eligible": 1112,
+   "written": 1112
+  },
+  {
+   "rule": [
+    5,
+    178,
+    4
+   ],
+   "conf": 0.2462962962962963,
+   "eligible": 1080,
+   "written": 1080
+  }
+ ],
+ "round1_rules": 3117,
+ "new_rules": 18,
+ "new_conf": 0.009259259259259259,
+ "control_new_rules": 24,
+ "control_conf": 0.027433137376553313,
+ "a15_recovered": false,
+ "verdict": "VOID \u2014 positive control failed; the machinery is blind",
+ "conditions": {
+  "data": "real:FB15k-237",
+  "split_seed": 12648430,
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ]
+  ],
+  "concurrency": "single-process"
+ },
+ "cites": [
+  "G17_composition_redo",
+  "G21_null_rust"
+ ]
+}

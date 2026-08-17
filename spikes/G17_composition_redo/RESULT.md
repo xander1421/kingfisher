@@ -1,5 +1,50 @@
 # G17 — a weak composition signal survives everything that killed G15
 
+> **UPDATE 2026-08-17 — two things closed, one reading corrected. The verdict
+> stands; the headline number was being read wrong.**
+>
+> **1. A20 capability test: PASS** (`a20_capability.py`, output in
+> `A20_OUTPUT.txt`). A permutation p is only worth its precision if the null can
+> *produce* the structure being tested. Planting a composition rule of known
+> strength into the shuffled graph recovers it at the strength planted:
+>
+> ```
+> frac=0.2  recovered rank 38  ho_conf 0.199   statistic +0.0000
+> frac=0.5  recovered rank  1  ho_conf 0.499   statistic +0.0181
+> frac=0.9  recovered rank  1  ho_conf 0.895   statistic +0.0511
+> ```
+>
+> The test was degenerate **twice** before it passed, both times reporting a
+> clean "NOT DETECTED" on an empty intervention — once planting on a `(p,q)`
+> with no 2-hop paths (`+0 edges`), once planting into train *and* test so
+> `redo.py:118` excluded every planted pair (statistic unchanged to four
+> decimals under a 1.3M-edge plant). Both are recorded in the script's
+> docstring. A control that runs on no input still prints a verdict.
+>
+> **2. The p-value is replaced by a distance, not by a smaller p**
+> (`../G21_null_rust/`). 500 draws in Rust, gate-checked bit-equivalent to this
+> implementation at 1.1e-16:
+>
+> ```
+> null n=500  mean 0.3281  sd 0.0121  max 0.3634     >= real 0/500
+> p = 0.0020, which is exactly 1/501 — STILL THE FLOOR
+> ```
+>
+> `p = 0.040` below was `1/(24+1)`; `0.0020` is `1/(500+1)`. More draws only
+> lower the floor. **The permutation p is structurally floor-limited for an
+> effect this far out** and is not the informative statistic. The null's tail is
+> Gaussian-consistent as far as it can be checked (max of 500 draws lands at
+> 2.91 sd, exactly `E[max]` for 500 Gaussians), so the distance is readable:
+> real is **6.4 sd above the largest of 500 shuffles**.
+>
+> **3. The reading correction, which matters more than either.** The null mean
+> is **0.328**. The shuffle reproduces **74% of the real statistic from chance
+> structure alone**. The effect is the **0.113 gap**, not the 0.441. Any summary
+> quoting "0.44 held-out confidence" as the finding is quoting mostly baseline —
+> the degree sequence and predicate marginals do that much unaided. And since
+> A20 measured one strong rule as worth +0.051, that gap is ~2.2 strong-rule
+> equivalents **spread across the top 12**, not one rule the shuffle missed.
+
 **Verdict: SURVIVES, at about a third of nothing like the strength G15 claimed.**
 Real mean top-12 held-out confidence **0.441** against a degree-preserving null
 of **0.329** (n=24, sd 0.012, max 0.350). Zero nulls reach it.

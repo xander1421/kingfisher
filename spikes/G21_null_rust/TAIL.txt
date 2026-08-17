@@ -1,0 +1,33 @@
+null n=500  mean 0.3281  sd 0.0121  min 0.2933  max 0.3634
+real 0.4405   ratio real/null 1.343   gap +0.1125
+
+shape: skew -0.173  excess kurtosis -0.016
+
+1. TAIL WHERE DRAWS EXIST — observed vs Gaussian expectation
+   >= 1.0 sd   observed  76   expected   79.3
+   >= 1.5 sd   observed  26   expected   33.4
+   >= 2.0 sd   observed   8   expected   11.4
+   >= 2.5 sd   observed   2   expected    3.1
+   >= 3.0 sd   observed   0   expected    0.7
+
+2. EXTREME OF 500 DRAWS
+   observed max  2.91 sd
+   E[max] of 500 Gaussians  2.91 sd
+   -> the extreme of the null is where a Gaussian's would be
+
+3. REAL'S DISTANCE
+   real is 9.3 sd above the null mean
+   real is 6.4 sd above the LARGEST of 500 draws
+   permutation p = 0.0020, and this is the FLOOR: 0 of 500 reached real
+
+   A Gaussian tail would put 9.3 sd at p ~ 1e-20. That number is NOT
+   reported as a result. It extrapolates the tail ~6 sd beyond the furthest
+   draw any of these 500 shuffles produced, and nothing here tests it there.
+
+   WHAT IS SUPPORTED: 0/500 degree-preserving shuffles reached 0.4405.
+   The largest came up 0.0772 short. The null's tail is
+   Gaussian-consistent as far as it can be checked, so the shortfall is
+   not an artefact of a skewed baseline.
+
+   WHAT IS NOT: the shuffle reproduces 74% of the real statistic by
+   chance structure alone. The effect is the 0.1125 gap, not the 0.4405.

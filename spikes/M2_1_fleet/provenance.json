@@ -1,0 +1,172 @@
+{
+ "spike": "M2_1_fleet",
+ "recorded_utc": "2026-08-17T07:26:50Z",
+ "note": "M2.1 fleet routing. Devices are host processes = ONE failure domain; this measures routing, not trust.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
+   "head": "3f76dc460da6961f57f69f6c3e550c59c74ada83",
+   "clean": false,
+   "dirty_files": [
+    "yperon-common/src/multitrie.rs",
+    "hyperon-space/src/index/trie.rs",
+    "lib/src/metta/runner/builtin_mods/fileio.rs",
+    "lib/src/metta/runner/builtin_mods/random.rs",
+    "lib/src/metta/runner/stdlib/atom.rs",
+    "lib/src/space/grounding/mod.rs"
+   ],
+   "diff_sha256": "04189487f726a26df787823055ddd11e12261894b41118411b1fe2d8e083234c",
+   "diff_bytes": 12070
+  }
+ ],
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host",
+   "sha256": "97d24cce709fdca29b73ef611f67e58ba0b0a18b264d4f29e5c38ac9d7c5aa6b",
+   "bytes": 3604032,
+   "mtime": 1786948986
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "demand-shape-control",
+   "must_fire_because": "uniform demand must NOT reproduce the skewed-demand result, or the sweep is measuring something other than S61 asked about",
+   "null_must_contain": "an imbalance regime where locality concentrates load",
+   "fired": true,
+   "detail": "uniform gives locality_pure 2.00x vs random 3.17x; zipf 1.4 gives 19.33x vs 1.79x",
+   "observations": [
+    {
+     "zipf": 0.0,
+     "policy": "random",
+     "imbalance": 3.1666666666666665,
+     "save": 0.0,
+     "load_max": 19,
+     "load_min": 6,
+     "unanim": 66
+    },
+    {
+     "zipf": 0.0,
+     "policy": "locality_pure",
+     "imbalance": 2.0,
+     "save": 88.9,
+     "load_max": 16,
+     "load_min": 8,
+     "unanim": 66
+    },
+    {
+     "zipf": 0.0,
+     "policy": "locality_lb",
+     "imbalance": 1.2727272727272727,
+     "save": 88.9,
+     "load_max": 14,
+     "load_min": 11,
+     "unanim": 66
+    },
+    {
+     "zipf": 0.7,
+     "policy": "random",
+     "imbalance": 1.7857142857142858,
+     "save": 0.0,
+     "load_max": 50,
+     "load_min": 28,
+     "unanim": 198
+    },
+    {
+     "zipf": 0.7,
+     "policy": "locality_pure",
+     "imbalance": 2.9523809523809526,
+     "save": 95.0,
+     "load_max": 62,
+     "load_min": 21,
+     "unanim": 198
+    },
+    {
+     "zipf": 0.7,
+     "policy": "locality_lb",
+     "imbalance": 1.6,
+     "save": 95.0,
+     "load_max": 48,
+     "load_min": 30,
+     "unanim": 198
+    },
+    {
+     "zipf": 1.0,
+     "policy": "random",
+     "imbalance": 1.7857142857142858,
+     "save": 0.0,
+     "load_max": 50,
+     "load_min": 28,
+     "unanim": 198
+    },
+    {
+     "zipf": 1.0,
+     "policy": "locality_pure",
+     "imbalance": 4.578947368421052,
+     "save": 95.8,
+     "load_max": 87,
+     "load_min": 19,
+     "unanim": 198
+    },
+    {
+     "zipf": 1.0,
+     "policy": "locality_lb",
+     "imbalance": 2.9583333333333335,
+     "save": 95.8,
+     "load_max": 71,
+     "load_min": 24,
+     "unanim": 198
+    },
+    {
+     "zipf": 1.4,
+     "policy": "random",
+     "imbalance": 1.7857142857142858,
+     "save": 0.0,
+     "load_max": 50,
+     "load_min": 28,
+     "unanim": 198
+    },
+    {
+     "zipf": 1.4,
+     "policy": "locality_pure",
+     "imbalance": 19.333333333333332,
+     "save": 92.8,
+     "load_max": 116,
+     "load_min": 6,
+     "unanim": 198
+    },
+    {
+     "zipf": 1.4,
+     "policy": "locality_lb",
+     "imbalance": 8.384615384615385,
+     "save": 92.8,
+     "load_max": 109,
+     "load_min": 13,
+     "unanim": 198
+    }
+   ]
+  }
+ ],
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental": {
+   "newest": 1786948573,
+   "from": "hyperon-space/src/index/trie.rs"
+  }
+ },
+ "problems": [],
+ "ok": true
+}

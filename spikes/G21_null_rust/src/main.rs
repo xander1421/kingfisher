@@ -116,7 +116,11 @@ fn statistic(train: &[Tri], test_pair: &HashMap<(u32, u32), HashSet<u32>>) -> f6
         .map(|(&p, e)| (p, e.iter().map(|&(s, o)| (o, s)).collect()))
         .collect();
 
-    let mut confs: Vec<f64> = Vec::new();
+    // (ho_conf, ho_pairs) — the second is needed for the tie-break. Python
+    // sorts by `(-ho_conf, -ho_pairs)` (redo.py:126); sorting by conf alone
+    // lets ties at the top-12 boundary pick a different 12th rule, which moves
+    // the statistic with no logic differing anywhere.
+    let mut confs: Vec<(f64, usize)> = Vec::new();
     for (&(p, q, r), _) in head.iter() {
         let bp = match body.get(&(p, q)) {
             Some(b) if b.len() >= MIN_PAIRS => b,
@@ -145,15 +149,21 @@ fn statistic(train: &[Tri], test_pair: &HashMap<(u32, u32), HashSet<u32>>) -> f6
             }
         }
         if n >= MIN_PAIRS {
-            confs.push(hits as f64 / n as f64);
+            confs.push((hits as f64 / n as f64, n));
         }
     }
-    confs.sort_by(|a, b| b.partial_cmp(a).unwrap());
+    confs.sort_by(|a, b| {
+        b.0.partial_cmp(&a.0)
+            .unwrap()
+            .then_with(|| b.1.cmp(&a.1))
+    });
     let k = TOP_N.min(confs.len());
     if k == 0 {
         return 0.0;
     }
-    confs[..k].iter().sum::<f64>() / k as f64
+    // Divide by k, not TOP_N — matches redo.py:189 `sum(top) / len(top)`,
+    // which differs only when a draw yields fewer than 12 surviving rules.
+    confs[..k].iter().map(|x| x.0).sum::<f64>() / k as f64
 }
 
 /// Degree-preserving: permute objects within each predicate.
@@ -202,16 +212,29 @@ fn main() {
     let test: Vec<Tri> = split[cut..].iter().map(|&i| tri[i]).collect();
     let test_pair = index(&test).pair;
 
+    // Read what Python actually computed, rather than a literal typed from a
+    // rounded printout. The earlier gate was `|real - 0.441| < 0.0005` and
+    // Python's value is 0.44054697045288443, leaving 0.00005 of margin on a
+    // number I had transcribed by eye — the same declared-vs-observed defect
+    // agent-1 found in the quorum's ISA axis.
+    let real_py: f64 = fs::read_to_string("real_py.txt")
+        .expect("real_py.txt — run `python3 dump_split.py` first")
+        .trim()
+        .parse()
+        .unwrap();
     let real = statistic(&train, &test_pair);
-    println!("real statistic {:.4}   (Python reported 0.441)", real);
-    let gate = (real - 0.441).abs() < 0.0005;
+    println!("real statistic {:.10}   (Python {:.10})", real, real_py);
+    // 1e-9: the only legitimate difference is float summation order over 12
+    // terms, which is ~1e-16. Anything larger is a logic difference.
+    let gate = (real - real_py).abs() < 1e-9;
     println!(
-        "EQUIVALENCE GATE: {}",
+        "EQUIVALENCE GATE: {}   (delta {:.3e})",
         if gate {
             "PASS — same statistic as the Python implementation"
         } else {
             "FAIL — different statistic; the null below would be meaningless"
-        }
+        },
+        (real - real_py).abs()
     );
     if !gate {
         std::process::exit(2);
@@ -242,6 +265,15 @@ fn main() {
     for h in handles {
         nulls.extend(h.join().unwrap());
     }
+
+    // Dump every draw. The summary alone cannot answer whether the null's tail
+    // is shaped such that a parametric statement is licensed, and with a
+    // seeded RNG (1000+s) this file is reproducible rather than a one-off.
+    fs::write(
+        "nulls.txt",
+        nulls.iter().map(|x| format!("{x}\n")).collect::<String>(),
+    )
+    .unwrap();
 
     let n = nulls.len() as f64;
     let mean = nulls.iter().sum::<f64>() / n;

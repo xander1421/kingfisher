@@ -1,0 +1,34 @@
+[
+ {
+  "policy": "random",
+  "imbalance": 1.7857142857142858,
+  "save": 0.0,
+  "load_max": 50,
+  "load_min": 28,
+  "unanim": 198
+ },
+ {
+  "policy": "locality_pure",
+  "imbalance": 19.333333333333332,
+  "save": 92.8,
+  "load_max": 116,
+  "load_min": 6,
+  "unanim": 198
+ },
+ {
+  "policy": "locality_lb",
+  "imbalance": 8.384615384615385,
+  "save": 92.8,
+  "load_max": 109,
+  "load_min": 13,
+  "unanim": 198
+ },
+ {
+  "policy": "locality_capped",
+  "imbalance": 1.1176470588235294,
+  "save": 77.5,
+  "load_max": 38,
+  "load_min": 34,
+  "unanim": 198
+ }
+]
