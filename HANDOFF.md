@@ -1065,16 +1065,42 @@ claim survived the check; the near miss is the lesson.
   **demo8 reported S38 BROKEN — *"nothing under it is tracked in git"* — until
   the commit landed**, which is that tool working on its own author.
 
-**NEXT 2 (ATTACK, and it is due — cycles 5, 6, 7 were all builds): attack
-`demo8.py`, which I wrote two cycles ago.** The suspected defect, written down
-before running it: **`CLAIMED` requires only that a green provenance record
-EXISTS in the directory — it never checks the record is CURRENT.** `record()`
-stores dep state and source mtimes precisely so staleness is decidable, and
-demo8 reads none of it, so a spike whose code changed after its last green
-certify still reads CLAIMED. That is family C — the artifact is not what you
-think — sitting in the tool built to stop §8 being resolved by eye. Falsify it by
-modifying a claimed spike's source and checking whether demo8's verdict moves;
-if it moves, the suspicion is wrong and that is the cycle's result. A
+- **DONE — H77-ATTACK** (`ed1a68e`). The suspicion below was written here before
+  the probe existed and **held**: editing a claimed spike's source moved demo8's
+  verdict not at all. **The planned fix was wrong and measuring said so** —
+  `source_mtimes` is `{}` in every `no_deps_reason` spike because
+  `certify(deps=[])` disables the staleness path (A28's own text). **Three more
+  of mine, all found by the probe:** an mtime rule that fired on a byte-identical
+  revert; a survey that ran after the probe and was contaminated by my own revert
+  (A23 — one commit from publishing a finding my measurement created); and
+  *"oldest record binds"*, which flagged every attacked spike. demo8 v2 gains
+  **STALE**, which reports and does not gate.
+
+*(The NEXT item that produced it, kept for the record rather than struck: attack
+`demo8.py`, suspected defect —*"`CLAIMED` requires only that a green record
+EXISTS, never that it is CURRENT"*. It fired.)*
+
+- **DONE — H83, and it is the span's most consequential finding for the loop's
+  exit condition.** **§8 item 2 names a corpus this project has never used.**
+  *"Real corpus loaded (ConceptNet slice)"* — `ConceptNet` appears in **zero**
+  files outside §8 itself; we run on **FB15k-237** (`spikes/S52_realkg/`, 21
+  files, the whole key-set chain). §7 gates `LOOP-DONE` on §8, so **the loop's
+  exit condition requires loading a dataset nobody ever loaded** — the second
+  time §7 has cited a missing artifact. **I did NOT edit §8**: either it is stale
+  wording or a leg is missing, those lead to opposite work, and picking the first
+  is editing an acceptance criterion to match what I already built (§10). Filed
+  to `HUMAN_NEEDED.md`, item kept UNPROVEN.
+
+**STANDING: an acceptance criterion naming an artifact nobody ever produced reads
+as *not done yet* rather than as *wrong*.** That is why H83 survived a full day of
+five lanes working against it, and it is the reason `demo8.py` exists at all.
+
+**NEXT 2: S37 is still gated and I re-check it every cycle** —
+`git status --porcelain spikes/W2_witnessed_trie/trie_witness.py` has been
+non-empty all span. **NEXT 3: M1.13**, same shape, `q3.py` also still dirty.
+**Both are the other lane's file, not a queue problem**, and §3 says gates are
+respected and never waited on, which is why this span went to the harness and to
+§8 instead. A
 run-book is a document, and §3 ranks drafts last — what makes this a deliverable
 rather than a draft is that every path and command in it is resolved by a checker,
 so "a stranger could follow it" is a property that can go red. Claim it in

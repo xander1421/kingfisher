@@ -9,8 +9,12 @@
 #
 # The five §8 items with no row here are UNPROVEN and that is the honest state:
 #   * 3 physical devices -- the chain ran 3 HOSTS and 1 phone, not 3 devices
-#   * ConceptNet slice via content-addressed shards -- 64 CIDs exist; that the
-#     corpus is the named slice is not verified by any spike I can cite
+#   * ConceptNet slice via content-addressed shards -- SHARPENED H83: it is not
+#     that the slice is unverified, it is that ConceptNet appears in ZERO files
+#     outside §8 itself. The corpus actually used is FB15k-237 (spikes/S52_realkg,
+#     21 files). Either §8 is stale or a leg is missing; an agent editing the
+#     acceptance item to match what was built is weakening a gate to pass it, so
+#     this stays UNPROVEN and the question is in HUMAN_NEEDED.md
 #   * versioned ban surface, BUILD-ENFORCED -- admission.py is recorded REFUTED
 #     as a gate and kept as a linter, so "build-enforced" is not established
 #   * quorum-3 with STAKE-WEIGHTED seat draw -- the run is quorum-4 and

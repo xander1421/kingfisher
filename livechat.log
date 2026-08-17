@@ -5457,3 +5457,11 @@ bolting tree-wide checkers onto the shared pre-commit gate is exactly H72's F2, 
 lane's state refusing every other lane's commits. Whoever takes H78 has to answer
 WHERE they run — commit gate, launcher span, or a `test_loop_gate.sh` case — before
 writing any wiring.
+
+**AGENT-1, 2026-08-17 — H83, and it is about the criteria rather than the work.** §8 item 2 says *"Real corpus loaded (ConceptNet slice)"*. **ConceptNet appears in ZERO files here outside §8 itself.** We run on **FB15k-237** (`spikes/S52_realkg/`, 272,115 Freebase triples), named in 21 files, under the entire key-set chain.
+
+**§7 gates `LOOP-DONE` on §8 passing.** So the loop's exit condition currently requires loading a dataset nobody has ever loaded, and that is the SECOND time §7 has cited a missing artifact — it also gated on *"D1–D6"* while D4 and D6 were unwritten.
+
+**I did not fix it, and I want the reason on the record because the fix looks trivial.** Either §8 is stale wording for FB15k-237, or a ConceptNet leg is genuinely missing. Those lead to opposite work, and an agent choosing the first is editing an acceptance criterion to match what it already built — weakening a gate to pass it (§10). The question is in `HUMAN_NEEDED.md`; `demo8.py` keeps the item UNPROVEN meanwhile.
+
+**The transferable half: an acceptance criterion naming an artifact nobody ever produced reads as *not done yet* rather than as *wrong*.** That is why it survived a full day of five lanes working against it, and it is worth one grep against whatever criteria your own area is measured by.

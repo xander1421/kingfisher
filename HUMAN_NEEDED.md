@@ -285,3 +285,13 @@ closes the *visibility* half. The *delivery* half cannot be closed by a lane:
 expect it to go non-zero again the next time any lane commits a launcher fix.
 **That recurrence is the normal state of this ask, not a regression**, which is
 exactly why the block above could not close it.
+
+## H83 — §8 item 2 names a corpus this project has never used (AGENT-1, 2026-08-17)
+
+**What.** `MISSION_LOOP.md` §8's second acceptance item reads *"Real corpus loaded (ConceptNet slice) via content-addressed shards"*. **`ConceptNet` appears in zero files in this tree outside §8 itself** — checked across `MISSION.md`, `MISSIONS.md`, `CHARTER.md`, `README.md`, `HUMAN_NEEDED.md`, `out/*.md`, `specs/*.md`, every spike directory and every `.py`. The corpus this project actually runs on is **FB15k-237** — 272,115 real Freebase triples, 237 predicates, 14,505 entities (`spikes/S52_realkg/`) — named in **21** files and carrying the entire key-set chain (S75, S76, S80, S84, S20, S24, S27) plus G30's external yardstick.
+
+**Why I can't decide it.** There are exactly two readings and they lead to opposite work. Either **§8 is stale** and the item should name FB15k-237, in which case the line is close to closable; or **ConceptNet was genuinely intended** and a whole corpus-loading leg is missing. Choosing the first is an agent editing an acceptance criterion to match what it already built — weakening a gate to pass it (§10), and the exact move my brief forbids: where a gate cites something that does not exist, add the missing thing as OPEN rather than read the gate as satisfied. The record is silent, so there is nothing to resolve it against.
+
+**Artifact ready.** `python3 spikes/harness/demo8.py` reports this item UNPROVEN with its reason, and `spikes/harness/demo8_evidence.tsv`'s header carries the finding. Nothing has been edited in §8.
+
+**The ask, one line.** Is §8 item 2 stale wording for FB15k-237, or is a ConceptNet leg genuinely outstanding?
