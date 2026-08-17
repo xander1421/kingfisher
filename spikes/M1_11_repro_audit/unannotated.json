@@ -1,0 +1,261 @@
+[
+ {
+  "claim": "`intersection-atom` returned WRONG ANSWERS, not just nondete",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "Both bugs fixed, 0 regressions",
+  "spikes": [
+   "S57"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S57_hyperon_corpus/run_all.sh"
+  ]
+ },
+ {
+  "claim": "The equivalence class for AI inference is binary + RUNTIME E",
+  "spikes": [
+   "S62",
+   "S63"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S62_llm_backend_determinism/extract.sh"
+  ]
+ },
+ {
+  "claim": "The S62/S63 comparator fabricated AGREEMENT",
+  "spikes": [
+   "S62",
+   "S63"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S62_llm_backend_determinism/extract.sh"
+  ]
+ },
+ {
+  "claim": "`sqrt-math` is exact cross-platform **by specification",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "A job with a correctly-bound seeded generator is bit-identic",
+  "spikes": [
+   "S58"
+  ],
+  "kind": "NONE",
+  "py": []
+ },
+ {
+  "claim": "`fuel + raw_hash` is NOT a sound replication oracle \u2014 PATCHE",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "Three `Display` impls leak heap addresses \u2014 PATCHED, unfiled",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "Packed popcount bit-exact vs scalar and SDOT, both machines",
+  "spikes": [
+   "S34"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S34_packed_popcount/s34_check.py"
+  ]
+ },
+ {
+  "claim": "Shard demand is the load-bearing unmeasured quantity, and it",
+  "spikes": [
+   "S52"
+  ],
+  "kind": "binary+source",
+  "py": []
+ },
+ {
+  "claim": "Per-device supply is 2.83 jobs/s (1 worker) / 11.17 (4 worke",
+  "spikes": [
+   "S32",
+   "S71"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S32_fleet_capacity/parallel.sh",
+   "spikes/S32_fleet_capacity/sustained.sh"
+  ]
+ },
+ {
+  "claim": "The ban list is enforced by BUILD, not static analysis \u2014 whi",
+  "spikes": [
+   "S63"
+  ],
+  "kind": "NONE",
+  "py": []
+ },
+ {
+  "claim": "Stage 2 in-process = **0.25 ms** (12 processes \u00d7 3000 reps, ",
+  "spikes": [
+   "S45"
+  ],
+  "kind": "binary+source",
+  "py": []
+ },
+ {
+  "claim": "Never size a spin-barrier pool to `nproc`",
+  "spikes": [
+   "S51",
+   "S53"
+  ],
+  "kind": "binary+source",
+  "py": []
+ },
+ {
+  "claim": "T=4 on the background cpuset is coordinator starvation \u2014 thi",
+  "spikes": [
+   "N1",
+   "S51",
+   "S53"
+  ],
+  "kind": "binary+source",
+  "py": []
+ },
+ {
+  "claim": "NNAPI exposes no accelerator on SM8750",
+  "spikes": [
+   "S31"
+  ],
+  "kind": "binary+source",
+  "py": []
+ },
+ {
+  "claim": "Transmit the scale as an **exact rational**, never a float",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "Job N differs from job 1 inside one process \u2014 a fresh `metta",
+  "spikes": [
+   "D3",
+   "D4",
+   "M1.1c",
+   "M1.3"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/M1_10_patchlive/probe.py",
+   "spikes/M1_11_repro_audit/audit.py"
+  ]
+ },
+ {
+  "claim": "`collapse` aborts the process at >=1024 results \u2014 an availab",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "Device-side shard integrity closed, and ISA monoculture clos",
+  "spikes": [
+   "S57"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S57_hyperon_corpus/run_all.sh"
+  ]
+ },
+ {
+  "claim": "Locality routing measured on a real fleet: S61's tension is ",
+  "spikes": [
+   "M1.8c",
+   "S61"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/M1_8_quorum3/classify.py",
+   "spikes/M1_8_quorum3/q3.py"
+  ]
+ },
+ {
+  "claim": "M1.7 phone-initiated transport works: 66/66 over HTTP, byte-",
+  "spikes": [
+   "M1.7",
+   "M1.8",
+   "S8"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/M1_7_transport/agent.sh",
+   "spikes/M1_7_transport/handshake.py"
+  ]
+ },
+ {
+  "claim": "The Android app is a fleet member: WorkManager -> preflight ",
+  "spikes": [],
+  "kind": "NO-SPIKE-REF",
+  "py": []
+ },
+ {
+  "claim": "A Cargo FEATURE changes `fuel_used` \u2014 the equivalence class ",
+  "spikes": [
+   "M1.1",
+   "M1.8",
+   "S57",
+   "S63"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/M1_10_patchlive/probe.py",
+   "spikes/M1_11_repro_audit/audit.py"
+  ]
+ },
+ {
+  "claim": "Phone dials over real WiFi with token auth; and the transfer",
+  "spikes": [
+   "M1.5b",
+   "M1.7b"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/M1_5_shardstore/shardstore.py",
+   "spikes/M1_5_shardstore/test_shardstore.py"
+  ]
+ },
+ {
+  "claim": "TLS on the device path, with pinning rather than a PKI",
+  "spikes": [
+   "M1.7d"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/M1_7_transport/agent.sh",
+   "spikes/M1_7_transport/handshake.py"
+  ]
+ },
+ {
+  "claim": "35 A-grade claims, and until today none named a command that",
+  "spikes": [
+   "S57"
+  ],
+  "kind": "script",
+  "py": [
+   "spikes/S57_hyperon_corpus/run_all.sh"
+  ]
+ },
+ {
+  "claim": "S65's commitment is FORGEABLE \u2014 it binds no computation",
+  "spikes": [
+   "S65"
+  ],
+  "kind": "binary+source",
+  "py": []
+ }
+]
