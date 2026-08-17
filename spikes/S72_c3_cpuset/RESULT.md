@@ -73,3 +73,61 @@ the prediction. Those were two claims and only one survived.
 - One thermal state, 34.3 °C at gate. Not a soak.
 - "Roof" is the binary's own model of the memory bound; it has not been
   independently re-derived here.
+
+---
+
+# S72b — the missing 4-worker measurement. Two of my claims were wrong, in opposite directions.
+
+**Run 2026-08-17, device gate green before and after. Harness: `k4.sh` (shipped — the previous four spikes shipped none).**
+
+S72 said, of itself: *"Single-threaded kernel under `taskset 33`; the cpuset
+grants 4 cores and the binary uses one. A 4-worker version is the missing
+measurement."* Here it is.
+
+## Measured — P concurrent `kernels`, all pinned to `0-1,4-5`, q=100
+
+| workers | per-instance GOP/s | aggregate | scaling | short of 5 TOP/s |
+|---|---|---|---|---|
+| 1 | 329.3 | 329.3 | 1.00× | 15.2× |
+| 2 | 326.2 | 652.4 | 1.98× | 7.7× |
+| 3 | 266.5 | 799.5 | 2.43× | 6.3× |
+| 4 | **220.2** | **880.9** | **2.68×** | **5.7×** |
+
+## 1. "15.2× short" was single-core and is corrected to 5.7×
+My prediction was ~2.4×. S72 recorded the miss as 6.3×. **The real miss is 2.4×**
+— bad, but not what S72 said, and S72 knew the measurement was missing when it
+published the number.
+
+## 2. The kernel is bandwidth-bound, and S34 says it is compute-bound
+**Per-instance throughput falls 329 → 220 GOP/s as workers are added.** That is
+the signature of memory-bandwidth saturation: adding cores does not add
+bandwidth. Scaling is **2.68×** on four cores, against **3.95×** S71 measured for
+independent MeTTa jobs on the same cpuset — the difference is exactly what
+distinguishes a bandwidth-bound kernel from a compute-bound one.
+
+S34's surviving conclusion is *"13.9× faster **while staying compute-bound**"*.
+At four workers on the deployable cpuset it is not. **S34's compute-bound claim
+is scoped to single-core and should say so.**
+
+## 3. This cuts toward the NPU, not away from it
+A bandwidth-bound kernel is precisely the case on-chip memory addresses, and
+VTCM is on-chip. So the honest position on the descope is now:
+
+- the **ladder argument is untouched** — no SDK, no delegate, no scale pinning,
+  no QNN licence, no requantisation assumption, and the prefilter still costs
+  ~50 µs inside a query that is ~57% symbolic;
+- but the **throughput argument has moved against it twice**: 5.7× short at the
+  deployable operating point, and now a bandwidth bound that VTCM exists to fix.
+- **VTCM is 8 MB against a 12.8 MB packed store**, so bundling remains a
+  prerequisite — already in the LEDGER as a gap.
+
+The descope stands on the ladder. It no longer has throughput support of any
+kind, and I should stop implying it does.
+
+## Controls, with their failing inputs (D6)
+| control | fails if |
+|---|---|
+| gate green before **and** after | `quiet.sh --device --json` non-quiet either side — thermal drift would invalidate the scaling curve |
+| per-instance GOP/s reported by the binary, not derived | a derived figure would hide the bandwidth effect, which is visible only per-instance |
+| exactness digest unchanged | any kernel differing from `f4e64fb7d70b9b0c` means the concurrent run altered results |
+| monotone aggregate | aggregate falling with more workers would indicate the pin is not honoured |
