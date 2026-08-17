@@ -1,5 +1,31 @@
 #!/usr/bin/env python3
-"""Shard admission: reject atoms that would make a job non-reproducible.
+"""Shard admission -- REFUTED AS A GATE. Kept as a linter, not an admission rule.
+
+STATUS: the predicate below rejects **51% of hyperon's own 67-program corpus**,
+and 21 of the 34 rejections are inside `(= ...)` rule bodies that were MEASURED
+STABLE (C1/C2). Worse, the E-series showed a second mechanism this rule does not
+touch at all. Do not gate on it. See M1.1c SOAK_RESULT.md.
+
+Two distinct mechanisms produce non-reproducibility, and they need different
+fixes:
+
+  (1) REPRESENTATIVE SELECTION -- a query aliasing two distinct pattern
+      variables onto one data variable returns `($x $x)` or `($y $y)`.
+      Outcomes = number of aliased variables. This rule catches it.
+
+  (2) THE COUNTER IS PRINTED -- `VariableAtom::name()` embeds `#{id}` and
+      `Display` calls it, so ANY result containing a data-origin variable emits
+      the process-global counter. `(implies (Frog $x) (Green $x))` queried with
+      a NON-aliasing `(implies $p $q)` gives 40 distinct outputs in 40 runs.
+      This rule does not catch it, and no data-side syntactic rule can: it
+      depends on what the query projects.
+
+Mechanism (2) is the more severe and is a small upstream fix. Mechanism (1)
+needs either a per-runner id space or an ordered binding map.
+
+Original docstring follows.
+
+Shard admission: reject atoms that would make a job non-reproducible.
 
 M1.1c measured the class. Same program, fresh runner, one process:
 `(pair $z $z)` matched by `(pair $x $y)` returns `($x $x)` or `($y $y)`

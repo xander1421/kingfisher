@@ -88,6 +88,52 @@ inter-atom analysis (D4), no knowledge of the query (B3 has the repeat in the
 pattern and is stable), and no rule analysis (C1/C2). Cheap enough to enforce at
 shard admission, and far weaker than requiring ground data.
 
+## The ban predicate is REFUTED, and there are two mechanisms
+
+Implemented as `spikes/harness/admission.py` (11 assertions) and run against
+hyperon's own 67-program corpus:
+
+```
+ADMIT 33   REJECT 34   (51% rejected)
+of the rejected: 21 have ALL violations inside `(= ...)` rule bodies
+                 -- shapes C1/C2 MEASURED STABLE
+```
+
+**51% rejection is not an admission gate, it is a ban on MeTTa.** And the
+over-conservatism was predictable from our own data: C1/C2 said rule bodies are
+safe and the syntactic rule rejects them anyway.
+
+Then the E-series found the rule is not merely blunt but **on an incomplete
+axis**:
+
+| program | query aliases? | result |
+|---|---|---|
+| E1 `(implies (Frog $x) (Green $x))` + `(implies $p $q)` | **no** | **DIVERGES 40/40** |
+| E2 same data + `(implies (Frog $a) (Green $b))` | yes | DIVERGES 2 |
+| E3 `(= (f $x) (g $x $x))` + `(= $h $b)` | no | **DIVERGES 40/40** |
+
+E1's sample output is the whole story: `((Frog $x#24605) (Green $x#24605))`.
+
+**Two mechanisms, needing different fixes:**
+
+1. **Representative selection** — aliasing decides whether `$x` or `$y` survives.
+   Bounded: outcomes equal the number of aliased variables (A2 gives exactly 3).
+   The syntactic rule does catch this one.
+2. **The counter is printed.** `VariableAtom::name()`
+   (`hyperon-atom/src/lib.rs:307-313`) embeds `#{id}`, and `Display` at `:335`
+   calls it. Any result containing a data-origin variable emits the
+   process-global counter — **40 distinct outputs in 40 runs, with no aliasing
+   anywhere**. No data-side syntactic rule can catch this; it depends on what
+   the query projects.
+
+Mechanism 2 is the severe one: it defeats result-hash comparison directly, which
+is the project's core verification mechanism. It is also a small upstream fix.
+`proposed/hyperon-nondeterminism/` Issue 3 has been **corrected** — it previously
+claimed the id never reaches printed output, which was wrong and understated it.
+
+Why S57's 66/67 corpus missed it: those programs return `()` and error atoms,
+not unbound data-origin variables. That is a property of the corpus.
+
 ## Consequence for M1.3 / WorkManager
 `PORT_PLAN` M1.3 requires a fresh process per job on two derivations. This
 measures the second one and it holds:
