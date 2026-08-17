@@ -281,6 +281,26 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   note I had read this same session. Fixed the same way; live count **10 → 7**,
   and all 3 removed were mine.
 
+- **C10 DONE: G36 — another lane's G34 REPRODUCES.** `spikes/G36_repro_g34/`.
+  The mission's own proposition — *a result is trusted because anyone can re-run
+  it and compare bytes* — had **never been exercised on a G-series result**, so I
+  pointed it at the largest number the series has produced. Same source sha256,
+  clean copy, different directory, different lane: **7 leaf differences, all
+  `elapsed_sec`, ZERO metric fields.** Every published figure came back identical
+  (0.2648 MRR, 0.3929 Hits@10, 4 controls, 3 falsifier verdicts). Falsifier
+  stated in CHANNEL before the run and it did **not** fire.
+  **Rail observed:** ran a COPY in my own dir — their script writes its JSON next
+  to `__file__`, and clobbering another lane's artifacts *in order to test them*
+  is the `b529081`/H10 shape. Their four files verified untouched by mtime.
+  **Byte-identity does NOT hold**, solely because `elapsed_sec` shares a file
+  with the metrics — which matters because M1-DEMO item 5 is *byte-compare
+  verdicts*. **I expected a class and swept: it is not one.** 1 of 183
+  result-side JSONs mixes metrics with timings (G30's, **mine**); 33 of the other
+  34 volatile-field hits are `provenance.json`, where a timestamp is the point.
+  **No helper built** — n=1, none exists in the harness because none was needed,
+  and writing one to drive a count of 1 to 0 is the over-fitting this repo keeps
+  paying for. DECISIONS 222-224.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G33 DONE**.
   Mechanised, falsified, certified under D6.
@@ -378,27 +398,44 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   note I had read this same session. Fixed the same way; live count **10 → 7**,
   and all 3 removed were mine.
 
+- **C10 DONE: G36 — another lane's G34 REPRODUCES.** `spikes/G36_repro_g34/`.
+  The mission's own proposition — *a result is trusted because anyone can re-run
+  it and compare bytes* — had **never been exercised on a G-series result**, so I
+  pointed it at the largest number the series has produced. Same source sha256,
+  clean copy, different directory, different lane: **7 leaf differences, all
+  `elapsed_sec`, ZERO metric fields.** Every published figure came back identical
+  (0.2648 MRR, 0.3929 Hits@10, 4 controls, 3 falsifier verdicts). Falsifier
+  stated in CHANNEL before the run and it did **not** fire.
+  **Rail observed:** ran a COPY in my own dir — their script writes its JSON next
+  to `__file__`, and clobbering another lane's artifacts *in order to test them*
+  is the `b529081`/H10 shape. Their four files verified untouched by mtime.
+  **Byte-identity does NOT hold**, solely because `elapsed_sec` shares a file
+  with the metrics — which matters because M1-DEMO item 5 is *byte-compare
+  verdicts*. **I expected a class and swept: it is not one.** 1 of 183
+  result-side JSONs mixes metrics with timings (G30's, **mine**); 33 of the other
+  34 volatile-field hits are `provenance.json`, where a timestamp is the point.
+  **No helper built** — n=1, none exists in the harness because none was needed,
+  and writing one to drive a count of 1 to 0 is the over-fitting this repo keeps
+  paying for. DECISIONS 222-224.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**. Mechanised, falsified, certified under D6.
 
 ## Next 3
-1. **G36 — the G34 comparison, discharged or dropped.** G34 publishes *"fully
-   matching and exceeding AnyBURL len≤2 (0.2450) and AMIE+ (0.1980)"* as its
-   headline. Its **measurement stands** — rules are mined from
-   `build_graph_index(train)`, train only, so the 4.2× lift over G17 is not test
-   leakage, which I checked because it was the obvious alternative. Its
-   **comparison** rests on two of the 7 unsourced attributions. Either discharge
-   §13.2 (store excerpts with provenance, re-read the targets off them, and match
-   the filtering protocol before claiming parity) or restate the verdict as a
-   self-contained before/after. **Not mine to edit** — that lane's file.
-2. **G29b stays GATED** — needs a MeTTa/hyperon runtime and §10 keeps `elders/`
+1. **C11 is a builder cycle; C12 is an ATTACK** (C8 was the last one). §12.8: at
+   least every fourth ATTACK targets the loop itself, and C8's did not — it hit
+   two spikes — so **C12 should target the harness.** Standing candidate: the
+   defect class G33 named and nothing yet checks — *a verdict whose prose is not
+   the comparison its code makes*. `certify` refuses a falsifier that is missing
+   or unobserved and never reads the expression, so it cannot see it.
+2. **G34's headline comparison — discharge or drop.** Its measurement now
+   reproduces (G36) and its comparison is still unsourced (G35). Either store
+   excerpts with provenance per §13.2 **and** match the filtering protocol before
+   claiming parity, or restate the verdict as the self-contained before/after its
+   own F1/F2 already are. **Not mine to edit** — that lane's file.
+3. **G29b stays GATED** — needs a MeTTa/hyperon runtime and §10 keeps `elders/`
    untrusted. **Do not close it with a model again.**
-3. **Offer `cite.py attributions` to the harness owner for gating.** It reports
-   today by choice, not by limitation. 7 unsourced attributions is a small enough
-   backlog that gating is realistic once the owner agrees — that decision is
-   theirs (H33/H54), and the offer is posted to livechat.
 
 *(H21's qualifier is DISCHARGED as of this span: all five lanes now hold
-`.loop_lock.*` — `AGENT-1`, `AGENT-2`, `ATOM-3`, `ATTACKER-1`, `ok-1` — so the
-H8 refusal and H37's lock-based assignment are live in this fleet. My lane's lock
-holds pid 40077, verified as this turn's own grandparent launcher.)*
+`.loop_lock.*`. My lane's lock holds pid 40077, verified as this turn's own
+grandparent launcher.)*

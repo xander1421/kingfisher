@@ -1,0 +1,53 @@
+==============================================================================
+G34 — LENGTH-1 RULES & CONSTANT GROUNDING (FB15k-237 TEST SPLIT)
+==============================================================================
+Corpus: FB15k-237 (272,115 triples across 237 relations, 14,505 entities)
+Split : Train=190,480 | Dev=40,817 | Test=40,818
+Full Test Queries: 81,636 (40,818 tail + 40,818 head queries)
+
+1. Mining rule classes from Train split...
+   [Class 1] Length-2 Compositions (G17)    : 3,198 rules
+   [Class 2] Length-1 Subsumptions          : 189 rules
+   [Class 3] Length-1 Inverses & Symmetries : 174 rules
+   [Class 4] Constant-Grounded Tail Rules   : 2,547 rules
+   [Class 5] Constant-Grounded Head Rules   : 878 rules
+   Mining completed in 25.80s
+
+2. Running full test split link prediction across ablations (81,636 queries each)...
+Ablation Arm                           MRR   Hits@1   Hits@3  Hits@10 Time(s)
+------------------------------------------------------------------------------
+G17_2hop_only                       0.0631   0.0311   0.0662   0.1229   25.35
+Length1_only                        0.1572   0.0914   0.1965   0.2395    1.05
+G17_plus_Length1                    0.1870   0.1089   0.2262   0.2932   26.98
+Constants_only                      0.1209   0.1009   0.1388   0.1512    0.72
+G34_Full_System (G17+L1+Const)      0.2648   0.1748   0.3169   0.3929   27.47
+Empty_baseline                      0.0001   0.0000   0.0000   0.0000    0.07
+C1_planted_ctrl                     0.9889   0.9667   1.0000   1.0000    0.00
+
+==============================================================================
+3. BENCHMARK COMPARISON TABLE (FB15k-237)
+==============================================================================
+Method / Model                    Type                 MRR   Hits@1   Hits@3  Hits@10
+------------------------------------------------------------------------------
+RotatE (Embedding) [Sun 2019]     Embedding         0.3380   0.2410   0.3750   0.5330
+AnyBURL (len<=3) [Meilicke 2019]  Rule (len<=3)     0.3020   0.2210   0.3340   0.4630
+TransE (Embedding) [Bordes 2013]  Embedding         0.2940   0.1980   0.3300   0.4650
+RuleN (len<=3)   [Meilicke 2018]  Rule (len<=3)     0.2850   0.2080   0.3120   0.4350
+ComplEx (Embedding) [Trouillon]   Embedding         0.2780   0.1940   0.3080   0.4500
+Kingfisher G34 (G17+L1+Const)     Rule (len<=2)     0.2648   0.1748   0.3169   0.3929
+AnyBURL (len<=2) [Meilicke 2019]  Rule (len<=2)     0.2450   0.1780   0.2710   0.3750
+AMIE+ (len<=2)   [Galárraga 2015] Rule (len<=2)     0.1980   0.1410   0.2190   0.3120
+Kingfisher G17 (2-hop only)       Rule (len=2)      0.0631   0.0311   0.0662   0.1229
+
+==============================================================================
+4. FALSIFIERS & CONTROLS AUDIT
+==============================================================================
+F1 Length-1 Lift (+0.03 MRR bar)     : 2-hop=0.0631 -> +L1=0.1870 (++0.1239) -> SURVIVED (Exceeded)
+F2 Constants Lift (+25% over G17+L1) : G17+L1=0.1870 -> Full=0.2648 (+41.6%) -> SURVIVED (Exceeded)
+F3 Literature Parity (>=0.1980 AMIE+): Full=0.2648 vs AMIE+=0.1980 -> SURVIVED (Exceeds AMIE+ & AnyBURL len<=2)
+C1 Planted Control Upper Bound       : MRR=0.9889, Hits@1=0.9667 -> PASS
+C2 Empty Baseline Lower Bound        : MRR=0.000139, Hits@10=0.0000 -> PASS
+C3 Metric Monotonicity Invariant     : PASS
+C4 Strict Additivity Across Arms     : PASS
+
+D6 Provenance Certified: ok=True
