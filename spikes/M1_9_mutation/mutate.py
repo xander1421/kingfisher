@@ -134,6 +134,23 @@ def build():
         sys.exit('BUILD FAILED\n' + r.stderr[-2000:])
 
 
+# What an UNMUTATED evaluator must answer. Asserted before the baseline is
+# recorded, because a baseline taken from a mutated binary makes that mutation
+# score 0/64 -- mutated compared against mutated -- which is indistinguishable
+# from the corpus not noticing. This is the control that catches the bug above.
+CLEAN_PROBES = [('!(- 5 3)', '0\t2'), ('!(< 1 1)', '0\tFalse')]
+
+
+def assert_clean_binary():
+    for src, want in CLEAN_PROBES:
+        got = probe_result(src)
+        if got != want:
+            sys.exit(f'REFUSING: binary is not unmutated. {src} gave {got!r}, '
+                     f'expected {want!r}. A baseline recorded here would be '
+                     f'worthless.')
+    print('clean-binary probes pass')
+
+
 def apply(path, old, new):
     sys.path.insert(0, os.path.join(ROOT, 'spikes', 'harness'))
     from edits import patch_file          # AnchorMissing if the site moved
@@ -143,6 +160,7 @@ def apply(path, old, new):
 def main():
     if '--baseline' in sys.argv:
         build()
+        assert_clean_binary()
         json.dump(sweep(), open(BASELINE, 'w'), indent=1)
         print(f'baseline written: {len(json.load(open(BASELINE)))} programs')
         return
@@ -162,6 +180,13 @@ def main():
             after = sweep()
         finally:
             shutil.move(backup, path)       # byte-exact restore, never git
+            # copy2 PRESERVED the original mtime, so restoring moved the source
+            # clock BACKWARDS and cargo saw nothing newer than the mutated
+            # build -- it skipped the rebuild and left the MUTATED binary on
+            # disk. baseline.json was then recorded against it. Family C, in
+            # the harness whose entire job is deciding what a binary is.
+            os.utime(path, None)
+            build()
 
         if mut_probe == base_probe:
             print(f'\n{name}: VOID -- probe {probe} returned {base_probe!r} both '

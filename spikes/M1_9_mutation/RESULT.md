@@ -72,6 +72,37 @@ program that hits that slice, and the corpus has none.
 This is the general shape and it is worse than a coverage gap. `<` is *executed*
 by the corpus; executing a faulty line is not the same as observing its fault.
 
+## The bug this harness shipped with, caught after the first writeup
+
+The first version restored the mutated file with `shutil.move` of a
+`shutil.copy2` backup. `copy2` **preserves mtime**, so restoring moved the
+source clock *backwards*: cargo saw nothing newer than the mutated build,
+skipped the rebuild, and left **the mutated binary on disk**. The final
+`build()` was a no-op.
+
+That is not cosmetic. `baseline.json` is recorded by a separate invocation that
+also starts with `build()` — so the baseline could have been swept with a
+`less-is-lesseq` binary, and comparing a mutated baseline against a mutated
+mutant yields `0/64` for exactly the reason that looks like the finding.
+
+Caught by running `!(< 1 1)` against the binary after the run and getting
+`True`. Two fixes:
+
+- `os.utime(path, None)` + an explicit `build()` immediately after every
+  restore, so the clock always moves forward;
+- `assert_clean_binary()` — the baseline now refuses to be recorded unless
+  `!(- 5 3)` is `2` and `!(< 1 1)` is `False`.
+
+**Re-run from a verified-clean baseline: `4/64` and `0/64`, unchanged.** The
+numbers above are the re-run. The bug did not alter the result, and it could
+have; the writeup that stated them before the check was luckier than it was
+careful.
+
+This is family C — the artifact is not what you think — inside a harness whose
+whole purpose is deciding what a binary is. It is also the same mtime mechanism
+`provenance.artifact_time` exists to police, reached from the other side: not a
+stale artifact next to fresh source, but fresh source made to *look* stale.
+
 ## Scope — what this does NOT license
 
 - **Two mutations, both evaluation-semantic.** A mutation to stdlib

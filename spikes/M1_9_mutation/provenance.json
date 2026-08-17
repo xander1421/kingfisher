@@ -1,19 +1,21 @@
 {
  "spike": "M1_9_mutation",
- "recorded_utc": "2026-08-17T11:02:44Z",
- "note": "REFUTED. sub-is-add 4/64; less-is-lesseq 0/64 with a live probe. harness/ deliberately NOT a dep: it only APPLIES the mutation, and the failure mode a bad edit would cause (mutation never reaches the binary) is exactly what the mutant-is-live probe control catches.",
+ "recorded_utc": "2026-08-17T11:06:36Z",
+ "note": "REFUTED. Re-run from a baseline whose binary is probe-verified unmutated.",
  "repos": [
   {
    "path": ".",
-   "head": "f9f39940b3ac41b983205186b5976ff76c7fa0bd",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "cf0e962ec3de7d384ecdc81726d8b69a8bad0749",
+   "clean": false,
+   "dirty_files": [
+    "spikes/M1_9_mutation/mutate.py"
+   ],
+   "diff_sha256": "0f7aa451998c0bb9eb08675bea12db4a784d28ee725f35f3b3390f05e3b9d77c",
+   "diff_bytes": 2209
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun",
-   "head": "f9f39940b3ac41b983205186b5976ff76c7fa0bd",
+   "head": "cf0e962ec3de7d384ecdc81726d8b69a8bad0749",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -40,7 +42,7 @@
    "path": "mutation.json",
    "sha256": "4d4c59678b1ea8a633c4f0e220c276dd4ab31dc97e8affa08b29a2edf17a70c2",
    "bytes": 812,
-   "mtime": 1786964461,
+   "mtime": 1786964751,
    "compared_ts": 1786964528,
    "compared_clock": "last-commit"
   },
@@ -48,7 +50,7 @@
    "path": "baseline.json",
    "sha256": "5b5b1f5e511b0ac3c26229d9932ed5d05b21d9fb20d1e55fd33ef9d3c5f85015",
    "bytes": 11818,
-   "mtime": 1786964452,
+   "mtime": 1786964734,
    "compared_ts": 1786964528,
    "compared_clock": "last-commit"
   }
@@ -72,8 +74,8 @@
   {
    "name": "mutant-is-live",
    "must_fire_because": "0/64 is what a dead mutant, a failed rebuild or a missed anchor also produce",
-   "can_fail_because": "an inert or unbuilt mutation returns an identical probe; the run is then reported VOID instead of as a detection rate",
-   "null_must_contain": "probe output differs before vs after for every mutation",
+   "can_fail_because": "an inert or unbuilt mutation returns an identical probe; the run is reported VOID instead of as a rate",
+   "null_must_contain": "probe differs before vs after for every mutation",
    "fired": true,
    "detail": "",
    "constant_observations": false,
@@ -85,7 +87,7 @@
   {
    "name": "noise-floor-measured",
    "must_fire_because": "a program whose result varies run-to-run scores as a detector by chance",
-   "can_fail_because": "if many programs were nondeterministic the floor would swamp the signal and no rate would be reportable",
+   "can_fail_because": "if many programs were nondeterministic the floor would swamp the signal",
    "null_must_contain": "programs varying across 4 identical unmutated sweeps",
    "fired": true,
    "detail": "",
@@ -94,23 +96,41 @@
     "test_gnd_conv:3-distinct-keys",
     "all-63-others:stable"
    ]
+  },
+  {
+   "name": "baseline-binary-verified-unmutated",
+   "must_fire_because": "copy2 preserved mtime, cargo skipped the rebuild and left the MUTATED binary on disk; a baseline swept with it scores that mutation 0/64 for the wrong reason",
+   "can_fail_because": "it DID fail -- the binary answered !(< 1 1)=True after the first run, which is how the bug was found; the baseline now refuses to record",
+   "null_must_contain": "!(- 5 3)=2 and !(< 1 1)=False before the baseline is recorded",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": [
+    "sub-probe:2",
+    "less-probe:False"
+   ]
   }
  ],
  "no_deps_reason": null,
  "source_mtimes": {
   ".": {
-   "newest": 1786964528,
-   "from": "<HEAD commit>"
+   "newest": 1786964719,
+   "from": "spikes/M1_9_mutation/mutate.py"
   },
   "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
    "newest": 1786955408,
    "from": "<HEAD commit>"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "STALE ARTIFACT mutation.json predates . source by 0.1h (newest source: spikes/M1_9_mutation/mutate.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "STALE ARTIFACT baseline.json predates . source by 0.1h (newest source: spikes/M1_9_mutation/mutate.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "DIRTY TREE . at cf0e962e: 1 modified. The build is NOT cf0e962e."
+ ],
+ "ok": false,
  "falsifier": "the corpus detects these mutations broadly -- a wrong evaluator changes many agreement keys",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }
