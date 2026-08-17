@@ -1,11 +1,11 @@
 {
  "spike": "M1_11_repro_audit",
- "recorded_utc": "2026-08-17T11:44:50Z",
- "note": "REFUTED: 3 of 13 named a document or a prebuilt binary and could re-derive nothing; a 4th (run_lan) could not run because the phone had left the host subnet. All 3 repointed, 0 remain. harness is NOT a dep: audit.py imports nothing from it.",
+ "recorded_utc": "2026-08-17T11:54:48Z",
+ "note": "REFUTED. 19 of 28 have runnable material in their own spike; 7 more name no spike at all in the row (a documentation gap, not an absence); only 2 are genuinely bare.",
  "repos": [
   {
    "path": ".",
-   "head": "0d0eb9b899c063a9959343ea69979b9a79b5ac49",
+   "head": "18cd55b71f1e2032bb1a660135cd085afc099642",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,7 +13,7 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/out",
-   "head": "0d0eb9b899c063a9959343ea69979b9a79b5ac49",
+   "head": "18cd55b71f1e2032bb1a660135cd085afc099642",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -34,11 +34,11 @@
  },
  "artifacts": [
   {
-   "path": "audit.json",
-   "sha256": "e54c58247562f8d6ee8e3e1addf2ff704ca355abad27ce563407398d2494ac82",
-   "bytes": 3273,
-   "mtime": 1786967030,
-   "compared_ts": 1786967054,
+   "path": "unannotated.json",
+   "sha256": "e8d95ae679cd6d0df10da5aa395cfd52569a564fe7c236538531baf0200f43da",
+   "bytes": 4921,
+   "mtime": 1786967573,
+   "compared_ts": 1786967643,
    "compared_clock": "last-commit"
   }
  ],
@@ -59,68 +59,72 @@
  },
  "controls": [
   {
-   "name": "audit-separates-outcomes",
-   "must_fire_because": "a reproducer can pass, be broken, refuse on a safety gate, need an environment that moved, or not be runnable at all",
-   "can_fail_because": "if every annotation returned the same status the audit would distinguish nothing and certify refuses",
-   "null_must_contain": "more than one status across the annotations",
+   "name": "partition-discriminates",
+   "must_fire_because": "if every unannotated claim fell in one bucket the survey would say nothing about why they are unannotated",
+   "can_fail_because": "a survey returning all-NONE would SUPPORT the falsifier instead of refuting it; it returned 4 kinds",
+   "null_must_contain": "more than one kind across the 28",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": [
-    "PASS",
-    "PASS",
-    "NEEDS-DEVICE",
-    "NEEDS-DEVICE",
-    "PASS",
-    "PASS",
-    "NEEDS-DEVICE",
-    "NEEDS-DEVICE",
-    "NEEDS-DEVICE",
-    "NEEDS-DEVICE",
-    "PASS",
-    "NEEDS-DEVICE",
-    "NEEDS-DEVICE"
+    "NO-SPIKE-REF",
+    "script",
+    "script",
+    "script",
+    "NO-SPIKE-REF",
+    "NONE",
+    "NO-SPIKE-REF",
+    "NO-SPIKE-REF",
+    "script",
+    "binary+source",
+    "script",
+    "NONE",
+    "binary+source",
+    "binary+source",
+    "binary+source",
+    "binary+source",
+    "NO-SPIKE-REF",
+    "script",
+    "NO-SPIKE-REF",
+    "script",
+    "script",
+    "script",
+    "NO-SPIKE-REF",
+    "script",
+    "script",
+    "script",
+    "script",
+    "binary+source"
    ]
   },
   {
-   "name": "parser-found-the-annotations",
-   "must_fire_because": "a regex matching nothing would report \"every reproducer passes\" over an empty set",
-   "can_fail_because": "the earlier regex DID match its own prose and invented a 12th annotation that was GONE",
-   "null_must_contain": "at least 10 annotations parsed from the LEDGER",
+   "name": "matcher-resolves-spike-names",
+   "must_fire_because": "the first matcher scored 11 as NONE purely because M1.7d did not glob to M1_7_transport -- absence of a match is not absence of a reproducer",
+   "can_fail_because": "if the fallback changed nothing, NONE would still be 11 and the partition would be an artifact of the regex",
+   "null_must_contain": "prefix fallback must move claims out of NONE",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": [
-    "spikes/harness/bansurface.py",
-    "spikes/M1_8_quorum3/test_adjudicate.py",
-    "spikes/M1_8_quorum3/q3.py",
-    "spikes/M1_3b_process_reuse/soak_check.py",
-    "spikes/M1_3_worker/test_preflight.py",
-    "spikes/harness/units.py",
-    "spikes/sweep.py",
-    "spikes/M1_7_transport/run.py",
-    "spikes/M1_10_patchlive/probe.py",
-    "spikes/M1_9_mutation/mutate.py",
-    "spikes/M1_8_quorum3/classify.py",
-    "spikes/M1_7_transport/handshake.py",
-    "spikes/M1_7_transport/latency_floor.py"
+    "before:NONE=11",
+    "after:NONE=2",
+    "after:NO-SPIKE-REF=7"
    ]
   },
   {
-   "name": "soakrun-control-live",
-   "must_fire_because": "canon==1 across positions is vacuous unless the raw hash actually drifts in a reused process",
-   "can_fail_because": "soak_check.py reports CONTROL DEAD and fails if raw comes back constant, rather than passing the claim",
-   "null_must_contain": "raw distinct must exceed 1 where canon is 1",
+   "name": "s34-hash-discriminates",
+   "must_fire_because": "identical hashes prove bit-exactness only if the hash can differ at all",
+   "can_fail_because": "s34_check.py reports CONTROL DEAD and fails if every hash in the output is the same value",
+   "null_must_contain": "a second hash over a different buffer must not equal the kernel hash",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": [
-    "raw:31",
-    "canon:1",
-    "alpha:1"
+    "kernels:f4e64fb7d70b9b0c",
+    "other-buffer:b3bfb70e74b94aa7"
    ]
   }
  ],
@@ -139,8 +143,9 @@
  },
  "problems": [],
  "ok": true,
- "falsifier": "all A-grade claims with a named reproducer still run and still produce their claimed result",
+ "falsifier": "the 28 unannotated A-grade claims are unannotated because no runnable reproducer exists for them",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

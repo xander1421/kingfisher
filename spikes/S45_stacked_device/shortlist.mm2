@@ -1,0 +1,17 @@
+;; S45 stage 2: exact match over the prefilter shortlist
+;; @steps 1
+
+(Triple p6 s125 o351)
+(Triple p6 s125 o505)
+(Triple p6 s125 o812)
+(Triple p6 s125 o857)
+(Triple p6 s125 o535)
+(Triple p6 s125 o224)
+(Triple p6 s125 o400)
+(Triple p6 s125 o812)
+(Triple p6 s125 o594)
+(Triple p6 s125 o628)
+(Triple p6 s125 o520)
+(Triple p6 s125 o434)
+
+(exec 0 (, (Triple p6 s125 $o)) (, (Answer $o)))

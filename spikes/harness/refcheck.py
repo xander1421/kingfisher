@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
-"""refcheck.py v1 — H4. Every §N / guardrail / file citation in the harness resolves.
+"""refcheck.py v2 — H4/H18. Every §N / guardrail / file / ROW-ID citation resolves.
+
+v2 RATIONALE (§12.7) — THE DEFECT REMOVED: an id could be allocated twice and
+nothing said so. v1 resolved a citation to a DOCUMENT and never asked whether it
+resolved to ONE THING. `WORK_QUEUE.md` had four ids allocated twice (H17, H18,
+H19, H20) and three of those four were allocated by TWO DIFFERENT LANES minutes
+apart, with 73 citations of them across 12 files, every one ambiguous. The
+namespace with no allocator is a class this repo has already paid for twice --
+two lanes signed the callsign `AGENT-2` (§12, H8), two lanes created `G25`
+(§13.3) -- and both times the rule written afterwards was PROSE. This is the
+same rule, mechanised, for the third namespace. Check 5 below.
 
 §12.4: "A reference to a section, spec, or file is resolved MECHANICALLY, never
 by eye." The H4 row records three regressions inside one hour -- CLAUDE.md citing
@@ -20,6 +30,8 @@ WHAT IS CHECKED
   2. duplicate section numbers -- two `## 9 ·` is what made every "§9" ambiguous.
   3. `A<n>` guardrail citations -> `### A<n>` in analysis/GUARDRAILS.md.
   4. backticked repo paths -> the file or directory exists.
+  5. duplicate table ROW IDS -- two rows numbered `H20` is what made every
+     "H20" citation resolve to two rows with opposite statuses.
 
 WHAT IS NOT, AND SAYING SO IS PART OF THE CHECK
 -----------------------------------------------
@@ -69,6 +81,27 @@ def sections(text):
 
 def subsections(text):
     return set(re.findall(r'^-?\s*\*\*(\d+\.\d+)\s+·', text, re.M))
+
+
+# An id is the shape this repo ACTUALLY allocates: starts upper-case, and carries
+# a digit or a hyphen -- `H1`, `H-CLOCK`, `D1+`, `M1.7`, `S45`, `H-A28`. Requiring
+# one of those two marks is what separates an id cell from a header cell (`id`,
+# `item`, `status`) and from a prose cell, WITHOUT a list of known prefixes that
+# would go stale the first time a lane opens a new series. Same reasoning as
+# commit-msg.hook's `is_callsign`: a SHAPE rule cannot go stale, a registry can.
+ID_CELL = re.compile(r'[A-Z][A-Za-z0-9]*(?:[-.][A-Za-z0-9]+)*\+?$')
+
+
+def row_ids(text):
+    """First-cell ids of markdown table rows, in order, so duplicates are visible."""
+    out = []
+    for line in text.splitlines():
+        if not line.startswith('|'):
+            continue
+        cell = line.split('|')[1].strip().strip('*`').strip()
+        if ID_CELL.match(cell) and (any(c.isdigit() for c in cell) or '-' in cell):
+            out.append(cell)
+    return out
 
 
 def main():
@@ -169,6 +202,20 @@ def scan():
                 continue
             if not os.path.exists(os.path.join(ROOT, tok)):
                 problems.append(f'{rel}: `{tok}` does not exist')
+
+        # 5 · duplicate row ids. A citation that resolves to TWO rows is worse
+        # than one that resolves to none, for §12.4's stated reason: it reads as
+        # satisfied. Measured on the queue this check was written against --
+        # `H20` was simultaneously OPEN (falsify.py, ATTACKER-1, 12:21) and DONE
+        # (provenance.Control, AGENT-1, 12:40), so a lane grepping its own NEXT
+        # item found someone else's closed row. Per FILE, because ids are
+        # namespaced by document; a `D4` in WORK_QUEUE and a `D4` in a spike's
+        # own table are not a collision.
+        ids = row_ids(text)
+        for n in sorted({i for i in ids if ids.count(i) > 1}):
+            problems.append(f'{rel}: {ids.count(n)} table rows are numbered '
+                            f'"{n}" -- every {n} citation resolves to more than '
+                            f'one row')
 
     for p in sorted(set(problems)):
         print('  UNRESOLVED ' + p)

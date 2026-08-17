@@ -85,6 +85,64 @@ constant, reporting `CONTROL DEAD` rather than a passing claim.
 and is not guessed at here; annotating a claim requires knowing which command
 produced it, and inventing one would be worse than leaving it blank.
 
+## The 28 unannotated claims: not unreproducible, unnamed
+
+**Second falsifier, stated before running:** *the 28 are unannotated because no
+runnable reproducer exists for them.* **Refuted.**
+
+| kind | n | what it means |
+|---|---|---|
+| `script` | 13 | a `.py`/`.sh` already sits in the claim's own spike |
+| `binary+source` | 6 | a compiled binary plus its `.c`/`.rs` — reproducible, needs a named command |
+| `NO-SPIKE-REF` | 7 | the LEDGER row names no spike, so nothing can be located from it |
+| `NONE` | 2 | genuinely bare (S58, S63) |
+
+**19 of 28 have runnable material sitting in their own spike directory.** They
+were never unreproducible; nobody wrote down the command.
+
+The first version of this matcher reported **11 NONE**, and that number was an
+artifact of the regex: `M1.7d` does not glob to `M1_7_transport`, so claims with
+a perfectly good `run_lan.py` beside them scored as having nothing. A prefix
+fallback moved 9 of them. **Absence of a match is not absence of a reproducer**,
+and reporting the first number would have justified exactly the wrong
+conclusion — that the claims were unverifiable rather than undocumented.
+
+Six of the binaries are **Android-only** (`realkg`, `threadcost`, `mc`, `mcx0`,
+`probe`): `Exec format error` on the host. They reproduce over adb, not locally,
+which is why a host-only sweep will never reach them.
+
+### One converted, as the pattern
+
+`S34_packed_popcount/s34_check.py` turns "bit-exact vs scalar and SDOT, **both
+machines**" into a command. A host-only run proves half the claim, so it runs
+`kernels_host` here and `kernels` on the phone under the §10 gate:
+
+```
+host:    K0 scalar / K1 SDOT / K2 popcount   f4e64fb7d70b9b0c
+device:  K0 scalar / K1 SDOT / K2 popcount   f4e64fb7d70b9b0c
+kernel hashes: 1 distinct across 2 machines
+control (different buffer): b3bfb70e74b94aa7
+```
+
+The control is the second hash. Identical hashes prove bit-exactness only if the
+hash *can* differ; if every value in the output were equal, "identical" would be
+a property of the instrument. `CONTROL DEAD` fails the run instead.
+
+### Two I deliberately did not annotate
+
+- **NNAPI** (`S31`): verified on-device — `NNAPI devices: 1`, the CPU reference
+  only, which supports "no accelerator on SM8750". Not annotated, because the
+  only artifact is an Android **binary**, and `reprocheck` now refuses binary
+  annotations. Annotating it would break the rule I added two hours earlier.
+- **Locality routing** (`S61`/`M1.8c`): `fleetsim.py` runs and passes 4/4 of its
+  own controls, but the claim says *measured on a real fleet* and fleetsim is
+  the **simulation the claim contrasts itself against**. No `M1_8c` directory
+  exists. Annotating the nearest runnable file would have named the wrong
+  experiment — which is how a reproducer starts certifying something it never
+  measured.
+
+`repro:` count is now 17 runnable, 0 gone, 0 inert, **27 unannotated**.
+
 ## The general form
 
 Three cycles have now found the same shape from three directions:
