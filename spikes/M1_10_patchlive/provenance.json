@@ -1,0 +1,133 @@
+{
+ "spike": "M1_10_patchlive",
+ "recorded_utc": "2026-08-17T11:26:58Z",
+ "note": "NOT refuted: 4 members x 4 probes x 30 runs, all distinct=1. Value is in the control: 2 of 4 probes were inert until the unpatched build exposed them.",
+ "repos": [
+  {
+   "path": ".",
+   "head": "3b28bc756b15c78ba946ee4a644ddc0e320e09c6",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun",
+   "head": "3b28bc756b15c78ba946ee4a644ddc0e320e09c6",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  ".": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
+   "files": 2,
+   "combined_sha256": "a7317d3b3f94dc27",
+   "per_file": {
+    "Cargo.toml": "e1464d0f054ec84e",
+    "Cargo.lock": "c9a891869d7fc8a8"
+   }
+  }
+ },
+ "artifacts": [
+  {
+   "path": "patchlive.json",
+   "sha256": "b7c8dae1939198dcb8f7ea1d11b0f3daa10407febfc41537e49eeb66308f26d5",
+   "bytes": 2153,
+   "mtime": 1786965953,
+   "compared_ts": 1786965991,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "control_unpatched.json",
+   "sha256": "f15eb57f34ea45c4e11d573bf6e666dc92e8e00c7bd1e36f27611829c18ecfce",
+   "bytes": 1163,
+   "mtime": 1786965881,
+   "compared_ts": 1786965991,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "unpatched-control-fires",
+   "must_fire_because": "distinct=1 is also what an INERT probe returns; only reverting the patches separates \"stable\" from \"measuring nothing\"",
+   "can_fail_because": "it DID fail: 2 of the 4 probes scored distinct=1 on the UNPATCHED build and were rewritten before their PASS meant anything",
+   "null_must_contain": "every probe must show distinct>1 on a build with the patches reverted",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": [
+    "intersection:3",
+    "subtraction:3",
+    "new_space:30",
+    "random_err:30"
+   ]
+  },
+  {
+   "name": "patched-differs-from-unpatched",
+   "must_fire_because": "the probe must separate the two builds by VALUE, not only by stability",
+   "can_fail_because": "if the fix did not change the printed output the probe would pass on both builds and prove nothing",
+   "null_must_contain": "the patched sample and the unpatched sample must not be the same string",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": [
+    "patched:0\tGroundingSpace",
+    "unpatched:0\tGroundingSpace-0x74add8298"
+   ]
+  },
+  {
+   "name": "all-four-members-covered",
+   "must_fire_because": "host-min has a different feature set and the phone a different ISA and OS; a host-only check speaks for neither",
+   "can_fail_because": "if two workers resolved to the same binary the observations would be constant and certify refuses",
+   "null_must_contain": "four distinct binary sha256 values",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": [
+    "f52d98196ad0",
+    "a867fbfa5f53",
+    "989da5cd3be7",
+    "c90624244472"
+   ]
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  ".": {
+   "newest": 1786965991,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
+   "newest": 1786955408,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "all four quorum-member binaries carry the nondeterminism patches live -- every probe returns a single stable result on every binary",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
