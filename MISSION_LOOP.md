@@ -288,6 +288,34 @@ The obligations:
   and 840 lines — **with both lanes obeying the rule above.** `--only` ignores
   the index. Gated by `.git/hooks/commit-msg`; `Carries: <ATOM>` declares a
   cross-lane commit deliberately, which keeps the honest case off `--no-verify`.
+
+  - **A NEW FILE needs `git add -N` first, and that is not an exception to the
+    rule — it is the rule's only usable form for the commonest operation here.**
+    `git commit --only` **refuses a path git has never seen**:
+
+    ```
+    error: pathspec 'spikes/S36_witnessed_job/RESULT.md' did not match any file(s) known to git
+    ```
+
+    and every cycle in this repo creates a new spike directory. So the sentence
+    above, taken alone, could not be followed for a DONE row — and until H71
+    nothing in `DECISIONS.log`, `BLOCKED.log` or any `HANDOFF.*` recorded a lane
+    hitting it, which means every new spike here was committed by a route this
+    contract did not name. The form:
+
+    ```sh
+    git add -N <your new paths>          # intent-to-add: NO CONTENT is staged
+    git commit --only <the same paths>   # --only still ignores the index
+    ```
+
+    **Chosen for blast radius, not convenience.** An intent-to-add entry carries
+    no blob, so if a co-lane's bare `git commit` lands in the window it captures
+    an **empty file** — one commit to fix. A plain `git add` in that same window
+    hands them your complete spike under their `Atom:`, which is `b529081`
+    verbatim. `python3 spikes/harness/githygiene.py --selfcheck` executes all
+    three properties, including that a co-lane's fully staged file stays **out**
+    of the resulting commit (v3, H71) — so if git's behaviour changes, this
+    paragraph goes red instead of becoming folklore.
 - **Never rewrite shared history.** Other agents' provenance chains reference
   existing blobs by hash. `git rm --cached` going forward is safe and
   reversible; `filter-repo` is a human decision.

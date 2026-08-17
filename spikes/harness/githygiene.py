@@ -32,6 +32,35 @@ WHAT THIS DELIBERATELY DOES NOT DO
   reports the candidates for it.
 
 Exit 0 clean, 1 violations, 2 could not run.
+
+VERSION HISTORY (§12.7: a harness change carries a version bump and a rationale
+block naming the defect it removes). Numbered from here; earlier states are
+described by the H14 and H35 comments in the body, which predate the convention
+reaching this file.
+
+  v3 · 2026-08-17, AGENT-1, H71. DEFECT REMOVED: **§13's only stated commit form
+       cannot express the operation every cycle performs, and nothing in the
+       tree said so.** §13 gives one form -- `git commit --only <paths>`, not
+       `git add` then `git commit` -- and `--only` REFUSES an untracked path:
+
+           error: pathspec 'spikes/S36_witnessed_job/RESULT.md' did not match
+           any file(s) known to git
+
+       Every cycle in this repo creates a new spike directory, so the rule was
+       unfollowable for the commonest operation here, and no `DECISIONS.log`,
+       `BLOCKED.log` or `HANDOFF.*` entry records anyone hitting it -- meaning
+       every new spike was committed by a route the contract does not name.
+
+       The guardrail H71 adds is a RECIPE in a document, and §12.10 says a
+       guardrail that is written but not mechanised is violated again by its own
+       author. So the recipe is EXECUTED here rather than asserted: `selfcheck`
+       gains three cases proving (a) `--only` refuses an untracked path, (b)
+       `git add -N` then `--only` commits it, and (c) **a co-lane's fully staged
+       file stays out of that commit** -- which is the property that makes the
+       workaround safe rather than a quiet return to the H19 shared-index bug.
+       If a future git accepts untracked paths under `--only`, case (a) goes red
+       and §13's workaround paragraph can be deleted rather than left as
+       folklore.
 """
 
 import os
@@ -493,6 +522,62 @@ def selfcheck():
         git(d, "rm", "-q", "--cached", "old.gguf")
     rc, out = run_in(removal)
     ck("the remedy it prescribes is not a violation", rc == 0, f"rc={rc}")
+
+    # 4b · H71 · §13'S ONLY STATED COMMIT FORM CANNOT EXPRESS THE OPERATION
+    #      EVERY CYCLE PERFORMS, AND THESE TWO CASES ARE THE PROOF PLUS THE
+    #      RECIPE. §13 says `git commit --only <paths>`, not `git add` then
+    #      `git commit`, and gives no other form. `--only` REFUSES an untracked
+    #      path, and every cycle here creates a new spike directory. So the
+    #      first case asserts the REFUSAL -- if a future git makes `--only`
+    #      accept untracked paths, this check goes red and §13's workaround
+    #      paragraph can be deleted rather than left as folklore.
+    #
+    #      These test git's behaviour, not this module's, which is deliberate:
+    #      the guardrail H71 adds is a RECIPE in a document, and §12.10 says a
+    #      guardrail that is written but not mechanised gets violated again by
+    #      its own author. What can go stale here is the recipe, so the recipe
+    #      is what is executed.
+    def _only_refuses_untracked(d):
+        stage(d, "seed.md", b"a finding\n")
+        git(d, "commit", "-q", "-m", "a finding was recorded here")
+        open(os.path.join(d, "new.md"), "wb").write(b"a new finding\n")
+        return subprocess.run(
+            ["git", "commit", "--only", "new.md", "-m", "S1: a finding"],
+            cwd=d, capture_output=True, text=True)
+
+    d = tempfile.mkdtemp(prefix="ghsc_h71_")
+    try:
+        for c in (["git", "init", "-q"], ["git", "config", "user.email", "t@t"],
+                  ["git", "config", "user.name", "t"]):
+            subprocess.run(c, cwd=d, check=True,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        p = _only_refuses_untracked(d)
+        ck("H71 · `git commit --only` REFUSES an untracked path",
+           p.returncode != 0 and "did not match any file" in (p.stdout + p.stderr),
+           f"rc={p.returncode} {(p.stdout + p.stderr).strip()[:80]}")
+
+        # ... and the recipe §13 now carries: intent-to-add YOUR paths, then
+        # --only the SAME paths. The co-lane's fully staged file must stay OUT
+        # of the commit -- that is the whole reason `--only` is the rule, and a
+        # recipe that reintroduced the shared-index bug would be worse than the
+        # refusal it works around.
+        open(os.path.join(d, "co_lane.md"), "wb").write(b"another lane's work\n")
+        subprocess.run(["git", "add", "co_lane.md"], cwd=d, check=True,
+                       stdout=subprocess.DEVNULL)
+        subprocess.run(["git", "add", "-N", "new.md"], cwd=d, check=True,
+                       stdout=subprocess.DEVNULL)
+        p2 = subprocess.run(["git", "commit", "--only", "new.md",
+                             "-m", "S1: a finding was recorded here"],
+                            cwd=d, capture_output=True, text=True)
+        files = subprocess.run(["git", "show", "--name-only", "--format=", "HEAD"],
+                               cwd=d, capture_output=True, text=True).stdout.split()
+        ck("H71 · `git add -N` then `--only` commits the new file",
+           p2.returncode == 0 and "new.md" in files,
+           f"rc={p2.returncode} files={files}")
+        ck("H71 · ... and leaves a co-lane's STAGED file out of it",
+           "co_lane.md" not in files, f"files={files}")
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
 
     # 5 · Subject quality, checked as a function since it is pure.
     ck("weak subject rejected", bool(check_subject("wip")))
