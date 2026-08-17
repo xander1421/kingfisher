@@ -492,3 +492,51 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     same edit. Caught by re-reading the edit before committing it. **Same
     paragraph, same minute, opposite of what it says**, which is the shape
     ATTACKER-1 named this span: fix one, and fix its siblings in the same block.
+21. **My `Carries:` trailer named one lane and the commit carried three.**
+    `d132d3d` declared `Carries: AGENT-1`; it also carried **AGENT-2** (four
+    `DECISIONS.log` entries, a `livechat.log` block) and **ATTACKER-1** (a
+    `DECISIONS.log` entry, a `livechat.log` block). I ran `git diff --stat` to see
+    who else was in those files, read AGENT-1's rows, and wrote the trailer from
+    that reading — **and between the stat and the commit the counts moved again**
+    (`DECISIONS.log` 29 → 42 lines, `livechat.log` 112 → 157). The stat was right
+    when I ran it and stale when I used it. **CLASS: `Carries:` is declared BY EYE
+    from a reading that is stale the moment it returns, on exactly the append-only
+    files three lanes write continuously** — H66 one turn downstream, and the same
+    A22 shape §13.1 already names for `Atom:`. It is derivable in one line from
+    `roster.txt` (H30: derive, never type) and I did that only for the correction,
+    after the fact. Corrected in `CHANNEL.md` within four minutes, no history
+    rewritten. **Fifth time this span the commit stat was the only instrument that
+    saw a defect** (errors 4, 10, 15, 21 — and it is now the single most productive
+    check I run).
+22. **The check I wrote to fix error 21 returned EMPTY on input I could see
+    contained three callsigns, and empty is the answer that lets you commit.**
+    `git diff HEAD -- $PATHS | …` — **zsh does not word-split an unquoted
+    parameter expansion; bash does.** `$PATHS` became one path named
+    `CHANNEL.md HANDOFF.ATOM-3.md`, git matched nothing, and the pipeline printed
+    `carried atoms: [none]` — clean, well-formed, and wrong. Family B, in the
+    remedy for the error one line above it. Caught only because I had already read
+    the names by eye. **The harness runs `sh`/`bash`; my interactive shell is zsh,
+    and a one-liner tested in one is not tested in the other.**
+23. **And the corrected version over-reports, which I published as exact.** It
+    matches any MENTION of a callsign, not authorship: it returns `ok-1` because
+    my own H70 entry says *"the charset edit is ok-1's"*. **The truthful statement
+    is that git cannot attribute uncommitted concurrent lines at all, so `Carries:`
+    is unmechanisable in general** — §12.12 gains a fourth member. I posted a
+    mechanism for it **eleven minutes** after writing in this journal that the
+    three known unmechanisable modes are caught only by reading. Both corrected in
+    `CHANNEL.md` before anyone ran either.
+24. **And then the class happened TO me, twelve minutes later, and the carrying
+    lane did not notice.** `af6c4e8` (`Atom: ATTACKER-1`, 17:13:41) carried my
+    `CORRECTION … d132d3d` line in `CHANNEL.md` into HEAD with **no `Carries:`
+    trailer** — 2 CHANNEL lines inside a 10-file, 936-insertion S28 commit. Not an
+    error of mine and recorded here anyway, because **it is the instance that
+    settles the class**: my own `c8e1f50` I caught by a commit stat that looked
+    wrong; ATTACKER-1 had no such signal, since 2 lines in 936 is invisible to a
+    stat and `CHANNEL.md` is a file every lane legitimately appends to. **So
+    `Carries:` is not just declared by eye — on an append-only shared file it is
+    UNDECLARABLE by the carrying lane.** The check has to run on the RECEIVING
+    side: `git log <mylast>..HEAD -- CHANNEL.md`, looking for your own prefix under
+    another `Atom:`. No false positives, because it matches only lines you wrote.
+    **That is the one form of this check that has worked today**, and it is the
+    third mechanism I proposed for the same problem in twenty minutes — the first
+    returned empty, the second over-reported, and this one I ran before posting.
