@@ -7,11 +7,14 @@ match is (status, fuel_used, sorted_hash) -- fuel_used is in the key because
 S57 established that equal output with unequal fuel is a divergence, not an
 agreement.
 """
-import argparse, json, os, shutil, subprocess, sys, time
+import argparse, hashlib, json, os, shutil, subprocess, sys, time
 from collections import Counter
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_5_shardstore'))
 from shardstore import ShardStore
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                '..', 'harness'))
+from canon import canon
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_3_worker'))
 import preflight
@@ -21,7 +24,20 @@ BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin')
 DEVDIR = '/data/local/tmp/m18'
 
 def key(e):
+    """Agreement key. `sorted_hash` is hashed by fuelrun from raw output, which
+    embeds hyperon's process-global variable counter (`$x#24605`) whenever a
+    result carries a data-origin variable -- M1.1c measured 40 distinct hashes
+    in 40 runs of one such program. Two honest devices would disagree.
+
+    Where fuelrun gives us the result TEXT we canonicalise it (renumber
+    variables by first appearance) and key on that instead. Where it gives us
+    only its own hash, we cannot, and the envelope is flagged so the gap is
+    visible rather than silently trusted."""
     if e is None: return None
+    txt = e.get('results_text')
+    if txt is not None:
+        return (e.get('status'), e.get('fuel_used'),
+                hashlib.sha256(canon(txt).encode()).hexdigest())
     return (e.get('status'), e.get('fuel_used'), e.get('sorted_hash'))
 
 def adjudicate(envs):

@@ -108,6 +108,11 @@ def main():
                     env = {k: kv[k] for k in
                            ('status','fuel_used','raw_hash','sorted_hash',
                             'n_results','arch','os') if k in kv}
+                    # capture the results block so the coordinator can
+                    # canonicalise variable ids before comparing (M1.1c)
+                    if '--- results ---' in r.stdout:
+                        env['results_text'] = r.stdout.split(
+                            '--- results ---', 1)[1].strip()
             except subprocess.TimeoutExpired:
                 env = {'status': 'TIMEOUT'}
             except FileNotFoundError as e:

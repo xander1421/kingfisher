@@ -23,6 +23,27 @@ public final class Soak {
 
     static final String TAG = "KFSOAK";
 
+    static final java.util.regex.Pattern VARID =
+            java.util.regex.Pattern.compile("\\$([^\\s()#]+)#(\\d+)");
+
+    /** Renumber variables by first appearance. See harness/canon.py for why
+     *  renumbering rather than stripping: ($x#1 $x#2) and ($x#1 $x#1) are
+     *  different answers and must not collapse onto each other. */
+    static String canon(String t) {
+        java.util.Map<String,Integer> map = new LinkedHashMap<>();
+        java.util.regex.Matcher m = VARID.matcher(t);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            String key = m.group(1) + "#" + m.group(2);
+            Integer k = map.get(key);
+            if (k == null) { k = map.size() + 1; map.put(key, k); }
+            m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(
+                    "$" + m.group(1) + "#" + k));
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
     static String sha(String s) throws Exception {
         byte[] d = MessageDigest.getInstance("SHA-256").digest(s.getBytes("UTF-8"));
         StringBuilder b = new StringBuilder();
@@ -71,16 +92,27 @@ public final class Soak {
         progs.put("E2_alias",    impl + "!(match &self (implies (Frog $a) (Green $b)) ($a $b))\n");
         String rule = "(= (f $x) (g $x $x))\n";
         progs.put("E3_rulequery",rule + "!(match &self (= $h $b) ($h $b))\n");
-        progs.put("E4_typedecl", "(: Pair (-> $ta $tb (PairType $ta $tb)))\n"
-                               + "!(match &self (: $n $t) ($n $t))\n");
+        // E4_typedecl removed: `(match &self (: $n $t) ...)` matches EVERY type
+        // declaration in the loaded stdlib, returning thousands of atoms and
+        // OOM-killing the process before the controls run. A probe whose scope
+        // is the whole stdlib measures the stdlib, not the hypothesis.
 
         // --- controls
         progs.put("CTL_arith",   "!(+ 1 2)\n");
         progs.put("POSCTL_space","!(new-space)\n");
 
+        // controls first, so a crash later cannot cost us the control (E4 did
+        // exactly that: the process died before POSCTL ever ran)
+        Map<String, String> ordered = new LinkedHashMap<>();
+        for (String k : new String[]{"CTL_arith", "POSCTL_space"})
+            if (progs.containsKey(k)) ordered.put(k, progs.remove(k));
+        ordered.putAll(progs);
+        progs = ordered;
+
         int reps = 40;
         for (Map.Entry<String, String> e : progs.entrySet()) {
             Set<String> seen = new LinkedHashSet<>();
+            Set<String> seenCanon = new LinkedHashSet<>();
             String first = null, lastOut = "";
             int firstDiffAt = -1;
             for (int i = 0; i < reps; i++) {
@@ -94,12 +126,14 @@ public final class Soak {
                 if (first == null) first = h;
                 else if (!h.equals(first) && firstDiffAt < 0) firstDiffAt = i;
                 seen.add(h);
+                try { seenCanon.add(sha(canon(out))); } catch (Exception ex) {}
             }
             Log.i(TAG, "  sample[" + e.getKey() + "] = " + lastOut);
-            Log.i(TAG, String.format("%-12s reps=%d distinct=%d firstDiffAt=%s %s",
-                    e.getKey(), reps, seen.size(),
-                    firstDiffAt < 0 ? "-" : String.valueOf(firstDiffAt),
-                    seen.size() == 1 ? "STABLE" : "DIVERGES " + seen));
+            Log.i(TAG, String.format("%-13s raw=%2d canon=%2d  %s",
+                    e.getKey(), seen.size(), seenCanon.size(),
+                    seenCanon.size() == 1
+                        ? (seen.size() == 1 ? "stable both" : "FIXED BY CANON")
+                        : "STILL DIVERGES"));
         }
         Log.i(TAG, "SOAK DONE");
     }

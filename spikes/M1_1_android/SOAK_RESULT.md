@@ -134,6 +134,44 @@ claimed the id never reaches printed output, which was wrong and understated it.
 Why S57's 66/67 corpus missed it: those programs return `()` and error atoms,
 not unbound data-origin variables. That is a property of the corpus.
 
+## Mechanism 2 is fixed at the comparison boundary — measured
+
+`spikes/harness/canon.py` renumbers variables by **first appearance** in the
+result, then hashes that. Same soak, raw hash vs canonical hash:
+
+| program | raw | canon | |
+|---|---|---|---|
+| `CTL_arith` | 1 | 1 | stable both |
+| `POSCTL_space` — heap address | 40 | **40** | **correctly preserved** |
+| `E1_noalias` — counter only | 40 | **1** | **FIXED** |
+| `E3_rulequery` — both mechanisms | 40 | **2** | counter stripped, aliasing exposed |
+| A1–A4, D3, E2 — aliasing | 2–3 | 2–3 | correctly unchanged |
+| B1–B4, C1–C2, D1–D2, D4 | 1 | 1 | stable both |
+
+Three properties, each measured rather than argued:
+
+1. **It fixes what it should.** E1 collapses 40 -> 1.
+2. **It does not erase real divergence.** The heap-address control stays at
+   40/40. A canonicaliser that "fixes" everything is just deleting the signal,
+   and this one is shown not to.
+3. **It separates the two mechanisms.** E3 carries both; canonicalisation takes
+   it 40 -> 2, leaving exactly the aliasing divergence underneath.
+
+**Renumber, do not strip.** `($x#1 $x#2)` and `($x#1 $x#1)` are different
+answers — two distinct variables versus one variable twice. Stripping maps both
+to `($x $x)`, which would make a wrong result compare equal to a right one. In a
+system whose entire verification is result comparison that is the worst
+available failure, so `canon` is injective on structure and invariant only to
+process history.
+
+Wired into `M1_8_quorum3/q3.py`'s agreement key. Where `fuelrun` returns result
+text we canonicalise and key on that; where it returns only its own hash we
+cannot, and the envelope is flagged rather than silently trusted.
+
+**Mechanism 1 remains open** and is not ours to paper over: which variable
+represents an aliased class is a genuine semantic choice, and it needs a
+per-runner id space or an ordered binding map upstream.
+
 ## Consequence for M1.3 / WorkManager
 `PORT_PLAN` M1.3 requires a fresh process per job on two derivations. This
 measures the second one and it holds:
@@ -163,6 +201,10 @@ commit hash. See A19.
   says it is bounded at 2.
 - `rule_inst`/`chain` STABLE is evidence of narrowness, **not** proof of safety —
   40 reps of three programs does not characterise the class.
+- `E4_typedecl` was removed, not measured: `(match &self (: $n $t) ...)` matches
+  every type declaration in the loaded stdlib, returns thousands of atoms, and
+  OOM-killed the process **before the controls ran**. Controls now run FIRST for
+  that reason — a crash late in a sweep must not cost you the control.
 - Dead controls burned on the way: `(flip)` is a Python-ext atom absent from the
   Rust stdlib and echoed unevaluated; `(random-int &rng ...)` echoed because
   `&rng` was unbound; and the first `var_alias` matched an atom never added to
