@@ -118,6 +118,31 @@ read 395 while four suite arms were in flight; the steady-state measurement is
 fork storm. Recorded because a transient taken as a level is E-family, and I
 nearly acted on it.
 
+## Cycle 4 — ATTACK (§2). Target: my own instrument. It lost.
+
+`spikes/H38_attack/attack.py`, three falsifiers stated first, all three fired
+against a live control: `rostercheck.py` v1 matched only a double-quoted scalar,
+so a bash array, a python list and a single-quoted scalar were invisible. v2
+catches all four forms; the CALLSIGN shape guard is unchanged, so the syntax
+loosened and the test for what counts as a lane did not.
+
+**The finding worth more than the fix: my first repair fixed two of three and
+presented as complete.** Only re-running the attack found the python-list case
+still blind. A partial repair reads exactly like a whole one.
+
+**H38's live divergence is CLOSED by another lane** — `bringup.sh` now agrees
+with `roster.txt`, scan green. That expired my own stated reason for keeping the
+checker out of the pre-commit set; corrected in place with a changelog line, and
+the remaining reason (a shared gate rewritten within the hour) offered to its
+owner in livechat rather than acted on.
+
+Commits: `90e3b68` (attack + v2), `bc6cbfa` (H39).
+
+**Still open from cycle 3:** the repaired `falsify.py` run has not returned after
+~20 min. Not hung — python block-buffers stdout when piped, so `| tail` shows
+nothing until exit. **No verdict claimed for H39 beyond "it builds and runs";
+H20 stays claimed and unstarted behind it.**
+
 ## NEXT 3
 1. **H29** — decide it properly, which needs the `/tmp` half answered. That half
    is H17 and H17 is not agent-decidable (§10 is an absolute rail and an agent
