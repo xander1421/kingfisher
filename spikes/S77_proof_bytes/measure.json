@@ -1,0 +1,213 @@
+{
+ "all_controls_fire": true,
+ "controls": {
+  "C_depth_and_siblings_disagree": {
+   "can_fail_because": "depth and sibling count rank the three key sets in the same order, which would make depth a valid proxy and retract nothing",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "S75 and S76 both converted depth into proof size by multiplication; that is only valid if the two quantities order the key sets the same way",
+   "name": "C_depth_and_siblings_disagree",
+   "null_must_contain": "three key sets spanning 12 to 1,155 byte keys and 10.3 to 139.1 node depth, which is ample room for the two orderings to AGREE and for this control to come out negative",
+   "observations": {
+    "by_depth_ascending": [
+     "triples",
+     "atoms_interned",
+     "atoms_original"
+    ],
+    "by_siblings_ascending": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "depths": {
+     "atoms_interned": 61.253237059379096,
+     "atoms_original": 139.0532147578416,
+     "triples": 10.260126582278481
+    },
+    "siblings": {
+     "atoms_interned": 56.356,
+     "atoms_original": 45.658,
+     "triples": 70.194
+    }
+   }
+  },
+  "C_every_sampled_proof_verifies": {
+   "can_fail_because": "any sampled membership proof fails verify_membership against the root hash",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a proof whose verifier rejects is not a proof and its size is a number about nothing -- W1 shipped four controls with no verification function at all",
+   "name": "C_every_sampled_proof_verifies",
+   "null_must_contain": "a verifier that returns False, which W2 has and W1 did not",
+   "observations": {
+    "atoms_interned": {
+     "max_bytes": 3841,
+     "mean_bytes": 1917.3413461538462,
+     "sampled": 208,
+     "verified": 208
+    },
+    "atoms_original": {
+     "max_bytes": 2543,
+     "mean_bytes": 1568.4423076923076,
+     "sampled": 208,
+     "verified": 208
+    },
+    "triples": {
+     "max_bytes": 3403,
+     "mean_bytes": 2350.082926829268,
+     "sampled": 205,
+     "verified": 205
+    }
+   }
+  },
+  "C_long_keys_add_nodes_not_branches": {
+   "can_fail_because": "the longest-key set does not have the fewest siblings per node on its path",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the reason depth fails as a proxy: the extra nodes a 1,155-byte key contributes are single-child and carry no digests",
+   "name": "C_long_keys_add_nodes_not_branches",
+   "null_must_contain": "the original atom keys, whose 139.1 mean depth gives them ample room to ALSO carry the most siblings if long runs were branchy",
+   "observations": {
+    "mean_key_bytes": {
+     "atoms_interned": 52.525,
+     "atoms_original": 106.605,
+     "triples": 12.0
+    },
+    "siblings_per_node_on_path": {
+     "atoms_interned": 0.9200493346232185,
+     "atoms_original": 0.3283491149738069,
+     "triples": 6.841436061933256
+    }
+   }
+  },
+  "C_probe_reads_the_zipper_correctly": {
+   "can_fail_because": "the two-key self-check reports any sibling count other than 1",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a misread of child_count would produce a confident sibling count about nothing, and it is the only quantity this spike measures",
+   "name": "C_probe_reads_the_zipper_correctly",
+   "null_must_contain": "a hand-decidable trie: keys \"aa\" and \"ab\" branch exactly once, so the path to \"aa\" has exactly 1 sibling and any other answer is a misreading",
+   "observations": {
+    "expected_siblings": 1,
+    "observed": {
+     "siblings": 1,
+     "steps": 2
+    }
+   }
+  },
+  "C_real_prover_agrees_with_the_sibling_walk": {
+   "can_fail_because": "W2 real proof bytes rank the three key sets differently from the pathmap sibling walk",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "sibling count times 32 B is arithmetic; a prover that exists and a verifier that accepts are the check on it",
+   "name": "C_real_prover_agrees_with_the_sibling_walk",
+   "null_must_contain": "W2's own proof sizes on the same keys, produced by a prover written before this spike and free to rank the sets any way at all",
+   "observations": {
+    "by_pathmap_siblings": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_w2_real_bytes": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "pathmap_auth_bytes": {
+     "atoms_interned": 1803.392,
+     "atoms_original": 1461.056,
+     "triples": 2246.208
+    },
+    "w2_mean_bytes": {
+     "atoms_interned": 1917.3413461538462,
+     "atoms_original": 1568.4423076923076,
+     "triples": 2350.082926829268
+    }
+   }
+  },
+  "C_same_key_files_as_S75_S76": {
+   "can_fail_because": "any key count differs from the count in the reviewed spike's compare.json",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "this is a review of two specific spikes, so it has to run on their committed key files rather than on re-derived ones",
+   "name": "C_same_key_files_as_S75_S76",
+   "null_must_contain": "the key counts S75 and S76 recorded (1,246 atoms, 4,096 triples), which this spike does not compute and cannot adjust",
+   "observations": {
+    "atoms_interned": 1246,
+    "atoms_original": 1246,
+    "triples": 4096
+   }
+  }
+ },
+ "depth_measured_by_S75_S76": {
+  "atoms_interned": 61.253237059379096,
+  "atoms_original": 139.0532147578416,
+  "triples": 10.260126582278481
+ },
+ "digest_bytes": 32,
+ "retracts": {
+  "S75": "the ~33 KB figure for S73 isolated insert proofs on real pathmap",
+  "S76": "the ~14 KB (id4) and ~9.9 KB (id2) figures, which inherit it",
+  "ground": "depth was multiplied by a digest width; the quantity that buys digests is siblings on the path, and long keys add nodes without adding siblings"
+ },
+ "seed": 20260817,
+ "selfcheck": {
+  "siblings": 1,
+  "steps": 2
+ },
+ "sets": {
+  "atoms_interned": {
+   "depth_implied_auth_bytes": 1960.103585900131,
+   "keys": 1246,
+   "mean_key_bytes": 52.525,
+   "pathmap_auth_bytes_mean": 1803.392,
+   "pathmap_branch_nodes_total": 9852,
+   "pathmap_max_siblings": 114,
+   "pathmap_mean_node_depth": 61.253237059379096,
+   "pathmap_mean_siblings": 56.356,
+   "w2_real_proof": {
+    "max_bytes": 3841,
+    "mean_bytes": 1917.3413461538462,
+    "sampled": 208,
+    "verified": 208
+   }
+  },
+  "atoms_original": {
+   "depth_implied_auth_bytes": 4449.702872250931,
+   "keys": 1246,
+   "mean_key_bytes": 106.605,
+   "pathmap_auth_bytes_mean": 1461.056,
+   "pathmap_branch_nodes_total": 9776,
+   "pathmap_max_siblings": 75,
+   "pathmap_mean_node_depth": 139.0532147578416,
+   "pathmap_mean_siblings": 45.658,
+   "w2_real_proof": {
+    "max_bytes": 2543,
+    "mean_bytes": 1568.4423076923076,
+    "sampled": 208,
+    "verified": 208
+   }
+  },
+  "triples": {
+   "depth_implied_auth_bytes": 328.3240506329114,
+   "keys": 4096,
+   "mean_key_bytes": 12.0,
+   "pathmap_auth_bytes_mean": 2246.208,
+   "pathmap_branch_nodes_total": 18138,
+   "pathmap_max_siblings": 102,
+   "pathmap_mean_node_depth": 10.260126582278481,
+   "pathmap_mean_siblings": 70.194,
+   "w2_real_proof": {
+    "max_bytes": 3403,
+    "mean_bytes": 2350.082926829268,
+    "sampled": 205,
+    "verified": 205
+   }
+  }
+ }
+}

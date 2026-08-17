@@ -72,3 +72,4 @@ spikes/W4_prefilter_readset/triples.bin
 # committed, the 1 MB binary and the exported key dumps are not
 spikes/S75_pathmap_check/pmprobe/target/
 spikes/S75_pathmap_check/keys_*.bin
+spikes/S77_proof_bytes/pmproof/target/

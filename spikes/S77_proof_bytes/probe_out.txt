@@ -1,0 +1,4 @@
+selfcheck two_keys_one_branch siblings=1 steps=2 expect siblings=1
+path /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/../S75_pathmap_check/keys_atoms.bin keys= 1246 mean_siblings=   45.658 max_siblings=   75 mean_byte_steps=  106.605 mean_key_bytes=  106.605 branch_nodes_total=9776
+path /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/../S76_interned_keys/keys_atoms.bin keys= 1246 mean_siblings=   56.356 max_siblings=  114 mean_byte_steps=   52.525 mean_key_bytes=   52.525 branch_nodes_total=9852
+path /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/../S75_pathmap_check/keys_triples.bin keys= 4096 mean_siblings=   70.194 max_siblings=  102 mean_byte_steps=   12.000 mean_key_bytes=   12.000 branch_nodes_total=18138
