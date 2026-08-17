@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""H7 — do the loop-harness checks FAIL when their defect comes back?
+"""H7 — do the loop-harness checks FAIL when their defect comes back?  (v2)
+
+v2 RATIONALE (§12.7) — THE DEFECT REMOVED: this driver restated
+`install_hooks.sh`'s hook list instead of reading it, the installer grew
+`pre-commit` under H15, and `build()` runs the installer with `check=True` --
+so `python3 falsify.py` raised `CalledProcessError` before a single falsifier
+ran. THE INSTRUMENT THAT ANSWERS "IS A RED RUN REACHABLE" WAS ITSELF DEAD, and
+nothing reported it because nothing runs this driver automatically (H29). Found
+by tripping it while trying to use it for H20. See `installed_hooks()`. (ok-1.)
 
 MISSION_LOOP §5: *a control that cannot fail is not a control.* Every check in
 `test_loop_gate.sh` was written in response to a defect that had already
@@ -47,13 +55,46 @@ LAUNCHER = 'run_loop.sh'
 
 # Files the suite reads out of ROOT. settings.json is copied because the
 # registration block enumerates them with `git ls-files`.
+INSTALLER = 'spikes/harness/install_hooks.sh'
+
+
+def installed_hooks():
+    """The hook sources `install_hooks.sh` installs, READ FROM IT, not restated.
+
+    v2, 2026-08-17 (ok-1, H39). THE DEFECT REMOVED: this list was written out by
+    hand next to the installer's own, so the two drifted and THE WHOLE DRIVER
+    DIED. `install_hooks.sh` grew `pre-commit` under H15; TREE still copied only
+    `commit-msg.hook`; `build()` runs the installer with `check=True`, so it
+    raised `CalledProcessError` before a single falsifier ran, and
+    `python3 falsify.py` had been failing outright ever since. Nothing reported
+    it, because nothing runs this driver automatically (H29).
+
+    That is H38's class in a second place inside the hour -- two independently
+    maintained lists of the same set with nothing comparing them -- so the fix is
+    to stop maintaining the second list rather than to correct it.
+
+    REFUSES rather than falling back to a hard-coded list: a silent fallback is
+    exactly how the driver would go quiet again, and family B (the instrument
+    reporting fiction) is worse here than a stop, because this driver's whole job
+    is to say whether a check can fail.
+    """
+    src = open(os.path.join(REPO, INSTALLER)).read()
+    m = re.search(r'^for h in ([A-Za-z0-9 _-]+); do', src, re.M)
+    if not m:
+        raise SystemExit(
+            f'falsify.py: cannot read the hook list out of {INSTALLER}. That loop '
+            'is where\nthe installed set is defined; restating it here is what '
+            'broke this driver once\n(H39). Fix the parse or the installer -- do '
+            'not re-add a hard-coded list.')
+    return [f'spikes/harness/{h}.hook' for h in m.group(1).split()]
+
+
 TREE = [SUITE, GATE, LAUNCHER,
         'spikes/harness/githygiene.py',
         'spikes/harness/edits.py',
-        'spikes/harness/commit-msg.hook',
-        'spikes/harness/install_hooks.sh',
+        INSTALLER,
         '.claude/settings.json',
-        'spikes/S51_multicore/.claude/settings.json']
+        'spikes/S51_multicore/.claude/settings.json'] + installed_hooks()
 
 # (id, why it is here, file, anchor, replacement, check that must go red)
 FALSIFIERS = [

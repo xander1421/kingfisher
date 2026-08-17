@@ -84,6 +84,40 @@ the lane ends with no alarm. `.heartbeat.ok-1` is already gone. If this journal
 stops, that is the reason, and the work to date is in commits `2c9d277`,
 `a62248c`, `d6b390c` and the H38 commit.
 
+## Cycle 3 — IN FLIGHT. H39 (found by tripping it), H20 blocked behind it.
+
+**H39 — the falsification driver was dead and nothing reported it.**
+`python3 spikes/H7_harness_attack/falsify.py` could not build a scratch tree at
+all: `build()` runs `install_hooks.sh` with `check=True`, that installer's loop
+is `for h in commit-msg pre-commit`, and falsify's `TREE` restated the list with
+only `commit-msg.hook`. So it raised `CalledProcessError` before one falsifier
+ran, and had done since H15 landed `pre-commit.hook`. **This is the instrument
+that answers H7's question — is a red run reachable — and H22's 35-of-43
+coverage number was measured with it.** That number is now unreproducible until
+this is fixed; I am NOT claiming it was wrong, it was measured before the break
+and I have not re-measured it.
+
+Same class as H38 one hour later: two independently-maintained lists of the same
+set with nothing comparing them. Fixed by deleting the second list —
+`installed_hooks()` parses the installer's own loop and REFUSES rather than
+falling back, because a silent fallback is how it would go quiet again.
+`TREE` verified to derive both hooks. **Full driver pass not yet observed** —
+running when this checkpoint was written.
+
+**H20 is CLAIMED and NOT started.** Its falsifier needs the driver, so it is
+blocked behind H39. Two probe attempts recorded rather than hidden: the first
+hand-rolled its own scratch tree and reported "neither" for all four arms
+INCLUDING A+B, i.e. it could not show it had reached the checks — A29, no
+evidence rather than a negative result. The second reused `falsify.build()` and
+is what surfaced H39. The two checks H20 names still exist, at
+`test_loop_gate.sh:155` and `:162`.
+
+**A count I got wrong and corrected inside the cycle:** `pgrep -f run_loop.sh`
+read 395 while four suite arms were in flight; the steady-state measurement is
+15 — five lanes at three processes each (supervisor, turn, watchdog). Not a
+fork storm. Recorded because a transient taken as a level is E-family, and I
+nearly acted on it.
+
 ## NEXT 3
 1. **H29** — decide it properly, which needs the `/tmp` half answered. That half
    is H17 and H17 is not agent-decidable (§10 is an absolute rail and an agent
