@@ -35,7 +35,7 @@ fn sha256_hex(s: &str) -> String {
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 3 {
-        eprintln!("usage: fuelrun <program.metta> <fuel_limit>");
+        eprintln!("usage: fuelrun <program.metta> <fuel_limit> [working_dir]");
         std::process::exit(2);
     }
     let path = &args[1];
@@ -46,7 +46,19 @@ fn main() {
     let t_boot = Instant::now();
     // new_core + an explicit stdlib load keeps us off the filesystem-dependent
     // module catalogue; the phone has no writable XDG config dir.
-    let metta = Metta::new(None);
+    // OPTIONAL 3rd arg: working directory. The Android agent (kfjni.c) must set
+    // one, because the `directories` crate resolves XDG paths that are not
+    // writable on Android -- so the agent and this verifier were running
+    // DIFFERENT configurations, and `import!` resolved differently between them
+    // (M1.7 FLEET_MEMBER.md, 9/10 rather than 10/10). A verifier configured
+    // unlike the thing it verifies is comparing two environments, not two
+    // executions. Pass the same working dir to compare like with like.
+    let metta = match args.get(3) {
+        Some(wd) => Metta::new(Some(
+            hyperon::metta::runner::EnvBuilder::test_env()
+                .set_working_dir(Some(std::path::Path::new(wd))))),
+        None => Metta::new(None),
+    };
     let boot_ms = t_boot.elapsed().as_millis();
 
     let t_run = Instant::now();

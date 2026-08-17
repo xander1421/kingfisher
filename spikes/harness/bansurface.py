@@ -31,6 +31,23 @@ SEEDED_GEN = re.compile(r'\(\s*new-random-generator\s+(-?\d+)\s*\)')
 RESET = re.compile(r'\(\s*(reset-random-generator|set-random-seed)\b')
 IMPORT_RANDOM = re.compile(r'\(\s*import!\s+\S+\s+random\s*\)')
 
+# Filesystem surface, enumerated from builtin_mods/fileio.rs `register_function`
+# calls. These resolve RELATIVE paths against the runner's working directory, so
+# the same program returns different results on an agent and its verifier when
+# the two have different working dirs -- measured: `mkdocs.metta` calls
+# `(file-open! "./docs/generated/corelib.md" ...)` and was the last of 66
+# programs to disagree between the Android app and the host, after feature sets
+# were matched and an escaping bug in our own transport was fixed.
+#
+# This is not nondeterminism: each runtime is internally deterministic. It is an
+# environment dependency, and replication cannot detect it because both sides
+# are honestly reporting their own filesystem.
+# no \b after the trailing `!`: `!` and the following space are both
+# non-word characters, so there is no word boundary there and the pattern
+# never matched. Caught by the assertion below, which is why it exists.
+FILEIO = re.compile(r'\(\s*(file-open!|file-read-exact!|file-read-to-string!'
+                    r'|file-write!|file-seek!|file-get-size!)(?=[\s)])')
+
 
 def strip_comments(text):
     out = []
@@ -59,6 +76,11 @@ def scan(text):
         bad.append(('reseed', 'reset-random-generator/set-random-seed mutate '
                               'generator state mid-job; the result then depends '
                               'on evaluation order'))
+    m = FILEIO.search(t)
+    if m:
+        bad.append(('filesystem', f'{m.group(1)} resolves paths against the '
+                                  f'runner working directory, which differs '
+                                  f'between an agent and its verifier'))
     # random-int/float are fine ONLY if every generator in the job is seeded
     if RANDOM_OP.search(t) and not SEEDED_GEN.search(t):
         bad.append(('unseeded-random', 'random-int/random-float used with no '
@@ -103,7 +125,17 @@ def demo():
     # a comment must not trigger the gate
     ok, _ = admit(b'; !(flip)\n!(+ 1 2)\n')
     assert ok
-    print('bansurface: 11 assertions pass')
+
+    # filesystem ops are environment-dependent, not nondeterministic -- both
+    # runtimes answer honestly about their own filesystem, so quorum cannot see it
+    ok, v = admit(b'!(file-open! "./docs/x.md" "w")\n')
+    assert not ok and v[0][0] == 'filesystem', v
+    for op in (b'file-read-to-string!', b'file-write!', b'file-get-size!'):
+        ok, _ = admit(b'!(' + op + b' "x")\n')
+        assert not ok, op
+    ok, _ = admit(b'; !(file-open! "x" "w")\n!(+ 1 2)\n')
+    assert ok, 'a commented-out fileio call must not trigger'
+    print('bansurface: 16 assertions pass')
 
 
 if __name__ == '__main__':

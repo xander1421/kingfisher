@@ -4,10 +4,29 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-hyperon = { path = "../../../elders/hyperon-experimental/lib", default-features = false, features = ["pkg_mgmt"] }
+# MUST match the feature set the AGENT is built with. `libhyperonc` takes
+# workspace defaults = ["pkg_mgmt", "das"], and `hyperonc` has no [features]
+# block so the agent CANNOT be built without `das` (the upstream cfg-gate
+# item in HUMAN_NEEDED). A verifier without `das` resolves `import! das`
+# differently from the agent -- which is the 1/10 mismatch in M1.7
+# FLEET_MEMBER.md. So the verifier is built maximal to match.
+hyperon = { path = "../../../elders/hyperon-experimental/lib", features = ["pkg_mgmt", "das"] }
 hyperon-atom = { path = "../../../elders/hyperon-experimental/hyperon-atom" }
 hyperon-space = { path = "../../../elders/hyperon-experimental/hyperon-space" }
 sha2 = "0.10"
 
 [profile.release]
 strip = "symbols"
+
+# metta-bus-client (the `das` feature) is a GIT dependency that pulls
+# hyperon-atom from the registry, while we use the local path. Cargo treats
+# those as different crates and the build fails with
+# "expected hyperon_atom::Atom, found a different hyperon_atom::Atom".
+# The hyperon workspace root has this same patch section; a crate OUTSIDE the
+# workspace does not inherit it, which is why the agent (built inside) got `das`
+# and this verifier (built outside) silently did not.
+[patch.'https://github.com/trueagi-io/hyperon-experimental.git']
+hyperon-common = { path = "../../../elders/hyperon-experimental/hyperon-common", version = "0.2.10" }
+hyperon-atom   = { path = "../../../elders/hyperon-experimental/hyperon-atom",   version = "0.2.10" }
+hyperon-space  = { path = "../../../elders/hyperon-experimental/hyperon-space",  version = "0.2.10" }
+hyperon-macros = { path = "../../../elders/hyperon-experimental/hyperon-macros", version = "0.2.10" }

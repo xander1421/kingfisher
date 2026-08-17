@@ -114,15 +114,42 @@ public class MettaWorker extends Worker {
                 Log.i(TAG, "METTA FAILED on " + jid + ": " + e);
                 continue;
             }
-            String env = "{\"job_id\":\"" + jid + "\",\"worker\":\"android\","
-                       + "\"shard_cid\":\"" + cid + "\",\"status\":\"OK\","
-                       + "\"results\":\"" + out.trim().replace("\n", " | ").replace("\"", "'") + "\"}";
+            // Proper JSON escaping. The first version replaced every double
+            // quote with a single quote to avoid breaking the string
+            // concatenation -- which silently CORRUPTED any result containing a
+            // quote, and made 3 of 4 corpus mismatches our own harness rather
+            // than a real divergence. A transport that mangles the payload it
+            // carries is worse than one that drops it.
+            String env = "{\"job_id\":" + jstr(jid)
+                       + ",\"worker\":\"android\""
+                       + ",\"shard_cid\":" + jstr(cid)
+                       + ",\"status\":\"OK\""
+                       + ",\"results\":" + jstr(out.trim().replace("\n", " | ")) + "}";
             if (net.postResult(env)) done++;
         }
         double ms = (System.nanoTime() - t0) / 1e6;
         Log.i(TAG, String.format("FLEET RUN: %d jobs in %.1f ms, exited on %s",
                 done, ms, isStopped() ? "onStopped" : "idle"));
         return Result.success();
+    }
+
+    /** JSON string literal with real escaping. */
+    private static String jstr(String v) {
+        StringBuilder b = new StringBuilder("\"");
+        for (int i = 0; i < v.length(); i++) {
+            char c = v.charAt(i);
+            switch (c) {
+                case '"':  b.append("\\\""); break;
+                case '\\': b.append("\\\\"); break;
+                case '\n': b.append("\\n");  break;
+                case '\r': b.append("\\r");  break;
+                case '\t': b.append("\\t");  break;
+                default:
+                    if (c < 0x20) b.append(String.format("\\u%04x", (int) c));
+                    else b.append(c);
+            }
+        }
+        return b.append('"').toString();
     }
 
     private static String field(String json, String key) {

@@ -64,3 +64,85 @@ list. Not yet enforced.
 build and timed out at 240 s looking like a transport bug. It now installs and
 prints the sha256 of what it installed. **A24 again: the artifact tested was not
 the artifact built**, and the digest is printed so the next person can tell.
+
+---
+
+# Closing the gap: 65/65 on the admitted corpus
+
+The 9/10 became 61/65 at full scale. Three distinct causes, **two of them ours**.
+
+## 1. The agent and verifier were built with different Cargo features
+`libhyperonc` takes workspace defaults `["pkg_mgmt", "das"]`. `fuelrun` declared
+`default-features = false, features = ["pkg_mgmt"]`. So `import! das` resolved in
+the agent and not in the verifier — the app got *further* and looked wrong.
+
+Building the verifier with `das` failed:
+```
+expected `hyperon_atom::Atom`, found a different `hyperon_atom::Atom`
+```
+`metta-bus-client` is a **git** dependency (`singnet/das` tag 1.0.2) that pulls
+`hyperon-atom` from the registry while the workspace uses a path dep. The
+hyperon workspace root carries a `[patch.'https://github.com/trueagi-io/...']`
+section reconciling them — and **a crate outside the workspace does not inherit
+it**. That is precisely why the agent (built inside) had `das` and the verifier
+(built outside) silently did not.
+
+Fixed by copying the patch section into `fuelrun/Cargo.toml`. Both binaries
+rebuilt with matching features; `bin/known/` digests updated.
+
+## 2. Our transport corrupted the payload it carried
+The envelope was built by string concatenation with
+`.replace("\"", "'")` to avoid breaking the JSON. That silently rewrote **every
+double quote in every result**:
+
+```
+host: (Error (change-state! &ReplPrompt "> ") ...
+dev : (Error (change-state! &ReplPrompt '> ') ...
+```
+
+Three of the four remaining mismatches were this. The earlier 10/10 passed
+because those ten programs happened to contain no quotes.
+
+**A transport that mangles the payload is worse than one that drops it** — a
+drop is visible, a mangle looks like a divergence and sends you hunting the
+engine. Replaced with real JSON escaping.
+
+## 3. One genuine environment dependency, now banned at admission
+`mkdocs.metta` calls `(file-open! "./docs/generated/corelib.md" ...)`. A
+**relative path** resolves against the runner's working directory, which is
+`filesDir` on the app and the shell cwd on the host.
+
+This is not nondeterminism: each runtime is internally deterministic and both
+report their own filesystem honestly. **Quorum cannot detect it** — every
+replica would answer correctly about a different filesystem.
+
+Added the whole `fileio.rs` surface to `bansurface.py`, enumerated from its
+`register_function` calls: `file-open!`, `file-read-exact!`,
+`file-read-to-string!`, `file-write!`, `file-seek!`, `file-get-size!`.
+
+```
+corpus 67: ADMIT 65  REJECT 2
+  REJECT mkdocs.metta                       ['filesystem']
+  REJECT python__sandbox__test_gnd_conv.metta  ['flip']
+```
+
+The first version of that regex used `\b` after the trailing `!` and **never
+matched** — `!` and the following space are both non-word characters, so there
+is no boundary. Caught by the assertion written alongside it.
+
+## Result
+```
+envelopes 65/65 in 56.4 s · 66 polls · 174,804 shard bytes · 0 misses
+ADMITTED CORPUS, app-in-process vs host: 65/65
+```
+
+## What the sequence shows
+Four "divergences" between an agent and its verifier: **one was a build-config
+difference, three were our own tooling, and one was a real environment
+dependency that replication is structurally blind to.** Zero were engine
+nondeterminism.
+
+That ratio is the lesson. Before attributing a cross-platform difference to the
+thing being measured, the build configuration, the transport encoding and the
+environment have to be eliminated — and each of those is easier to get wrong
+than the engine is.

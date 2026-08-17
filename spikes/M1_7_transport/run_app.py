@@ -47,6 +47,11 @@ sh('adb', 'logcat', '-c')
 sh('adb', 'shell', 'am start -n net.kingfisher/.MainActivity')
 print(f'{len(progs)} jobs queued; app launched, WorkManager will schedule the worker')
 
+# give the verifier the SAME working dir the app uses, so filesystem-touching
+# programs (file-open!, mkdocs) compare like with like
+appdir = sh('adb','shell','run-as net.kingfisher pwd').stdout.strip() or ''
+print('app files dir (for verifier parity):', appdir or '<unavailable>')
+
 t0 = time.time()
 while len(server.RESULTS) < len(progs) and time.time() - t0 < 240:
     time.sleep(0.3)
