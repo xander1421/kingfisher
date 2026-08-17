@@ -1,0 +1,80 @@
+{
+ "spike": "M1_8_quorum3",
+ "recorded_utc": "2026-08-17T05:58:45Z",
+ "note": "M1 full-system run: admission gate -> CID shard store -> session preflight -> phone + 2 host workers -> canon_alpha -> quorum-3. elders tree carries our 3 unfiled nondeterminism patches (recorded, not silent); fuelrun binaries are prebuilt from an unconfirmed commit.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
+   "head": "3f76dc460da6961f57f69f6c3e550c59c74ada83",
+   "clean": false,
+   "dirty_files": [
+    "yperon-common/src/multitrie.rs",
+    "lib/src/metta/runner/builtin_mods/fileio.rs",
+    "lib/src/metta/runner/builtin_mods/random.rs",
+    "lib/src/metta/runner/stdlib/atom.rs",
+    "lib/src/space/grounding/mod.rs"
+   ],
+   "diff_sha256": "2a38d23f5150ab70834003b774ba2f5f8b88e191d45fe574cecd58bf40227397",
+   "diff_bytes": 11661
+  }
+ ],
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/fuelrun.v2.android",
+   "sha256": "deb4ee9b93f842bdef88f3bbf48cb6e7510c7157981cbc2fd6425ff47e1bcec2",
+   "bytes": 2894416
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/fuelrun.v2.host",
+   "sha256": "78d874f976748cb67ad1717995d6e8c57a84ed9b03cbb4b8ecca5b8f13290ed7",
+   "bytes": 2425952
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "admission-gate",
+   "must_fire_because": "a gate that never refuses is indistinguishable from no gate (A15)",
+   "null_must_contain": null,
+   "fired": true,
+   "detail": "refused 1 of 67",
+   "observations": [
+    {
+     "program": "python__sandbox__test_gnd_conv.metta",
+     "reasons": [
+      "flip"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "adjudicator-can-refuse",
+   "must_fire_because": "the quorum must be able to return every non-accepting verdict, or 66/66 means only that nothing was tested",
+   "null_must_contain": null,
+   "fired": true,
+   "detail": "each verdict reachable from a constructed envelope set",
+   "observations": {
+    "UNANIMOUS": "UNANIMOUS",
+    "REDUCED_QUORUM": "REDUCED_QUORUM",
+    "AGREED_FAILURE": "AGREED_FAILURE",
+    "NO_QUORUM": "NO_QUORUM"
+   }
+  }
+ ],
+ "problems": [],
+ "ok": true
+}
