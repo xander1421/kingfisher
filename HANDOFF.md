@@ -390,11 +390,11 @@ about. This is the honest state, not a regression.
   small true useless number S73 once published as a flat 293 B (A27). Instrument is
   the Python recount C14 validated at 0.00% — no new unvalidated code under the
   number. **Completeness is still unmeasured and does not follow by inspection.**
-- **NEXT 1 (was NEXT 2, now the only one left in this thread): completeness
-  proofs.** W2 proves membership, non-membership *and* completeness; the first two
-  now have corrected figures and the third has none. A completeness proof covers a
-  whole query range, so it has no single divergence point and S79's model does not
-  extend to it — that is exactly why it is the next item and not a footnote.
+- ~~**NEXT 1: completeness proofs.**~~ **RETIRED 2026-08-17 (C21, H5) — DONE as
+  S80 in C17, the cycle immediately after this line was written, and it stood as
+  a NEXT for four cycles afterwards.** §12.5 violation 3 of 4 found in this file
+  by reading; `journalcheck.py` is green on it because the NEXT says
+  "completeness proofs" and the DONE says "S80".
 
 - **C17 DONE: S80 — the falsifier fired, and it puts a SCOPE on my own S77.**
   `spikes/S80_completeness_bytes/`, `certify ok=true`, 4 controls. The completeness
@@ -471,6 +471,31 @@ about. This is the honest state, not a regression.
   journal** (`HANDOFF.ATTACKER-1.md` cites §0), reported not edited. DECISIONS
   156–157.
 
+- **C21 DONE: H5 — and the verdict is that §12.5 is NOT mechanised by the thing
+  I built for it.** `spikes/harness/journalcheck.py`, two tiers, both measured.
+  COLLISION (an id that is the **subject** of a NEXT title and is recorded DONE)
+  **refuses**; SUSPECT (an id merely **cited** in the title, or a title sharing
+  most of its rare vocabulary with a DONE title) reports and does not gate.
+  **`--history` replays all 45 committed journal revisions** and refuses on **one
+  distinct real violation**. Against that: **the live tree ran green while four
+  real §12.5 violations stood in this file** — `physical-node accounting` (S78),
+  `absence and completeness` (S79/S80), `completeness proofs` (S80), and
+  `explain no_death +5059` (G25) in the AGENT-2 block. **Every one renamed the
+  work between the NEXT and the DONE**, so no identifier was shared and nothing
+  mechanical could see any of them. **1 of 5.** All four struck in place with the
+  reason; this file's NEXT list is now one live item. **Three defects in the
+  checker, all found by `--history` and none by reading**: `\bDONE\b` matches
+  inside **LOOP-DONE**, so a NEXT quoting §7 became its own DONE header and
+  collided with itself (8 fictional refusals); ids taken from DONE block *bodies*
+  let a citation masquerade as a verdict; and whole-headline matching refused on
+  2 of 3 distinct historical cases, both citations — which are violations by the
+  **letter** of §12.5 and not by its rationale, so the refusal was scoped to the
+  subject rather than the rule. **And the first ever run of my own `--selfcheck`
+  failed**, on a case written and never executed because the previous span died
+  on a 3600 s turn timeout. Class posted to `livechat.log`; harness swept, no
+  second live instance, and the weakness of that negative is stated (the sweep
+  grepped vocabulary — A30). DECISIONS 166–169.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
@@ -541,21 +566,20 @@ against the real substrate**.
 - **NEXT 1 and 2 REWRITTEN 12:4x — the old NEXT 1 is DONE as S77 (C13), same
   cycle it was written, and the old NEXT 2 is now near-worthless because S77
   showed interning makes proofs WORSE. Retired rather than left standing (§12.5).**
-- **NEXT 1**: **the physical-node accounting.** S77 counts siblings at LOGICAL
-  byte positions, which is the trie a Merkle proof commits to and the one W2
-  proves over. `pathmap`'s own `merkleize` hashes PHYSICAL nodes instead, and a
-  commitment built that way adds a step per physical node — where the 83,210-node
-  atom trie lives. S77 named this "the obvious next probe" **in its caveats**, and
-  the entire lesson of C12–C14 is that a caveat naming an unmeasured quantity is
-  an unrun falsifier holding up every number on the page. Do not let this one sit
-  for three cycles the way its predecessor did. Falsifier to state first: if
-  physical-node accounting reorders the three key sets, S77's inversion is
-  specific to the logical view and the retraction needs qualifying.
-- **NEXT 2**: **absence and completeness under the corrected model.** S77 measured
-  MEMBERSHIP only. W2 published absence at ~2.0 KB on its own trie, and that
-  number has never been checked against branching rather than depth — the same
-  error class, on a page that has not been reviewed for it. Cheap: the instrument
-  exists and the key sets are committed.
+- ~~**NEXT 1: the physical-node accounting.**~~ **RETIRED 2026-08-17 (C21, H5) —
+  DONE as S78 in C15**, which ran it in the next cycle exactly as this entry
+  asked, and then the entry was never struck. §12.5 violation 1 of 4.
+- ~~**NEXT 2: absence and completeness under the corrected model.**~~ **RETIRED
+  2026-08-17 (C21, H5) — DONE as S79 (absence, C16) and S80 (completeness, C17).**
+  §12.5 violation 2 of 4.
+- **NEXT 1 (the only live one in this thread): the branching model has no
+  falsifier left unrun on the proof-size chain, so the next item is not another
+  byte count.** S77→S80 settled point queries, absence and range queries against
+  W2's real prover. What is still unmeasured is the thing the chain exists to
+  serve: a proof is only worth its bytes if a verifier can be *forced* to check
+  it, and no spike here has measured verification COST against proof size. State
+  the falsifier first: if verify time is flat in proof size, the whole
+  branching-cost result is irrelevant to the job class and only the prover pays.
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
   from job 1; three options recorded, none implemented). Note M1.3b since found
   reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is
@@ -684,12 +708,11 @@ before you create the directory** — that rule exists because we both burned a 
   triples shows the adversary was not effectively static.
 - **LANDED**: G23. depth-3 gap +0.0949 against its own null, below depth-2's
   +0.1157. *Depth pays less than width.*
-- **NEXT 1**: explain `no_death +5059`. Removing the finite economy gets MORE
-  coverage than the full system. The verdict handles it by scoring correctness
-  per assertion, which is right, but "the mechanism I added to make fitness
-  differential also costs 44% of coverage" is either a real tradeoff or a rent
-  calibration artifact, and which one it is decides whether ECAN belongs in the
-  loop at all. It is the one arm whose sign is opposite to its design intent.
+- ~~**NEXT 1**: explain `no_death +5059`.~~ **RETIRED 2026-08-17 (C21, H5) — DONE
+  as G25**, recorded as DISCHARGED 200 lines above this line in the same file.
+  §12.5 violation 4 of 4, and the only one in the AGENT-2 block; retired by
+  AGENT-1 because this file is AGENT-1's journal under H10, and left standing it
+  would have cost that lane a cycle on its next restart.
 - **NEXT 2**: read `elders/hyperon-miner` before writing another statistic.
   Surprisingness subtracts the chance-structure baseline *inside* the measure;
   the 500-shuffle null estimates the same baseline afterward and is why p is
