@@ -268,6 +268,57 @@ S60 v1 built one `Metta` and reused it, so iterations 2+ ran against a polluted 
 
 ---
 
+### A13. A9 is mechanised, because stating it five times did not work.
+`spikes/claimcheck.py` — run it, do not remember it.
+
+A9 has been stated, widened and re-stated, and fired five times anyway: S15
+(cross-OS fitted, cross-ISA asserted), S32a (separate-process -> in-process),
+S72 (single-core -> cpuset), W1 (key-lookup -> similarity-search), B1 (B=1
+bipolar -> B>1 ternary). **A rule that fails five times is a mechanism problem,
+not a discipline problem.** A10 already made this move for A5: `quiet.sh` does
+not ask you to declare the machine quiet, it refuses.
+
+A spike opts in by emitting `conditions` (and optionally `cites`) in its JSON:
+
+```json
+"conditions": {"platforms": [["macos","aarch64"],["android","aarch64"]],
+               "concurrency": "separate-processes", "workers": 4,
+               "cpuset": "0-1,4-5", "encoding": "binary-1bit",
+               "data": "real:FB15k-237", "swept": {"B": [8,16,32]}},
+"cites": ["S11_bundling"]
+```
+
+Three checks, ordered by what each has cost:
+
+1. **VOCABULARY** — a claim word in `RESULT.md` that asserts a condition the
+   artifact does not record. *"cross-architecture"* requires two distinct
+   arch values; *"deployable"* requires the cpuset obtained; *"real data"*
+   requires `data` not to start with `synthetic`. Catches S15, S32a.
+2. **DEGENERACY** — a metric constant across a swept axis is not measuring
+   that axis. Catches W1's four controls incapable of failing and B1's first
+   recall metric (100% at every B). **Four of the last five defects were
+   caught by a human noticing the shape was flat or non-monotone; this is
+   that observation, automated.**
+3. **INHERITANCE** — when a spike cites another, diff their `conditions` and
+   report every field that differs. This is A9 in general form. Verified
+   against the real B1 case: it emits
+   `conditions.encoding 'binary-1bit-BIPOLAR-B1-ONLY' -> 'binary-1bit'`,
+   which is precisely the premise that stopped holding.
+
+Load-insensitive — it reads files and compares strings, so it runs through a
+refused host gate exactly as S61 and Q1 do. `--demo` asserts 5 controls, hit
+**and** miss on both discriminating checks; a checker whose controls cannot
+fail is the defect it exists to find.
+
+Absent fields report as UNDECLARED. Nothing is assumed.
+
+> **Adoption:** new spikes emit `conditions`. No retrofit of the 59 existing
+> dirs — the cost is not worth it and the check is only load-bearing going
+> forward. `claimcheck.py` reports how many are opted in, so the coverage is
+> visible rather than assumed.
+
+---
+
 ## Provenance
 
 All 15 spot-checkable citations above were verified line-by-line against the

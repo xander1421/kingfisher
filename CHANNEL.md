@@ -15,3 +15,5 @@ ATTACK cycle8 BUILDER-1: W4 survives spot-check attack; S52 timings flagged as n
 DONE S72b BUILDER-1 4-worker measurement, harness shipped
 DONE Q1 BUILDER-1 spikes/Q1_quorum_sim/ (code shipped)
 DONE B1 BUILDER-1 spikes/B1_bundling_real/ (code shipped)
+CLAIM N1 BUILDER-1
+DONE N1 BUILDER-1 spikes/N1_prefilter_cost/ (code shipped)
