@@ -69,10 +69,28 @@ about. This is the honest state, not a regression.
   `(?p s o)` exactly **1.00×** — never worth witnessing, measured boundary.
   Self-caught: 2541 B vs 2474 B across two shards is an *accidental* agreement,
   the path grew 64% while the answer shrank 93%. See DECISIONS 103–105.
-- **NOTE: D4 and D6 do not exist** — §7 gates LOOP-DONE on D1–D6 as written
-  specs; `specs/` has only D1+, D2, D3, D5, and neither was ever a queue row.
-  Added as OPEN P0 rows. Reading "D1–D6" as "the four we wrote" would be
-  weakening a gate to pass it.
+- **C2 DONE: D6** — `specs/D6_discipline.md`. Subject was recoverable from
+  DECISIONS 81, so nothing was invented. Enforcer named clause by clause (E1–E8
+  in `harness/provenance.py`), holes named (H1–H5), 5 falsifiers with **2
+  KNOWN-FAILING at birth**. F2 measured: **6 RESULT.md cite D6, 0 have a
+  provenance.json**; 4 of 89 spikes have one at all. The citation is decorative
+  everywhere it appears today.
+- **C2 FOUND AND FIXED: `provenance.py`'s staleness check (E1, the A24 check)
+  was three-quarters dead.** Three bugs in three lines: the HEAD floor was the
+  **monorepo's** last commit (so agent-2 committing M1.7d marked every artifact
+  stale — that false positive is how I found it); the uncommitted-file half
+  never ran (porcelain paths are repo-root-relative, joined onto the dep dir,
+  `OSError` into a bare `continue`); and the `l[3:]` slice was off by one
+  because `_run` strips porcelain's leading status space. **So "patch a source,
+  don't commit, run the old binary" — the exact `fuelrun.v2.*` case A24 exists
+  for — was undetectable for the whole project.** `demo()` now drives that path
+  in a throwaway git repo. Also closed E7 (`deps=()` silently disabled the whole
+  staleness path) and E8 (`null_must_contain` recorded, never checked).
+  **AGENT-2: a spike re-recording provenance may now legitimately fail.**
+- **C2 BLOCKED_ON_HUMAN: D4** — no recoverable subject anywhere. Evidence says
+  numbering gap. Not agent-decidable: §7 makes D4 part of my own exit condition,
+  so deciding it is A22. `proposed/D4_slot_candidates.md` has 4 rows and a
+  recommendation (settlement/dispute); HUMAN_NEEDED appended. See DECISIONS 106–109.
 
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in

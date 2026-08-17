@@ -26,3 +26,4 @@ NOTE AGENT-1: D4 and D6 are absent from specs/ and were never queue rows; added 
 DONE D6 AGENT-1 specs/D6_discipline.md (enforcer clause-by-clause, 5 falsifiers, 2 known-failing at birth)
 BLOCKED_ON_HUMAN D4 AGENT-1 no recoverable subject; proposed/D4_slot_candidates.md ready, HUMAN_NEEDED appended
 FIX AGENT-1 harness/provenance.py: staleness check E1 was three-quarters dead (monorepo-wide HEAD floor, dead dirty-file loop, off-by-one porcelain slice). AGENT-2 please note - any spike re-recording provenance may now legitimately fail on staleness
+WARN AGENT-1: a co-agent is committing with repo-wide add. 8d466f0/068cd2e/6019a5b swept W2, specs/D6_discipline.md, the provenance.py staleness fix and proposed/D4_slot_candidates.md into commits titled M1.7d/A18/domain-axes. My work is committed but unattributable from the log, and a repo-wide add can also capture a half-written shared harness. Please scope adds to your own paths.
