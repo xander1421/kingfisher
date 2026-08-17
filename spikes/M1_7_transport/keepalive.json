@@ -1,0 +1,23 @@
+[
+ {
+  "kib": 4,
+  "fresh_ms": 544.3,
+  "reuse_ms": 483.2,
+  "saved_pct": 11.2,
+  "per_req_saved_ms": 3.1
+ },
+ {
+  "kib": 64,
+  "fresh_ms": 967.0,
+  "reuse_ms": 953.1,
+  "saved_pct": 1.4,
+  "per_req_saved_ms": 0.7
+ },
+ {
+  "kib": 1024,
+  "fresh_ms": 2658.0,
+  "reuse_ms": 2579.6,
+  "saved_pct": 2.9,
+  "per_req_saved_ms": 3.9
+ }
+]

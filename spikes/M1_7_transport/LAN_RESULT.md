@@ -95,3 +95,47 @@ which costs one flag and is not run.
 - `curl` process spawn is inside every timing; the 4 KiB point is an upper
   bound on per-request cost, not a measurement of it.
 - Single seed, median of 5, no confidence intervals.
+
+---
+
+# The keep-alive falsifier, run
+
+Stated at the end of the section above and left unrun: *"plain-TCP connection
+reuse would capture most of the same win, and that is one flag and is not run."*
+Run now. 20 blobs per size, one curl per request versus one curl reusing the
+connection across all 20, timed on-device with `%{time_total}`:
+
+| KiB | fresh (ms) | reused (ms) | saved | per request |
+|---|---|---|---|---|
+| 4 | 544.3 | 483.2 | 11.2% | **3.1 ms** |
+| 64 | 967.0 | 953.1 | 1.4% | **0.7 ms** |
+| 1024 | 2658.0 | 2579.6 | 2.9% | **3.9 ms** |
+
+**My hypothesis was wrong and the conclusion is stronger for it.** Reuse saves
+only 1–11%, so keep-alive does *not* capture a large win — but that is because
+**there is barely a win to capture**: connection setup on this path costs about
+**3 ms**.
+
+QUIC's 0-RTT can at best remove connection setup. If setup is 3 ms, 0-RTT saves
+3 ms — against a 27 ms request at 4 KiB or a 130 ms one at 1 MiB. Negligible.
+
+## So the deferral now rests on its third reason, and the first two are dead
+1. ~~"fixed cost is 27% and falling"~~ — **void**: the affine model it came from
+   does not hold on a real network.
+2. ~~"keep-alive would capture most of the win"~~ — **false**: reuse saves 1–11%.
+3. **"connection setup costs ~3 ms on this path, so 0-RTT has ~3 ms to win"** —
+   measured, and it is the reason that survives.
+
+## And it is path-dependent, which is the part that decides the future
+This is a LAN: sub-millisecond RTT. A TLS+TCP handshake is 2–3 round trips, so
+~3 ms here. On **cellular at 50 ms RTT that same handshake is 100–150 ms**, and
+0-RTT resumption would be decisive rather than negligible.
+
+**We have measured one path and it is the friendliest one that exists.** The
+QUIC question is not settled by this; it is settled *for a LAN*. The measurement
+that would actually settle it is the phone on cellular against a coordinator it
+must reach over the internet — which is also the first configuration where
+binding beyond the local network becomes a real exposure rather than a
+documented one, and where TLS stops being optional.
+
+Recorded rather than resolved.

@@ -442,11 +442,15 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
         r["id"] = i
     nid = len(pop)
 
-    variation = arm != "no_variation"
-    death = arm != "no_death"
-    coevo = arm != "static_adv"
-    waves = arm != "no_waves"
-    abduction = arm != "no_abduct"
+    # `arm` is a "+"-joined SET of ablations, so combinations are expressible.
+    # G24 ran one ablation at a time and could not fill the death x abduction
+    # 2x2; the missing cell is what G25 needed. Single names behave as before.
+    abl = set(arm.split("+"))
+    variation = "no_variation" not in abl
+    death = "no_death" not in abl
+    coevo = "static_adv" not in abl
+    waves = "no_waves" not in abl
+    abduction = "no_abduct" not in abl
 
     adv_idx = Idx(R.shuffled(train, 555))
     tbl = build_bias(idx)   # (follows, precedes)
@@ -561,7 +565,9 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
     return hist, stats["rejected_capped"], pop
 
 
-def main():
+def dataset():
+    """Split, plant, index. Extracted from main() unchanged so another spike can
+    run these exact conditions rather than re-deriving them and drifting."""
     nt, npred, nent, tri = R.load()
     idx_ = list(range(nt))
     random.Random(SEED).shuffle(idx_)
@@ -578,9 +584,11 @@ def main():
     print(f"split  train {len(train)}  dev {len(dev)}  test {len(test)}")
     print(f"A15 planted {planted[0]},{planted[1]}=>{planted[2]}  "
           f"{len(ptr)} train edges, {len(pdev)} dev conclusions\n")
+    return train, Idx(dev).pair, Idx(test).pair, npred, planted
 
-    p_dev = Idx(dev).pair
-    p_test = Idx(test).pair
+
+def main():
+    train, p_dev, p_test, npred, planted = dataset()
 
     out = {}
     for arm in ("full", "no_variation", "no_abduct", "no_death",

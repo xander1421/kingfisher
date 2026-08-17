@@ -2,3 +2,27 @@ running arm full ...
   110 rules survived
 
 running arm no_variation ...
+  32 rules survived
+
+ thresh                        EVOLVED (full)                   SEED (no_variation)
+              rules     preds   corr     prec       rules     preds   corr     prec
+   0.00          69    116083   4144   0.0357          32      5112   1127   0.2205
+   0.02          44     66644   3865   0.0580          32      5112   1127   0.2205
+   0.05          28     24120   2633   0.1092          32      5112   1127   0.2205
+   0.10          18      5745   1199   0.2087          32      5112   1127   0.2205
+   0.15          13      3693    893   0.2418          32      5112   1127   0.2205
+   0.20          12      3625    875   0.2414          21      4069    967   0.2377
+   0.30           1        66     15   0.2273           3       158     35   0.2215
+   0.40           0         0      0   0.0000           0         0      0   0.0000
+   0.50           0         0      0   0.0000           0         0      0   0.0000
+
+AT MATCHED-OR-BETTER PRECISION, WHO COVERS MORE:
+   seed prec 0.2205 corr  1127   vs   evolved prec 0.2418 corr   893   -> SEED
+   seed prec 0.2205 corr  1127   vs   evolved prec 0.2418 corr   893   -> SEED
+   seed prec 0.2205 corr  1127   vs   evolved prec 0.2418 corr   893   -> SEED
+   seed prec 0.2205 corr  1127   vs   evolved prec 0.2418 corr   893   -> SEED
+   seed prec 0.2205 corr  1127   vs   evolved prec 0.2418 corr   893   -> SEED
+   seed prec 0.2377 corr   967   vs   evolved prec 0.2418 corr   893   -> SEED
+   seed prec 0.2215 corr    35   vs   evolved prec 0.2418 corr   893   -> EVOLVED
+
+VERDICT: MIXED — evolved wins 1/7 of the seed's precision levels; neither curve dominates

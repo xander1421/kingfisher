@@ -48,10 +48,28 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 THRESHOLDS = [0.0, 0.02, 0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50]
 
 
-def curve(pop, idx, p_tr, p_dev, p_test):
-    """Precision/coverage on TEST as a function of a dev-chosen threshold."""
+def curve(pop, idx, p_tr, p_dev, p_test, banned_heads=()):
+    """Precision/coverage on TEST as a function of a dev-chosen threshold.
+
+    `banned_heads` excludes the A15 planted predicate, and it MUST be excluded.
+    The plant puts its conclusions in dev only (that is what makes it a
+    held-out positive control), so the planted rule can never score on test --
+    it contributes 568 predictions and 0 correct, by construction.
+
+    Only the evolved arm ever discovers that rule, so leaving it in loads 568
+    guaranteed-wrong assertions onto one side of the comparison. At threshold
+    0.15 that is the difference between precision 0.2096 and 0.2418, which is
+    the difference between losing to the seed and beating it.
+
+    My own positive control was contaminating the primary measurement. Caught
+    because the t=0.50 row read "1 rule, 568 predictions, 0 correct" -- a rule
+    that survives the strictest filter while getting nothing right is not a
+    good rule, it is a rule being scored against the wrong set.
+    """
     scored = []
     for r in pop:
+        if r["head"] in banned_heads:
+            continue
         s = E.score(idx, r["body"], r["head"], p_tr, p_dev)
         if s:
             scored.append((s["conf"], r["head"], s["cand"]))
@@ -95,8 +113,9 @@ def main():
         print(f"running arm {arm} ...")
         _h, _c, pop = E.run(arm, train, p_dev, p_test, npred, planted,
                             log=False)
-        res[arm] = {"pop": len(pop), "curve": curve(pop, idx, p_tr, p_dev,
-                                                    p_test)}
+        res[arm] = {"pop": len(pop),
+                    "curve": curve(pop, idx, p_tr, p_dev, p_test,
+                                   banned_heads={planted[2]})}
         print(f"  {len(pop)} rules survived\n")
 
     print(f"{'thresh':>7}{'':4}{'EVOLVED (full)':>34}{'':4}"
@@ -151,6 +170,7 @@ def main():
                "conditions": {"data": "real:FB15k-237+planted",
                               "split": "70/15/15", "split_seed": E.SEED,
                               "threshold_chosen_on": "dev",
+                              "excluded": "A15 planted head predicate — its conclusions are dev-only by construction and cannot score on test",
                               "measured_on": "test",
                               "platforms": [["macos", "aarch64"]],
                               "concurrency": "single-process",

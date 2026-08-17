@@ -5,9 +5,16 @@
 > real WiFi (`spikes/M1_7_transport/LAN_RESULT.md`), **the affine model does not
 > hold** — bandwidth climbs from 1.0 to 28.3 MB/s with transfer size, so there
 > is no single fixed component to be "27% and falling". The recommendation
-> (defer) still stands, but the *reason* below is void; the live reason is that
-> plain-TCP connection reuse would capture most of the same win and has not been
-> tested against it.
+> (defer) still stands, but the *reason* below is void.
+>
+> The replacement reason was also tested and also false: plain-TCP keep-alive
+> saves only **1–11%**, so it does not capture a large win either. What it
+> reveals is that **connection setup on this path costs ~3 ms**, so QUIC's
+> 0-RTT has ~3 ms to win against 27–130 ms transfers.
+>
+> **That is a LAN result and it is the friendliest path that exists.** At
+> cellular RTT (~50 ms) the same handshake is 100–150 ms and 0-RTT would be
+> decisive. The QUIC question is settled *for a LAN* and open everywhere else.
 
 **Recommendation: not now, and the reason is measured, not architectural.**
 QUIC's advantages land almost entirely on costs we have already shown are not
