@@ -50,6 +50,12 @@ about. This is the honest state, not a regression.
   `USB powered: true`. The phone was charging all along, §10 was honoured, and
   on-device timings need no re-measurement. Both gates now refuse on an
   overridden service. `spikes/M1_3_worker/CHARGING_DEFECT.md`.
+- **OPEN/BLOCKED**: app as a q3 quorum member (`worker_app.py`) — okhttp fault
+  I could not isolate, time-boxed, q3 reverted to the adb verifier.
+  `spikes/M1_8_quorum3/APP_WORKER_BLOCKED.md`.
+- **DONE: a Cargo FEATURE changes `fuel_used`** (107 vs 580). Equivalence class
+  includes the feature set; `provenance.py` hashes manifests and `manifest` is a
+  domain axis. `analysis/FEATURE_EQUIVALENCE.md`.
 - **DONE: the Android app is a fleet member, 65/65 byte-identical to host** on
   the admitted corpus. Closing it needed matched Cargo features (the `[patch]`
   section does not cross the workspace boundary), fixing our own envelope
