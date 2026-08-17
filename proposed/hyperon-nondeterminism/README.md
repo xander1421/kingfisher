@@ -214,3 +214,33 @@ Two practical consequences for anyone embedding hyperon:
 - Issue 3 above is reported without a patch: fixing it means either excluding
   `id` from `Hash` (changing `Bindings` semantics) or using an ordered map, and
   that is upstream's call, not a drive-by change.
+
+## How this was built — state it, because features change results
+
+`hyperon` was built with **`features = ["pkg_mgmt", "das"]`** (the workspace
+default set). This matters and is not boilerplate: a Cargo feature changes
+`fuel_used`. Measured on this tree, `integration_tests__das__test.metta` gives
+
+```
+features = ["pkg_mgmt"]          status OK  fuel_used 107
+features = ["pkg_mgmt","das"]    status OK  fuel_used 580
+```
+
+Same source, same commit, same machine. So a step count reported without its
+feature set is not reproducible, and two honest evaluators built differently
+will disagree on fuel while both being correct.
+
+```
+rustc            : rustc 1.96.1 (31fca3adb 2026-06-26)
+profile          : release
+hyperon features : pkg_mgmt, das
+manifest hash    : d29818ae02020053   (sha256 over every Cargo.toml/Cargo.lock in the tree)
+```
+
+Note for anyone reproducing from outside the hyperon workspace: `metta-bus-client`
+(the `das` feature) is a git dependency that pulls `hyperon-atom` from the
+registry, while the workspace path-patches it. A crate outside the workspace does
+**not** inherit that `[patch]` section and the build fails with
+*"expected `hyperon_atom::Atom`, found a different `hyperon_atom::Atom`"*.
+Copy the `[patch.'https://github.com/trueagi-io/hyperon-experimental.git']`
+section into your own manifest.
