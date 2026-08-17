@@ -1,0 +1,167 @@
+{
+ "spike": "S27_verify_floor",
+ "recorded_utc": "2026-08-17T15:46:27Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/../S20_verify_kinds",
+   "head": "821b8c8e52009c029ecfb60aff0995c13e8f9d64",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/../S20_verify_kinds": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/verify_floor.json",
+   "sha256": "1c1bc27a3d47ec13922812b77b3c348991e7168d0f777f963683f43f229e2e6a",
+   "bytes": 1354,
+   "mtime": 1786981587,
+   "compared_ts": 1786981587,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_model_is_not_the_measurement",
+   "must_fire_because": "the descriptor sum is computed by a SEPARATE traversal that hashes nothing, so it can disagree with the counting hashlib. If the two were the same code the agreement would be a tautology and the falsifier could not fire",
+   "can_fail_because": "no row was measured at all, or the model returned zero bytes for a non-empty answer set",
+   "null_must_contain": "an implementation hashing anything outside node_hash -- a length prefix, a separator, a second pass -- would show up as slack",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": [
+     40,
+     22900.15
+    ],
+    "atoms_interned": [
+     40,
+     12834.9
+    ],
+    "triples": [
+     40,
+     6011.15
+    ]
+   }
+  },
+  {
+   "name": "C_answer_sets_are_non_trivial",
+   "must_fire_because": "a query returning one key would make the subtrie a single node and the decomposition trivially content-only, which would answer nothing about the regime S20 measured",
+   "can_fail_because": "any row's mean answer set is below 2 keys",
+   "null_must_contain": "single-key answers, where digests are 0 and the share question does not arise",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": 134,
+    "atoms_interned": 128.35,
+    "triples": 96.475
+   }
+  },
+  {
+   "name": "C_shares_sum_to_the_whole",
+   "must_fire_because": "content + framing + digests + the path fold must account for byte; a fourth category would mean the decomposition is not the node_hash definition it claims to be",
+   "can_fail_because": "the three parts do not sum to the descriptor total on any row",
+   "null_must_contain": "a node_hash that fed sha256 something outside those three categories",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": [
+     14290.425,
+     1360.5,
+     6192,
+     1057.225,
+     22900.15
+    ],
+    "atoms_interned": [
+     5555.6,
+     1129.85,
+     5137.6,
+     1011.85,
+     12834.9
+    ],
+    "triples": [
+     10.2,
+     798.05,
+     3620.8,
+     1582.1,
+     6011.15
+    ]
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_implementation_slack",
+   "must_fire_because": null,
+   "can_fail_because": "measured verifier bytes exceed the descriptor sum by more than 1.0% on any key set",
+   "null_must_contain": "a verifier doing a second pass, or hashing framing of its own, which would show as positive slack",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "measured": 22900.15,
+     "model": 22900.15,
+     "slack_pct": 0.0
+    },
+    "atoms_interned": {
+     "measured": 12834.9,
+     "model": 12834.9,
+     "slack_pct": 0.0
+    },
+    "triples": {
+     "measured": 6011.15,
+     "model": 6011.15,
+     "slack_pct": 0.0
+    }
+   },
+   "refutes": "S20's open item -- if the verifier hashes more than the root's definition requires, the 2-4x is slack a better verifier could remove",
+   "fires_when": "measured verifier bytes exceed the descriptor sum by more than 1.0% on any key set",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/../S20_verify_kinds": {
+   "newest": 1786979862,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "verifier bytes exceeding the answer subtrie's descriptor sum by more than 1.0%, which would make the 2-4x constant implementation slack rather than the commitment format",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

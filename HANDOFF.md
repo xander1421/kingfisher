@@ -881,11 +881,35 @@ about. This is the honest state, not a regression.
   **Own defect, caught by the gating control**: I reimplemented the agreement key
   and reproduced 0 of 64; fixed by executing `q3.py`'s own `key()` with its
   trailing bare `main()` stripped and the anchor asserted. DECISIONS 226–228.
-- **NEXT 2: is the 2–4× completeness constant implementation-shaped?** The
-  verifier rebuilds with `build()`, the prover's own function. A verifier that
-  folded the answer set incrementally would hash the same key bytes but allocate
-  fewer node descriptors. Nothing in S20 says 2–4× is a lower bound, and the
-  mission cares because a range query is what a real client asks.
+- ~~**NEXT 2: is the 2–4× completeness constant implementation-shaped?**~~
+  **DONE as S27 in C35, the cycle after it was written. Answer: NO.** Struck
+  here rather than left standing (§12.5, H5).
+- **C35 DONE: S27 — the completeness verifier has ZERO implementation slack.**
+  `spikes/S27_verify_floor/`, `certify ok=true`, 3 controls, falsifier did not
+  fire. **Measured slack 0.000% on all three key sets** — it hashes exactly what
+  recomputing the root requires — so the 2–4× is the **commitment format**, and
+  no streaming verifier can improve it without changing the format. Every byte
+  decomposed from `node_hash`'s own definition (content / framing / child
+  digests / path fold): atoms 62.40 / 5.94 / 27.04 / 4.62%, interned 43.29 /
+  8.80 / 40.03 / 7.88%, **triples 0.17 / 13.28 / 60.23 / 26.32%** — on 12-byte
+  keys the verifier hashes the commitment, not the data. Levers are digest width
+  and fan-out (16-byte digests: ~30% off triples, ~13% off atoms).
+  **My own defect is the transferable half**: the first model omitted the
+  authentication-path fold and reported **+35.7% to +1,899.5% "slack" that was
+  my missing term** — `fold` hashes each step with ONE MORE EDGE than
+  `steps_bytes` counts. That is `S79-ATTACK` with the hats swapped, and it
+  surfaced only because the threshold was **1% on a quantity that should be
+  exactly zero**; at 50% it would have shipped. DECISIONS 229–231.
+- **NEXT 1: M1.13 — `adjudicate()` must name the defendant.** S26 measured the
+  attribution is a set difference over what `result.json` already records
+  (200/200). Blocked only on another lane's uncommitted `q3.py` edit landing;
+  check `git status --porcelain spikes/M1_8_quorum3/q3.py` first, and do not
+  commit that file while it is dirty (H19).
+- **NEXT 2: absence/membership verifier floors.** S27 measured the floor for the
+  COMPLETENESS verifier, whose cost is dominated by a rebuild. Membership and
+  absence fold a path and rebuild nothing, so their floor is a different
+  quantity and S27 does not extend to them by inspection — the same trap S79 and
+  S80 named on the prover side.
 
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
