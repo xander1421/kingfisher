@@ -153,9 +153,28 @@ def manifest_state(path):
 def repo_state(path):
     """HEAD is not enough. A dirty tree with HEAD=X is not X, and that is
     exactly how a patched build shipped under a stock commit hash."""
+    # A dep must be a DIRECTORY inside a git repo. Passing a FILE made
+    # subprocess raise NotADirectoryError, which _run swallowed into the string
+    # '<error: ...>'; that is not '', so `clean` came out False and certify
+    # refused with "DIRTY TREE q3.py at <error: : 1 modified" -- a fabricated
+    # verdict about a real tree. Family B inside the family-C module: the
+    # instrument reported fiction rather than admitting it could not answer.
+    if not os.path.isdir(path):
+        raise NotADirectoryError(
+            f'repo_state({path!r}): deps must be DIRECTORIES inside a git repo, '
+            f'not files. Naming a file silently produced a fake dirty verdict.')
+    if _run(['git', 'rev-parse', '--show-toplevel'], cwd=path).startswith('<error'):
+        raise ValueError(f'repo_state({path!r}): not inside a git repository')
+
     head = _run(['git', 'rev-parse', 'HEAD'], cwd=path)
-    dirty = _run(['git', 'status', '--porcelain'], cwd=path)
-    diff = _run(['git', 'diff', 'HEAD'], cwd=path)
+    # SCOPED to this subtree (`-- .`), not repo-wide. Repo-wide made the gate
+    # unusable the moment a second agent had anything uncommitted anywhere: an
+    # unrelated spike's edits marked THIS build dirty, and the only way past a
+    # gate that is permanently red is allow_dirty=True, which voids it. Scoping
+    # keeps the check honest -- each declared dep is checked against its own
+    # subtree, and a spike that depends on a shared module must name it.
+    dirty = _run(['git', 'status', '--porcelain', '--', '.'], cwd=path)
+    diff = _run(['git', 'diff', 'HEAD', '--', '.'], cwd=path)
     return {
         'path': path,
         'head': head,

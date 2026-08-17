@@ -13,7 +13,11 @@ import os
 import re
 import sys
 
-REPRO = re.compile(r'repro:\s*`([^`]+)`')
+# The path must contain a '/' BEFORE any space. Without that, the regex matched
+# its own prose in the LEDGER ("none named a repro: `->`") and reported a
+# 12th annotation that was GONE -- a false positive in the tool whose whole job
+# is auditing whether claims are reproducible.
+REPRO = re.compile(r'repro:\s*`([^\s`]*/[^`]*)`')
 
 
 def audit(ledger_path, root, grade='**A**'):
