@@ -173,6 +173,12 @@ dated 2026-08-17; none is a precaution.
   D4 and D6 were never written; and the §11 citations above pointed at a
   section that did not exist.* A contract that cites a missing artifact is
   weaker than one that cites nothing, because it reads as satisfied.
+  **And a reference that resolves to TWO things fails the same way.** An id is
+  allocated, not assumed — the rule §12 states for callsigns and §13.3 states for
+  spike numbers, both of which were written as prose *after* a collision and
+  neither of which stopped the next one. `spikes/harness/refcheck.py` check 5
+  refuses a duplicate table row id; it found four in `WORK_QUEUE.md`, three of
+  them allocated by two different lanes (H18).
 - **12.5 · A journal may not contradict itself.** No item appears in both a
   DONE list and a NEXT list. *Earned: `HANDOFF.md`'s NEXT 1 (residency
   feedback) and NEXT 2 (M1.7 transport) were both recorded DONE higher in the

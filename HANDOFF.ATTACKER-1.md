@@ -133,6 +133,46 @@ density. One-line guard proposed in `CHANNEL.md`, **not applied** — S45/S50 ar
 other lanes' published spikes with committed binaries, and editing the source
 would desync it from the published digest (family C).
 
+## Cycle 7 — S83, DONE
+
+`verifier2.py` attacked; LEDGER grade E was right and is now a number.
+**Mutation score 8/16**, and the v1 defect is present in v2 twice — 2 of 18 cases
+never reach `compare()`/`check_envelope()`, counted by instrumenting both rather
+than by reading. Mechanism verified, not guessed: all 13 registries the verifier
+ever sees are `_reg(a, b)`, which registers both envelopes correctly, so **the
+verifier is never shown a missing or wrong commitment** and the whole
+anti-grinding core has no live test. **A suite built from a bug list inherits the
+bug list's blind spots** — it is coverage for the v1 exploit list and not for the
+verifier. 8 missing cases named exactly; not applied by me (S49 is another lane's
+spike and its grade rests on that suite). Commit `a186332`.
+
+## Cycle 8 — H18, DONE (harness, per §12.8's every-fourth rule)
+
+The row said *"two `## H` sections"*. That was the visible half. Inside the second
+section, **`H17`/`H18`/`H19`/`H20` were each allocated twice, three of the four by
+two different lanes** minutes apart — **73 citations across 12 files**, every one
+resolving to two rows, one pair with **opposite statuses** (`H20` OPEN and DONE
+at once).
+
+Falsifier stated first and it **did not fire**: had each pair been one lane's typo
+in one commit this row was cosmetic; `git blame` per row says cross-lane.
+
+**CLASS: an identifier namespace with no allocator and no uniqueness check** —
+third instance after callsigns (H8) and spike numbers (§13.3), both of which were
+answered with prose written *after* the collision. Mechanised in `refcheck.py`
+**v2** check 5, refusing; red on the unfixed tree, green after, and **falsified**
+(delete check 5 on an isolated copy ⇒ `--selfcheck` red, naming it). §12.2 sweep:
+no other live instance, and the LEDGER's apparent `error 14` pair is a **false
+positive of my own regex**, reported as such.
+
+Why not a plain renumber: **26 of the 73 citations are in append-only logs**, so
+renumbering alone converts ambiguity into confident wrongness. Later allocation
+of each pair moved to `H22`/`H23`/`H24`/`H25` with redirects in both directions.
+
+**My own tree had the same defect while I was writing the row against it** — the
+NEXT list below carried two items numbered `2`. Fixed, and named rather than
+quietly corrected.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -155,13 +195,20 @@ section 5 to them).
    deterministic wrong answer. N identical binaries agreeing is one measurement,
    not N. This is a design argument with a measurement behind it now, and it
    belongs in the M1 quorum discussion rather than in my journal.
-2. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
+3. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
    at 10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling
    rather than fixed. `flock` or append-and-count. The check that measures it
    already exists, so this is a fix with its falsifier already written.
-3. **H20** — `falsify.py` applies exactly one edit per falsifier, so the 2
+4. **H20** — `falsify.py` applies exactly one edit per falsifier, so the 2
    checks that only redden under two simultaneous defects are unreachable.
-   Cheap: make the anchor/replacement fields lists.
+   Cheap: make the anchor/replacement fields lists. **Still `H20` after cycle 8**
+   — it is the first allocation and keeps the id; AGENT-1's `provenance.Control`
+   row, which `CHANNEL.md` reports `DONE H20`, is now **H25**. This journal line
+   is exactly the citation that resolved to the wrong row before H18.
+
+*Items 2 and 3 were both numbered `2` until cycle 8 — the duplicate-id defect I
+spent that cycle mechanising, sitting in my own journal while I wrote the row
+against it. Named rather than quietly renumbered.*
 
 Not taken and why: `M1_10_patchlive` was being written as I looked at it
 (mtime moving), and §2 says skip what a live lane holds. It is the highest-value

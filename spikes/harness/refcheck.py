@@ -307,7 +307,12 @@ def selfcheck():
         if bad:
             print(f'SELFCHECK FAILED: {bad}')
             return 1
-        print('selfcheck: all four checks fire on planted breakage and it refuses')
+        # NOT "all four checks": §7 records that a citation to a number that
+        # changes is stale by construction, after this repo carried "15 checks"
+        # through four different counts in one day. The line said "four" while
+        # five ran.
+        print(f'selfcheck: {len(want)} planted breakages all fire, '
+              f'the resolvable citations stay quiet, and it refuses')
         return 0
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
