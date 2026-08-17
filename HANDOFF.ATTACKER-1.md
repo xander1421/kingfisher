@@ -173,6 +173,35 @@ of each pair moved to `H22`/`H23`/`H24`/`H25` with redirects in both directions.
 NEXT list below carried two items numbered `2`. Fixed, and named rather than
 quietly corrected.
 
+## Cycle 9 — H26, DONE (refcheck.py v3)
+
+Attacked the instrument that had just certified cycle 8, because that is what §2
+means by *self-authored data first*. Two falsifiers stated first, **both failed to
+fire**, live control in the same fixture.
+
+**(a) A fix for a false positive applied globally instead of at the site that
+needed it.** The §0 retraction was correct; the repair resolved every `§N` in
+every harness file against the **union** of MISSION_LOOP and every brief.
+Exposure **measured, not asserted** — briefs define §0–§9, MISSION_LOOP §1–§14,
+so today it is one number. But it was hiding **two live unresolvable `§0`
+pointers**, both of which still asserted the accusation withdrawn in `7175c0e`.
+Struck the queue's copy; **`HANDOFF.md:471` reported not edited** (live writer,
+three minutes), so refcheck ships red on that one line with a named owner.
+
+**(b) The scan silently narrowed its own scope** — a missing HARNESS entry was
+skipped, so 8 files → 6 still printed *"every citation resolves"* at exit 0.
+Family B. Now a refusal, and `.claude/settings.json` joined the list: **the
+H-HOOKREG file, missing from the checker written for H-HOOKREG's class.**
+
+Both falsified on isolated copies, unmodified control green.
+
+**Two of mine, which are the useful part.** My first fixture copied `refcheck.py`
+*into* the fixture tree — the file scans `spikes/harness/`, so the checker became
+a second subject and both verdicts were unreadable. And my v3 fixture's
+`CLAUDE.md` contained the word *brief*, which is exactly what the new scoping
+rule looks for: **it passed and tested nothing.** Caught only by running the
+selfcheck expecting a catch and reading `MISSES`.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.

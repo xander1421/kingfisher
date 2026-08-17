@@ -1,5 +1,30 @@
 #!/usr/bin/env python3
-"""refcheck.py v2 — H4/H18. Every §N / guardrail / file / ROW-ID citation resolves.
+"""refcheck.py v3 — H4/H18. Every §N / guardrail / file / ROW-ID citation resolves.
+
+v3 RATIONALE (§12.7) — TWO DEFECTS REMOVED, both found by attacking v2 with a
+falsifier that FAILED TO FIRE, against a live control in the same fixture:
+
+  (a) THE FIX FOR A FALSE ACCUSATION WAS APPLIED GLOBALLY INSTEAD OF AT THE ONE
+      SITE THAT NEEDED IT. v1 reported `HANDOFF.ATTACKER-1.md` citing a broken
+      §0; that line reads "per §12 and the brief's §0" and the brief really does
+      define one, so the retraction was right. But the repair resolved every §N
+      in every harness file against the UNION of MISSION_LOOP and every per-lane
+      brief -- so `§0` in `CLAUDE.md`, where §N can only mean MISSION_LOOP,
+      resolved silently off `prompts/ATTACKER-1.md`. A false positive was traded
+      for a false negative. MEASURED, not asserted: the briefs define §0-§9 and
+      MISSION_LOOP §1-§14, so TODAY'S EXPOSURE IS EXACTLY ONE NUMBER, §0. The
+      durable defect is that the exposure is whatever the briefs happen to define
+      and moves whenever any lane edits one. Brief sections are now offered only
+      to a file that IS a brief or that discusses one.
+
+  (b) THE SCAN SILENTLY NARROWED ITS OWN SCOPE. `harness_files()` skipped any
+      HARNESS entry that did not exist, so deleting `.claude/hooks/loop_gate.sh`
+      and `run_loop.sh` took the scan from 8 files to 6 and it still printed
+      "every citation resolves" at exit 0. Family B -- the instrument reports
+      fiction, confidently and well-formed. A named harness file that is missing
+      is now a REFUSAL. `.claude/settings.json` was also absent from the list
+      while §12 names it as harness, and that is the H-HOOKREG file exactly.
+
 
 v2 RATIONALE (§12.7) — THE DEFECT REMOVED: an id could be allocated twice and
 nothing said so. v1 resolved a citation to a DOCUMENT and never asked whether it
@@ -52,15 +77,27 @@ GR = os.path.join(ROOT, 'analysis', 'GUARDRAILS.md')
 # pointer is a historical record of what a lane believed at the time, and
 # rewriting history to satisfy a checker is the opposite of the point.
 HARNESS = ['MISSION_LOOP.md', 'CLAUDE.md', 'WORK_QUEUE.md', 'HANDOFF.md',
-           'analysis/GUARDRAILS.md', 'run_loop.sh', '.claude/hooks/loop_gate.sh']
+           'analysis/GUARDRAILS.md', 'run_loop.sh', '.claude/hooks/loop_gate.sh',
+           # §12 names "every settings.json that registers it" as harness and
+           # this list omitted it -- the H-HOOKREG file, left out of the checker
+           # written to catch H-HOOKREG's class.
+           '.claude/settings.json']
 
 
-def harness_files():
+def harness_files(missing=None):
+    """v3: a HARNESS entry that does not exist is REPORTED, not skipped.
+
+    v2 skipped it. That made the scope of the scan depend on the tree it was
+    scanning, so a harness file could be renamed or deleted and this would print
+    "every citation resolves" over the gap -- fewer files, same green verdict.
+    """
     out = []
     for rel in HARNESS:
         p = os.path.join(ROOT, rel)
         if os.path.exists(p):
             out.append(rel)
+        elif missing is not None:
+            missing.append(rel)
     for d in ('spikes/harness', 'prompts'):
         dp = os.path.join(ROOT, d)
         if not os.path.isdir(dp):
@@ -127,17 +164,32 @@ def scan():
     # Sections are therefore resolved against every harness document that DEFINES
     # them. The duplicate check below stays MISSION_LOOP-only: two `## 9 ·` there
     # is what made every §9 ambiguous, and briefs are per-lane.
-    sec_set = set(secs)
-    for rel in harness_files():
+    # v3 (a): the brief sections are kept SEPARATE from MISSION_LOOP's and handed
+    # out per file, instead of unioned into one set for the whole harness. v2
+    # unioned them, which is why `§0` resolved in CLAUDE.md -- a file where §N
+    # cannot mean anything but MISSION_LOOP. The retraction that caused the union
+    # was correct about ITS site and the repair was applied everywhere.
+    ml_secs, ml_subs = set(secs), set(subs)
+    brief_secs, brief_subs = set(), set()
+    missing = []
+    files = harness_files(missing)
+    for rel in files:
         if rel.startswith('prompts/') and rel.endswith('.md'):
             try:
                 other = open(os.path.join(ROOT, rel), encoding='utf-8').read()
             except (UnicodeDecodeError, OSError):
                 continue
-            sec_set |= set(sections(other))
-            subs |= subsections(other)
+            brief_secs |= set(sections(other))
+            brief_subs |= subsections(other)
     guards = set(re.findall(r'^###\s+A(\d+)', gr, re.M))
     problems = []
+
+    # v3 (b): a harness file named in §12 that is not on disk is a REFUSAL. The
+    # scan reporting clean over a file it never opened is family B.
+    for rel in missing:
+        problems.append(f'harness file `{rel}` is named in §12 and IS NOT ON '
+                        f'DISK -- the scan narrowed itself to {len(files)} files '
+                        f'and would have reported clean over it')
 
     # 2 · duplicate section numbers, the defect that made "§9" ambiguous
     dupes = {n for n in secs if secs.count(n) > 1}
@@ -145,22 +197,34 @@ def scan():
         problems.append(f'MISSION_LOOP.md has {secs.count(n)} sections numbered '
                         f'"{n}" -- every §{n} citation is ambiguous')
 
-    for rel in harness_files():
+    for rel in files:
         path = os.path.join(ROOT, rel)
         try:
             text = open(path, encoding='utf-8').read()
         except (UnicodeDecodeError, OSError):
             continue
 
+        # A file may resolve §N against a per-lane brief only if it IS one, or if
+        # it talks about one -- `HANDOFF.ATTACKER-1.md`'s "per §12 and the brief's
+        # §0" is the case the retraction was about, and it says "brief". Kept at
+        # FILE level rather than line level on purpose: a citation wrapped away
+        # from the word would be flagged, and filing a second false accusation
+        # against another lane is a worse failure here than one §0 unchecked in a
+        # file that discusses briefs. Residual stated rather than hidden.
+        cites_brief = rel.startswith('prompts/') or re.search(r'brief', text, re.I)
+        sec_set = ml_secs | brief_secs if cites_brief else ml_secs
+        sub_set = ml_subs | brief_subs if cites_brief else ml_subs
+
         # 1 · §N and §N.M
         for ref in set(re.findall(r'§\s*(\d+(?:\.\d+)?)', text)):
             if '.' in ref:
-                if ref not in subs and ref.split('.')[0] not in sec_set:
+                if ref not in sub_set and ref.split('.')[0] not in sec_set:
                     problems.append(f'{rel}: §{ref} does not resolve -- '
                                     f'MISSION_LOOP.md has no such bullet')
             elif ref not in sec_set:
-                problems.append(f'{rel}: §{ref} does not resolve -- no harness '
-                                f'document defines it; known: {sorted(sec_set, key=int)}')
+                problems.append(f'{rel}: §{ref} does not resolve -- no document '
+                                f'THIS FILE may cite defines it; known: '
+                                f'{sorted(sec_set, key=int)}')
 
         # 1b · `§N` in GUARDRAILS.md cites EXTERNAL documents (a standard's section 46,
         #      a paper's section), not this repo's loop contract, so § resolution
@@ -225,7 +289,7 @@ def scan():
               f'        which is why this refuses rather than warns.')
         return 1
     print(f'refcheck: every §N, guardrail and path citation in '
-          f'{len(harness_files())} harness files resolves')
+          f'{len(files)} harness files resolves')
     return 0
 
 
@@ -262,9 +326,31 @@ def selfcheck():
             f'| {dup} | first allocation, lane A | OPEN |\n'
             f'| {uniq} | only allocation | OPEN |\n'
             f'| {dup} | second allocation, lane B | DONE |\n')
+        # v3 (a)'s fixture. A per-lane brief defines a section MISSION_LOOP does
+        # not. `CLAUDE.md` is not a brief and does not discuss one, so its
+        # \u00a7{brief_sec} must be FLAGGED; `HANDOFF.md` says "brief", which is the
+        # retracted-false-accusation case, so its \u00a7{brief_sec} must stay QUIET.
+        # Both directions, because v2 was quiet on BOTH and that is the defect.
+        brief_sec = '0'
+        os.makedirs(os.path.join(tmp, 'prompts'))
+        open(os.path.join(tmp, 'prompts', 'ATTACKER-1.md'), 'w').write(
+            f'## {brief_sec} \u00b7 claim your identity\n')
         open(os.path.join(tmp, 'CLAUDE.md'), 'w').write(
             'cite \u00a71 and \u00a71.1 and A1 and `MISSION_LOOP.md` -- all fine.\n'
-            f'now cite {bad_sec} and {bad_g} and `{bad_path}` -- none exist.\n')
+            f'now cite {bad_sec} and {bad_g} and `{bad_path}` -- none exist.\n'
+            # This line must NOT contain the word the scoping rule looks for --
+            # the first draft of this fixture wrote "which only a per-lane brief
+            # defines" and thereby handed CLAUDE.md the very permission the case
+            # exists to deny. The fixture passed and tested nothing.
+            f'and \u00a7{brief_sec}, which MISSION_LOOP does not define.\n')
+        open(os.path.join(tmp, 'HANDOFF.md'), 'w').write(
+            f"per \u00a71 and the brief's \u00a7{brief_sec}.\n")
+        # v3 (b)'s fixture: every remaining HARNESS entry EXISTS in this pass, so
+        # the missing-file check is shown quiet here and driven separately below.
+        os.makedirs(os.path.join(tmp, '.claude', 'hooks'))
+        open(os.path.join(tmp, 'run_loop.sh'), 'w').write('#!/bin/sh\n')
+        open(os.path.join(tmp, '.claude', 'hooks', 'loop_gate.sh'), 'w').write('#!/bin/sh\n')
+        open(os.path.join(tmp, '.claude', 'settings.json'), 'w').write('{}\n')
         global ROOT, ML, GR
         keep = (ROOT, ML, GR)
         ROOT = tmp
@@ -275,6 +361,15 @@ def selfcheck():
         with contextlib.redirect_stdout(buf):
             rc = scan()
         out = buf.getvalue()
+        # SECOND PASS for v3 (b): delete one named harness file and nothing else.
+        # Driven as its own run because the check is about what the scan DOES NOT
+        # LOOK AT, and a check for an absence cannot share a pass with the
+        # presence it contradicts.
+        os.remove(os.path.join(tmp, 'run_loop.sh'))
+        buf2 = io.StringIO()
+        with contextlib.redirect_stdout(buf2):
+            scan()
+        out2 = buf2.getvalue()
         ROOT, ML, GR = keep
         # Same reason as the fixtures: assembled, so this file contains no
         # literal broken citation for its own scan to trip over.
@@ -302,6 +397,28 @@ def selfcheck():
             bad.append('unique row id')
         else:
             print(f'  QUIET   on a singly-allocated row id ({uniq})')
+        # v3 (a), both directions.
+        if f'CLAUDE.md: §{brief_sec} does not resolve' in out:
+            print(f'  CATCHES a brief-only section cited by a non-brief file (§{brief_sec})')
+        else:
+            print(f'  MISSES  a brief-only section cited by a non-brief file (§{brief_sec})')
+            bad.append('brief-scoped section')
+        if f'HANDOFF.md: §{brief_sec}' in out:
+            print(f"  FALSE-POSITIVE on a file that names the brief (§{brief_sec})")
+            bad.append('brief citation refused')
+        else:
+            print(f"  QUIET   on a file that names the brief (§{brief_sec})")
+        # v3 (b), both directions.
+        if 'IS NOT ON DISK' in out:
+            print('  FALSE-POSITIVE reported a missing harness file while all exist')
+            bad.append('spurious missing file')
+        else:
+            print('  QUIET   on a complete harness')
+        if '`run_loop.sh` is named in §12 and IS NOT ON DISK' in out2:
+            print('  CATCHES a named harness file deleted from the tree')
+        else:
+            print('  MISSES  a named harness file deleted from the tree')
+            bad.append('missing harness file')
         if rc == 0:
             print('  MISSES  it did not refuse at all'); bad.append('refusal')
         if bad:
@@ -311,8 +428,13 @@ def selfcheck():
         # changes is stale by construction, after this repo carried "15 checks"
         # through four different counts in one day. The line said "four" while
         # five ran.
-        print(f'selfcheck: {len(want)} planted breakages all fire, '
-              f'the resolvable citations stay quiet, and it refuses')
+        # NO COUNT. v2 printed "all four checks" while five ran; v3 replaced that
+        # with len(want) and it went stale INSIDE ONE CYCLE, because the two v3
+        # cases are asserted outside `want`. §7: cite the artifact, not its size.
+        # The per-case lines above are the count, and they cannot disagree with
+        # themselves.
+        print('selfcheck: every planted breakage fires, every resolvable '
+              'citation stays quiet, and it refuses')
         return 0
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
