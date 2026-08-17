@@ -1,0 +1,9 @@
+  CONTROL  unmodified copy: 63 pass, 0 fail  -> ok
+  F24  FIRES   lane signal untouched (want 'present', got 'gone')
+           defect: a callsign-less session consumes a REAL lane's terminal signal and exits in its place. Needs both the LANE default and the glob read: with the default alone the hook looks for `.loop_signal.unknown` and there is none, with the glob alone it never reaches the lookup
+
+  CONTROL  unmodified githygiene --selfcheck: all-pass  -> ok
+
+COVERAGE: not printed — this was a filtered run (F24). A ratio over a subset in the shape of a full pass is family B.
+
+H7: the 1 selected falsifier(s) fired, control green

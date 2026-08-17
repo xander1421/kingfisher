@@ -152,8 +152,29 @@ nolane() { if env -u CALLSIGN ./gate.sh </dev/null 2>/dev/null | grep -q '"decis
            then echo block; else echo exit; fi; }
 check "no callsign is not gated"      "$(nolane)" "exit"
 check "  writes no 'unknown' fuse"    "$([ -f .loop_blocks.unknown ] && echo wrote || echo none)" "none"
-check "  writes no 'unknown' marker"  "$([ -f .loop_exit.unknown ] && echo wrote || echo none)"   "none"
 check "  writes no fuse at all"       "$(ls .loop_blocks.* 2>/dev/null | wc -l | tr -d ' ')"      "0"
+
+# 9b · THE PRECONDITION SECTION 9 DELETES. H20 (ok-1) filed both of its checks as
+#      "unreachable without two simultaneous reverts". Measured, and only one of
+#      them was: `writes no 'unknown' marker` lived above, under a section that
+#      opens `rm -f .loop_signal*`, and the hook writes `.loop_exit.<LANE>` ONLY
+#      after consuming a signal. So no combination of hook defects could redden
+#      it -- not a check needing two reverts, a check whose own section removes
+#      the thing it tests. A15: the instrument cannot produce the answer.
+#
+#      IT IS A NEW SECTION AND NOT A LINE ADDED TO SECTION 9, because the obvious
+#      fix is wrong and the probe caught it: planting the signal in section 9
+#      makes the hook exit legally under the LANE-default defect, so
+#      `no callsign is not gated` STOPS FIRING on the very defect it exists for.
+#      Measured on a scratch tree -- that defect alone reddens 6 checks, and with
+#      the plant folded into section 9 it reddens 2. A repair that raises one
+#      check's coverage by disarming five is a suite that reports better and
+#      tests less.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+echo LOOP-HALT > .loop_signal.unknown
+_=$(nolane)
+check "  writes no 'unknown' marker"  "$([ -f .loop_exit.unknown ] && echo wrote || echo none)"        "none"
+check "  leaves the planted signal"   "$([ -f .loop_signal.unknown ] && echo present || echo gone)"    "present"
 
 # 10 · An unidentified session must not consume a real lane's terminal signal.
 rm -f .loop_signal* .loop_exit.* .loop_blocks.*

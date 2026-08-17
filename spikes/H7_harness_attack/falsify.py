@@ -1,5 +1,33 @@
 #!/usr/bin/env python3
-"""H7 — do the loop-harness checks FAIL when their defect comes back?  (v2)
+"""H7 — do the loop-harness checks FAIL when their defect comes back?  (v3)
+
+v3 RATIONALE (§12.7) — THE DEFECT REMOVED: this driver applied EXACTLY ONE edit
+per falsifier, so a check that only reddens under two simultaneous defects was
+unreachable and its PASS was a statement about nothing. An optional 7th field
+carries further `(rel, old, new)` edits; F24 is the first user of it, and the
+row's own warning is why the repair went into a SHARED `apply_edits()` rather
+than into the F-series loop: *"the driver has two apply sites, the F-series and
+the G-series, and a fix at one is the defect this repo has paid for at every
+version of §12.2."* The G-series takes the same optional field from the same
+function, so a two-defect githygiene falsifier now costs nothing to add.
+
+ALSO v3: `falsify.py F24 G2` runs a SUBSET. A full pass is 25 scratch trees at
+about three minutes of suite each -- over an hour -- so there was no way to
+exercise one falsifier while writing it, and the instrument that answers "is a
+red run reachable" was itself unreachable during the work that needed it. A
+filtered run REFUSES to print coverage rather than printing a subset ratio in
+the shape of a full pass.
+
+MEASURED, and it killed half of H20 as filed: the row named TWO checks needing
+list support and only one did. `writes no unknown marker` sat under a section
+opening `rm -f .loop_signal*`, and the hook writes an exit marker only after
+consuming a signal -- so no combination of hook defects could redden it. Not a
+check needing two reverts; a check whose own section deletes its precondition
+(A15). It moved to a new section 9b in the suite with the plant it needs, and
+NOT into section 9, because the probe measured that folding the plant into
+section 9 lets the hook exit legally under the LANE-default defect: that defect
+reddens 6 checks, and 2 with the plant folded in. A repair that raises one
+check's coverage by disarming five reports better and tests less. (ok-1, H20.)
 
 v2 RATIONALE (§12.7) — THE DEFECT REMOVED: this driver restated
 `install_hooks.sh`'s hook list instead of reading it, the installer grew
@@ -293,6 +321,25 @@ FALSIFIERS = [
      '/Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh',
      '/Users/victorianikolenko/kingfisher/.claude/hooks/moved_away.sh',
      'reg spikes/S51_multicore/.claude/settings.json resolves to an executable'),
+
+    # --- H20, 2026-08-17 (ok-1). THE FIRST FALSIFIER THAT NEEDS TWO DEFECTS AT
+    # ONCE, which is the whole of the row: this driver applied exactly one edit
+    # per falsifier, so a check that only reddens under a PAIR was unreachable
+    # and its PASS was a statement about nothing. Measured before writing the
+    # support (`spikes/H20_multi_revert/probe.py`): red under neither defect
+    # alone, red under the pair.
+    ('F24',
+     'a callsign-less session consumes a REAL lane\'s terminal signal and exits '
+     'in its place. Needs both the LANE default and the glob read: with the '
+     'default alone the hook looks for `.loop_signal.unknown` and there is none, '
+     'with the glob alone it never reaches the lookup',
+     GATE,
+     'if [ -z "${CALLSIGN:-}" ]; then\n  exit 0\nfi\nLANE="$CALLSIGN"',
+     'LANE="${CALLSIGN:-unknown}"',
+     'lane signal untouched',
+     [(GATE,
+       'for SIGFILE in ".loop_signal.${LANE}"; do',
+       'for SIGFILE in .loop_signal.*; do')]),
 ]
 
 
@@ -311,6 +358,29 @@ def build(dst):
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def apply_edits(root, edits):
+    """Apply every `(rel, old, new)` to `root`. v3 (H20): ONE apply site.
+
+    There were two -- the F-series loop and the G-series loop -- each with its
+    own copy of read-then-write-then-anchored_replace, and the H20 row named
+    that before the fix went in: *"a fix at one apply site is the defect this
+    repo has paid for at every version of §12.2."*
+
+    READ BEFORE OPENING 'w'. `open(p,'w').write(anchored_replace(open(p).read(),
+    ...))` was the G-loop's first version and it is family B: Python evaluates
+    `open(p,'w')` before the argument expression, so the file is TRUNCATED TO
+    ZERO and then read as empty, the anchor "appears 0 times", and the driver
+    reports the check unfalsifiable -- a check declaring itself untestable
+    because the tester destroyed the input. Caught only because anchored_replace
+    REFUSES on a missed anchor; str.replace would have written an empty file and
+    reported the check green.
+    """
+    for rel, old, new in edits:
+        p = os.path.join(root, rel)
+        src = open(p).read()
+        open(p, 'w').write(anchored_replace(src, old, new))
+
+
 def norm(name):
     """Check names carry a dynamic tail -- `(.loop_signal.L7)` on a pass,
     `(want 'x', got 'y')` on a fail. Compare on the stable prefix."""
@@ -324,6 +394,15 @@ def run_suite(root):
     failed = [m.strip() for m in re.findall(r'^  FAIL  (.*)$', out, re.M)]
     passed = [m.strip() for m in re.findall(r'^  PASS  (.*)$', out, re.M)]
     return passed, failed, out
+
+
+# v3 (H20): run a SUBSET by id, e.g. `falsify.py F24 G2`. A full pass is 25
+# scratch trees at ~3 minutes of suite each -- over an hour -- so before this
+# there was no way to exercise ONE falsifier while writing it, and the driver
+# that answers "is a red run reachable" was itself unreachable during the work
+# that needed it. A filtered run REFUSES to print coverage: a ratio measured
+# over a subset, printed in the format of a full pass, is family B.
+ONLY = {a for a in sys.argv[1:] if not a.startswith('-')}
 
 
 def main():
@@ -346,14 +425,21 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
-    for fid, why, rel, old, new, want in FALSIFIERS:
+    for entry in FALSIFIERS:
+        # v3 (H20): an OPTIONAL 7th field is a list of further `(rel, old, new)`
+        # edits applied with the first, for a check that only reddens under two
+        # defects at once. Optional rather than a rewrite of all 24 rows,
+        # because churning 23 working falsifiers to add a 24th is how an anchor
+        # drifts unnoticed and a revert silently tests nothing.
+        fid, why, rel, old, new, want = entry[:6]
+        if ONLY and fid not in ONLY:
+            continue
+        edits = [(rel, old, new)] + list(entry[6] if len(entry) > 6 else ())
         tmp = tempfile.mkdtemp(prefix=f'h7_{fid}_')
         try:
             build(tmp)
-            path = os.path.join(tmp, rel)
-            src = open(path).read()
             try:
-                open(path, 'w').write(anchored_replace(src, old, new))
+                apply_edits(tmp, edits)
             except AnchorMissing as e:
                 # The fix moved and this falsifier no longer describes it. Loud,
                 # because the silent version is a green report over no test.
@@ -413,7 +499,7 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
-    for gid, why, old, new, want in [
+    for gentry in [
         ('G1', 'the module has no `import re`, so it dies at IMPORT time — the '
                'state it was committed to HEAD in, breaking every lane',
          'import re          # H14', '# import re removed  # H14',
@@ -424,22 +510,23 @@ def main():
          'violations += check_paths(committed,',
          'already-tracked violation does NOT gate'),
     ]:
+        # Same optional-extra shape as the F-series, applied by the same
+        # function, so a two-defect githygiene falsifier costs nothing to add
+        # later. It was the SHAPE that H20 named, not one missing falsifier.
+        gid, why, old, new, want = gentry[:5]
+        if ONLY and gid not in ONLY:
+            continue
+        extra = gentry[5] if len(gentry) > 5 else ()
         tmp = tempfile.mkdtemp(prefix=f'h7_{gid}_')
         try:
             build(tmp)
-            p = os.path.join(tmp, 'spikes/harness/githygiene.py')
             try:
-                # READ FIRST. `open(p,'w').write(anchored_replace(open(p).read(),
-                # ...))` was the first version and it is family B: Python
-                # evaluates `open(p,'w')` before the argument expression, so the
-                # file is TRUNCATED TO ZERO and then read as empty. The anchor
-                # then "appears 0 times" and the driver reported both falsifiers
-                # as unfalsifiable -- a check declaring itself untestable because
-                # the tester had destroyed the input. Caught only because
-                # anchored_replace REFUSES on a missed anchor; str.replace would
-                # have written an empty file and reported the check green.
-                src = open(p).read()
-                open(p, 'w').write(anchored_replace(src, old, new))
+                # v3 (H20): the SECOND apply site, now the same function as the
+                # F-series. Its read-before-write lore moved into apply_edits
+                # with it -- a comment recording a family-B defect is worth less
+                # sitting beside code that no longer performs the write.
+                apply_edits(tmp, [('spikes/harness/githygiene.py', old, new)]
+                            + list(extra))
             except AnchorMissing as e:
                 problems.append(f'{gid}: anchor gone, revert tested NOTHING ({e})')
                 print(f'  {gid}  ANCHOR MISSING — cannot falsify')
@@ -461,6 +548,17 @@ def main():
             shutil.rmtree(tmp, ignore_errors=True)
 
     print()
+    if ONLY:
+        print(f'COVERAGE: not printed — this was a filtered run ({" ".join(sorted(ONLY))}). '
+              f'A ratio over a subset in the shape of a full pass is family B.')
+        print()
+        if problems:
+            print(f'H7: {len(problems)} check(s) do not fail on their own defect')
+            for p in problems:
+                print(f'  - {p}')
+            return 1
+        print(f'H7: the {len(ONLY)} selected falsifier(s) fired, control green')
+        return 0
     covered = [c for c in map(norm, base_pass) if c in reddened]
     uncovered = [c for c in map(norm, base_pass) if c not in reddened]
     print(f'COVERAGE: {len(covered)}/{len(base_pass)} checks have been observed '

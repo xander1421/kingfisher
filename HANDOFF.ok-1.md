@@ -179,17 +179,75 @@ use it — it is cheaper than grepping and that is its only enforcement.
   excludes self, so the name is assigned and visible only to the receiver. H27's
   shape one artifact later. Both other lanes reached the same conclusion.
 
+## Cycle 5 — H41 DONE, H20 to a verdict, and two of my own claims corrected
+
+**H41 — `refcheck.py` v5. The row named one of two defects and the one it named
+catches nothing alone.** Measured on all 45 harness files BEFORE writing the
+repair: fence half 0 flagged, dot-slash half 2, both 4, zero false positives at
+either half, all four the same real absent file. The row's own cited live
+instance survives the fence fix, because check 4 skips any token whose first path
+segment is not a top-level entry and the first segment of a dot-slash token is
+`.`. Falsifier stated first and run: `spikes/H41_fenced_paths/falsify.py` reverts
+each of v5's three changes on an isolated copy — 3 of 3 caught, control green.
+Commit `1f5f6ab`.
+
+**Against me, three times in one row.** v5's first run flagged its OWN source
+three times: a rationale block naming an absent path is indistinguishable from a
+broken citation of it — the trap `selfcheck()` builds every fixture from string
+parts to avoid, in a comment I had read minutes earlier. It then caught me twice
+more, in the queue row and in the header I wrote to describe the first three.
+
+**Scope narrowed, cost filed as H54 rather than buried.** Per-lane journals left
+refcheck's PATH check: 3 of the 4 red sites were lanes REPORTING this defect, one
+inside a journal H10 forbids me to write to, so the block's only remedy was
+forbidden to every lane that could trip it. Given up: a journal claiming evidence
+at a path that does not exist is now unchecked.
+
+**The live instance was closed by another lane mid-cycle** — `peers.sh` created
+14:16. So the green tree is not evidence for v5 and I do not cite it as such; the
+selfcheck is the evidence.
+
+**H20 — HALF THE ROW IS WRONG, measured.** Probe `spikes/H20_multi_revert/probe.py`,
+four falsifiers stated first, all four passed. `lane signal untouched` reds only
+under the PAIR (LANE default + glob read) — list support justified. `writes no
+'unknown' marker` stays green even under the pair: its section opens
+`rm -f .loop_signal*` and the hook writes an exit marker only after consuming a
+signal, so no combination of hook defects could redden it. **Not a two-revert
+check — a check whose own section deletes its precondition (A15).**
+
+**And the obvious fix for that half is wrong, which the probe also measured.**
+Folding the plant into section 9 lets the hook exit legally under the LANE-default
+defect: that defect reddens 6 checks, and 2 with the plant folded in. So the plant
+went into a NEW section 9b. A repair that raises one check's coverage by disarming
+five reports better and tests less.
+
+**My own probe v1 named the wrong partner defect** — F5's bare-signal form, which
+`.loop_signal.L1` matches under no hook at all, so the A+B arm would have reported
+"row does not stand" over a defect of mine. Found by reading the section the check
+lives in rather than the check's name.
+
+**Corrections to my own cycle-4 notes.** (1) `falsify.py` was not hung and does
+not block on buffering — the suite is ~3 min per run and a full pass is 25 trees,
+over an hour. (2) The run I left in flight was UNOBSERVABLE: its stdout went to a
+pipe whose reader died with the session, so its result could never have been read.
+Killed and re-run to a file. `falsify.py` now takes an id filter so one falsifier
+can be exercised without an hour's wait.
+
+**Cycle-2 standing hazard is CLOSED.** `roster.txt` now carries `ok-1`, sanctioned
+by the operator on a checkable record, and `rostercheck.py` is green over
+`bringup.sh` and `send.sh`. This lane will not be refused at its next relaunch.
+
 ## NEXT 3
-1. **H29** — decide it properly, which needs the `/tmp` half answered. That half
-   is H17 and H17 is not agent-decidable (§10 is an absolute rail and an agent
-   narrowing a rail it operates under is A22). So: take the *detach race* half,
-   which is decidable — set `KF_DETACHED=1` in the two launcher checks so the
-   assertion observes the process it is asserting about (A29).
-2. **H20** — `falsify.py` applies one edit per falsifier, so 2 of 43 checks are
-   unreachable. The row calls the fix cheap: make the anchor/replacement fields
-   lists. Cheap and it raises falsifier coverage, which is the number H22 made
-   measurable.
+1. **H29** — the decidable half: set `KF_DETACHED=1` in the two launcher checks
+   so the assertion observes the process it is asserting about (A29). The `/tmp`
+   half is H17 and is not agent-decidable — §10 is an absolute rail and an agent
+   narrowing a rail it operates under is A22.
+2. **H54** — the cost H41 paid. A journal's evidence-path citations need a check
+   that reports to the journal's OWN lane, not to the shared commit gate.
 3. **H23** — a stale instruction at a surviving call site, no mechanical
    detector. Read it before taking it: the row states the distinguishing test is
    whether the sentence tells a reader what to DO, which may not be mechanisable
    at all (§12.12). If it is not, the honest verdict is to say so in the row.
+
+**Cycle 6 is not an ATTACK cycle; cycle 8 is, and §12.8 makes it the loop's turn
+— at least every fourth ATTACK targets the harness rather than a spike.**

@@ -1,0 +1,12 @@
+  control        63 pass / 0 fail; target red: neither
+  A (unknown)    57 pass / 6 fail; target red: ["writes no 'unknown' marker"]
+  B (glob sig)   60 pass / 3 fail; target red: neither
+  A+B            54 pass / 9 fail; target red: ["writes no 'unknown' marker", 'lane signal untouched']
+
+  PASS  V1 control all-green
+  PASS  V2 marker reds under A alone
+  PASS  V3 signal reds under the pair
+  PASS  V4 signal quiet under either alone
+  PASS  V5 A still reddens >= 6 checks
+
+  (A reddens 6 checks; it reddened 6 before this repair)

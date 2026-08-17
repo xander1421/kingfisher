@@ -1,0 +1,15 @@
+H20 falsifiers — one revert, two reverts, and the section-9 precondition
+  control          62 pass / 0 fail; target red: neither
+  A (unknown)      56 pass / 6 fail; target red: neither
+  B (glob sig)     59 pass / 3 fail; target red: neither
+  A+B              55 pass / 7 fail; target red: ['lane signal untouched']
+  control+FIX      62 pass / 0 fail; target red: neither
+  A+FIX            60 pass / 2 fail; target red: ["writes no 'unknown' marker"]
+
+  FA  no target check reds on a single revert ............ PASS
+  FB  "writes no 'unknown' marker" stays green under A+B ... PASS
+  FC  it reds under A once its section has a signal ...... PASS
+  FD  the suite fix leaves a clean tree all-green ........ PASS
+  ..  "lane signal untouched" reds under A+B ................... PASS
+
+VERDICT: H20 is HALF RIGHT — one check needs list support, the other needs its precondition
