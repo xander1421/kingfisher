@@ -860,6 +860,27 @@ about. This is the honest state, not a regression.
   question (A20) — and the gating control used 40 probes against S20's 60 while
   demanding exact equality, so it could not fire (A15); the probe count was
   matched rather than the comparison loosened. DECISIONS 223–225.
+- **C34 DONE: S26 — the quorum catches every lie AND can name the liar; nobody
+  had read the field.** `spikes/S26_cheat_attribution/`, `certify ok=true`, 4
+  controls, falsifier did NOT fire. M1-DEMO §8 item 5's untouched half. Over the
+  committed 64-program / 4-worker M1.8 run: **200 injected cheats, 200 caught
+  (every one dropped an agreeing seat), 200 attributed to exactly one worker**,
+  50/50 for each of `host-a`, `host-min`, `host-x86`, `phone`. `adjudicate()`
+  returns a verdict with no defendant, and attribution is a set difference over
+  envelopes `result.json` already carries — **one field, filed as M1.13 and
+  deliberately not applied**, because `q3.py` is uncommitted-modified by another
+  lane and `--only` on a shared file carries their work under my Atom (H19).
+  **56 envelopes cannot express a cheat at all** — the 14 `NO_RESULTS` programs
+  × 4 workers, where `key()` already returns `None` for an empty result member —
+  so the honest denominator is **50, not 64**. **Two threat models, one table**:
+  a lying member is caught 200/200 and named; M1.9's wrong replica is caught
+  **0/64** for `(< a a)` and 0/64 for an extra stdlib rule. Byte compare is
+  certain against misreporting and blind to consistent wrongness.
+  **No points arithmetic published** — D3 carries no stake floor, no `R`, no
+  price per job, so item 5's "paid" half is blocked on D3's own silence (A26).
+  **Own defect, caught by the gating control**: I reimplemented the agreement key
+  and reproduced 0 of 64; fixed by executing `q3.py`'s own `key()` with its
+  trailing bare `main()` stripped and the anchor asserted. DECISIONS 226–228.
 - **NEXT 2: is the 2–4× completeness constant implementation-shaped?** The
   verifier rebuilds with `build()`, the prover's own function. A verifier that
   folded the answer set incrementally would hash the same key bytes but allocate

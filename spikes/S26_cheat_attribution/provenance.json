@@ -1,0 +1,139 @@
+{
+ "spike": "S26_cheat_attribution",
+ "recorded_utc": "2026-08-17T15:42:10Z",
+ "note": "",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S26_cheat_attribution/cheat_attr.json",
+   "sha256": "167d6e9ac427ab48540c926f6f3746ae54d14cc4309283a132da7356f85741ca",
+   "bytes": 1055,
+   "mtime": 1786981330
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S26_cheat_attribution/result.head.json",
+   "sha256": "ccb9d25530bb62258a41d40096fb14d5da00ba2c8bcef11a5d9028aa745fc8e7",
+   "bytes": 348702,
+   "mtime": 1786981257
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S26_cheat_attribution/q3_head.py",
+   "sha256": "b719a4b9846ac99a31e67467649d0d876a78c442f6333a9620945f87d72967c5",
+   "bytes": 30038,
+   "mtime": 1786981330
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_key_matches_committed",
+   "must_fire_because": "every committed row's key and agreement count must be re-derived here before any tampering, or this spike is adjudicating with a different key function than the pipeline that produced the artifact",
+   "can_fail_because": "any of the 64 rows disagrees on key or on agreement count",
+   "null_must_contain": "a key function differing in any field -- status, fuel, hash or result count -- would show up as a mismatched row",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rows_checked": 64,
+    "key_matches": 64,
+    "agree_matches": 64
+   }
+  },
+  {
+   "name": "C_cheat_moves_the_key",
+   "must_fire_because": "A29: a cheat that leaves the agreement key unchanged tests nothing. Every injected cheat must change the envelope key, and envelopes where it cannot are counted rather than skipped silently",
+   "can_fail_because": "no cheat was expressible on any envelope, or a tampered envelope keyed identically to its original",
+   "null_must_contain": "an envelope with no hash to flip, which is counted as inexpressible instead of passing",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expressible": 200,
+    "inexpressible": 56,
+    "injected": 200
+   }
+  },
+  {
+   "name": "C_agreement_drops",
+   "must_fire_because": "a lying member must cost the quorum an agreeing seat -- if the majority count did not move, byte compare did not see the lie and \"caught\" would be a claim about nothing",
+   "can_fail_because": "the agreement count is unchanged for any injected cheat",
+   "null_must_contain": "a tampered envelope that still keys with the majority, which is what a cheat on a field outside the key would give",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "agreement_dropped": 200,
+    "injected": 200
+   }
+  },
+  {
+   "name": "C_worktree_key_agrees",
+   "must_fire_because": "the published numbers come from a byte-pin of the COMMITTED q3.py because the working-tree copy is uncommitted-modified. The working-tree key function must return the same 64 majority keys, or the two are not the same adjudicator and reading the diff was not evidence",
+   "can_fail_because": "any of the 64 majority keys differs between the pinned and working-tree q3.py",
+   "null_must_contain": "an in-flight edit that touched key() or its canonicalisation would move these keys",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rows": 64,
+    "identical": 64,
+    "pinned": "spikes/S26_cheat_attribution/q3_head.py"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_attribution_needs_a_protocol_change",
+   "must_fire_because": null,
+   "can_fail_because": "any injected cheat cannot be attributed to exactly one worker from what result.json already records",
+   "null_must_contain": "a corpus where two workers key identically to each other and not to the majority, which would name two defendants for one lie",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "injected": 200,
+    "attributed": 200,
+    "unattributed": 0
+   },
+   "refutes": "the reading that the pipeline cannot name a cheater: if every injected cheat is attributable from the recorded envelopes, the gap is reporting and the fix is a field",
+   "fires_when": "any injected cheat cannot be attributed to exactly one worker from what result.json already records",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "both inputs are BYTE-PINNED into this directory and hashed as artifacts -- q3_head.py (blob of HEAD's q3.py) and result.head.json (blob e1d3bf85) -- because spikes/M1_8_quorum3 has 256 modified files from another lane's in-flight run and a dep-dir staleness check would be judging their work, not this run's inputs. C_worktree_key_agrees measures the working-tree copy rather than assuming the difference is irrelevant.",
+ "problems": [],
+ "ok": true,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3": {
+   "newest": 1786979542,
+   "from": "spikes/M1_8_quorum3/result.json"
+  }
+ },
+ "falsifier": "an injected cheat that cannot be attributed to exactly one worker from the envelopes result.json already records, which would make attribution a protocol change rather than a field",
+ "carried_from_previous_record": [
+  "source_mtimes",
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

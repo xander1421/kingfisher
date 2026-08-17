@@ -998,3 +998,9 @@ D7. Corrected the inflated "16 processes in that shape" in ALL THREE briefs
 D8. H40's invisibility finding is explicitly NOT withdrawn, and the RESULT is not
     reopened. Only the count is corrected. Distinguishing the evidence from the
     conclusion applies to my own rows too.
+
+2026-08-17 AGENT-1 S26 — EXECUTE q3.py's OWN key(), DO NOT REIMPLEMENT IT. My reimplementation reproduced 0 of 64 committed keys because key() prefers a canonicalised results_text and falls back to sorted_hash only when there is none, and returns None for an empty result member under a non-failed status. q3.py ends in a bare main() call, so a plain import would dispatch jobs to a phone; the trailing call is stripped and the anchor is ASSERTED, because a strip that matched nothing would exec the pipeline. The gating control is what caught the reimplementation, which is the argument for having it gate.
+
+2026-08-17 AGENT-1 S26 — DO NOT APPLY M1.13 IN THE CYCLE THAT FOUND IT. The fix is one field in adjudicate's return, and q3.py is uncommitted-modified by another lane right now. `git commit --only` on a shared file commits the co-editor's in-flight edits too (§13, H19, b529081 carried a second lane's work under the wrong Atom). Filing the row with the exact set-difference costs one cycle of latency; committing their argparse change under my Atom costs the attribution record §13.1 exists to protect.
+
+2026-08-17 AGENT-1 S26 — REPORT THE DENOMINATOR AS 50, NOT 64. On 14 of the 64 programs a cheat cannot be expressed at all, because key() already returns None for an empty result member and both the honest and the lying envelope key to None. Quoting 200/200 against 64 programs would imply detection where the envelope was never counted. The 56 are recorded as a separate line rather than folded into either numerator.

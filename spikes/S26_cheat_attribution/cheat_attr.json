@@ -1,0 +1,53 @@
+{
+  "cheats": {
+    "agreement_count_dropped": 200,
+    "attributed_to_exactly_one_worker": 200,
+    "envelopes_where_a_cheat_is_inexpressible": 56,
+    "injected": 200,
+    "not_attributed": 0
+  },
+  "falsifier_fired": false,
+  "per_worker": {
+    "host-a": {
+      "cheats_injected": 50,
+      "named": 50,
+      "unnamed": 0
+    },
+    "host-min": {
+      "cheats_injected": 50,
+      "named": 50,
+      "unnamed": 0
+    },
+    "host-x86": {
+      "cheats_injected": 50,
+      "named": 50,
+      "unnamed": 0
+    },
+    "phone": {
+      "cheats_injected": 50,
+      "named": 50,
+      "unnamed": 0
+    }
+  },
+  "programs": 64,
+  "reproduced": {
+    "agree_matches": 64,
+    "key_matches": 64,
+    "rows_checked": 64
+  },
+  "source": "spikes/S26_cheat_attribution/result.head.json",
+  "unattributed_detail": [],
+  "workers": [
+    "host-a",
+    "host-min",
+    "host-x86",
+    "phone"
+  ],
+  "wrong_replica_for_comparison_M1_9": {
+    "extra_stdlib_rule": 0,
+    "of": 64,
+    "resolver_message": 24,
+    "wrong_less_than": 0,
+    "wrong_minus": 4
+  }
+}
