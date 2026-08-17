@@ -11,7 +11,7 @@ and process-global NEXT_VARIABLE_ID).
 import argparse, hashlib, json, os, platform, subprocess, sys, time
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_5_shardstore'))
-from shardstore import ShardStore, cid_of
+from shardstore import ShardStore, cid_of, parse_cid
 
 def run_local(binary, prog, fuel):
     return subprocess.run([binary, prog, str(fuel)],
@@ -26,10 +26,20 @@ def device_fetch(store, cid, devdir):
     """M1.5 on the device side: the phone runs from a CID-named cache and the
     blob crosses the wire only on a miss. Returns (device_path, bytes_pushed)."""
     dpath = f'{devdir}/shards/{cid}'
-    hit = subprocess.run(['adb', 'shell', f'test -f {dpath} && echo Y'],
-                         capture_output=True, text=True).stdout.strip() == 'Y'
-    if hit:
-        return dpath, 0
+    # Verify the cached blob ON THE DEVICE before trusting it. Host-side `get`
+    # re-hashes; the device previously trusted its own cache file, so a corrupt
+    # or substituted shard was caught only by quorum -- i.e. by three devices
+    # disagreeing, which is the expensive way to find a bit flip.
+    # The CID *is* the hash, so verification needs no extra metadata.
+    probe = subprocess.run(
+        ['adb', 'shell', f'test -f {dpath} && sha256sum {dpath} || true'],
+        capture_output=True, text=True).stdout.split()
+    if probe:
+        want = parse_cid(cid)[2:].hex()      # strip the 0x12 0x20 multihash prefix
+        if probe[0] == want:
+            return dpath, 0                  # verified hit
+        # present but wrong: evict rather than run it
+        subprocess.run(['adb', 'shell', f'rm -f {dpath}'], capture_output=True)
     data = store.get(cid)
     if data is None:
         raise FileNotFoundError(f'shard {cid} not in store')

@@ -49,6 +49,14 @@ UNSEPARABLE = {
 }
 
 
+def _run(cmd):
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True,
+                              timeout=30).stdout.strip()
+    except Exception:
+        return ''
+
+
 def observed_domains(wid, binary, via):
     """Domain identity the COORDINATOR observes, never what the worker declares.
 
@@ -79,7 +87,13 @@ def observed_domains(wid, binary, via):
     else:
         host = f'host:{platform.node()}'   # the coordinator's own machine
         os_id = f'{platform.system().lower()}-{platform.release()}'
-        isa = platform.machine()
+        # read the ISA off the BINARY, not off the coordinator. An x86-64 build
+        # running under Rosetta on this arm64 host is a different ISA domain,
+        # and `platform.machine()` would have reported the host's and silently
+        # merged them -- the same self-flattering-key defect one level up.
+        arches = _run(['lipo', '-archs', binary])
+        isa = arches.split()[0] if arches and 'error' not in arches.lower() \
+            else platform.machine()
     isa = 'aarch64' if isa.lower().startswith(('arm64', 'aarch64')) else \
           ('x86_64' if isa.lower() in ('x86_64', 'amd64') else isa.lower())
 
@@ -256,9 +270,13 @@ def main():
         print('gate:', gate)
         stage_device(os.path.join(BIN, 'fuelrun.android'))
 
+    # host-x86 is an x86-64 build of the same source, run under Rosetta. It is a
+    # distinct `binary` and `isa` domain and the SAME `host` and `os` domain --
+    # which is exactly why the count is per-axis. It restores the cross-ISA
+    # property S57's headline had and this quorum had lost.
     workers = [
         ('host-a', os.path.join(BIN, 'fuelrun.host'), 'local'),
-        ('host-b', os.path.join(BIN, 'fuelrun.host'), 'local'),
+        ('host-x86', os.path.join(BIN, 'fuelrun.host.x86_64'), 'local'),
     ]
     if not a.no_device:
         workers.append(('phone', os.path.join(BIN, 'fuelrun.android'), 'adb'))
@@ -415,9 +433,10 @@ def main():
         pushed_claim = sum(1 for _,_,_,_,es,_,_,_ in rows for e in es
                            if e and e.get('worker') == 'phone'
                            and e.get('bytes_pushed', 0) > 0)
+        need = set(cids)
         print(f'\nresidency (observed on device, not worker-reported): '
-              f'{len(held)} of {uniq} shards held; worker claimed {pushed_claim} '
-              f'fetches this run')
+              f'{len(need & held)}/{len(need)} of this run\'s shards held, '
+              f'{len(held)} total on device; {pushed_claim} fetched this run')
     ow = [e['observed_ms'] for _,_,_,_,es,_,_,_ in rows for e in es
           if e and e.get('worker') == 'phone' and 'observed_ms' in e]
     wc = [float(e['wall_ms']) for _,_,_,_,es,_,_,_ in rows for e in es

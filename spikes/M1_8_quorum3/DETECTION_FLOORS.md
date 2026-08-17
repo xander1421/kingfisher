@@ -35,3 +35,53 @@ Neither is fixed by running the check harder. The first needs a different
 quantity — fuel rather than time. The second needs an attestation root, which
 this project does not have, and which is the same missing piece the `operator`
 domain axis reports as 1.
+
+---
+
+## Two floors closed since this table was written
+
+**Device-side shard integrity — was "absent", now exact.**
+The worker verifies the cached blob **on the device** before running it. The CID
+*is* the hash, so this needs no extra metadata: `sha256sum` the file, compare to
+the multihash, evict and refetch on mismatch.
+
+Control, run rather than argued — corrupt a cached shard and see whether the
+pipeline notices:
+```
+on-device sha, pre-corruption   6e99de46fcad885dd82540f7caf5…
+on-device sha, post-corruption  3398b5c2a9131cb63d2d21240a5d…
+-> phone bytes_pushed 2002  (rejected the cache, refetched)
+-> status OK, fuel 58, agree 3/3
+```
+Previously a corrupt shard was caught only by quorum — i.e. by three devices
+disagreeing, which is the expensive way to find a bit flip, and which fails
+outright when the corruption is identical across devices.
+
+Residual floor: this catches corruption and substitution. It does **not** catch
+a device that verifies correctly and then executes something else.
+
+**ISA monoculture — was 1 domain, now 2.**
+Added an x86-64 build of the same source, run under Rosetta. Distinct `binary`
+and `isa` domain, same `host` and `os` domain — which is precisely why the count
+is per-axis rather than scalar.
+
+```
+binary    3 domain(s)
+host      2
+os        2
+isa       2      <- was 1
+operator  1      <- binding
+```
+
+This restores the cross-ISA property S57's headline had and the quorum had
+quietly lost, and all jobs still agree 3/3 — so aarch64 and x86_64 produce
+byte-identical results inside the live pipeline, not just in S57's corpus run.
+
+**The mismatch detector caught a real error doing it.** The worker declared
+`isa=arm64` — its own Python process — while the coordinator observed `x86_64`
+from the binary via `lipo -archs`. Self-declaration was simply wrong, and the
+axis would have silently merged two ISAs into one domain. The detector's first
+firing was benign (`operator`); this one was not.
+
+`operator` remains the binding axis at 1 and cannot be raised without an
+attestation root.
