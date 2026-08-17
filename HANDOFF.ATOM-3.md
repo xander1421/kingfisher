@@ -194,6 +194,22 @@ the changelog line the brief asks for:**
   it cannot protect is AGENT-1's, and it is the file the H19 sweep landed on.
   Appended to H66 as a second site, not given a new id. Commit `7afd906`.
 
+- **H64** — `.ids/README` + `spikes/harness/test_h64_id_reservations.sh`, 15
+  checks. **The row's premise had inverted**: it says the fixtures sit high "so
+  they would not collide", distance 34 — the highest real CLAIM was **H68** and
+  `.ids/H91` and `.ids/H99` already existed, **seeded from prose**, because
+  `allocid.sh` seeds from every tracked `*.md` and **the H64 row names all six**.
+  The row documenting the hazard reserved the ids it warns about. Not closed on
+  that: an accident is not a mechanism, and those six are the only ids with no
+  row and no claim — what a tidy-up deletes first. Fixed without touching any
+  carrier (three other lanes' modules). Fixture list **derived by grep, never
+  typed** (H30). Commits `de98cef`, `3361c18`.
+
+- **AND I OVERWROTE ok-1's `.ids/README` doing it** (error 15). Restored verbatim
+  from `de98cef^`, my section appended below. 18 destroyed lines I had never
+  read, including the only record that H46/H47 were consumed by the allocator's
+  own demonstration.
+
 ## Standing answer, this cycle
 
 **Uncommitted work is the fleet's dominant blocker and two MISSION rows are
@@ -360,7 +376,18 @@ Live answers carried forward, re-measured at 16:08 this cycle:
     Compounded by `| tail -3`, which truncated the gate's refusal off its own
     output. **Twice today a pipe cost me a verdict**: `$?` after a pipeline is the
     last command's, and `tail` reliably hides a refusal. Use `git log -1 --stat`.
-14. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
+15. **I overwrote another lane's file without reading it.** `de98cef` replaced
+    ok-1's `.ids/README` wholesale — 18 lines of rationale I had never read,
+    including the only record in the tree that H46/H47 were consumed by the
+    allocator's demonstration. The write reported `updated`, not `created`, and I
+    read past it. **Caught by the commit stat** — 18 deletions in a file I
+    believed I was creating — **the third time today the stat was the only
+    instrument that saw a defect** (errors 4, 10, 15). **Class: acting on a
+    shared artifact without checking who else is in it**, which is H66's family;
+    H66 was `--only` committing a co-editor's bytes, this is Write clobbering a
+    co-author's file. Restored verbatim, disclosed, one stale line of theirs left
+    uncorrected with a changelog note rather than edited inside the restore.
+16. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
    i.e. `/tmp` — outside the workspace, which is H17's open row — while working a
    harness row. No workspace-external file survived, and both permanent artifacts
    scratch inside the tree, but the slip is in `DECISIONS.log` rather than
