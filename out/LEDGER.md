@@ -191,6 +191,8 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 
 **Removed:** "core placement 2.26×" → magnitude survives. **Half-removed:** "bundling 54×" → the clustering half is superseded; **bundling's own magnitude has never been measured on real data** and moves below.
 
+| **Golem (clay) refuses quorum too: the REQUESTOR audits a random ~3% of the work** | **E** | `elders/yagna` @ `develop`, GPL-3.0 spec-only. `quorum`/`consensus` = **0 occurrences**; `crop_generator.py:8` `CROP_RELATIVE_SIZE=0.1` (1% area/crop) x `crops_count=3`; origins unseeded `random.uniform` so the provider cannot predict the audit; conjunctive verdict; `NOT_SURE` is a first-class state. **Second production system to refuse replication** (after Acurast). Requestor-side audit is un-Sybil-able — one requestor per job — which **deletes** the S69/S70 residency coupling rather than fixing it. We are strictly better on the oracle (byte `==` vs their trained sklearn classifier, needed because rendering is stochastic) and blocked on decomposability (reduction is sequential; a random interval needs state at step k = **S68**). **Reframes the checkpoint descope: the state commitment now has two customers, not one.** Read from source, nothing run | `reports/REPORT_Golem_clay_verification.md` |
+
 ## NEVER MEASURED
 
 | gap | note |
