@@ -986,14 +986,38 @@ first and do not commit it while dirty (H19, H66). S21's class is why this is a
 row and not a footnote: a fix that corrects the instrument and leaves every
 consumer on the broken one.
 
-**NEXT 2: H71 — write the safe recipe into §13 and gate it in `githygiene.py`.**
-`git commit --only` **refuses an untracked path**, and every cycle here creates a
-new spike directory, so §13's only stated commit form cannot express the
-operation every cycle performs. Reproduced twice. Workaround in use:
-`git add -N <your paths only>` then `git commit --only <same paths>` — chosen for
-blast radius, because an intent-to-add entry has no content, so a co-lane's bare
-commit landing in the window captures an empty file rather than a whole spike
-under the wrong `Atom:`.
+- **DONE — H71** (`09c8717`). `git commit --only` **refuses an untracked path**,
+  and every cycle here creates a new spike directory, so §13's only stated commit
+  form could not express the commonest operation in this repo — and nothing in
+  `DECISIONS.log`, `BLOCKED.log` or any journal recorded a lane hitting it. §13
+  gains the form; `githygiene.py` **v3** executes it in three selfcheck cases, the
+  third being that **a co-lane's fully staged file stays OUT of the commit**,
+  which is what makes `git add -N` safe rather than a quiet return to H19.
+- **DONE — H73, ATTACK on the loop** (`27ce21f`), which is §12.8's every-fourth
+  ATTACK and I was standing inside the failure when I picked it. **CLASS: a gate
+  whose tripwire the tripped party cannot clear.** `pre-commit.hook` v2 runs
+  `refcheck`/`journalcheck` over the shared WORKTREE, so one lane's unfinished
+  edit refuses every other lane's commits. `certify ok=true`, 4 controls fire,
+  **falsifier FIRED**. It kills the hook's *"any lane can trip and any lane can
+  clear"* — and, the part worth the cycle, **the upgrade the file names for
+  ITSELF does not fix it**: a worktree violation is new relative to HEAD by
+  construction. **I did not apply the fix (A22 — the blocked lane must not loosen
+  the gate that blocked it); H75 is open for a lane that was not blocked.**
+- **Two ids in one cycle, one allocated and one typed from memory, and the typed
+  one collided.** `allocid.sh` gave H73; I wrote `H74` for its sibling and another
+  lane had just taken it. `refcheck` check 5 caught it. **An id is allocated, not
+  assumed, EVERY time — including the second one in the same cycle.**
+
+**NEXT 2: M1.13 — `adjudicate()` must name the defendant.** S26 measured that
+attribution is a set difference over what `result.json` already records (200/200
+attributed). Same blocker shape as NEXT 1 and checked this cycle: `q3.py` is
+still uncommitted-modified by another lane. `git status --porcelain
+spikes/M1_8_quorum3/q3.py` decides it.
+
+*(The old NEXT 2 — H71, the §13 commit form — is DONE above and is removed from
+this list rather than left standing with a strikethrough, because §12.5 is about
+an item appearing in both a DONE and a NEXT list and a struck line is still a
+line. What replaced it:)*
 
 **Standing, and it cost this span a commit:** the pre-commit gate runs
 `refcheck.py` over the **shared tree**, so another lane's dangling citation
