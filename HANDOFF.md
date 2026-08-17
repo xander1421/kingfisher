@@ -45,10 +45,15 @@ about. This is the honest state, not a regression.
    `proposed/das-concurrency/`, `proposed/mork-license/`.
 
 ## Where I am, and the next three items
-- **BLOCKER, new**: the phone is not charging (all powered flags false).
-  WorkManager will not start any worker, so M1.1-on-M1.7 is untestable, and
-  every on-device timing this session is unknown-condition. Gate fixed and now
-  refuses. See `spikes/M1_3_worker/CHARGING_DEFECT.md`.
+- **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
+  a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
+  `USB powered: true`. The phone was charging all along, §10 was honoured, and
+  on-device timings need no re-measurement. Both gates now refuse on an
+  overridden service. `spikes/M1_3_worker/CHARGING_DEFECT.md`.
+- **DONE: the Android app is a fleet member, 65/65 byte-identical to host** on
+  the admitted corpus. Closing it needed matched Cargo features (the `[patch]`
+  section does not cross the workspace boundary), fixing our own envelope
+  escaping, and banning the `fileio` surface. `spikes/M1_7_transport/FLEET_MEMBER.md`.
 - **DONE**: M1.7 transport (66/66 byte-identical, phone dials out, loopback
   only); M1.3b process reuse (31 raw hashes -> 1 canon; SAFE for ground
   results); M2.1 §6 maxSkew reframed as a security dial, §3's knee withdrawn;

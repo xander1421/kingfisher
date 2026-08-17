@@ -27,3 +27,4 @@ NULLS  20 degree-preserving shuffles per depth. Each depth is compared to
        draw 15/20   depth2 0.3080   depth3 0.3127
        draw 16/20   depth2 0.3237   depth3 0.3290
        draw 17/20   depth2 0.3306   depth3 0.2789
+       draw 18/20   depth2 0.3271   depth3 0.3144
