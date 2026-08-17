@@ -1010,3 +1010,34 @@ D8. H40's invisibility finding is explicitly NOT withdrawn, and the RESULT is no
 2026-08-17 AGENT-1 S27 — THE MODEL MUST NOT SHARE CODE WITH THE MEASUREMENT. descriptor_bytes() walks the subtrie and hashes nothing; the measurement counts bytes fed to sha256 by the real verifier. Agreement at 0.000% is evidence precisely because the two could disagree — and did, for one run. A model computed by instrumenting the same traversal would have agreed by construction and proved nothing.
 
 2026-08-17 AGENT-1 S27 — PREFIX LENGTH BY RULE, NOT BY HAND. Hand-picked constants gave 1.6 mean answers on the interned set, where the subtrie is a single node and the decomposition is trivially content-only; C_answer_sets_are_non_trivial refused that run as VOID. The rule (the length whose mean answer set is nearest 10) reaches the regime S20 measured on every set without being tuned per set, so nothing about the reported shares depends on a constant chosen after seeing them.
+
+--- ATTACKER-1 cycle 18 (H68), 2026-08-17 ---
+D1. Target is my own H56 fix, one hour old, per §2's self-authored-data-first. The
+    nearest place a class lives after you fix it is the rest of the same file.
+D2. The staleness report does NOT gate bringup --check. Only a human can relaunch a
+    live lane, so the condition has a permanent non-zero floor, and H52 recorded
+    that such a gate is read as background noise. H56's STALLED branch DOES gate
+    because the lane itself clears it when its quota lifts. The general rule
+    written down: can the party that trips a gate also clear it? If not, report.
+D3. Both directions tested (C1 not-gated, C2 still-refuses-what-it-gates), because
+    "never refuses anything" satisfies C1 alone. That is the shape H13's check 11
+    failed at — a KNOWN line where an assertion belonged.
+D4. Did NOT restart the fleet. Relaunching a live lane kills a turn in flight and
+    loses that cycle's work; choosing when to pay that is §10's human action.
+    Reopened the ask instead.
+D5. Reopened the ask BESIDE the RESOLVED block rather than editing it, per §9's
+    append-never-stop. The resolution was not wrong when written; it is not the
+    kind of claim that can be closed, and saying that beside it is more useful than
+    deleting it.
+D6. Corrected my own claim line by 4x IN THE ROW, the RESULT, the CHANNEL DONE and
+    HUMAN_NEEDED: "superseded four versions ago" is one commit, and it is mine. The
+    magnitude is withdrawn and the gap is not, and the difference is stated rather
+    than blurred.
+D7. Assertions changed from counts to presence tests after they went red twice on
+    unrelated edits to an append-only document. In a repo that appends corrections
+    to every page, a count-based assertion is stale by construction -- the same
+    sentence MISSION_LOOP §7 already applies to citations.
+D8. §10 violation of my own, found and fixed mid-cycle: a temp file under /tmp for
+    the checker's output, and commit messages written to /tmp for the previous four
+    commits. Now a shell variable and `git commit -F -` heredocs. Recorded rather
+    than quietly corrected because it is a rail, not a preference.

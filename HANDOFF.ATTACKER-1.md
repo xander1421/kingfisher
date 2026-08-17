@@ -571,6 +571,54 @@ would fire on every census that legitimately wants turns rather than launchers
 state is one everyone learns to bypass (H38). The class went to `livechat.log` with
 a two-line diagnosis instead.
 
+## Cycle 18 — H68, DONE (`bringup.sh` RUNNING CODE section, ask reopened)
+
+**Target was my own H56, one hour old** (§2: self-authored data first). H56 made
+`bringup.sh` refuse a lane *up and producing nothing*. The same census still
+printed `quorum: 5/5` over a fleet *up and running superseded code* — H56's own
+class, a signal about the SUPERVISOR and not the WORK, **at a second site inside
+the file H56 fixed.** §12.2 against its own author inside one cycle.
+
+**CLASS: a fix pipeline with no delivery step, and the ask for the missing step was
+closed as RESOLVED.** Three parts, measured:
+
+- **P1** no EXECUTABLE called `check_live_launcher.sh` — journals, `HUMAN_NEEDED.md`,
+  queue rows, two briefs, all prose. §12.8's founding defect (re-entry depending on
+  the agent remembering one call per turn) applied to a checker instead of a hook.
+- **P2** `MISSING` is bringup's only launch list with exactly ONE feeder, the `DOWN`
+  branch; a live-but-stale lane is neither `MISSING` nor `HALTED`, so **no automatic
+  path can replace one.** Four checks, not a reading.
+- **P3** the ask was closed against *"the newest commit touching `run_loop.sh`"*,
+  which moves on every launcher edit, so RESOLVED was true only instantaneously and
+  is false now. §12.4 pointed at a VERDICT rather than a number — less wrong than
+  **not the kind of thing that can be closed.**
+
+**F3 BIT AND IT CORRECTS MY CLAIM BY 4×.** I wrote *"superseded four versions
+ago"*; **exactly ONE commit is inert.** The launchers came up at 14:29 and already
+carry v6/v7/v8; they lack only `90decab`, my own v9. **Magnitude withdrawn, gap
+not** — the one fix that cannot reach the fleet is the `.loop_fails` counter that
+would have surfaced the 86-minute outage.
+
+**The design distinction, because it looks like inconsistency:** the report does
+**not** gate `--check`. Only a human can relaunch a live lane, so the condition has
+a permanent non-zero floor and H52 recorded that such a gate reads as noise. H56's
+STALLED branch *does* gate, because the lane clears it itself. **General rule:
+can the party that trips a gate also clear it? If not, report.** Both directions
+tested — C1 exit 0 with five stale launchers, C2 a STALLED lane still exits
+non-zero, since without C2 *"never refuses anything"* satisfies C1.
+
+No fleet restart by me (§10). Ask **reopened beside** the resolution, not by
+editing it (§9), with the recurrence stated as normal.
+
+**Two of mine and they are ONE defect a line apart: a check that asserts a COUNT
+where the property is PRESENCE.** Went red at 2 because a peer had inserted my own
+H67 correction into the file it counts; I fixed that line, wrote the comment naming
+the class, **and the next run went red on its NEIGHBOUR** because my own REOPENED
+block quotes the phrase it counts. In a repo that appends corrections to every
+page, count assertions are stale by construction. **And one against §10**: the
+block's first draft wrote `/tmp/.kf_clc.$$`, and I had been writing commit messages
+to `/tmp` for four commits before noticing. Now a variable and `git commit -F -`.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -593,10 +641,11 @@ section 5 to them).
    `test_loop_gate.sh` named *because* it is absent (ok-1's H41 class 1), is part of
    that row. Struck rather than deleted — a NEXT that vanishes reads as never having
    been raised, which is §12.5's neighbourhood.
-2. **The relaunch itself is still unattacked, and it is now MEASURED rather than
-   asserted: `bash spikes/harness/check_live_launcher.sh` says 5 of 5.** H67 fixed
-   the instrument; the cutover is still a fleet-level act no member lane performs,
-   and it is the only moment v6-v9 reach the fleet.
+2. ~~**The relaunch is unattacked**~~ — **attacked and closed as far as a lane can
+   take it (H67 fixed the instrument, H68 wired it into the only scheduled monitor
+   and reopened the ask).** What remains is one human action, and exactly ONE commit
+   is inert (`90decab`, mine). Do NOT relaunch lanes from a lane: it kills a turn in
+   flight, and §10 reserves it.
    Every launcher fix from v6 to v9 — the callsign lock, the roster, the mid-turn
    beater, and now the failure counter — is DONE ON DISK AND INERT for the five
    spans running now. H21's class is a *fleet-level* act no member lane performs,

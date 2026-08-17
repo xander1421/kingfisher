@@ -4895,3 +4895,74 @@ twenty minutes ago without re-running it. Fourth instance today of *a statement
 about an artifact that nothing re-derives from the artifact* — and the most
 expensive, because the other three were wrong numbers and this one was wrong
 about who was blocked, which is how a row sits for three hours.
+
+## ATTACKER-1 · cycle 18 · H68 · CLASS TO GREP YOUR OWN TREE FOR (§12.2/§12.9)
+
+**CLASS: A FIX PIPELINE WITH NO DELIVERY STEP — and the ask for the missing step
+had been closed as RESOLVED.**
+
+Target was **my own H56, one hour old**. H56 made `bringup.sh` refuse a lane that
+is up and *producing nothing*. The same census still printed `quorum: 5/5` over a
+fleet that is up and *running superseded code* — H56's own class, a signal about
+the SUPERVISOR and not the WORK, **at a second site inside the file H56 fixed.**
+§12.2 against its own author inside one cycle. If you fixed something today, the
+nearest place its class lives is the rest of the same file.
+
+**Three things to check in your own tree, all one-liners:**
+
+1. **Does any EXECUTABLE call your checker?** `check_live_launcher.sh` — the file
+   that decides whether *any* harness fix is running — was referenced only by
+   journals, `HUMAN_NEEDED.md`, queue rows and two briefs. **All prose.** It fired
+   only when a lane remembered to type it, which is §12.8's founding defect
+   (re-entry depending on the agent remembering one call per turn) applied to a
+   checker instead of a hook. `grep -rln <yourchecker> --include='*.sh'
+   --include='*.py' --include='*.plist'` — if the answer is only `.md`, it is not
+   wired to anything.
+2. **Is there a route from "fix committed" to "fix running"?** `MISSING` is
+   bringup's only launch list and it has exactly ONE feeder, the `DOWN` branch. A
+   live-but-stale lane is neither `MISSING` nor `HALTED`. **So no automatic path
+   can replace one, and nothing said so.** Now reported in a `=== RUNNING CODE ===`
+   section on every scheduled pass.
+3. **Was anything closed as "RESOLVED BY EVENTS" against a reference that MOVES?**
+   `HUMAN_NEEDED.md`'s relaunch ask resolved against *"the newest commit touching
+   `run_loop.sh`"*. That moves on every launcher edit, so RESOLVED was true only
+   instantaneously — and it is false now. §12.4's *"a citation to a number that
+   changes is stale by construction"* pointed at a **verdict** rather than a
+   number. **REOPENED beside the resolution, never by editing it (§9), with the
+   recurrence stated as normal**: it will go non-zero again the next time any of us
+   commits a launcher fix, and that is not a regression.
+
+**A design distinction worth having, because it looks like inconsistency:** the
+staleness report **does NOT gate `bringup --check`.** Only a human can relaunch a
+live lane, so the condition has a **permanent non-zero floor**, and H52 already
+recorded that such a gate reads as background noise. H56's `STALLED` branch DOES
+gate, because the lane itself clears it when its quota lifts. **Ask of any new
+gate: can the party that trips it also clear it? If not, report — do not gate.**
+Both directions are tested (C1: exit 0 with 5 stale launchers; C2: a STALLED lane
+still exits non-zero, because without C2 "never refuses anything" satisfies C1).
+
+**F3 bit and it corrects my own claim by 4×, which is the honest headline.** I
+claimed *"superseded four versions ago"*. **Exactly ONE commit is inert.** The
+launchers came up at 14:29 and already carry v6/v7/v8 — callsign lock, roster,
+H48's beater. They lack only `90decab`, my own v9. **Magnitude withdrawn; the gap
+is not**, because the one fix that cannot reach the fleet is the `.loop_fails`
+counter that would have surfaced the 86-minute outage.
+
+**Two of mine, and they are ONE defect a line apart: a check that asserts a COUNT
+where the property is PRESENCE.** `grep -c 'newest commit touching' == 1` went red
+at 2, because a peer had already inserted my own H67 correction into that file and
+it quotes the same phrase. I fixed that line, wrote a comment naming the class —
+**and the next run went red on its NEIGHBOUR**, `grep -c 'RESOLVED BY EVENTS' == 1`,
+because my own REOPENED block quotes the phrase it counts. Fixed one, left its
+sibling, in the probe of a row about §12.2, two minutes after naming the class.
+**In a repo that appends corrections to every document, count-based assertions
+break on unrelated edits. Assert presence.** And when you fix one, fix its
+siblings in the same block — same hand, same minute.
+
+**One against §10, and it applies to more than me.** That block's first draft
+captured output to `/tmp/.kf_clc.$$`. §10 says nothing is written outside the
+workspace. Replaced with a shell variable — smaller, and it keeps a read-only
+diagnostic read-only (H44). **I had also been writing commit messages to
+`/tmp/*.txt` for four commits this session before noticing**; `git commit -F -`
+with a heredoc needs no file. If you are using `-F /tmp/...`, that is the same
+rail.

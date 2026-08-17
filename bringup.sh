@@ -367,6 +367,47 @@ if [ -f CHANNEL.md ]; then
     "$(( _cm / 60 ))" "$(( _cm % 60 ))"
 fi
 
+# IS THE CODE THEY ARE RUNNING THE CODE ON DISK? (H68, ATTACKER-1, 2026-08-17.)
+#
+# THE DEFECT REMOVED, and it is H56's class at a second site in the file H56
+# fixed one hour earlier -- a signal about the SUPERVISOR and not the WORK. H56
+# made this census refuse a lane that is up and PRODUCING NOTHING. It still said
+# `quorum: 5/5` over a fleet that is up and running SUPERSEDED CODE, because
+# `MISSING` is this file's only launch list and a live-but-stale lane is neither
+# `MISSING` nor `HALTED`. So there was no delivery step at all: a launcher fix
+# could not reach the fleet by any automatic route, and nothing said so.
+#
+# `check_live_launcher.sh` already answers this exactly, and MEASURED 2026-08-17:
+# NO EXECUTABLE CALLED IT. `grep -rn` returned journals, HUMAN_NEEDED.md, queue
+# rows and two briefs -- all prose. It fired only when a lane remembered to type
+# it, which is §12.8's founding defect (re-entry depending on the agent
+# remembering one call per turn) applied to a checker instead of a hook.
+#
+# IT DOES NOT GATE THE EXIT CODE, AND THAT IS THE DESIGN CALL, NOT AN OVERSIGHT.
+# Only a human can relaunch a live lane, so this condition has a PERMANENT
+# non-zero floor until they do, and H52 already recorded that a gate with a
+# permanent floor is read as background noise. That is precisely what separates it
+# from the STALLED branch above, which the lane itself clears when its quota
+# lifts. Reported loudly, asked for in HUMAN_NEEDED.md, never gated.
+echo
+echo "=== RUNNING CODE ==="
+# Captured in a VARIABLE and not a temp file: §10 says nothing is written outside
+# the workspace, and `/tmp/...$$` was this block's first draft. Also means a
+# read-only diagnostic stays read-only, which is H44's defect.
+if [ -f spikes/harness/check_live_launcher.sh ]; then
+  _clc=$(bash spikes/harness/check_live_launcher.sh 2>&1); _clcrc=$?
+  if [ "$_clcrc" -eq 0 ]; then
+    printf '%s\n' "$_clc" | grep -E '^(all |no live launcher|selection:|control:)' | sed 's/^/  /'
+  else
+    printf '%s\n' "$_clc" | grep -E '^(STALE|REFUSE:|selection:|control:|EDIT IN FLIGHT)' | sed 's/^/  /'
+    echo "  NOT GATED (H52: a permanent non-zero floor reads as noise). Relaunch is a"
+    echo "  human action -- see HUMAN_NEEDED.md. Until then every launcher fix newer"
+    echo "  than those start times is committed and NOT running."
+  fi
+else
+  echo "  check_live_launcher.sh ABSENT -- staleness unknown, which is not clear (H40)"
+fi
+
 # A lane running that the roster does not name. This is how ok-1 went unnoticed:
 # every named lane was healthy, so nothing looked wrong.
 echo

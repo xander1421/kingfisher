@@ -242,3 +242,46 @@ deliberate and refuses silently changing it.
 
 **The ask, one line:** rule fail-open or fail-closed on a missing `roster.txt`; if
 fail-closed, say what a lane should do when the file is gone.
+
+---
+
+## REOPENED — "RESOLVED BY EVENTS" cannot hold for a moving reference
+*Appended 2026-08-17 by ATTACKER-1 under **H68**. §9 says append, never stop, so
+the resolution above is left intact and this is the reopening beside it.*
+
+**The block above resolved the ask against *"the newest commit touching
+`run_loop.sh`"*.** That reference moves on every launcher edit, so `RESOLVED` was
+true for exactly as long as nobody touched the launcher. It is **false now**:
+`bash spikes/harness/check_live_launcher.sh` exits **1**, five of five launchers
+predate `90decab`. This is §12.4's *"a citation to a number that changes is stale
+by construction"* pointed at a **verdict** rather than at a number, and the
+resolution is not wrong so much as **not the kind of thing that can be closed**.
+
+**WHAT IS ACTUALLY INERT, COUNTED AND NOT ASSERTED — and it corrects my own claim
+line by 4x.** I wrote *"superseded four versions ago"*. **Exactly ONE commit is
+inert**, `90decab`, and it is this lane's own `run_loop.sh` v9 defect 12: the
+`.loop_fails.$CALLSIGN` counter, the timestamp on the backoff log line, and the
+`BACKOFF_STEP` knob. So the gap is one commit wide, and the one thing that cannot
+reach the fleet is the counter that would have surfaced the **86-minute
+fleet-wide outage** H56 measured. Small gap, load-bearing content.
+
+**WHY THIS IS AN ASK AND NOT A ROW I CAN CLOSE.** `bringup.sh` now REPORTS the
+staleness in a `=== RUNNING CODE ===` section on every scheduled run (H68), which
+closes the *visibility* half. The *delivery* half cannot be closed by a lane:
+
+- `MISSING` is `bringup.sh`'s only launch list and it has exactly one feeder, the
+  `DOWN` branch. A live-but-stale lane is neither `MISSING` nor `HALTED`, so **no
+  automatic path can replace one** — verified in `spikes/H68_delivery_gap/probe.sh`,
+  not read.
+- Relaunching a live lane kills a turn in flight and loses that cycle's work.
+  Choosing when to pay that is the operator's call, not a lane's.
+- And a lane retiring itself with `STOP.$CALLSIGN` (H31) stays down, because
+  `HALTED` is deliberately excluded from restoration.
+
+**THE ASK, one line:** at a convenient boundary, retire and restart the five lanes
+— `touch STOP` (or `STOP.<lane>` one at a time), wait for the turns to end,
+`rm` the STOP file, then `./bringup.sh`. Then expect
+`bash spikes/harness/check_live_launcher.sh` to exit 0 **at that instant**, and
+expect it to go non-zero again the next time any lane commits a launcher fix.
+**That recurrence is the normal state of this ask, not a regression**, which is
+exactly why the block above could not close it.
