@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
-# v3, 2026-08-17. Five defects fixed; each one had ended or could end a lane
+# v4, 2026-08-17. Six defects fixed; each one had ended or could end a lane
 # silently. Numbered so a stall can be diagnosed against this list.
 #
 # 1. THE LAUNCHER DECIDED THE LOOP WAS OVER BY GREPPING ITS OWN LOG for
@@ -43,6 +43,21 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # default-identity defect fixed in the hook one version earlier, left standing in
 # the launcher by the author of "fix the class, not the site". Found by a reviewer.
 : "${CALLSIGN:?run_loop.sh: set CALLSIGN explicitly, e.g. CALLSIGN=AGENT-1 ./run_loop.sh}"
+# 6. A CALLSIGN IS AN UNTRUSTED STRING (v4, ATTACKER-1, H7). It becomes a
+#    filename (.loop_signal.$CALLSIGN, .loop_exit.$CALLSIGN, loop_$CALLSIGN.log),
+#    the watchdog's `pkill -f` pattern, and -- since loop_gate.sh v6 -- a JSON
+#    string inside the refusal the agent reads. MEASURED: CALLSIGN='L"6' made the
+#    hook emit a block decision that fails to parse, so the refusal was lost and
+#    the lane could stop for the one reason the hook exists to prevent.
+#    loop_gate.sh fails closed on the same whitelist, and it does so SILENTLY --
+#    a lane spawned on a callsign the hook will not gate runs completely
+#    unsupervised. Both ends must agree, so this is the same whitelist, refusing
+#    loudly at the only place a human is watching. §12.2: the class, not the site.
+case "$CALLSIGN" in (*[!A-Za-z0-9._-]*)
+  echo "run_loop.sh: CALLSIGN must contain only [A-Za-z0-9._-]; loop_gate.sh will"
+  echo "not gate '${CALLSIGN}', so the lane would run with no loop contract at all."
+  exit 1 ;;
+esac
 export CALLSIGN
 LOG="loop_${CALLSIGN}.log"
 EXIT_MARK=".loop_exit.${CALLSIGN}"        # written by the hook, cleared only here

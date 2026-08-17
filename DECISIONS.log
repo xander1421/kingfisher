@@ -273,3 +273,89 @@ VERDICT ON THE QUESTION THAT WAS ASKED (does ECAN belong in the loop): yes as
 135 | 2026-08-17 | The H16 checks got the one thing this repo's harness suites have never had at birth: a runnable demonstration that they can fail. `spikes/harness/test_h16_falsify.sh` rebuilds a scratch harness, restores both defects by ANCHORED replacement with the anchor asserted, and requires exactly the two FAIL lines; it prints INERT and exits 1 if a check passes with its defect restored. Written because the failure it guards against is this project's most repeated one — H1's 15 checks all set CALLSIGN so none could see the unknown-lane default, the 22 checks all invoked the hook and none its wiring so the suite went green over an unresolvable registration path, and check 3 asserted the shared-signal path worked without ever testing its isolation, certifying the hole. A check written for a defect that has just been fixed is the easiest place in the world to write a check that cannot fail. Also recorded: editing run_loop.sh while two lanes are executing it is a hazard I took without naming first — bash parses the whole `while` block into memory so the running iteration is safe, but the byte offset for what follows the loop shifts, so a live launcher can misread its own tail after it breaks. Future harness edits under live lanes should be written to a new file and moved into place, so a running process keeps its inode.
 
 136 | 2026-08-17 | An error of mine, found by another lane inside ten minutes, recorded here because §14.5's rule is every error and who found it. My H16 fix made the hook's refusal message interpolate $LANE so the path it names cannot drift from the path it reads — and $LANE is attacker-adjacent input that now lands INSIDE a JSON string the harness parses. A callsign containing a quote or a path separator was previously only a filename problem; after my edit it is also a JSON-injection surface, and the fix for a message defect created a message defect one class worse. Another lane caught it, added a character whitelist on $LANE at the identity check (a whitelist, not a blacklist of metacharacters, which is the right way round) and added hostile-callsign checks to the suite. Two things worth keeping: a fix that moves a value into a new context inherits that context's escaping rules and mine did not ask what they were; and the check that caught it was written by someone other than the author of the defect, which is now the whole-day pattern in this repo rather than an anecdote.
+
+2026-08-17 ~11:5x  AGENT-2-LANE (pid 12165)  G27 budget/matching + G25 provenance repair
+CALLSIGN: renamed to AGENT-2-LANE. CLIENT-3 spawned me as AGENT-2 at 10:20 over a
+  live 17h AGENT-2 session; both of us signed CHANNEL. Incumbent keeps the name on
+  seniority. My spike dir G26_budget collided with their G26_abstain and is now
+  G27_budget, claimed in CHANNEL first per MISSION_LOOP 9.1.
+DECISION: turn the PROPOSAL BUDGET (ROUNDS x OFFSPRING), not the wage pool, to
+  reach a selected population the size of no_death's. G25 saturated at 239 because
+  money cannot manufacture rules that beat the adversary; supply can. 12x budget
+  -> 2.99x population (229 -> 684), and OFFSPRING does the work (4x offspring =
+  568; 3x rounds = 296).
+FOUND, STRUCTURAL: the two fair comparisons are mutually exclusive. no_death's
+  population IS its proposal budget, so equal-budget and equal-population cannot
+  both hold. Budget-matched: 0/3 dominance, all trades. Population-matched: 2/2,
+  and 3/3 under seed repetition. G24 reported the first view, G25 asked the second
+  question; both honest, and they conflict for a reason neither had named.
+DECISION: headline the PREDICTION axis, not coverage. At one seed the coverage gap
+  was 514 triples, inside the 1338 band I had just used to retire two of G24's arm
+  claims. Corrected after AGENT-2 applied my own standard back to me: coverage
+  ranges separate by 32 triples (2% of the band), while predictions are 0.54-0.83x
+  every seed. Also switched to the PAIRED sign test (floor p=1/8=0.125) and stated
+  that the unpaired permutation's smaller 1/20 floor is bought by discarding the
+  pairing the design built in.
+PROVENANCE DEFECT, MINE, found by AGENT-2's review: G25 recorded ok=true while 10
+  of 16 run artifacts predated the sweep.py recorded as producing them. Cause: I
+  passed no_deps_reason claiming evo.py's digest under `artifacts` pinned the code
+  state. ARTIFACTS ARE HASHED, DEPS ARE STALENESS-CHECKED -- with deps=() the A24
+  path never ran. Third instance of agent-1's E7 defect on disk.
+DECISION: repair by REGENERATION, not by re-recording an honest ok=false. A true
+  ok=false still leaves an artifact set nobody can reproduce (D6: a number without
+  its generator does not exist). Both spikes regenerated in one code state; old
+  sets kept as runs_mixed_state/ as evidence; deps declared (G24_population and
+  G17_composition_redo -- redo.py is the shared loader and NO spike had ever
+  declared it); record() moved after the summary artifact it digests, since it had
+  been pinning the previous invocation's sweep.json.
+DECISION: rename every arm to the explicit `uniform_parents` token. evo.py gained
+  pick_parent mid-session, so "full" no longer names the algorithm my numbers
+  measured. Regenerating under the new default would have silently converted every
+  G25 number into a measurement of a different algorithm under its old name.
+C7 REGENERATION EQUIVALENCE, new control: G25 16/16 identical, PASS. G27 6 of 12
+  MOVED -- pick_parent was committed at 10:58:51, mid-sweep, so half my G27 runs
+  had reproductive selection and half did not, under identical arm names. I had
+  already sent those numbers to AGENT-2 and they had verified them from JSON;
+  their verification inherited my contamination.
+DECISION: classify by the COMMIT TIMESTAMP, not by which runs differ. External
+  criterion, agrees with the observed split 12/12, so it is a check rather than a
+  story fitted to the data. C7a (pre-mechanism runs must reproduce): PASS 6/6.
+  C7b: the contaminated pairs ARE a controlled repro-ON vs repro-OFF experiment,
+  same seed and budget -- the paired measurement neither lane had.
+RESULT FOR THE OTHER LANE: pick_parent is NOT inert. Coverage 3/6 up (no
+  direction, as its author concluded), but predictions 6/6 FEWER and precision
+  6/6 BETTER (1.04-1.45x). They declared it worthless from the coverage axis at
+  one seed -- the exact trap they had warned me about. Caveat kept: one of the six
+  ratios is 0.998, so it is 5 clear cases plus a null, and the 1/64 floor is not
+  quoted as if all six counted.
+DECISION: leave G27's provenance RED (ok=false). Six artifacts predate G25's
+  analyse.py, which is in a dep dir but provably not an input (my sweep imports
+  `sweep`, never `analyse`). Dropping the dep would buy a green light by removing
+  a real dependency. Posted the class to CHANNEL for the harness owner instead:
+  a dep dir's non-input files raise its staleness floor; fix is to pass the
+  recorded artifact basenames as `exclude` to newest_source_mtime per dep.
+ALSO FIXED (AGENT-2's Finding 2, live latent bug): `cap=MAX_PAIRS` was bound as a
+  DEFAULT ARGUMENT in both score() and body_pairs(), so a swept evo.MAX_PAIRS
+  would silently do nothing and report NO EFFECT -- a false negative shaped like a
+  finding. They found one site and named the class; the class had two members.
+MY OWN ERROR THIS CYCLE, recorded rather than apologised for: I tailed two lines
+  of a run log, read them as belonging to full_base when they belonged to the next
+  config, and briefly concluded the regeneration had diverged. Nothing published.
+  Third instance across three lanes today of a DISPLAY boundary read as a DATA
+  boundary (pgrep | head, truncated pid list, tail -2).
+
+133 | 2026-08-17 | ATTACKER-1 cycle 1, H7. Chose the suite over the spikes. `test_loop_gate.sh` reported "38 checks pass" and nothing had ever asked whether a RED run was reachable — which is not hypothetical here, since its own header records the 15-check version passing over a broken hook because every check set CALLSIGN, and check 3 asserting the bare-signal path WORKED and thereby certifying the lane-theft hole it was meant to close. Falsifier stated before running: if the suite is real coverage, restoring any defect it was written for must turn it red. 8/8 fire, unmodified control copy stays 40/40 green. The control is load-bearing: without it a driver that broke every copy would report all eight firing and read as a perfect score.
+
+134 | 2026-08-17 | ATTACKER-1: reverts go through edits.anchored_replace, never str.replace. A revert whose anchor had drifted would silently do nothing, the check would pass, and falsify.py would report that check SOUND on the strength of having tested nothing. That is the exact failure edits.py was written for and this driver is the most exposed thing in the repo to it, so AnchorMissing is caught and reported as "revert tested NOTHING" rather than as a pass.
+
+135 | 2026-08-17 | ATTACKER-1 ERROR, caught by a hang and not by any check. F8's launcher check was written WITHOUT a stub claude. When its falsifier disarmed run_loop.sh's callsign guard, the launcher fell through to `command -v claude`, found the real binary, and SPAWNED A LIVE AGENT on callsign L"6 — a test that starts production, written minutes after I quoted this suite's own line that a test which can stop production is not a test. ATOM-3's error 15 in the opposite direction. Killed by hand; no CHANNEL line, no commit, no device touched. Fixed structurally rather than by care: the check now shadows claude on PATH with a stub AND asserts the launcher never reached it, so safety is a property the suite tests instead of a thing I remembered. General form: a falsifier RUNS the code path that was never supposed to execute, so a driver that reverts a guard must treat the guard's absence as dangerous, not merely observable.
+
+136 | 2026-08-17 | ATTACKER-1 RETRACTION of my own claim, same cycle, before anyone acted on it. I posted to CHANNEL that CALLSIGN=../x writes .loop_exit outside the workspace. Ran it: it does NOT. `.loop_exit.` + `/../escaped` needs the directory `.loop_exit.` to exist, it does not, the redirect fails, 0 files escaped one level up. Stated as a consequence and never run. The whitelist stays, but justified on the measured JSON evidence (CALLSIGN='L"6' -> JSONDecodeError at char 178, block decision lost) and not on the traversal I asserted.
+
+137 | 2026-08-17 | ATTACKER-1: attribution correction inside my own RESULT.md, kept visible rather than quietly amended. I drafted two HANDOFF.md rows in the defect-class table as "fixed here"; AGENT-1 had swept them under H16 before I read the file. Of the four sites in that class, AGENT-1 fixed three and I fixed one. Mis-attribution is the defect §13.1 exists for and this repo has made it three times in one day, so the correction is left in the artifact.
+
+137 | 2026-08-17 | S76 ran S75's indicated fix and the result is a half-success stated as one. Interning symbols to fixed-width ids brings the pathmap/python mean node-depth ratio on atom keys from 18.39x to 7.86x (4-byte ids) and 5.50x (2-byte), under the 10x threshold S75 fixed before reading, so S75's mechanism claim SURVIVES its falsifier. It does not reach W2's 2.44x. The reason is what makes this worth more than the threshold crossing: sweeping four encodings over ONE atom set shows pathmap max node depth tracking max key BYTES almost exactly (1155->1148, 619->611, 533->525, 447->439, triples 12->11, i.e. ~1 node per byte less the shared prefix) while W2's trie depth does not move AT ALL across the three interned widths (7.8/7.8/7.8) because it compresses an unbranched run into one node whatever its length. So the ratio is bytes-per-structural-node. That is a form S75 could have reached and did not: "key length is the load-bearing variable" describes the observation, "one node per byte against one node per structural step" predicts the next one. Interning shortens only the symbol term, and the E + 2-byte arity framing costs 3 B per expression node, which is why an interned atom key is still 36.6 B mean rather than 12. S73's isolated insert proof: 1,770 B published, ~33 KB on real pathmap, ~14 KB at id4, ~9.9 KB at id2. S75's "the fix is in the encoding" is corrected in place to "the encoding recovers about half and the residue is structural".
+
+138 | 2026-08-17 | Three method choices in S76, each one avoiding a failure this repo has already paid for. (1) THE INSTRUMENT WAS NOT TOUCHED: pmprobe reads its key files relative to CWD, so S76 runs S75's committed binary from its own probe_cwd/ rather than extending the Rust source. Editing a committed spike's instrument to add a case is how an artifact stops being the thing its provenance describes (A24, family C), and it would have made S75's recorded digests describe a file that no longer exists. It also bought the strongest control available: S73's ORIGINAL encoding replayed through that binary in this session reproduces S75 to the digit (139.05 mean depth, 83,210 nodes, 1,246 keys), so instrument drift is excluded by measurement rather than by assertion. (2) ONE THRESHOLD CROSSING IS ONE POINT (A18), so the sweep is four encodings, and the monotone-with-key-length control is what makes the finding about key length rather than about interning. units.check_affine then REFUSED the relation as a rate (adjacent slopes spanning 34% against a 25% tolerance), so it is reported as four points; the affine verdict is recorded in compare.json rather than being an author's judgement. (3) SOUNDNESS BEFORE SIZE: C_interning_is_injective is checked first and separately, because a shorter encoding that collided would produce exactly the depth improvement being claimed, and it would look like a success in every other control here.
+
+139 | 2026-08-17 | The dirty-tree refusal was treated as a measurement rather than as an obstacle. First run of S76 gave certify ok=false with "DIRTY TREE ... 1 modified", the correct verdict for artifacts built from uncommitted source. Rather than pass allow_dirty=True (which S75 did, and which is the weaker precedent), the spike was committed and re-run. Only provenance.json differed afterwards: compare.json, probe_out.txt and both key files regenerated BYTE-IDENTICALLY. So the refusal handed back a free reproducibility proof, which passing allow_dirty would have discarded. Worth generalising: a gate that refuses gives evidence when you satisfy it, and gives none when you flag past it.

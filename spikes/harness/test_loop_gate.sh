@@ -226,6 +226,26 @@ check "launcher clears a stale signal before the turn" \
       "$([ -f stale_reached_turn ] && echo reached || echo cleared)" "cleared"
 rm -f .loop_signal* .loop_exit.* .loop_blocks.* stale_reached_turn run_loop.sh loop_L8.log
 
+# --- THE COMMIT GATE IS WIRED IN AN UNTRACKED DIRECTORY. ATTACKER-1, H7.
+# Same class as the settings.json block above (a wiring reference nothing
+# resolves), one layer down. `.git/hooks/` is not tracked and cannot be, so the
+# only ENFORCING gate in the repo is absent from every clone and worktree, and
+# `spikes/harness/commit-msg.hook` had no installer and no reference anywhere in
+# the tree. Editing the source changed the reviewed artifact and not the
+# enforced one. Install with `sh spikes/harness/install_hooks.sh`.
+hookdir=$(cd "$ROOT" && git rev-parse --git-path hooks 2>/dev/null)
+case "$hookdir" in /*) ;; *) hookdir="$ROOT/$hookdir" ;; esac
+src="$ROOT/spikes/harness/commit-msg.hook"
+if [ ! -f "$src" ]; then
+  bad "commit-msg.hook source is missing from spikes/harness"
+elif [ ! -x "$hookdir/commit-msg" ]; then
+  bad "commit gate NOT INSTALLED at $hookdir/commit-msg (sh spikes/harness/install_hooks.sh)"
+elif ! cmp -s "$src" "$hookdir/commit-msg"; then
+  bad "installed commit gate has DRIFTED from its tracked source"
+else
+  ok "commit gate installed and identical to its tracked source"
+fi
+
 # --- A CALLSIGN IS AN UNTRUSTED STRING. ATTACKER-1, H7, 2026-08-17.
 # The hook interpolates $LANE into .loop_exit.$LANE, .loop_blocks.$LANE and --
 # since H16 rewrote section 5 at 11:52 -- into the refusal JSON itself. Nothing
@@ -259,6 +279,34 @@ for cs in 'L"6' 'L\6' 'L 6' '../L6' '$(touch pwned)' 'L`6' 'L
   fi
 done
 check "  no callsign was executed"  "$([ -f pwned ] && echo ran || echo none)" "none"
+# The hook refuses a malformed callsign SILENTLY -- it exits 0, which is correct
+# for a non-lane and catastrophic for a real one: the lane spawns and runs with
+# no loop contract at all, unsupervised, looking normal. So the launcher must
+# refuse the same shapes LOUDLY, at the one place a human is watching. Both ends
+# of the whitelist, or the fix is worse than the defect.
+#
+# THE STUB IS NOT OPTIONAL. Written first without it, and when its falsifier
+# disarmed the guard the launcher fell through to `command -v claude`, found the
+# REAL one, and spawned a live agent on the callsign L"6 -- a test that starts
+# production, minutes after this file's own header says a test that can stop
+# production is not a test. Killed by hand; nothing reached CHANNEL. So the stub
+# shadows claude on PATH and the check ALSO asserts the launcher never got that
+# far, which is the property that makes the test safe rather than merely lucky.
+mkdir -p bin
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo reached > launcher_reached_claude
+echo LOOP-HALT > ".loop_exit.${CALLSIGN}"     # let the launcher finish in one pass
+STUB
+chmod +x bin/claude
+cp "$ROOT/run_loop.sh" ./rl.sh
+rm -f launcher_reached_claude
+PATH="$T/bin:$PATH" CALLSIGN='L"6' MAX_TURN=5 bash ./rl.sh >/dev/null 2>&1
+rc=$?
+check "  launcher refuses what the hook will not gate" "$rc" "1"
+check "  launcher never reached claude"                                      \
+      "$([ -f launcher_reached_claude ] && echo spawned || echo none)" "none"
+rm -f ./rl.sh launcher_reached_claude 'loop_L"6.log' .loop_exit.* .loop_blocks.*
 check "  hostile callsigns left no state" \
       "$(ls .loop_exit.* .loop_blocks.* 2>/dev/null | wc -l | tr -d ' ')" "0"
 rm -f pwned

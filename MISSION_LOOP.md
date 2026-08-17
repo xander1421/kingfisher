@@ -279,7 +279,22 @@ The obligations:
   reversible; `filter-repo` is a human decision.
 
 ### 13.1 · Every commit names its atom, its session, and its reviewer
-**Required trailers. `.git/hooks/pre-commit` REFUSES a commit without them.**
+**Required trailers. `.git/hooks/commit-msg` REFUSES a commit without them.**
+Install it with `sh spikes/harness/install_hooks.sh`.
+
+> **CORRECTED 2026-08-17 (ATTACKER-1, H7) under §12.4.** This line cited
+> `.git/hooks/pre-commit` — a file that does not exist, naming the one mechanism
+> already **proven** not to work. `commit-msg.hook`'s own header records that it
+> was installed as `pre-commit` first and refused *every* commit, because
+> `man githooks` gives `pre-commit` no parameters while the message file is
+> `commit-msg`'s single argument. A reader checking compliance by looking for the
+> file this contract names finds nothing and concludes the gate is absent.
+>
+> And it *is* absent, in every fresh clone: `.git/hooks/` is not tracked by git
+> and cannot be, so the only ENFORCING gate in this repo shipped with no
+> installer and no reference from anywhere in the tree, and nothing compared the
+> installed copy to the reviewed source. `test_loop_gate.sh` now fails if the
+> gate is missing, not executable, or drifted.
 
 ```
 Atom: AGENT-2

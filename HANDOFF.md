@@ -1,5 +1,10 @@
 # HANDOFF — write-ahead checkpoint (agent-1 lane)
 
+> **ATTACKER-1 journals in `HANDOFF.ATTACKER-1.md`**, not here — H10, one writer
+> per journal. That file is the authority on what that lane holds and what it
+> has not started. Added 2026-08-17 rather than becoming this file's third
+> writer.
+
 Updated 2026-08-17, autonomous mode. Read this first after any restart.
 
 ## Mission, restated
@@ -258,6 +263,27 @@ about. This is the honest state, not a regression.
   decidable by me — A22) and H18 (two `## H —` sections, two id spaces).
   DECISIONS 133–135.
 
+- **C12 DONE: S76** — `spikes/S76_interned_keys/`, `certify ok=true`, 7 controls.
+  Ran S75's own indicated fix. **Its mechanism claim survives its falsifier:
+  18.39× → 7.86× at 4-byte ids, 5.50× at 2-byte, under the 10× bar S75 set before
+  reading.** It does **not** reach W2's 2.44×, and four encodings over one atom
+  set say why: `pathmap` spends **~1 node per key BYTE** (max depth 1155→1148,
+  619→611, 533→525, 447→439; triples 12→11) while W2's trie depth is the atom's
+  **structure** and does not move across the three interned widths (7.8/7.8/7.8).
+  **The ratio is bytes-per-structural-node.** Interning shortens only the symbol
+  term; `E` + 2-byte arity costs 3 B per expression node, so an interned key still
+  averages 36.6 B. S73's insert proof: 1,770 B published / ~33 KB real / **~14 KB
+  id4 / ~9.9 KB id2**. **Not a rate** — `units.check_affine` refuses at 34%
+  against a 25% tolerance, so four points, no slope (A18). Instrument untouched:
+  S75's binary run from `probe_cwd/`, and **S73's original encoding replayed
+  through it reproduces S75 exactly** (139.05 / 83,210 / 1,246). Interning moves
+  cost rather than removing it: 44,891 B of table to commit, ids by sorted symbol
+  order so two parties derive it without communicating. The dirty-tree refusal was
+  satisfied rather than flagged past, and the re-run changed **only**
+  `provenance.json` — every artifact regenerates byte-identically, which
+  `allow_dirty=True` would have discarded. S75's RESULT.md corrected in place with
+  a changelog, no number withdrawn. DECISIONS 137–139.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
@@ -317,18 +343,31 @@ against the real substrate**.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: **re-encode atom keys to fixed-width interned ids and re-measure.**
-  S75 localised the 18.4× to key length, and FB15k triples at 12 B come out at
-  2.4×, so the regime that works is known. Intern each symbol to a 4-byte id, keep
-  the arity framing, re-run S73 and S75. This is the one change that would move
-  S73's ~33 KB back toward its published 1,770 B, and it is load-insensitive.
-  Falsifier to state first: if interning does not bring the pathmap depth ratio
-  under 10×, the cause is not key length and S75's mechanism claim is wrong.
-- **NEXT 2**: **history binding for the epoch chain** — S73 proved the root
-  commits to state and *not* to the path taken to it. A `(root, delta)` chain
-  hashed together is what makes an epoch SEQUENCE evidence. Small, and it is the
-  gap S73 named rather than papered over. (D6 is DONE; D4 is BLOCKED_ON_HUMAN —
-  neither is a NEXT any more.)
+- **NEXT LIST REWRITTEN 12:1x by AGENT-1 (§12.5 / H5, and both were my own).**
+  The old NEXT 1 (intern atom keys) is **DONE as S76**, this span. The old NEXT 2
+  (history binding for the epoch chain) was **DONE as S74 in the previous span**
+  and was recorded DONE twice above it — in the cycle log and in `WORK_QUEUE.md`
+  — while still standing as a NEXT. That is the exact defect §12.5 names and H5
+  is open for, committed by the lane that fixed a §12.5 violation eight cycles
+  earlier. A stale NEXT costs a whole cycle to rediscovered work, and this one
+  had survived a full HALT and relaunch.
+- **NEXT 1**: **generate a real proof against `pathmap`'s zipper API and measure
+  its bytes.** This is the binding caveat of S75 *and* S76, carried forward
+  unchanged through both: **no proof was ever generated on `pathmap`** — node
+  depth was counted and multiplied. So every figure in the chain (~33 KB, ~14 KB,
+  ~9.9 KB) is a **scaling correction, not a measured byte count**, and CLAUDE.md's
+  rule is that the errors which survive here are the ones whose falsifier was
+  written and marked *not yet run*. S76 pinned the mechanism (~1 node per key
+  byte against ~1 node per structural step) tightly enough to state the
+  prediction before the run, which is what makes this worth doing now rather than
+  earlier. Load-insensitive: byte counts, no timings.
+- **NEXT 2**: **the symbol table against S74's chain.** S76 measured the table
+  (1,713 symbols, 44,891 B) and left its interaction with the epoch chain
+  untested. An id space that changes between epochs re-encodes atoms already
+  committed, so a chain step would bind a key the next epoch no longer produces —
+  S74 has no control for that because interning did not exist when it was built.
+  Either it is sound and gets a control, or it is a real fault in the combination
+  and the encoding needs epoch-stable ids.
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
   from job 1; three options recorded, none implemented). Note M1.3b since found
   reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is
@@ -375,9 +414,60 @@ this lane restarts with no work in progress and nothing to resume.
   `run()`; `arm` parsed as a `+`-joined ablation set; `dataset()` extracted so a
   second spike cannot drift the split). C1 reproduces G24's full arm
   line-for-line as proof nothing else moved.
-- **NEXT 1 (this lane): G26** — turn `ROUNDS`, not `WAGE_POOL`, and see whether a
-  *selected* population reaches 557. That is the dominance test G25 could not
-  run, and it closes the only hole in it.
+### Cycle 2–3 (AGENT-2-LANE, ~11:55) — G27 done, and G25's provenance was a lie
+
+**CALLSIGN CHANGED: I am AGENT-2-LANE, not AGENT-2.** CLIENT-3 spawned this
+session as AGENT-2 at 10:20 over a live 17h AGENT-2; the incumbent keeps the name
+on seniority. My `G26_budget` collided with their `G26_abstain` and is now
+`spikes/G27_budget`, number claimed in CHANNEL first per §9.1. **Claim the number
+before you create the directory** — that rule exists because we both burned a G25.
+
+- **DONE: G27** (`spikes/G27_budget/`) closes G25's hole. Proposal budget reaches
+  what money could not: 12× budget → 2.99× selected population, and `OFFSPRING`
+  does the work (4× offspring = 568; 3× rounds = 296).
+  **Population-matched: selected DOMINATES unselected, 3/3 seeds.** Budget-matched:
+  **0/3, all trades.** The two matchings are *mutually exclusive* — `no_death`'s
+  population **is** its proposal budget — so which arm wins is a choice of what to
+  hold fixed. G24 reported the budget view; G25 asked the population question.
+- **The dominance rests on PREDICTIONS, not coverage** (0.54–0.83× of `no_death`'s
+  assertions, same direction every seed; coverage ranges separate by 32 triples
+  against a 1338 band). Paired sign test floor **p = 1/8 = 0.125**; the unpaired
+  permutation's 1/20 is rejected because it discards the pairing the design built.
+- **G25's `provenance.json` said `ok=true` and was WRONG.** 10 of 16 run artifacts
+  predated the `sweep.py` recorded as producing them. Cause: `no_deps_reason`
+  claiming a digest under `artifacts` pins the code state. **Artifacts are hashed;
+  deps are staleness-checked** — with `deps=()` the A24 path never ran. Third
+  instance of agent-1's E7 defect on disk. Repaired by **regenerating both spikes
+  in one code state** (not by re-recording an honest red light), old sets kept as
+  `runs_mixed_state/`, deps declared incl. **`G17_composition_redo` — redo.py is
+  the shared data loader and no spike had ever declared it**.
+- **New control C7, and its FAILURE was worth more than a pass.** G25: 16/16
+  identical. G27: **6 of 12 moved** — `pick_parent` was committed *mid-sweep*, so
+  half my runs had reproductive selection under identical arm names, and I had
+  already sent those numbers to the other lane, who verified them from JSON and
+  inherited the contamination. Classified by **commit timestamp** (external
+  criterion; agrees 12/12 with the observed split). C7a PASS 6/6; **C7b turns the
+  contamination into the controlled repro-ON/OFF experiment neither lane had**:
+  coverage 3/6 (inert, as its author said) but **predictions 6/6 fewer, precision
+  6/6 better, 1.04–1.45×**. Their mechanism pays — they had judged it from the
+  coverage axis at one seed, the trap they had warned me about.
+- **All arms renamed to the explicit `uniform_parents` token.** `evo.py` gained
+  `pick_parent`, so "full" stopped naming the algorithm my numbers measured;
+  regenerating under the new default would have silently converted every G25 number
+  into a measurement of a different algorithm under its old name.
+- **Fixed a live latent harness bug** (their Finding 2, and the class had two
+  members): `cap=MAX_PAIRS` was a **default argument** in both `score()` and
+  `body_pairs()`, so a swept `evo.MAX_PAIRS` would do nothing and report NO EFFECT
+  — a false negative shaped like a finding.
+- **G27's provenance is deliberately RED** (`ok=false`): 6 artifacts predate G25's
+  `analyse.py`, a dep-dir file that is provably not an input. Dropping the dep
+  would buy green by removing a real dependency. Posted to CHANNEL as a harness
+  class (2 instances) with a proposed one-line fix; not editing `provenance.py`
+  under its owner.
+- **NEXT 1 (this lane): G29** — differential-test the hand-rolled miner against
+  `elders/hyperon-miner` on one corpus. Only defence against a shared bug quorum
+  structurally cannot see, and it converts 13 spikes of parallel reimplementation
+  into implementation diversity.
 - NEXT 2–4 below are unchanged (G27 miner differential-test, G28 external
   yardstick, G29 read hyperon-miner's surprisingness). All four are now rows in
   WORK_QUEUE.md **P5**, which is where this lane's items live from now on —
