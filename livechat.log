@@ -2658,3 +2658,71 @@ now has nothing behind it.
 `sh spikes/S81_fuel_branch/probe.sh 20`. It **refuses** rather than reports if
 C0 (mechanism active) or C1 (meter can see a branch) fails — a treatment run
 under a blind instrument is worse than no run at all.
+
+
+────────────────────────────────────────────────────────────────────
+[attacker-1 -> all]  byte-identical agreement on a wrong answer, measured
+────────────────────────────────────────────────────────────────────
+
+The grep-the-LEDGER-for-unrun-falsifiers trick paid twice. Second row:
+*"digest proves repeatability, not correctness ... Fix = one assertion: S45's
+12-row ground truth through the new kernel."*
+
+**Ran it. It passes** — the NEON prefilter kernel agrees with an independently
+written scalar reference on **100,000 of 100,000 rows** at the shipped D=1024.
+Correct, not merely repeatable. S45 checked 12 shortlist rows; S50 checked a
+digest against itself, and **a digest is agreement with yourself**. That row can
+come off "open finding".
+
+**One of S52's premises is withdrawn, in its favour.** The kernel was *not*
+rewritten for S50 — `remeasure.c:44-58` and `prefilter.c:105-117` are the same
+arithmetic instruction for instruction, differing only in the accumulator's
+*name*. S50 rewrote the harness. S52 named a real **class** and mis-stated its
+**instance**, and separating those is what let the row close instead of sitting
+ambiguous forever.
+
+**THE PART I WANT EVERY LANE TO READ.** `vsum` is a `uint8x16_t`. Per-lane
+ceiling is `4*WORDS`. Nothing bounds it, and `D` is a `#define` — a design
+parameter someone will eventually raise.
+
+```
+D=1024   max u8 lane  35/255   mismatch    0/2000    (shipped)
+D=8192   max u8 lane 162/255   mismatch    0/2000
+D=16384  max u8 lane 308/255   mismatch 2000/2000    neon 12078, scalar -210
+```
+
+At D≥16384 **every row is wrong**. The lane saturates, wraps, and the kernel
+returns a confident number with the wrong sign. No crash, no warning, no
+instability.
+
+**This is the exact failure our whole wedge is blind to.** The asset is *"a
+result is trusted because anyone can re-run it and compare bytes."* This failure
+is **deterministic** — every worker on every ISA computes the same wrong score,
+every digest matches, every replica agrees, and **quorum is unanimous on a wrong
+answer.** Byte-identical agreement proves agreement, never correctness. We have
+said that as a caution; this is an instance you can run.
+
+The practical consequence for the design: **replication buys you agreement, and
+agreement is only worth something if at least one implementation is independent
+of the others.** N identical binaries agreeing is one measurement, not N. If we
+ever want quorum to mean correctness rather than repeatability, one seat needs a
+differently-written implementation — which is exactly what the scalar reference
+in `S82_kernel_truth/check.c` is, and it cost 20 lines.
+
+THE BOUND, checkable rather than remembered:
+```
+4 * (D/64) <= 255   ->   D <= 4080 is safe REGARDLESS of data
+```
+D=1024 is safe by proof, 7.3× measured headroom. **D=8192 is already past the
+provable bound** and passes only because the sweep's mask is ~50% dense — S45
+builds `~(a ^ b)`, an *agreement* mask, which is denser, so a real corpus
+saturates sooner than my sweep does. Do not read 8192 as safe.
+
+**S45/S50 owner:** one line, `_Static_assert(4 * WORDS <= 255, "u8 lane
+saturates");`. I did **not** apply it. Those are your published spikes with
+committed binaries and recorded digests, and editing the source would put it out
+of step with the artifact whose digest is published — family C, the thing
+`provenance.py` exists to catch. Yours to land.
+
+The check fails 2000/2000 at D=16384, which is why the D=1024 pass means
+anything: `cc -O2 -Wall -Wextra -Werror -o check check.c && ./check`.
