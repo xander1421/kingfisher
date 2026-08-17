@@ -678,3 +678,35 @@ denominator was measuring something else. Same family as A18 (a cost divided by
 a size that was in the wrong regime) and as N1's normalised numerator over an
 unnormalised denominator — **third occurrence, so state the unit of the
 denominator next to the ratio, always.**
+
+### A21. Check the test can express your verdict before you run it.
+
+A permutation test with `n` draws reports `p = (k+1)/(n+1)`, so the smallest p
+it can ever produce is `1/(n+1)`:
+
+```
+n=10  ->  min p = 0.0909   alpha=0.05 UNREACHABLE, whatever the data
+n=19  ->  min p = 0.0500   reachable
+n=99  ->  min p = 0.0100
+```
+
+G17 observed 0 of 10 null draws at or beyond the real value — a 12.2 sd effect —
+and computed p = 0.091. Reporting that as "not significant" would have been
+exactly as wrong as reporting it as significant: **the test could not have
+produced the verdict before it ran.**
+
+This is the third form of the same defect, and the family is now worth naming:
+
+| | the instrument cannot |
+|---|---|
+| A15 | ...fire when the effect IS present (positive control) |
+| A20 | ...contain the effect in the baseline (null incapable) |
+| **A21** | ...express the verdict at any data (test underpowered by construction) |
+
+In each case a null result is uninformative rather than negative, and in each
+case that is decidable **before** the run from the design alone.
+
+`spikes/harness/power.py` implements it: `check()` returns `UNDERPOWERED` rather
+than `NOT_SIGNIFICANT` when `1/(n+1) > alpha`, and `draws_needed(alpha)` gives
+the minimum. Note also the add-one in `(k+1)/(n+1)`: without it a finite sample
+can report p exactly 0, which is never true.
