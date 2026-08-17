@@ -54,8 +54,6 @@ public final class Transport {
             c.setConnectTimeout(5000);
             if (!token.isEmpty())
                 c.setRequestProperty("Authorization", "Bearer " + token);
-            // do not reuse pooled sockets across long-polls
-            c.setRequestProperty("Connection", "close");
             c.setReadTimeout(timeoutMs);
             int code = c.getResponseCode();
             if (code != 200) { Log.i(TAG, "poll HTTP " + code); return ERROR; }
@@ -82,8 +80,6 @@ public final class Transport {
             c.setConnectTimeout(5000);
             if (!token.isEmpty())
                 c.setRequestProperty("Authorization", "Bearer " + token);
-            // do not reuse pooled sockets across long-polls
-            c.setRequestProperty("Connection", "close");
             c.setReadTimeout(60000);
             if (c.getResponseCode() != 200) {
                 Log.i(TAG, "shard " + cid.substring(0, 12) + " HTTP " + c.getResponseCode());
@@ -106,8 +102,6 @@ public final class Transport {
             c.setConnectTimeout(5000);
             if (!token.isEmpty())
                 c.setRequestProperty("Authorization", "Bearer " + token);
-            // do not reuse pooled sockets across long-polls
-            c.setRequestProperty("Connection", "close");
             c.setReadTimeout(30000);
             c.setRequestProperty("Content-Type", "application/json");
             byte[] b = json.getBytes("UTF-8");

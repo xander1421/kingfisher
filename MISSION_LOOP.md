@@ -89,7 +89,10 @@ reads `.loop_signal.last`. **Corrected 2026-08-17 per §12.4** — this paragrap
 said the hook "consumes it to `.loop_signal.last`", which no process read, and
 that dead end is exactly why the launcher fell back to grepping its own log for
 the marker words and killed lanes on the hook's own refusal text (§12.2).
-Enforced by `spikes/harness/test_loop_gate.sh`, 27 checks.
+Enforced by `spikes/harness/test_loop_gate.sh` — run it for the count. This
+sentence cited "15 checks" for hours after the suite grew, and the count moved
+four times in one day (15, 21, 23, 26). A citation to a number that changes is
+stale by construction; cite the artifact, not its size.
 
 - **STOP file exists** → finish the current write, `echo LOOP-HALT > .loop_signal.$CALLSIGN`.
 - **LOOP-DONE** → M1-DEMO (§8) passes AND D1–D6 exist as written specs AND

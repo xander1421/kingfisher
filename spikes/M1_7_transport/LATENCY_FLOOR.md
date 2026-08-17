@@ -64,3 +64,61 @@ Enabling keep-alive requires removing `Connection: close`, which exists to work
 around the okhttp fault (`spikes/M1_8_quorum3/APP_WORKER_BLOCKED.md`). So the
 2.5x is available to the shell agent today and to the app only after that fault
 is fixed. That raises the priority of a defect I twice judged to block nothing.
+
+---
+
+# Taken: 17.8 ms -> 6.5 ms. The workaround was for a misdiagnosis.
+
+**Falsifier stated:** *the `Connection: close` workaround is still needed now
+that auth is fixed.* **Refuted.** The app returns 8/8 with keep-alive on.
+
+```
+PRODUCTION server, 20 requests on one connection:
+  connects > 0        1/20        (reuse working)
+  per-request median  6.5 ms      (was 17.8 ms)
+  min                 5.5 ms
+```
+
+Two lines: remove `Connection: close`, set `disable_nagle_algorithm = True`.
+**2.7x, and it is the floor** — 6.5 ms against a 6.4 ms measured RTT.
+
+## The full chain of the mistake, because it is the useful part
+1. The app failed with okhttp's `unexpected end of stream`.
+2. I diagnosed it as stale pooled sockets and added `Connection: close`.
+3. **That diagnosis was wrong.** The real cause, found much later, was a
+   missing `Authorization` header — the app was getting 401s.
+4. The workaround stayed, silently costing 2.5x on every request.
+5. It then corrupted a *different* measurement: the keep-alive falsifier
+   compared fresh-vs-fresh and concluded reuse was not worth having.
+6. That conclusion became the surviving reason to defer QUIC.
+
+**A workaround for a misdiagnosed fault is worse than the fault.** The fault was
+visible; the workaround was not, and it went on to produce a wrong measurement
+and a wrong architectural conclusion.
+
+## Both controls could have failed, and say how
+| control | can fail because | observed |
+|---|---|---|
+| reuse actually happened | if the server still sent `Connection: close`, `time_connect` would be non-zero on all 20 | 1 of 20 |
+| app still works | if the workaround were required, the app would return 0 envelopes as it did for ~15 cycles | 8/8 |
+
+The first exists because the previous keep-alive measurement had no such
+control and was void for exactly that reason: **I did not assert that the
+mechanism under test was active.**
+
+## Shared-module rule applied
+`server.py` changed, so every entry point importing it was run:
+
+| driver | result |
+|---|---|
+| `run_app.py` (app, JNI) | 8/8 |
+| `run.py` (shell agent, adb) | 8/8, byte-identical to host |
+| `run_lan.py` (WiFi + TLS) | 8/8, auth control fired 401 |
+| `q3.py` (quorum) | 4/4 agree, gate refused later on thermal 45.5C — correct |
+
+## Consequence for the blocked item
+`APP_WORKER_BLOCKED.md` said the okhttp fault "blocks nothing". That was true
+when written and false by the time I acted on it: the workaround it forced was
+costing 2.7x. **A blocked item's cost is not fixed at the moment you block it**,
+and nothing in the process re-examines that. The trigger here was measuring
+something unrelated.

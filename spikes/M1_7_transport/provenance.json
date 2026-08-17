@@ -1,14 +1,14 @@
 {
  "spike": "M1_7_transport",
- "recorded_utc": "2026-08-17T10:15:11Z",
- "note": "Headline re-established after a day of changes (bearer auth, TLS, canon, admission rules, feature-matched binaries). Both drivers that produced the earlier numbers had silently broken; both fixed.",
+ "recorded_utc": "2026-08-17T10:34:49Z",
+ "note": "Removed Connection: close (a workaround for a misdiagnosed fault) and enabled TCP_NODELAY. 17.8 ms -> 6.5 ms per request.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
    "head": "3f76dc460da6961f57f69f6c3e550c59c74ada83",
    "clean": false,
    "dirty_files": [
-    "yperon-common/src/multitrie.rs",
+    "hyperon-common/src/multitrie.rs",
     "hyperon-space/src/index/trie.rs",
     "lib/src/metta/runner/builtin_mods/fileio.rs",
     "lib/src/metta/runner/builtin_mods/random.rs",
@@ -38,28 +38,12 @@
  },
  "artifacts": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host",
-   "sha256": "f52d98196ad048fcdd2cb0f4c78614c3c5b3ff62de62b1344c2fd7b41e77328a",
-   "bytes": 6065600,
-   "mtime": 1786959339,
-   "compared_ts": 1786955408,
-   "compared_clock": "last-commit"
-  },
-  {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.android",
    "sha256": "c90624244472fb94e59baac90c990a3f8bae744655f6dd3e54b10f04244b879d",
    "bytes": 6548072,
    "mtime": 1786954717,
    "compared_ts": 1786955408,
    "compared_clock": "last-commit"
-  },
-  {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_1_android/app/build/outputs/apk/debug/app-debug.apk",
-   "sha256": "542be0b8d391bac8c54c8b9532d4b5f84c6552fc3fca1bd050f5281ee795798d",
-   "bytes": 16058855,
-   "mtime": 1786960395,
-   "compared_ts": 1786960395,
-   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -79,29 +63,47 @@
  },
  "controls": [
   {
-   "name": "admission-gate",
-   "must_fire_because": "a gate that never refuses is indistinguishable from no gate",
-   "can_fail_because": "if all 67 programs were admissible it would refuse 0 and this control would not fire",
-   "null_must_contain": "a corpus with no bannable program",
+   "name": "connection-reuse-actually-happened",
+   "must_fire_because": "a keep-alive claim must show reuse occurred, not assume it",
+   "can_fail_because": "if the server still sent Connection: close, time_connect would be non-zero on all 20 requests as it was before",
+   "null_must_contain": "a run where every request opens a new connection",
    "fired": true,
-   "detail": "refused 3 of 67 on three distinct rules",
+   "detail": "1 of 20 requests opened a connection; 19 reused it",
    "constant_observations": false,
    "observations": [
-    "flip",
-    "filesystem",
-    "feature-gated-module"
+    22.743,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
    ]
   },
   {
-   "name": "preflight-refusal",
-   "must_fire_because": "the per-job gate must be able to decline, not only pass",
-   "can_fail_because": "if the 101% floor were satisfiable the worker would never log a refusal",
-   "null_must_contain": "a run where every preflight passes",
+   "name": "app-still-works-without-the-workaround",
+   "must_fire_because": "removing the workaround must be gated on the app still functioning",
+   "can_fail_because": "if Connection: close were still required, the app would return 0 envelopes as it did for ~15 cycles",
+   "null_must_contain": "an app run that fails with unexpected end of stream",
    "fired": true,
-   "detail": "kf-refuse fired alongside the working path in the same run",
+   "detail": "app, shell agent, and LAN+TLS paths all pass with keep-alive on",
    "constant_observations": false,
    "observations": [
-    "battery:100%<101% -> retry with backoff"
+    "8/8 envelopes",
+    "unauthorised 0"
    ]
   }
  ],
@@ -114,5 +116,8 @@
  },
  "problems": [],
  "ok": true,
- "falsifier": "if any admitted program differs between the app in-process and the host verifier, the byte-identity claim is refuted for that program; 64/64 must be exact, not majority"
+ "falsifier": "if any driver regressed, or if time_connect were non-zero on more than the first request, the change is refuted",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }

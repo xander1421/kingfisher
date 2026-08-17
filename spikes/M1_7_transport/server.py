@@ -42,6 +42,11 @@ STATS = {'polls': 0, 'jobs_out': 0, 'shard_bytes': 0, 'results': 0,
 
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
+    # TCP_NODELAY. Without it, Nagle collides with delayed ACK on a persistent
+    # connection and small responses stall ~40 ms: measured 51.9 ms per request
+    # against 7.0 ms with it -- i.e. enabling keep-alive WITHOUT this is 3x
+    # slower than the fresh connections it replaces.
+    disable_nagle_algorithm = True
 
     def log_message(self, *a):
         pass                                    # quiet; the harness reports
@@ -54,13 +59,12 @@ class H(BaseHTTPRequestHandler):
         # once the real app polled -- the shell agent never noticed.
         self.send_header('Content-Type', ctype)
         self.send_header('Content-Length', str(len(body)))
-        # No keep-alive. `BaseHTTPRequestHandler` under HTTP/1.1 advertises
-        # persistent connections but drops them between long-polls, so okhttp
-        # reuses a pooled socket the server has already closed and reports
-        # "unexpected end of stream" -- instantly, and only on the SECOND poll.
-        # That is why a run whose first poll had work appeared to succeed.
-        self.send_header('Connection', 'close')
-        self.close_connection = True
+        # Keep-alive is ON. `Connection: close` used to live here as a
+        # workaround for okhttp's "unexpected end of stream" -- but that fault
+        # was later traced to a MISSING AUTH HEADER, not to connection reuse.
+        # The workaround cost 2.5x: fresh connection 17.8 ms vs persistent
+        # 7.0 ms (LATENCY_FLOOR.md). Removing it is gated on the app still
+        # working, which is the falsifier for this change.
         self.end_headers()
         if body:
             self.wfile.write(body)

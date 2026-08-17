@@ -1,7 +1,7 @@
 {
  "lan_ip": "192.168.1.25",
  "tls": true,
- "spki_sha256": "MU9LLCNVuE6jAwLMjjbMAii8NvaytTuN9Gc3xl6CNV8=",
+ "spki_sha256": "kBNNZOQh0S0s0efNddgzO/9Q8k9YyRo4Qgy+1+bayxY=",
  "envelopes": [
   {
    "job_id": "j0000",
@@ -38,15 +38,51 @@
    "fuel_used": "7",
    "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "job_id": "j0004",
+   "worker": "phone",
+   "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
+   "status": "OK",
+   "fuel_used": "12",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "job_id": "j0005",
+   "worker": "phone",
+   "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
+   "status": "OK",
+   "fuel_used": "7",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "job_id": "j0006",
+   "worker": "phone",
+   "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
+   "status": "OK",
+   "fuel_used": "7",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "job_id": "j0007",
+   "worker": "phone",
+   "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
+   "status": "OK",
+   "fuel_used": "3",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   }
  ],
  "stats": {
-  "polls": 5,
-  "jobs_out": 4,
-  "shard_bytes": 7200,
-  "results": 4,
+  "polls": 9,
+  "jobs_out": 8,
+  "shard_bytes": 11388,
+  "results": 8,
   "misses": 0,
   "unauthorised": 1
  },
- "wall_s": 1.2
+ "wall_s": 2.2
 }

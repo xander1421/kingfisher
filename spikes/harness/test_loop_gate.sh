@@ -25,6 +25,14 @@ GATE="$ROOT/.claude/hooks/loop_gate.sh"
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 sed "s|^ROOT=.*|ROOT=\"$T\"|" "$GATE" > "$T/gate.sh"
+# ASSERT THE ANCHOR MATCHED. Without this the sed can silently no-op -- the exact
+# defect CLAUDE.md's Editing section warns about, where a replacement whose anchor
+# is absent returns the input unchanged. A no-op here would point the copy at the
+# REAL workspace and eat a running lane's terminal signal, which is precisely what
+# the isolation note at the top of this file claims to prevent. Found by a fresh
+# reviewer 2026-08-17: "the guard that remains".
+grep -q "^ROOT=\"$T\"$" "$T/gate.sh" || {
+  echo "FAIL: ROOT anchor did not match; refusing to run the live hook"; exit 1; }
 chmod +x "$T/gate.sh"
 cd "$T"
 
@@ -53,13 +61,25 @@ check "per-lane signal ends turn"   "$(blocked L1)"                    "exit"
 check "  leaves exit marker"        "$(cat .loop_exit.L1 2>/dev/null)" "LOOP-HALT"
 check "  consumes the signal"       "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "gone"
 
-# 3 · Bare .loop_signal must keep working: MISSION_LOOP §7 documents that path and
-#     live agents were started against it. Backward compatibility is load-bearing,
-#     not politeness.
+# 3 · BARE .loop_signal MUST BE REFUSED (v5). This check previously asserted the
+#     opposite and thereby CERTIFIED THE HOLE: with a shared bare signal, whichever
+#     lane's hook fires first consumes it, writes its own exit marker, deletes the
+#     file, and the lane that actually wrote it can then never exit. Check 5 tested
+#     isolation only on the per-lane path, so the suite proved the unsafe path
+#     WORKED and never asked whether it was safe. Reproduced by a fresh reviewer;
+#     ATOM-3 had meanwhile told the fleet isolation was "per-callsign, and there is
+#     a test that fails if lane isolation regresses". This is now that test.
 rm -f .loop_signal* .loop_exit.* .loop_blocks.*
 echo LOOP-IDLE > .loop_signal
-check "bare signal still honoured"  "$(blocked L1)"                    "exit"
-check "  marker records the kind"   "$(cat .loop_exit.L1 2>/dev/null)" "LOOP-IDLE"
+check "bare signal is REFUSED"      "$(blocked L1)"                                        "block"
+check "  no marker written"         "$([ -f .loop_exit.L1 ] && echo wrote || echo none)"   "none"
+
+# 3b · And the theft itself: a bare signal must not let ANOTHER lane exit in the
+#      place of the lane that wrote it.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+echo LOOP-HALT > .loop_signal
+check "L2 cannot exit on a bare signal" "$(blocked L2)"                                      "block"
+check "  L1 can still exit properly"    "$(echo LOOP-HALT > .loop_signal.L1; blocked L1)"    "exit"
 
 # 4 · Prose must never end a loop. The v1 hook grepped the transcript and fired on
 #     a mere mention; anything not an exact marker is malformed and must be dropped.
@@ -116,6 +136,28 @@ rm -f .loop_signal* .loop_exit.* .loop_blocks.*
 echo LOOP-HALT > .loop_signal.L1
 check "no callsign cannot steal exit" "$(nolane)" "exit"
 check "  lane signal untouched"       "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "present"
+
+# 11 · §12.6 CONCURRENCY. The fuse is `N=$(cat); N=$((N+1)); echo $N >` — an
+#      unsynchronised read-modify-write. A reviewer measured 20 concurrent fires
+#      for one lane landing on 5. Every check above is a single sequential
+#      invocation, so a suite written FOR a two-lanes-share-state defect contained
+#      no concurrency at all. This does not fix the race; it MEASURES it, so the
+#      undercount is recorded rather than discovered later by someone trusting the
+#      count. Marked as a known ceiling, not a pass.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+for i in $(seq 1 20); do ( CALLSIGN=L9 ./gate.sh </dev/null >/dev/null 2>&1 ) & done
+wait
+conc=$(cat .loop_blocks.L9 2>/dev/null || echo 0)
+if [ "$conc" -eq 20 ]; then ok "fuse counts 20/20 under concurrency"
+else printf '  KNOWN  fuse undercounts under concurrency: %s/20 (unsynchronised RMW, WORK_QUEUE H13)\n' "$conc"; fi
+
+# 12 · A non-numeric counter used to be written back unchanged, so the arithmetic
+#      errored, the comparison errored, and the hook fell through to block —
+#      permanently, with a fuse that could never trip.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+printf '3x' > .loop_blocks.L5
+blocked L5 >/dev/null
+check "corrupt fuse file recovers"  "$(cat .loop_blocks.L5 2>/dev/null)" "1"
 
 # --- REGISTRATION, not just the script. Added 2026-08-17, ATTACK cycle 8.
 # All 22 checks above invoke loop_gate.sh directly, so the suite went green while

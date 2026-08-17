@@ -1,0 +1,306 @@
+{
+ "name": "nodeath",
+ "arm": "no_death+uniform_parents",
+ "params": {
+  "wage_pool": 120.0,
+  "rent": 0.5,
+  "rent_pred": 0.05,
+  "max_pop": 200,
+  "run_seed": 1234,
+  "rounds": 15,
+  "offspring": 40,
+  "pop_seed": 60,
+  "min_pairs": 30,
+  "max_pairs": 40000,
+  "adv_tries": 2
+ },
+ "hist": [
+  {
+   "round": 0,
+   "pop": 94,
+   "dev": {
+    "solved": 1344,
+    "predicted": 36543,
+    "precision": 0.03677858960676463,
+    "top12": 0.2992832759232153
+   },
+   "test": {
+    "solved": 1302,
+    "predicted": 36543,
+    "precision": 0.03562925868155324,
+    "top12": 0.27857135584601456
+   },
+   "unsolved": 39758,
+   "a15": false,
+   "mean_body": 2.0425531914893615
+  },
+  {
+   "round": 1,
+   "pop": 128,
+   "dev": {
+    "solved": 3166,
+    "predicted": 123353,
+    "precision": 0.025666177555470883,
+    "top12": 0.36415719715993194
+   },
+   "test": {
+    "solved": 2606,
+    "predicted": 123353,
+    "precision": 0.021126360931635224,
+    "top12": 0.27888816025372803
+   },
+   "unsolved": 37936,
+   "a15": true,
+   "mean_body": 2.078125
+  },
+  {
+   "round": 2,
+   "pop": 160,
+   "dev": {
+    "solved": 3636,
+    "predicted": 327561,
+    "precision": 0.011100222553967047,
+    "top12": 0.36415719715993194
+   },
+   "test": {
+    "solved": 3080,
+    "predicted": 327561,
+    "precision": 0.009402828786088698,
+    "top12": 0.27888816025372803
+   },
+   "unsolved": 37466,
+   "a15": true,
+   "mean_body": 2.13125
+  },
+  {
+   "round": 3,
+   "pop": 192,
+   "dev": {
+    "solved": 4653,
+    "predicted": 357396,
+    "precision": 0.01301917201087869,
+    "top12": 0.36636007702238627
+   },
+   "test": {
+    "solved": 4060,
+    "predicted": 357396,
+    "precision": 0.011359948068808828,
+    "top12": 0.28330813189271986
+   },
+   "unsolved": 36449,
+   "a15": true,
+   "mean_body": 2.140625
+  },
+  {
+   "round": 4,
+   "pop": 228,
+   "dev": {
+    "solved": 5258,
+    "predicted": 417869,
+    "precision": 0.012582890810277862,
+    "top12": 0.36636007702238627
+   },
+   "test": {
+    "solved": 4738,
+    "predicted": 417869,
+    "precision": 0.011338481677272064,
+    "top12": 0.2846911106161241
+   },
+   "unsolved": 35844,
+   "a15": true,
+   "mean_body": 2.1447368421052633
+  },
+  {
+   "round": 5,
+   "pop": 257,
+   "dev": {
+    "solved": 5442,
+    "predicted": 438115,
+    "precision": 0.012421396208757974,
+    "top12": 0.36822078940941444
+   },
+   "test": {
+    "solved": 4904,
+    "predicted": 438115,
+    "precision": 0.01119340812343791,
+    "top12": 0.2888180947431082
+   },
+   "unsolved": 35660,
+   "a15": true,
+   "mean_body": 2.1439688715953307
+  },
+  {
+   "round": 6,
+   "pop": 291,
+   "dev": {
+    "solved": 5868,
+    "predicted": 513812,
+    "precision": 0.011420519567468257,
+    "top12": 0.37578599571522225
+   },
+   "test": {
+    "solved": 5298,
+    "predicted": 513812,
+    "precision": 0.010311164394759173,
+    "top12": 0.2888180947431082
+   },
+   "unsolved": 35234,
+   "a15": true,
+   "mean_body": 2.1512027491408934
+  },
+  {
+   "round": 7,
+   "pop": 326,
+   "dev": {
+    "solved": 5979,
+    "predicted": 598106,
+    "precision": 0.009996555794457839,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 5413,
+    "predicted": 598106,
+    "precision": 0.009050235242582418,
+    "top12": 0.2935346661628503
+   },
+   "unsolved": 35123,
+   "a15": true,
+   "mean_body": 2.168711656441718
+  },
+  {
+   "round": 8,
+   "pop": 357,
+   "dev": {
+    "solved": 6147,
+    "predicted": 704110,
+    "precision": 0.008730170001846303,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 5567,
+    "predicted": 704110,
+    "precision": 0.007906435074065132,
+    "top12": 0.2935346661628503
+   },
+   "unsolved": 34955,
+   "a15": true,
+   "mean_body": 2.1848739495798317
+  },
+  {
+   "round": 9,
+   "pop": 388,
+   "dev": {
+    "solved": 6431,
+    "predicted": 740346,
+    "precision": 0.008686479024672247,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 5844,
+    "predicted": 740346,
+    "precision": 0.007893606502905399,
+    "top12": 0.2935346661628503
+   },
+   "unsolved": 34671,
+   "a15": true,
+   "mean_body": 2.1881443298969074
+  },
+  {
+   "round": 10,
+   "pop": 423,
+   "dev": {
+    "solved": 6487,
+    "predicted": 786592,
+    "precision": 0.008246969203856638,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 5894,
+    "predicted": 786592,
+    "precision": 0.007493084089337293,
+    "top12": 0.2935346661628503
+   },
+   "unsolved": 34615,
+   "a15": true,
+   "mean_body": 2.186761229314421
+  },
+  {
+   "round": 11,
+   "pop": 457,
+   "dev": {
+    "solved": 6590,
+    "predicted": 836812,
+    "precision": 0.007875126073717872,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 6010,
+    "predicted": 836812,
+    "precision": 0.007182019378307194,
+    "top12": 0.2935346661628503
+   },
+   "unsolved": 34512,
+   "a15": true,
+   "mean_body": 2.177242888402626
+  },
+  {
+   "round": 12,
+   "pop": 492,
+   "dev": {
+    "solved": 6743,
+    "predicted": 880392,
+    "precision": 0.007659088224336432,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 6163,
+    "predicted": 880392,
+    "precision": 0.007000290779561832,
+    "top12": 0.2971764182223239
+   },
+   "unsolved": 34359,
+   "a15": true,
+   "mean_body": 2.178861788617886
+  },
+  {
+   "round": 13,
+   "pop": 525,
+   "dev": {
+    "solved": 6834,
+    "predicted": 912559,
+    "precision": 0.007488830859155408,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 6257,
+    "predicted": 912559,
+    "precision": 0.006856542974207695,
+    "top12": 0.2971764182223239
+   },
+   "unsolved": 34268,
+   "a15": true,
+   "mean_body": 2.182857142857143
+  },
+  {
+   "round": 14,
+   "pop": 557,
+   "dev": {
+    "solved": 6970,
+    "predicted": 969298,
+    "precision": 0.007190771052865063,
+    "top12": 0.3772001371293636
+   },
+   "test": {
+    "solved": 6361,
+    "predicted": 969298,
+    "precision": 0.006562481300900239,
+    "top12": 0.2971764182223239
+   },
+   "unsolved": 34132,
+   "a15": true,
+   "mean_body": 2.18491921005386
+  }
+ ],
+ "capped_evals": 548,
+ "final_pop": 557
+}

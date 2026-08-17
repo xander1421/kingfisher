@@ -1,0 +1,26 @@
+Halted per §7. `STOP` was present (set 10:50 by an interactive session, not a lane, to break a live-lock; its own text reserves lifting it to the operator). Current write finished first, then `LOOP-HALT` → `.loop_signal.AGENT-1`.
+
+**10 cycles, 7 DONE rows, 2 ATTACK cycles, 1 BLOCKED_ON_HUMAN.**
+
+| cycle | outcome |
+|---|---|
+| C1 | **W2** — membership + non-membership + completeness over a Merkle-committed radix trie, with a verifier that returns False. W1 had no verification function at all, which is why its four controls were dead |
+| C2 | **D6** written; found `provenance.py`'s A24 staleness check **three-quarters dead**; **D4 has no recoverable subject** → BLOCKED_ON_HUMAN, not decided (§7 makes it my own exit condition, so deciding it is A22) |
+| C3 | **S73** — space-state commitment, 66 epochs verified, fold-forward deltas; XOR null beats it on cost then forged in one line |
+| C4 | **ATTACK** — soundness bug in the shared trie instrument: a key ending *inside* a compressed prefix was reported present. Latent in both spikes, so no number moved |
+| C5 | **D6 retro-fit** — 9 of 20 stated controls across five spikes have no observation on disk. E1 bugs 4 and 5 |
+| C6 | **W4 → 4/4** — its missing observation was printed to stdout and discarded by a redirect. E1 bug 6 |
+| C7 | **class-H sweep** (§12.1/12.2) — `provenance.json` had three writers, last-writer-wins |
+| C8 | **ATTACK** — the Stop hook's root registration couldn't resolve, and its 22 checks all invoked the script, none the wiring |
+| C9 | **S74** — epoch sequence bound at 32 B/epoch |
+| C10 | **S75** — ran my own declared falsifier on real `pathmap`. **It fired at 18.4×** |
+
+Two results matter more than the spikes:
+
+**`provenance.py`'s A24 check had six bugs across three cycles and its own self-test passed over every one.** The self-test used a year-2020 artifact, which fails on the HEAD floor alone — a control exercising one of two mechanisms was silently reporting on both. So "patch a source, don't commit it, run the binary built before the patch" — the `fuelrun.v2.*` case that burned both lanes — was undetectable for the whole project.
+
+**The falsifier fired on my own work.** S73's insert proof is ~33 KB on real `pathmap`, not 1,770 B; its "same shape, different constants" caveat was wrong at 18.4×. W2 holds at 2.4× (a constant factor, as claimed) and S74 is untouched. Cause is key length, so the fix is in the encoding — that's NEXT 1. Separately, `pathmap`'s own `merkleization.rs` is a dedup pass on a 128-bit non-cryptographic gxhash with no proof and no verifier, so "the substrate already has merkleization" is wrong.
+
+Three of my own controls were caught weak before publishing, and one after: an A4 probe reported SURVIVES without reaching its target (A29), and a control grepped `fn witness` and matched 14 Rust *borrow* witnesses (A30).
+
+Resume with `rm STOP`. Before reopening interactively, the STOP text asks for a lane whitelist in `loop_gate.sh` — CLIENT-3 reports v4 has it, so check the installed version. D4 needs one line from you: `proposed/D4_slot_candidates.md`, four rows, recommendation is settlement/dispute.
