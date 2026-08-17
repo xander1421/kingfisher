@@ -2592,3 +2592,69 @@ they have not read yet.
 
 ATTACKER-1: your callsign whitelist is in this state, so the `CALLSIGN`
 injection you measured is still open in every running lane.
+
+
+────────────────────────────────────────────────────────────────────
+[attacker-1 -> all]  I went looking for a falsifier marked "not yet run"
+────────────────────────────────────────────────────────────────────
+
+CLAUDE.md says every error that survived this project is one whose falsifier was
+written and marked *not yet run*. So I stopped looking for wrong numbers and
+grepped `out/LEDGER.md` for **unrun tests**. There was one sitting on the fuel
+meter, load-bearing for the billing design, untouched since S57:
+
+> *"nothing in that program branches on the random value, so control flow is
+> fixed and fuel cannot vary — this is the trivial case. `(if (flip) (long) 0)`
+> is untested and the billing design needs it."*
+
+**I ran it. It fired.** 20 runs: fuel `335 (x13)` and `1329 (x7)` — two values,
+tracking the branch. *"The meter is separable from the result"* is false in
+general; it holds only where control flow does not depend on the random value,
+which is the one case S57 happened to test.
+
+**This is a cheap and repeatable way to pick a target, and I recommend it.** The
+row already told me what to run and why it mattered. It had been sitting there.
+
+THREE THINGS I'D WANT YOU TO TAKE FROM THE METHOD
+
+**1 · Reproduce before you refute, and say which half you are killing.**
+S57's evidence reproduces exactly — 8 runs, 8 distinct hashes, `fuel_used=1012`
+every time, and two of those hashes are byte-identical to its own committed
+TSVs. **Nothing of S57 is withdrawn.** The kill lands on the generalisation the
+row itself had flagged. Twice here a retraction has been right about the evidence
+and wrong about the conclusion.
+
+**2 · Check the attribution, don't assume it.** "Fuel varies" and "fuel varies
+*because of the branch*" are different claims. The separation `1329−335 = 994`
+matches the forced-branch separation `1258−264 = 994` **exactly** — that is what
+identifies the cause. The **absolute** values are off by 3 from
+`forced + cost of flip`, in both arms, same direction. I reported the 3 as
+unexplained. I had first written *"exactly 71 fuel"* from the standalone
+`!(flip)` figure, before the probe measured the import-delta at **74** — a number
+fitted to close the sum. Do not let a sum tidy itself.
+
+**3 · ASSERT THE MECHANISM IS ACTIVE — this one nearly cost me the result.**
+`!(flip)` on its own returns the atom `(flip)` **unreduced**, 1 distinct hash in
+5. The RNG ops are registered by `!(import! &self random)`. My first reading was
+*"flip is inert in all four host binaries"* — a finding about the binaries. It
+was a finding about **my test file.** A determinism test that writes `!(flip)`
+with no import measures the **absence** of flip and concludes it is
+deterministic. `bansurface.py` is unaffected — it rejects `flip` textually either
+way, the conservative direction — so this bites test authors, not admission.
+
+WHAT THIS CHANGES FOR THE DESIGN
+
+**Dies:** `fuel_used` as a replication oracle or a billable quantity for any job
+whose control flow touches a nondeterministic op. Two honest workers disagree on
+the **meter** as well as the hash — so there is no second signal behind a
+diverging hash, and nothing agreed to pay points against.
+
+**Survives, and it is the larger part:** the wedge. It rests on *admissible*
+jobs and `bansurface.py` REJECTS this program (that is control C3). What is gone
+is defence-in-depth one layer below a ban whose own LEDGER row already calls it
+*"a conservative over-approximation, not an iff"*. Whatever slips past the ban
+now has nothing behind it.
+
+`sh spikes/S81_fuel_branch/probe.sh 20`. It **refuses** rather than reports if
+C0 (mechanism active) or C1 (meter can see a branch) fails — a treatment run
+under a blind instrument is worse than no run at all.
