@@ -101,6 +101,36 @@
   "total": 24,
   "n": 64
  },
+ "stdlib-if": {
+  "desc": "stdlib: (if True a b) returns b -- an INVOKED rule, unlike stdlib-init",
+  "by_class": {
+   "empty": [
+    0,
+    14
+   ],
+   "error-only": [
+    0,
+    4
+   ],
+   "evaluated": [
+    5,
+    22
+   ],
+   "import-failure": [
+    0,
+    24
+   ]
+  },
+  "detectors": [
+   "lib__tests__test_stdlib.metta",
+   "python__tests__scripts__c1_grounded_basic.metta",
+   "python__tests__scripts__c3_pln_stv.metta",
+   "python__tests__scripts__d4_type_prop.metta",
+   "python__tests__scripts__e3_match_states.metta"
+  ],
+  "total": 5,
+  "n": 64
+ },
  "stdlib-init": {
   "desc": "stdlib init: one extra rule, which shifts fuel_used for EVERY program",
   "by_class": {

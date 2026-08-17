@@ -1,0 +1,35 @@
+{
+ "sub-is-add": {
+  "detected": 1,
+  "n": 4,
+  "by": [
+   "arith_identity.metta"
+  ]
+ },
+ "less-is-lesseq": {
+  "detected": 2,
+  "n": 4,
+  "by": [
+   "cmp_boundary.metta",
+   "cmp_equal.metta"
+  ]
+ },
+ "resolver-message": {
+  "detected": 0,
+  "n": 4,
+  "by": []
+ },
+ "stdlib-if": {
+  "detected": 2,
+  "n": 4,
+  "by": [
+   "cmp_boundary.metta",
+   "stdlib_rule.metta"
+  ]
+ },
+ "stdlib-init": {
+  "detected": 0,
+  "n": 4,
+  "by": []
+ }
+}

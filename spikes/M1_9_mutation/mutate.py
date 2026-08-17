@@ -75,6 +75,16 @@ MUTATIONS = [
      'None => {return Err(format!("Cannot resolve module {mod_path}"))}',
      'module resolver: the failure text a missing import! produces',
      '!(import! &self kf_no_such_module)'),
+    # stdlib-init adds an UNUSED rule, and 0/64 for it is CORRECT rather than a
+    # gap: a rule nothing invokes cannot change any result, and fuel_used does
+    # not move when the stdlib merely grows. The open question it leaves is the
+    # one that matters -- is a stdlib rule programs DO invoke detectable? This
+    # mutates `if`, which is reached by nearly every non-trivial program.
+    ('stdlib-if', STDLIB,
+     '(= (if True $then $else) $then)',
+     '(= (if True $then $else) $else)',
+     'stdlib: (if True a b) returns b -- an INVOKED rule, unlike stdlib-init',
+     '!(if True yes no)'),
     ('stdlib-init', STDLIB,
      '(@doc =\n',
      '(= (kf-canary) 1)\n(@doc =\n',

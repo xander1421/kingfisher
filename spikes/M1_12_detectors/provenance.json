@@ -1,0 +1,134 @@
+{
+ "spike": "M1_12_detectors",
+ "recorded_utc": "2026-08-17T13:13:50Z",
+ "note": "REFUTED: 0/64 -> 2/4 on four programs. stdlib-init stays 0 on both and correctly so: an UNUSED rule is unobservable by result comparison, which stdlib-if (5/64, 2/4) separates from an INVOKED one.",
+ "repos": [
+  {
+   "path": ".",
+   "head": "a5a80e667ca3350874d4716dab662607b866bb74",
+   "clean": false,
+   "dirty_files": [
+    "spikes/M1_12_detectors/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_9_mutation",
+   "head": "a5a80e667ca3350874d4716dab662607b866bb74",
+   "clean": false,
+   "dirty_files": [
+    "spikes/M1_9_mutation/mutate.py",
+    "spikes/M1_9_mutation/mutation.json"
+   ],
+   "diff_sha256": "c076ef7daffc2a3e4e4463abdfc26c7e7cc8fe93e33d8d0a151cd555677c0940",
+   "diff_bytes": 2063
+  }
+ ],
+ "manifests": {
+  ".": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/M1_9_mutation": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "detect.json",
+   "sha256": "7aecbd8622c9358f7150794cec66ac9e8a037263b6a69e0b924bfeaa22dce94c",
+   "bytes": 436,
+   "mtime": 1786972103,
+   "compared_ts": 1786972103,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "detectors-differ-from-corpus",
+   "must_fire_because": "a detector set that scored like the corpus would add nothing; the claim is that it closes a hole the corpus CANNOT express",
+   "can_fail_because": "if every mutation scored the same on both, these 4 programs would be redundant with 64 and the set should be deleted",
+   "null_must_contain": "at least one mutation where detector rate > 0 and corpus rate == 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "sub-is-add:corpus=4/64,det=1/4",
+    "less-is-lesseq:corpus=0/64,det=2/4",
+    "resolver-message:corpus=24/64,det=0/4",
+    "stdlib-if:corpus=5/64,det=2/4",
+    "stdlib-init:corpus=0/64,det=0/4"
+   ]
+  },
+  {
+   "name": "detectors-do-not-claim-universality",
+   "must_fire_because": "resolver-message is 0/4 here and 24/64 there -- the sets are COMPLEMENTARY, not one replacing the other",
+   "can_fail_because": "if the detectors caught everything the corpus does, this control could not fire and the honest split would be hidden",
+   "null_must_contain": "at least one mutation the corpus catches and the detectors do not",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "resolver:corpus=24,det=0",
+    "less:corpus=0,det=2"
+   ]
+  },
+  {
+   "name": "mutant-is-live",
+   "must_fire_because": "0 is also what a dead mutant or a skipped rebuild produces",
+   "can_fail_because": "the resolver-message v1 mutation DID come back VOID earlier, on a #[cfg]-excluded line",
+   "null_must_contain": "every reported mutation had a probe that moved; VOID otherwise",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "sub 2->8",
+    "less False->True",
+    "if yes->no",
+    "canary ->1"
+   ]
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  ".": {
+   "newest": 1786972039,
+   "from": "spikes/M1_12_detectors/"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/M1_9_mutation": {
+   "newest": 1786972399,
+   "from": "spikes/M1_9_mutation/mutation.json"
+  }
+ },
+ "problems": [
+  "STALE ARTIFACT detect.json predates M1_9_mutation source by 0.1h (newest source: spikes/M1_9_mutation/mutation.json; artifact clock: mtime). It cannot have been built from the tree recorded here.",
+  "DIRTY TREE . at a5a80e66: 1 modified. The build is NOT a5a80e66.",
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/M1_9_mutation at a5a80e66: 2 modified. The build is NOT a5a80e66."
+ ],
+ "ok": false,
+ "falsifier": "a targeted probe set cannot raise less-is-lesseq detection above the corpus 0/64"
+}
