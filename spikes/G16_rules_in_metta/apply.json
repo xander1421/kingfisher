@@ -1,0 +1,89 @@
+{
+ "rows": [
+  {
+   "p": 157,
+   "q": 73,
+   "r": 171,
+   "edges": 746,
+   "python": 123,
+   "metta": 123,
+   "agree": true,
+   "status": "OK",
+   "fuel": "251431",
+   "hash": "61c57600e1288e3fc732a7399aeab1f5964758ad5c4c0ce21b31b756505adc71",
+   "device_identical": true
+  },
+  {
+   "p": 197,
+   "q": 64,
+   "r": 197,
+   "edges": 915,
+   "python": 128,
+   "metta": 0,
+   "agree": false,
+   "status": "?",
+   "fuel": "?",
+   "hash": "?",
+   "device_identical": true
+  },
+  {
+   "p": 130,
+   "q": 4,
+   "r": 178,
+   "edges": 5762,
+   "python": 31,
+   "metta": 0,
+   "agree": false,
+   "status": "?",
+   "fuel": "?",
+   "hash": "?",
+   "device_identical": true
+  },
+  {
+   "p": 130,
+   "q": 5,
+   "r": 178,
+   "edges": 5765,
+   "python": 27,
+   "metta": 0,
+   "agree": false,
+   "status": "?",
+   "fuel": "?",
+   "hash": "?",
+   "device_identical": true
+  },
+  {
+   "p": 114,
+   "q": 114,
+   "r": 114,
+   "edges": 100,
+   "python": 132,
+   "metta": 144,
+   "agree": false,
+   "status": "OK",
+   "fuel": "223275",
+   "hash": "4110492c34d5daff6f6cef40ab79fdae6d45fb888f99f3b5d6845ec1c82d1d0b",
+   "device_identical": true
+  }
+ ],
+ "verdict": "CROSS-ENGINE AGREEMENT 1/5, DEVICE IDENTICAL 5/5",
+ "conditions": {
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ],
+   [
+    "android",
+    "aarch64"
+   ]
+  ],
+  "data": "real:FB15k-237",
+  "concurrency": "single-process",
+  "swept": {}
+ },
+ "cites": [
+  "G15_analogy_realkg",
+  "S52_realkg"
+ ]
+}
