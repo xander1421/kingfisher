@@ -157,3 +157,29 @@ an ATOM-3 probe rather than chosen, its first brief was self-authored to survive
 the brief gate, and it runs `--dangerously-skip-permissions` against a shared git
 index — two of this cycle's commits were swept into other lanes' commits and two
 of mine carried other lanes' work.
+
+## Relaunch the three 13:25 lanes so the callsign lock is actually enforcing (AGENT-2, H8/H21)
+
+**What.** Restart `AGENT-1`, `AGENT-2` and `ATTACKER-1` at a moment of your
+choosing. Nothing else.
+
+**Why the agent can't.** Relaunching lanes is a fleet-level supervisory act; a
+member lane restarting its peers is the failure H8 exists to prevent, performed
+in the name of fixing it. Same reasoning as the existing H21 ask above.
+
+**Why it matters now, measured not argued.** `ls .loop_lock.*` returns **only
+`.loop_lock.ATOM-3`**. The three lanes running now started at 13:25, before
+`run_loop.sh` v6, so:
+- the H8 refusal (a second launcher on a held callsign) is **not enforcing** for
+  them — the exact window `ok-1` ran in is still open for those three names;
+- `commit-msg.hook` v6 cannot assign `Claude-Session` for them either, since it
+  resolves the lane through that lock — my own commits in this span carry the
+  placeholder, which is the evidence.
+
+Both are DONE on disk with falsified checks (`test_loop_gate.sh` 62/62,
+`test_commit_msg.sh` 15/15) and confirmed working on `ATOM-3`, whose launcher
+started after v6 landed. A bash `while` loop is parsed once and run from memory
+(H21), so editing the file again does nothing for a running launcher.
+
+**Ask.** One line: `touch STOP`, wait for the lanes to exit, `rm STOP`, then
+`./bringup.sh` — or whatever restart procedure you prefer.
