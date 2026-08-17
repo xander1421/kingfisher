@@ -1,21 +1,36 @@
-Allocated id namespace. One empty file per id, created by
-`sh spikes/harness/allocid.sh <PREFIX>` with `set -o noclobber`, so the
-test-and-create is one O_EXCL open and twenty racing lanes get twenty distinct
-ids. See H45.
+.ids/ — the id allocation pool. One empty file per allocated id.
 
-Tracked deliberately: an id allocated by a lane that then crashes before
-publishing must stay taken. That unpublished window is exactly where the two
-real collisions of 2026-08-17 landed (H30: AGENT-1 vs ATTACKER-1; H38: ok-1 vs
-ATTACKER-1) -- both lanes ran a correct grep about two minutes apart and neither
-row existed yet at the other's read.
+`spikes/harness/allocid.sh` allocates with `set -C; : > .ids/<id>`, which is
+create-or-fail in one syscall, so a file here means the id is TAKEN and can
+never be handed out again. The files are empty on purpose and MUST STAY EMPTY:
+`allocid.sh:118` re-seeds from the tree on every invocation with
+`: > "$IDS/$i"`, which truncates. Anything you write into an id file is erased
+by the next allocation.
 
-THERE IS NO RELEASE PATH, and that is deliberate: freeing an id re-opens the
-race it was allocated to close, and ids are free while a duplicate citation is
-not (73 of them across 12 files under H18).
+DO NOT DELETE THE FILES THAT HAVE NO QUEUE ROW. That is the whole reason this
+README exists. (H64, ATOM-3, 2026-08-17.)
 
-H46 and H47 were consumed by the allocator's own demonstration -- allocate twice,
-show the ids differ -- and are recorded here rather than quietly reused. A gap
-with a reason is cheaper than a reuse without one.
+    H91  H99  S96  S97  S98  S99
 
-`.seeded.<PREFIX>` marks that the one-time bootstrap grep has run for that
-prefix. After it, no grep is on the allocation path.
+These six are RESERVED FIXTURES, not allocations. They are the synthetic ids
+inside the selfcheck strings of `journalcheck.py`, `idscope.py` and
+`refcheck.py` — chosen high so a real allocation would not reach them. Nothing
+enforced that: `allocid.sh` deliberately does not scan code (H57's attack
+measured why — scanning code reserves `Q2`, `Q3`, `B6`, `B16`, which are
+variable names and grep flags), so the allocator cannot see a fixture. When real
+allocation reaches H91, `refcheck` check 5 and `idscope` read a selfcheck string
+as a queue row.
+
+They are reserved here today only by ACCIDENT: `WORK_QUEUE.md`'s H64 row names
+them in prose, the seed reads every tracked `*.md`, and so the row documenting
+the hazard reserved the ids it warns about. Measured 2026-08-17: highest real
+`CLAIM` was H68 while `.ids/H91` and `.ids/H99` already existed.
+
+An accident is not a mechanism. These six files are the only ids in the pool
+with no queue row and no claim, which makes them exactly what a tidy-up would
+delete first — and deleting them silently restores the collision with no error
+anywhere. `spikes/harness/test_h64_id_reservations.sh` fails if one goes
+missing, becomes untracked, or stops being reachable by the allocator.
+
+To retire a reservation: delete the fixture id from the module that uses it
+FIRST, then remove the file. Never the other way round.
