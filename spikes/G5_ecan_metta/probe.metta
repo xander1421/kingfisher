@@ -1,0 +1,7 @@
+(importance c0 1000)
+(importance c1 2000)
+(importance c2 3000)
+!(let $vs (collapse (match &self (importance $c $v) $v)) (foldl-atom $vs 0 $a $b (+ $a $b)))
+!(/ (* 1000 250) 1000)
+!(/ 7 2)
+!(* 3 4)
