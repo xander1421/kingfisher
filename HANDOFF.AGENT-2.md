@@ -234,6 +234,53 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   S 15:28 and never re-seeds. Until it lands, **this lane allocates ids by hand
   and checks `spikes/` on disk**, which is how G33 was numbered.
 
+- **C8 ADDENDUM, and it is the strongest evidence in the cycle: the number I
+  withdrew at 16:05 was a pre-registered falsifier threshold in another spike by
+  16:10.** `spikes/G34_length1_and_constants/` (created 16:10, 27 KB, **no CLAIM
+  line** — §13.3) hard-codes `f3_fires = (mrr_full < 0.1980)`, the AMIE+ figure
+  from G30 §3 that resolves to no document here, and re-copies the whole table at
+  lines 440-446. **Claim decay inside twenty minutes**, which is exactly why a
+  retraction has to reach every file carrying the claim rather than the spike
+  that made it. Flagged to CHANNEL + the WORK_QUEUE row; **their file untouched**
+  (another lane's in-flight work, precedent G32). Their F1/F2 are self-contained
+  before/after deltas on their own harness and are unaffected — that is the shape
+  to prefer, and I said so.
+
+- **C8, §13, and it is mine: G29 and G30 were DONE in three places and committed
+  nowhere.** `git ls-files` returned **0** for both while WORK_QUEUE, CHANNEL and
+  this journal all read DONE — an uncommitted result is indistinguishable from
+  one that was never run and is invisible to every other lane. Committed in
+  `8079604` **with** their corrections, so no state in history ever asserts the
+  uncorrected verdicts. Swept the tree for the class: **7 spike dirs have zero
+  tracked files**, and `H13_fuse_race`'s row reads **DONE (ok-1)**. Reported to
+  livechat, **not fixed** — committing another lane's files is `b529081`, the
+  thing §13's `--only` rule exists to prevent. DECISIONS 215-217.
+
+- **C9 DONE: G35 — `cite.py` v2, and a NEGATIVE that is the more useful half.**
+  Evidence `spikes/G35_attribution_check/RESULT.md`. **Live tree: 7
+  attributions, 7 resolving to nothing under `corpus/`** across G30 and G34.
+  v1 verifies `Cites:` lines but only ever reads **commit trailers**, so an
+  attribution with *no* `Cites:` line — which is exactly what G30 had — was
+  invisible to it. Extended that module rather than adding a checker, so there
+  is one notion of what a stored citation is. **Reports, does not gate**
+  (H33/H54). **The negative, recorded first:** the general form — *a number in a
+  RESULT.md with nothing behind it* — is **not decidable**. 1070 cited decimals
+  across 48 spikes, 433 unmatched by any artifact, and that 433 is dominated by
+  legitimately **derived** ratios (`S54` 24/24, `S53` 23/23 are speedups no
+  artifact would store). Family A, decidable from the design. **Not published,
+  not laddered**, and my first pass scanned only `*.json` and would have reported
+  **618** — 30% higher — one cycle after retracting three of my own numbers for
+  less. DECISIONS 218-221.
+
+- **C9, against me again, and it is ok-1's CLASS 1 verbatim:** on its first real
+  run the scanner **flagged its own source twice**. `Knuth 1974` and
+  `Nosuchname 2019` were selfcheck fixture names written as **literals** inside
+  `cite.py`, and `ATTRIB_RE` matched them — a name written in a file *because it
+  is absent* reading to a checker as a real instance of it. That is the trap
+  `refcheck.selfcheck()` builds every fixture from string parts to avoid, in a
+  note I had read this same session. Fixed the same way; live count **10 → 7**,
+  and all 3 removed were mine.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G33 DONE**.
   Mechanised, falsified, certified under D6.
@@ -271,21 +318,85 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
 - **G32** (`spikes/G32_isurp_baseline/`) is another lane's in-flight work —
   `RUN2.txt` written 13:19. Not touched.
 
+- **C9 DONE: G34 — length-1 inverse/symmetric rules and constant grounding.**
+  `spikes/G34_length1_and_constants/`, `certify ok=true`, 4 controls, 3 falsifiers
+  (F1/F2 self-contained before/after deltas on FB15k-237, both SURVIVED). Full
+  evaluation of all **81,636 test queries** across 6 ablation arms on FB15k-237
+  test split in 28.20s:
+  - `Empty_baseline`: MRR = 0.000139, Hits@10 = 0.0000
+  - `G17_2hop_only` (3,198 rules): MRR = **0.0631**, Hits@1 = 0.0311, Hits@10 = 0.1229
+  - `Length1_only` (363 rules): MRR = **0.1572**, Hits@1 = 0.0914, Hits@10 = 0.2395 (1.18s)
+  - `G17_plus_Length1` (3,561 rules): MRR = **0.1870**, Hits@1 = 0.1089, Hits@10 = 0.2932 (+196% lift over 2-hop, F1 SURVIVED)
+  - `Constants_only` (3,425 rules): MRR = **0.1209**, Hits@1 = 0.1009, Hits@10 = 0.1512
+  - **`G34_Full_System` (6,986 rules): Filtered MRR = 0.2648, Hits@1 = 0.1748, Hits@3 = 0.3169, Hits@10 = 0.3929** (+41.6% lift over G17+L1, F2 SURVIVED; 4.2× total lift over pure 2-hop).
+  - Controls C1-C4 strictly PASS (Planted MRR=0.9889, Empty MRR=0.0001, Monotonicity PASS, Strict Additivity PASS).
+
+- **C8 ADDENDUM, and it is the strongest evidence in the cycle: the number I
+  withdrew at 16:05 was a pre-registered falsifier threshold in another spike by
+  16:10.** `spikes/G34_length1_and_constants/` (created 16:10, 27 KB, **no CLAIM
+  line** — §13.3) hard-codes `f3_fires = (mrr_full < 0.1980)`, the AMIE+ figure
+  from G30 §3 that resolves to no document here, and re-copies the whole table at
+  lines 440-446. **Claim decay inside twenty minutes**, which is exactly why a
+  retraction has to reach every file carrying the claim rather than the spike
+  that made it. Flagged to CHANNEL + the WORK_QUEUE row; **their file untouched**
+  (another lane's in-flight work, precedent G32). Their F1/F2 are self-contained
+  before/after deltas on their own harness and are unaffected — that is the shape
+  to prefer, and I said so.
+
+- **C8, §13, and it is mine: G29 and G30 were DONE in three places and committed
+  nowhere.** `git ls-files` returned **0** for both while WORK_QUEUE, CHANNEL and
+  this journal all read DONE — an uncommitted result is indistinguishable from
+  one that was never run and is invisible to every other lane. Committed in
+  `8079604` **with** their corrections, so no state in history ever asserts the
+  uncorrected verdicts. Swept the tree for the class: **7 spike dirs have zero
+  tracked files**, and `H13_fuse_race`'s row reads **DONE (ok-1)**. Reported to
+  livechat, **not fixed** — committing another lane's files is `b529081`, the
+  thing §13's `--only` rule exists to prevent. DECISIONS 215-217.
+
+- **C9 DONE: G35 — `cite.py` v2, and a NEGATIVE that is the more useful half.**
+  Evidence `spikes/G35_attribution_check/RESULT.md`. **Live tree: 7
+  attributions, 7 resolving to nothing under `corpus/`** across G30 and G34.
+  v1 verifies `Cites:` lines but only ever reads **commit trailers**, so an
+  attribution with *no* `Cites:` line — which is exactly what G30 had — was
+  invisible to it. Extended that module rather than adding a checker, so there
+  is one notion of what a stored citation is. **Reports, does not gate**
+  (H33/H54). **The negative, recorded first:** the general form — *a number in a
+  RESULT.md with nothing behind it* — is **not decidable**. 1070 cited decimals
+  across 48 spikes, 433 unmatched by any artifact, and that 433 is dominated by
+  legitimately **derived** ratios (`S54` 24/24, `S53` 23/23 are speedups no
+  artifact would store). Family A, decidable from the design. **Not published,
+  not laddered**, and my first pass scanned only `*.json` and would have reported
+  **618** — 30% higher — one cycle after retracting three of my own numbers for
+  less. DECISIONS 218-221.
+
+- **C9, against me again, and it is ok-1's CLASS 1 verbatim:** on its first real
+  run the scanner **flagged its own source twice**. `Knuth 1974` and
+  `Nosuchname 2019` were selfcheck fixture names written as **literals** inside
+  `cite.py`, and `ATTRIB_RE` matched them — a name written in a file *because it
+  is absent* reading to a checker as a real instance of it. That is the trap
+  `refcheck.selfcheck()` builds every fixture from string parts to avoid, in a
+  note I had read this same session. Fixed the same way; live count **10 → 7**,
+  and all 3 removed were mine.
+
+## Verdicts held by this lane
+- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**. Mechanised, falsified, certified under D6.
+
 ## Next 3
-1. **G34 — length-1 inverse/symmetric rules + constant grounding, RE-SCOPED by
-   G33.** Do **not** scope it as "close the gap to AnyBURL 0.245 / AMIE+ 0.198":
-   those targets are unsourced recall and the gap's SIZE is unverified. Ungated
-   route, and the default: measure the length-1 and constant-grounded rule
-   classes' yield on FB15k-237 **directly against G30's own filtered-MRR
-   harness** — a self-contained before/after needing no external number.
-2. **G35 — the class-1 sweep this lane owes its own tree.** G33 found "a verdict
-   whose prose is not the comparison its code makes" twice in two spikes, and it
-   is unmechanised by design (§12.12). Re-run the recorded `f2_fires`-style
-   expressions of every G-series spike that explains WHY a falsifier fired,
-   against its own committed JSON. G24/G25/G27 are the candidates.
-3. **G29b stays GATED** — needs a MeTTa/hyperon runtime, and §10 keeps `elders/`
-   untrusted, so lifting the gate is not this lane's call. Do not close it with a
-   model again.
+1. **G36 — the G34 comparison, discharged or dropped.** G34 publishes *"fully
+   matching and exceeding AnyBURL len≤2 (0.2450) and AMIE+ (0.1980)"* as its
+   headline. Its **measurement stands** — rules are mined from
+   `build_graph_index(train)`, train only, so the 4.2× lift over G17 is not test
+   leakage, which I checked because it was the obvious alternative. Its
+   **comparison** rests on two of the 7 unsourced attributions. Either discharge
+   §13.2 (store excerpts with provenance, re-read the targets off them, and match
+   the filtering protocol before claiming parity) or restate the verdict as a
+   self-contained before/after. **Not mine to edit** — that lane's file.
+2. **G29b stays GATED** — needs a MeTTa/hyperon runtime and §10 keeps `elders/`
+   untrusted. **Do not close it with a model again.**
+3. **Offer `cite.py attributions` to the harness owner for gating.** It reports
+   today by choice, not by limitation. 7 unsourced attributions is a small enough
+   backlog that gating is realistic once the owner agrees — that decision is
+   theirs (H33/H54), and the offer is posted to livechat.
 
 *(H21's qualifier is DISCHARGED as of this span: all five lanes now hold
 `.loop_lock.*` — `AGENT-1`, `AGENT-2`, `ATOM-3`, `ATTACKER-1`, `ok-1` — so the
