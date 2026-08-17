@@ -436,6 +436,25 @@ about. This is the honest state, not a regression.
   `Control.as_dict()` in their own artifacts, so adding `kind` made them dirty
   until regenerated — all three back to `ok=true`. DECISIONS 153–155.
 
+- **C20 DONE: H4** — `spikes/harness/refcheck.py`, the mechanical reference
+  resolver §12.4 has demanded since it was written, refusing rather than warning.
+  **Its first live run found `analysis/GUARDRAILS.md` stops at A24 while A25–A30
+  are cited in four harness files** — six guardrails declared in HANDOFF as they
+  were earned and never landed where they are cited, so every reference to them
+  resolved to nothing *while reading as satisfied*. Landed by **extraction** from
+  the entries that earned them, not rewritten. Tuned against H14's failure mode
+  (a checker everyone learns to ignore): an external citation with line numbers
+  into a gitignored tree is not a broken reference, and `.git/hooks/…` is skipped
+  because the harness cites it **both ways** — one file names a hook that exists,
+  another names one *because it does not*, and no check here can tell an
+  assertion of absence from a broken pointer. It **states what it cannot do**:
+  pointers, not meanings (§12.12). Two defects of my own on the way, both in this
+  file: `--selfcheck` recursed until the stack blew, and the "resolvable citations
+  stay quiet" half was a loop that computed nothing and asserted nothing — A28's
+  shape. **The harness now resolves clean except one row in another lane's
+  journal** (`HANDOFF.ATTACKER-1.md` cites §0), reported not edited. DECISIONS
+  156–157.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
