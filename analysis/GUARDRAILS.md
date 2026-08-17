@@ -369,6 +369,13 @@ Each carried a component whose cost was unknown and whose necessity was assumed.
 In all three the honest answer to *"what would it cost to measure this?"* was
 larger than the answer to *"what would it cost to not need it?"*
 
+**The asymmetry, conceded (C5):** A12 compares a *measured* removal cost against
+an *unmeasured* measurement cost, which biases it toward deletion. It is safe
+only when the **replacement is already measured** — as it was in all three cases
+above (`asimddp`+`i8mm`, S57's byte-identical results, unregistered-means-
+unreachable). When the replacement is itself assumed, A12 is a licence to delete
+whatever is inconvenient. State the replacement's grade when invoking it.
+
 **Ask the second question first.** The ladder's first rung — *does this need to
 exist at all?* — applies to architecture, not only to code, and it has now paid
 three times running. The tell is a grade-D or grade-E claim sitting on the
