@@ -1,6 +1,7 @@
 {
- "gate": "device quiet: cpu_busy 0.9% (limit 15%), runnable 4, thermal 39700m, battery status=5 level=100",
+ "gate": "device quiet: cpu_busy 0.5% (limit 15%), runnable 1, thermal 38600m, battery status=5 level=100",
  "fuel": 2000000,
+ "bytes_pushed": 0,
  "workers": [
   "host-a",
   "host-b",
@@ -31,9 +32,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0000",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/integration_tests__das__animals.metta",
+     "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
-     "wall_ms": 9.7
+     "bytes_pushed": 0,
+     "wall_ms": 9.6
     },
     {
      "status": "OK",
@@ -45,9 +47,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0000",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/integration_tests__das__animals.metta",
+     "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
-     "wall_ms": 9.9
+     "bytes_pushed": 0,
+     "wall_ms": 10.3
     },
     {
      "status": "OK",
@@ -59,9 +62,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0000",
-     "program": "corpus/integration_tests__das__animals.metta",
+     "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
-     "wall_ms": 48.2
+     "bytes_pushed": 0,
+     "wall_ms": 67.9
     }
    ]
   },
@@ -85,9 +89,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0001",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/integration_tests__das__test.metta",
+     "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -99,9 +104,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0001",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/integration_tests__das__test.metta",
+     "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 9.8
     },
     {
      "status": "OK",
@@ -113,9 +119,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0001",
-     "program": "corpus/integration_tests__das__test.metta",
+     "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
-     "wall_ms": 44.8
+     "bytes_pushed": 0,
+     "wall_ms": 66.9
     }
    ]
   },
@@ -139,9 +146,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0002",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__catalog.metta",
+     "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -153,9 +161,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0002",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__catalog.metta",
+     "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -167,9 +176,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0002",
-     "program": "corpus/lib__src__metta__runner__builtin_mods__catalog.metta",
+     "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
-     "wall_ms": 47.6
+     "bytes_pushed": 0,
+     "wall_ms": 67.5
     }
    ]
   },
@@ -193,9 +203,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0003",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__das.metta",
+     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
-     "wall_ms": 8.6
+     "bytes_pushed": 0,
+     "wall_ms": 10.0
     },
     {
      "status": "OK",
@@ -207,9 +218,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0003",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__das.metta",
+     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
-     "wall_ms": 8.7
+     "bytes_pushed": 0,
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -221,9 +233,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0003",
-     "program": "corpus/lib__src__metta__runner__builtin_mods__das.metta",
+     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
-     "wall_ms": 47.0
+     "bytes_pushed": 0,
+     "wall_ms": 68.4
     }
    ]
   },
@@ -247,9 +260,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0004",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__fileio.metta",
+     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
-     "wall_ms": 8.6
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -261,9 +275,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0004",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__fileio.metta",
+     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
-     "wall_ms": 8.7
+     "bytes_pushed": 0,
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -275,9 +290,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0004",
-     "program": "corpus/lib__src__metta__runner__builtin_mods__fileio.metta",
+     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
-     "wall_ms": 46.5
+     "bytes_pushed": 0,
+     "wall_ms": 68.1
     }
    ]
   },
@@ -301,9 +317,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0005",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__json.metta",
+     "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
-     "wall_ms": 9.7
+     "bytes_pushed": 0,
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -315,9 +332,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0005",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__json.metta",
+     "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
-     "wall_ms": 9.4
+     "bytes_pushed": 0,
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -329,9 +347,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0005",
-     "program": "corpus/lib__src__metta__runner__builtin_mods__json.metta",
+     "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
-     "wall_ms": 47.1
+     "bytes_pushed": 0,
+     "wall_ms": 66.2
     }
    ]
   },
@@ -355,9 +374,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0006",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__random.metta",
+     "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -369,9 +389,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0006",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__random.metta",
+     "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -383,9 +404,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0006",
-     "program": "corpus/lib__src__metta__runner__builtin_mods__random.metta",
+     "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
-     "wall_ms": 46.6
+     "bytes_pushed": 0,
+     "wall_ms": 67.1
     }
    ]
   },
@@ -409,9 +431,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0007",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__skel.metta",
+     "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
-     "wall_ms": 10.9
+     "bytes_pushed": 0,
+     "wall_ms": 11.1
     },
     {
      "status": "OK",
@@ -423,9 +446,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0007",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__builtin_mods__skel.metta",
+     "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
-     "wall_ms": 13.4
+     "bytes_pushed": 0,
+     "wall_ms": 12.4
     },
     {
      "status": "OK",
@@ -437,9 +461,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0007",
-     "program": "corpus/lib__src__metta__runner__builtin_mods__skel.metta",
+     "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
-     "wall_ms": 46.4
+     "bytes_pushed": 0,
+     "wall_ms": 71.0
     }
    ]
   },
@@ -463,9 +488,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0008",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__environment.default.metta",
+     "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
-     "wall_ms": 10.9
+     "bytes_pushed": 0,
+     "wall_ms": 11.1
     },
     {
      "status": "OK",
@@ -477,9 +503,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0008",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__environment.default.metta",
+     "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
-     "wall_ms": 10.3
+     "bytes_pushed": 0,
+     "wall_ms": 9.6
     },
     {
      "status": "OK",
@@ -491,9 +518,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0008",
-     "program": "corpus/lib__src__metta__runner__environment.default.metta",
+     "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
-     "wall_ms": 45.2
+     "bytes_pushed": 0,
+     "wall_ms": 68.8
     }
    ]
   },
@@ -517,9 +545,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0009",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__init.default.metta",
+     "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
-     "wall_ms": 9.4
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -531,9 +560,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0009",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__init.default.metta",
+     "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
-     "wall_ms": 9.0
+     "bytes_pushed": 0,
+     "wall_ms": 9.6
     },
     {
      "status": "OK",
@@ -545,9 +575,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0009",
-     "program": "corpus/lib__src__metta__runner__init.default.metta",
+     "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
-     "wall_ms": 45.3
+     "bytes_pushed": 0,
+     "wall_ms": 66.1
     }
    ]
   },
@@ -571,9 +602,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0010",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__stdlib__stdlib.metta",
+     "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
-     "wall_ms": 11.7
+     "bytes_pushed": 0,
+     "wall_ms": 12.4
     },
     {
      "status": "OK",
@@ -585,9 +617,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0010",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__src__metta__runner__stdlib__stdlib.metta",
+     "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
-     "wall_ms": 11.3
+     "bytes_pushed": 0,
+     "wall_ms": 13.0
     },
     {
      "status": "OK",
@@ -599,9 +632,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0010",
-     "program": "corpus/lib__src__metta__runner__stdlib__stdlib.metta",
+     "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
-     "wall_ms": 53.8
+     "bytes_pushed": 0,
+     "wall_ms": 86.2
     }
    ]
   },
@@ -625,9 +659,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0011",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__tests__test_stdlib.metta",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
-     "wall_ms": 62.8
+     "bytes_pushed": 0,
+     "wall_ms": 66.8
     },
     {
      "status": "OK",
@@ -639,9 +674,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0011",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/lib__tests__test_stdlib.metta",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
-     "wall_ms": 61.8
+     "bytes_pushed": 0,
+     "wall_ms": 67.9
     },
     {
      "status": "OK",
@@ -653,9 +689,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0011",
-     "program": "corpus/lib__tests__test_stdlib.metta",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
-     "wall_ms": 164.3
+     "bytes_pushed": 0,
+     "wall_ms": 185.5
     }
    ]
   },
@@ -679,9 +716,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0012",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/mkdocs.metta",
+     "shard_cid": "bafkreiecmbxqkqoirppl6uigzm6flwnhvya3sd4hbgyfbdhsle5oxfm6ny",
      "fuel_limit": 2000000,
-     "wall_ms": 4487.9
+     "bytes_pushed": 0,
+     "wall_ms": 4794.0
     },
     {
      "status": "FUEL_EXHAUSTED",
@@ -693,9 +731,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0012",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/mkdocs.metta",
+     "shard_cid": "bafkreiecmbxqkqoirppl6uigzm6flwnhvya3sd4hbgyfbdhsle5oxfm6ny",
      "fuel_limit": 2000000,
-     "wall_ms": 4561.6
+     "bytes_pushed": 0,
+     "wall_ms": 4793.7
     },
     {
      "status": "FUEL_EXHAUSTED",
@@ -707,9 +746,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0012",
-     "program": "corpus/mkdocs.metta",
+     "shard_cid": "bafkreiecmbxqkqoirppl6uigzm6flwnhvya3sd4hbgyfbdhsle5oxfm6ny",
      "fuel_limit": 2000000,
-     "wall_ms": 10084.0
+     "bytes_pushed": 0,
+     "wall_ms": 10916.4
     }
    ]
   },
@@ -733,9 +773,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0013",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__agent.metta",
+     "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
-     "wall_ms": 9.2
+     "bytes_pushed": 0,
+     "wall_ms": 11.1
     },
     {
      "status": "OK",
@@ -747,9 +788,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0013",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__agent.metta",
+     "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 10.8
     },
     {
      "status": "OK",
@@ -761,9 +803,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0013",
-     "program": "corpus/python__hyperon__exts__agents__tests__agent.metta",
+     "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
-     "wall_ms": 59.5
+     "bytes_pushed": 0,
+     "wall_ms": 71.4
     }
    ]
   },
@@ -787,9 +830,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0014",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_0_passive_agents.metta",
+     "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 11.2
     },
     {
      "status": "OK",
@@ -801,9 +845,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0014",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_0_passive_agents.metta",
+     "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 10.4
     },
     {
      "status": "OK",
@@ -815,9 +860,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0014",
-     "program": "corpus/python__hyperon__exts__agents__tests__test_0_passive_agents.metta",
+     "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
-     "wall_ms": 53.0
+     "bytes_pushed": 0,
+     "wall_ms": 72.6
     }
    ]
   },
@@ -841,9 +887,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0015",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_4_agent1.metta",
+     "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
-     "wall_ms": 9.5
+     "bytes_pushed": 0,
+     "wall_ms": 10.6
     },
     {
      "status": "OK",
@@ -855,9 +902,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0015",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_4_agent1.metta",
+     "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
-     "wall_ms": 9.5
+     "bytes_pushed": 0,
+     "wall_ms": 11.2
     },
     {
      "status": "OK",
@@ -869,9 +917,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0015",
-     "program": "corpus/python__hyperon__exts__agents__tests__test_4_agent1.metta",
+     "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
-     "wall_ms": 52.4
+     "bytes_pushed": 0,
+     "wall_ms": 81.0
     }
    ]
   },
@@ -895,9 +944,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0016",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_4_agent2.metta",
+     "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
-     "wall_ms": 9.3
+     "bytes_pushed": 0,
+     "wall_ms": 11.3
     },
     {
      "status": "OK",
@@ -909,9 +959,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0016",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_4_agent2.metta",
+     "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 11.9
     },
     {
      "status": "OK",
@@ -923,9 +974,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0016",
-     "program": "corpus/python__hyperon__exts__agents__tests__test_4_agent2.metta",
+     "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
-     "wall_ms": 49.2
+     "bytes_pushed": 0,
+     "wall_ms": 78.9
     }
    ]
   },
@@ -949,9 +1001,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0017",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_4_events.metta",
+     "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -963,9 +1016,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0017",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__agents__tests__test_4_events.metta",
+     "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -977,9 +1031,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0017",
-     "program": "corpus/python__hyperon__exts__agents__tests__test_4_events.metta",
+     "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
-     "wall_ms": 46.8
+     "bytes_pushed": 0,
+     "wall_ms": 74.1
     }
    ]
   },
@@ -1003,9 +1058,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0018",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__snet_io__snet__naint__text-generation.metta",
+     "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
-     "wall_ms": 9.3
+     "bytes_pushed": 0,
+     "wall_ms": 11.4
     },
     {
      "status": "OK",
@@ -1017,9 +1073,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0018",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__snet_io__snet__naint__text-generation.metta",
+     "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
-     "wall_ms": 9.1
+     "bytes_pushed": 0,
+     "wall_ms": 10.7
     },
     {
      "status": "OK",
@@ -1031,9 +1088,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0018",
-     "program": "corpus/python__hyperon__exts__snet_io__snet__naint__text-generation.metta",
+     "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
-     "wall_ms": 51.4
+     "bytes_pushed": 0,
+     "wall_ms": 71.0
     }
    ]
   },
@@ -1057,9 +1115,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0019",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__snet_io__test_snet_call.metta",
+     "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 9.8
     },
     {
      "status": "OK",
@@ -1071,9 +1130,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0019",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__snet_io__test_snet_call.metta",
+     "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -1085,9 +1145,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0019",
-     "program": "corpus/python__hyperon__exts__snet_io__test_snet_call.metta",
+     "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
-     "wall_ms": 47.2
+     "bytes_pushed": 0,
+     "wall_ms": 64.2
     }
    ]
   },
@@ -1111,9 +1172,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0020",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__snet_io__test_snet_meta.metta",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
-     "wall_ms": 9.0
+     "bytes_pushed": 0,
+     "wall_ms": 10.0
     },
     {
      "status": "OK",
@@ -1125,9 +1187,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0020",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__hyperon__exts__snet_io__test_snet_meta.metta",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
-     "wall_ms": 8.2
+     "bytes_pushed": 0,
+     "wall_ms": 11.0
     },
     {
      "status": "OK",
@@ -1139,9 +1202,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0020",
-     "program": "corpus/python__hyperon__exts__snet_io__test_snet_meta.metta",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
-     "wall_ms": 50.3
+     "bytes_pushed": 0,
+     "wall_ms": 65.2
     }
    ]
   },
@@ -1165,9 +1229,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0021",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__01_example_majority.metta",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 10.3
     },
     {
      "status": "OK",
@@ -1179,9 +1244,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0021",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__01_example_majority.metta",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -1193,9 +1259,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0021",
-     "program": "corpus/python__sandbox__bhv_binding__01_example_majority.metta",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
-     "wall_ms": 51.1
+     "bytes_pushed": 0,
+     "wall_ms": 62.2
     }
    ]
   },
@@ -1219,9 +1286,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0022",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__02_example_perm.metta",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 10.5
     },
     {
      "status": "OK",
@@ -1233,9 +1301,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0022",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__02_example_perm.metta",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 10.0
     },
     {
      "status": "OK",
@@ -1247,9 +1316,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0022",
-     "program": "corpus/python__sandbox__bhv_binding__02_example_perm.metta",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
-     "wall_ms": 48.6
+     "bytes_pushed": 0,
+     "wall_ms": 65.1
     }
    ]
   },
@@ -1273,9 +1343,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0023",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__03_example_dict.metta",
+     "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 11.2
     },
     {
      "status": "OK",
@@ -1287,9 +1358,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0023",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__03_example_dict.metta",
+     "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 11.2
     },
     {
      "status": "OK",
@@ -1301,9 +1373,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0023",
-     "program": "corpus/python__sandbox__bhv_binding__03_example_dict.metta",
+     "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
-     "wall_ms": 51.3
+     "bytes_pushed": 0,
+     "wall_ms": 64.1
     }
    ]
   },
@@ -1327,9 +1400,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0024",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__04_example_dollar_of_mexico.metta",
+     "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
-     "wall_ms": 8.6
+     "bytes_pushed": 0,
+     "wall_ms": 10.3
     },
     {
      "status": "OK",
@@ -1341,9 +1415,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0024",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__bhv_binding__04_example_dollar_of_mexico.metta",
+     "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
-     "wall_ms": 9.2
+     "bytes_pushed": 0,
+     "wall_ms": 10.9
     },
     {
      "status": "OK",
@@ -1355,9 +1430,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0024",
-     "program": "corpus/python__sandbox__bhv_binding__04_example_dollar_of_mexico.metta",
+     "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
-     "wall_ms": 47.7
+     "bytes_pushed": 0,
+     "wall_ms": 65.4
     }
    ]
   },
@@ -1381,9 +1457,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0025",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__enum_lambda.metta",
+     "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -1395,9 +1472,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0025",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__enum_lambda.metta",
+     "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
-     "wall_ms": 9.2
+     "bytes_pushed": 0,
+     "wall_ms": 10.9
     },
     {
      "status": "OK",
@@ -1409,9 +1487,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0025",
-     "program": "corpus/python__sandbox__jetta__enum_lambda.metta",
+     "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
-     "wall_ms": 54.7
+     "bytes_pushed": 0,
+     "wall_ms": 64.4
     }
    ]
   },
@@ -1435,9 +1514,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0026",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_basic_jetta.metta",
+     "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.7
+     "bytes_pushed": 0,
+     "wall_ms": 9.8
     },
     {
      "status": "OK",
@@ -1449,9 +1529,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0026",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_basic_jetta.metta",
+     "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 9.2
     },
     {
      "status": "OK",
@@ -1463,9 +1544,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0026",
-     "program": "corpus/python__sandbox__jetta__test_basic_jetta.metta",
+     "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
-     "wall_ms": 51.0
+     "bytes_pushed": 0,
+     "wall_ms": 64.5
     }
    ]
   },
@@ -1489,9 +1571,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0027",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_expr_compile.metta",
+     "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 10.0
     },
     {
      "status": "OK",
@@ -1503,9 +1586,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0027",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_expr_compile.metta",
+     "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -1517,9 +1601,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0027",
-     "program": "corpus/python__sandbox__jetta__test_expr_compile.metta",
+     "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
-     "wall_ms": 50.2
+     "bytes_pushed": 0,
+     "wall_ms": 65.9
     }
    ]
   },
@@ -1543,9 +1628,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0028",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_lambda.metta",
+     "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 11.0
     },
     {
      "status": "OK",
@@ -1557,9 +1643,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0028",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_lambda.metta",
+     "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 10.5
     },
     {
      "status": "OK",
@@ -1571,9 +1658,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0028",
-     "program": "corpus/python__sandbox__jetta__test_lambda.metta",
+     "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
-     "wall_ms": 55.9
+     "bytes_pushed": 0,
+     "wall_ms": 66.1
     }
    ]
   },
@@ -1597,9 +1685,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0029",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_nondet.metta",
+     "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
-     "wall_ms": 8.6
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -1611,9 +1700,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0029",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__jetta__test_nondet.metta",
+     "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 10.5
     },
     {
      "status": "OK",
@@ -1625,9 +1715,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0029",
-     "program": "corpus/python__sandbox__jetta__test_nondet.metta",
+     "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
-     "wall_ms": 46.1
+     "bytes_pushed": 0,
+     "wall_ms": 65.0
     }
    ]
   },
@@ -1651,9 +1742,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0030",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__mork__test_mork.metta",
+     "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 10.6
     },
     {
      "status": "OK",
@@ -1665,9 +1757,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0030",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__mork__test_mork.metta",
+     "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 10.9
     },
     {
      "status": "OK",
@@ -1679,9 +1772,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0030",
-     "program": "corpus/python__sandbox__mork__test_mork.metta",
+     "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
-     "wall_ms": 45.2
+     "bytes_pushed": 0,
+     "wall_ms": 64.2
     }
    ]
   },
@@ -1705,9 +1799,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0031",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__neurospace__test_nspace.metta",
+     "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
-     "wall_ms": 8.7
+     "bytes_pushed": 0,
+     "wall_ms": 13.4
     },
     {
      "status": "OK",
@@ -1719,9 +1814,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0031",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__neurospace__test_nspace.metta",
+     "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 13.6
     },
     {
      "status": "OK",
@@ -1733,9 +1829,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0031",
-     "program": "corpus/python__sandbox__neurospace__test_nspace.metta",
+     "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
-     "wall_ms": 47.4
+     "bytes_pushed": 0,
+     "wall_ms": 67.2
     }
    ]
   },
@@ -1759,9 +1856,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0032",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__numpy__nm_test.metta",
+     "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
-     "wall_ms": 9.2
+     "bytes_pushed": 0,
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -1773,9 +1871,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0032",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__numpy__nm_test.metta",
+     "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 11.1
     },
     {
      "status": "OK",
@@ -1787,9 +1886,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0032",
-     "program": "corpus/python__sandbox__numpy__nm_test.metta",
+     "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
-     "wall_ms": 46.4
+     "bytes_pushed": 0,
+     "wall_ms": 68.4
     }
    ]
   },
@@ -1813,9 +1913,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0033",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__pytorch__tm_test.metta",
+     "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
-     "wall_ms": 9.2
+     "bytes_pushed": 0,
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -1827,9 +1928,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0033",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__pytorch__tm_test.metta",
+     "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -1841,9 +1943,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0033",
-     "program": "corpus/python__sandbox__pytorch__tm_test.metta",
+     "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
-     "wall_ms": 48.5
+     "bytes_pushed": 0,
+     "wall_ms": 68.5
     }
    ]
   },
@@ -1867,9 +1970,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0034",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__resolve__r.metta",
+     "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -1881,9 +1985,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0034",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__resolve__r.metta",
+     "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 10.4
     },
     {
      "status": "OK",
@@ -1895,9 +2000,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0034",
-     "program": "corpus/python__sandbox__resolve__r.metta",
+     "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
-     "wall_ms": 49.2
+     "bytes_pushed": 0,
+     "wall_ms": 70.7
     }
    ]
   },
@@ -1921,9 +2027,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0035",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__sql_space__sql_space_test.metta",
+     "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 10.0
     },
     {
      "status": "OK",
@@ -1935,9 +2042,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0035",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__sql_space__sql_space_test.metta",
+     "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 10.4
     },
     {
      "status": "OK",
@@ -1949,9 +2057,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0035",
-     "program": "corpus/python__sandbox__sql_space__sql_space_test.metta",
+     "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
-     "wall_ms": 48.4
+     "bytes_pushed": 0,
+     "wall_ms": 67.2
     }
    ]
   },
@@ -1964,16 +2073,17 @@
     {
      "status": "OK",
      "fuel_used": "1012",
-     "raw_hash": "97250a5ff250bde11676a79a8eec4672288f70cc1876ba785cfc2e8ca08d7223",
-     "sorted_hash": "822f8dc1b0d4d22cc48231a83866c6919f756780995fd3f83729b73f62709ba4",
+     "raw_hash": "88d2a4e474fa028e83630efd270206a20dc8ce1193990c4a9861a9f4cd50120d",
+     "sorted_hash": "2f4d62ff46ba642799a3d582d4c044d89d994e058a9f4b351aeec0ce468f1a93",
      "n_results": "5",
      "arch": "aarch64",
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0036",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__test_gnd_conv.metta",
+     "shard_cid": "bafkreidnqrjrx3qamajwuigpwghdj33joiccup7ivf66yr3g3m72muoua4",
      "fuel_limit": 2000000,
-     "wall_ms": 9.0
+     "bytes_pushed": 0,
+     "wall_ms": 11.0
     },
     {
      "status": "OK",
@@ -1985,23 +2095,25 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0036",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__sandbox__test_gnd_conv.metta",
+     "shard_cid": "bafkreidnqrjrx3qamajwuigpwghdj33joiccup7ivf66yr3g3m72muoua4",
      "fuel_limit": 2000000,
-     "wall_ms": 9.1
+     "bytes_pushed": 0,
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
      "fuel_used": "1012",
-     "raw_hash": "fa0aff142447aecd91079afd6df9a07532e7a8cf86862163f8f77274c1a6c026",
-     "sorted_hash": "bd007a029ff9e19c0ff14f9e917088a4566efc76066073a1065435a107aaa1ba",
+     "raw_hash": "d59cf828736f8bad9a34a03d30a46627850bde95f1b5de640b30d0d7f548cebd",
+     "sorted_hash": "4b47bab3325782927cb4e6d37881e177944d3a6a0d50d9629a8864e160b661f6",
      "n_results": "5",
      "arch": "aarch64",
      "os": "android",
      "worker": "phone",
      "job_id": "j0036",
-     "program": "corpus/python__sandbox__test_gnd_conv.metta",
+     "shard_cid": "bafkreidnqrjrx3qamajwuigpwghdj33joiccup7ivf66yr3g3m72muoua4",
      "fuel_limit": 2000000,
-     "wall_ms": 48.8
+     "bytes_pushed": 0,
+     "wall_ms": 67.2
     }
    ]
   },
@@ -2025,9 +2137,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0037",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__ext_sub__module.metta",
+     "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
-     "wall_ms": 8.1
+     "bytes_pushed": 0,
+     "wall_ms": 12.5
     },
     {
      "status": "OK",
@@ -2039,9 +2152,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0037",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__ext_sub__module.metta",
+     "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
-     "wall_ms": 8.9
+     "bytes_pushed": 0,
+     "wall_ms": 13.2
     },
     {
      "status": "OK",
@@ -2053,9 +2167,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0037",
-     "program": "corpus/python__tests__ext_sub__module.metta",
+     "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
-     "wall_ms": 47.6
+     "bytes_pushed": 0,
+     "wall_ms": 66.8
     }
    ]
   },
@@ -2079,9 +2194,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0038",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__a1_symbols.metta",
+     "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
-     "wall_ms": 17.5
+     "bytes_pushed": 0,
+     "wall_ms": 19.0
     },
     {
      "status": "OK",
@@ -2093,9 +2209,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0038",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__a1_symbols.metta",
+     "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
-     "wall_ms": 16.9
+     "bytes_pushed": 0,
+     "wall_ms": 19.7
     },
     {
      "status": "OK",
@@ -2107,9 +2224,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0038",
-     "program": "corpus/python__tests__scripts__a1_symbols.metta",
+     "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
-     "wall_ms": 69.7
+     "bytes_pushed": 0,
+     "wall_ms": 91.0
     }
    ]
   },
@@ -2133,9 +2251,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0039",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__a2_opencoggy.metta",
+     "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
-     "wall_ms": 9.8
+     "bytes_pushed": 0,
+     "wall_ms": 11.4
     },
     {
      "status": "OK",
@@ -2147,9 +2266,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0039",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__a2_opencoggy.metta",
+     "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
-     "wall_ms": 10.0
+     "bytes_pushed": 0,
+     "wall_ms": 10.9
     },
     {
      "status": "OK",
@@ -2161,9 +2281,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0039",
-     "program": "corpus/python__tests__scripts__a2_opencoggy.metta",
+     "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
-     "wall_ms": 53.4
+     "bytes_pushed": 0,
+     "wall_ms": 74.2
     }
    ]
   },
@@ -2187,9 +2308,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0040",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__a3_twoside.metta",
+     "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
-     "wall_ms": 13.2
+     "bytes_pushed": 0,
+     "wall_ms": 16.5
     },
     {
      "status": "OK",
@@ -2201,9 +2323,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0040",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__a3_twoside.metta",
+     "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
-     "wall_ms": 13.0
+     "bytes_pushed": 0,
+     "wall_ms": 14.9
     },
     {
      "status": "OK",
@@ -2215,9 +2338,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0040",
-     "program": "corpus/python__tests__scripts__a3_twoside.metta",
+     "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
-     "wall_ms": 65.1
+     "bytes_pushed": 0,
+     "wall_ms": 79.6
     }
    ]
   },
@@ -2241,9 +2365,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0041",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b0_chaining_prelim.metta",
+     "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
-     "wall_ms": 14.2
+     "bytes_pushed": 0,
+     "wall_ms": 15.0
     },
     {
      "status": "OK",
@@ -2255,9 +2380,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0041",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b0_chaining_prelim.metta",
+     "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
-     "wall_ms": 13.2
+     "bytes_pushed": 0,
+     "wall_ms": 15.6
     },
     {
      "status": "OK",
@@ -2269,9 +2395,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0041",
-     "program": "corpus/python__tests__scripts__b0_chaining_prelim.metta",
+     "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
-     "wall_ms": 64.8
+     "bytes_pushed": 0,
+     "wall_ms": 80.9
     }
    ]
   },
@@ -2295,9 +2422,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0042",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b1_equal_chain.metta",
+     "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
-     "wall_ms": 17.7
+     "bytes_pushed": 0,
+     "wall_ms": 18.7
     },
     {
      "status": "OK",
@@ -2309,9 +2437,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0042",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b1_equal_chain.metta",
+     "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
-     "wall_ms": 17.8
+     "bytes_pushed": 0,
+     "wall_ms": 19.6
     },
     {
      "status": "OK",
@@ -2323,9 +2452,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0042",
-     "program": "corpus/python__tests__scripts__b1_equal_chain.metta",
+     "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
-     "wall_ms": 68.9
+     "bytes_pushed": 0,
+     "wall_ms": 86.6
     }
    ]
   },
@@ -2349,9 +2479,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0043",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b2_backchain.metta",
+     "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
-     "wall_ms": 20.7
+     "bytes_pushed": 0,
+     "wall_ms": 22.4
     },
     {
      "status": "OK",
@@ -2363,9 +2494,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0043",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b2_backchain.metta",
+     "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
-     "wall_ms": 21.2
+     "bytes_pushed": 0,
+     "wall_ms": 24.2
     },
     {
      "status": "OK",
@@ -2377,9 +2509,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0043",
-     "program": "corpus/python__tests__scripts__b2_backchain.metta",
+     "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
-     "wall_ms": 74.2
+     "bytes_pushed": 0,
+     "wall_ms": 95.9
     }
    ]
   },
@@ -2403,9 +2536,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0044",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b3_direct.metta",
+     "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
-     "wall_ms": 13.5
+     "bytes_pushed": 0,
+     "wall_ms": 15.2
     },
     {
      "status": "OK",
@@ -2417,9 +2551,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0044",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b3_direct.metta",
+     "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
-     "wall_ms": 13.8
+     "bytes_pushed": 0,
+     "wall_ms": 14.8
     },
     {
      "status": "OK",
@@ -2431,9 +2566,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0044",
-     "program": "corpus/python__tests__scripts__b3_direct.metta",
+     "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
-     "wall_ms": 59.5
+     "bytes_pushed": 0,
+     "wall_ms": 81.0
     }
    ]
   },
@@ -2457,9 +2593,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0045",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b4_nondeterm.metta",
+     "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
-     "wall_ms": 25.9
+     "bytes_pushed": 0,
+     "wall_ms": 29.4
     },
     {
      "status": "OK",
@@ -2471,9 +2608,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0045",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b4_nondeterm.metta",
+     "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
-     "wall_ms": 25.6
+     "bytes_pushed": 0,
+     "wall_ms": 28.9
     },
     {
      "status": "OK",
@@ -2485,9 +2623,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0045",
-     "program": "corpus/python__tests__scripts__b4_nondeterm.metta",
+     "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
-     "wall_ms": 89.1
+     "bytes_pushed": 0,
+     "wall_ms": 109.1
     }
    ]
   },
@@ -2511,9 +2650,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0046",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b5_types_prelim.metta",
+     "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
-     "wall_ms": 41.3
+     "bytes_pushed": 0,
+     "wall_ms": 43.9
     },
     {
      "status": "OK",
@@ -2525,9 +2665,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0046",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__b5_types_prelim.metta",
+     "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
-     "wall_ms": 41.3
+     "bytes_pushed": 0,
+     "wall_ms": 42.3
     },
     {
      "status": "OK",
@@ -2539,9 +2680,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0046",
-     "program": "corpus/python__tests__scripts__b5_types_prelim.metta",
+     "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
-     "wall_ms": 116.1
+     "bytes_pushed": 0,
+     "wall_ms": 138.9
     }
    ]
   },
@@ -2565,9 +2707,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0047",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c1_grounded_basic.metta",
+     "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
-     "wall_ms": 49.8
+     "bytes_pushed": 0,
+     "wall_ms": 54.0
     },
     {
      "status": "OK",
@@ -2579,9 +2722,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0047",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c1_grounded_basic.metta",
+     "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
-     "wall_ms": 53.4
+     "bytes_pushed": 0,
+     "wall_ms": 54.3
     },
     {
      "status": "OK",
@@ -2593,9 +2737,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0047",
-     "program": "corpus/python__tests__scripts__c1_grounded_basic.metta",
+     "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
-     "wall_ms": 144.0
+     "bytes_pushed": 0,
+     "wall_ms": 157.5
     }
    ]
   },
@@ -2619,9 +2764,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0048",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c2_spaces.metta",
+     "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
-     "wall_ms": 9.0
+     "bytes_pushed": 0,
+     "wall_ms": 10.3
     },
     {
      "status": "OK",
@@ -2633,9 +2779,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0048",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c2_spaces.metta",
+     "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.7
+     "bytes_pushed": 0,
+     "wall_ms": 10.8
     },
     {
      "status": "OK",
@@ -2647,9 +2794,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0048",
-     "program": "corpus/python__tests__scripts__c2_spaces.metta",
+     "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
-     "wall_ms": 47.2
+     "bytes_pushed": 0,
+     "wall_ms": 78.3
     }
    ]
   },
@@ -2673,9 +2821,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0049",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c2_spaces_kb.metta",
+     "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -2687,9 +2836,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0049",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c2_spaces_kb.metta",
+     "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -2701,9 +2851,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0049",
-     "program": "corpus/python__tests__scripts__c2_spaces_kb.metta",
+     "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
-     "wall_ms": 48.2
+     "bytes_pushed": 0,
+     "wall_ms": 68.5
     }
    ]
   },
@@ -2727,9 +2878,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0050",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c3_pln_stv.metta",
+     "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
-     "wall_ms": 45.0
+     "bytes_pushed": 0,
+     "wall_ms": 50.1
     },
     {
      "status": "OK",
@@ -2741,9 +2893,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0050",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__c3_pln_stv.metta",
+     "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
-     "wall_ms": 43.0
+     "bytes_pushed": 0,
+     "wall_ms": 47.5
     },
     {
      "status": "OK",
@@ -2755,9 +2908,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0050",
-     "program": "corpus/python__tests__scripts__c3_pln_stv.metta",
+     "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
-     "wall_ms": 122.4
+     "bytes_pushed": 0,
+     "wall_ms": 144.7
     }
    ]
   },
@@ -2781,9 +2935,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0051",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d1_gadt.metta",
+     "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
-     "wall_ms": 21.5
+     "bytes_pushed": 0,
+     "wall_ms": 22.9
     },
     {
      "status": "OK",
@@ -2795,9 +2950,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0051",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d1_gadt.metta",
+     "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
-     "wall_ms": 21.9
+     "bytes_pushed": 0,
+     "wall_ms": 24.5
     },
     {
      "status": "OK",
@@ -2809,9 +2965,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0051",
-     "program": "corpus/python__tests__scripts__d1_gadt.metta",
+     "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
-     "wall_ms": 75.3
+     "bytes_pushed": 0,
+     "wall_ms": 98.9
     }
    ]
   },
@@ -2835,9 +2992,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0052",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d2_higherfunc.metta",
+     "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
-     "wall_ms": 44.9
+     "bytes_pushed": 0,
+     "wall_ms": 47.9
     },
     {
      "status": "OK",
@@ -2849,9 +3007,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0052",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d2_higherfunc.metta",
+     "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
-     "wall_ms": 46.9
+     "bytes_pushed": 0,
+     "wall_ms": 48.3
     },
     {
      "status": "OK",
@@ -2863,9 +3022,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0052",
-     "program": "corpus/python__tests__scripts__d2_higherfunc.metta",
+     "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
-     "wall_ms": 125.0
+     "bytes_pushed": 0,
+     "wall_ms": 148.0
     }
    ]
   },
@@ -2889,9 +3049,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0053",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d3_deptypes.metta",
+     "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
-     "wall_ms": 18.3
+     "bytes_pushed": 0,
+     "wall_ms": 20.8
     },
     {
      "status": "OK",
@@ -2903,9 +3064,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0053",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d3_deptypes.metta",
+     "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
-     "wall_ms": 19.7
+     "bytes_pushed": 0,
+     "wall_ms": 21.2
     },
     {
      "status": "OK",
@@ -2917,9 +3079,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0053",
-     "program": "corpus/python__tests__scripts__d3_deptypes.metta",
+     "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
-     "wall_ms": 70.1
+     "bytes_pushed": 0,
+     "wall_ms": 89.1
     }
    ]
   },
@@ -2943,9 +3106,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0054",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d4_type_prop.metta",
+     "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
-     "wall_ms": 30.3
+     "bytes_pushed": 0,
+     "wall_ms": 32.0
     },
     {
      "status": "OK",
@@ -2957,9 +3121,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0054",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d4_type_prop.metta",
+     "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
-     "wall_ms": 30.4
+     "bytes_pushed": 0,
+     "wall_ms": 33.0
     },
     {
      "status": "OK",
@@ -2971,9 +3136,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0054",
-     "program": "corpus/python__tests__scripts__d4_type_prop.metta",
+     "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
-     "wall_ms": 90.9
+     "bytes_pushed": 0,
+     "wall_ms": 113.1
     }
    ]
   },
@@ -2997,9 +3163,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0055",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d5_auto_types.metta",
+     "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
-     "wall_ms": 15.1
+     "bytes_pushed": 0,
+     "wall_ms": 15.9
     },
     {
      "status": "OK",
@@ -3011,9 +3178,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0055",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__d5_auto_types.metta",
+     "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
-     "wall_ms": 14.5
+     "bytes_pushed": 0,
+     "wall_ms": 15.2
     },
     {
      "status": "OK",
@@ -3025,9 +3193,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0055",
-     "program": "corpus/python__tests__scripts__d5_auto_types.metta",
+     "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
-     "wall_ms": 60.5
+     "bytes_pushed": 0,
+     "wall_ms": 82.2
     }
    ]
   },
@@ -3051,9 +3220,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0056",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__e1_kb_write.metta",
+     "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
-     "wall_ms": 12.0
+     "bytes_pushed": 0,
+     "wall_ms": 13.2
     },
     {
      "status": "OK",
@@ -3065,9 +3235,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0056",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__e1_kb_write.metta",
+     "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
-     "wall_ms": 11.7
+     "bytes_pushed": 0,
+     "wall_ms": 13.5
     },
     {
      "status": "OK",
@@ -3079,9 +3250,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0056",
-     "program": "corpus/python__tests__scripts__e1_kb_write.metta",
+     "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
-     "wall_ms": 57.9
+     "bytes_pushed": 0,
+     "wall_ms": 74.4
     }
    ]
   },
@@ -3105,9 +3277,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0057",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__e2_states.metta",
+     "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
-     "wall_ms": 31.0
+     "bytes_pushed": 0,
+     "wall_ms": 32.8
     },
     {
      "status": "OK",
@@ -3119,9 +3292,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0057",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__e2_states.metta",
+     "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
-     "wall_ms": 30.0
+     "bytes_pushed": 0,
+     "wall_ms": 32.7
     },
     {
      "status": "OK",
@@ -3133,9 +3307,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0057",
-     "program": "corpus/python__tests__scripts__e2_states.metta",
+     "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
-     "wall_ms": 92.3
+     "bytes_pushed": 0,
+     "wall_ms": 116.1
     }
    ]
   },
@@ -3159,9 +3334,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0058",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__e3_match_states.metta",
+     "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
-     "wall_ms": 18.4
+     "bytes_pushed": 0,
+     "wall_ms": 19.6
     },
     {
      "status": "OK",
@@ -3173,9 +3349,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0058",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__e3_match_states.metta",
+     "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
-     "wall_ms": 17.5
+     "bytes_pushed": 0,
+     "wall_ms": 19.9
     },
     {
      "status": "OK",
@@ -3187,9 +3364,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0058",
-     "program": "corpus/python__tests__scripts__e3_match_states.metta",
+     "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
-     "wall_ms": 67.9
+     "bytes_pushed": 0,
+     "wall_ms": 86.5
     }
    ]
   },
@@ -3213,9 +3391,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0059",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_imports.metta",
+     "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
-     "wall_ms": 10.5
+     "bytes_pushed": 0,
+     "wall_ms": 12.2
     },
     {
      "status": "OK",
@@ -3227,9 +3406,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0059",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_imports.metta",
+     "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
-     "wall_ms": 10.1
+     "bytes_pushed": 0,
+     "wall_ms": 11.8
     },
     {
      "status": "OK",
@@ -3241,9 +3421,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0059",
-     "program": "corpus/python__tests__scripts__f1_imports.metta",
+     "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
-     "wall_ms": 54.3
+     "bytes_pushed": 0,
+     "wall_ms": 73.2
     }
    ]
   },
@@ -3267,9 +3448,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0060",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_moduleA.metta",
+     "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
-     "wall_ms": 9.3
+     "bytes_pushed": 0,
+     "wall_ms": 10.9
     },
     {
      "status": "OK",
@@ -3281,9 +3463,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0060",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_moduleA.metta",
+     "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
-     "wall_ms": 8.0
+     "bytes_pushed": 0,
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -3295,9 +3478,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0060",
-     "program": "corpus/python__tests__scripts__f1_moduleA.metta",
+     "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
-     "wall_ms": 45.9
+     "bytes_pushed": 0,
+     "wall_ms": 66.1
     }
    ]
   },
@@ -3321,9 +3505,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0061",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_moduleB.metta",
+     "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
-     "wall_ms": 8.8
+     "bytes_pushed": 0,
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -3335,9 +3520,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0061",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_moduleB.metta",
+     "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
-     "wall_ms": 8.0
+     "bytes_pushed": 0,
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -3349,9 +3535,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0061",
-     "program": "corpus/python__tests__scripts__f1_moduleB.metta",
+     "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
-     "wall_ms": 47.3
+     "bytes_pushed": 0,
+     "wall_ms": 66.3
     }
    ]
   },
@@ -3375,9 +3562,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0062",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_moduleC.metta",
+     "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
-     "wall_ms": 8.6
+     "bytes_pushed": 0,
+     "wall_ms": 10.7
     },
     {
      "status": "OK",
@@ -3389,9 +3577,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0062",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__f1_moduleC.metta",
+     "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
-     "wall_ms": 7.9
+     "bytes_pushed": 0,
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -3403,9 +3592,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0062",
-     "program": "corpus/python__tests__scripts__f1_moduleC.metta",
+     "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
-     "wall_ms": 49.3
+     "bytes_pushed": 0,
+     "wall_ms": 63.8
     }
    ]
   },
@@ -3429,9 +3619,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0063",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__g1_docs.metta",
+     "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
-     "wall_ms": 11.2
+     "bytes_pushed": 0,
+     "wall_ms": 12.0
     },
     {
      "status": "OK",
@@ -3443,9 +3634,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0063",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__scripts__g1_docs.metta",
+     "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
-     "wall_ms": 10.5
+     "bytes_pushed": 0,
+     "wall_ms": 12.7
     },
     {
      "status": "OK",
@@ -3457,9 +3649,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0063",
-     "program": "corpus/python__tests__scripts__g1_docs.metta",
+     "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
-     "wall_ms": 54.1
+     "bytes_pushed": 0,
+     "wall_ms": 72.8
     }
    ]
   },
@@ -3483,9 +3676,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0064",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__test_include.metta",
+     "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 9.6
     },
     {
      "status": "OK",
@@ -3497,9 +3691,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0064",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__test_include.metta",
+     "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
-     "wall_ms": 8.5
+     "bytes_pushed": 0,
+     "wall_ms": 10.0
     },
     {
      "status": "OK",
@@ -3511,9 +3706,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0064",
-     "program": "corpus/python__tests__test_include.metta",
+     "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
-     "wall_ms": 45.4
+     "bytes_pushed": 0,
+     "wall_ms": 67.1
     }
    ]
   },
@@ -3537,9 +3733,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0065",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__test_load.metta",
+     "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
-     "wall_ms": 8.3
+     "bytes_pushed": 0,
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -3551,9 +3748,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0065",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/python__tests__test_load.metta",
+     "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
-     "wall_ms": 7.8
+     "bytes_pushed": 0,
+     "wall_ms": 10.7
     },
     {
      "status": "OK",
@@ -3565,9 +3763,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0065",
-     "program": "corpus/python__tests__test_load.metta",
+     "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
-     "wall_ms": 49.1
+     "bytes_pushed": 0,
+     "wall_ms": 66.6
     }
    ]
   },
@@ -3591,9 +3790,10 @@
      "os": "macos",
      "worker": "host-a",
      "job_id": "j0066",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/repl__src__repl.default.metta",
+     "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
-     "wall_ms": 8.4
+     "bytes_pushed": 0,
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -3605,9 +3805,10 @@
      "os": "macos",
      "worker": "host-b",
      "job_id": "j0066",
-     "program": "/Users/victorianikolenko/kingfisher/spikes/M1_8_quorum3/../S57_hyperon_corpus/corpus/repl__src__repl.default.metta",
+     "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
-     "wall_ms": 8.2
+     "bytes_pushed": 0,
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -3619,9 +3820,10 @@
      "os": "android",
      "worker": "phone",
      "job_id": "j0066",
-     "program": "corpus/repl__src__repl.default.metta",
+     "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
-     "wall_ms": 48.2
+     "bytes_pushed": 0,
+     "wall_ms": 65.5
     }
    ]
   }

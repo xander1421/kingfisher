@@ -9,6 +9,9 @@ agreement.
 """
 import argparse, json, os, shutil, subprocess, sys, time
 from collections import Counter
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                '..', 'M1_5_shardstore'))
+from shardstore import ShardStore
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin')
@@ -29,15 +32,15 @@ def adjudicate(envs):
         return ('UNANIMOUS' if n == len(ks) else 'MAJORITY'), k, n
     return 'NO_QUORUM', None, n
 
-def stage_device(prog_dir, android_bin):
+def stage_device(android_bin):
     subprocess.run(['adb', 'shell', f'mkdir -p {DEVDIR}/corpus'], check=True)
     subprocess.run(['adb', 'push', android_bin, DEVDIR + '/'],
                    check=True, capture_output=True)
     subprocess.run(['adb', 'shell',
                     f'chmod +x {DEVDIR}/{os.path.basename(android_bin)}'],
                    check=True)
-    subprocess.run(['adb', 'push', prog_dir, DEVDIR + '/'],
-                   check=True, capture_output=True)
+    # NOTE: the corpus is deliberately NOT pushed. M1.5 means the device
+    # fetches each shard by CID on a cache miss and never sees the rest.
 
 def main():
     ap = argparse.ArgumentParser()
@@ -47,6 +50,9 @@ def main():
     ap.add_argument('--limit', type=int, default=0, help='0 = whole corpus')
     ap.add_argument('--work', default=os.path.join(HERE, 'run'))
     ap.add_argument('--no-device', action='store_true')
+    ap.add_argument('--store', default=os.path.join(HERE, 'run', 'store'))
+    ap.add_argument('--cap-mb', type=int, default=64)
+    ap.add_argument('--keep-device-cache', action='store_true')
     a = ap.parse_args()
 
     progs = sorted(f for f in os.listdir(a.corpus) if f.endswith('.metta'))
@@ -61,7 +67,7 @@ def main():
         if g.returncode != 0:
             print('device gate REFUSED:', gate); sys.exit(2)
         print('gate:', gate)
-        stage_device(a.corpus, os.path.join(BIN, 'fuelrun.v2.android'))
+        stage_device(os.path.join(BIN, 'fuelrun.v2.android'))
 
     workers = [
         ('host-a', os.path.join(BIN, 'fuelrun.v2.host'), 'local'),
@@ -73,6 +79,20 @@ def main():
         workers.append(('host-c', os.path.join(BIN, 'fuelrun.v2.host'), 'local'))
 
     shutil.rmtree(a.work, ignore_errors=True)
+    if not a.no_device and not a.keep_device_cache:
+        subprocess.run(['adb', 'shell', f'rm -rf {DEVDIR}/shards'],
+                       capture_output=True)   # cold cache unless asked otherwise
+
+    # M1.5: ingest the corpus into the content-addressed store first. The job
+    # carries a CID; nothing downstream ever names a path.
+    store = ShardStore(a.store, cap_bytes=a.cap_mb << 20)
+    cids = []
+    for p in progs:
+        cids.append(store.put(open(os.path.join(a.corpus, p), 'rb').read()))
+    uniq = len(set(cids))
+    print(f'store: {len(progs)} programs -> {uniq} distinct CIDs, '
+          f'{store.total_bytes()/1024:.1f} KiB, cap {a.cap_mb} MiB')
+
     procs = []
     for wid, binary, via in workers:
         inbox  = os.path.join(a.work, wid, 'in')
@@ -81,15 +101,14 @@ def main():
         procs.append(subprocess.Popen(
             [sys.executable, os.path.join(HERE, 'worker.py'),
              '--id', wid, '--inbox', inbox, '--outbox', outbox,
-             '--bin', binary, '--via', via, '--devdir', DEVDIR]))
+             '--bin', binary, '--via', via, '--devdir', DEVDIR,
+             '--store', a.store]))
 
     # dispatch: same (program, fuel) to all three. Paths differ per transport.
     for i, p in enumerate(progs):
         jid = f'j{i:04d}'
         for wid, _, via in workers:
-            prog = (f'corpus/{p}' if via == 'adb'
-                    else os.path.join(a.corpus, p))
-            job = {'job_id': jid, 'program': prog, 'fuel': a.fuel, 'name': p}
+            job = {'job_id': jid, 'shard_cid': cids[i], 'fuel': a.fuel, 'name': p}
             d = os.path.join(a.work, wid, 'in')
             tmp = os.path.join(d, jid + '.tmp')
             with open(tmp, 'w') as f: json.dump(job, f)
@@ -120,7 +139,12 @@ def main():
     accepted = tally['UNANIMOUS'] + tally['MAJORITY']
     print(f'accepted {accepted}/{len(rows)}')
 
-    json.dump({'gate': gate, 'fuel': a.fuel,
+    pushed = sum(e.get('bytes_pushed', 0) for _, _, _, _, es in rows
+                 for e in es if e)
+    print(f'device cache: {pushed/1024:.1f} KiB crossed the wire '
+          f'({uniq} distinct shards)')
+
+    json.dump({'gate': gate, 'fuel': a.fuel, 'bytes_pushed': pushed,
                'workers': [w[0] for w in workers],
                'tally': dict(tally),
                'rows': [{'program': p, 'verdict': v, 'agree': n,
