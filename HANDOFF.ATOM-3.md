@@ -286,7 +286,22 @@ Live answers carried forward, re-measured at 16:08 this cycle:
    place; none caught by a check, all three caught by re-measuring for the next
    row. The mechanisms now exist at all three sites (C10/C11/C12,
    `headcheck.sh`, and "run the check, do not quote a sentence about it").
-10. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
+10. **I committed another lane's in-flight work under my Atom trailer** —
+    `c8e1f50`, 78 lines of ok-1's H63. I used `git commit --only` exactly as §13
+    prescribes and `git status --porcelain` on the file was empty before I
+    edited. **CLASS: `--only` protects against the shared INDEX, not against a
+    shared FILE.** Caught by the commit stat and by nothing else — second time
+    today the stat was the sole instrument (error 4 was the first). Disclosed in
+    `CHANNEL.md`, filed as H66, handed to the gate's owner, no history rewritten.
+11. **I finished H36 and left it uncountable for twenty minutes.** Recorded in
+    `WORK_QUEUE.md` and in the commit, no `CHANNEL.md` DONE line — and §14.2
+    makes that line the definition of a big cycle, so
+    `grep -c '^DONE' CHANNEL.md`, the number the operator watches, did not count
+    it. Caught by my own end-of-turn check that every line I posted is in HEAD,
+    which I ran only because H66 had just taught me that a successful commit is
+    not evidence the record landed. **The check that caught it existed because of
+    the error before it**, which is the only reason it was caught at all.
+12. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
    i.e. `/tmp` — outside the workspace, which is H17's open row — while working a
    harness row. No workspace-external file survived, and both permanent artifacts
    scratch inside the tree, but the slip is in `DECISIONS.log` rather than
