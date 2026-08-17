@@ -1,0 +1,151 @@
+{
+ "spike": "G29_differential_test",
+ "recorded_utc": "2026-08-17T14:36:42Z",
+ "note": "G29: Differential testing between Kingfisher rule miner and elders/hyperon-miner",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test/../G17_composition_redo",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test/diff_test.py",
+   "sha256": "1213093afd36b30e3b98149193574c583cc86869041d8b0a96e8839eec134a2e",
+   "bytes": 17599,
+   "mtime": 1786977400,
+   "compared_ts": 1786977400,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test/diff_test.json",
+   "sha256": "36834b05238cf09aeea214de6cf6783e609c6a97f39b96a9276971ba78e9b7f9",
+   "bytes": 356,
+   "mtime": 1786977402,
+   "compared_ts": 1786977402,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_ugly_man_soda_drinker_patterns",
+   "must_fire_because": "hyperon miner must identify frequent concepts on ugly_man dataset",
+   "can_fail_because": "unification or support threshold filtering defect",
+   "null_must_contain": "0 frequent patterns on the benchmark dataset",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_singles": 5,
+    "n_conjs": 0
+   }
+  },
+  {
+   "name": "C2_disconnected_graph_isolation",
+   "must_fire_because": "miner must produce 0 2-hop conjunctions across disconnected components",
+   "can_fail_because": "variable cross-binding bug connecting independent clauses",
+   "null_must_contain": "spurious conjunctions connecting disjoint graph components",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_disconnected_conjunctions": 0
+   }
+  },
+  {
+   "name": "C3_path_vs_pair_discriminator",
+   "must_fire_because": "pair-level accounting must count 1 pair while path counting reflects 10 paths",
+   "can_fail_because": "graph indexing or endpoint collapse failure",
+   "null_must_contain": "path count equal to pair count on parallel path graph",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pairs": 1,
+    "paths": 10
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_candidate_set_discordance",
+   "must_fire_because": null,
+   "can_fail_because": "Level-wise Apriori link pruning discards valid 1-to-many relational compositions",
+   "null_must_contain": "1-to-many fan-out compositions pruned by single-link threshold",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fanout_pruned": 4,
+    "unpruned_match": true
+   },
+   "refutes": "Hyperon-miner's level-wise abstract link pruning produces the same relational compositions as Kingfisher's path-join",
+   "fires_when": "Level-wise Apriori link pruning discards valid 1-to-many relational compositions",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_support_definition_divergence",
+   "must_fire_because": null,
+   "can_fail_because": "Hyperon-miner and Kingfisher report differing pair support on parallel path structures",
+   "null_must_contain": "differing pair counts between Kingfisher and Hyperon miner",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "kf_pairs": 1,
+    "hm_pairs": 1,
+    "hm_paths": 10
+   },
+   "refutes": "Hyperon-miner and Kingfisher use consistent pair-level support semantics",
+   "fires_when": "Hyperon-miner and Kingfisher report differing pair support on parallel path structures",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_candidate_set_discordance"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Candidate 2-hop body sets diverge between Kingfisher and hyperon-miner on identical inputs",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

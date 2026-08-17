@@ -1,0 +1,201 @@
+{
+ "spike": "G33_yardstick_audit",
+ "recorded_utc": "2026-08-17T15:06:03Z",
+ "note": "G33: ATTACK on this lane's own G29 and G30",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G30_external_yardstick/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G29_differential_test/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G33_yardstick_audit/audit.py",
+   "sha256": "790d2b51e28392126ab19d9c7fa2e51090a519c83424d27edcf7bebf60119e07",
+   "bytes": 22838,
+   "mtime": 1786979162,
+   "compared_ts": 1786979162,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G33_yardstick_audit/audit.json",
+   "sha256": "0cd332448885a72fe5d72d805472916ec6a921168b17431e903c45d6d07bb56b",
+   "bytes": 2980,
+   "mtime": 1786979163,
+   "compared_ts": 1786979163,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_random_arms_do_vary",
+   "must_fire_because": "the by-construction charge needs a design in which top-12 CAN vary",
+   "can_fail_because": "if random arms also matched, invariance would be an artefact of the fixture, not of ranked subsetting",
+   "null_must_contain": "random subsets of the same sizes reproducing the full set's top-12 mean exactly",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "random_identical": 0,
+    "ranked_identical": 200,
+    "trials": 200
+   }
+  },
+  {
+   "name": "C2_scanner_detects_execution",
+   "must_fire_because": "an absence-of-execution probe is worthless unless it can see execution",
+   "can_fail_because": "an AST walk that misses ast.Import would report every file as non-executing, including one that shells out",
+   "null_must_contain": "a fixture that imports and calls subprocess going undetected",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "fixture_detected": true
+   }
+  },
+  {
+   "name": "C3_citation_search_finds_a_known_citation",
+   "must_fire_because": "an empty citation search must be distinguishable from a broken one",
+   "can_fail_because": "a wrong corpus root or an extension filter would return zero for every surname regardless of truth",
+   "null_must_contain": "the one excerpt this workspace does store going unfound by the same walk",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "corpus_files_searched": 2
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_f2_expression_matches_its_reported_condition",
+   "must_fire_because": null,
+   "can_fail_because": "the comparison RESULT.md reports is absent from the f2_fires expression; it would be present if f2_fires compared the G17 arms among themselves",
+   "null_must_contain": "an expression referencing the four G17 arms' top-12 spread",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "made_true_by": "slot1 only",
+    "slot1_top12_arm": "G17_top500",
+    "slot1_mrr_arm": "Null_degree",
+    "n_arms_tied": 5
+   },
+   "refutes": "WITHDRAW the F2 finding if yardstick.py's f2_fires tests what RESULT.md says it tests",
+   "fires_when": "the comparison RESULT.md reports is absent from the f2_fires expression; it would be present if f2_fires compared the G17 arms among themselves",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_no_elder_code_executes",
+   "must_fire_because": null,
+   "can_fail_because": "no execution import and no execution call appears in the AST; a single subprocess call to a metta binary would make the differential test a real one",
+   "null_must_contain": "a subprocess/metta/hyperon invocation in the AST",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "imports": [],
+    "calls": [],
+    "metta_on_path": false,
+    "hyperon_importable": false
+   },
+   "refutes": "WITHDRAW the G29 finding if any elder code executes in diff_test.py",
+   "fires_when": "no execution import and no execution call appears in the AST; a single subprocess call to a metta binary would make the differential test a real one",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F4_literature_numbers_are_unsourced",
+   "must_fire_because": null,
+   "can_fail_because": "no surname attributed in G30's table resolves to any excerpt stored under corpus/; one stored excerpt would resolve that row",
+   "null_must_contain": "a surname from G30's table found in corpus/",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "attributed": [
+     "Bordes",
+     "Gal\u00e1rraga",
+     "Meilicke",
+     "Sun",
+     "Trouillon"
+    ],
+    "resolved": []
+   },
+   "refutes": "WITHDRAW the citation finding for any row resolving to a stored excerpt",
+   "fires_when": "no surname attributed in G30's table resolves to any excerpt stored under corpus/; one stored excerpt would resolve that row",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_f2_expression_matches_its_reported_condition",
+  "F3_no_elder_code_executes",
+  "F4_literature_numbers_are_unsourced"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick": {
+   "newest": 1786977345,
+   "from": "spikes/G30_external_yardstick/"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G29_differential_test": {
+   "newest": 1786977410,
+   "from": "spikes/G29_differential_test/"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "G30's f2_fires tests the comparison its RESULT.md reports; or the G17 arms can differ on top-12 by construction; or elder code executes in diff_test.py; or any external row resolves to a stored citation",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

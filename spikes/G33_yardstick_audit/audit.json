@@ -1,0 +1,98 @@
+{
+  "P1_f2_expression": {
+    "arms_tied_at_top_of_top12": [
+      "G17_all",
+      "G17_top500",
+      "G17_top100",
+      "G17_conf>=0.20",
+      "G17_conf>=0.40"
+    ],
+    "disjunct_slot0_differs": false,
+    "disjunct_slot1_differs": true,
+    "f2_expression_names": [
+      "mrr_rank_order",
+      "top12_rank_order"
+    ],
+    "f2_expression_source": "top12_rank_order[0] != mrr_rank_order[0] or top12_rank_order[1] != mrr_rank_order[1]",
+    "f2_fires": true,
+    "made_true_by": "slot1 only",
+    "mrr_order": [
+      "G17_all",
+      "Null_degree",
+      "G17_top500",
+      "G17_conf>=0.20",
+      "G17_conf>=0.40",
+      "G17_top100",
+      "Empty_baseline"
+    ],
+    "n_models": 7,
+    "n_tied": 5,
+    "null_rank_by_mrr": 2,
+    "null_rank_by_top12": 6,
+    "real_arms_ranked_below_the_null_on_mrr": [
+      "G17_top500",
+      "G17_top100",
+      "G17_conf>=0.20",
+      "G17_conf>=0.40"
+    ],
+    "reported_condition_appears_in_expression": false,
+    "reported_condition_g17_mrr_span": 3.5026,
+    "reported_condition_g17_top12_values": {
+      "G17_all": 0.6351807753261106,
+      "G17_conf>=0.20": 0.6351807753261106,
+      "G17_conf>=0.40": 0.6351807753261106,
+      "G17_top100": 0.6351807753261106,
+      "G17_top500": 0.6351807753261106
+    },
+    "slot1_follows_source_order": true,
+    "slot1_mrr_arm": "Null_degree",
+    "slot1_top12_arm": "G17_top500",
+    "slot1_under_reversed_arm_order": "G17_conf>=0.20",
+    "tie_broken_by": "dict literal insertion order (yardstick.py:305-313)",
+    "top12_order": [
+      "G17_all",
+      "G17_top500",
+      "G17_top100",
+      "G17_conf>=0.20",
+      "G17_conf>=0.40",
+      "Null_degree",
+      "Empty_baseline"
+    ]
+  },
+  "P2_by_construction": {
+    "control_passes": true,
+    "random_subsets_identical_top12": 0,
+    "ranked_subsets_identical_top12": 200,
+    "seed": 4242,
+    "trials": 200,
+    "verdict": "top-12 is INVARIANT across confidence-ranked arms by construction; the control shows random arms of the same sizes are not"
+  },
+  "P3_g29_execution": {
+    "control_scanner_detects_execution_in_fixture": true,
+    "elder_paths_opened_for_DATA": [
+      "ugly_man_sodaDrinker.metta"
+    ],
+    "elder_side_is_a_class_in_this_same_file": [
+      "HyperonMinerReference"
+    ],
+    "execution_calls_found": [],
+    "execution_imports_found": [],
+    "hyperon_module_importable": false,
+    "metta_binary_on_path": false,
+    "verdict": "no elder code executes; the elder side is an in-process Python model authored in the same file"
+  },
+  "P4_citations": {
+    "control_finds_the_one_known_stored_citation": true,
+    "corpus_files_searched": 2,
+    "n_unresolved": 5,
+    "surnames_attributed_in_g30_table": [
+      "Bordes",
+      "Gal\u00e1rraga",
+      "Meilicke",
+      "Sun",
+      "Trouillon"
+    ],
+    "surnames_resolving_to_stored_excerpts": [],
+    "verdict": "every external number in G30 \u00a73 is unsourced recall; the control confirms the search can find a stored citation"
+  }
+}

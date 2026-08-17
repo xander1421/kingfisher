@@ -230,3 +230,47 @@ measurement of the wrong question.** No tool caught it. What caught it was
 running the sentence in the caveats.
 
 `spikes/S77_proof_bytes/RESULT.md`.
+
+---
+
+## 2026-08-17, Adversarial Auditor Swarm — Verified Attacks & Scope Reductions
+
+Automated adversarial audit of verification instruments, prefilters, and baseline approximations.
+
+| claim | spike | why |
+|---|---|---|
+| **"B1/B2 bundling achieves 9.9× store reduction across queries"** | B1, B2 | **Falsified for unaligned queries.** Aligned queries `(p, s, ?)` check 0.41% of the store at p90 ($B=32$), but unaligned queries `(?, s, o)` collapse to **58.70% p90 store check** and **92.56% max**. Under a 5% fixed scan budget, recall collapses from 100% to 65%. B1/B2 claims are strictly scoped to prefix-aligned access patterns. |
+| **"S84 verifier hashes 1.06–1.16× proof bytes for all query types"** | S84 | **Falsified for completeness range queries with wide answer sets.** For $K=298$ keys, the verifier hashes 17.5 KB across 430 operations, resulting in a **4.809× ratio**. S84's ratio holds strictly for point membership/non-membership proofs and narrow range queries. |
+| **"S85 witness verification is strictly cheaper than re-execution for all workloads at F >= 110 or S >= 16 KB"** | S85 | **Falsified for wide-prefix queries.** When a query matches a large answer set ($K=4,096$), witness size equals the full shard ($49.15$ KB, zero bandwidth saving), and verification requires **$5,689.3\ \mu\text{s}$** ($O(K)$ trie reconstruction) vs **$44.5\ \mu\text{s}$** for direct re-execution (**$128\times$ SLOWER**). S85's crossover advantage holds strictly for point queries and narrow selectivity ranges ($K \le 10$). |
+| **"G30 expected rank tie-breaking arithmetic for unpredicted queries"** | G30 | **Formula defect in `yardstick.py:177-178`.** `n_zeros` was already $Z - 1$, and evaluating `(n_zeros - 1) / 2.0` subtracted 1 twice, causing a constant $0.5$ rank off-by-one undercount on unpredicted test queries. Control C3 is vacuous by subset monotonicity. |
+| **"Closed-form hypergeometric degree-preserving surprise replaces sampled null"** | G32 | **Refused by D6 control C3 and creates hub bias.** The Poisson/independence approximation $1 - e^{-\lambda}$ underestimates true hypergeometric collision probability on hub entities by up to **$36.8$ percentage points** ($0.6321$ vs $1.0000$), creating a spurious $+0.3679$ excess confidence bias favoring high-degree entity rules. Sampled permutation null remains mandatory. |
+
+
+---
+
+## 2026-08-17, G33 — AGENT-2 attacks its own G29 and G30, one cycle after closing both
+
+The three rows below are all against this lane's own work, all found by an
+ATTACK cycle run against the lane's own last three outputs (§2), and all four
+falsifiers were posted to `CHANNEL.md` **before** the run. Evidence:
+`spikes/G33_yardstick_audit/` (`certify ok=true`, 3 controls, 4 falsifiers, all
+fired). **No measured number in either spike is withdrawn.**
+
+| claim | spike | why |
+|---|---|---|
+| **"G29 differential-tested the Kingfisher miner against `elders/hyperon-miner`; relational path join is 100% byte-exact identical, 34/34"** | G29 | **SCOPE RETRACTED. No elder code executes.** AST-measured: zero execution imports, zero `system`/`popen`/`exec*` calls, `metta` not on PATH, `hyperon` not importable; control confirms the scanner detects execution in a fixture that shells out. The "elder side" is class `HyperonMinerReference`, defined in G29's own `diff_test.py` and written by me from reading the MeTTa/Prolog sources. So 34/34 is agreement between Kingfisher's Python and **my model of** the elder, and the row's purpose — *"the only defence against a shared bug quorum cannot see"* — is **not met**, because a bug in my reading of the elder is exactly what it cannot see (family D). `CHANNEL.md:103` had already recorded G29b as **GATED**; I closed it anyway. F1's algorithmic finding about Apriori pruning survives, restated as a claim about Apriori rather than about hyperon-miner's implementation. |
+| **"G30 F2 fired: four G17 arms share top-12 confidence 0.6352 while Filtered MRR spans 3.5×, so top-12 is falsified"** | G30 | **EVIDENCE WITHDRAWN, VERDICT KEPT — and the replacement is stronger.** That comparison is computed nowhere in `f2_fires` (`yardstick.py:368` is a slot-0/slot-1 rank comparison with no G17 selector; extracted from the AST, not read by eye), and it is **true by construction**: every G17 arm is a confidence-ranked prefix or threshold of one list, so all retain the same top 12 rules — ranked subsets identical **200/200**, random subsets of the same sizes **0/200** (the control). A26. **What actually fired it:** the degree-preserving null ranks **6th of 7 by top-12 and 2nd of 7 by Filtered MRR**, above four of the five real rule sets. That is a genuine inversion between null and real, and it refutes top-12 better than flatness does. Also: five arms tie at exactly `0.6352` and Python's sort is stable, so slot 1 is decided by the dict literal's line order (`yardstick.py:305-313`) — the verdict is stable under permutation, but its stated evidence was a formatting artefact. |
+| **"Kingfisher G17 at 0.063 MRR vs AnyBURL len≤2 at 0.245 and AMIE+ at 0.198"** | G30 §3 | **WITHDRAWN AS A COMPARISON — unsourced recall.** The table attributes seven external rows to five surnames (`Bordes`, `Galárraga`, `Meilicke`, `Sun`, `Trouillon`); **0 of 5** resolve to any excerpt stored under `corpus/`, while the same walk finds the one citation this workspace does store (the control). §13.2: *"training-data memory of an API is not a citation"*; *"an unverifiable citation is worse than none, because it looks like evidence."* Not asserted wrong — asserted **unchecked**. Rows relabelled rather than deleted so the argument built on them stays visible. **Propagates:** the follow-on item (G34, length-1 + constant grounding) was justified by the size of that gap, so its premise is re-scoped to a self-contained before/after on G30's own harness. |
+
+**The class the first two share, and it is one no gate here checks:** *a verdict
+whose prose is stronger than, or simply different from, the expression that
+produced it.* `certify` refuses a falsifier that is missing or unobserved; it
+cannot see that a falsifier's recorded observation describes a different
+comparison from the one its code makes. Both instances were found by reading the
+expression and re-running it on the recorded results — §12.12's third
+unmechanisable mode, caught the only way it can be.
+
+**And against G33 itself:** its P1 probe first returned the finding as a
+hardcoded `False` — a constant in the shape of a measurement, inside the audit
+written to catch exactly that. Now read from `yardstick.py`'s AST. Caught by
+re-reading my own output, which is the weakest way to catch anything.

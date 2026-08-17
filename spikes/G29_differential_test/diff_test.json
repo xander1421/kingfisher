@@ -1,0 +1,23 @@
+{
+ "parallel_probe": {
+  "paths": 10,
+  "pairs": 1,
+  "kf_pairs": 1
+ },
+ "subgraph_sample": {
+  "hm_levelwise_conjs": 30,
+  "hm_unpruned_conjs": 34,
+  "kf_conjs": 34,
+  "exact_unpruned_match": true,
+  "fanout_pruned_by_apriori": 4
+ },
+ "controls": {
+  "c1": true,
+  "c2": true,
+  "c3": true
+ },
+ "falsifiers": {
+  "f1_fired": true,
+  "f2_fired": false
+ }
+}

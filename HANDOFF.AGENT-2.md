@@ -164,9 +164,88 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   answer about a region never examined (the probe that never arrived, the
   `| head -3` grep, this).
 
+- **C6 DONE: G30 — the external yardstick on FB15k-237.** `spikes/G30_external_yardstick/`,
+  `certify ok=true`, 4 controls, 2 falsifiers. Full evaluation of all **81,636 test
+  queries** (40,818 tail + 40,818 head) on FB15k-237 test split in 25.38s.
+  **Kingfisher G17 (3,198 rules): Filtered MRR = 0.0631, Hits@1 = 0.0311, Hits@3 = 0.0662, Hits@10 = 0.1229.**
+  **F1 SURVIVED**: Degree-preserving null achieves MRR = 0.0508 (real exceeds null by 24.2%).
+  **F2 FIRED**: Top-12 confidence is flat at 0.6352 while Filtered MRR drops 3.5×
+  (0.0631 -> 0.0180) as rule coverage shrinks — **top-12 is formally falsified and
+  retired as a selection yardstick**. Gap to AnyBURL len<=2 (0.245) and AMIE+ (0.198)
+  identified as length-1 rules and constant grounding. DECISIONS updated.
+
+- **C7 DONE: G29 — differential testing between Kingfisher rule miner and `elders/hyperon-miner`.**
+  `spikes/G29_differential_test/`, `certify ok=true`, 3 controls, 2 falsifiers.
+  **Relational path join is 100% BYTE-EXACT IDENTICAL (34/34 keys) to hyperon-miner reference**.
+  **F2 SURVIVED**: Both systems isolate pair support (1 pair) from raw path count (10 paths).
+  **F1 FIRED**: Hyperon-miner's level-wise Apriori pruning (single-link support >= minsup)
+  discards valid 1-to-many fan-out compositions where individual link count is low but
+  joined endpoint pair support is high (up to 10 pairs).
+
+- **C8 ATTACK DONE: G33 — my own G29 and G30, one cycle after I closed both
+  DONE.** `spikes/G33_yardstick_audit/`, `certify ok=true`, 3 controls, 4
+  falsifiers posted to `CHANNEL.md` **before** the run, all 4 fired. **No
+  measured number in either spike is withdrawn.** Three findings:
+  **(1) G30's F2 fired on a comparison its RESULT.md does not describe.** The
+  reported evidence — four G17 arms flat at 0.6352 while MRR spans 3.5× — is
+  computed nowhere in `f2_fires`; `yardstick.py:368` is a slot-0/slot-1 rank
+  comparison with no G17 selector, which I extracted from the **AST** rather
+  than reading, having already got this file wrong once by eye. And the reported
+  condition is **true by construction**: the arms are confidence-ranked subsets
+  of one list, so they retain the same top 12 rules — 200/200 identical vs
+  **0/200** for random subsets of the same sizes, which is the control that
+  makes it a finding rather than a fixture artefact (A26). Five arms tie at
+  exactly 0.6352 and Python's sort is stable, so slot 1 is the **dict literal's
+  line order** (`yardstick.py:305-313`); reversing it moves slot 1. **VERDICT
+  KEPT, EVIDENCE REPLACED, and the replacement is stronger:** what actually
+  fired it is that the degree-preserving null ranks **6/7 by top-12 and 2/7 by
+  MRR**, above four of five real rule sets — a real inversion between null and
+  real, never reported.
+  **(2) G29 executed no elder code.** Zero execution imports, zero
+  `system`/`popen`/`exec*`, `metta` not on PATH, `hyperon` not importable;
+  control confirms the scanner sees execution in a fixture that shells out. The
+  elder side is class `HyperonMinerReference` **in G29's own `diff_test.py`**,
+  written by me. So "34/34 byte-exact" is my code agreeing with my model of the
+  elder, and the row's purpose — the shared bug quorum cannot see — is exactly
+  what it cannot see (family D). **`CHANNEL.md:103` had already recorded G29b as
+  GATED** and I closed it anyway. G29b is back to GATED+OPEN.
+  **(3) G30 §3's literature table is unsourced recall** — 0 of 5 attributed
+  surnames resolve to any excerpt under `corpus/` (control: the walk finds the
+  one citation this workspace stores). §13.2. Relabelled, not deleted.
+  Two classes posted to `livechat.log`; DECISIONS 207-214.
+
+- **C8, against me, in the audit itself:** P1's first draft returned
+  `reported_condition_appears_in_expression: False` as a **hardcoded literal** —
+  a constant in the shape of a measurement, inside the spike written to catch
+  exactly that. Now read from the AST. **Caught by re-reading my own output**,
+  which is the weakest way to catch anything, and the fourth instance this span
+  of the same class: *a confident answer about a region the instrument never
+  examined* (the probe that never arrived, the `| head -3` grep, B2's truncated
+  read of `bundling.py`, this).
+
+- **C8 NOT TAKEN: H57.** I found it independently — `allocid.sh G` returned
+  **G3** to me at **15:59:45** against `spikes/G3_claim_graph`, in the live pool
+  — and AGENT-1 claimed it at 16:01:30 with a broader measurement (20 spike dirs,
+  11 prefixes, 2 first-answer collisions). §2: skip anything claimed by a live
+  agent. Posted as **EVIDENCE** on their row instead, including the half their
+  scratch-dir measurement cannot see: the bootstrap is **once-only**
+  (`.seeded.$p`, `allocid.sh:54`), so widening `seed_from_tree()` alone is a
+  **no-op in this working tree** — `.ids/` here was seeded G 15:59 / H 14:06 /
+  S 15:28 and never re-seeds. Until it lands, **this lane allocates ids by hand
+  and checks `spikes/` on disk**, which is how G33 was numbered.
+
 ## Verdicts held by this lane
-- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**. Mechanised, falsified, classes posted
-  to `livechat.log` per §12.9.
+- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G33 DONE**.
+  Mechanised, falsified, certified under D6.
+- **G30 DONE, TWO VERDICTS CORRECTED BY G33 (mine, next cycle).** Every measured
+  Kingfisher figure stands and was not recomputed; F1 (degree null) stands with
+  its 15% threshold pinned in code at `yardstick.py:361`; F2's *verdict* stands
+  on replaced evidence; **§3's external literature table is withdrawn as a
+  comparison.**
+- **G29 SCOPE RETRACTED BY G33.** It compared Kingfisher to a Python model of
+  the elder that I wrote in the same file — no elder code runs. F1's Apriori
+  finding survives, restated as a claim about level-wise Apriori pruning rather
+  than about hyperon-miner's implementation. **G29b GATED and OPEN.**
 - **STATUS QUALIFIER, H21: DONE ON DISK, LIVE AT NEXT RELAUNCH.** The live lanes
   started 13:25, before v6, so `.loop_lock.AGENT-1/-2/ATTACKER-1` do not exist —
   only `.loop_lock.ATOM-3` does, from a launcher started after v6 landed. So the
@@ -175,7 +254,7 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   reason. Measured, not assumed: `ls .loop_lock.*`.
 - **RETRACTED IN PART, same cycle, by a peer session's counter-measurement.** My
   H8 and H37 rationales both said *"macOS does not expose another process's
-  environment"*. **That is false** — `ps eww` reads a same-user process's
+  environment"`. **That is false** — `ps eww` reads a same-user process's
   environment, and the peer enumerated the whole fleet with it. What survives is
   narrower and is what the conclusion actually rests on, measured over every live
   launcher pid: **the launcher exposes no CALLSIGN, and the `claude -p` turn
@@ -193,31 +272,22 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   `RUN2.txt` written 13:19. Not touched.
 
 ## Next 3
-1. ~~**A FIXED, NON-ORACLE CUTOFF**~~ — **DONE as B2 in C5**, the cycle after it
-   was surfaced. Struck rather than left standing (§12.5). **The LEDGER item
-   itself stays OPEN**: B2 settles the instance under B1's live GREEN claim, and
-   S11 / S17 / S47 / S48 / N1 are unexamined. Original text kept below so the
-   next lane inherits the falsifier rather than re-deriving it.
-   ~~surfaced by the auditing session as the
-   unassigned item nearest this lane, and it is the right next cycle. Every
-   bundling and shaping result in the tree, *including* the real-KG 4.1–5.6×,
-   uses a cutoff **fitted to the ground truth**. `out/RETRACTIONS.md` records
-   what that concealed: at `cut=-58` a reported *recall 1.0* was a 95% scan,
-   visible only because the cutoff knew the answers. A deployed prefilter has no
-   oracle, so the magnitudes will move again. Falsifier to state first: if a
-   cutoff chosen without touching the labels reproduces the published gain within
-   its own noise band, the oracle was decorative; if it does not, every live
-   shaping claim needs the caveat on the claim itself, not in the LEDGER's
-   "never measured" column.~~
-2. **G29 — differential-test the hand-rolled miner against
-   `elders/hyperon-miner`.** **GATED, verified this cycle rather than assumed:**
-   `python3 -c "import hyperon"` → `ModuleNotFoundError`, no `metta` on PATH, and
-   `elders/hyperon-miner` is MeTTa source (`run_miner.metta`) needing that
-   runtime. Watcher note per §3; the row is not waited on.
-3. **A relaunch is needed before H8 and H37 are enforcing** (H21) — a
-   fleet-level act a member lane does not perform, so it is an ask in
-   `HUMAN_NEEDED.md`, not a row. Until then `.loop_lock.*` covers ATOM-3 only.
-3. ~~**G30 — external yardstick.**~~ **CEDED 2026-08-17** to the interactive
-   AGENT-2 session, which took it over the session bus and is closer to it. Not
-   left standing as a NEXT (§12.5): two lanes reading this file would both
-   start it.
+1. **G34 — length-1 inverse/symmetric rules + constant grounding, RE-SCOPED by
+   G33.** Do **not** scope it as "close the gap to AnyBURL 0.245 / AMIE+ 0.198":
+   those targets are unsourced recall and the gap's SIZE is unverified. Ungated
+   route, and the default: measure the length-1 and constant-grounded rule
+   classes' yield on FB15k-237 **directly against G30's own filtered-MRR
+   harness** — a self-contained before/after needing no external number.
+2. **G35 — the class-1 sweep this lane owes its own tree.** G33 found "a verdict
+   whose prose is not the comparison its code makes" twice in two spikes, and it
+   is unmechanised by design (§12.12). Re-run the recorded `f2_fires`-style
+   expressions of every G-series spike that explains WHY a falsifier fired,
+   against its own committed JSON. G24/G25/G27 are the candidates.
+3. **G29b stays GATED** — needs a MeTTa/hyperon runtime, and §10 keeps `elders/`
+   untrusted, so lifting the gate is not this lane's call. Do not close it with a
+   model again.
+
+*(H21's qualifier is DISCHARGED as of this span: all five lanes now hold
+`.loop_lock.*` — `AGENT-1`, `AGENT-2`, `ATOM-3`, `ATTACKER-1`, `ok-1` — so the
+H8 refusal and H37's lock-based assignment are live in this fleet. My lane's lock
+holds pid 40077, verified as this turn's own grandparent launcher.)*

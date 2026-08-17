@@ -1,0 +1,226 @@
+{
+ "spike": "G30_external_yardstick",
+ "recorded_utc": "2026-08-17T14:35:46Z",
+ "note": "G30: Filtered MRR / Hits@1,3,10 external benchmark yardstick on FB15k-237 test split",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/../G17_composition_redo",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/../S52_realkg",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/yardstick.py",
+   "sha256": "97bc80501989ec694589c54356708b2dc6f88329aac01b3a0e5f854bfe28c6e2",
+   "bytes": 22704,
+   "mtime": 1786977243,
+   "compared_ts": 1786977243,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/yardstick.json",
+   "sha256": "3f5411ea7c257718d8c7b8e8261765a47935ba8b429965b6b50e1ce434bbb9f5",
+   "bytes": 6384,
+   "mtime": 1786977346,
+   "compared_ts": 1786977346,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_planted_composition_upper_bound",
+   "must_fire_because": "a rule engine with valid inference must achieve MRR=1.0 on a planted composition",
+   "can_fail_because": "inference walk could miss multi-hop paths or fail filter verification",
+   "null_must_contain": "an unpredicted or incorrectly ranked query on a deterministic planted relation",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.9888888888888889,
+    "hits1": 0.9666666666666667,
+    "hits10": 1.0
+   }
+  },
+  {
+   "name": "C2_empty_rule_lower_bound",
+   "must_fire_because": "an empty rule set must yield zero hits and MRR near random entity expectation",
+   "can_fail_because": "tie-breaking bug could assign rank 1 to unpredicted entities",
+   "null_must_contain": "non-zero hits when zero rules are provided",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.00013946353058580304,
+    "hits10": 0.0
+   }
+  },
+  {
+   "name": "C3_metric_monotonicity",
+   "must_fire_because": "Hits@1 <= Hits@3 <= Hits@10 must strictly hold across all models",
+   "can_fail_because": "metric calculation bug across different thresholds",
+   "null_must_contain": "a strict violation of Hits@K monotonicity",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "G17_all": [
+     0.031064726346219804,
+     0.06622078494781714,
+     0.12294820912342594
+    ],
+    "G17_top500": [
+     0.026005683766965555,
+     0.04990445391738939,
+     0.08498701553236317
+    ],
+    "G17_top100": [
+     0.01420941741388603,
+     0.01941545396638738,
+     0.02133862511637023
+    ],
+    "G17_conf>=0.20": [
+     0.02229408594247636,
+     0.035793032485668085,
+     0.051386643147630945
+    ],
+    "G17_conf>=0.40": [
+     0.01587534911068646,
+     0.0219511000048998,
+     0.027757361948160125
+    ],
+    "Null_degree": [
+     0.023506786221764907,
+     0.04814052623842423,
+     0.10706061051496889
+    ],
+    "Empty_baseline": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "C4_filter_integrity",
+   "must_fire_because": "filter sizes must never exceed total entity count and true target must not be filtered",
+   "can_fail_because": "corrupted set filtering or index boundary leak",
+   "null_must_contain": "an entity candidate pool larger than vocabulary size",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "max_filter_size": 843,
+    "nent": 14505
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_null_dominance",
+   "must_fire_because": null,
+   "can_fail_because": "Degree-preserving null rules achieve within 15% of real mined rules on Filtered MRR",
+   "null_must_contain": "a null MRR within 15% of real MRR (ratio >= 0.85)",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_real": 0.0631122756859102,
+    "mrr_null": 0.05083775739440509,
+    "ratio": 0.8055129820925568
+   },
+   "refutes": "Real mined rules possess genuine relational link prediction capacity beyond degree sequences",
+   "fires_when": "Degree-preserving null rules achieve within 15% of real mined rules on Filtered MRR",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_top12_heuristic_inversion",
+   "must_fire_because": null,
+   "can_fail_because": "Ranking rule sets by top-12 confidence inverts relative to Filtered MRR",
+   "null_must_contain": "a discordance between top-12 rule confidence order and test-split link prediction MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "top12_order": [
+     "G17_all",
+     "G17_top500",
+     "G17_top100"
+    ],
+    "mrr_order": [
+     "G17_all",
+     "Null_degree",
+     "G17_top500"
+    ]
+   },
+   "refutes": "Top-12 mean confidence is a reliable proxy for whole-graph link prediction utility",
+   "fires_when": "Ranking rule sets by top-12 confidence inverts relative to Filtered MRR",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_top12_heuristic_inversion"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/../S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Degree-preserving null matches real mined rules within 15% on Filtered MRR, or top-12 ranking inverts vs Filtered MRR",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
