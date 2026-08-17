@@ -37,6 +37,34 @@
 > `(, (bucket b0 $c) (imp 0 $c $v))` returns while
 > `(, (imp 0 $c $v) (bucket b0 $c))` — same denotation — aborts. The
 > architecture scales; these programs do not, as written. G19 is the rewrite.
+>
+> **2026-08-17, G18 CORRECTED and the series re-tested.** Agent-1 showed my G18
+> attribution was wrong: the panics came from an operator-precedence bug at
+> `trie.rs:545` (`&` binds looser than `-` in Rust), not the arity assert. There
+> is **no `match` arity ceiling** — a bare match returns 5,000 results on a
+> patched build — and conjunction order is **not** a language hazard. What
+> survives is that `collapse` builds one expression and is genuinely capped at
+> 1024 by a 10-bit field.
+>
+> That raised a provenance question against this entire document, because
+> `fuelrun.v2.host` was built **2026-08-16 16:16, before every patch** — so every
+> G-series result measured a buggy engine. Re-run against a build from the
+> patched tree (07:36):
+>
+> ```
+> program                stock hash        patched hash      fuel stock/patched
+> G1  q2_selfmod         5cb2e24bde1ced63  5cb2e24bde1ced63  3765 / 3765
+> G5  ecan               88bea8a2593b75eb  88bea8a2593b75eb  2887738 / 2887738
+> G8  ecan_g8            f77f80f0c8a6da3f  f77f80f0c8a6da3f  5751951 / 5751951
+> G11 epoch0             63398348e00517ee  63398348e00517ee  4829611 / 4829611
+> ```
+>
+> **Identical, hashes and fuel.** The precedence bug never fired because every
+> fold in the series is over 62–600 atoms, far below 1024. So the results below
+> stand as measured, and the 60-node scale was a **budget choice after all** —
+> not the hard limit G18 claimed. G19's bucket rewrite is not needed for
+> correctness; whether it is needed for *performance* is a separate, unmeasured
+> question (on stock, `plain_400` ran 164.7 s against `buck_400`'s 2.8 s).
 
 Thirteen spikes testing one question: **can a self-modifying knowledge graph, run
 on Hyperon across two devices, learn?**
