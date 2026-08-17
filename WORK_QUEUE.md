@@ -7,7 +7,7 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 |---|---|---|
 | D1+ | seat-draw spec | **DONE** — `specs/D1_seat_draw.md`, 5 falsifiers, F5 live pending W3 |
 | D2 | canonical result serialization per job class; Tier-A exclusions pending upstream; links hyperon nondeterminism drafts | OPEN |
-| D3 | economics as FORMULAS; shard demand declared unmeasured; only N·C/S ≥ R kept; orphan placement priced as availability | OPEN |
+| D3 | economics as FORMULAS | **DONE** — `specs/D3_economics.md`; no constant derived from Δ, feasibility bound only |
 | D5 | ban-surface closure | **DONE** — `specs/D5_ban_surface.md`, v1 surface + 5 falsifiers; F3 unrun, cfg-gate aspirational |
 
 ## P1 — verification substrate

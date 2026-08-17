@@ -111,3 +111,5 @@
 84 | 2026-08-17 | Loop cycle 1: D1+ seat-draw spec written. Key decision - R3 removes the local/global seat split entirely, because W1 cut residency coupling; S69 local/global was itself the vector. F5 recorded live: R3 holds only for clustering-aligned classes until W3 grades non-aligned witness sizes.
 
 85 | 2026-08-17 | Loop cycle 2: D5 ban surface spec. Enforcement by build not analysis (py-atom makes static checking undecidable). Surface versioned by binary hash. Float print/parse and sort stability excluded on precaution not evidence, stated as such. Honest gap recorded: the upstream cfg-gate does not exist, so sin-math exclusion is aspirational today.
+
+86 | 2026-08-17 | Loop cycle 3: D3 economics spec. Every input graded; shard demand D declared UNMEASURED and unmeasurable from inside the workspace. Only N*C >= R*S survives as a constraint. b_res marked grade D (inherits S32 INVALID) with a do-not-build-on-it note. Document deliberately states no coverage target, no R, no stake floor.
