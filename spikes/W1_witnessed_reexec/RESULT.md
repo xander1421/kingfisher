@@ -1,3 +1,36 @@
+> **INVALID — 2026-08-17. Do not cite. Do not build on this.**
+>
+> **`witness.py` measures a query engine that does not exist here.** Its
+> `mode=='ps'` branch invents a sorted-array range skip; the only engine anyone
+> has measured — `S52/realkg.c:184`, the same spike W1 takes its corpus and
+> clustering from — is `for(int b=0;b<nb;b++) scores[b]=score_row(...)`. **No
+> skip. Every bundle scored on every query, every shape.** The read set is 100%
+> of the prefilter index, always.
+>
+> Corrected witness: **1.54 MB (B=64) to 12.23 MB (B=8)**, i.e. **1.0–8.3× over a
+> cold fetch, not 3,000×**, and **543–4,297× a resident replica, not 1.5×**.
+>
+> Second error, compounding: **12.8 MB is a B=8 prefilter index over 800,000
+> triples** (`ADDENDUM.md`: "16 bytes of pre-filter index per triple"), not raw
+> triples. Dividing it by `TRIPLE_BYTES=12` to extrapolate was an arithmetic
+> operation on incompatible units.
+>
+> Third: **W3's premise is falsified by S52 directly.** On the identical corpus
+> and clustering S52 measured `(p s ?o)` **0.2%**, `(p ?s o)` **1.0%**,
+> `(?p s o)` **8.8%** of store checked. W1 reported 7.7% / 100% / 100%. Every
+> cell disagrees; two by 100× and 11×.
+>
+> Fourth: **all four controls are incapable of failing.** C-A tests which mode
+> string was passed. C-B tests `hashlib` — **there is no proof-verification
+> function anywhere in `witness.py`**; `proof_len` returns a length. C-C reduces
+> to "the read set is non-empty". C-D tests that a linear scan misses a
+> key outside the id space. Per `LEDGER:19`, W1 has no controls.
+>
+> What survives is a corpus statistic, not a system result: in a sorted
+> `(pred,subj)`-clustered array of raw triples, a `(p s ?o)` lookup touches
+> **1.09 chunks mean / 2 at p95 / 3 max** — and the honest witness is **4.6 KB
+> mean, 8.3 KB p95**, not "~4.2 KB", because bandwidth is a mean not a median.
+
 # W1 — witnessed re-execution: cut verification eligibility loose from shard residency
 
 **Verdict: GREEN for clustering-aligned queries, RED for the rest, and it kills S69's 1,500× traffic objection. A witness is ~4.2 KB regardless of shard size, so a non-resident verifier costs ~1.5× a resident one, not 4,500×. Ships code, seed and four controls per D6.**
