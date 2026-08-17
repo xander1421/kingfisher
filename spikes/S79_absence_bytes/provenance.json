@@ -1,0 +1,177 @@
+{
+ "spike": "S79_absence_bytes",
+ "recorded_utc": "2026-08-17T11:25:05Z",
+ "note": "S79 uses the Python sibling recount that C14 validated against the pathmap walk at 0.00%, so no new unvalidated instrument sits under the number. Counts and digests only, no timings.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes",
+   "head": "226fd5995774171615a8f2ea11df6667822ea1f7",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S79_absence_bytes/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/absence.json",
+   "sha256": "8cbce8e01b4ab8d330fbf4c041d2ade6b9d8bb82448483ebf22815b1038502b1",
+   "bytes": 6033,
+   "mtime": 1786965905,
+   "compared_ts": 1786965905,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_probes_are_absent_and_proofs_verify",
+   "must_fire_because": "an \"absence proof\" for a key that is present, or one the verifier rejects, is a number about nothing -- W1 shipped four controls with no verification function at all",
+   "can_fail_because": "any probe is found present by prove_membership, or any absence proof fails verification",
+   "null_must_contain": "W2's prove_membership, which is free to find any probe present, and verify_non_membership, which is free to return False",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "probes": 200,
+     "absent": 200,
+     "built": 200,
+     "verified": 200
+    },
+    "atoms_interned": {
+     "probes": 200,
+     "absent": 200,
+     "built": 200,
+     "verified": 200
+    },
+    "triples": {
+     "probes": 200,
+     "absent": 200,
+     "built": 200,
+     "verified": 200
+    }
+   }
+  },
+  {
+   "name": "C_probes_are_deep_misses",
+   "must_fire_because": "A27: probes that diverge at the root measure the CHEAP miss and S73 published a flat 293 B that way; W2's ~2.0 KB is about the realistic deep miss",
+   "can_fail_because": "mean divergence depth is below 2 for any set, i.e. the probes leave the trie immediately",
+   "null_must_contain": "a divergence depth free to come out at 0 or 1, which is exactly what a random-byte probe would give on these key sets",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": 95.5,
+    "atoms_interned": 54.3,
+    "triples": 11.0
+   }
+  },
+  {
+   "name": "C_absence_tracks_branching_like_membership",
+   "must_fire_because": "S77 generalised to 'proof size is set by branching, not key length' from membership alone; if absence orders the sets differently, that sentence is membership-only and S77 overreached",
+   "can_fail_because": "the absence ordering differs from the membership ordering on these three sets",
+   "null_must_contain": "three key sets whose absence proofs are built independently of the membership measurement and are free to rank in any of six orders",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "by_membership": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_absence": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "absence_bytes": {
+     "atoms_original": 1513.28,
+     "atoms_interned": 1855.68,
+     "triples": 2299.04
+    },
+    "membership_bytes": {
+     "atoms_original": 1461.056,
+     "atoms_interned": 1803.392,
+     "triples": 2246.208
+    }
+   }
+  },
+  {
+   "name": "C_real_prover_agrees_on_absence_ordering",
+   "must_fire_because": "the model charges ALL children at the divergence point, which is a claim about what a proof must carry; a prover that exists is the check on it",
+   "can_fail_because": "W2's real absence bytes rank the sets differently from the modelled digest counts",
+   "null_must_contain": "W2's prove_non_membership, written before this spike and free to rank the sets any way",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "by_w2_real": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_model": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "w2_bytes": {
+     "atoms_original": 1588.85,
+     "atoms_interned": 1929.61,
+     "triples": 2291.2
+    }
+   }
+  },
+  {
+   "name": "C_absence_costs_more_than_membership",
+   "must_fire_because": "the model says absence carries every child at the divergence point where membership carries all but one, so absence must be strictly dearer -- if it is not, the model is wrong about what an absence proof has to show",
+   "can_fail_because": "any set shows absence costing no more than membership",
+   "null_must_contain": "membership digest counts measured in S77, which this spike does not recompute and cannot adjust",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": 1.0357440098120811,
+    "atoms_interned": 1.028994250833984,
+    "triples": 1.023520528820127
+   }
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes": {
+   "newest": 1786965905,
+   "from": "spikes/S79_absence_bytes/"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes at 226fd599: 1 modified. The build is NOT 226fd599."
+ ],
+ "ok": false,
+ "falsifier": "if non-membership proof cost does not track branching the way membership does -- i.e. if the absence ordering differs from the membership ordering -- then S77's \"proof size is set by branching, not key length\" is membership-only and overreached"
+}

@@ -1,0 +1,167 @@
+{
+ "all_controls_fire": true,
+ "controls": {
+  "C_absence_costs_more_than_membership": {
+   "can_fail_because": "any set shows absence costing no more than membership",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the model says absence carries every child at the divergence point where membership carries all but one, so absence must be strictly dearer -- if it is not, the model is wrong about what an absence proof has to show",
+   "name": "C_absence_costs_more_than_membership",
+   "null_must_contain": "membership digest counts measured in S77, which this spike does not recompute and cannot adjust",
+   "observations": {
+    "atoms_interned": 1.028994250833984,
+    "atoms_original": 1.0357440098120811,
+    "triples": 1.023520528820127
+   }
+  },
+  "C_absence_tracks_branching_like_membership": {
+   "can_fail_because": "the absence ordering differs from the membership ordering on these three sets",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "S77 generalised to 'proof size is set by branching, not key length' from membership alone; if absence orders the sets differently, that sentence is membership-only and S77 overreached",
+   "name": "C_absence_tracks_branching_like_membership",
+   "null_must_contain": "three key sets whose absence proofs are built independently of the membership measurement and are free to rank in any of six orders",
+   "observations": {
+    "absence_bytes": {
+     "atoms_interned": 1855.68,
+     "atoms_original": 1513.28,
+     "triples": 2299.04
+    },
+    "by_absence": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_membership": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "membership_bytes": {
+     "atoms_interned": 1803.392,
+     "atoms_original": 1461.056,
+     "triples": 2246.208
+    }
+   }
+  },
+  "C_probes_are_absent_and_proofs_verify": {
+   "can_fail_because": "any probe is found present by prove_membership, or any absence proof fails verification",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "an \"absence proof\" for a key that is present, or one the verifier rejects, is a number about nothing -- W1 shipped four controls with no verification function at all",
+   "name": "C_probes_are_absent_and_proofs_verify",
+   "null_must_contain": "W2's prove_membership, which is free to find any probe present, and verify_non_membership, which is free to return False",
+   "observations": {
+    "atoms_interned": {
+     "absent": 200,
+     "built": 200,
+     "probes": 200,
+     "verified": 200
+    },
+    "atoms_original": {
+     "absent": 200,
+     "built": 200,
+     "probes": 200,
+     "verified": 200
+    },
+    "triples": {
+     "absent": 200,
+     "built": 200,
+     "probes": 200,
+     "verified": 200
+    }
+   }
+  },
+  "C_probes_are_deep_misses": {
+   "can_fail_because": "mean divergence depth is below 2 for any set, i.e. the probes leave the trie immediately",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "A27: probes that diverge at the root measure the CHEAP miss and S73 published a flat 293 B that way; W2's ~2.0 KB is about the realistic deep miss",
+   "name": "C_probes_are_deep_misses",
+   "null_must_contain": "a divergence depth free to come out at 0 or 1, which is exactly what a random-byte probe would give on these key sets",
+   "observations": {
+    "atoms_interned": 54.3,
+    "atoms_original": 95.5,
+    "triples": 11.0
+   }
+  },
+  "C_real_prover_agrees_on_absence_ordering": {
+   "can_fail_because": "W2's real absence bytes rank the sets differently from the modelled digest counts",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the model charges ALL children at the divergence point, which is a claim about what a proof must carry; a prover that exists is the check on it",
+   "name": "C_real_prover_agrees_on_absence_ordering",
+   "null_must_contain": "W2's prove_non_membership, written before this spike and free to rank the sets any way",
+   "observations": {
+    "by_model": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_w2_real": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "w2_bytes": {
+     "atoms_interned": 1929.61,
+     "atoms_original": 1588.85,
+     "triples": 2291.2
+    }
+   }
+  }
+ },
+ "digest_bytes": 32,
+ "model": "membership charges (children-1) per branching position; absence charges the same along the shared prefix and ALL children at the divergence position, because a subset would let a prover hide the child that makes the key present",
+ "probes_per_set": 200,
+ "seed": 20260817,
+ "sets": {
+  "atoms_interned": {
+   "absence_auth_bytes_mean": 1855.68,
+   "absence_digests_mean": 57.99,
+   "absence_over_membership": 1.028994250833984,
+   "mean_divergence_depth": 54.3,
+   "mean_key_bytes": 52.525,
+   "membership_auth_bytes_mean": 1803.392,
+   "membership_siblings": 56.356,
+   "probes": 200,
+   "probes_absent": 200,
+   "w2_proofs_built": 200,
+   "w2_real_absence_bytes_mean": 1929.61,
+   "w2_verified": 200
+  },
+  "atoms_original": {
+   "absence_auth_bytes_mean": 1513.28,
+   "absence_digests_mean": 47.29,
+   "absence_over_membership": 1.0357440098120811,
+   "mean_divergence_depth": 95.5,
+   "mean_key_bytes": 106.605,
+   "membership_auth_bytes_mean": 1461.056,
+   "membership_siblings": 45.658,
+   "probes": 200,
+   "probes_absent": 200,
+   "w2_proofs_built": 200,
+   "w2_real_absence_bytes_mean": 1588.85,
+   "w2_verified": 200
+  },
+  "triples": {
+   "absence_auth_bytes_mean": 2299.04,
+   "absence_digests_mean": 71.845,
+   "absence_over_membership": 1.023520528820127,
+   "mean_divergence_depth": 11.0,
+   "mean_key_bytes": 12.0,
+   "membership_auth_bytes_mean": 2246.208,
+   "membership_siblings": 70.194,
+   "probes": 200,
+   "probes_absent": 200,
+   "w2_proofs_built": 200,
+   "w2_real_absence_bytes_mean": 2291.2,
+   "w2_verified": 200
+  }
+ }
+}
