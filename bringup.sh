@@ -152,6 +152,53 @@ lane_fails() {
   [ -n "$n" ] && echo "$n" || echo -1
 }
 
+# v3 (H43, ATOM-3, 2026-08-17). THE DEFECT: NOTHING IN THIS HARNESS OBSERVES
+# WORK. Every signal it has observes the SUPERVISOR (launcher pid, .loop_lock,
+# peers.sh), the TURN BOUNDARY (.heartbeat), or the TURN'S DURATION
+# (.loop_fails) -- and H56's class is precisely "a health signal that observes
+# the supervisor and not the work", so the class survived inside the fix for it.
+#
+# CONCRETELY, and it is decidable from the code without a run: `.loop_fails`
+# only climbs when `run_loop.sh:422` sees `elapsed < 60`, and the STALLED branch
+# below fires at `nfail >= 2`. Its own comment reads *"up and producing nothing:
+# two or more consecutive turns exited under 60 s"* -- which SUBSTITUTES "exited
+# under 60 s" for "producing nothing". So a lane whose turns last longer than a
+# minute and produce nothing resets the counter every single turn, can never
+# reach 2, and reports plain UP. **That is exactly the wedged lane H43 exists
+# for**, and it is family A: the only trigger aimed at it cannot fire for it.
+#
+# THE OBSERVABLE IS ALREADY DEFINED BY THE MISSION and needed no invention:
+# §14.2 says a big cycle is a row reaching DONE with its line in CHANNEL.md, and
+# gives `grep -c '^DONE' CHANNEL.md` as the number the operator watches. This
+# reads the same file per lane.
+#
+# NOT COMMITS. Measured before choosing, on the live fleet at 16:25: ok-1's last
+# commit was 14:26 -- two hours -- while it was writing its journal that second
+# and had posted `DONE H62` minutes earlier. A lane can work for hours without
+# committing (that is H60's finding, not a stall), so commit recency would have
+# reported a working lane as dead. The check must not repeat the error it names.
+#
+# AND IT DELIBERATELY HAS NO THRESHOLD. It prints the age and sets no verdict.
+# H6's whole finding was that liveness needs no threshold, and H48's was that
+# every threshold below MAX_TURN fires on a healthy long turn while none above
+# it beats the watchdog. A work signal has the same shape -- a lane legitimately
+# spends an hour on one row -- so this ADDS A COLUMN, not an alarm. The 86-minute
+# outage H56 measured would have read `no DONE 86m` on all five lanes while
+# every other signal read 5/5, which is the whole point: a human or a lane
+# reading the census sees it, and nothing gets relaunched into a quota wall.
+lane_lastwork() {
+  local l=$1 n
+  # The lane's own most recent CLAIM/DONE/NOTE line, by POSITION in an
+  # append-only file -- CHANNEL.md carries no timestamps, so distance from the
+  # end is the only ordering it actually has, and inventing a time would be
+  # fiction. Reported as "lines back", which is honest about what was measured.
+  [ -f CHANNEL.md ] || { echo -1; return; }
+  n=$(grep -nE "^(CLAIM|DONE|NOTE|CORRECTION|ATTACK|EVIDENCE|STATUS|RENUMBERED|WITHDRAWN) [^ ]+ ${l}\b" CHANNEL.md \
+        | tail -1 | cut -d: -f1)
+  [ -n "$n" ] || { echo -1; return; }
+  echo $(( $(wc -l < CHANNEL.md) - n ))
+}
+
 CHECK_ONLY=0; INSTALL=0
 for a in "$@"; do
   case "$a" in
@@ -270,7 +317,17 @@ for lane in "${ROSTER[@]}"; do
       # did not fire. There is no healthy reading of this.
       printf '  %-12s UP   pid %-7s (%s) WATCHDOG FAILED: turn age %ss > MAX_TURN+300 (%ss)\n' "$lane" "$pid" "$src" "$age" "$STALE_SECS"
     else
-      printf '  %-12s UP   pid %-7s (%s) turn age %ss\n' "$lane" "$pid" "$src" "$age"
+      # THE WORK COLUMN (H43). Reported beside the turn age, never instead of
+      # it: turn age says the supervisor is alive, this says the lane has
+      # produced something. Both, because either alone was the 5/5 lie.
+      w=$(lane_lastwork "$lane")
+      if [ "$w" -lt 0 ]; then
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, NO CHANNEL LINE EVER -- nothing observed of this lane\n' \
+          "$lane" "$pid" "$src" "$age"
+      else
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, last CHANNEL line %s back\n' \
+          "$lane" "$pid" "$src" "$age" "$w"
+      fi
     fi
   elif [ -f STOP ] || [ -f "STOP.$lane" ]; then
     # HALTED IS NOT DOWN. A lane retired on purpose and a lane that died are the
@@ -284,6 +341,31 @@ for lane in "${ROSTER[@]}"; do
   fi
 done
 echo "  quorum: ${UP}/${#ROSTER[@]}$([ "$STALLED" -gt 0 ] && printf ' (%s STALLED, NOT counted up)' "$STALLED")"
+
+# FLEET OUTPUT AGE (H43), and this line exists because MY OWN FIRST FIX COULD NOT
+# HAVE CAUGHT THE FAILURE IT WAS BUILT FOR. The per-lane column above reports a
+# lane's last CHANNEL line as a DISTANCE FROM THE END of an append-only file. If
+# nobody posts, that distance does not grow -- it FREEZES. Measured against the
+# real outage: `git log -- CHANNEL.md` is EMPTY from 14:29 to 15:56 and there
+# were ZERO commits of any kind in those 87 minutes, so every lane's column
+# would have read the same small number at all EIGHT of bringup's samples, and
+# a single census could not have told a silent fleet from a busy one. Family A,
+# in the instrument I had just written to fix family A.
+#
+# The two answer different questions and both are kept: the per-lane distance
+# says WHICH LANE IS BEHIND THE OTHERS; this says WHETHER ANYTHING IS HAPPENING
+# AT ALL, and it is absolute, so one reading is enough.
+#
+# NO THRESHOLD, for the third time in this file: a fleet legitimately spends an
+# hour on hard rows, and H48 measured what a threshold below MAX_TURN does to a
+# healthy long turn. It prints the age. During the 14:29-15:56 outage this line
+# would have read 0m, then 10m, then 20m ... while quorum read 5/5 at every one
+# of those samples, which is the whole of H56's finding in one number.
+if [ -f CHANNEL.md ]; then
+  _cm=$(( $(date +%s) - $(stat -f %m CHANNEL.md) ))
+  printf '  fleet output: CHANNEL.md last written %sm %ss ago (no threshold -- compare across samples)\n' \
+    "$(( _cm / 60 ))" "$(( _cm % 60 ))"
+fi
 
 # A lane running that the roster does not name. This is how ok-1 went unnoticed:
 # every named lane was healthy, so nothing looked wrong.
