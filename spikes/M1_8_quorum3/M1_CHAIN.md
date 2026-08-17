@@ -86,6 +86,52 @@ result:    INSUFFICIENT_DOMAINS  3/3 2dom  on every row -- accepted 0/66
 The same chain that reported 66/66 an hour earlier now reports **0/66**, and
 nothing about the chain changed. Only the question did.
 
+### The count is per fault class, not global
+
+A scalar conflates classes with different domain structures — two workers can be
+independent for a compiler bug and identical for a libm bug. The adjudicator now
+reports a vector and **binds on the weakest axis**:
+
+```
+binary    2 domain(s)
+host      2 domain(s)
+os        2 domain(s)
+isa       1 domain(s)  <-- binding
+operator  1 domain(s)  <-- binding
+```
+
+Two disclosures fall straight out of it, neither visible in `2dom`:
+
+- **`operator` is 1**, and that is the axis Q1's 72% capture figure is *about*.
+  Every worker is run by us. On the only axis that models collusion, this quorum
+  has one domain.
+- **`isa` is 1.** S57's determinism headline was **cross-ISA** (x86-64 +
+  aarch64). This quorum is aarch64 on both sides, so it re-tests nothing S57
+  established about instruction semantics.
+
+The `isa` axis first reported **2**, because macOS says `arm64` and Android says
+`arm64-v8a`. Same ISA, two strings. That is this module's own warning —
+*a key that flatters itself* — committed inside the fix for it, and caught only
+by reading the vector. Now normalised.
+
+### Fault classes NO key separates
+Some faults have no separating axis at any quorum size, and a domain count that
+omits them reads as stronger than it is:
+
+| fault class | separating key | domains available |
+|---|---|---|
+| libm divergence (S59) | libm build | 2 (libSystem, bionic) |
+| DVFS / thermal | physical device | 2 |
+| variable-id (M1.1c) | process | many |
+| **1022 match panic (G18)** | **none** | **1** |
+| **shared implementation bug** | **none** | **1** |
+
+The panic is the concrete instance: verified identical on macos-arm64 and
+android-aarch64, so **determinism extends to the crash**. Replication catches
+disagreement, never a shared bug — and a shared abort is just the loudest shared
+bug. `q3.py` prints these classes with every refusal rather than letting a
+domain count imply coverage it does not have.
+
 ### The domain key itself overstates independence
 It separates `(host, binary)` and nothing else. **Two different binaries on one
 host still share kernel, libm, clock source, page-table behaviour and CPU

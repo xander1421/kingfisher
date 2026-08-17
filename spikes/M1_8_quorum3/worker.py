@@ -68,26 +68,58 @@ def main():
     store = ShardStore(a.store)
     os.makedirs(a.outbox, exist_ok=True)
 
-    # FAILURE DOMAIN. Two workers running the same binary on the same host share
-    # every failure mode -- same libm, same clock, same page tables, same panic
-    # at 1024 results -- so their agreement is nearly free. Quorum arithmetic has
-    # to run on domains, not on seats. The key is whatever independence is being
-    # claimed over; here: which binary, and which machine executes it.
+    # FAILURE DOMAINS, per fault class. A single scalar count conflates classes
+    # that have different domain structures: two workers can be independent for
+    # a compiler bug and identical for a libm bug. So the worker declares a
+    # VECTOR and the adjudicator counts each axis separately.
+    #
+    #   binary    a bad build, a mis-applied patch, a codegen bug
+    #   host      kernel, clock source, page tables, CPU errata, thermal state
+    #   os        libc/libm -- the S59 divergence class
+    #   isa       instruction semantics, float behaviour
+    #   operator  collusion and Sybil -- the only axis Q1's capture model is about
+    #
+    # Each is what it says and nothing more. `binary` differing does NOT imply
+    # `host` differs, and counting a single number would let the strongest axis
+    # speak for the weakest -- which is the whole failure this replaces.
     bin_sha = hashlib.sha256(open(a.bin, 'rb').read()).hexdigest()[:12]
     if a.via == 'adb':
         serial = subprocess.run(['adb', 'get-serialno'], capture_output=True,
                                 text=True).stdout.strip() or 'device'
         host_id = f'adb:{serial}'
+        os_id = subprocess.run(
+            ['adb', 'shell', 'getprop ro.build.version.release'],
+            capture_output=True, text=True).stdout.strip() or '?'
+        os_id = f'android-{os_id}'
+        isa = subprocess.run(['adb', 'shell', 'getprop ro.product.cpu.abi'],
+                             capture_output=True, text=True).stdout.strip() or '?'
     else:
         host_id = f'host:{platform.node()}'
-    # NOTE the key OVERSTATES independence. It separates (host, binary) only.
-    # Two different binaries on ONE host still share kernel, libm, clock source,
-    # page-table behaviour and CPU errata, so they are not independent for that
-    # whole class of fault -- they will merely be counted as if they were.
-    # A domain that is independent for the faults we actually care about needs
-    # host AND operator AND ideally ISA to differ. Recorded here rather than in
-    # prose because a key that flatters itself is worse than no key.
-    domain = f'{host_id}|bin:{bin_sha}'
+        os_id = f'{platform.system().lower()}-{platform.release()}'
+        isa = platform.machine()
+    # Normalise the ISA string before using it as a domain key. macOS reports
+    # `arm64`, Android reports `arm64-v8a`; they are the SAME ISA and counting
+    # them as two domains is the key flattering itself -- the exact defect this
+    # module's own comment warns about, committed in this module.
+    def norm_isa(v):
+        v = v.lower()
+        if v.startswith(('arm64', 'aarch64')):
+            return 'aarch64'
+        if v in ('x86_64', 'amd64'):
+            return 'x86_64'
+        return v
+    isa = norm_isa(isa)
+
+    domains = {
+        'binary': f'bin:{bin_sha}',
+        'host': host_id,
+        'os': os_id,
+        'isa': isa,
+        # every worker here is run by us. Stated, not omitted: on the axis Q1's
+        # 72% capture figure is actually about, this quorum has ONE domain.
+        'operator': os.environ.get('KF_OPERATOR', 'operator:self'),
+    }
+    domain = f'{host_id}|bin:{bin_sha}'   # legacy scalar, kept for the display
     idle = 0
     while idle < 60:
         jobs = sorted(f for f in os.listdir(a.inbox) if f.endswith('.job'))
@@ -138,7 +170,8 @@ def main():
                 env = {'status': 'TIMEOUT'}
             except FileNotFoundError as e:
                 env = {'status': 'SHARD_MISSING', 'detail': str(e)}
-            env.update(domain=domain, bin_sha256=bin_sha, host_id=host_id,
+            env.update(domain=domain, domains=domains,
+                       bin_sha256=bin_sha, host_id=host_id,
                        worker=a.id, job_id=job['job_id'],
                        shard_cid=job['shard_cid'], fuel_limit=job['fuel'],
                        bytes_pushed=pushed,

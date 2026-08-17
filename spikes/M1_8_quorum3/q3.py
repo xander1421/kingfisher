@@ -27,6 +27,21 @@ DEVDIR = '/data/local/tmp/m18'
 ALPHA = False   # set by --alpha; opt-in per job class, never the default
 MIN_DOMAINS = 3  # independent failure domains required among AGREEING workers
 
+# Axes the domain key can separate. Each is only itself: `binary` differing does
+# not imply `host` does.
+DOMAIN_AXES = ('binary', 'host', 'os', 'isa', 'operator')
+
+# Fault classes NO axis separates, so replication cannot detect them at ANY
+# quorum size. Recorded because a domain count that omits them reads as
+# stronger than it is.
+UNSEPARABLE = {
+    'shared implementation bug': 'every honest evaluator computes the same '
+        'wrong answer. Replication catches disagreement, never a shared bug.',
+    'shared abort (G18 1022-match panic)': 'verified identical on macos-arm64 '
+        'and android-aarch64 -- determinism extends to the crash, so quorum '
+        'is structurally incapable here however many devices exist.',
+}
+
 
 def key(e):
     """Agreement key. `sorted_hash` is hashed by fuelrun from raw output, which
@@ -100,9 +115,17 @@ def adjudicate(envs):
         # is 2. Capture arithmetic (Q1) runs on domains, not seats. Same shape
         # as k8s podtopologyspread: topologyKey names what you claim
         # independence over, maxSkew bounds concentration within it.
-        agreeing = {e.get('domain') for e, kk in zip(envs, ks)
-                    if kk == k and e is not None}
-        domains = len(agreeing)
+        agree_envs = [e for e, kk in zip(envs, ks) if kk == k and e is not None]
+        # per-fault-class counts. A scalar would let the strongest axis speak
+        # for the weakest.
+        per_class = {}
+        for ax in DOMAIN_AXES:
+            per_class[ax] = len({e.get('domains', {}).get(ax, e.get('domain'))
+                                 for e in agree_envs})
+        # The binding constraint is the WEAKEST axis, not the count of seats.
+        domains = min(per_class.values()) if per_class else 0
+        for e in agree_envs:
+            e['_per_class'] = per_class
         if domains < MIN_DOMAINS:
             return 'INSUFFICIENT_DOMAINS', k, n, dispatched, returned, domains
         return ('UNANIMOUS' if n == dispatched else 'MAJORITY'), \
@@ -272,14 +295,17 @@ def main():
     accepted = tally['UNANIMOUS'] + tally['MAJORITY']
     insuf = tally['INSUFFICIENT_DOMAINS']
     if insuf:
-        doms = sorted({e['domain'] for _,_,_,_,es,_,_,_ in rows
-                       for e in es if e and e.get('domain')})
-        print(f'\n!! INSUFFICIENT_DOMAINS on {insuf} job(s): agreement came from '
-              f'fewer than {MIN_DOMAINS} independent failure domains.')
-        for d in doms:
-            print(f'     domain: {d}')
-        print('   Workers sharing a binary and a host share every failure mode; '
-              'their agreement is nearly free.')
+        pc = next((e['_per_class'] for _,_,_,_,es,_,_,_ in rows
+                   for e in es if e and e.get('_per_class')), {})
+        print(f'\n!! INSUFFICIENT_DOMAINS on {insuf} job(s): the WEAKEST axis has '
+              f'fewer than {MIN_DOMAINS} domains.')
+        for ax in DOMAIN_AXES:
+            n_ax = pc.get(ax, 0)
+            mark = '  <-- binding' if n_ax == min(pc.values(), default=0) else ''
+            print(f'     {ax:9} {n_ax} domain(s){mark}')
+        print('   Fault classes NO axis separates (quorum cannot help at any size):')
+        for name, why in UNSEPARABLE.items():
+            print(f'     - {name}: {why}')
     short = tally['REDUCED_QUORUM']
     if short:
         print(f'\n!! REDUCED_QUORUM on {short} job(s): fewer workers returned '
@@ -312,7 +338,9 @@ def main():
                'tally': dict(tally),
                'rows': [{'program': p, 'verdict': v, 'agree': n,
                          'key': k, 'envelopes': e,
-                         'dispatched': d, 'returned': r, 'domains': dm}
+                         'dispatched': d, 'returned': r, 'domains': dm,
+                         'domains_per_class': next(
+                             (x.get('_per_class') for x in e if x), None)}
                         for p, v, n, k, e, d, r, dm in rows]},
               open(os.path.join(HERE, 'result.json'), 'w'), indent=1)
     print('-> result.json')

@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """G19 — ECAN past the 1021 ceiling, by leading every conjunction with a bucket.
 
+N capped at 3000: the bucketed form runs 3 matches per bucket and the matcher
+scans the whole space each time, so cost is O(buckets x space). N=20000
+(50 buckets over 80,000 atoms) did not finish in 15 minutes and was cut. 3000
+exceeds the 1021 ceiling by ~3x, which is what the claim needs; the cost curve
+is a separate question and is NOT measured here.
+
 G18: the limit is the result cardinality of a conjunction's LEADING pattern, not
 `collapse`. Chunking the fold does not help because
 `(, (imp 0 $c $v) (bucket $c bK))` materialises all N before filtering. Chunking
@@ -136,7 +142,7 @@ def main():
     print(f"{'N':>7}  {'plain':<12}{'bucketed':<12}{'equivalent':>11}"
           f"{'device':>11}")
     rows = []
-    for n in (60, 400, 1000, 3000, 20000):
+    for n in (60, 400, 1000, 3000):
         pp = os.path.join(HERE, f"plain_{n}.metta")
         bp = os.path.join(HERE, f"buck_{n}.metta")
         prog_plain(n, pp)
