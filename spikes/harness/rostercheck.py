@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""rostercheck.py v1 — H38. One roster, or the fleet has two answers about itself.
+"""rostercheck.py v2 — H38. One roster, or the fleet has two answers about itself.
+
+v2 CHANGELOG (§5 — corrected in place, nothing above this line edited):
+  * The pattern matched only a DOUBLE-QUOTED scalar. I attacked this module
+    an hour after shipping it (`spikes/H38_attack/attack.py`) with three
+    falsifiers stated first, and ALL THREE FIRED against a live control: a
+    bash array, a python list and a single-quoted scalar were all invisible.
+    A green run meant only that nobody had used a different quote. The first
+    repair fixed two of the three and READ AS A FIX FOR ALL THREE; only
+    re-running the attack found the python-list case still blind.
+  * THE LIVE DIVERGENCE BELOW IS NOW CLOSED, by another lane, while this was
+    being written: `spikes/harness/bringup.sh` now agrees with roster.txt and
+    the live scan is GREEN. The section below is kept as the record of what
+    was found, not as a description of the tree.
 
 THE DEFECT REMOVED
 ------------------
@@ -36,9 +49,13 @@ once, so a checker that resolved the disagreement by picking a side would be the
 same defect with a script in front of it. The divergence is reported, loudly,
 and the answer is left to whoever owns the roster.
 
-NOT IN THE PRE-COMMIT SET, and that is a decision, not an oversight (H14): it is
-RED on this tree right now, and a gate that fires on a known-accepted state every
-run is one everyone learns to bypass. It joins the gate when it is green.
+NOT IN THE PRE-COMMIT SET. v1 gave the reason as "it is RED on this tree right
+now, and a gate that fires on a known-accepted state every run is one everyone
+learns to bypass" (H14). THAT REASON EXPIRED: the tree is green. The remaining
+reason is smaller and is not mine to decide -- `pre-commit.hook` is another
+lane's artifact and was rewritten to v2 within the hour, so wiring a fifth
+checker into a shared gate mid-edit is the b529081 hazard. Offered to that
+gate's owner in livechat rather than taken.
 
   python3 rostercheck.py [--selfcheck]    exit 0 = one roster, no divergence.
 """
@@ -51,8 +68,27 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 # Broader ("any string containing a callsign") would match every rationale block
 # in the harness, and this repo is full of prose naming lanes -- a checker that
 # fires on prose is one nobody runs (H14).
+#
+# v2, 2026-08-17 (ok-1). ATTACKED MY OWN INSTRUMENT ONE HOUR AFTER SHIPPING IT
+# and the attack succeeded on all three stated falsifiers
+# (`spikes/H38_attack/attack.py`, run with a live control in the same fixture):
+# v1 required a DOUBLE-QUOTED scalar, so a lane list written as a bash array
+# `LANES=(A B)`, a python list `LANES = ["A", "B"]`, or a single-quoted scalar
+# `LANES='A B'` was invisible and the checker printed "one roster" over a tree
+# with two. `bringup.sh` already uses the array form for its own roster loop, so
+# that was not hypothetical syntax. A green run meant only that nobody had used
+# a different quote -- family A, the instrument cannot produce the answer, in
+# the module whose v1 header cites H26 for exactly this shape.
 HARDCODED = re.compile(
-    r'^\s*(?:LANES|ROSTER|AGENTS|CALLSIGNS)=(?:\$\{[A-Za-z_]+:-)?"([^"]+)"',
+    r'^[ \t]*(?:LANES|ROSTER|AGENTS|CALLSIGNS)[ \t]*=[ \t]*'
+    r'(?:\$\{[A-Za-z_]+:-)?'
+    # Three delimiter forms, each with its own closer. A single character class
+    # cannot do this: the first version wrote one, and its exclusion set had to
+    # forbid `"` to terminate a double-quoted scalar, which made it unable to
+    # see the QUOTED ELEMENTS inside `["A", "B"]`. So the python-list case
+    # survived the first repair -- the fix for two of three forms read as a fix
+    # for all three, and only re-running the attack said otherwise.
+    r'(?:"([^"]+)"|\'([^\']+)\'|[(\[]([^)\]]+)[)\]])',
     re.M)
 
 # The callsign shape, from commit-msg.hook's `is_callsign`, PLUS the lower-case
@@ -111,7 +147,13 @@ def scan(root=None):
     for rel in harness_files(r):
         text = open(os.path.join(r, rel), errors='replace').read()
         for m in HARDCODED.finditer(text):
-            words = m.group(1).split()
+            # v2: split on commas as well as whitespace and strip quotes, so a
+            # python list reads the same as a shell string. The CALLSIGN guard
+            # below is what keeps a non-lane value out; loosening the SYNTAX
+            # while leaving the SHAPE test intact is the scoped direction (H26).
+            raw = next(g for g in m.groups() if g)
+            words = [w.strip('\'",') for w in re.split(r'[,\s]+', raw)
+                     if w.strip('\'",')]
             if not words or not all(CALLSIGN.match(w) for w in words):
                 continue          # not a lane set; some other quoted value
             extra = [w for w in words if w not in sanctioned]
