@@ -72,19 +72,43 @@ def device():
 
 
 class Control:
-    """A positive control that MUST fire. If it does not, the run is void --
-    not negative. Three dead controls in one session all read as clean nulls."""
+    """A positive control that MUST fire, and whose OBSERVATIONS are persisted.
 
-    def __init__(self, name, why):
-        self.name, self.why, self.fired, self.detail = name, why, None, None
+    Two failure modes, both seen:
+      - a control that cannot fire (three in one session, all reading as clean
+        nulls: an absent Python-ext atom, an unbound generator, a match against
+        an atom never added);
+      - a control that was described but never saved. A null computed inline and
+        reported in prose is unfalsifiable afterwards: nobody can recheck a
+        number that exists only in a sentence.
 
-    def observe(self, fired, detail=''):
-        self.fired, self.detail = bool(fired), detail
+    So `observe` requires the actual values, not a boolean, and they land in
+    provenance.json where a third party can recompute the verdict.
+    """
+
+    def __init__(self, name, why, null_must_contain=None):
+        self.name, self.why = name, why
+        # what the null/baseline must be CAPABLE of producing. A null that
+        # cannot contain the structure under test is not a null: it will always
+        # be beaten, and "beats null" then restates the structure's existence.
+        self.null_must_contain = null_must_contain
+        self.fired, self.values, self.detail = None, None, None
+
+    def observe(self, fired, values, detail=''):
+        if values is None:
+            raise ValueError(
+                f'control {self.name}: observations are required, not just a '
+                f'verdict -- a control reported only in prose cannot be rechecked')
+        self.fired = bool(fired)
+        self.values = list(values) if not isinstance(values, dict) else values
+        self.detail = detail
         return self.fired
 
     def as_dict(self):
         return {'name': self.name, 'must_fire_because': self.why,
-                'fired': self.fired, 'detail': self.detail}
+                'null_must_contain': self.null_must_contain,
+                'fired': self.fired, 'detail': self.detail,
+                'observations': self.values}
 
 
 def record(spike_dir, deps=(), artifacts=(), controls=(),
@@ -117,6 +141,10 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
     for c in prov['controls']:
         if c['fired'] is None:
             problems.append(f"CONTROL {c['name']} never observed")
+        elif c.get('observations') in (None, [], {}):
+            problems.append(
+                f"CONTROL {c['name']} carries no observations -- a control "
+                f"reported in prose is not in the artefact and cannot be rechecked")
         elif not c['fired']:
             problems.append(
                 f"CONTROL {c['name']} DID NOT FIRE -- run is VOID, not negative. "
@@ -135,12 +163,19 @@ def demo():
     d = tempfile.mkdtemp()
 
     c_good = Control('posctl', 'must vary or the instrument is blind')
-    c_good.observe(True, '40/40 distinct')
+    c_good.observe(True, [f'hash{i}' for i in range(40)], '40/40 distinct')
     ok, p = record(d, deps=(), artifacts=(), controls=[c_good])
     assert ok, p['problems']
 
     c_dead = Control('posctl', 'must vary or the instrument is blind')
-    c_dead.observe(False, '1/40 distinct')
+    c_dead.observe(False, ['same'] * 40, '1/40 distinct')
+
+    # a control asserted with no data is refused at the point of observation
+    try:
+        Control('x', 'y').observe(True, None)
+        raise AssertionError('should have refused a control with no observations')
+    except ValueError:
+        pass
     ok, p = record(d, controls=[c_dead])
     assert not ok and 'VOID' in p['problems'][0], p['problems']
 

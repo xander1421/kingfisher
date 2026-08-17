@@ -644,3 +644,37 @@ Implemented in `spikes/harness/provenance.py`; it refuses to certify a run with
 an unacknowledged dirty dependency or a control that did not fire.
 `allow_dirty=True` exists so a deliberate patched build is *recorded*, never
 silent.
+
+### A20. A control lives in the artefact, or it does not exist. And a null must be able to contain the thing you claim to detect.
+
+Reported from the G-series after an adversary destroyed G15, and it applies here
+unchanged.
+
+**Pre-registering a hypothesis is not enough if the control is pre-registered in
+prose.** G15 named its null in advance, computed it inline, reported
+"real 0.394 vs null 0.055–0.104" — and never saved it. Nobody can recheck a
+number that exists only in a sentence. Every input present in the artefact, or
+the result is unfalsifiable.
+
+`spikes/harness/provenance.py` now enforces it: `Control.observe()` **requires
+the observations**, not a verdict, and refuses a bare boolean at the point of
+call. A control with no persisted data blocks certification exactly as a control
+that failed to fire does.
+
+**Second, and less obvious: check that the null CAN produce the structure.**
+G15's degree-preserving shuffle destroys cliques and near-inverse pairs — which
+were precisely the structures generating the signal. A null that cannot contain
+the effect will always be beaten, and "beats null" then reduces to "the real
+graph has cliques and the shuffle does not." The control was not merely absent,
+it was **incapable**, which is A15's failure one level up: not a control that
+cannot fail, but a *baseline* that cannot succeed.
+`Control(null_must_contain=...)` exists to make that explicit in the record.
+
+**Third — the number can be right while the UNIT is wrong.** G15's `ho_n`
+counted 2-hop *paths* and the confidence was asserted about *pairs*: one pair
+contributed 245 of 489 denominator entries and all 245 hits, so a coin flip
+became 0.501 by path weighting. Every figure reproduced exactly; the
+denominator was measuring something else. Same family as A18 (a cost divided by
+a size that was in the wrong regime) and as N1's normalised numerator over an
+unnormalised denominator — **third occurrence, so state the unit of the
+denominator next to the ratio, always.**
