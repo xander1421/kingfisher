@@ -92,6 +92,18 @@ about. This is the honest state, not a regression.
   so deciding it is A22. `proposed/D4_slot_candidates.md` has 4 rows and a
   recommendation (settlement/dispute); HUMAN_NEEDED appended. See DECISIONS 106–109.
 
+- **C3 DONE: S73** — `spikes/S73_epoch_commitment/`. Canonical **space** state at
+  an epoch boundary. 66 epochs over the real 67-program corpus chain and verify;
+  a verifier **computes** `root_N+1` by folding `root_N` forward from the
+  additions alone, never seeing the space. **1,150 B per added atom batched /
+  1,770 B isolated**; 12× space = 2.27× proof; epoch cost **~1–2 recomputed
+  nodes per added atom**, `O(added)` not `O(space)`. XOR-of-hashes null beats the
+  trie on cost and is **forged in one line** (`a^a=0`). **Root commits to STATE,
+  not history** — two epoch groupings reach the same root; history binding needs
+  a `(root, delta)` chain, deliberately not built. 11 controls, all fire.
+  **Does NOT unblock bisection** — interpreter state stays RED per S68, and the
+  item was split for exactly that reason. DECISIONS 111–114. New guardrail **A25**.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
@@ -121,22 +133,17 @@ about. This is the honest state, not a regression.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: canonical **state** serialization at an epoch boundary. D2
-  canonicalises *results*; nothing canonicalises interpreter state. It is the
-  shared dependency of (a) optimistic-execution/bisection, which is how
-  verification stops costing a second full run, and (b) verifiable adaptation
-  across epochs (G11 is the n=6 existence proof). One artifact, two unblocks.
-  **Split it before starting** — W2 just showed the two halves are different
-  problems. *Space* state is a pathmap trie, and `W2/trie_witness.py:node_hash`
-  already canonicalises a trie (child bytes sorted, digest a function only of
-  `(prefix, term, children)`), so that half is reachable today. *Interpreter*
-  state is the plan stack, and S68 is RED on it — 4 contaminants, one
-  unidentified, blocked upstream. Do the space half; record the interpreter half
-  as gated on S68, do not re-measure it.
-- **NEXT 2**: **D4 and D6 as written specs.** They gate LOOP-DONE (§7) and
-  neither exists. D6 in particular is cited as a standard on every result page
-  while living only as MISSION_LOOP §5 prose. Freeze-gate priority per §3, so
-  this outranks the measurements below.
+- **NEXT 1**: the **retro-fit D6 owes** — Q1, S72, N1, W4, B1 each cite "per D6"
+  with no `provenance.json` beside them (W1 is INVALID already, skip it). Either
+  record one or drop the citation. This is D6's own consequence 2 and the F2
+  falsifier currently reads 6/6 failing, i.e. the standard is decorative
+  everywhere it appears. Cheap, load-insensitive, and it stops the newest spec
+  from being the least honoured one.
+- **NEXT 2**: **history binding for the epoch chain** — S73 proved the root
+  commits to state and *not* to the path taken to it. A `(root, delta)` chain
+  hashed together is what makes an epoch SEQUENCE evidence. Small, and it is the
+  gap S73 named rather than papered over. (D6 is DONE; D4 is BLOCKED_ON_HUMAN —
+  neither is a NEXT any more.)
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
   from job 1; three options recorded, none implemented). Note M1.3b since found
   reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is

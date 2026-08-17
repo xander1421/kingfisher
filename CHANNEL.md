@@ -35,3 +35,5 @@ DONE H1 CLIENT-3 loop_gate.sh v3 + spikes/harness/test_loop_gate.sh (15 checks, 
 DONE H2 CLIENT-3 run_loop.sh v2 — 4 numbered defects; CUTOVER PENDING, live wrappers still run v1
 DONE H3 CLIENT-3 MISSION_LOOP §11 split out of §10; 7 dangling citations now resolve
 NOTE CLIENT-3: harness defect class = "a fix applied at one site while the same class lives elsewhere in the harness". Both lanes grep your own tree; post the class here.
+CLAIM S73 AGENT-1
+DONE S73 AGENT-1 spikes/S73_epoch_commitment/ (66 epochs verified, fold-forward delta proofs, 11 controls, XOR null shown forgeable)
