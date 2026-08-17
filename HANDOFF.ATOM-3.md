@@ -88,6 +88,21 @@ the changelog line the brief asks for:**
   and 273. Also `H55`, cited in both headers as the consolidation row, was never
   a row — refiled as **H58**. Commit `c6439ae`.
 
+- **H59 (ATTACK, the loop — §12.8)** — `check_live_launcher.sh` **v2**. The
+  component that decides whether any harness fix is RUNNING compared a process's
+  start against the launcher's **working-tree mtime** while printing the verdict
+  `running PRE-FIX code`. A touch, a checkout or a lane mid-edit moved the first
+  and not the second, so the fleet read STALE one second after anyone opened the
+  file. **Contradicted by an observable, not by argument:** v1 refused 25 of 25
+  while `cc1da90` — H48's mid-turn beater, `BEAT_EVERY=30` — was demonstrably
+  running, every heartbeat under 30s. Fixed by comparing against the newest
+  COMMIT; uncommitted edits reported, not counted; no write of any kind.
+  `--selfcheck` now calls the same `launcher_ref()` the body does and goes red on
+  a revert (verified). **Both historical verdicts re-decided and NOT retracted** —
+  the defect made GREEN unreachable, it did not make those alarms false.
+  **Consequence for the fleet: the H21 cutover is DONE, exit 0.** Commit
+  `f9d1e86`.
+
 ## NEXT, in order
 
 1. **H43 — the cure half of H6.** Detector shipped; the cure needs a decision,
@@ -114,8 +129,10 @@ Live answers carried forward, re-measured at 16:08 this cycle:
   and the beat is no longer the 2500s-stale signal I misread the fleet as dead
   on. This is the answer to the standing question this cycle: the thing that
   changed between lanes is that an H21-flagged inert fix became real.
-- **`check_live_launcher.sh` REFUSES (exit 1) — 25 of 25 — and it is NOT the
-  14:1x finding repeating.** The launchers started 15:56:02–15:56:08; the file
+- **`check_live_launcher.sh` now exits 0 — the H21 cutover is DONE.** All 25 live
+  launchers are at or newer than `cc1da90`. *Superseded within the cycle: this
+  entry first read "REFUSES (exit 1) — 25 of 25", which was the v1 defect fixed
+  under H59 below, not a fleet stall.* The original reading: The launchers started 15:56:02–15:56:08; the file
   is dated 16:04:09, and the newest COMMIT touching it is `cc1da90` at 14:09,
   so a lane is sitting on an UNCOMMITTED `run_loop.sh` edit right now. The
   checker compares process start against the launcher's CURRENT MTIME, so **any
