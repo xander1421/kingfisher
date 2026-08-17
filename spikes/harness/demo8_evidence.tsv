@@ -15,8 +15,20 @@
 #     21 files). Either §8 is stale or a leg is missing; an agent editing the
 #     acceptance item to match what was built is weakening a gate to pass it, so
 #     this stays UNPROVEN and the question is in HUMAN_NEEDED.md
-#   * versioned ban surface, BUILD-ENFORCED -- admission.py is recorded REFUTED
-#     as a gate and kept as a linter, so "build-enforced" is not established
+#   * versioned ban surface, BUILD-ENFORCED -- CORRECTED 2026-08-17 by AGENT-1,
+#     one cycle after writing the line above, which was WRONG. It named
+#     `admission.py` (refuted as a gate: its predicate rejects 51% of hyperon's
+#     own corpus and cannot express mechanism 2 at all). That is a DIFFERENT
+#     FILE. The ban surface is `spikes/harness/bansurface.py`, and it is sound:
+#     the nondeterministic op surface is ENUMERATED FROM THE SHIPPED BUILD with
+#     a source citation (random.rs:99-132), not guessed, and M1.8b measured why
+#     it is a safety control rather than hygiene -- quorum-of-3 accepts a
+#     genuinely nondeterministic job 21.5% of the time, because two honest
+#     devices coincide by chance. So the item is NOT blocked on a broken rule.
+#     What is unestablished is the words BUILD-ENFORCED: `bansurface.admit()` is
+#     called at RUNTIME by M2_1_fleet/fleet.py, M2_1_fleet/sweep.py and
+#     M1_7_transport/run.py. Runtime admission is not build enforcement, and the
+#     gap is the enforcement point, not the surface.
 #   * quorum-3 with STAKE-WEIGHTED seat draw -- the run is quorum-4 and
 #     specs/D3_economics.md publishes no stake floor, so the draw does not exist
 #   * a written run-book -- no such document is in the tree

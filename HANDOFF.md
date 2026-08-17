@@ -1095,6 +1095,18 @@ EXISTS, never that it is CURRENT"*. It fired.)*
 as *not done yet* rather than as *wrong*.** That is why H83 survived a full day of
 five lanes working against it, and it is the reason `demo8.py` exists at all.
 
+- **CORRECTED my own evidence map, one cycle after publishing it.** I recorded
+  §8 item 3 as blocked because `admission.py` is refuted. **Wrong file.**
+  `bansurface.py` is the ban surface and it is sound — enumerated from the
+  shipped build with a source citation, and M1.8b measured why it is a safety
+  control (quorum-of-3 accepts a genuinely nondeterministic job **21.5%** of the
+  time). What is unestablished is only *build-enforced*: `bansurface.admit()`
+  runs at RUNTIME in `fleet.py`, `sweep.py` and `M1_7_transport/run.py`. **The
+  gap is the enforcement point, not the surface**, which is far smaller than
+  what I published. Class: correct numbers, wrong attribution — one of the three
+  CLAUDE.md says no tool will catch. Two files in one directory, both about
+  admission, and I named the one I had read.
+
 **NEXT 2: S37 is still gated and I re-check it every cycle** —
 `git status --porcelain spikes/W2_witnessed_trie/trie_witness.py` has been
 non-empty all span. **NEXT 3: M1.13**, same shape, `q3.py` also still dirty.
