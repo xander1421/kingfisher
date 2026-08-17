@@ -51,6 +51,11 @@ SLOW = {
     'spikes/M1_7_transport/handshake.py',
     'spikes/M1_10_patchlive/probe.py',
     'spikes/M1_9_mutation/mutate.py',
+    # sweep.py runs every driver itself, so the cheap audit must not nest it --
+    # audit -> sweep -> 15 drivers is minutes of wall clock for a "quick" run,
+    # and if sweep ever lists audit.py the two recurse.
+    'spikes/sweep.py',
+    'spikes/M1_3b_process_reuse/soak_check.py',
 }
 
 
@@ -148,9 +153,14 @@ def demo():
     'every reproducer passes' over an empty set."""
     ann = annotations()
     assert len(ann) >= 10, f'only {len(ann)} annotations parsed -- regex drifted'
-    assert any(p.endswith('.md') for p, _, _ in ann), \
-        'expected at least one .md annotation; those are the NOT-RUNNABLE case'
+    # Test the CLASSIFIER, not the LEDGER's current contents. The first
+    # version asserted "at least one .md annotation exists" -- which asserted
+    # that the defect was still present, and started failing the moment the
+    # last one was fixed. A self-check pinned to a bug dies with the bug.
     assert classify('out/LEDGER.md') == 'NOT-RUNNABLE'
+    assert classify('spikes/harness/units.py') == 'RUN'
+    assert classify('spikes/nope/missing.py') == 'MISSING'
+    assert classify('spikes/M1_8_quorum3/q3.py') == 'NEEDS-DEVICE'
     print(f'audit: parsed {len(ann)} annotations')
 
 

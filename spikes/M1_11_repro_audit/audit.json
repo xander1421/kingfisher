@@ -21,15 +21,15 @@
    "--alpha"
   ],
   "claim": "Quorum agreement must be counted in failure DOMAINS, not seats \u2014 and t",
-  "status": "FAIL(rc=2)",
-  "secs": 2.3,
-  "tail": "device gate REFUSED: REFUSED - device is not quiet: cpu_busy(23.1%>15%) thermal(46700m)\n  device cpu_busy 23.1% (limit 15%), runnable 1, thermal 46700m\n  battery: status=5 level=100 charging=true powered=1\n"
+  "status": "NEEDS-DEVICE",
+  "secs": 0,
+  "tail": ""
  },
  {
-  "path": "spikes/S15_android_device/fuelrun/target/release/soakrun",
+  "path": "spikes/M1_3b_process_reuse/soak_check.py",
   "args": [],
   "claim": "Process reuse is SAFE for the measured job class \u2014 M1's largest open i",
-  "status": "NOT-RUNNABLE",
+  "status": "NEEDS-DEVICE",
   "secs": 0,
   "tail": ""
  },
@@ -50,10 +50,10 @@
   "tail": "units: 15 assertions pass\n"
  },
  {
-  "path": "spikes/REGRESSION_SWEEP.md",
+  "path": "spikes/sweep.py",
   "args": [],
   "claim": "Regression sweep: 2 of 7 drivers silently broken by one change, both b",
-  "status": "NOT-RUNNABLE",
+  "status": "NEEDS-DEVICE",
   "secs": 0,
   "tail": ""
  },
@@ -63,9 +63,9 @@
    "67"
   ],
   "claim": "Headline re-established on the current codebase, and CERTIFIED** | **A",
-  "status": "PASS",
-  "secs": 11.6,
-  "tail": "coordinator on 127.0.0.1:18080 (loopback only), 64 jobs queued\n\nreturned 64/64 envelopes in 10.1s, 64 status OK\nserver stats: {\"polls\": 65, \"jobs_out\": 64, \"shard_bytes\": 174063, \"results\": 64, \"misses\": 0, \"unauthorised\": 0}\nphone-over-HTTP vs host: 64/64 byte-identical (fuel_used AND sorted_hash)\n"
+  "status": "NEEDS-DEVICE",
+  "secs": 0,
+  "tail": ""
  },
  {
   "path": "spikes/M1_10_patchlive/probe.py",
@@ -73,40 +73,40 @@
    "--control"
   ],
   "claim": "The nondeterminism patches are live in all 4 quorum binaries \u2014 and 2 o",
-  "status": "PASS",
-  "secs": 9.9,
-  "tail": "probe: parser returns non-empty output\nUNPATCHED build, 30 runs each:\n  intersection   distinct=3  0\t(B $y C)\n  subtraction    distinct=3  0\t(A B)\n  new_space      distinct=30  0\tGroundingSpace-0x76d1b0018\n  random_err     distinct=30  0\t()\n1\t(Error (random-int RandomGenerator-0x96f220018 5 0) RangeIsEmpt\n"
+  "status": "NEEDS-DEVICE",
+  "secs": 0,
+  "tail": ""
  },
  {
   "path": "spikes/M1_9_mutation/mutate.py",
   "args": [],
   "claim": "Corpus classes partition by layer: resolver faults 24/24, evaluation f",
-  "status": "PASS",
-  "secs": 34.0,
-  "tail": "_sub__module.metta\n      detector: python__tests__scripts__c2_spaces.metta\n      detector: python__tests__scripts__f1_imports.metta\n      detector: python__tests__scripts__f1_moduleA.metta\n      detector: python__tests__scripts__f1_moduleB.metta\n\n  probe !(kf-canary): '0\\t(kf-canary)' -> '0\\t1'  (mutant live)\n\nstdlib-init: stdlib init: one extra rule, which shifts fuel_used for EVERY program\n  empty             0/ 14 detected\n  error-only        0/  4 detected\n  evaluated         0/ 22 detected\n  import-failure    0/ 24 detected\n  TOTAL             0/64\n\nrebuilt unmutated; wrote mutation.json\n"
- },
- {
-  "path": "spikes/M1_8_quorum3/CORPUS_COMPOSITION.md",
-  "args": [],
-  "claim": "The 64-program corpus: 38 of 64 cannot exhibit an evaluation divergenc",
-  "status": "NOT-RUNNABLE",
+  "status": "NEEDS-DEVICE",
   "secs": 0,
   "tail": ""
+ },
+ {
+  "path": "spikes/M1_8_quorum3/classify.py",
+  "args": [],
+  "claim": "The 64-program corpus: 38 of 64 cannot exhibit an evaluation divergenc",
+  "status": "PASS",
+  "secs": 0.0,
+  "tail": "classify: all assertions pass\n\nhost-a: 64 envelopes\n  empty            14  distinct_hashes=  1  fuel 1-302\n  import-failure   24  distinct_hashes= 14  fuel 107-1811\n  error-only        4  distinct_hashes=  3  fuel 107-1829\n  evaluated        22  distinct_hashes= 15  fuel 132-50794\n\nexecuted MeTTa:      26/64\ncould NOT diverge:   38/64   (no output, or died at first import!)\n"
  },
  {
   "path": "spikes/M1_7_transport/handshake.py",
   "args": [],
   "claim": "A workaround disabled keep-alive, and the disabled keep-alive then arg",
-  "status": "PASS",
-  "secs": 3.9,
-  "tail": "6   tls 192.168.1.25:18087\n\n           phase   plain ms     tls ms\n         connect        6.1        6.8\n      appconnect        0.0       17.5\n   starttransfer       12.4       24.2\n           total       13.0       24.3\n\nTCP handshake           6.1 ms   (1 round trip)\nTLS handshake          10.7 ms   (1.8 x the TCP RTT)\ntotal setup            16.9 ms\n\nimplied one-way RTT     6.1 ms  (TCP handshake is 1 RTT)\n  at  30 ms RTT: setup ~=     83 ms  -> 0-RTT would save that\n  at  50 ms RTT: setup ~=    138 ms  -> 0-RTT would save that\n  at  80 ms RTT: setup ~=    220 ms  -> 0-RTT would save that\n"
+  "status": "NEEDS-DEVICE",
+  "secs": 0,
+  "tail": ""
  },
  {
   "path": "spikes/M1_7_transport/latency_floor.py",
   "args": [],
   "claim": "Latency floor is 7.0 ms = 1 RTT; we ship 17.8 ms; the naive fix gives",
-  "status": "PASS",
-  "secs": 68.9,
-  "tail": "case                                    median ms   p90 ms\nA persistent connection (floor)               7.0      8.4\nB fresh conn, keep-alive server              14.2     33.1\nC fresh conn, production server              23.7     37.4\n\nidle-gap cost -- what a reconnect really pays on a phone:\n  after  0s idle:    21.8 ms\n  after  2s idle:    25.2 ms\n  after  5s idle:    28.4 ms\n  after 15s idle:    25.0 ms\n"
+  "status": "NEEDS-DEVICE",
+  "secs": 0,
+  "tail": ""
  }
 ]
