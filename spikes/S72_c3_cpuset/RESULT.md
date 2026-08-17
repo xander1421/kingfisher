@@ -109,9 +109,24 @@ S34's surviving conclusion is *"13.9× faster **while staying compute-bound**"*.
 At four workers on the deployable cpuset it is not. **S34's compute-bound claim
 is scoped to single-core and should say so.**
 
-## 3. This cuts toward the NPU, not away from it
-A bandwidth-bound kernel is precisely the case on-chip memory addresses, and
-VTCM is on-chip. So the honest position on the descope is now:
+## 3. This cuts toward the NPU **conditionally**, and the condition is unmet
+**Bandwidth-bound normally cuts AWAY from the NPU** — S18's original point: the
+NPU shares the same DRAM bus, so a bandwidth-limited kernel is not helped by
+moving it to a different compute unit on the same memory system.
+
+It cuts *toward* the NPU only through **on-chip residency**, and that chain has
+an unmet link already recorded:
+
+```
+LEDGER  VTCM is 8 MB vs a 12.8 MB packed store — it does not fit,
+        so bundling is a prerequisite for residency
+LEDGER  Bundling's magnitude on real data: 54x was B=1->B=64 compression;
+        S52 measured clustering-vs-random only.  UNMEASURED
+```
+
+So S72b makes the NPU **conditionally relevant again, on a premise nobody has
+measured**. That is a real change from where the descope stood and it is *not*
+a revival. The honest position on the descope is now:
 
 - the **ladder argument is untouched** — no SDK, no delegate, no scale pinning,
   no QNN licence, no requantisation assumption, and the prefilter still costs
