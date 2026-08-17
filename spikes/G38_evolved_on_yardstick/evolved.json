@@ -1,0 +1,211 @@
+{
+  "arms": {
+    "full": {
+      "beats_size_matched_on_every_seed": true,
+      "evaluated_rules": [
+        53,
+        53,
+        54
+      ],
+      "hits1": 0.01210250379734431,
+      "hits10": 0.05752364153069724,
+      "hits3": 0.027402126512812975,
+      "median_mrr": 0.02669542335020429,
+      "mrr": 0.02669542335020429,
+      "mrr_range": [
+        0.026510576429377476,
+        0.02817033043722353
+      ],
+      "per_seed": [
+        {
+          "body_lengths": {
+            "2": 51,
+            "3": 2
+          },
+          "dropped_planted": 73,
+          "evaluated_rules": 53,
+          "evolve_sec": 45.9,
+          "hits1": 0.010497819589396835,
+          "hits10": 0.05752364153069724,
+          "hits3": 0.02674065363320104,
+          "mrr": 0.026510576429377476,
+          "planted_share_pct": 48.7,
+          "pop_size": 150,
+          "ratio_vs_size_matched": 2.1007838788236572,
+          "rejected_capped": 234,
+          "seed": 777,
+          "size_matched_mrr": 0.012619373509388403,
+          "unscorable_below_min_pairs": 5
+        },
+        {
+          "body_lengths": {
+            "2": 48,
+            "3": 5
+          },
+          "dropped_planted": 70,
+          "evaluated_rules": 53,
+          "evolve_sec": 46.6,
+          "hits1": 0.01210250379734431,
+          "hits10": 0.06024303003576854,
+          "hits3": 0.028688323778725072,
+          "mrr": 0.02817033043722353,
+          "planted_share_pct": 44.9,
+          "pop_size": 156,
+          "ratio_vs_size_matched": 2.2323081582667887,
+          "rejected_capped": 260,
+          "seed": 1234,
+          "size_matched_mrr": 0.012619373509388403,
+          "unscorable_below_min_pairs": 2
+        },
+        {
+          "body_lengths": {
+            "2": 48,
+            "3": 6
+          },
+          "dropped_planted": 46,
+          "evaluated_rules": 54,
+          "evolve_sec": 48.5,
+          "hits1": 0.012310745259444363,
+          "hits10": 0.05509824097212014,
+          "hits3": 0.027402126512812975,
+          "mrr": 0.02669542335020429,
+          "planted_share_pct": 32.4,
+          "pop_size": 142,
+          "ratio_vs_size_matched": 2.1133390552416715,
+          "rejected_capped": 269,
+          "seed": 31337,
+          "size_matched_mrr": 0.012631869592336439,
+          "unscorable_below_min_pairs": 7
+        }
+      ],
+      "ratio_median": 2.1133390552416715,
+      "ratio_range": [
+        2.1007838788236572,
+        2.2323081582667887
+      ]
+    },
+    "no_variation": {
+      "beats_size_matched_on_every_seed": true,
+      "evaluated_rules": [
+        32,
+        32,
+        32
+      ],
+      "hits1": 0.010154833651820275,
+      "hits10": 0.016169337057180655,
+      "hits3": 0.014797393306874419,
+      "median_mrr": 0.013440210257029826,
+      "mrr": 0.013440210257029826,
+      "mrr_range": [
+        0.013440210257029826,
+        0.013440210257029826
+      ],
+      "per_seed": [
+        {
+          "body_lengths": {
+            "2": 32
+          },
+          "dropped_planted": 0,
+          "evaluated_rules": 32,
+          "evolve_sec": 33.8,
+          "hits1": 0.010154833651820275,
+          "hits10": 0.016169337057180655,
+          "hits3": 0.014797393306874419,
+          "mrr": 0.013440210257029826,
+          "planted_share_pct": 0.0,
+          "pop_size": 32,
+          "ratio_vs_size_matched": 1.453275151141657,
+          "rejected_capped": 0,
+          "seed": 777,
+          "size_matched_mrr": 0.009248221334047808,
+          "unscorable_below_min_pairs": 0
+        },
+        {
+          "body_lengths": {
+            "2": 32
+          },
+          "dropped_planted": 0,
+          "evaluated_rules": 32,
+          "evolve_sec": 34.0,
+          "hits1": 0.010154833651820275,
+          "hits10": 0.016169337057180655,
+          "hits3": 0.014797393306874419,
+          "mrr": 0.013440210257029826,
+          "planted_share_pct": 0.0,
+          "pop_size": 32,
+          "ratio_vs_size_matched": 1.453275151141657,
+          "rejected_capped": 0,
+          "seed": 1234,
+          "size_matched_mrr": 0.009248221334047808,
+          "unscorable_below_min_pairs": 0
+        },
+        {
+          "body_lengths": {
+            "2": 32
+          },
+          "dropped_planted": 0,
+          "evaluated_rules": 32,
+          "evolve_sec": 34.1,
+          "hits1": 0.010154833651820275,
+          "hits10": 0.016169337057180655,
+          "hits3": 0.014797393306874419,
+          "mrr": 0.013440210257029826,
+          "planted_share_pct": 0.0,
+          "pop_size": 32,
+          "ratio_vs_size_matched": 1.453275151141657,
+          "rejected_capped": 0,
+          "seed": 31337,
+          "size_matched_mrr": 0.009248221334047808,
+          "unscorable_below_min_pairs": 0
+        }
+      ],
+      "ratio_median": 1.453275151141657,
+      "ratio_range": [
+        1.453275151141657,
+        1.453275151141657
+      ]
+    }
+  },
+  "baseline_g17_2hop": {
+    "hits1": 0.031064726346219804,
+    "hits10": 0.12294820912342594,
+    "hits3": 0.06622078494781714,
+    "mrr": 0.0631122756859102
+  },
+  "baseline_rule_count": 3198,
+  "best_arm": "full",
+  "body_lengths_observed": [
+    2,
+    3
+  ],
+  "c1_baseline_reproduces_g30": true,
+  "evolved_beats_size_matched_mining": {
+    "full": true,
+    "no_variation": true
+  },
+  "f1_evolved_fails_to_beat_mining": true,
+  "f2_no_length_variation": false,
+  "plant_contribution_bound": {
+    "g24_published_full_base_solved": [
+      4719,
+      4144,
+      3381
+    ],
+    "max_plant_share_of_g24_coverage_pct": [
+      11.7,
+      13.3,
+      16.3
+    ],
+    "note": "evo.population_metrics counts `correct` over ALL rules including planted heads, and `target` includes the planted dev conclusions, so G24's published `solved` INCLUDES the A15 plant. Bounded above by the number of planted dev conclusions.",
+    "planted_dev_conclusions": 550
+  },
+  "seeds": [
+    777,
+    1234,
+    31337
+  ],
+  "size_matched": {
+    "full": 0.012619373509388403,
+    "no_variation": 0.009248221334047808
+  }
+}

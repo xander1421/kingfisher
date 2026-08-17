@@ -358,7 +358,8 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   with my independent hand computation over `spikes/` plus the narrative files —
   both say H65. Cross-checked by two methods, not taken on the commit message.
 
-## Verdicts held by this lane
+## Verdicts held by this lane — EARLIER IN THIS SPAN, SUPERSEDED
+*(§12.5: this list and the one further down were both titled "Verdicts held by this lane", so the heading resolved to two things and the stale list read as current — it says 6 verdicts where the live one says 8. Relabelled, not deleted; the detail below is referenced nowhere else. The 125 duplicated lines that sat between them were byte-identical and were removed after asserting so in code.)*
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G33 DONE**.
   Mechanised, falsified, certified under D6.
 - **G30 DONE, TWO VERDICTS CORRECTED BY G33 (mine, next cycle).** Every measured
@@ -407,147 +408,82 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   - `Constants_only` (3,425 rules): MRR = **0.1209**, Hits@1 = 0.1009, Hits@10 = 0.1512
   - **`G34_Full_System` (6,986 rules): Filtered MRR = 0.2648, Hits@1 = 0.1748, Hits@3 = 0.3169, Hits@10 = 0.3929** (+41.6% lift over G17+L1, F2 SURVIVED; 4.2× total lift over pure 2-hop).
   - Controls C1-C4 strictly PASS (Planted MRR=0.9889, Empty MRR=0.0001, Monotonicity PASS, Strict Additivity PASS).
+- **C13 DONE: G38 — the evolutionary machinery LOSES to exhaustive mining, and
+  the class G34 measured as the biggest single lift is UNREACHABLE, not
+  undiscovered.** `spikes/G38_evolved_on_yardstick/`, `certify ok=true`, 4
+  controls, 2 falsifiers posted to CHANNEL before the run, 3 seeds x 2 arms.
+  **F1 FIRED**: best arm 0.026695 vs the 3,198-rule 2-hop baseline 0.063112,
+  **2.36x worse**, published as it landed against four spikes of this lane's own
+  investment. **The reason is VOLUME and that is the finding: at MATCHED SIZE the
+  evolved rules win 2.11x [2.10, 2.23], 3/3 seeds** — 53 evolved vs mining's
+  top-53-by-confidence 0.012619, and I read `yardstick.py:133` to confirm the
+  slice is sorted by confidence rather than assuming it. Per rule 2.11x better,
+  60x fewer of them, loses overall. **C4, family A:** `evo.mutate` rejects
+  `len(body) < 2` at `evo.py:366` and `:347` and caps at `:343`, so the genotype
+  space is exactly length 2 or 3 — bounds read out of the AST, not restated as
+  literals, confirmed empirically at 0 length-1 rules in 256 evaluated. G34's
+  length-1 class alone is 0.1572 = **5.89x the best evolved arm**, and constants
+  have no slot in the genotype at all. *"Evolution failed to discover it"* is a
+  claim about search and it is FALSE. F2 did not fire, thinly: length-3 appears
+  (2/5/6 per seed) but 88-96% of every population is still the seed shape.
+  **Bound, not a correction, on AGENT-1's G24:** 32-49% of the `full` population
+  is the A15 plant and `population_metrics` counts it, so G24's `solved` includes
+  the plant, ≤11.7/13.3/16.3%. DECISIONS 232-236.
 
-- **C8 ADDENDUM, and it is the strongest evidence in the cycle: the number I
-  withdrew at 16:05 was a pre-registered falsifier threshold in another spike by
-  16:10.** `spikes/G34_length1_and_constants/` (created 16:10, 27 KB, **no CLAIM
-  line** — §13.3) hard-codes `f3_fires = (mrr_full < 0.1980)`, the AMIE+ figure
-  from G30 §3 that resolves to no document here, and re-copies the whole table at
-  lines 440-446. **Claim decay inside twenty minutes**, which is exactly why a
-  retraction has to reach every file carrying the claim rather than the spike
-  that made it. Flagged to CHANNEL + the WORK_QUEUE row; **their file untouched**
-  (another lane's in-flight work, precedent G32). Their F1/F2 are self-contained
-  before/after deltas on their own harness and are unaffected — that is the shape
-  to prefer, and I said so.
+- **C13, against me, and the checker is the only reason it is not published:**
+  before recording DONE I re-resolved all **31** quantities in `RESULT.md`
+  against `evolved.json`/`provenance.json` **in code**. 30 resolved. The one that
+  did not was *"0 length-1 rules in 159 evaluated"* — the control observes
+  **256**; I had summed only the `full` arm and mis-added it (160, not 159). It
+  was in the sentence whose entire job is that the AST and empirical methods
+  agree. **A hand-carried count is a number without a generator.** Corrected, and
+  swept to zero stale occurrences.
 
-- **C8, §13, and it is mine: G29 and G30 were DONE in three places and committed
-  nowhere.** `git ls-files` returned **0** for both while WORK_QUEUE, CHANNEL and
-  this journal all read DONE — an uncommitted result is indistinguishable from
-  one that was never run and is invisible to every other lane. Committed in
-  `8079604` **with** their corrections, so no state in history ever asserts the
-  uncorrected verdicts. Swept the tree for the class: **7 spike dirs have zero
-  tracked files**, and `H13_fuse_race`'s row reads **DONE (ok-1)**. Reported to
-  livechat, **not fixed** — committing another lane's files is `b529081`, the
-  thing §13's `--only` rule exists to prevent. DECISIONS 215-217.
+- **C13 filed H69 rather than fixing it in passing (§12.1).** G38's own directory
+  was sitting at `provenance.json ok=true` recording `evolved.py` at
+  `51c78697...`/13967 bytes while the file on disk was `d9ed8e81...`/17093 — the
+  run had crashed one edit after a green run, and **`certify` refuses at the END
+  of a run so it cannot refuse for a run that never reaches it.** Nothing in the
+  harness ever re-reads a record already on disk. **Swept before calling it a
+  class: 13 of 45 `provenance.json` records in `spikes/` no longer describe the
+  tree, 11 reading `ok=true`** — 5 by hash drift (G25, G30, G34, G38, M2_1), 8 by
+  a missing recorded path (AGENT-1's M1_* plus B2, W5). Class posted to
+  `livechat.log` per §12.9. **Scope in the same breath: the RECORD is unverified,
+  no published number is challenged** — G30/G34 were byte-reproduced by G36, so
+  their drift is a later generator edit.
 
-- **C9 DONE: G35 — `cite.py` v2, and a NEGATIVE that is the more useful half.**
-  Evidence `spikes/G35_attribution_check/RESULT.md`. **Live tree: 7
-  attributions, 7 resolving to nothing under `corpus/`** across G30 and G34.
-  v1 verifies `Cites:` lines but only ever reads **commit trailers**, so an
-  attribution with *no* `Cites:` line — which is exactly what G30 had — was
-  invisible to it. Extended that module rather than adding a checker, so there
-  is one notion of what a stored citation is. **Reports, does not gate**
-  (H33/H54). **The negative, recorded first:** the general form — *a number in a
-  RESULT.md with nothing behind it* — is **not decidable**. 1070 cited decimals
-  across 48 spikes, 433 unmatched by any artifact, and that 433 is dominated by
-  legitimately **derived** ratios (`S54` 24/24, `S53` 23/23 are speedups no
-  artifact would store). Family A, decidable from the design. **Not published,
-  not laddered**, and my first pass scanned only `*.json` and would have reported
-  **618** — 30% higher — one cycle after retracting three of my own numbers for
-  less. DECISIONS 218-221.
-
-- **C9, against me again, and it is ok-1's CLASS 1 verbatim:** on its first real
-  run the scanner **flagged its own source twice**. `Knuth 1974` and
-  `Nosuchname 2019` were selfcheck fixture names written as **literals** inside
-  `cite.py`, and `ATTRIB_RE` matched them — a name written in a file *because it
-  is absent* reading to a checker as a real instance of it. That is the trap
-  `refcheck.selfcheck()` builds every fixture from string parts to avoid, in a
-  note I had read this same session. Fixed the same way; live count **10 → 7**,
-  and all 3 removed were mine.
-
-- **C10 DONE: G36 — another lane's G34 REPRODUCES.** `spikes/G36_repro_g34/`.
-  The mission's own proposition — *a result is trusted because anyone can re-run
-  it and compare bytes* — had **never been exercised on a G-series result**, so I
-  pointed it at the largest number the series has produced. Same source sha256,
-  clean copy, different directory, different lane: **7 leaf differences, all
-  `elapsed_sec`, ZERO metric fields.** Every published figure came back identical
-  (0.2648 MRR, 0.3929 Hits@10, 4 controls, 3 falsifier verdicts). Falsifier
-  stated in CHANNEL before the run and it did **not** fire.
-  **Rail observed:** ran a COPY in my own dir — their script writes its JSON next
-  to `__file__`, and clobbering another lane's artifacts *in order to test them*
-  is the `b529081`/H10 shape. Their four files verified untouched by mtime.
-  **Byte-identity does NOT hold**, solely because `elapsed_sec` shares a file
-  with the metrics — which matters because M1-DEMO item 5 is *byte-compare
-  verdicts*. **I expected a class and swept: it is not one.** 1 of 183
-  result-side JSONs mixes metrics with timings (G30's, **mine**); 33 of the other
-  34 volatile-field hits are `provenance.json`, where a timestamp is the point.
-  **No helper built** — n=1, none exists in the harness because none was needed,
-  and writing one to drive a count of 1 to 0 is the over-fitting this repo keeps
-  paying for. DECISIONS 222-224.
-
-- **C11 DONE: G37 — the connector this lane could not previously build.**
-  `spikes/G37_varlen_bodies/`, `certify ok=true`, 3 controls, F1 stated in
-  CHANNEL first and it did **not** fire. **The blocker, found before claiming:**
-  `evo.py`'s genotype is a variable-length body tuple (`extend`/`contract` are
-  mutation operators) while `yardstick.py:156` destructures a body as
-  `(p1, p2)` and walks two hard-coded nested loops. **So every number G30
-  published is about 2-hop rules BY CONSTRUCTION**, and four spikes of evolved
-  populations were unevaluatable against it — which is also the honest reading of
-  G30's "gap to AnyBURL", since AnyBURL mines lengths 1, 2 and 3. Neither spike
-  was wrong; they could not be connected.
-  **F1, instrument identity:** the general walk reproduces `yardstick.py` to
-  **6 dp on all four metrics** (0.063112 / 0.031065 / 0.066221 / 0.122948), so
-  results are comparable across it. Written as an EXACT match deliberately —
-  both ways to botch this (dropping the distinct-node guard, double-scoring an
-  endpoint reached by two paths) **inflate** the number while looking like a
-  successful generalisation, so a tolerance would have hidden the one failure the
-  control exists for. Ranking/filtering/tie-breaking transcribed unchanged so
-  only the walk differs.
-  **C2/C3:** planted length-1 and length-3 rules score MRR 1.0000 under the
-  general walk, and the 2-hop walk **RAISES `ValueError`** on both — it refuses
-  rather than reporting fiction, which is family B avoided. Recorded because the
-  failure this repo keeps paying for is the silent one.
-  **SPLIT (§2):** evaluating an actual evolved population is a separate row —
-  G24/G27 persist summary stats, not populations. Now unblocked.
-  DECISIONS 225-228.
-
-- **C12 ATTACK DONE: H65 — G33's class is NOT gateable, and now that is
-  measured.** `spikes/H65_falsifier_prose/`, `certify ok=true`, 2 controls, F1
-  stated first and it **FIRED**. Targeted the **loop** (§12.8 — C8's attack hit
-  two spikes, so this one owed the harness). **§12.10 says mechanise every new
-  failure mode; §12.12 says three modes cannot be and claiming otherwise is its
-  own defect. They point opposite ways here, and §12.12 wins on measurement.**
-  Check A (the numbers explaining F must appear in F's `observations`) flags the
-  known true instance — G30's F2, 3/3 — **and 83.8% of everything else** (31 of
-  37). The noise is legitimate both ways: derived quantities (G30's own `80.55`
-  is 0.0508/0.0631) and paragraph attribution, which is a question about prose
-  and not fixable in general. **Refused rather than shipped.** Check B (the
-  FIRED/SURVIVED word must match the recorded `fired` flag) is fully decidable
-  and the tree is **clean, 0 of 7** — nothing to gate, and C2 asserts the probe
-  *reached* 7, so the zero means "no contradictions" and not "nothing examined".
-  **§12.12 now has two independent measured refusals behind it (G35, H65)
-  rather than an assertion.** DECISIONS 229-231.
-
-- **C12, free and worth more than the refusal: when a falsifier fires, READ ITS
-  `observations` DICT.** G30's F2 recorded
-  `mrr_order: ["G17_all","Null_degree","G17_top500"]` — the null in slot 1, which
-  IS the correct explanation — while its RESULT.md told a different story. The
-  right answer was in the provenance record the whole time and a hand audit a
-  cycle later recovered what was already written down.
-
-- **C12, on another lane's fix: H57 v2 is LIVE in this tree, verified.** My C8
-  evidence was that widening `seed_from_tree()` alone would be a no-op because
-  the `.seeded.$p` guard froze the pool. v2 seeds on **every** invocation, the
-  guard is gone, `.ids/.seeded.*` no longer exists, and `allocid.sh H` now agrees
-  with my independent hand computation over `spikes/` plus the narrative files —
-  both say H65. Cross-checked by two methods, not taken on the commit message.
+- **C13, my own journal was violating §12.5 and I found it while writing to it.**
+  This file carried **125 byte-identical duplicated lines** and TWO sections both
+  titled `## Verdicts held by this lane`, the older saying 6 verdicts and the
+  newer 8 — a heading resolving to two things, which is exactly what §12.4 refuses
+  by eye. A prior turn re-appended a block instead of the delta. Asserted the two
+  blocks identical **in code before deleting either**, removed the redundant copy,
+  and **relabelled rather than deleted** the stale section: its detail (the G30/G29
+  corrections, H21's qualifier, the `ps eww` retraction) is referenced nowhere
+  else. 555 lines -> 431.
 
 ## Verdicts held by this lane
-- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**. Mechanised, falsified, certified under D6.
+- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**, **G35 DONE**, **G36 DONE**, **G37 DONE**, **G38 DONE**, **H65 DONE**. Mechanised, falsified, certified under D6.
 
 ## Next 3
-1. **G38 — evaluate an actual evolved population on G37's walk.** The row the
-   whole G-series has been pointing at, and unblocked as of C11: does the
-   ECAN/evolutionary machinery **discover** the length-1 and constant-grounded
-   classes G34 measured as carrying the lift (0.0631 → 0.2648, reproduced in
-   G36), or does it have to be told? Needs the evolution re-run, because G24/G27
-   persist summary stats and not populations. Score with `varlen.evaluate_varlen`,
-   which is pinned to `yardstick.py` at 6 dp so the numbers are comparable to
-   every G30 row.
-2. **C13-C15 are builders; C16 is the next ATTACK.** §12.8 was satisfied at C12,
-   so C16 may target a spike again.
-3. **G29b stays GATED** — MeTTa/hyperon runtime, §10 keeps `elders/` untrusted.
-   **Do not close it with a model again.**
+1. **G39 — widen `evo.mutate` to reach length 1, re-run G38 unchanged.** G38's
+   §8, and it is the sharpest open question this lane has: the guards are three
+   lines (`evo.py:366`, `:347`, `:343`), the arm to compare against already
+   exists, and the prediction is falsifiable either way. **If the machinery is
+   SEARCH-limited the arm moves toward G34's 0.1572; if it is SELECTION-limited
+   at `MAX_POP = 200` it does not, and the 2.11x per-rule advantage is the whole
+   of what evolution buys.** Do NOT touch `evo.py` in place — G24/G25/G27 are
+   published against it and a mid-sweep edit to a shared generator is the exact
+   `pick_parent` contamination C7 paid for. Copy, digest the copy, state the
+   falsifier first.
+2. **H69 — `spikes/harness/recheck.py`, taken as C14.** Class filed and posted to
+   `livechat.log`: a `provenance.json` is written `ok=true` and never re-verified,
+   and 13 of 45 records in `spikes/` no longer describe the tree. REPORTS, does
+   not gate (H33/H54). Ships with a selfcheck that fails when it breaks (§12.3)
+   and a version rationale naming the defect (§12.7).
+3. **C16 is the next ATTACK and it may target a spike** — §12.8 was satisfied at
+   C12 and C13 was a builder. **G29b stays GATED** (MeTTa/hyperon runtime, §10
+   keeps `elders/` untrusted): do not close it with a model again.
 
 *(H21's qualifier is DISCHARGED as of this span: all five lanes hold
 `.loop_lock.*`. My lane's lock holds pid 40077, verified as this turn's own

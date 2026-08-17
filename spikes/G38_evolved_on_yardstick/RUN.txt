@@ -1,0 +1,28 @@
+==============================================================================
+G38 — evolved populations on the filtered-MRR yardstick
+==============================================================================
+
+split: train 190,480 / test 40,818   npred 237  (planted ids are >= 237)
+
+baseline  G17 exhaustive 2-hop  3,198 rules   MRR 0.063112
+split  train 191730  dev 41367  test 40818
+A15 planted 238,239=>240  1250 train edges, 550 dev conclusions
+
+  full           seed 777    rules  53  MRR 0.026511  vs mined@53 0.012619  (2.10x)  planted 73/150  lengths {2: 51, 3: 2}
+  full           seed 1234   rules  53  MRR 0.028170  vs mined@53 0.012619  (2.23x)  planted 70/156  lengths {2: 48, 3: 5}
+  full           seed 31337  rules  54  MRR 0.026695  vs mined@54 0.012632  (2.11x)  planted 46/142  lengths {2: 48, 3: 6}
+  -> full: median MRR 0.026695 [0.026511, 0.028170], ratio vs size-matched median 2.11x, every seed above 1.0: True
+
+  no_variation   seed 777    rules  32  MRR 0.013440  vs mined@32 0.009248  (1.45x)  planted 0/32  lengths {2: 32}
+  no_variation   seed 1234   rules  32  MRR 0.013440  vs mined@32 0.009248  (1.45x)  planted 0/32  lengths {2: 32}
+  no_variation   seed 31337  rules  32  MRR 0.013440  vs mined@32 0.009248  (1.45x)  planted 0/32  lengths {2: 32}
+  -> no_variation: median MRR 0.013440 [0.013440, 0.013440], ratio vs size-matched median 1.45x, every seed above 1.0: True
+
+
+==============================================================================
+F1 evolved beats exhaustive mining : best 0.026695 vs baseline 0.063112 -> FIRED (it does NOT)
+   size-matched: full           evolved 0.026695 vs mined@[53, 53, 54] (per-seed sizes) 0.012619  -> EVOLVED WINS
+   size-matched: no_variation   evolved 0.013440 vs mined@[32, 32, 32] (per-seed sizes) 0.009248  -> EVOLVED WINS
+F2 evolution left the seed's shape : body lengths seen [2, 3] -> did not fire
+
+D6 Provenance Certified: ok=True
