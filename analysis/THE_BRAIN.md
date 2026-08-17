@@ -107,7 +107,29 @@ else. Two constraints do not improve with scale, and one gets worse:
   problem into a settlement problem; it just turns out settlement has a known
   key.
 - **Demand does not scale into existence.** BOINC ran 24 years with volunteers
-  and never built a market. Golem built one and deleted the repository.
+  and never built a market.
+  **Golem claim CORRECTED 2026-08-17.** This document said "Golem built one and
+  deleted the repository." That is false, and it was manufactured in the
+  retelling: `LICENSE_LEDGER:34` records the narrow verified fact — the
+  `golemfactory/yagna` **monorepo** 404s — and this line inflated it into "the
+  project died."
+  Verified now: the `golemfactory` org has 100 repos and pushed code **two days
+  ago** (`ya-runtime-wasi` 2026-08-15, `ya-service-bus` 2026-08-14,
+  `golem-stats-backend` 2026-08-12, `erc20_payment_lib` 2026-08-01). The
+  network is alive; only the monorepo is gone from public view. Emphasis has
+  shifted toward **GolemDB / Golem Base** (`golembase-rust-sdk` 2025-11,
+  `golemdb-workshop` 2025-09, `marketplace-explorer`), and
+  `yagna-arkiv-market-matcher` is archived.
+  **The demand evidence is therefore ambiguous, not supportive.** A compute
+  marketplace that is still running but visibly reweighting toward a database
+  product says something about compute demand — but it is a live competitor, not
+  a corpse, and this document was using it as a corpse.
+  `api.stats.golem.network` does not resolve and the public dashboard renders
+  "0 providers computing"; **neither is usable as a utilisation measurement** —
+  an unpopulated JS placeholder read as a datum is the empty-hash failure
+  (S57/S62), and a dead DNS record is not a demand number.
+  *(Unrelated: `golemcloud/golem` is a different company — WASM durable
+  execution, no token, no marketplace. Do not cite it as Golem Network.)*
 - **Heterogeneity gets worse.** The AI-module equivalence class already includes
   environment variables no verifier can see. 250M devices is 250M runtimes.
 

@@ -515,3 +515,38 @@ iteration.
 Corollary: log a per-arm nuisance readout (here, T=1 wall time) and check arm
 balance across its range *before* computing any effect. N1e's imbalance was
 visible in the raw table and was not looked for.
+
+### A17. A claim decays when it is retold. Cite the ledger row, not the sentence.
+
+`LICENSE_LEDGER:34` recorded a narrow, verified, checkable fact:
+*"golemfactory/yagna — repository removed from GitHub (404)."* True today.
+
+`THE_BRAIN.md` retold it as **"Golem built one and deleted the repository"**,
+which then did rhetorical work in a CEO report as evidence that *demand does not
+scale into existence*. The `golemfactory` org has 100 repos and pushed code two
+days before that report was written. The network is alive; only the monorepo is
+gone from public view.
+
+**No measurement failed here.** The ledger was right. The error entered when a
+scoped observation was restated one document downstream as an unscoped
+conclusion, and then a third document treated the conclusion as evidence.
+
+Rules:
+1. When a document repeats a finding from another, it **quotes the ledger row
+   and its scope**, or it links to it. It does not paraphrase into a stronger
+   verb. "404s" is not "deleted"; "deleted a repo" is not "the project failed".
+2. A fact that is load-bearing in an argument gets **re-verified at the time the
+   argument is made**, not inherited. Repository state, licences, upstream
+   activity and prices all drift; a 404 is a snapshot.
+3. Absence of a public artifact is evidence about the artifact, never about the
+   organisation. Check the org, not the URL.
+4. **An unpopulated value is not a measurement.** `stats.golem.network` renders
+   "0 providers computing" before its JS runs, and `api.stats.golem.network`
+   does not resolve. Neither is a utilisation figure. Same shape as the
+   `da39a3ee` empty-string hash that faked agreement in S57/S58/S60/S62/S63 —
+   the fifth and sixth appearances of "nothing there" read as "zero".
+
+Corollary, and the reason this rule is worth its length: the corrected fact was
+**more** interesting than the false one. A marketplace still running while
+visibly reweighting toward a database product is a live competitor and a real
+signal about compute demand. Inflating it into a corpse destroyed information.

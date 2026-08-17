@@ -1,0 +1,23 @@
+{
+ "labelled": 50,
+ "died": 13,
+ "baseline": 0.74,
+ "loo_accuracy": 0.76,
+ "shuffled_mean": 0.6773333333333333,
+ "shuffle_max": 0.8,
+ "permutation_p": 0.12903225806451613,
+ "hypothesis_space": 351,
+ "rules": {
+  "not_cites_GREEN AND words>=800": 48,
+  "not_has(admits_missing) AND cites_INVALID": 2
+ },
+ "verdict": "NO SIGNAL \u2014 p=0.129, cannot reject that the search fits noise",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {}
+ },
+ "cites": [
+  "G1_graph_ingest"
+ ]
+}

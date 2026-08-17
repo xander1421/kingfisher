@@ -1,0 +1,1709 @@
+{
+ "nodes": [
+  {
+   "id": "B1",
+   "dir": "B1_bundling_real",
+   "verdict": "GREEN",
+   "cites": [
+    "B1b",
+    "B1c",
+    "D2",
+    "D6",
+    "Q1",
+    "S11",
+    "S18",
+    "S34",
+    "S52",
+    "S61",
+    "S70",
+    "S72b",
+    "W1"
+   ],
+   "words": 1813,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "Q1",
+    "S11",
+    "S18",
+    "S34",
+    "S52",
+    "S61",
+    "S70",
+    "W1"
+   ]
+  },
+  {
+   "id": "M1",
+   "dir": "M1_8_quorum3",
+   "verdict": "GREEN",
+   "cites": [
+    "A8",
+    "N1c",
+    "N1d",
+    "N1e",
+    "Q1",
+    "S57",
+    "S60",
+    "S69",
+    "S70",
+    "S8"
+   ],
+   "words": 645,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": true,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "Q1",
+    "S57",
+    "S60",
+    "S69",
+    "S70",
+    "S8"
+   ]
+  },
+  {
+   "id": "N1",
+   "dir": "N1_prefilter_cost",
+   "verdict": "GREEN",
+   "cites": [
+    "A10",
+    "A15",
+    "B1",
+    "D6",
+    "M1",
+    "N1b",
+    "N1c",
+    "N1d",
+    "Q1",
+    "S11",
+    "S18",
+    "S51",
+    "S53",
+    "S55",
+    "S56",
+    "S72b",
+    "W1"
+   ],
+   "words": 2327,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "B1",
+    "M1",
+    "Q1",
+    "S11",
+    "S18",
+    "S51",
+    "S53",
+    "S55",
+    "S56",
+    "W1"
+   ]
+  },
+  {
+   "id": "Q1",
+   "dir": "Q1_quorum_sim",
+   "verdict": "GREEN",
+   "cites": [
+    "C4",
+    "C5",
+    "D1",
+    "D3",
+    "D6",
+    "S32",
+    "S49",
+    "S52",
+    "S61",
+    "S71",
+    "W1"
+   ],
+   "words": 738,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S32",
+    "S49",
+    "S52",
+    "S61",
+    "S71",
+    "W1"
+   ]
+  },
+  {
+   "id": "S10",
+   "dir": "S10_pattern_classes",
+   "verdict": "GREEN",
+   "cites": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "M2",
+    "S5"
+   ],
+   "words": 950,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S5"
+   ]
+  },
+  {
+   "id": "S11",
+   "dir": "S11_bundling",
+   "verdict": "GREEN",
+   "cites": [
+    "M4",
+    "S13",
+    "S3",
+    "S5"
+   ],
+   "words": 981,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S13",
+    "S3",
+    "S5"
+   ]
+  },
+  {
+   "id": "S12",
+   "dir": "S12_int8_numerics",
+   "verdict": "GREEN",
+   "cites": [
+    "M2",
+    "S5",
+    "S7"
+   ],
+   "words": 822,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S5",
+    "S7"
+   ]
+  },
+  {
+   "id": "S13",
+   "dir": "S13_crossover_replication",
+   "verdict": "RED",
+   "cites": [
+    "M4",
+    "S11",
+    "S3",
+    "S5"
+   ],
+   "words": 764,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S11",
+    "S3",
+    "S5"
+   ]
+  },
+  {
+   "id": "S14",
+   "dir": "S14_mork_server",
+   "verdict": "YELLOW",
+   "cites": [
+    "M0",
+    "M1"
+   ],
+   "words": 808,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "M1"
+   ]
+  },
+  {
+   "id": "S15",
+   "dir": "S15_android_device",
+   "verdict": "GREEN",
+   "cites": [
+    "M1",
+    "M2",
+    "S2",
+    "S4",
+    "S6",
+    "S9"
+   ],
+   "words": 851,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "M1",
+    "S2",
+    "S4",
+    "S6",
+    "S9"
+   ]
+  },
+  {
+   "id": "S16",
+   "dir": "S16_mork_android",
+   "verdict": "GREEN",
+   "cites": [
+    "M1",
+    "S14",
+    "S15"
+   ],
+   "words": 1109,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "M1",
+    "S14",
+    "S15"
+   ]
+  },
+  {
+   "id": "S17",
+   "dir": "S17_multipattern_bundling",
+   "verdict": "GREEN",
+   "cites": [
+    "C1",
+    "C2",
+    "C3",
+    "C6",
+    "M4",
+    "S10",
+    "S11",
+    "S13",
+    "S3"
+   ],
+   "words": 1190,
+   "features": {
+    "self_correction": false,
+    "attacks_own": true,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S10",
+    "S11",
+    "S13",
+    "S3"
+   ]
+  },
+  {
+   "id": "S18",
+   "dir": "S18_batch_intensity",
+   "verdict": "RED",
+   "cites": [
+    "M1",
+    "S17",
+    "S9"
+   ],
+   "words": 561,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "M1",
+    "S17",
+    "S9"
+   ]
+  },
+  {
+   "id": "S1",
+   "dir": "S1_hyperon_native",
+   "verdict": "GREEN",
+   "cites": [],
+   "words": 347,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": []
+  },
+  {
+   "id": "S2",
+   "dir": "S2_hyperon_android",
+   "verdict": "GREEN",
+   "cites": [
+    "M1",
+    "S1"
+   ],
+   "words": 537,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "M1",
+    "S1"
+   ]
+  },
+  {
+   "id": "S30",
+   "dir": "S30_speed_duel",
+   "verdict": "GREEN",
+   "cites": [
+    "C5",
+    "S15",
+    "S9"
+   ],
+   "words": 1309,
+   "features": {
+    "self_correction": true,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S15",
+    "S9"
+   ]
+  },
+  {
+   "id": "S31",
+   "dir": "S31_nnapi_probe",
+   "verdict": "YELLOW",
+   "cites": [
+    "C1",
+    "M2",
+    "O2",
+    "S12",
+    "S5",
+    "V79"
+   ],
+   "words": 869,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S12",
+    "S5"
+   ]
+  },
+  {
+   "id": "S32",
+   "dir": "S32_fleet_capacity",
+   "verdict": "RED",
+   "cites": [
+    "B5",
+    "M3",
+    "M4",
+    "S15",
+    "S32a",
+    "S33",
+    "S34",
+    "S35",
+    "S45",
+    "S50",
+    "S51",
+    "S54",
+    "S61"
+   ],
+   "words": 989,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S15",
+    "S33",
+    "S34",
+    "S35",
+    "S45",
+    "S50",
+    "S51",
+    "S54",
+    "S61"
+   ]
+  },
+  {
+   "id": "S33",
+   "dir": "S33_device_batch",
+   "verdict": "RED",
+   "cites": [
+    "M4",
+    "N0",
+    "N1",
+    "O3",
+    "S18",
+    "S32"
+   ],
+   "words": 1017,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "N1",
+    "S18",
+    "S32"
+   ]
+  },
+  {
+   "id": "S34",
+   "dir": "S34_packed_popcount",
+   "verdict": "GREEN",
+   "cites": [
+    "K0",
+    "K1",
+    "K2",
+    "M4",
+    "N1",
+    "N4",
+    "S18",
+    "S31",
+    "S32",
+    "S33",
+    "S9"
+   ],
+   "words": 968,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "N1",
+    "S18",
+    "S31",
+    "S32",
+    "S33",
+    "S9"
+   ]
+  },
+  {
+   "id": "S35",
+   "dir": "S35_engine_duel",
+   "verdict": "GREEN",
+   "cites": [
+    "M0",
+    "S15",
+    "S16",
+    "S32",
+    "S4"
+   ],
+   "words": 850,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": true,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S15",
+    "S16",
+    "S32",
+    "S4"
+   ]
+  },
+  {
+   "id": "S3",
+   "dir": "S3_mork_bench",
+   "verdict": "YELLOW",
+   "cites": [],
+   "words": 1033,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": []
+  },
+  {
+   "id": "S43",
+   "dir": "S43_bitpack",
+   "verdict": "GREEN",
+   "cites": [
+    "M1",
+    "M2",
+    "M4",
+    "S13",
+    "S18",
+    "S30"
+   ],
+   "words": 1007,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "M1",
+    "S13",
+    "S18",
+    "S30"
+   ]
+  },
+  {
+   "id": "S44",
+   "dir": "S44_stacked",
+   "verdict": "GREEN",
+   "cites": [
+    "M2",
+    "M4",
+    "S10",
+    "S17",
+    "S18",
+    "S30",
+    "S43",
+    "S5",
+    "V0",
+    "V1",
+    "V2",
+    "V3",
+    "V4"
+   ],
+   "words": 840,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S10",
+    "S17",
+    "S18",
+    "S30",
+    "S43",
+    "S5"
+   ]
+  },
+  {
+   "id": "S45",
+   "dir": "S45_stacked_device",
+   "verdict": "GREEN",
+   "cites": [
+    "M4",
+    "S11",
+    "S17",
+    "S18",
+    "S2",
+    "S30",
+    "S32",
+    "S33",
+    "S34",
+    "S35",
+    "S43",
+    "S44",
+    "S45b",
+    "V3",
+    "V4"
+   ],
+   "words": 1597,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S11",
+    "S17",
+    "S18",
+    "S2",
+    "S30",
+    "S32",
+    "S33",
+    "S34",
+    "S35",
+    "S43",
+    "S44"
+   ]
+  },
+  {
+   "id": "S46",
+   "dir": "S46_residency",
+   "verdict": "RED",
+   "cites": [
+    "L1",
+    "N2",
+    "N3",
+    "S18",
+    "S45b"
+   ],
+   "words": 956,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S18"
+   ]
+  },
+  {
+   "id": "S47",
+   "dir": "S47_bundle_priced",
+   "verdict": "GREEN",
+   "cites": [
+    "C3",
+    "M4",
+    "S10",
+    "S11",
+    "S13",
+    "S17",
+    "S3",
+    "S45",
+    "S46"
+   ],
+   "words": 899,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S10",
+    "S11",
+    "S13",
+    "S17",
+    "S3",
+    "S45",
+    "S46"
+   ]
+  },
+  {
+   "id": "S48",
+   "dir": "S48_shaping_decay",
+   "verdict": "GREEN",
+   "cites": [
+    "C3",
+    "M4",
+    "S13",
+    "S17",
+    "S46",
+    "S47"
+   ],
+   "words": 871,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S13",
+    "S17",
+    "S46",
+    "S47"
+   ]
+  },
+  {
+   "id": "S49",
+   "dir": "S49_schema_v1",
+   "verdict": "GREEN",
+   "cites": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "S12",
+    "S15",
+    "S16",
+    "S30",
+    "S31",
+    "S35",
+    "S4",
+    "S45",
+    "S48",
+    "S49b"
+   ],
+   "words": 1665,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S12",
+    "S15",
+    "S16",
+    "S30",
+    "S31",
+    "S35",
+    "S4",
+    "S45",
+    "S48"
+   ]
+  },
+  {
+   "id": "S4",
+   "dir": "S4_hyperjob_schema",
+   "verdict": "GREEN",
+   "cites": [
+    "S7",
+    "V1"
+   ],
+   "words": 659,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S7"
+   ]
+  },
+  {
+   "id": "S50",
+   "dir": "S50_harness",
+   "verdict": "GREEN",
+   "cites": [
+    "L1",
+    "S32",
+    "S34",
+    "S45",
+    "S45b",
+    "S46"
+   ],
+   "words": 754,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S32",
+    "S34",
+    "S45",
+    "S46"
+   ]
+  },
+  {
+   "id": "S51",
+   "dir": "S51_multicore",
+   "verdict": "GREEN",
+   "cites": [
+    "S30",
+    "S32",
+    "S34",
+    "S45b",
+    "S50"
+   ],
+   "words": 914,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S30",
+    "S32",
+    "S34",
+    "S50"
+   ]
+  },
+  {
+   "id": "S52",
+   "dir": "S52_realkg",
+   "verdict": "GREEN",
+   "cites": [
+    "M4",
+    "S10",
+    "S11",
+    "S17",
+    "S47",
+    "S48",
+    "S5",
+    "W4"
+   ],
+   "words": 994,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S10",
+    "S11",
+    "S17",
+    "S47",
+    "S48",
+    "S5",
+    "W4"
+   ]
+  },
+  {
+   "id": "S53",
+   "dir": "S53_residency_v2",
+   "verdict": "GREEN",
+   "cites": [
+    "N2",
+    "S46",
+    "S51"
+   ],
+   "words": 547,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S46",
+    "S51"
+   ]
+  },
+  {
+   "id": "S54",
+   "dir": "S54_cpuset",
+   "verdict": "RED",
+   "cites": [
+    "S50",
+    "S51",
+    "S53",
+    "S6"
+   ],
+   "words": 577,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S50",
+    "S51",
+    "S53",
+    "S6"
+   ]
+  },
+  {
+   "id": "S55",
+   "dir": "S55_mork_inproc",
+   "verdict": "GREEN",
+   "cites": [
+    "M0",
+    "S16",
+    "S44",
+    "S45",
+    "S54",
+    "S56"
+   ],
+   "words": 657,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S16",
+    "S44",
+    "S45",
+    "S54",
+    "S56"
+   ]
+  },
+  {
+   "id": "S56",
+   "dir": "S56_mork_amortise",
+   "verdict": null,
+   "cites": [
+    "S53",
+    "S55"
+   ],
+   "words": 974,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S53",
+    "S55"
+   ]
+  },
+  {
+   "id": "S57",
+   "dir": "S57_hyperon_corpus",
+   "verdict": null,
+   "cites": [
+    "C2",
+    "S15",
+    "S16",
+    "S50"
+   ],
+   "words": 1572,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": true,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S15",
+    "S16",
+    "S50"
+   ]
+  },
+  {
+   "id": "S58",
+   "dir": "S58_fuel_branching",
+   "verdict": null,
+   "cites": [
+    "S57"
+   ],
+   "words": 1158,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S57"
+   ]
+  },
+  {
+   "id": "S59",
+   "dir": "S59_libm_crossisa",
+   "verdict": "RED",
+   "cites": [
+    "C2",
+    "S34",
+    "S57",
+    "S58"
+   ],
+   "words": 945,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S34",
+    "S57",
+    "S58"
+   ]
+  },
+  {
+   "id": "S5",
+   "dir": "S5_hdc_prototype",
+   "verdict": "GREEN",
+   "cites": [
+    "M2",
+    "S7"
+   ],
+   "words": 1061,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S7"
+   ]
+  },
+  {
+   "id": "S60",
+   "dir": "S60_bisect_commit",
+   "verdict": "RED",
+   "cites": [
+    "A1"
+   ],
+   "words": 1220,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": true,
+    "inherits": false
+   },
+   "cites_resolved": []
+  },
+  {
+   "id": "S61",
+   "dir": "S61_fleet_locality_sim",
+   "verdict": "GREEN",
+   "cites": [
+    "M3",
+    "S52",
+    "S55"
+   ],
+   "words": 1429,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": true,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S52",
+    "S55"
+   ]
+  },
+  {
+   "id": "S62",
+   "dir": "S62_llm_backend_determinism",
+   "verdict": "INVALID",
+   "cites": [
+    "A7",
+    "C3",
+    "S57",
+    "S58",
+    "S63"
+   ],
+   "words": 1007,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S57",
+    "S58",
+    "S63"
+   ]
+  },
+  {
+   "id": "S63",
+   "dir": "S63_crossdevice_cpu",
+   "verdict": "INVALID",
+   "cites": [
+    "A7",
+    "B1",
+    "S57",
+    "S58",
+    "S59",
+    "S60",
+    "S62"
+   ],
+   "words": 950,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "B1",
+    "S57",
+    "S58",
+    "S59",
+    "S60",
+    "S62"
+   ]
+  },
+  {
+   "id": "S64",
+   "dir": "S64_attack_s50",
+   "verdict": null,
+   "cites": [
+    "L1",
+    "L2",
+    "N3",
+    "O3",
+    "S44",
+    "S45",
+    "S46",
+    "S47",
+    "S50",
+    "S52",
+    "V3"
+   ],
+   "words": 1321,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": true,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S44",
+    "S45",
+    "S46",
+    "S47",
+    "S50",
+    "S52"
+   ]
+  },
+  {
+   "id": "S65",
+   "dir": "S65_checkpoint_cadence",
+   "verdict": "GREEN",
+   "cites": [
+    "A10",
+    "A8",
+    "S57",
+    "S60"
+   ],
+   "words": 799,
+   "features": {
+    "self_correction": true,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": true,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S57",
+    "S60"
+   ]
+  },
+  {
+   "id": "S66",
+   "dir": "S66_zkvm_feasibility",
+   "verdict": "GREEN",
+   "cites": [
+    "A11",
+    "S15",
+    "S58",
+    "S65"
+   ],
+   "words": 684,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": true,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S15",
+    "S58",
+    "S65"
+   ]
+  },
+  {
+   "id": "S67",
+   "dir": "S67_ecan_fixedpoint",
+   "verdict": null,
+   "cites": [
+    "A11",
+    "Q32",
+    "S58",
+    "S66"
+   ],
+   "words": 1088,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S58",
+    "S66"
+   ]
+  },
+  {
+   "id": "S68",
+   "dir": "S68_state_commitment",
+   "verdict": "RED",
+   "cites": [
+    "S65"
+   ],
+   "words": 682,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S65"
+   ]
+  },
+  {
+   "id": "S69",
+   "dir": "S69_quorum_locality",
+   "verdict": "GREEN",
+   "cites": [
+    "C4",
+    "M3",
+    "S34",
+    "S61"
+   ],
+   "words": 769,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": true,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S34",
+    "S61"
+   ]
+  },
+  {
+   "id": "S6",
+   "dir": "S6_scheduler",
+   "verdict": "GREEN",
+   "cites": [],
+   "words": 225,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": []
+  },
+  {
+   "id": "S70",
+   "dir": "S70_shard_tail",
+   "verdict": "GREEN",
+   "cites": [
+    "S52",
+    "S61",
+    "S69"
+   ],
+   "words": 779,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": true,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S52",
+    "S61",
+    "S69"
+   ]
+  },
+  {
+   "id": "S71",
+   "dir": "S71_c2_supply",
+   "verdict": "GREEN",
+   "cites": [
+    "C2",
+    "C5",
+    "M1",
+    "S30",
+    "S32",
+    "S32a",
+    "S54"
+   ],
+   "words": 693,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": true,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "M1",
+    "S30",
+    "S32",
+    "S54"
+   ]
+  },
+  {
+   "id": "S72",
+   "dir": "S72_c3_cpuset",
+   "verdict": "AMBER",
+   "cites": [
+    "C3",
+    "D6",
+    "K0",
+    "K1",
+    "K2",
+    "S12",
+    "S18",
+    "S31",
+    "S32",
+    "S34",
+    "S52",
+    "S54",
+    "S56",
+    "S71",
+    "S72b"
+   ],
+   "words": 1235,
+   "features": {
+    "self_correction": true,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": true,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S12",
+    "S18",
+    "S31",
+    "S32",
+    "S34",
+    "S52",
+    "S54",
+    "S56",
+    "S71"
+   ]
+  },
+  {
+   "id": "S7",
+   "dir": "S7_toploc_adapt",
+   "verdict": "GREEN",
+   "cites": [
+    "M2",
+    "S5"
+   ],
+   "words": 785,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S5"
+   ]
+  },
+  {
+   "id": "S8",
+   "dir": "S8_das_up",
+   "verdict": "GREEN",
+   "cites": [
+    "S1"
+   ],
+   "words": 641,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": false,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S1"
+   ]
+  },
+  {
+   "id": "S9",
+   "dir": "S9_timing_rigor",
+   "verdict": "RED",
+   "cites": [
+    "S12",
+    "S5",
+    "S7"
+   ],
+   "words": 691,
+   "features": {
+    "self_correction": true,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S12",
+    "S5",
+    "S7"
+   ]
+  },
+  {
+   "id": "W1",
+   "dir": "W1_witnessed_reexec",
+   "verdict": "INVALID",
+   "cites": [
+    "C4",
+    "D6",
+    "S34",
+    "S52",
+    "S61",
+    "S69",
+    "S70",
+    "W3"
+   ],
+   "words": 1130,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": true
+   },
+   "cites_resolved": [
+    "S34",
+    "S52",
+    "S61",
+    "S69",
+    "S70"
+   ]
+  },
+  {
+   "id": "W4",
+   "dir": "W4_prefilter_readset",
+   "verdict": null,
+   "cites": [
+    "C4",
+    "D6",
+    "S17",
+    "S52",
+    "S69",
+    "S70",
+    "W1"
+   ],
+   "words": 1173,
+   "features": {
+    "self_correction": false,
+    "attacks_own": false,
+    "declares_null": false,
+    "declares_gate": false,
+    "admits_missing": true,
+    "n_equals_one": false,
+    "inherits": false
+   },
+   "cites_resolved": [
+    "S17",
+    "S52",
+    "S69",
+    "S70",
+    "W1"
+   ]
+  }
+ ],
+ "n_atoms": 460,
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {}
+ },
+ "cites": []
+}
