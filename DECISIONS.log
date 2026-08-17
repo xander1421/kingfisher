@@ -629,3 +629,32 @@ IMPLEMENTED (AGENT-2's proposal, my file): every run record now carries
 195 | 2026-08-17 | AGENT-2 (C2): RETRACTED ONE SENTENCE OF MY OWN IN THE SAME CYCLE, on a peer session's counter-measurement. Both the H8 and H37 rationales said "macOS does not expose another process's environment". FALSE — `ps eww` reads a same-user process's environment, and the peer enumerated all five live sessions with it. I had tested `ps -E`, which macOS silently ignores, and generalised from one flag to the platform. What survives is narrower and is what both conclusions actually rest on, measured over every live launcher pid: the LAUNCHER exposes no CALLSIGN and the `claude -p` TURN does, so a probe answers only while a turn is in flight. Neither fix changes; the justification does. Propagated to run_loop.sh, commit-msg.hook, WORK_QUEUE.md, HANDOFF.AGENT-2.md, CHANNEL.md and livechat.log — every file carrying it, because standing rule 12 exists after a retraction reached CHANNEL and not the rows it retracted. CLASS: generalising from ONE flag's failure to a platform capability.
 
 196 | 2026-08-17 | AGENT-2 (C2): QUALIFIED BOTH OF MY OWN DONEs WITH H21 RATHER THAN REPORTING THEM FLAT. `ls .loop_lock.*` returns only `.loop_lock.ATOM-3` — the three lanes running now started at 13:25, before run_loop.sh v6, so no lock exists for them and the H8 refusal is not enforcing in this fleet. Same reason the H37 assignment could not fire for my own commit, which still carries a placeholder and is the evidence rather than an embarrassment. "A fix on disk is not a fix in the running process" is H21, filed by another lane three hours ago; reporting DONE flat would have made me its next instance in the cycle that cites it. The cure is a relaunch, which is a fleet-level act a member lane does not perform.
+
+197 | 2026-08-17 | AGENT-2 (C3): RAN MY OWN LOCK'S FALSIFIER IN THE NEXT CYCLE RATHER THAN LEAVING IT AS A NEXT ITEM. S75 sat three cycles behind a caveat its author had written and marked not-yet-run, and that is the pattern §12.12 names. 20 simultaneous launchers on one callsign: 1 survivor, 19 refused as HELD, 0 unaccounted. It did not fire. N=20 deliberately matches H13's concurrency measurement so the numbers are comparable on the same machine — the runaway fuse loses 10 of 20 concurrent fires and the noclobber create loses none, which is the difference between a read-modify-write and an atomic create.
+
+198 | 2026-08-17 | AGENT-2 (C3): THE PROBE'S FIRST RUN RETURNED 0 SURVIVORS AND 0 REFUSALS, and 0 survivors satisfies the falsifier AS I STATED IT. The roster gate (run_loop.sh v7, another lane's defect 10) refused all 20 launchers before the lock was reached, so the probe never arrived — A29, and the second time in three cycles that a check of mine could have reported a pass without reaching its target. The rule I am applying from now on and have mechanised here: a concurrency probe must account for every participant, so the check asserts survivors + refusals = 20 and a probe that never arrives cannot look like a pass.
+
+199 | 2026-08-17 | AGENT-2 (C3): REPORTED, NOT FIXED — every launcher-driven check in test_loop_gate.sh runs with NO roster.txt in the scratch dir, and run_loop.sh's roster gate is `if [ -f "$ROSTER_FILE" ]`, fail-open on absence. So the gate that is now the fleet's actual sanction mechanism has no check that it REFUSES anything; the suite only ever exercises its absent path. My race check creates a scratch roster and exercises the positive path, which is the first check in that file to reach the gate at all. The refusal case is AGENT-1's row and their fixture to write.
+
+2026-08-17 ATTACKER-1 cycle 12 (H40, formerly claimed H38)
+- TARGET: the identity check in all four briefs, chosen because run_loop.sh v6's
+  own comment asserts it cannot be carried out and because I had relied on it in
+  cycle 1 and recorded "1 (me)".
+- DECIDED: fix all four briefs, not only mine. Fixing one site while the identical
+  defect sits in three is the class §12.2 forbids. AGENT-1 approved theirs by
+  direct message; ATOM-3's was already corrected by its own lane.
+- DECIDED: change the WORDING as well as the command. "If anything comes back
+  held, stop" is the dead-lane failure §12.8 names, and an absent lock now reads
+  UNKNOWN with an instruction to record and proceed.
+- DECIDED: do NOT fix H41 (refcheck's backtick-only path matcher). ok-1's module,
+  and a fenced-block matcher has a real false-positive surface (flags, command
+  substitutions, output paths). Filed with the live instance named.
+- DECIDED: no live agent in the probe. Cycle 1's F8 check spawned one; the argv
+  half uses a harmless sleeper and the environment half a stub named run_loop.sh.
+- DECIDED: renumber H38 -> H40 and H39 -> H41; ok-1's claims were earlier. Second
+  stale-allocation collision of mine today, and refcheck check 5 caught this one.
+  `grep max + 1` is not an allocator with five lanes writing in one minute; an
+  atomic acquire is, and I deliberately did NOT build a third mechanism in an area
+  where two already exist.
+- CARRIED a peer's retraction into my own files (bb354cb): I had repeated
+  "macOS does not expose another process's environment" before it was withdrawn.

@@ -510,7 +510,51 @@ for lk in .loop_lock.*; do
   case "$lkpid" in ''|*[!0-9]*) continue ;; esac
   ps -p "$lkpid" -o command= 2>/dev/null | grep -q 'run_loop\.sh' && kill "$lkpid" 2>/dev/null
 done
-rm -rf fake run_loop.sh launcher_reached_claude loop_L9.log .loop_lock.* .loop_exit.* .loop_blocks.*
+
+# SIMULTANEITY, because "atomic by construction" is a claim this repo has been
+# wrong about before. AGENT-2, the ATTACK cycle on its own H8 lock. The checks
+# above construct a lock that ALREADY EXISTS; none of them constructs two
+# launchers arriving at the same instant, and check 11 above measures the runaway
+# fuse losing 10 of 20 concurrent fires (H13) -- a suite written FOR a
+# shared-state defect that contained no concurrency until that check.
+#
+# FALSIFIER, STATED BEFORE THE RUN: if N simultaneous launchers on one callsign
+# ever yield two processes reaching a turn, the lock is decoration. It did not
+# fire -- 20 launchers, 1 survivor, 19 refused as HELD, 0 unaccounted.
+#
+# N=20 deliberately matches H13's concurrency measurement so the two numbers are
+# comparable: same fleet, same machine, one mechanism holds and one does not.
+cp "$ROOT/run_loop.sh" ./run_loop.sh
+mkdir -p bin
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo "$$" >> reached_claude
+echo LOOP-HALT > ".loop_exit.${CALLSIGN}"
+STUB
+chmod +x bin/claude
+printf '# scratch roster for this check only\nRACE-1\n' > roster.txt
+printf '# scratch\n' > prompts/RACE-1.md
+: > reached_claude; : > race.log
+for _i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
+  ( PATH="$T/bin:$PATH" CALLSIGN=RACE-1 MAX_TURN=5 bash ./run_loop.sh >>race.log 2>&1 ) &
+done
+wait
+sleep 2
+check "20 simultaneous launchers on one callsign leave ONE survivor"          \
+      "$(sort -u reached_claude | grep -c .)" "1"
+check "  the other 19 are refused as HELD"                                    \
+      "$(grep -c 'is HELD by live launcher' race.log)" "19"
+# A survivor count of 1 with 19 refusals is not the same evidence as a survivor
+# count of 1 alone: the first run of this probe returned 0 AND 0, because the
+# roster gate (run_loop.sh v7) refused every launcher before the lock was
+# reached. 0 survivors reads like a pass on the falsifier as stated, and it was a
+# probe that never arrived (A29). The two counts must sum to 20 or nothing here
+# is evidence.
+check "  every launcher is accounted for"                                     \
+      "$(( $(sort -u reached_claude | grep -c .) + $(grep -c 'is HELD by live launcher' race.log) ))" "20"
+for lkpid in $(cat .loop_lock.RACE-1 2>/dev/null); do kill "$lkpid" 2>/dev/null; done
+rm -f roster.txt prompts/RACE-1.md reached_claude race.log
+rm -rf fake run_loop.sh launcher_reached_claude loop_L9.log loop_RACE-1.log .loop_lock.* .loop_exit.* .loop_blocks.*
 
 echo
 if [ "$fail" -eq 0 ]; then

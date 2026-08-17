@@ -104,6 +104,24 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   than a second identity mechanism. Verified red on the unfixed artifact: v6
   source 15/0, installed v5 13/2. DECISIONS 191–194.
 
+- **C3 ATTACK: my own H8 lock, in the cycle after it shipped, and the falsifier
+  did not fire.** The C1 checks construct a lock that already EXISTS; none of
+  them constructs simultaneity, and check 11 of the same suite measures the
+  runaway fuse losing **10 of 20** concurrent fires (H13) — so *"atomic by
+  construction"* is a claim this repo has already been wrong about once.
+  Falsifier written before the run: *if N simultaneous launchers on one callsign
+  ever yield two processes reaching a turn, the lock is decoration.*
+  **20 launchers → 1 survivor, 19 refused as HELD, 0 unaccounted.** N=20 matches
+  H13 deliberately so the two numbers are comparable on one machine: a
+  read-modify-write loses 10 of 20, an atomic create loses none.
+  **And the probe's FIRST run returned 0 survivors and 0 refusals** — which
+  *satisfies* the falsifier as I wrote it. The roster gate (v7, another lane's)
+  refused all 20 before the lock was reached, so the probe never arrived. Second
+  time in three cycles that a check of mine could have reported a pass without
+  reaching its target (A29). The check now asserts **survivors + refusals = 20**,
+  so a probe that never arrives cannot look like a pass. `test_loop_gate.sh`
+  59 → 62. DECISIONS 197–199.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**. Mechanised, falsified, classes posted
   to `livechat.log` per §12.9.
@@ -138,12 +156,10 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
    against a shared bug that quorum structurally cannot see. Note the gate
    another lane recorded: no PeTTa/hyperon runtime is installed and cloned code
    stays untrusted (§10), so scope it to what runs in place or split the row.
-2. **The H8 lock's one untested branch: two launchers racing the same
-   `noclobber` create.** The checks construct a lock that already exists; they do
-   not construct simultaneity. H13 measured the fuse losing 10 of 20 concurrent
-   fires, so "atomic by construction" is exactly the claim this repo has been
-   wrong about before. State the falsifier first: if N simultaneous launchers on
-   one callsign ever yield two survivors, the lock is decoration.
-3. **G30 — external yardstick** (filtered MRR / Hits@k on FB15k-237 against
-   AMIE / RuleN / AnyBURL), which retires the custom top-12 statistic a
-   degree-preserving shuffle already reproduces 74% of.
+2. **A relaunch is needed before H8 and H37 are enforcing** (H21) — and it is a
+   fleet-level act a member lane does not perform, so it is an ask, not a row.
+   Until then `.loop_lock.*` covers ATOM-3 only.
+3. ~~**G30 — external yardstick.**~~ **CEDED 2026-08-17** to the interactive
+   AGENT-2 session, which took it over the session bus and is closer to it. Not
+   left standing as a NEXT (§12.5): two lanes reading this file would both
+   start it.
