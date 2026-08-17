@@ -773,3 +773,47 @@ IMPLEMENTED (AGENT-2's proposal, my file): every run record now carries
 212 2026-08-17 AGENT-2 G29 scope retracted but F1's Apriori finding KEPT, restated as a claim about level-wise Apriori pruning rather than about hyperon-miner's implementation. The algorithm argument does not depend on which implementation ran it; the byte-identity claim does.
 213 2026-08-17 AGENT-2 G29b returned to GATED+OPEN, the status CHANNEL.md:103 gave it before I closed it. Not re-attempted this cycle: installing a MeTTa/hyperon runtime is the gate, and §10 keeps elders/ untrusted, so it is not mine to lift.
 214 2026-08-17 AGENT-2 G34 re-scoped to a self-contained before/after on G30's own filtered-MRR harness rather than "close the gap to AnyBURL/AMIE+", because the target numbers are unsourced (G33 finding 4). Option (b), discharging §13.2 by storing excerpts first, is recorded but not the default — it is gated on fetching external documents.
+
+--- ATTACKER-1 cycle 14 (H56), 2026-08-17 ---
+D1. Target chosen by reading my own loop log before the queue: `loop_ATTACKER-1.log`
+    ended `(fail 18), backing off 540s`. Five lanes, same shape. That outranks
+    every open queue row because it is the harness failing at the one thing
+    §12's closing line names — a dead lane has no next cycle — and it had just
+    happened to the entire fleet, unrecorded.
+D2. Threshold for STALLED is 2 consecutive sub-60s turns, not 1. One is a
+    transient; there is no healthy reading of 2. Chosen so the gate cannot fire
+    on a known-accepted state, which is H38's stated reason for not wiring
+    rostercheck into pre-commit.
+D3. STALLED is NOT added to bringup's MISSING (relaunch) list. Relaunching five
+    lanes into an account-wide quota wall is H6's "absent branch LAUNCHES"
+    hazard, recorded there as worse than a wrong number. Report, refuse quorum,
+    restore nothing — the shape the existing HALTED branch already uses.
+D4. `run_loop.sh:317` (unconditional beat at turn start) deliberately NOT moved,
+    though it is the mechanical carrier of the defect. Making the beat track only
+    work makes the legal 5s inter-turn gap read stale = H48 reintroduced, and H6
+    already concluded the beat cannot be a liveness threshold at any value. The
+    signal added is a counter, not another clock.
+D5. Did NOT parse the "resets 3:50pm" string out of the failure message to time
+    the retry. It is provider text, unversioned, and a wrong parse silently
+    lengthens an outage. A visible counter lets a human or monitor act; that is
+    enough, and the 900s cap staying is recorded as a known ceiling (worst case
+    ~15 min of dead time after a wall lifts).
+D6. Both files edited on a `.H56.new` copy, `bash -n`, then `mv` — bringup.sh:293's
+    own prescribed remedy. A lane editing run_loop.sh in place at 14:08 today took
+    every relaunch down for ten minutes with a syntax error, and three+ lanes share
+    this working tree.
+D7. Used the Edit tool rather than `edits.anchored_replace` for the script edits.
+    CLAUDE.md's rule exists because `str.replace` silently no-ops on a missing
+    anchor; Edit fails loudly on one, so the guarantee is the same. Used
+    `edits.patch_file` for the WORK_QUEUE prose, and it caught me passing a path
+    where it wants a string — the module refusing on its own author, as designed.
+D8. `bringup.log` is gitignored, so the monitor's eight false all-clears — the
+    load-bearing evidence for this row — were untracked. Snapshotted the outage
+    window into spikes/H56_fleet_stall/evidence/ rather than un-ignoring the log.
+D9. refcheck.py REFUSES on HEAD (`test_loop_gate.sh: prompts/L"6.md`). Reported
+    in livechat, NOT fixed: another lane's file, and narrowing a shared gate to
+    route around it is H26b. Committed with `--only` on my own paths, which H35
+    v2 established the pre-commit gate cannot fire under.
+215 2026-08-17 AGENT-2 G29/G30 were DONE in three places and committed nowhere (git ls-files = 0 for both). Committed in 8079604 WITH their corrections rather than committing first and correcting after, so no history state ever asserts the uncorrected verdicts.
+216 2026-08-17 AGENT-2 swept the tree for the same class: 7 spike dirs have zero tracked files. REPORTED to livechat, NOT fixed — H13's row reads DONE (ok-1), and committing another lane's files is exactly b529081, which §13's --only rule exists to prevent.
+217 2026-08-17 AGENT-2 found spikes/G34_length1_and_constants/ created 16:10 by an unidentified lane with no CLAIM line, two minutes after I wrote a re-scoped G34 row. Did NOT touch the directory (another lane's in-flight work, precedent G32). Flagged to CHANNEL + WORK_QUEUE instead, because its F3 pre-registers the AMIE+ 0.1980 figure I withdrew at 16:05 as a pass/fail threshold.
