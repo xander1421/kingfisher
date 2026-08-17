@@ -133,3 +133,44 @@ q3.MIN_DOMAINS = 1
 q3.OBSERVED.clear()
 
 print('adjudicate: 36 assertions pass')
+
+# --- SOUNDNESS: an empty result member must never read as agreement. -----------
+# Reported by a fresh reviewer 2026-08-17 and reproduced before the fix: key()
+# guarded results_text for ABSENCE and not EMPTINESS, so canon('') -> '' ->
+# sha256('') = e3b0c442..., and three workers returning an empty results block
+# keyed IDENTICALLY and adjudicated UNANIMOUS -- agreement on nothing. Because
+# key() prefers results_text when present, an empty block also silently DISCARDED
+# the worker's own sorted_hash. Masked in production only by MIN_DOMAINS under
+# operator=1, i.e. it would have activated the day an attestation root landed.
+#
+# These assertions fail if the guard is reverted.
+_ok  = {'status': 'OK', 'fuel_used': 100, 'sorted_hash': 'abc123', 'results_text': '(A B)'}
+def _with(**kw):
+    e = dict(_ok); e.update(kw); return e
+
+for _label, _e in [('empty results_text', _with(results_text='')),
+                   ('blank results_text', _with(results_text='   ')),
+                   ('empty sorted_hash',  _with(results_text=None, sorted_hash='')),
+                   ('null  sorted_hash',  _with(results_text=None, sorted_hash=None))]:
+    assert key(_e) is None, f'{_label}: an empty result member produced an agreement key'
+    assert adj([_with(**{}), _e, _e])[0] != 'UNANIMOUS', f'{_label}: adjudicated UNANIMOUS'
+    assert adj([_e, _e, _e])[0] in ('NO_RESULTS', 'REDUCED_QUORUM'), _label
+
+# The empty-hash CONSTANT arriving as if it were a result is refused too.
+assert key(_with(results_text=None,
+                 sorted_hash='e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')) is None
+
+# A FAILED worker legitimately has no result member, and agreement that a job
+# failed is a different verdict from agreement on a result. The first version of
+# the guard omitted this and turned three crashes into NO_RESULTS; line 62 caught
+# it. This pins the boundary so the fix cannot be widened back over it.
+_crash = {'status': 'CRASH', 'fuel_used': None, 'sorted_hash': None, 'results_text': None}
+assert adj([_crash, _crash, _crash])[0] == 'AGREED_FAILURE'
+
+# ARITY. Every path returns 6; NO_RESULTS returned 5 while the only production
+# caller unpacks 6, so total quorum loss crashed the coordinator instead of
+# recording the verdict. Asserting [0] alone is what let it through.
+for _envs in ([None, None, None], [_ok, _ok, _ok], [_crash, _crash, _crash]):
+    assert len(adj(_envs)) == 6, f'arity {len(adj(_envs))} != 6 for {_envs[0]}'
+
+print('soundness: empty result member cannot agree; arity uniform at 6')

@@ -36,5 +36,9 @@ fn main() {
         let r2 = m.merkleize();
         println!("pathmap {:8} second merkleize: same_hash={} reused={}",
                  name, r2.hash == r.hash, r2.reused);
+        // DEPTH is what decides proof length: every node on the path to a key is
+        // one authenticated step. A node count alone cannot answer that.
+        println!("--- {} depth histogram (node depth, not byte depth) ---", name);
+        c.print_histogram_by_depth();
     }
 }

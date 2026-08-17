@@ -182,12 +182,21 @@ def key(e):
     # instrument.check_nonempty already refused both '' and the empty-hash
     # constants; q3.py never called it. The guard existed at the shared site and
     # was not wired -- found by a fresh reviewer 2026-08-17.
-    _res = e.get('results_text')
-    _cand = _res if _res is not None else e.get('sorted_hash')
-    _ok, _why = check_nonempty(_cand, 'result member')
-    if not _ok:
-        e['empty_result'] = _why
-        return None
+    # ONLY for a worker claiming SUCCESS. A worker reporting a FAILED status
+    # legitimately has no result member, and this function's own contract says
+    # agreement that a job FAILED is a different verdict from agreement on a
+    # RESULT. The first version of this guard omitted that condition and turned
+    # `adj([crash, crash, crash])` from AGREED_FAILURE into NO_RESULTS --
+    # test_adjudicate.py:62 caught it. Fixed the site, broke its sibling: the
+    # exact class this repo spent a day cataloguing, committed while cataloguing
+    # it. The test that caught it was written by another atom.
+    if e.get('status') not in FAILED_STATUS:
+        _res = e.get('results_text')
+        _cand = _res if _res is not None else e.get('sorted_hash')
+        _ok, _why = check_nonempty(_cand, 'result member')
+        if not _ok:
+            e['empty_result'] = _why
+            return None
 
     txt = e.get('results_text')
     if txt is not None:
