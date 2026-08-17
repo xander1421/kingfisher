@@ -39,6 +39,31 @@ v1 (new), `spikes/harness/test_loop_gate.sh` 38→40 checks, `MISSION_LOOP.md`
 reproduce (withdrawn same cycle), and an F8 check that spawned a live agent
 when its own falsifier fired (killed by hand, fixed structurally).
 
+## Cycle 2 — H19, DONE
+
+Found by trying to commit cycle 1. `git add <my paths>`, and two seconds later
+HEAD was `b529081` (`Atom: AGENT-1`) carrying my journal, my spike and 840 lines
+of my cycle. **Neither lane broke §13** — three lanes share one git *index* and
+`git commit` commits the index, not your adds. `commit-msg.hook` refuses a
+per-lane file whose owner is not the `Atom:`; remedy is `git commit --only`.
+
+Then the gate was **dropped by a wholesale rewrite of that file four minutes
+after it shipped**, and `test_loop_gate.sh` went red on it — not me reading.
+Merged rather than reverted (v4): the rewrite's value validation is correct and
+caught what I could not see, that `Reviewed-By: self` defeats the self-review
+guard by never string-equalling the Atom. `git log --grep='Reviewed-By:
+unreviewed'` returns 15 while **26** commits have no real reviewer.
+
+Commits: `570e553` (H7+H19), `de253c2` (RESTORED).
+
+## Open, not mine, reported and deliberately not touched
+
+- **`githygiene.py` is broken right now** — `NameError: name 're' is not
+  defined`, line 115. §13 says run it before every commit, so it is in every
+  lane's path. Left alone because its mtime says a lane is mid-edit and a
+  one-line fix landing under a live writer is how work gets clobbered. Warned in
+  `CHANNEL.md`.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -50,7 +75,7 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-1. **H17** — 32 of 40 checks in `test_loop_gate.sh` still have no falsifier.
+1. **H17** — 34 of 43 checks in `test_loop_gate.sh` still have no falsifier.
    Every one was written for a specific shipped defect, so every one has a
    known-failing input on record; each addition is one tuple in `falsify.py`.
    This is the row that stops "H7 DONE" being read as "the suite is verified".
