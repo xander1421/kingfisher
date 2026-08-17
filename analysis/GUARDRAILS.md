@@ -489,3 +489,29 @@ to 5 cycles per crossing, because the forced build creates **true** sharing
 (barrier state every core must observe), not false sharing. Padding separates
 *unrelated* data; there was nothing unrelated to separate. The null was
 unfalsifiable as constructed, and one control could not reveal that.
+### A16. Arms must share the nuisance state, not merely be measured against it.
+
+N1e A/B-tested two builds of `S51/mcx.c` — barrier atomics padded vs sharing a
+line with the work-stealing cursor — and included a within-run control
+(static mode never touches the cursor). That control normalises DVFS *inside*
+a run. It says nothing about **which arm ran while the device was hot**.
+
+The device dropped into the low DVFS state between two arms and stayed there
+(T=1: 572 -> 940 us). The fast regime ended up holding **three control arms and
+one treatment arm**. The apparent 20 pp effect came from that imbalance; the
+balanced regime gives 4.4 pp.
+
+**A control that normalises a nuisance variable within an arm does not
+randomise or pair that variable across arms.** Those are different jobs. When
+between-run drift can exceed the effect — thermal, DVFS, cache warmth, page
+placement, allocator state — the arms must be interleaved at the finest
+granularity the harness allows, ideally inside one process so the nuisance
+state is shared by construction, and paired differences used as the estimator.
+
+Separate binaries are the failure mode: two builds are two runs, and two runs
+are two thermal histories. Compile both layouts into one binary and switch per
+iteration.
+
+Corollary: log a per-arm nuisance readout (here, T=1 wall time) and check arm
+balance across its range *before* computing any effect. N1e's imbalance was
+visible in the raw table and was not looked for.
