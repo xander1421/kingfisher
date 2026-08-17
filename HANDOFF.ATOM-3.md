@@ -54,6 +54,23 @@ the changelog line the brief asks for:**
   `MAX_TURN=3600`. Liveness moved to `ps` + `.loop_lock` (no threshold); the beat
   repurposed to watchdog-failure detection. `test_loop_gate.sh` 62/62 after.
 
+- **H53** — the CHANNEL/QUEUE status divergences, verified one at a time against
+  the artifact. Six were **three different defects wearing one uniform**, which
+  is why none had been cleared: 2 genuinely stale and now closed (**H31**,
+  **H32** — each a live SELECT hazard), 1 one-id-two-works (**H11**, stays OPEN,
+  `run_loop.sh:316` still clears the fuse per turn), 2 renumbered ids the checker
+  cannot follow (**H17**→H22, **H20**→H25), and **H2** re-verified still open and
+  wider — `check_live_launcher.sh` REFUSES, 20 of 21 live launchers predate
+  `run_loop.sh`, so every launcher fix made today is in no running lane. All four
+  residual rows now carry their adjudication in the row itself.
+- **H52 filed** (not fixed, another lane's file): a checker with a permanent
+  non-zero floor is read as background noise, and that floor is what hid H31 and
+  H32.
+- **`prompts/ATOM-3.md` §0 guarded**, with a changelog line: it prescribed
+  `./peers.sh` UNGUARDED — the section a lane runs before anything else, telling
+  it to run a script that did not exist (H23's class). `peers.sh` landed at 14:15
+  and refcheck is green again.
+
 ## NEXT, in order
 
 1. **H44 — two `bringup.sh`, both live, differing from line 2, one LaunchAgent
@@ -62,15 +79,7 @@ the changelog line the brief asks for:**
    `spikes/harness/bringup.sh` is untracked and is what `CHANNEL.md:182`'s
    `DONE H6b` names and `net.kingfisher.fleet.plist:54` invokes. Two censuses
    that can disagree is H6's own hazard, so this is the direct successor.
-2. **The idscope divergence — 8 ids read DONE in `CHANNEL.md` and OPEN in
-   `WORK_QUEUE.md`** (`python3 spikes/harness/idscope.py` REFUSES right now:
-   H2, H6, H9, H11, H17, H20, H31, H32). H6 was one of them and is now resolved
-   in the queue. The rest are cross-lane bookkeeping, which is the elder's
-   standing question and no rowing lane's job. Note the causes differ: H31/H32
-   look like DONE-never-recorded, H6 was one id covering two different pieces of
-   work, and H2's queue status is a genuine REOPENED. Do not sweep them
-   uniformly.
-3. **H43 — the cure half of H6.** Detector shipped; the cure needs a decision,
+2. **H43 — the cure half of H6.** Detector shipped; the cure needs a decision,
    not code. Killing a wedged lane's `claude` child does **not** kill the lane
    (H31: the detached wrapper respawns it), and an automatic cure acts on a live
    lane, so a false positive costs another lane's cycle.
@@ -83,7 +92,10 @@ LEDGER row, a retraction that reached `CHANNEL.md` and not the file it retracts
 (H26b), a control that cannot fire.
 
 Live answers carried forward:
-- `idscope.py` REFUSES on 8 ids (NEXT 2).
+- `idscope.py` REFUSES on 5 ids and CANNOT reach zero (H52). Four are correct
+  by its own design; the fifth is mine — `DONE H50 ATOM-3` in the append-only
+  log against AGENT-1's OPEN `| H50 |` row. Adjudicated in the H53 row, not
+  clearable.
 - `cite.py` exits 1.
 - `bringup.sh --check` reports `ok-1` OFF-ROSTER while `CHANNEL.md:180` records
   the operator declaring it the fourth lane — the two-roster dispute is **ok-1's
@@ -109,7 +121,17 @@ Live answers carried forward:
    a control that cannot fire. Then a pidfile — abandoned on finding
    `.loop_lock.$CALLSIGN` already in the tree from AGENT-2's H8. Both avoided by
    checking, neither by foresight.
-4. **I took a peer's report about its own artifact at face value for one
+4. **I allocated another lane's id and my DONE line closed their OPEN row.**
+   `H50` is AGENT-1's. I allocated with `grep ... | sort | tail` over a namespace
+   three lanes are writing — stale the moment it returns — while
+   `sh spikes/harness/allocid.sh H` had existed since 14:06, six minutes earlier.
+   `idscope.py` went 4 → 5 divergences **on my own edit**, and it is H11's shape
+   (one id, two pieces of work) reproduced inside forty minutes of my writing the
+   queue row that documents it. Renumbered myself to H53, and my H51 row to H52
+   after finding `CLAIM H51 AGENT-1` predated it. Caught by reading the commit
+   stat — `1 file changed, 1 insertion` when I had edited five rows — not by any
+   check.
+5. **I took a peer's report about its own artifact at face value for one
    exchange.** AGENT-2 said whois.py's self-blindness was "stated in the commit
    and in the docstring". It is in `b403300`'s body and **not** in the file.
    Family D, applied to a peer instead of to data. Checked both before writing
