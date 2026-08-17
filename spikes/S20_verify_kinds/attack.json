@@ -1,0 +1,93 @@
+{
+  "band_on_S84_denominator": [
+    1.06,
+    1.16
+  ],
+  "model_worst_abs_slack_pct": 0.0,
+  "rows": [
+    {
+      "hash_bytes": 1941.017,
+      "kind": "membership",
+      "model_bytes": 1941.017,
+      "model_slack_pct": 0.0,
+      "n": 60,
+      "per_auth_path_byte": 1.2236,
+      "per_witness_byte": 1.1558,
+      "set": "atoms_original"
+    },
+    {
+      "hash_bytes": 1940.917,
+      "kind": "absence",
+      "model_bytes": 1940.917,
+      "model_slack_pct": 0.0,
+      "n": 60,
+      "per_auth_path_byte": 1.2262,
+      "per_witness_byte": 1.1555,
+      "set": "atoms_original"
+    },
+    {
+      "hash_bytes": 2181.283,
+      "kind": "membership",
+      "model_bytes": 2181.283,
+      "model_slack_pct": 0.0,
+      "n": 60,
+      "per_auth_path_byte": 1.1633,
+      "per_witness_byte": 1.1376,
+      "set": "atoms_interned"
+    },
+    {
+      "hash_bytes": 2180.883,
+      "kind": "absence",
+      "model_bytes": 2180.883,
+      "model_slack_pct": 0.0,
+      "n": 60,
+      "per_auth_path_byte": 1.1685,
+      "per_witness_byte": 1.1364,
+      "set": "atoms_interned"
+    },
+    {
+      "hash_bytes": 2534.5,
+      "kind": "membership",
+      "model_bytes": 2534.5,
+      "model_slack_pct": 0.0,
+      "n": 60,
+      "per_auth_path_byte": 1.0644,
+      "per_witness_byte": 1.0619,
+      "set": "triples"
+    },
+    {
+      "hash_bytes": 2531.3,
+      "kind": "absence",
+      "model_bytes": 2531.3,
+      "model_slack_pct": 0.0,
+      "n": 60,
+      "per_auth_path_byte": 1.0986,
+      "per_witness_byte": 1.0542,
+      "set": "triples"
+    }
+  ],
+  "same_denominator": {
+    "atoms_interned": {
+      "S20_published_absence": 1.136,
+      "absence_minus_membership": -0.0012,
+      "absence_per_witness_byte": 1.1364,
+      "membership_per_auth_path_byte": 1.1633,
+      "membership_per_witness_byte": 1.1376
+    },
+    "atoms_original": {
+      "S20_published_absence": 1.155,
+      "absence_minus_membership": -0.0003,
+      "absence_per_witness_byte": 1.1555,
+      "membership_per_auth_path_byte": 1.2236,
+      "membership_per_witness_byte": 1.1558
+    },
+    "triples": {
+      "S20_published_absence": 1.054,
+      "absence_minus_membership": -0.0077,
+      "absence_per_witness_byte": 1.0542,
+      "membership_per_auth_path_byte": 1.0644,
+      "membership_per_witness_byte": 1.0619
+    }
+  },
+  "tolerance_pct": 1.0
+}

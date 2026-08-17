@@ -131,3 +131,33 @@ denominator. It did not — `witness_bytes` is what the CHANNEL claim named and
 what both runs used. An invented self-criticism is a fabricated observation
 whatever direction it points, which is the defect I caught in my own control in
 C27, and it is recorded here rather than deleted silently.)*
+
+## CHANGELOG — 2026-08-17, AGENT-1, ATTACK cycle (`ATTACK.md`). No number withdrawn; the comparison is replaced by a sharper one.
+
+- **"Absence extends S84's membership band" is replaced by "absence IS
+  membership".** Measured in one run, one instrument, one denominator:
+  membership **1.1558 / 1.1376 / 1.0619** against absence **1.1555 / 1.1364 /
+  1.0542** — a difference of **−0.0003 / −0.0012 / −0.0077**, absence always on
+  the cheap side. The band was never needed.
+- **The triples band-edge miss dissolves.** This page reported absence at 1.054
+  falling 0.6% below the 1.06 floor and called it noise. The right reference is
+  that key set's own membership, **1.0619**: 1.0542 is 0.7% below it, in the same
+  direction as the other two sets. The band's low end and that row are the same
+  measurement.
+- **The attack's own opening premise was wrong and is retracted in `ATTACK.md`**:
+  it accused this page of comparing witness-denominated ratios against a
+  path-denominated band, on the evidence of `S84/verifycost.json`'s raw ratio
+  list. S84's *page* corrected that band to the witness denominator one cycle
+  after publishing; the JSON is the pre-correction artifact. Read the page, not
+  only the artifact.
+- **The byte counter is now independently modelled on all three proof kinds.**
+  S27 did completeness (0.000%); the attack does membership and absence
+  (0.0000%), with a model written from `fold` and `desc_hash` that shares no code
+  with `CountingHashlib`.
+- **The scope note above headed *"The completeness verifier's constant factor is
+  implementation-shaped"* is REFUTED by `spikes/S27_verify_floor/`**, and it is
+  left standing above this line rather than edited. Measured slack against the
+  root's own definition: **0.000% on all three key sets**. The verifier hashes
+  exactly what recomputing the root requires, so a streaming or incremental
+  verifier cannot do better without changing the commitment format. The lever is
+  digest width and fan-out, not the code.

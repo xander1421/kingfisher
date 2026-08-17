@@ -1,0 +1,134 @@
+{
+ "spike": "S20_verify_kinds",
+ "recorded_utc": "2026-08-17T15:51:17Z",
+ "note": "",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/attack.json",
+   "sha256": "1aab443bab160e65893c29b3e0bb2c83d10048cd0cf71ffe88f34d1ab0bc2553",
+   "bytes": 2340,
+   "mtime": 1786981877
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_absence_reproduces_S20",
+   "must_fire_because": "this attack must reproduce S20's published absence ratios before it is allowed to reinterpret them -- otherwise a disagreement could be the attack's own bug",
+   "can_fail_because": "a published absence ratio differs from the value recomputed here by more than 0.002",
+   "null_must_contain": "any drift in the instrument, key files or probe construction would move these",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "deltas_vs_published": {
+     "atoms_original": 0.0005,
+     "atoms_interned": 0.0004,
+     "triples": 0.0002
+    },
+    "published": {
+     "atoms_interned": 1.136,
+     "atoms_original": 1.155,
+     "triples": 1.054
+    }
+   }
+  },
+  {
+   "name": "C_two_denominators_differ",
+   "must_fire_because": "the whole of A1 rests on the two denominators being different quantities. If auth-path and witness bytes were equal, the comparison S20 made would have been harmless and this angle would be empty",
+   "can_fail_because": "auth-path and witness bytes agree on every set, making the denominators interchangeable",
+   "null_must_contain": "a proof kind whose terminal descriptor is zero bytes, where the two coincide",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original/membership": 0.0678,
+    "atoms_original/absence": 0.0707,
+    "atoms_interned/membership": 0.0257,
+    "atoms_interned/absence": 0.0321,
+    "triples/membership": 0.0025,
+    "triples/absence": 0.0444
+   }
+  },
+  {
+   "name": "C_model_shares_no_code",
+   "must_fire_because": "A2: the byte model is written from `fold` and `desc_hash` and hashes nothing, so it can disagree with the counting hashlib that four spikes now depend on. S27 ran this check for the completeness path; membership and absence never had it",
+   "can_fail_because": "model and counter disagree by more than 1.0% on any row",
+   "null_must_contain": "a counter that missed an update, or a verifier hashing something outside node_hash",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original/membership": 0.0,
+    "atoms_original/absence": 0.0,
+    "atoms_interned/membership": 0.0,
+    "atoms_interned/absence": 0.0,
+    "triples/membership": 0.0,
+    "triples/absence": 0.0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_band_comparison_was_wrong",
+   "must_fire_because": null,
+   "can_fail_because": "membership measured on the witness denominator falls OUTSIDE S84's published 1.06-1.16 band, which is what a denominator mismatch would show",
+   "null_must_contain": "membership landing inside the band, i.e. the band and S20's ratios sharing a denominator and there being nothing to correct",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "S84_page_band": [
+     1.06,
+     1.16
+    ],
+    "S84_json_raw_ratios_are_path_denominated": [
+     1.223,
+     1.161,
+     1.065
+    ],
+    "membership_per_witness_byte": {
+     "atoms_original": 1.1558,
+     "atoms_interned": 1.1376,
+     "triples": 1.0619
+    },
+    "membership_per_auth_path_byte": {
+     "atoms_original": 1.2236,
+     "atoms_interned": 1.1633,
+     "triples": 1.0644
+    }
+   },
+   "refutes": "THIS ATTACK's own A1 premise -- that S20 compared against a band computed on a different denominator. If membership under S20's denominator lands inside S84's published band, the premise is refuted and the accusation is withdrawn",
+   "fires_when": "membership measured on the witness denominator falls OUTSIDE S84's published 1.06-1.16 band, which is what a denominator mismatch would show",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "the instrument is S20's pinned w2_head/trie_witness.py, already hashed as an artifact by S20's own record; this attack adds no new dependency and writes under its own record name so it cannot overwrite that record (H49).",
+ "problems": [],
+ "ok": true,
+ "falsifier": "membership measured on S20's own denominator falling outside S84's published band, which would have confirmed this attack's A1 premise instead of refuting it; and, for A2, the byte model disagreeing with the counting hashlib that four spikes now share",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

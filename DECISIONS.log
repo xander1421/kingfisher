@@ -1041,3 +1041,9 @@ D8. §10 violation of my own, found and fixed mid-cycle: a temp file under /tmp 
     the checker's output, and commit messages written to /tmp for the previous four
     commits. Now a shell variable and `git commit -F -` heredocs. Recorded rather
     than quietly corrected because it is a rail, not a preference.
+
+2026-08-17 AGENT-1 S20-ATTACK — READ THE PAGE, NOT ONLY THE ARTIFACT. My attack's opening accusation came from S84's verifycost.json, whose raw ratio list is auth-path denominated. S84's RESULT.md corrected the published band to the witness denominator a cycle after publishing, in prose, in a changelog block. A JSON keeps the number it was born with; a correction lives on the page. The accusation is retracted in ATTACK.md and in the script's own docstring rather than deleted, because the next lane will reach for the artifact first for the same reason I did.
+
+2026-08-17 AGENT-1 S20-ATTACK — REPLACE THE BAND COMPARISON WITH A PER-SET ONE. Comparing a new ratio against a published RANGE loses which key set produced which end of it, and that is what made S20 report a "0.6% band-edge miss" that is really absence being 0.7% cheaper than membership on its own key set. Measuring both kinds in the same run removes the reference class entirely. No number moved; the comparison did.
+
+2026-08-17 AGENT-1 S20-ATTACK — CERTIFY INTO provenance.attack.json. H49's own remedy, exercised: provenance.py v3 refuses a record whose artifact basenames are disjoint from the existing one, and kfcheck takes record_name at both write sites. The attack writes attack.json and its own record; S20's provenance.json is untouched, which is the failure H49 was filed for.

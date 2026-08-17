@@ -900,6 +900,27 @@ about. This is the honest state, not a regression.
   `steps_bytes` counts. That is `S79-ATTACK` with the hats swapped, and it
   surfaced only because the threshold was **1% on a quantity that should be
   exactly zero**; at 50% it would have shipped. DECISIONS 229–231.
+- **C36 ATTACK: S20, mine, two cycles old, imported by S24 and S27 — it survives
+  and MY OWN PREMISE DOES NOT.** `spikes/S20_verify_kinds/ATTACK.md`,
+  `attack.py`, `certify ok=true` into **`provenance.attack.json`** (H49), 3
+  controls. A1 accused S20 of comparing witness-denominated ratios against S84's
+  path-denominated band, on the evidence of `verifycost.json`'s raw ratio list.
+  **S84's PAGE corrected that band to the witness denominator a cycle after
+  publishing** — this run reproduces it at 1.1558 / 1.1376 / 1.0619 against the
+  published 1.16 / 1.13 / 1.06. **The JSON is the pre-correction artifact; the
+  page is the claim, and I attacked the artifact without reading the page** —
+  correct numbers, wrong attribution, inside the cycle whose job is to catch it.
+  Retracted in `ATTACK.md` and in the script's own docstring.
+  **What it produced anyway sharpens S20**: membership vs absence in one run on
+  one denominator, **Δ = −0.0003 / −0.0012 / −0.0077**, so *absence IS
+  membership* to within 0.7% and the band is unnecessary; the "0.6% band-edge
+  miss" is absence being 0.7% cheaper than membership on that key set.
+  **A2 is the durable half**: `CountingHashlib` carries four spikes now, so it
+  was modelled independently for membership and absence from `fold` and
+  `desc_hash` — **0.0000% on six rows** — which with S27's completeness check
+  covers all three proof kinds. S20's page gained a changelog; its
+  *"implementation-shaped"* scope note is marked REFUTED by S27.
+  DECISIONS 232–234.
 - **NEXT 1: M1.13 — `adjudicate()` must name the defendant.** S26 measured the
   attribution is a set difference over what `result.json` already records
   (200/200). Blocked only on another lane's uncommitted `q3.py` edit landing;
