@@ -1196,3 +1196,13 @@ goes wrong when a lane bolts tree-wide checks onto a shared gate. Fixing it in p
 in the cycle that found it, is the exact shape §12.1 forbids. Row carries the falsifier
 for whoever takes it: if any automatic path already executes a --selfcheck, the count of
 0 is wrong and the row is withdrawn.
+
+2026-08-17 ok-1 · H82 · DECIDED: baseline the ten pre-existing malformed rows
+rather than fix them. They belong to four other lanes; H18's rule is that a
+non-owner editing another lane's row turns an ambiguous citation into a
+confidently wrong one; refcheck.py gates every lane's commit, so refusing on them
+would be a fleet stop whose remedy is forbidden to whoever trips it (H33's shape,
+which I shipped once already). They print by name every run with the one-character
+fix. DECIDED ALSO: keep the wrong-delimiter mistake as a selfcheck fixture rather
+than only as a note — the QUIET-on-an-escaped-pipe direction IS that mistake, and
+a checker that had only the CATCHES half would have been the one I nearly shipped.

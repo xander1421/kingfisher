@@ -1,5 +1,29 @@
 #!/usr/bin/env python3
-"""refcheck.py v5 — H4/H18/H33/H41. Every §N / guardrail / file / ROW-ID citation resolves.
+"""refcheck.py v6 — H4/H18/H33/H41/H82. Every §N / guardrail / file / ROW-ID
+citation resolves, and every table row still has a status column to read.
+
+v6 RATIONALE (§12.7) — THE DEFECT REMOVED: a row with an unescaped `|` in its
+text gains a cell, every later cell shifts, and the STATUS column -- the one §2's
+SELECT step reads to decide what is open and unclaimed -- becomes a fragment of
+prose. Ten rows were in that state, across four lanes: `H18`'s status read
+``uniq -d` and renumbered to §13``, `H40`'s read ``grep -c 'You are <CS>\.'` --
+mine called it...``. A second cause, same symptom: my own `H11` printed OPEN to
+an `awk -F'|'` twenty minutes after I recorded it DONE, because the verdict was
+appended as a FIFTH cell beside the old status instead of replacing it.
+
+AND THE CHECK WAS NEARLY SHIPPED AGAINST THE WRONG NUMBER. My first count split
+on every `|`, which counts the escape `\|` as a delimiter: it reported 21
+malformed rows where there are 10, and the repair script it fed would have
+"fixed" eleven correctly-escaped rows, two of them mine. It refused instead --
+its assertion compared the escaped row's field count and did not get 5 -- and the
+escape-aware rule (split on a pipe not preceded by a backslash, which is what GFM
+delimits on) is what the check ships with. The QUIET-on-an-escaped-pipe fixture in
+selfcheck() is that mistake, kept as a test.
+
+BASELINED, NOT GRANDFATHERED SILENTLY: the ten pre-existing rows belong to other
+lanes, H18 forbids a non-owner from editing them, and this module gates every
+lane's commit -- so they are REPORTED every run with the fix and do not gate. A
+new one refuses. Full reasoning at check 6.
 
 v5 RATIONALE (§12.7) — TWO DEFECTS REMOVED, and H41 named only one of them:
   (a) only INLINE backticked paths were matched, so a path inside a ```sh fence
@@ -181,6 +205,38 @@ def row_ids(text):
     return out
 
 
+# Rows whose shape was already broken when check 6 shipped (H82, 2026-08-17).
+# Reported every run, never gating -- see check 6 for why, and shrink this list
+# rather than growing it.
+BASELINE_ROW_SHAPE = {
+    'WORK_QUEUE.md': {'S75', 'N1', 'G30', 'H27', 'H28', 'H36', 'H52', 'H53',
+                      'H59', 'H71'},
+}
+
+CELL = re.compile(r'(?<!\\)\|')
+
+
+def malformed_rows(text):
+    """(id, field count) for every table row that is not exactly 3 cells wide.
+
+    Splits on a pipe NOT preceded by a backslash, because that is what GFM
+    delimits a cell on. A plain split('|') counts the escape itself and reports
+    correctly-escaped rows as broken -- measured, 21 against a true 10.
+    """
+    out = []
+    for line in text.splitlines():
+        if not line.startswith('|'):
+            continue
+        cell = line.split('|')[1].strip().strip('*`').strip()
+        if not (ID_CELL.match(cell) and
+                (any(c.isdigit() for c in cell) or '-' in cell)):
+            continue
+        n = len(CELL.split(line))
+        if n != 5:
+            out.append((cell, n))
+    return out
+
+
 def main():
     # DISPATCH ONLY. The first draft had main() re-read sys.argv and selfcheck()
     # call main(), so --selfcheck recursed until the stack blew -- a checker that
@@ -334,7 +390,7 @@ def scan():
         def unresolved(tok):
             """None if `tok` is not a repo-path citation or resolves; else the path."""
             if tok.startswith(('~', 'http', '/', '<')) or any(
-                    c in tok for c in '<>*?:\\$'):
+                    c in tok for c in '<>*?:\\$"\'`{}[]()'):
                 return None
             tok = tok.rstrip('.,;:')
             body = tok[2:] if tok.startswith('./') else tok
@@ -390,6 +446,45 @@ def scan():
                             f'"{n}" -- every {n} citation resolves to more than '
                             f'one row')
 
+        # 6 · ROW SHAPE. A row with an unescaped `|` in its text gains a cell,
+        # and every later cell shifts -- so the STATUS column, which is what §2's
+        # SELECT step reads to decide what is open and unclaimed, becomes a
+        # fragment of prose. Live when written (H82): `H18`'s status read
+        # ``uniq -d` and renumbered to §13`` and `H40`'s read ``grep -c 'You are
+        # <CS>\.'` -- mine called it...``, and my OWN `H11` still printed OPEN to
+        # an `awk -F'|'` twenty minutes after I recorded it DONE, because the
+        # verdict landed as a FIFTH cell beside the old status instead of
+        # replacing it. Two different causes, one symptom, one check.
+        #
+        # THE SPLIT RULE IS ESCAPE-AWARE, and getting it wrong is how this check
+        # was nearly shipped against the wrong number: a plain `line.split('|')`
+        # counts the escape `\|` as a delimiter, which reported 21 malformed rows
+        # where there are 10 -- and would have "repaired" eleven correctly-escaped
+        # rows, two of them mine. GFM delimits on a pipe NOT preceded by a
+        # backslash; this file already used that escape in 12 places before the
+        # check existed, which is the precedent the repair follows.
+        #
+        # BASELINED, NOT GRANDFATHERED SILENTLY. These ten rows were malformed
+        # when the check shipped and belong to four other lanes; H18's rule says a
+        # non-owner editing another lane's row turns an ambiguous citation into a
+        # confidently wrong one, and this module gates every lane's commit, so
+        # refusing on them would be a fleet stop whose remedy is forbidden to the
+        # lane that trips it (H33, and H14's "a checker that fires on known items
+        # every run is one everyone learns to ignore"). They are REPORTED every
+        # run with their owner's cue and they do not gate. A NEW one refuses.
+        if rel in BASELINE_ROW_SHAPE:
+            known = BASELINE_ROW_SHAPE[rel]
+            for rid, n in malformed_rows(text):
+                if rid in known:
+                    print(f'  KNOWN ROW SHAPE {rel}: `{rid}` has {n} fields, not '
+                          f'5 -- its status column is unreadable. Owner fixes it '
+                          f'by escaping the pipe as \\| (H82).')
+                else:
+                    problems.append(
+                        f'{rel}: row `{rid}` has {n} fields, not 5 -- an '
+                        f'unescaped `|` shifts every later cell, so the STATUS '
+                        f'column reads as a fragment of prose. Escape it as \\|')
+
     for p in sorted(set(problems)):
         print('  UNRESOLVED ' + p)
     if problems:
@@ -435,6 +530,13 @@ def selfcheck():
         # spikes/harness/. dup is allocated twice (the defect); uniq once (the
         # control that proves the check is not simply reporting every id).
         dup, uniq = 'H' + '99', 'H' + '98'
+        # Check 6's fixtures (H82), and they are a PAIR because either half alone
+        # passes for a checker that is wrong in the opposite direction: `shape_bad`
+        # carries a raw pipe in its status text and must be CAUGHT; `shape_ok`
+        # carries the same command with the pipe ESCAPED and must stay QUIET. A
+        # check that split on every `|` would flag both, which is the mistake this
+        # check was nearly shipped with.
+        shape_bad, shape_ok = 'H' + '97', 'H' + '96'
         # v5 (H41). Four path fixtures in two PAIRS, because each half of v5 has
         # a direction that a checker skipping every path would also satisfy.
         fence_bad = 'spikes/' + 'harness/fenced_nope.sh'    # fenced, absent
@@ -446,7 +548,11 @@ def selfcheck():
             '| id | item | status |\n|---|---|---|\n'
             f'| {dup} | first allocation, lane A | OPEN |\n'
             f'| {uniq} | only allocation | OPEN |\n'
-            f'| {dup} | second allocation, lane B | DONE |\n')
+            f'| {dup} | second allocation, lane B | DONE |\n'
+            f'| {shape_bad} | a row whose status names a pipeline | DONE — '
+            f'`grep -c . WORK_QUEUE.md | wc -l` says so |\n'
+            f'| {shape_ok} | the same, escaped | DONE — '
+            f'`grep -c . WORK_QUEUE.md \\| wc -l` says so |\n')
         # v3 (a)'s fixture. A per-lane brief defines a section MISSION_LOOP does
         # not. `CLAUDE.md` is not a brief and does not discuss one, so its
         # \u00a7{brief_sec} must be FLAGGED; `HANDOFF.md` says "brief", which is the
@@ -511,7 +617,9 @@ def selfcheck():
                 ('nope.py', 'missing path'), ('numbered "2"', 'duplicate section'),
                 (f'numbered "{dup}"', 'duplicate row id'),
                 (fence_bad, 'absent path inside a ```sh fence (v5a)'),
-                (dot_bad, 'absent dot-slash path (v5b)')]
+                (dot_bad, 'absent dot-slash path (v5b)'),
+                (f'row `{shape_bad}`', 'a row whose unescaped pipe shifts its '
+                                       'status column (check 6)')]
         bad = [w for w, _d in want if w not in out]
         for w, d in want:
             print(f"  {'CATCHES' if w in out else 'MISSES '} {d} ({w})")
@@ -533,6 +641,15 @@ def selfcheck():
             bad.append('template path refused')
         else:
             print(f'  QUIET   on a template path ({tmpl_path})')
+        # Check 6's QUIET direction, and it is the half that matters most: an
+        # ESCAPED pipe is the documented way to write one in a cell and this file
+        # already used it 12 times before the check existed. Flagging it would
+        # have refused eleven correct rows.
+        if f'row `{shape_ok}`' in out:
+            print(f'  FALSE-POSITIVE on a correctly ESCAPED pipe ({shape_ok})')
+            bad.append('escaped pipe refused')
+        else:
+            print(f'  QUIET   on a correctly ESCAPED pipe ({shape_ok})')
         # v5's three QUIET directions. Each is the half a checker that simply
         # flagged every slash-bearing token would fail, and `nope.py` CATCHES
         # above is what stops "quiet everywhere" from reading as a pass.

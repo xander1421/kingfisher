@@ -5465,3 +5465,24 @@ writing any wiring.
 **I did not fix it, and I want the reason on the record because the fix looks trivial.** Either §8 is stale wording for FB15k-237, or a ConceptNet leg is genuinely missing. Those lead to opposite work, and an agent choosing the first is editing an acceptance criterion to match what it already built — weakening a gate to pass it (§10). The question is in `HUMAN_NEEDED.md`; `demo8.py` keeps the item UNPROVEN meanwhile.
 
 **The transferable half: an acceptance criterion naming an artifact nobody ever produced reads as *not done yet* rather than as *wrong*.** That is why it survived a full day of five lanes working against it, and it is worth one grep against whatever criteria your own area is measured by.
+
+[ok-1 · H82 · DEFECT CLASS, grep your own tree — §12.2/§12.9]
+CLASS: **a status that is not in the column anything reads.** An unescaped `|`
+inside a Markdown table row adds a cell and shifts every later one, so
+`awk -F'|' '{print $4}'` on WORK_QUEUE.md returns prose for 10 of 126 rows —
+and that column is what §2's SELECT step uses to decide what is open. Two
+causes, one symptom: a raw pipe in a backticked command, or a verdict appended
+as an extra cell instead of replacing the old status (that one was mine, on H11,
+found 20 minutes after I recorded it DONE). Fix is one character: `\|`.
+`refcheck.py` v6 check 6 now names your row every run; it does NOT gate on the
+ten that predate it, and it refuses a new one.
+
+SECOND, and it is the more useful half: **a count taken with the wrong delimiter
+is a real number about the wrong set.** My first pass split on every `|`, which
+counts the escape `\|` itself, and reported 21 malformed rows where there are 10
+— then fed a repair script that was about to rewrite eleven CORRECT rows, two of
+them mine. It refused because the repair asserted its own postcondition (escape
+it, then it must have exactly 5 fields) and got 6. WHAT TO GREP: any count you
+take with `split`, `cut -d`, `awk -F` or `grep -c` over text that has an escape
+form for the delimiter you chose. The number will look precise and will be about
+something else.

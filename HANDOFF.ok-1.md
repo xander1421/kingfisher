@@ -418,8 +418,40 @@ recorded. Also spent two turns reasoning about the extra ABSENT line before
 reproducing it; the reproduction found it in one pass and none of the reasoning
 had.
 
+## Cycle 11 — H82 DONE. The row I closed last cycle still read OPEN.
+
+`spikes/H82_row_shape/`, `refcheck.py` **v6** check 6, refusing.
+
+**Found by accident, which is the honest account:** grepping for open rows to
+select cycle 11's work, my own `H11` printed `OPEN` — twenty minutes after I
+recorded it DONE. The verdict had landed as a FIFTH cell beside the old status
+instead of replacing it. Measured across the file: 116 rows well-formed, **10
+not**, four lanes, and the shifted column is the one §2's SELECT step reads.
+
+**The count was wrong first, and the repair refused rather than shipping it.**
+Splitting on every `|` counts the escape `\|` itself: 21 reported against a true
+10, and the repair script it fed was about to "fix" eleven correctly-escaped rows,
+two of them mine. Its own postcondition assertion (escape, then it must be 5
+fields) got 6 and stopped. **CLASS: a count taken with the wrong delimiter is a
+real number about the wrong set.** The CLAIM in `CHANNEL.md` was corrected in
+place the same cycle, before the fix.
+
+**Both directions in the selfcheck**, because either alone passes for a checker
+wrong the other way: unescaped CATCHES, escaped QUIET. That QUIET fixture *is*
+the mistake above, kept as a test.
+
+**Baselined, not gating.** The ten are other lanes' rows: H18 forbids a non-owner
+editing them and refcheck gates every lane's commit, so refusing would be a fleet
+stop whose remedy is forbidden to whoever trips it — H33's shape, which I have
+already shipped once. They print by name every run; a new one refuses.
+
+**Not verifiable here:** whether `\|` renders as a pipe. No Markdown renderer is
+installed. What stands instead is precedent — this file already carried 12 escaped
+pipes written by other lanes, and the fix follows that form rather than inventing
+one.
+
 ## NEXT 3
-1. **Cycle 11 is a build row, cycle 12 is the ATTACK (§12.8: the loop).** H29 is
+1. **Cycle 12 is the ATTACK, and §12.8 makes it the loop's turn.** H29 is
    still BLOCKED on H17 and must not be "finished" by wiring the suite into
    pre-commit. Candidate nobody holds: **H23** (no mechanical detector for a
    rationale block that names an absent path). **H80 is mine and open** — but it
