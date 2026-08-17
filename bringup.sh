@@ -22,7 +22,21 @@ set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ROSTER_FILE="roster.txt"
-STALE_SECS=2100        # 35 min: H6's threshold, same number run_loop.sh cites
+# v2 (H6, ATOM-3, 2026-08-17). This was 2100 (35 min), "H6's threshold, same
+# number run_loop.sh cites" -- and 35 min is the number from the POST-MORTEM of a
+# dead fleet, not a threshold this file can act on. `.heartbeat.$CALLSIGN` is
+# written ONCE per turn, at turn start (run_loop.sh:263), and a turn is legal
+# until MAX_TURN=3600. So every threshold below 3600 fires on a healthy long
+# turn, and no threshold above it beats the watchdog that already kills at 3600.
+# The beat cannot be a lane-death detector at any setting.
+#
+# What it CAN detect, and now does: a beat older than MAX_TURN means the
+# watchdog did not fire -- the turn outlived the only mechanism that bounds it.
+# That is a real alarm with no healthy reading, and it is the one an external
+# watcher cannot get from `ps`. Liveness moved to lane_pid/lane_lock_pid below,
+# which need no threshold at all.
+MAX_TURN_SECS=3600     # must track run_loop.sh's MAX_TURN default; asserted by test_h6_selfblind.sh
+STALE_SECS=$(( MAX_TURN_SECS + 300 ))
 
 [ -f "$ROSTER_FILE" ] || { echo "bringup: $ROSTER_FILE missing -- refusing to guess the roster"; exit 1; }
 # Strip comments (inline and whole-line) and blanks.
@@ -37,7 +51,46 @@ done < <(sed 's/#.*//' "$ROSTER_FILE" | awk 'NF{print $1}')
 
 # Match the launch prompt exactly. `You are AGENT-1.` with the trailing period,
 # so AGENT-1 never matches a future AGENT-10.
-lane_pid() { pgrep -f "You are ${1}\." 2>/dev/null | head -1; }
+#
+# `ps`, NOT `pgrep` (H6, v2). CLASS: A CENSUS THAT CANNOT SEE ITS OWN OBSERVER.
+# `man pgrep`, flag -a: "the current pgrep or pkill process and all of its
+# ancestors are excluded". A lane running this census is ALWAYS its own census's
+# ancestor -- claude -p -> bash -> bringup.sh -> pgrep -- so `pgrep` returned
+# nothing for the one lane guaranteed to be alive.
+#   MEASURED from inside ATOM-3, 2026-08-17: `./bringup.sh --check` printed
+#   `ATOM-3 DOWN`, `quorum: 3/4`, exit 1, while `ps -eww` showed pid 44527
+#   carrying `You are ATOM-3.` and `.loop_lock.ATOM-3` held its live wrapper.
+#   The other three lanes, none of them ancestors, resolved correctly -- so the
+#   failure is invisible unless the observer is inside the fleet it is counting.
+#   Two-sided control in spikes/H6_liveness/: same pattern, same binary, marker
+#   as ancestor -> pgrep [] / ps [3 pids]; marker as descendant -> both find it.
+#   WORSE THAN A WRONG REPORT: without --check the DOWN branch LAUNCHES, so a
+#   lane running its own bring-up relaunches its own callsign. That is H8, and
+#   `.loop_lock` only covers lanes started by run_loop.sh v6 or later.
+# The correct idiom was already 100 lines below in this same file -- the
+# OFF-ROSTER block has always used `ps`, which has no ancestor rule.
+# Snapshot BEFORE the search so the searcher cannot match itself (the first two
+# runs of the control above failed exactly that way: `grep -v grep` deleted the
+# target because the target's argv contained the word `grep`). `grep -F` keeps
+# the trailing period literal.
+lane_pid() {
+  local snap
+  snap=$(ps -eww -o pid=,command= 2>/dev/null)
+  printf '%s\n' "$snap" | grep -F "You are ${1}." | awk 'NR==1{print $1}'
+}
+
+# THE RECORDED HOLDER (run_loop.sh v6 / H8): one file per callsign holding the
+# loop pid. `You are X.` exists only while a turn is IN FLIGHT, so between turns
+# -- and through a backoff that reaches 900s -- ps reads clear on a callsign that
+# is held, and this census would call a healthy lane DOWN and relaunch it.
+# ABSENCE IS UNKNOWN, NEVER CLEAR: the lanes launched before v6 carry no lock
+# file at all, which is why this is a second opinion and not a replacement.
+lane_lock_pid() {
+  local f=".loop_lock.${1}" p
+  [ -f "$f" ] || return 1
+  p=$(tr -dc '0-9' < "$f")
+  [ -n "$p" ] && kill -0 "$p" 2>/dev/null && printf '%s\n' "$p"
+}
 
 beat_age() {
   local f=".heartbeat.${1}"
@@ -102,16 +155,30 @@ echo
 echo "=== QUORUM ==="
 UP=0; MISSING=()
 for lane in "${ROSTER[@]}"; do
-  pid=$(lane_pid "$lane")
+  # TWO SOURCES, because neither alone can answer it (H6). A turn in flight is
+  # visible to ps and vanishes between turns; the loop lock survives between
+  # turns and does not exist for lanes started before run_loop.sh v6. UP on
+  # either, and SAY WHICH -- a lane held only by its lock has not been observed
+  # doing anything, and reporting that as plain UP is the empty-input floor.
+  pid=$(lane_pid "$lane"); src="turn"
+  if [ -z "$pid" ]; then pid=$(lane_lock_pid "$lane"); src="loop"; fi
   age=$(beat_age "$lane")
   if [ -n "$pid" ]; then
     UP=$((UP+1))
     if [ "$age" -lt 0 ]; then
-      printf '  %-12s UP   pid %-7s no heartbeat file yet\n' "$lane" "$pid"
+      # ABSENT IS NOT STALE, and only one of them has a timestamp. run_loop.sh
+      # removes the beat on a clean exit, so absence also means retired, or
+      # never started, or -- observed on ok-1, alive and mid-turn with no beat
+      # file at all -- a wrapper still running a launcher generation that
+      # predates the beat (H21). Four states, one observation: say so.
+      printf '  %-12s UP   pid %-7s (%s) NO BEAT FILE -- retired, pre-v5 launcher, or never started\n' "$lane" "$pid" "$src"
     elif [ "$age" -gt "$STALE_SECS" ]; then
-      printf '  %-12s UP   pid %-7s HEARTBEAT STALE %ss (>%ss)\n' "$lane" "$pid" "$age" "$STALE_SECS"
+      # Not "the lane is dead" -- ps or the lock just said it is not. It means
+      # the turn outlived MAX_TURN, i.e. the watchdog that exists to bound it
+      # did not fire. There is no healthy reading of this.
+      printf '  %-12s UP   pid %-7s (%s) WATCHDOG FAILED: turn age %ss > MAX_TURN+300 (%ss)\n' "$lane" "$pid" "$src" "$age" "$STALE_SECS"
     else
-      printf '  %-12s UP   pid %-7s beat %ss ago\n' "$lane" "$pid" "$age"
+      printf '  %-12s UP   pid %-7s (%s) turn age %ss\n' "$lane" "$pid" "$src" "$age"
     fi
   else
     printf '  %-12s DOWN\n' "$lane"

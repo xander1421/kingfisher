@@ -47,7 +47,7 @@ _ROSTER="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/roster.txt"
 if [ -z "${LANES:-}" ] && [ -f "$_ROSTER" ]; then
   LANES="$(sed 's/#.*//' "$_ROSTER" | awk 'NF{print $1}' | tr '\n' ' ')"
 fi
-LANES=${LANES:-"AGENT-1 AGENT-2 ATTACKER-1 ATOM-3"}
+LANES=${LANES:-"AGENT-1 AGENT-2 ATTACKER-1 ATOM-3 ok-1"}
 CHECK_ONLY=no
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -61,6 +61,36 @@ done
 problems=0
 note() { printf '  %-9s %s\n' "$1" "$2"; }
 fail() { problems=$((problems+1)); note FAIL "$1"; }
+
+# v2 (H6, ATOM-3, 2026-08-17). CLASS: A CENSUS THAT CANNOT SEE ITS OWN OBSERVER.
+# Every lane lookup here was `pgrep -f "You are $l\."`, and `man pgrep` (-a)
+# says: "the current pgrep or pkill process and all of its ancestors are
+# excluded". A lane running this script is its own lookup's ancestor
+# (claude -p -> bash -> bringup.sh -> pgrep), so the ONE lane guaranteed alive
+# read as absent. Measured in ./bringup.sh, which had the identical line:
+# `ATOM-3 DOWN, quorum 3/4` reported from inside ATOM-3, pid 44527 live.
+# HERE IT IS WORSE THAN A WRONG COUNT: section 8's absent branch runs
+# `CALLSIGN="$l" ./run_loop.sh`, so a lane running its own bring-up launches a
+# SECOND launcher on its own held callsign -- H8, the defect section 8's own
+# header says it exists to prevent. `.loop_lock` only covers lanes started by
+# run_loop.sh v6+; the four lanes live right now predate it and hold no lock.
+# `ps` has no ancestor rule. Snapshot taken before the search so the searcher
+# cannot match itself; `grep -F` keeps the trailing period literal so AGENT-1
+# never matches a future AGENT-10.
+lane_pid() {
+  _snap=$(ps -eww -o pid=,command= 2>/dev/null)
+  printf '%s\n' "$_snap" | grep -F "You are ${1}." | awk 'NR==1{print $1}'
+}
+
+# lane_pid takes NR==1, so it answers "is at least one alive" and is blind to
+# TWO processes holding one callsign -- which is H8, the thing section 8 exists to
+# prevent, invisible to the lookup that guards it. Observed: a launcher probe left
+# two `ok-1` running and bring-up reported the fleet healthy at 5/5.
+# Same snapshot, so the count cannot disagree with the pid it reports.
+lane_count() {
+  _snap=$(ps -eww -o pid=,command= 2>/dev/null)
+  printf '%s\n' "$_snap" | grep -cF "You are ${1}."
+}
 
 echo "PRECONDITIONS"
 
@@ -152,7 +182,13 @@ echo "LANES"
 #     numbered G25.
 started=0
 for l in $LANES; do
-  live=$(pgrep -f "You are $l\." 2>/dev/null | head -1)
+  live=$(lane_pid "$l")
+  if [ "$(lane_count "$l")" -gt 1 ]; then
+    fail "$l -- $(lane_count "$l") PROCESSES hold this callsign: $(ps -eww -o pid=,command= | grep -F "You are ${l}." | awk '{print $1}' | tr '\n' ' ')"
+    note "" "  H8. Retire the newer at its WRAPPER CHAIN, not its child -- killing"
+    note "" "  the child respawns it (H31). \`ps -o etimes=\` is not a macOS keyword."
+    continue
+  fi
   if [ -n "$live" ]; then
     beat="n/a"
     [ -f ".heartbeat.$l" ] && beat="$(( $(date +%s) - $(cat ".heartbeat.$l") ))s"
@@ -187,7 +223,7 @@ if [ "$started" -gt 0 ]; then
   echo "VERIFY"
   for l in $LANES; do
     [ -f "STOP.$l" ] && continue
-    p=$(pgrep -f "You are $l\." 2>/dev/null | head -1)
+    p=$(lane_pid "$l")
     if [ -n "$p" ]; then
       pp=$(ps -o ppid= -p "$p" 2>/dev/null | tr -d ' ')
       note ok "$l — pid $p, heartbeat $([ -f .heartbeat.$l ] && echo present || echo MISSING)"
@@ -201,7 +237,11 @@ fi
 #     was already inside, which is how `ok-1` ran for hours with no role (H32).
 echo
 echo "AUDIT"
-pgrep -f 'claude -p' 2>/dev/null | while read -r p; do
+# `ps`, not `pgrep`: the AUDIT FOR UNDECLARED LANES could not see the lane
+# running it, because pgrep excludes its own ancestors (H6). So a lane that
+# was itself off-roster -- exactly ok-1's case, which is why this block was
+# written -- audited the fleet and reported itself absent.
+ps -eww -o pid=,command= 2>/dev/null | grep -F 'claude -p' | awk '{print $1}' | while read -r p; do
   cs=$(ps -ww -o command= -p "$p" 2>/dev/null | sed -n 's/.*You are \([A-Za-z0-9._-]*\)\..*/\1/p')
   [ -z "$cs" ] && continue
   case " $LANES " in *" $cs "*) continue ;; esac
