@@ -60,6 +60,34 @@ def newest_source_mtime(path):
     return newest, newest_file
 
 
+def manifest_state(path):
+    """Hash every Cargo.toml / Cargo.lock under a dependency tree.
+
+    A binary digest pins WHICH artifact (A24). It does not pin the FEATURE SET
+    it was built with, and features change behaviour invisibly: enabling
+    hyperon's `das` feature changes `integration_tests__das__test.metta` from
+    fuel 107 to fuel 580. **Fuel is the unit of payment and part of the quorum
+    agreement key**, so two honest devices built with different features
+    disagree on it and neither is wrong.
+
+    Cheap proxy for the resolved feature set: the manifests that determine it.
+    """
+    out = {}
+    for root, dirs, files in os.walk(path):
+        dirs[:] = [d for d in dirs if d not in ('.git', 'target', 'node_modules')]
+        for f in files:
+            if f in ('Cargo.toml', 'Cargo.lock'):
+                fp = os.path.join(root, f)
+                rel = os.path.relpath(fp, path)
+                try:
+                    out[rel] = sha256_file(fp)[:16]
+                except OSError:
+                    pass
+    combined = hashlib.sha256(
+        json.dumps(out, sort_keys=True).encode()).hexdigest()[:16]
+    return {'files': len(out), 'combined_sha256': combined, 'per_file': out}
+
+
 def repo_state(path):
     """HEAD is not enough. A dirty tree with HEAD=X is not X, and that is
     exactly how a patched build shipped under a stock commit hash."""
@@ -149,6 +177,7 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         'recorded_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
         'note': note,
         'repos': [repo_state(d) for d in deps],
+        'manifests': {d: manifest_state(d) for d in deps},
         'artifacts': [{'path': a, 'sha256': sha256_file(a),
                        'bytes': os.path.getsize(a),
                        'mtime': int(os.path.getmtime(a))}
@@ -242,6 +271,20 @@ def demo():
             assert ok2, 'allow_dirty should permit an acknowledged dirty tree'
 
     assert sha256_file(__file__) == sha256_file(__file__)
+
+    # manifest hashing must notice a feature change, which a binary digest cannot
+    kf2 = os.path.expanduser('~/kingfisher/spikes/S15_android_device/fuelrun')
+    if os.path.isfile(os.path.join(kf2, 'Cargo.toml')):
+        m1 = manifest_state(kf2)
+        assert m1['files'] >= 1 and len(m1['combined_sha256']) == 16
+        import tempfile as _tf, shutil as _sh
+        tmp = _tf.mkdtemp()
+        _sh.copy(os.path.join(kf2, 'Cargo.toml'), tmp)
+        before = manifest_state(tmp)['combined_sha256']
+        with open(os.path.join(tmp, 'Cargo.toml'), 'a') as fh:
+            fh.write('\n# feature change\n')
+        assert manifest_state(tmp)['combined_sha256'] != before, \
+            'a manifest edit must change the combined hash'
 
     # --- staleness: an artifact older than the source cannot come from it
     import time as _t
