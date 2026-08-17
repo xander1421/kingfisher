@@ -15,6 +15,19 @@ M1 series went wrong BEFORE the write-up:
 This records what a THIRD PARTY could re-derive -- commit hashes, binary
 digests, device fingerprint, toolchain versions -- and refuses to certify a run
 whose positive control did not fire.
+
+v2, 2026-08-17 (H20). DEFECT REMOVED: this module could not express a NEGATIVE
+result. `Control` is "a positive control that MUST fire" and `record` refuses one
+that did not with "run is VOID, not negative" -- correct for an instrument check,
+and wrong for a falsifier, whose FIRING is the finding. S80 stated its falsifier
+as a Control, the falsifier fired, and `certify` reported the run void; the
+result could not be published until the control was restructured by hand, and
+every spike whose falsifier fires would have had to reinvent that. A21 -- a test
+that cannot express its verdict -- inside the module that enforces A21.
+`Falsifier` is additive: no provenance.json already on disk changes shape, no
+recorded verdict moves, and a falsifier is still refused for everything a control
+is refused for EXCEPT its verdict. `demo()` asserts the difference in one place,
+driving the SAME observation through both types.
 """
 import hashlib, json, os, subprocess, sys, time
 
@@ -296,16 +309,67 @@ class Control:
         self.detail = detail
         return self.fired
 
+    kind = 'control'
+
     def as_dict(self):
         return {'name': self.name, 'must_fire_because': self.why,
                 'can_fail_because': self.can_fail_because,
                 'null_must_contain': self.null_must_contain,
                 'fired': self.fired, 'detail': self.detail,
+                'kind': self.kind,
                 'constant_observations': getattr(self, 'constant', None),
                 'observations': self.values}
 
 
-def record(spike_dir, deps=(), artifacts=(), controls=(),
+class Falsifier(Control):
+    """A test whose FIRING is the finding. Its outcome does NOT gate `ok`.
+
+    H20, 2026-08-17. `Control` is "a positive control that MUST fire", and
+    `record` refuses a control that did not with *"run is VOID, not negative"*.
+    That is right for an instrument check and wrong for a falsifier, and the
+    difference had never been expressible here:
+
+        S80 stated its falsifier as a Control that fires when the claim holds.
+        The falsifier FIRED -- a real, informative negative, the most valuable
+        outcome a spike can have -- and `certify` could only report the run VOID.
+        The finding could not be published until the control was restructured by
+        hand, and every spike whose falsifier fires would have to reinvent that.
+
+    That is A21 -- a test that cannot express its verdict -- inside the module
+    that enforces A21.
+
+    WHAT IS STILL REFUSED, because this is not an escape hatch: a falsifier with
+    no observations, one that was never observed at all, one with constant
+    observations, and one that does not say what outcome would have been the
+    other way. Only the FIRED/NOT-FIRED verdict is released from gating `ok`.
+    A falsifier that cannot fire is as dead as a control that cannot (A15), and
+    `fires_when` is the field that has to say how.
+
+    ADDITIVE ON PURPOSE: no existing spike passes `falsifiers=`, so no
+    provenance.json already on disk changes shape and no verdict already
+    recorded moves. `certify` still takes its prose `falsifier=` string -- that
+    states the claim's refutation in words, and this mechanises one.
+    """
+    kind = 'falsifier'
+
+    def __init__(self, name, refutes, fires_when, null_must_contain=None):
+        super().__init__(name, refutes, null_must_contain=null_must_contain,
+                         can_fail_because=fires_when)
+        self.fires_when = fires_when
+        self.refutes = refutes
+
+    def as_dict(self):
+        d = super().as_dict()
+        d['refutes'] = self.refutes
+        d['fires_when'] = self.fires_when
+        d['must_fire_because'] = None          # it must NOT be required to fire
+        d['verdict'] = ('REFUTED — the falsifier fired' if self.fired
+                        else 'survived — the falsifier did not fire'
+                        if self.fired is not None else None)
+        return d
+
+
+def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
            allow_dirty=False, note='', no_deps_reason=''):
     """Write provenance.json next to the spike. Returns (ok, provenance).
 
@@ -327,6 +391,9 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         'toolchain': toolchain(),
         'device': device(),
         'controls': [c.as_dict() for c in controls],
+        # H20: recorded beside the controls and NOT gated on their verdict.
+        'falsifiers': [f.as_dict() for f in falsifiers],
+        'falsifiers_fired': [f.name for f in falsifiers if f.fired],
     }
     prov['no_deps_reason'] = no_deps_reason
     problems = []
@@ -415,6 +482,33 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
                 f"CONTROL {c['name']} declares no null_must_contain -- a null "
                 f"that cannot contain the effect is not a null (A20), and a "
                 f"control with no stated failing input is W1's failure mode")
+    # H20 -- FALSIFIERS: everything a control is refused for EXCEPT the verdict.
+    # A falsifier that fired is the most valuable outcome a spike can produce, so
+    # `ok` must survive it; a falsifier that was never run, never observed, or
+    # cannot say what the other outcome would have been is as dead as a control
+    # that cannot fail (A15), and is refused exactly as one.
+    for f in prov.get('falsifiers', []):
+        if f['fired'] is None:
+            problems.append(f"FALSIFIER {f['name']} never observed -- declared "
+                            f"and not run is the state every error that survived "
+                            f"this project was in")
+        elif f.get('constant_observations'):
+            problems.append(
+                f"FALSIFIER {f['name']} has CONSTANT observations -- it "
+                f"distinguished nothing, whatever it reported")
+        elif f.get('observations') in (None, [], {}):
+            problems.append(
+                f"FALSIFIER {f['name']} carries no observations -- a verdict "
+                f"reported in prose cannot be rechecked")
+        if f.get('null_must_contain') in (None, ''):
+            problems.append(
+                f"FALSIFIER {f['name']} declares no null_must_contain -- the "
+                f"outcome space has to be able to contain BOTH answers or the "
+                f"verdict was decided by the setup (A20)")
+        if not f.get('fires_when'):
+            problems.append(
+                f"FALSIFIER {f['name']} declares no fires_when -- a falsifier "
+                f"that cannot say what would refute the claim cannot refute it")
     if prov['missing_artifacts']:
         problems.append(f"missing artifacts: {prov['missing_artifacts']}")
     prov['problems'] = problems
@@ -591,6 +685,57 @@ def demo():
         'a re-record erased another writer\'s block'
     assert 'foreign_block' in doc2.get('carried_from_previous_record', []), \
         'a carried key must be named, or a stale block masquerades as fresh'
+
+    # ---- H20: a falsifier that FIRES must not void the run -------------------
+    # The one assertion that could not pass before this existed, and that states
+    # the whole defect: the SAME observation, expressed as a Control, voids the
+    # run; expressed as a Falsifier, it is recorded and `ok` survives.
+    #
+    # Earned in S80, whose falsifier fired -- a real negative, the most valuable
+    # outcome a spike can have -- and `certify` could only say "run is VOID, not
+    # negative", so the finding could not be published until the control was
+    # restructured by hand. A21 inside the module that enforces A21.
+    if True:
+        as_control = Control('same_observation', 'why',
+                             null_must_contain='both outcomes',
+                             can_fail_because='the ordering matches')
+        as_control.observe(False, {'ordering': 'differs'})
+        ok_c, p_c = record(d, controls=[as_control], no_deps_reason=NR)
+        assert not ok_c and any('VOID' in x for x in p_c['problems']), p_c['problems']
+
+        f = Falsifier('same_observation',
+                      refutes='the claim that the orderings agree',
+                      fires_when='the ordering differs',
+                      null_must_contain='both outcomes')
+        f.observe(True, {'ordering': 'differs'})
+        ok_f, p_f = record(d, falsifiers=[f], no_deps_reason=NR)
+        assert ok_f, p_f['problems']
+        assert p_f['falsifiers_fired'] == ['same_observation'], p_f['falsifiers_fired']
+        assert p_f['falsifiers'][0]['verdict'].startswith('REFUTED'), p_f['falsifiers'][0]
+
+        # ...and it is NOT an escape hatch. Everything else a control is refused
+        # for, a falsifier is refused for too.
+        f2 = Falsifier('never_run', 'a claim', 'an observation', 'both outcomes')
+        ok2, p2 = record(d, falsifiers=[f2], no_deps_reason=NR)
+        assert not ok2 and any('never observed' in x for x in p2['problems']), p2['problems']
+
+        f3 = Falsifier('no_null', 'a claim', 'an observation')
+        f3.observe(False, {'x': 1})
+        ok3, p3 = record(d, falsifiers=[f3], no_deps_reason=NR)
+        assert not ok3 and any('null_must_contain' in x for x in p3['problems']), p3['problems']
+
+        try:
+            Falsifier('no_fires_when', 'a claim', '')
+            raise AssertionError('a falsifier with no fires_when must be refused')
+        except ValueError:
+            pass
+
+        # regression: a dead CONTROL still voids the run, unchanged by all this
+        dead = Control('still_gated', 'why', null_must_contain='n',
+                       can_fail_because='c')
+        dead.observe(False, {'x': 1})
+        ok4, p4 = record(d, controls=[dead], no_deps_reason=NR)
+        assert not ok4 and any('VOID' in x for x in p4['problems']), p4['problems']
 
     print('provenance: all assertions pass')
 

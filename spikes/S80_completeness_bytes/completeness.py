@@ -39,7 +39,7 @@ sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
 from trie_witness import (build, prove_completeness, verify_completeness,   # noqa: E402
                           steps_bytes)
 from kfcheck import certify                                                 # noqa: E402
-from provenance import Control                                              # noqa: E402
+from provenance import Control, Falsifier                                   # noqa: E402
 
 SEED = 20260817
 DIGEST = 32
@@ -177,6 +177,27 @@ def main():
     # it for a passing check.
     spread = (max(v['auth_path_bytes_mean'] for v in a.values())
               / min(v['auth_path_bytes_mean'] for v in a.values()))
+    # H20 LANDED: the verdict is now a Falsifier, recorded with its outcome and
+    # NOT gating `ok`. This spike is what found that `Control` could not express a
+    # negative -- it fired, and certify called the run VOID -- so it is the right
+    # place to prove the fix end to end. The decidability control below STAYS: it
+    # is an instrument check and belongs in the gate, which is exactly the
+    # distinction H20 is about.
+    fal = Falsifier(
+        'F_branching_rule_is_point_query_only',
+        refutes="S77's \"proof size is set by branching, not key length\" as a "
+                'statement about key sets rather than about point queries',
+        fires_when='the completeness auth-path ordering differs from the '
+                   'membership ordering on these three key sets',
+        null_must_contain='three key sets free to rank in any of six orders '
+                          'under either measure, so agreement and disagreement '
+                          'are both expressible')
+    fal.observe(not tracks,
+                {'by_membership': mem_order, 'by_auth_path': auth_order,
+                 'auth_bytes': {n: a[n]['auth_path_bytes_mean'] for n in a},
+                 'membership_bytes_same_sample':
+                     {n: a[n]['membership_auth_bytes_same_sample'] for n in a}})
+
     c = Control('C_auth_path_comparison_is_decisive',
                 "the falsifier here is an ORDERING, so what has to be checked is "
                 'that the ordering was decidable at all: three sets, real verified '
@@ -247,6 +268,7 @@ def main():
                    ('the completeness auth path orders the key sets the same way '
                     'membership does, so the branching rule extends to range '
                     'queries')}
+    out['falsifier'] = fal.as_dict()
     out['controls'] = {c.name: c.as_dict() for c in cs}
     out['all_controls_fire'] = all(c.fired for c in cs)
     with open(os.path.join(HERE, 'completeness.json'), 'w') as f:
@@ -254,7 +276,7 @@ def main():
 
     ok, problems = certify(
         HERE, deps=[HERE], artifacts=[os.path.join(HERE, 'completeness.json')],
-        controls=cs,
+        controls=cs, falsifiers=[fal],
         falsifier='if the completeness AUTH PATH orders the three key sets '
                   'differently from membership, then "proof size is set by '
                   'branching" is a claim about point queries only and S77/S79 '
@@ -277,7 +299,8 @@ def main():
     print(f"order by answer size: {ans_order}")
     for c in cs:
         print(f"  {'FIRES ' if c.fired else 'DEAD  '} {c.name}")
-    print(f"certify ok={ok}")
+    print(f"  {'FIRED ' if fal.fired else 'quiet '} {fal.name} -- {fal.as_dict()['verdict']}")
+    print(f"certify ok={ok}  (a fired falsifier no longer voids the run -- H20)")
     return 0 if (ok and out['all_controls_fire']) else 1
 
 

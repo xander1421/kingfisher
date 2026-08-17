@@ -6,6 +6,7 @@
    "constant_observations": false,
    "detail": "",
    "fired": true,
+   "kind": "control",
    "must_fire_because": "if the answer set ordered the sets the same way the auth path does, a single total would be safe to publish and the separation this spike insists on would be decoration",
    "name": "C_answer_size_is_a_separate_axis",
    "null_must_contain": "answer sizes free to correlate with the auth path -- nothing in the construction forces the two orderings apart, and on a different corpus they could coincide",
@@ -37,6 +38,7 @@
    "constant_observations": false,
    "detail": "",
    "fired": true,
+   "kind": "control",
    "must_fire_because": "the falsifier here is an ORDERING, so what has to be checked is that the ordering was decidable at all: three sets, real verified proofs, and values far enough apart that the ranking is not noise",
    "name": "C_auth_path_comparison_is_decisive",
    "null_must_contain": "auth-path values free to tie or to sit within rounding of each other, in which case no ordering claim could be made in either direction",
@@ -70,6 +72,7 @@
    "constant_observations": false,
    "detail": "",
    "fired": true,
+   "kind": "control",
    "must_fire_because": "a completeness proof that its own verifier rejects is a number about nothing, and this is the proof kind whose verifier is the anti-omission check -- W2 drives it to False with C_omit / C_add / C_tamper",
    "name": "C_completeness_proofs_verify",
    "null_must_contain": "W2's verify_completeness, which returns False on an omitted, added or tampered key and is free to reject every proof here",
@@ -96,6 +99,7 @@
    "constant_observations": false,
    "detail": "",
    "fired": true,
+   "kind": "control",
    "must_fire_because": "a query taken at a fixed BYTE depth sits near the root of a 1,155-byte atom key and near the leaf of a 12-byte triple key, which compares two regimes and calls it a comparison",
    "name": "C_queries_are_scale_matched",
    "null_must_contain": "the key lengths themselves, which differ by 90x across these sets and would produce wildly unmatched query depths under a fixed-byte rule",
@@ -122,6 +126,41 @@
   }
  },
  "digest_bytes": 32,
+ "falsifier": {
+  "can_fail_because": "the completeness auth-path ordering differs from the membership ordering on these three key sets",
+  "constant_observations": false,
+  "detail": "",
+  "fired": true,
+  "fires_when": "the completeness auth-path ordering differs from the membership ordering on these three key sets",
+  "kind": "falsifier",
+  "must_fire_because": null,
+  "name": "F_branching_rule_is_point_query_only",
+  "null_must_contain": "three key sets free to rank in any of six orders under either measure, so agreement and disagreement are both expressible",
+  "observations": {
+   "auth_bytes": {
+    "atoms_interned": 1785.0666666666666,
+    "atoms_original": 1478.6666666666667,
+    "triples": 1400.5333333333333
+   },
+   "by_auth_path": [
+    "triples",
+    "atoms_original",
+    "atoms_interned"
+   ],
+   "by_membership": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "membership_bytes_same_sample": {
+    "atoms_interned": 1802.4,
+    "atoms_original": 1489.8666666666666,
+    "triples": 2269.3333333333335
+   }
+  },
+  "refutes": "S77's \"proof size is set by branching, not key length\" as a statement about key sets rather than about point queries",
+  "verdict": "REFUTED \u2014 the falsifier fired"
+ },
  "queries_per_set": 120,
  "query_prefix_fraction": 0.75,
  "seed": 20260817,

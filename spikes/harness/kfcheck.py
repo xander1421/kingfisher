@@ -22,7 +22,7 @@ import units as _units
 from provenance import record, Control          # noqa: F401  (re-exported)
 
 
-def certify(spike_dir, deps=(), artifacts=(), controls=(),
+def certify(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
             measurements=(), captures=(), instrument_texts=(),
             counters=None, expect_nonzero=(),
             falsifier=None, allow_dirty=False, no_deps_reason=None, note=''):
@@ -35,7 +35,8 @@ def certify(spike_dir, deps=(), artifacts=(), controls=(),
     falsifier        str; what result would have refuted the claim
     """
     ok, prov = record(spike_dir, deps=deps, artifacts=artifacts,
-                      controls=controls, allow_dirty=allow_dirty,
+                      controls=controls, falsifiers=falsifiers,
+                      allow_dirty=allow_dirty,
                       no_deps_reason=no_deps_reason, note=note)
     problems = list(prov.get('problems', []))
 

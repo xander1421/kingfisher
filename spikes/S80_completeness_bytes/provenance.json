@@ -1,15 +1,18 @@
 {
  "spike": "S80_completeness_bytes",
- "recorded_utc": "2026-08-17T11:29:36Z",
+ "recorded_utc": "2026-08-17T11:38:40Z",
  "note": "S80 separates the auth path from the answer set BEFORE measuring, because a single total would let the answer size decide a verdict about branching (A18). Counts and digests only, no timings.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes",
-   "head": "795023b0e4945bfb04083240997519a846622135",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "2024b6dbc395e4c77b8aa6f3c0aa1ae734103971",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S80_completeness_bytes/completeness.json",
+    "spikes/S80_completeness_bytes/completeness.py"
+   ],
+   "diff_sha256": "2ad3a7802b2a6768a76c2e8d6a22015177ef829ed75948d2dccc7dba113584e4",
+   "diff_bytes": 7659
   }
  ],
  "manifests": {
@@ -22,11 +25,11 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes/completeness.json",
-   "sha256": "a7b1a3708361ebcb3062e48d80d2072935c9504eaabdfce8633b56d5c764f697",
-   "bytes": 6437,
-   "mtime": 1786966176,
-   "compared_ts": 1786966176,
-   "compared_clock": "last-commit"
+   "sha256": "09d3e8171dc60ed35090befc2e96b8cff8c37f46a5cd92c7115fb14c996f000f",
+   "bytes": 7772,
+   "mtime": 1786966720,
+   "compared_ts": 1786966720,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -52,6 +55,7 @@
    "null_must_contain": "W2's verify_completeness, which returns False on an omitted, added or tampered key and is free to reject every proof here",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "atoms_original": {
@@ -78,6 +82,7 @@
    "null_must_contain": "auth-path values free to tie or to sit within rounding of each other, in which case no ordering claim could be made in either direction",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "auth_bytes": {
@@ -111,6 +116,7 @@
    "null_must_contain": "answer sizes free to correlate with the auth path -- nothing in the construction forces the two orderings apart, and on a different corpus they could coincide",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "by_answer_keys": [
@@ -142,6 +148,7 @@
    "null_must_contain": "the key lengths themselves, which differ by 90x across these sets and would produce wildly unmatched query depths under a fixed-byte rule",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "atoms_original": {
@@ -165,15 +172,57 @@
    }
   }
  ],
+ "falsifiers": [
+  {
+   "name": "F_branching_rule_is_point_query_only",
+   "must_fire_because": null,
+   "can_fail_because": "the completeness auth-path ordering differs from the membership ordering on these three key sets",
+   "null_must_contain": "three key sets free to rank in any of six orders under either measure, so agreement and disagreement are both expressible",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "by_membership": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_auth_path": [
+     "triples",
+     "atoms_original",
+     "atoms_interned"
+    ],
+    "auth_bytes": {
+     "atoms_original": 1478.6666666666667,
+     "atoms_interned": 1785.0666666666666,
+     "triples": 1400.5333333333333
+    },
+    "membership_bytes_same_sample": {
+     "atoms_original": 1489.8666666666666,
+     "atoms_interned": 1802.4,
+     "triples": 2269.3333333333335
+    }
+   },
+   "refutes": "S77's \"proof size is set by branching, not key length\" as a statement about key sets rather than about point queries",
+   "fires_when": "the completeness auth-path ordering differs from the membership ordering on these three key sets",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F_branching_rule_is_point_query_only"
+ ],
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes": {
-   "newest": 1786966176,
-   "from": "<HEAD commit>"
+   "newest": 1786966720,
+   "from": "spikes/S80_completeness_bytes/completeness.py"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes at 2024b6db: 2 modified. The build is NOT 2024b6db."
+ ],
+ "ok": false,
  "falsifier": "if the completeness AUTH PATH orders the three key sets differently from membership, then \"proof size is set by branching\" is a claim about point queries only and S77/S79 overreached",
  "carried_from_previous_record": [
   "falsifier",
