@@ -20,30 +20,44 @@ set -u
 # the host, so every device measurement in this workspace (S34, S50-S54, S57,
 # S62, S63) ran ungated -- including the ones A10 was written after.
 if [ "${1:-}" = "--device" ] || [ "${2:-}" = "--device" ]; then
-  D=$(adb shell 'cat /proc/loadavg' 2>/dev/null | tr -d '\r' | awk '{print $1}')
+  # CPU busy from a /proc/stat delta, NOT loadavg. Android's loadavg counts
+  # uninterruptible-sleep background services and does not indicate contention:
+  # measured 6.0% busy with 1 runnable task out of 8,889 while loadavg read 9.19.
+  # Gating on loadavg here refuses a perfectly idle phone.
+  D=$(adb shell 'a=$(head -1 /proc/stat); sleep 2; b=$(head -1 /proc/stat); echo "$a|$b"' 2>/dev/null | tr -d '\r' | awk -F'|' '
+    {split($1,x," "); split($2,y," "); t=0; for(i=2;i<=8;i++) t+=y[i]-x[i];
+     id=(y[5]-x[5])+(y[6]-x[6]); if(t>0) printf "%.1f", 100*(1-id/t); else print "0"}')
+  DRUN=$(adb shell 'cat /proc/loadavg' 2>/dev/null | tr -d '\r' | awk -F'[ /]' '{print $4}')
   DC=$(adb shell 'cat /sys/devices/system/cpu/present' 2>/dev/null | tr -d '\r' | awk -F- '{print $2+1}')
   DT=$(adb shell 'cat /sys/class/thermal/thermal_zone0/temp' 2>/dev/null | tr -d '\r')
-  BAT=$(adb shell 'dumpsys battery | grep -E "^  (level|status|AC powered|USB powered)"' 2>/dev/null | tr -d '\r' | tr '\n' ';')
+  # Charging state: use `status`, NOT `AC/USB powered`. Android clears the
+  # powered flags at 100% because the charger disengages, so a plugged phone at
+  # full reads "AC powered: false". 2=CHARGING and 5=FULL are both plugged;
+  # 3=DISCHARGING and 4=NOT_CHARGING are not. Getting this wrong is the same
+  # misdiagnosis that had the energy measurement filed as "blocked: needs root".
+  BSTAT=$(adb shell 'dumpsys battery | grep -E "^  status"' 2>/dev/null | tr -d '\r' | awk '{print $2}')
+  BLVL=$(adb shell 'dumpsys battery | grep -E "^  level"' 2>/dev/null | tr -d '\r' | awk '{print $2}')
+  BAT="status=$BSTAT level=$BLVL"
   [ -z "$D" ] && { echo "REFUSED - no device" >&2; exit 1; }
-  DLIM=$(echo "${DC:-8}" | awk '{printf "%.2f", $1/4}')
+  DLIM=15
   DFAIL=""
-  awk -v l="$D" -v m="$DLIM" 'BEGIN{exit !(l>m)}' && DFAIL="$DFAIL loadavg($D>$DLIM)"
+  awk -v l="$D" -v m="$DLIM" 'BEGIN{exit !(l>m)}' && DFAIL="$DFAIL cpu_busy(${D}%>${DLIM}%)"
   # thermal: millidegrees. Above 45C the governor is already throttling.
   [ -n "$DT" ] && [ "$DT" -gt 45000 ] 2>/dev/null && DFAIL="$DFAIL thermal(${DT}m)"
   # S6: the deployable configuration is charge-time. Not charging = wrong config.
-  case "$BAT" in *"AC powered: true"*|*"USB powered: true"*) ;; *) DFAIL="$DFAIL not-charging" ;; esac
+  case "$BSTAT" in 2|5) ;; *) DFAIL="$DFAIL not-plugged(status=$BSTAT)" ;; esac
   if [ "${3:-}${2:-}" = "--json" ] || [ "${1:-}" = "--json" ]; then
-    printf '{"quiet":%s,"device_loadavg":%s,"device_limit":%s,"device_cores":%s,"thermal_m":%s,"battery":"%s","refusals":"%s"}\n' \
-      "$([ -z "$DFAIL" ] && echo true || echo false)" "$D" "$DLIM" "${DC:-null}" "${DT:-null}" "$(echo $BAT)" "$(echo $DFAIL)"
+    printf '{"quiet":%s,"device_cpu_busy_pct":%s,"device_limit_pct":%s,"device_cores":%s,"thermal_m":%s,"battery":"%s","refusals":"%s"}\n' \
+      "$([ -z "$DFAIL" ] && echo true || echo false)" "$D" "$DLIM" "${DC:-null}" "${DT:-null}" "$(echo $BAT) runnable=$DRUN" "$(echo $DFAIL)"
     exit 0
   fi
   if [ -n "$DFAIL" ]; then
     echo "REFUSED - device is not quiet:$DFAIL" >&2
-    echo "  device loadavg $D (limit $DLIM on ${DC:-?} cores), thermal ${DT:-?}m" >&2
+    echo "  device cpu_busy ${D}% (limit ${DLIM}%), runnable $DRUN, thermal ${DT:-?}m" >&2
     echo "  battery: $BAT" >&2
     exit 1
   fi
-  echo "device quiet: loadavg $D / $DLIM, thermal ${DT}m, charging"
+  echo "device quiet: cpu_busy ${D}% (limit ${DLIM}%), runnable $DRUN, thermal ${DT}m, battery $BAT"
   exit 0
 fi
 

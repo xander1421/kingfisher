@@ -215,7 +215,7 @@ a majority of a quorum.
 | | |
 |---|---|
 | settlement ceiling | ~17 jobs/s, PoV-bound — **scarce** |
-| per-device supply | ~2.9 jobs/s, S54-capped — **abundant** |
+| per-device supply | **measured 2.83 jobs/s single-worker, 11.17 at 4 workers** (S71). The 2.87 projection was within 1.4% of truth but descended from an INVALID source — now measured directly |
 
 And **replication never reaches the chain under batching.** Per-job posting at 3×
 would give 5.7 jobs/s; batched, the quorum comparison happens off-chain between
