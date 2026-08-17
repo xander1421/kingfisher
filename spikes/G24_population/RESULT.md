@@ -1,5 +1,63 @@
 # G24 — the rule population evolves; every mechanism it removes costs it
 
+> **CORRECTED 2026-08-17, twice, and both corrections came from other lanes.**
+>
+> **1. Two arm comparisons below are withdrawn as noise.** AGENT-2-LANE ran the
+> `full` config under three seeds (777 / 1234 / 31337) and got **4719 / 4144 /
+> 3381** — a **1338-triple band**. Every arm number in this file is a single
+> seed, so any between-arm coverage difference under ~1300 is not distinguishable
+> from seed variance.
+>
+> ```
+> WITHDRAWN  "no_waves DOMINATED by full"    3651 vs 4144 = 493 apart. Noise.
+> FRAGILE    "static_adv DOMINATED by full"  2745 vs 4144 = 1399. Marginal.
+> SURVIVES   no_abduct                       1359 vs 4144 = 2785. Real.
+> SURVIVES   no_death precision              0.0066 vs 0.0355 = 5.4x. Real.
+> ```
+>
+> So "every mechanism it removes costs it" — the title — is only supported for
+> **abduction** and **death**. The waves and adversary claims were single-seed
+> differences inside the noise floor, and I reported them as dominance.
+>
+> **2. The premise of my own fair-comparison argument is measured FALSE.**
+> `analyse.py` says "`test solved` rises with population size near-mechanically",
+> and I used that to dismiss `no_death`'s coverage as a population artefact.
+> AGENT-2-LANE ran the missing 2x2 cell: **`no_death+no_abduct` gets 1514 correct
+> at pop 531**, against `no_death`'s 6361 at pop 557. At matched population with
+> selection absent from both, **abduction is worth 4847 correct triples and
+> population volume is worth ~155.**
+>
+> The precision half of my argument stands — `no_death` buys its coverage at 5.4x
+> worse precision, and the (predictions, correct) plane is still the right
+> comparison. But the *reason* I gave was wrong: `no_death`'s coverage came from
+> abduction, not from having more rules.
+>
+> **3. Reproductive selection was missing, is now present, and does not pay.**
+> AGENT-2-LANE found `imp` had one consumer (the death filter) and parents were
+> drawn uniformly, so `no_death` had no selection at all. Correct, and the fix is
+> a mechanism not a parameter: `pick_parent()` weights parent choice by
+> importance. The 8-arm run separates survival from reproductive selection:
+>
+> ```
+> arm                        correct   prec     pop
+> full (repro ON)               3569   0.0250   156
+> uniform_parents (repro OFF)   4144   0.0355   110
+> no_death (repro ON)           6752   0.0070   542
+> no_death+uniform_parents      6361   0.0066   557
+> ```
+>
+> **Isolation check:** `uniform_parents` reproduces the old `full` exactly
+> (4144 / 0.0355 / 110) and `no_death+uniform_parents` reproduces the old
+> `no_death` exactly (6361 / 0.0066 / 557). Turning the change off returns the
+> previous code's numbers to the unit, so `pick_parent` altered only what it
+> claims.
+>
+> **Verdict on the fix: worth approximately nothing measurable.** +391 with death
+> off and −575 with death on, both inside the 1338 band, and precision is *worse*
+> with it on (0.0250 vs 0.0355). It makes the ablation mean what its name says —
+> which is why it stays — but the architectural argument for it did not translate
+> into a better system. I argued it from principle and the measurement declined.
+
 **Verdict: the full system triples held-out coverage at constant precision, and
 no ablation gets more correct answers without asserting more.** G22 failed
 because it satisfied none of Lewontin's three conditions for evolution. Built
