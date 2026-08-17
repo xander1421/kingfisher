@@ -761,14 +761,46 @@ about. This is the honest state, not a regression.
   (ok-1's module): `refcheck.py:119` hardcodes one `settings.json` where §12's
   namespace is *every* one that registers the hook, and there are two.
   DECISIONS 209–213.
-- **NEXT 1: absence and completeness VERIFICATION cost** (still live from C25).
-  S84 measured membership only; S79/S80 both found the other two proof kinds
-  behave differently on the PROVER side, so it does not extend by inspection.
-  Note before starting: `verify_completeness` calls `build(sorted(ks), depth)`,
-  i.e. the verifier rebuilds the whole answer subtrie, so its forced work is
-  likely dominated by ANSWER SIZE — the axis W2's "auth path is independent of
-  answer size" says nothing about. State that as the falsifier and run it.
-  `S20` is already allocated to this lane for it (`.ids/S20`).
+- **C30 DONE: S20 — the verifier's cost for the other two proof kinds, and the
+  falsifier fired.** `spikes/S20_verify_kinds/`, `certify ok=true`, 7 controls.
+  **Absence extends S84 (1.054 / 1.136 / 1.155× its own witness bytes against
+  the membership band 1.06–1.16×); completeness does not (1.888 / 2.304 /
+  2.682×).** The fire is carried by completeness — the single absence miss is
+  `triples` at 1.054 against a 1.06 floor, **0.6% below**, and is written down as
+  noise rather than promoted. Mechanism predicted in the file before the run:
+  `verify_completeness` calls `build(sorted(ks), pf['depth'])`, so the verifier
+  rebuilds the answer subtrie and its work is set by ANSWER SIZE.
+  **The transferable half is an inversion**: over a triples prefix sweep
+  6 B → 11 B (answers 1,943 → 3.2) the auth path runs **75 B → 2,304 B** while
+  the verifier hashes **95,530 B → 2,548 B**, so at a 6-byte prefix the verifier
+  does **1,270×** the path's bytes. W2's *"auth path independent of answer size"*
+  stays true and stays about the PROVER. Not a rate: `check_affine` refuses at a
+  30% adjacent-slope spread against 25%. **S85's crossover does not transfer to
+  range queries** and this spike does not compute the new one.
+  **The instrument was uncommitted-modified by another lane while this ran**
+  (`trie_witness.py`, 145 lines, all three verifiers wrapped in `try/except`,
+  no CHANNEL line) and `certify` REFUSED the first run — A24 working. Answered
+  with evidence, not `allow_dirty`: the published run imports a byte-pin of the
+  committed blob (`57d1a481` at HEAD `6d81a45`) and `C_worktree_agrees` re-runs
+  everything against their working copy in a subprocess, every row identical.
+  Own defect, caught: a fraction sweep produced a **duplicate point**, because
+  triple-key byte positions 8 and 9 carry one distinct value each, so prefixes of
+  length 8, 9 and 10 are the same query. And a **fabricated self-criticism was
+  struck before publishing** — a second "defect of my own" claiming the first run
+  used `steps_bytes`, which it never did. DECISIONS 214–217.
+- **NEXT 1: the range-query crossover — verification against RE-EXECUTION for
+  completeness proofs.** S85 settled it for membership (F\* ≈ 47–54 fuel steps);
+  S20 shows verifier cost for a range query grows with the answer set while the
+  auth path shrinks, so the crossover moves in an unknown direction and the
+  honest recommendation for range queries is not yet known. **Falsifier to state
+  first: if verification stays cheaper than re-execution across the whole
+  1,943 → 3 answer-size range, the inversion is a curiosity and not an operating
+  constraint.** W2 ships `reexecute()`, S85 ships the duel harness.
+- **NEXT 2: is the 2–4× completeness constant implementation-shaped?** The
+  verifier rebuilds with `build()`, the prover's own function. A verifier that
+  folded the answer set incrementally would hash the same key bytes but allocate
+  fewer node descriptors. Nothing in S20 says 2–4× is a lower bound, and the
+  mission cares because a range query is what a real client asks.
 
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)

@@ -1,0 +1,215 @@
+{
+  "answer_axis": {
+    "affine": false,
+    "affine_detail": "adjacent slopes span 37.37..48.65 (30% > 25%): NOT affine. Report the measured points, not a rate.",
+    "points_answer_keys_vs_hash_bytes": [
+      [
+        1943.233,
+        95529.85
+      ],
+      [
+        204.783,
+        10961.017
+      ],
+      [
+        97.583,
+        6074.017
+      ],
+      [
+        3.233,
+        2547.9
+      ]
+    ]
+  },
+  "answer_sweep": [
+    {
+      "answer_keys": 1943.233,
+      "auth_path_bytes": 75,
+      "hash_bytes": 95529.85,
+      "hash_calls": 2421.833,
+      "kind": "completeness",
+      "n_keys": 4096,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "prefix_len": 6,
+      "set": "triples",
+      "steps": 1,
+      "verified_true": 60,
+      "witness_bytes": 23393.8,
+      "work_per_auth_path_byte": 1273.731,
+      "work_per_witness_byte": 4.084
+    },
+    {
+      "answer_keys": 204.783,
+      "auth_path_bytes": 1320.5,
+      "hash_bytes": 10961.017,
+      "hash_calls": 247.267,
+      "kind": "completeness",
+      "n_keys": 4096,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "prefix_len": 7,
+      "set": "triples",
+      "steps": 2,
+      "verified_true": 60,
+      "witness_bytes": 3777.9,
+      "work_per_auth_path_byte": 8.301,
+      "work_per_witness_byte": 2.901
+    },
+    {
+      "answer_keys": 97.583,
+      "auth_path_bytes": 1465.35,
+      "hash_bytes": 6074.017,
+      "hash_calls": 119.2,
+      "kind": "completeness",
+      "n_keys": 4096,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "prefix_len": 8,
+      "set": "triples",
+      "steps": 2.95,
+      "verified_true": 60,
+      "witness_bytes": 2636.35,
+      "work_per_auth_path_byte": 4.145,
+      "work_per_witness_byte": 2.304
+    },
+    {
+      "answer_keys": 3.233,
+      "auth_path_bytes": 2304.183,
+      "hash_bytes": 2547.9,
+      "hash_calls": 7.683,
+      "kind": "completeness",
+      "n_keys": 4096,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "prefix_len": 11,
+      "set": "triples",
+      "steps": 3.917,
+      "verified_true": 60,
+      "witness_bytes": 2342.983,
+      "work_per_auth_path_byte": 1.106,
+      "work_per_witness_byte": 1.087
+    }
+  ],
+  "band_from_S84": [
+    1.06,
+    1.16
+  ],
+  "inside_S84_band": {
+    "atoms_interned/absence": true,
+    "atoms_interned/completeness": false,
+    "atoms_original/absence": true,
+    "atoms_original/completeness": false,
+    "triples/absence": false,
+    "triples/completeness": false
+  },
+  "probes_per_set": 60,
+  "query_prefix_fraction": 0.75,
+  "rows": [
+    {
+      "answer_keys": 0,
+      "auth_path_bytes": 1582.933,
+      "hash_bytes": 1940.917,
+      "hash_calls": 8.883,
+      "kind": "absence",
+      "n_keys": 1246,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "set": "atoms_original",
+      "steps": 7.883,
+      "verified_true": 60,
+      "witness_bytes": 1679.767,
+      "work_per_auth_path_byte": 1.226,
+      "work_per_witness_byte": 1.155
+    },
+    {
+      "answer_keys": 21.933,
+      "auth_path_bytes": 1573.367,
+      "hash_bytes": 4925.633,
+      "hash_calls": 39.917,
+      "kind": "completeness",
+      "n_keys": 1246,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "set": "atoms_original",
+      "steps": 7.817,
+      "verified_true": 60,
+      "witness_bytes": 1836.567,
+      "work_per_auth_path_byte": 3.131,
+      "work_per_witness_byte": 2.682
+    },
+    {
+      "answer_keys": 0,
+      "auth_path_bytes": 1866.35,
+      "hash_bytes": 2180.883,
+      "hash_calls": 8.9,
+      "kind": "absence",
+      "n_keys": 1246,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "set": "atoms_interned",
+      "steps": 7.9,
+      "verified_true": 60,
+      "witness_bytes": 1919.183,
+      "work_per_auth_path_byte": 1.169,
+      "work_per_witness_byte": 1.136
+    },
+    {
+      "answer_keys": 22.217,
+      "auth_path_bytes": 1859.917,
+      "hash_bytes": 4014.617,
+      "hash_calls": 36.967,
+      "kind": "completeness",
+      "n_keys": 1246,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "set": "atoms_interned",
+      "steps": 7.817,
+      "verified_true": 60,
+      "witness_bytes": 2126.517,
+      "work_per_auth_path_byte": 2.158,
+      "work_per_witness_byte": 1.888
+    },
+    {
+      "answer_keys": 0,
+      "auth_path_bytes": 2304.183,
+      "hash_bytes": 2531.3,
+      "hash_calls": 4.917,
+      "kind": "absence",
+      "n_keys": 4096,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "set": "triples",
+      "steps": 3.917,
+      "verified_true": 60,
+      "witness_bytes": 2401.05,
+      "work_per_auth_path_byte": 1.099,
+      "work_per_witness_byte": 1.054
+    },
+    {
+      "answer_keys": 97.583,
+      "auth_path_bytes": 1465.35,
+      "hash_bytes": 6074.017,
+      "hash_calls": 119.2,
+      "kind": "completeness",
+      "n_keys": 4096,
+      "n_proofs": 60,
+      "null_hash_bytes": 33,
+      "set": "triples",
+      "steps": 2.95,
+      "verified_true": 60,
+      "witness_bytes": 2636.35,
+      "work_per_auth_path_byte": 4.145,
+      "work_per_witness_byte": 2.304
+    }
+  ],
+  "seed": 20260817,
+  "work_per_witness_byte": {
+    "atoms_interned/absence": 1.136,
+    "atoms_interned/completeness": 1.888,
+    "atoms_original/absence": 1.155,
+    "atoms_original/completeness": 2.682,
+    "triples/absence": 1.054,
+    "triples/completeness": 2.304
+  }
+}

@@ -1,0 +1,280 @@
+{
+ "spike": "S20_verify_kinds",
+ "recorded_utc": "2026-08-17T15:14:21Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/../S84_verify_cost",
+   "head": "6d81a45874ec6eb038cdab584f237063f3de6d95",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/../S84_verify_cost": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/verify_kinds.json",
+   "sha256": "54100b7b85cab7b324c15897cf9194f93b0d3c4e4deca8250f9ce6650dfab1ec",
+   "bytes": 5353,
+   "mtime": 1786979660,
+   "compared_ts": 1786979660,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+   "sha256": "e4cf0aac4c4a41b917a3db08b8d2ca6559af215dcb12f07c8e62b56a9bd2d8fe",
+   "bytes": 38234,
+   "mtime": 1786979593,
+   "compared_ts": 1786979593,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_S84_reproduces",
+   "must_fire_because": "the membership band this spike compares against is reproduced here with S84's own probe function on S84's own key files, before any new number is computed",
+   "can_fail_because": "S84.probe_set returns hash_bytes or proof_bytes differing from the committed verifycost.json",
+   "null_must_contain": "any drift in trie_witness, the key files or the counting hashlib would move these means",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "hash_bytes_now": 1959.383,
+     "hash_bytes_committed": 1959.383,
+     "delta_hash_bytes": 0.0,
+     "delta_proof_bytes": 0.0
+    },
+    "atoms_interned": {
+     "hash_bytes_now": 2224.583,
+     "hash_bytes_committed": 2224.583,
+     "delta_hash_bytes": 0.0,
+     "delta_proof_bytes": 0.0
+    },
+    "triples": {
+     "hash_bytes_now": 2528.617,
+     "hash_bytes_committed": 2528.617,
+     "delta_hash_bytes": 0.0,
+     "delta_proof_bytes": 0.0
+    }
+   }
+  },
+  {
+   "name": "C_every_proof_verified_true",
+   "must_fire_because": "A29: a probe that cannot show it reached its target has produced no evidence. A verifier returning False on line one hashes almost nothing and reports a small stable number",
+   "can_fail_because": "any row has verified_true < n_proofs, or zero proofs were built for a set",
+   "null_must_contain": "a proof that fails to verify, which raises SystemExit in the measurement loop",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original/absence": [
+     60,
+     60
+    ],
+    "atoms_original/completeness": [
+     60,
+     60
+    ],
+    "atoms_interned/absence": [
+     60,
+     60
+    ],
+    "atoms_interned/completeness": [
+     60,
+     60
+    ],
+    "triples/absence": [
+     60,
+     60
+    ],
+    "triples/completeness": [
+     60,
+     60
+    ]
+   }
+  },
+  {
+   "name": "C_every_path_position_forced",
+   "must_fire_because": "a sibling digest flipped at EACH path position independently must be rejected, or the verifier hashes bytes it does not actually check and the ratio prices nothing",
+   "can_fail_because": "any single-position corruption verifies TRUE, or no position had a sibling to flip",
+   "null_must_contain": "a verifier that checks only the last step would accept a corruption at position 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "absence": {
+     "path_tried": 1182,
+     "path_rejected": 1182,
+     "no_sibling": 0,
+     "drop_child_tried": 37,
+     "drop_child_rejected": 37,
+     "add_child_tried": 37,
+     "add_child_rejected": 37
+    },
+    "completeness": {
+     "path_tried": 1115,
+     "path_rejected": 1115,
+     "no_sibling": 0,
+     "drop_key_tried": 68,
+     "drop_key_rejected": 68,
+     "tamper_key_tried": 180,
+     "tamper_key_rejected": 180
+    }
+   }
+  },
+  {
+   "name": "C_divergence_child_set_forced",
+   "must_fire_because": "absence is the claim \"the next byte is not among this node's children\", so a prover hiding the child that holds the key would prove a false absence. Both directions driven: a child removed, and the queried byte forged in",
+   "can_fail_because": "either tampered absence proof verifies TRUE, or neither edit was constructible on any probe",
+   "null_must_contain": "a verifier that folds the path and trusts the terminal descriptor accepts both edits",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "path_tried": 1182,
+    "path_rejected": 1182,
+    "no_sibling": 0,
+    "drop_child_tried": 37,
+    "drop_child_rejected": 37,
+    "add_child_tried": 37,
+    "add_child_rejected": 37
+   }
+  },
+  {
+   "name": "C_answer_set_forced",
+   "must_fire_because": "completeness is the anti-omission claim, so an omitted answer key and an altered answer key must both be rejected -- this is the work that makes the verifier rebuild the subtrie",
+   "can_fail_because": "either tampered completeness proof verifies TRUE, or no proof carried two or more keys",
+   "null_must_contain": "a verifier that folds the path and takes the key list on trust accepts both edits",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "path_tried": 1115,
+    "path_rejected": 1115,
+    "no_sibling": 0,
+    "drop_key_tried": 68,
+    "drop_key_rejected": 68,
+    "tamper_key_tried": 180,
+    "tamper_key_rejected": 180
+   }
+  },
+  {
+   "name": "C_null_is_flat",
+   "must_fire_because": "A20: \"verifier work tracks proof size\" is unfalsifiable without a verifier that genuinely does constant work. S84's flat_verify is that null and it must stay flat across both new kinds and all three sets",
+   "can_fail_because": "flat_verify's bytes hashed differ across rows, which would mean the null is reading the proof",
+   "null_must_contain": "the real verifier, whose bytes hashed differ by set and by kind",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "distinct_null_hash_bytes": [
+     33
+    ],
+    "real_hash_bytes": [
+     1940.917,
+     2180.883,
+     2531.3,
+     4014.617,
+     4925.633,
+     6074.017
+    ]
+   }
+  },
+  {
+   "name": "C_worktree_agrees",
+   "must_fire_because": "the published numbers come from a byte-pin of the COMMITTED trie_witness.py (blob 57d1a481, HEAD 6d81a45) because the working-tree copy was uncommitted-modified while this ran. The same measurement against the working-tree copy must give identical rows, or the two verifiers are not the same verifier",
+   "can_fail_because": "any row or sweep point differs between the pinned and working-tree instruments, or the subprocess fails to run at all",
+   "null_must_contain": "the in-flight edit rewrites all three verify functions, so a behavioural change in any of them lands in these rows",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "subprocess_rc": 0,
+    "rows_identical": true,
+    "sweep_identical": true,
+    "pinned_instrument": "w2_head",
+    "stderr_tail": ""
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_S84_band_extends",
+   "must_fire_because": null,
+   "can_fail_because": "any of the six (kind x set) ratios falls OUTSIDE [1.06, 1.16]",
+   "null_must_contain": "six ratios inside the band, which is what the membership rows already look like",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "ratios": {
+     "atoms_original/absence": 1.155,
+     "atoms_original/completeness": 2.682,
+     "atoms_interned/absence": 1.136,
+     "atoms_interned/completeness": 1.888,
+     "triples/absence": 1.054,
+     "triples/completeness": 2.304
+    },
+    "inside_band": {
+     "atoms_original/absence": true,
+     "atoms_original/completeness": false,
+     "atoms_interned/absence": true,
+     "atoms_interned/completeness": false,
+     "triples/absence": false,
+     "triples/completeness": false
+    }
+   },
+   "refutes": "this spike: if both new kinds sit inside the membership band, the verifier model extends by inspection and the cycle bought nothing",
+   "fires_when": "any of the six (kind x set) ratios falls OUTSIDE [1.06, 1.16]",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F_S84_band_extends"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/../S84_verify_cost": {
+   "newest": 1786971035,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "absence and completeness verifier work inside S84's membership band [1.06, 1.16] on all three key sets, which would mean the verifier model extends by inspection",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
