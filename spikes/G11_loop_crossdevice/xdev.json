@@ -1,0 +1,118 @@
+{
+ "cycles": 6,
+ "rows": [
+  {
+   "cycle": 0,
+   "live": 60,
+   "host": [
+    "OK",
+    "4829611",
+    "63398348e00517eef00ca333919d5be1382503ae2e1fda956bcc03f11390e01a"
+   ],
+   "device": [
+    "OK",
+    "4829611",
+    "63398348e00517eef00ca333919d5be1382503ae2e1fda956bcc03f11390e01a"
+   ],
+   "match": true
+  },
+  {
+   "cycle": 1,
+   "live": 54,
+   "host": [
+    "OK",
+    "3975151",
+    "75d5d1342422c07ac8af8652bedc97b1f3ebd3f274481e2ec4c0c882cc4f489b"
+   ],
+   "device": [
+    "OK",
+    "3975151",
+    "75d5d1342422c07ac8af8652bedc97b1f3ebd3f274481e2ec4c0c882cc4f489b"
+   ],
+   "match": true
+  },
+  {
+   "cycle": 2,
+   "live": 49,
+   "host": [
+    "OK",
+    "3326351",
+    "b7b0b09c8276cfb72b35bf642dc3e216041bafc9135fab33f9816d2578cf0cf3"
+   ],
+   "device": [
+    "OK",
+    "3326351",
+    "b7b0b09c8276cfb72b35bf642dc3e216041bafc9135fab33f9816d2578cf0cf3"
+   ],
+   "match": true
+  },
+  {
+   "cycle": 3,
+   "live": 45,
+   "host": [
+    "OK",
+    "2848711",
+    "1e9fd5ba418b8a89f658066a587349e69037f11dce3cba3be52792ede88b9086"
+   ],
+   "device": [
+    "OK",
+    "2848711",
+    "1e9fd5ba418b8a89f658066a587349e69037f11dce3cba3be52792ede88b9086"
+   ],
+   "match": true
+  },
+  {
+   "cycle": 4,
+   "live": 41,
+   "host": [
+    "OK",
+    "2407871",
+    "2db87e366ff38256e42ede0e40543093cb1c252c622a79438831a0c696d8e088"
+   ],
+   "device": [
+    "OK",
+    "2407871",
+    "2db87e366ff38256e42ede0e40543093cb1c252c622a79438831a0c696d8e088"
+   ],
+   "match": true
+  },
+  {
+   "cycle": 5,
+   "live": 37,
+   "host": [
+    "OK",
+    "2003831",
+    "e109ea449fb6610bd214f1635e416b7fe0f112e0336bc4ec6a9d078b9828debc"
+   ],
+   "device": [
+    "OK",
+    "2003831",
+    "e109ea449fb6610bd214f1635e416b7fe0f112e0336bc4ec6a9d078b9828debc"
+   ],
+   "match": true
+  }
+ ],
+ "first_divergence": null,
+ "verdict": "IDENTICAL \u2014 determinism survives iteration, all cycles",
+ "conditions": {
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ],
+   [
+    "android",
+    "aarch64"
+   ]
+  ],
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "cycle": 6
+  }
+ },
+ "cites": [
+  "G10_closed_loop",
+  "G5_ecan_metta"
+ ]
+}
