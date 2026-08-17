@@ -235,16 +235,21 @@ rm -f .loop_signal* .loop_exit.* .loop_blocks.* stale_reached_turn run_loop.sh l
 # enforced one. Install with `sh spikes/harness/install_hooks.sh`.
 hookdir=$(cd "$ROOT" && git rev-parse --git-path hooks 2>/dev/null)
 case "$hookdir" in /*) ;; *) hookdir="$ROOT/$hookdir" ;; esac
-src="$ROOT/spikes/harness/commit-msg.hook"
-if [ ! -f "$src" ]; then
-  bad "commit-msg.hook source is missing from spikes/harness"
-elif [ ! -x "$hookdir/commit-msg" ]; then
-  bad "commit gate matches its tracked source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
-elif ! cmp -s "$src" "$hookdir/commit-msg"; then
-  bad "commit gate matches its tracked source (DRIFTED from its tracked source)"
-else
-  ok "commit gate matches its tracked source"
-fi
+# Both gates, by list. AGENT-1/H15 added `pre-commit`; checking only the one
+# gate that existed when this check was written is how an installer ships with a
+# hook it does not install.
+for g in commit-msg pre-commit; do
+  src="$ROOT/spikes/harness/$g.hook"
+  if [ ! -f "$src" ]; then
+    bad "$g.hook source is missing from spikes/harness"
+  elif [ ! -x "$hookdir/$g" ]; then
+    bad "$g gate matches its tracked source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
+  elif ! cmp -s "$src" "$hookdir/$g"; then
+    bad "$g gate matches its tracked source (DRIFTED from its tracked source)"
+  else
+    ok "$g gate matches its tracked source"
+  fi
+done
 
 # --- THE COMMIT GATE MUST REFUSE ANOTHER LANE'S FILES. ATTACKER-1, H19.
 # Three lanes share one git index and `git commit` takes the index, not your

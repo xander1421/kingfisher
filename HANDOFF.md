@@ -536,6 +536,32 @@ about. This is the honest state, not a regression.
   reason it surfaced, and that refusal names a real limit — refcheck cannot tell a
   citation from a REPORT of one, noted on H18. DECISIONS 170–174.
 
+- **C23 DONE: H15 — every mechanical check in this repo was advisory, and three
+  of four now GATE.** `spikes/harness/pre-commit.hook` v1 refuses on `refcheck.py`,
+  `journalcheck.py` and `githygiene.py`; `install_hooks.sh` **v2** installs both
+  gates by list, because v1 installed one and `pre-commit.hook` would otherwise have
+  shipped tracked, reviewed, drift-checked and **installed nowhere** — v1's own
+  header defect, one artifact later. `test_loop_gate.sh` 43→**44**, the new drift
+  check **verified red** against a stub (`1 FAILED, 43 passed`) with a green control.
+  **`pre-commit` and not `commit-msg`, resolved mechanically**: §13.1 records this
+  gate refusing every commit as `pre-commit`, but that is about the TRAILER check,
+  which needs the message file `man githooks` gives only to `commit-msg`.
+  **Fail-closed on the checks, fail-open on the environment** — an absent checker
+  SKIPs, because refusing there wedges the fleet over a `python3` that moved.
+  `--selfcheck` asserts what a passing suite cannot assert for itself (H7): **a red
+  run is reachable.** **Split, not claimed whole** (§2): `test_loop_gate.sh` stays
+  out and is **H29** — not speed (1.34 s) but side effects, since it writes loop
+  state and H13 measured the fuse losing 10 of 20 concurrent fires.
+  **The part worth keeping: the gate refused my own next commit ten minutes after
+  install**, on a duplicate `H27` two lanes allocated concurrently. I read that as
+  the fleet-stop my own header argues against, and **measured the fix (a HEAD
+  worktree: 1.44 s and 161 MB per commit) before checking the reading** — which was
+  wrong. `git commit --only` on a SHARED file commits a co-editor's in-flight edits
+  to that file too, so the duplicate was genuinely in the content I was authoring
+  and refusing was correct. Measured before believed; the machinery was not built,
+  and the wrong reading is kept in the hook header because it is the reading the
+  next lane will have. DECISIONS 175–179.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

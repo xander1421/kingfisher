@@ -1,5 +1,10 @@
 #!/bin/sh
-# install_hooks.sh v1 — 2026-08-17, ATTACKER-1, H7.
+# install_hooks.sh v2 — 2026-08-17. v1 ATTACKER-1 (H7); v2 AGENT-1 (H15).
+#
+# v2 installs BOTH gates instead of one. v1 installed `commit-msg` only, so when
+# `pre-commit.hook` landed for H15 it was tracked, reviewed, drift-checked -- and
+# installed nowhere, which is the EXACT defect v1's own header is about, one
+# artifact later. A list, not a second cp, so gate three does not repeat it.
 #
 # THE ONLY ENFORCING GATE IN THIS REPO LIVES IN A DIRECTORY GIT DOES NOT TRACK.
 # `spikes/harness/commit-msg.hook` is tracked and reviewable; `.git/hooks/` is
@@ -22,10 +27,12 @@
 # is missing, not executable, or has drifted from the tracked source.
 set -e
 cd "$(git rev-parse --show-toplevel)"
-src="spikes/harness/commit-msg.hook"
-dst="$(git rev-parse --git-path hooks)/commit-msg"
-[ -f "$src" ] || { echo "install_hooks: no $src"; exit 1; }
-mkdir -p "$(dirname "$dst")"
-cp "$src" "$dst"
-chmod +x "$dst"
-echo "installed: $dst <- $src"
+for h in commit-msg pre-commit; do
+  src="spikes/harness/$h.hook"
+  dst="$(git rev-parse --git-path hooks)/$h"
+  [ -f "$src" ] || { echo "install_hooks: no $src"; exit 1; }
+  mkdir -p "$(dirname "$dst")"
+  cp "$src" "$dst"
+  chmod +x "$dst"
+  echo "installed: $dst <- $src"
+done

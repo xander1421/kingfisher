@@ -1,0 +1,109 @@
+#!/bin/sh
+# pre-commit.hook v1 — 2026-08-17, AGENT-1, H15.
+#
+# EVERY MECHANICAL CHECK IN THIS REPO WAS ADVISORY. H15's row: "a check that
+# REPORTS but does not GATE is a stronger version of a prose NOTE, not a
+# different kind of thing." The trailer gate (`commit-msg.hook`) was the single
+# exception, and it checks trailers only. `refcheck.py`, `journalcheck.py` and
+# `githygiene.py` ran when somebody remembered, which on the evidence is: the
+# cycle that wrote them, and not the next one. I added two of the three in the
+# hour before writing this, so this is my debt before it is anyone's row.
+#
+# WHY pre-commit AND NOT commit-msg
+# §13.1 records that this gate was installed as `pre-commit` once and refused
+# EVERY commit -- because the TRAILER check needs the message, and `man
+# githooks` gives `pre-commit` no parameters. That is an argument about the
+# trailer check specifically. These three checks read the tree and the index and
+# need no message at all, so `pre-commit` is where they belong, and putting them
+# in `commit-msg` would run them after the author has already been asked for a
+# message. Both hooks now exist and neither duplicates the other.
+#
+# WHY IT REFUSES RATHER THAN REPORTS, AND WHY THAT IS SAFE TODAY
+# H14's failure mode is a checker that fires on a known-accepted backlog every
+# run, so everyone learns to bypass it -- `githygiene.py` was exit 1 permanently
+# on 16 already-tracked binaries and its verdict therefore carried no
+# information. That is NOT the situation here, and it was checked rather than
+# assumed: at install time all three are green on this tree
+# (`refcheck` 31 files resolve, `journalcheck` 2 journals clean, `githygiene`
+# "clean -- nothing you are about to commit violates §13"). With no backlog, a
+# refusal can only mean the commit in front of it introduced something.
+#
+# So there is deliberately NO baseline-diffing machinery here. If a backlog ever
+# accumulates, the upgrade is to compare against HEAD and refuse only on new
+# items -- but building that today would be scaffolding for a backlog that does
+# not exist, and it would have to be maintained by every lane meanwhile.
+# ponytail: no baseline diff, add one if these ever go red on a backlog.
+#
+# THIS GATE REFUSED ITS OWN AUTHOR'S NEXT COMMIT, TEN MINUTES AFTER INSTALL, and
+# the first reading was wrong in a way worth keeping. Two lanes had numbered a
+# WORK_QUEUE row `H27` concurrently and refcheck refused the duplicate. That
+# looked like the fleet-stop this header argues against -- one lane blocked by
+# another lane's UNCOMMITTED edit -- and a HEAD baseline was measured (1.44 s and
+# 161 MB of worktree per commit) before the reading was checked. It was wrong:
+# `git commit --only` on a SHARED file commits the other lane's in-flight edits
+# to that file as well, which is §13's blast-radius point, so the duplicate was
+# genuinely in the content being authored and refusing was correct. The gate
+# judges the content of your commit, and on a shared file that content is not
+# only yours. Measured before believed; the machinery was not built.
+#
+# FAIL-CLOSED ON THE CHECKS, FAIL-OPEN ON THE ENVIRONMENT. A checker that is
+# missing or that cannot start is NOT a violation -- it is a broken clone, and
+# refusing there would wedge every lane over a `python3` that moved. A checker
+# that RUNS and returns non-zero refuses. The distinction is the whole reason
+# this file has a selfcheck.
+#
+# Bypass is `git commit --no-verify`, deliberately and on the record: the hook
+# is shared by every lane in this working tree, so an emergency must not need a
+# lane to edit a gate the other lanes are also standing behind.
+#
+# Installed by spikes/harness/install_hooks.sh; drift-checked by
+# spikes/harness/test_loop_gate.sh. Selfcheck: sh pre-commit.hook --selfcheck
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+CHECKS='spikes/harness/refcheck.py
+spikes/harness/journalcheck.py
+spikes/harness/githygiene.py'
+
+run_checks() {
+  _bad=''
+  for c in $CHECKS; do
+    [ -f "$c" ] || { echo "  SKIP  $c is absent — broken clone, not a violation"; continue; }
+    if out=$(python3 "$c" 2>&1); then :; else
+      _bad="$_bad $c"
+      echo "----- $c REFUSED -----"
+      echo "$out" | tail -12
+    fi
+  done
+  [ -z "$_bad" ] || { echo "pre-commit REFUSED —$_bad"; echo "Bypass: git commit --no-verify"; return 1; }
+  return 0
+}
+
+if [ "$1" = "--selfcheck" ]; then
+  # The property that matters is REACHABILITY OF A RED RUN (H7's question: a
+  # passing suite cannot tell you a failure is expressible). Driven with stubs,
+  # so it asserts the hook's own logic and not the current state of the tree.
+  fail=0
+  CHECKS=/nonexistent/definitely_absent.py
+  run_checks >/dev/null 2>&1 || fail=1
+  [ "$fail" = 0 ] || { echo "  FAIL  an absent checker must SKIP, not refuse"; }
+  fail2=0
+  d=$(git rev-parse --git-path hooks)/_pc_selfcheck.$$
+  mkdir -p "$d"
+  printf 'import sys\nsys.exit(3)\n' > "$d/red.py"
+  printf 'import sys\nsys.exit(0)\n' > "$d/green.py"
+  CHECKS="$d/green.py"
+  run_checks >/dev/null 2>&1 || fail2=1
+  [ "$fail2" = 0 ] || echo "  FAIL  a green checker must pass"
+  fail3=0
+  CHECKS="$d/red.py"
+  run_checks >/dev/null 2>&1 || fail3=1
+  [ "$fail3" = 1 ] || echo "  FAIL  a RED checker must refuse — the gate is inert"
+  rm -rf "$d"
+  bad=$(( fail + fail2 + (1 - fail3) ))
+  [ "$bad" = 0 ] && echo "pre-commit selfcheck: red reachable, green passes, absent skips"
+  [ "$bad" = 0 ]
+  exit $?
+fi
+
+run_checks
