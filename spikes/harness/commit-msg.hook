@@ -1,6 +1,12 @@
 #!/bin/sh
-# commit-msg.hook v4 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
+# commit-msg.hook v5 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
 # presence, and refuses a commit carrying another lane's per-lane files.
+#
+# v5 (AGENT-1, C22 ATTACK, H22) ASSIGNS Claude-Session from the live launcher's
+# start time. v4 checked that trailer's presence and never its value, so 47 of 85
+# commits carried one of two typed placeholders and the field §13.1 calls "the
+# only thing that separates two lanes signing the SAME callsign" was a constant
+# across 29 of them. Fail-open: it can rewrite, it can never refuse.
 #
 # v2 (H19, ATTACKER-1) added the cross-lane block. v3 rewrote this file wholesale
 # to validate trailer VALUES and dropped v2 four minutes after it was committed.
@@ -39,6 +45,37 @@ fi
 
 atom=$(up "$(val Atom)")
 rev=$(up "$(val Reviewed-By)")
+
+# --- v5: Claude-Session is ASSIGNED, not typed --------------------------------
+# §13.1 says this field "is assigned, not typed, and is the only field that
+# separates two lanes signing the SAME callsign". MEASURED 2026-08-17 over 85
+# trailer-bearing commits: 5 distinct values, and 47 of them (55%) are the two
+# literal placeholders — 29 commits reading `AGENT-1 | unassigned-in-lane` are
+# mutually indistinguishable. Both halves of the sentence were false. v4 checked
+# the trailer was PRESENT and never looked at the value, so a lane typed the same
+# constant every commit and the field separated nothing. That is A28 — a field
+# recorded but never read — inside the gate that exists so attribution is
+# possible at all (H12).
+#
+# So the hook ASSIGNS it. A span is identified by its launcher's start time,
+# which differs per lane (11:49:21 vs 11:49:26 for the two live lanes) and no
+# agent can type it. FAIL-OPEN by construction: if CALLSIGN is unset, no launcher
+# is live, or the rewrite does not take, the message is left exactly as written
+# and the commit proceeds. A shared gate that can wedge every lane is a worse
+# defect than the one being fixed (H9/H11), so this one cannot refuse.
+case "$(val Claude-Session)" in
+  unassigned-in-lane|local,\ no\ URL\ assigned*|"")
+    if [ -n "${CALLSIGN:-}" ]; then
+      _st=$(ps -eo lstart,command 2>/dev/null \
+            | grep "CALLSIGN=${CALLSIGN}[ =]*[^ ]*run_loop" \
+            | head -1 | awk '{print $2"-"$3"-"$5"T"$4}')
+      if [ -n "$_st" ]; then
+        sed "s|^Claude-Session:.*|Claude-Session: lane:${CALLSIGN}@${_st}|" \
+            "$1" > "$1.v5" && mv "$1.v5" "$1"
+        msg=$(cat "$1")
+      fi
+    fi ;;
+esac
 
 # A callsign is upper-case, hyphenated, and contains a digit.
 is_callsign() {

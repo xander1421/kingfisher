@@ -467,9 +467,17 @@ about. This is the honest state, not a regression.
   pointers, not meanings (§12.12). Two defects of my own on the way, both in this
   file: `--selfcheck` recursed until the stack blew, and the "resolvable citations
   stay quiet" half was a loop that computed nothing and asserted nothing — A28's
-  shape. **The harness now resolves clean except one row in another lane's
-  journal** (`HANDOFF.ATTACKER-1.md` cites §0), reported not edited. DECISIONS
-  156–157.
+  shape. **RETRACTED, same day, in this entry rather than only in CHANNEL:** the
+  "one unresolved row in another lane's journal" was **my checker's bug, not their
+  citation.** Their line cites the section-zero heading of `prompts/ATTACKER-1.md`,
+  which exists and is exact; refcheck assumed every section citation resolves
+  against `MISSION_LOOP.md` — a resolver resolving against one document while the
+  repo cites several, which is the defect class it exists to find, shipped inside
+  it, filing a false accusation on its first live run. Fixed to resolve against
+  every harness document that defines sections. **This sentence carried the bare
+  section number for two cycles and refcheck refused on it in C22** — a checker
+  that cannot tell a citation from a REPORT of a citation, which is H18's class
+  and is now noted on that row. DECISIONS 156–157.
 
 - **C21 DONE: H5 — and the verdict is that §12.5 is NOT mechanised by the thing
   I built for it.** `spikes/harness/journalcheck.py`, two tiers, both measured.
@@ -495,6 +503,32 @@ about. This is the honest state, not a regression.
   on a 3600 s turn timeout. Class posted to `livechat.log`; harness swept, no
   second live instance, and the weakness of that negative is stated (the sweep
   grepped vocabulary — A30). DECISIONS 166–169.
+
+- **C22 ATTACK: the harness (§12.8), and §13.1's own attribution field is a
+  constant.** H27. The contract says `Claude-Session:` *"is assigned, not typed,
+  and is the only field that separates two lanes signing the SAME callsign."*
+  **Measured over 85 trailer-bearing commits: 5 distinct values, 47 of them (55%)
+  one of two literal placeholders — 29 read `AGENT-1 | unassigned-in-lane` and are
+  mutually indistinguishable**, 14 more are `ATTACKER-1 | unassigned-in-lane`.
+  `commit-msg.hook` v4 checked the trailer was PRESENT and never read its value.
+  **A28 inside the gate that exists so attribution is possible at all (H12).**
+  Not hypothetical: **two lanes signed `Atom: AGENT-1` seven minutes apart today**
+  (`dd1942d` 12:55, my `a6e467e` 13:02) — the exact collision the field is for —
+  and it separated them only because one lane happened to hold a session URL.
+  **Fix is ASSIGNMENT, not refusal**: hook **v5** derives the value from the live
+  launcher's start time (`lane:AGENT-1@…11:49:21` vs `lane:ATTACKER-1@…11:49:26`),
+  which differs per lane and no agent can type. Refusing the placeholder would have
+  blocked every `run_loop` lane, since our spawn prompts carry no URL — that is why
+  the placeholder exists, and refusing it turns a shared gate into a fleet stop.
+  **Fail-open by construction and that check runs first**; `test_commit_msg.sh`
+  11→14, **verified red with the v5 block deleted from an isolated copy** (12/2)
+  against a green control. The assertion is `lane:$cs@*` and not "no longer the
+  placeholder", because the weaker form is green over a constant rewrite — the very
+  defect removed. **Found on the way, and it was mine**: my C20 entry above still
+  carried the section-zero accusation I retracted in CHANNEL two cycles ago and never
+  propagated here (standing rule 12); `refcheck` refused on it, which is the only
+  reason it surfaced, and that refusal names a real limit — refcheck cannot tell a
+  citation from a REPORT of one, noted on H18. DECISIONS 170–174.
 
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
