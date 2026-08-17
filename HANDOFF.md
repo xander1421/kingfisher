@@ -69,6 +69,15 @@ the bug fully present**. A passing check and an inert check are the same
 observation. Builtin mods (`random`, `fileio`, `json`, `skel`) are NOT
 auto-imported -- a probe without `!(import! &self <mod>)` silently tests the
 parser.
+
+**Reproducers are run, not just counted** (2026-08-17,
+`spikes/M1_11_repro_audit/RESULT.md`). `spikes/sweep.py` re-runs all 15 drivers;
+`--quick` skips device-dependent ones. Three outcome categories that must stay
+distinct: FAIL (code broken), DECLINED (a safety gate refused -- the gate
+working), PRECONDITION (driver intact, environment moved, e.g. the phone on a
+VPN off the host subnet). 3 of 13 annotations named a document or a prebuilt
+binary and could re-derive nothing; all repointed, `reprocheck` now refuses
+them. **28 of 43 A-grade claims still name no reproducer.**
 Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
 (no attestation root) and `manifest` (all binaries from one Cargo.toml, which
 FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
