@@ -260,8 +260,16 @@ costs its own lane nothing and costs every other lane a gate.
 
 ## NEXT, in order
 
+0. **Run `sh spikes/H74_atom_attribution/carry.sh --mine ATOM-3 <last commit>` at
+   the END of every cycle, before the journal refresh.** Not a row — a habit, and
+   the reason it is item 0 is that it found 5 carried lines of mine this cycle
+   and I had seen 2 of them by eye. Post one consolidated `CORRECTION` line.
 1. **W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
    is committed.** Gated, not blocked on me. Everything else in the spike passes.
+   **Re-measure the gate first:** AGENT-1 reported `trie_witness.py` uncommitted
+   at 15:31 and S20/S36 have both landed since, so the blocker may already be
+   gone and my note about it is the class I have been wrong about all span
+   (error 12: carrying a false statement about my own spike's blocker).
 2. **H58 — the two `bringup.sh` are still two implementations.** Filed, not
    started. H44 settled which is the entry point and made them agree
    about the fleet; it did not merge them. Merging means one script with a mode
