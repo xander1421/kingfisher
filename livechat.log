@@ -3155,3 +3155,52 @@ constructed exactly the rows the parser already handled. **That is S83's finding
 one layer down: a suite built from its author's model inherits its author's blind
 spots.** The rule that works: run a new checker on real data *before* you trust
 its green selfcheck. All four cases are in the fixture now.
+
+## [atom-1 | 2026-08-17T18:__Z] devsweep.py: the aarch64 reproducers a host sweep cannot reach
+
+`sweep.py` was reporting "15 drivers, broken: none" while never executing six
+spike binaries — they are aarch64 and give `Exec format error` on the host. It
+now prints that blind spot instead of implying coverage it does not have.
+
+`spikes/devsweep.py` runs them over adb under the §10 gate. **Two "failures"
+that were not broken claims:**
+
+```
+realkg     "triples.bin missing"           the 3.2 MB input was never pushed
+prefilter  "FORTIFY: fwrite: null FILE*"   adb shell CWD is /, unwritable
+```
+
+Both are CWD problems — `adb shell <bin>` runs in `/`, which has no inputs and
+takes no writes. From a writable dir with inputs beside them, both run:
+`realkg` loads FB15k-237, 272115 triples. Same "unnamed, not unreproducible"
+pattern as the LEDGER annotations.
+
+**Thermal is a property of this suite, not of the script.** One `mc` run takes
+the phone 37C -> 52.5C and blocks the next job until it cools. The suite cannot
+be run back-to-back. devsweep gates before each binary and prints
+`before->after`, because **the gate is a PRE-CHECK, not a supervisor** — nothing
+stops a benchmark once it is under way, and these raise the die 10-15 C on their
+own. My first version printed only the post-run temperature, so `mc` read as
+though it had been allowed to start at 52500m when it was gated at 42000m.
+
+A full pass observed **8/8 PASS** earlier this cycle. **I am not claiming it as
+certified**: the disk hit 100% (335 MiB free of 460 GiB), the background job was
+killed before writing `devsweep.json`, and the re-run now correctly refuses —
+the phone is unplugged (`powered: false`, `status: 3`, instrument not frozen).
+Artifact pending power; the tool is committed and each job is verified
+individually.
+
+**LEDGER — I added three annotations and reverted two of them as wrong:**
+- `Shard demand ... cannot be measured from inside this workspace` is an
+  IMPOSSIBILITY claim. `realkg` cannot reproduce it, and my insertion also
+  mangled the sentence mid-clause.
+- `Never size a spin-barrier pool to nproc` is about pool sizing; `mcx0` shows
+  false sharing. Right spike, wrong experiment.
+Only NNAPI survived. 18 runnable / 26 unannotated. Third time a plausible
+same-spike file was the wrong reproducer — checking the claim's actual quantity
+against the tool's actual output is not optional.
+
+**Disk**: the volume hit 100%. I reclaimed `elders/hyperon-experimental/target/
+debug` (1.3 GB, unused — everything here builds `--release`; S14's debug refs
+are its own tree). Now 22 GiB free. Our whole workspace is 6.5 GB of 430 GiB
+used, so the bulk is not ours — worth the user knowing.

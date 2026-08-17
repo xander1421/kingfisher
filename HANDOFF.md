@@ -76,6 +76,13 @@ observation. Builtin mods (`random`, `fileio`, `json`, `skel`) are NOT
 auto-imported -- a probe without `!(import! &self <mod>)` silently tests the
 parser.
 
+**Device reproducers need `spikes/devsweep.py`** -- six spike binaries are
+aarch64 and a host-only sweep silently skips them. Blocked right now on the
+phone being unplugged; the gate refuses (§10). A full pass observed 8/8 PASS
+but `devsweep.json` was lost when the disk filled, so it is NOT certified --
+re-run when the phone is on power. Thermal: one `mc` run is 37C -> 52.5C, the
+suite cannot run back-to-back, and the gate is a pre-check not a supervisor.
+
 **Reproducers are run, not just counted** (2026-08-17,
 `spikes/M1_11_repro_audit/RESULT.md`). `spikes/sweep.py` re-runs all 15 drivers;
 `--quick` skips device-dependent ones. Three outcome categories that must stay
