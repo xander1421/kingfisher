@@ -1,0 +1,25 @@
+{
+  "demo8_after_edit": "CLAIMED 3 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
+  "demo8_before_edit": "CLAIMED 3 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
+  "falsifier_fired": true,
+  "fix_detects_the_edit": true,
+  "probe_target": "spikes/S38_runbook/check_runbook.py",
+  "stale_code_seen_by_fix_during_probe": [
+    "check_runbook.py"
+  ],
+  "survey_of_claimed_spikes": {
+    "spikes/S26_cheat_attribution": {
+      "record": "provenance.json",
+      "stale_code": []
+    },
+    "spikes/S36_witnessed_job": {
+      "record": "provenance.attack.json",
+      "stale_code": []
+    },
+    "spikes/S38_runbook": {
+      "record": "provenance.json",
+      "stale_code": []
+    }
+  },
+  "verdict_moved": false
+}

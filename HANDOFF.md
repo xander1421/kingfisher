@@ -1057,7 +1057,24 @@ sentence named `DECISIONS.log`, `BLOCKED.log` and the journals, and a tool
 solving the adjacent problem appeared in `spikes/harness/` minutes later. The
 claim survived the check; the near miss is the lesson.
 
-**NEXT 2: the M1-DEMO run-book, with its commands MECHANICALLY CHECKED.** A
+- **DONE — H77** (`43b3c3c`, renumbered from H76 in `48c9059`) and **S38**
+  (`7a01132`). `demo8.py` now reports **CLAIMED 3 · UNPROVEN 4 · BROKEN 0** of
+  §8's seven. S38 is the run-book, and what makes it a deliverable rather than a
+  draft is that `check_runbook.py` **executes** 10 of its 13 commands and refuses
+  on any command that is neither executed nor excused with a stated reason.
+  **demo8 reported S38 BROKEN — *"nothing under it is tracked in git"* — until
+  the commit landed**, which is that tool working on its own author.
+
+**NEXT 2 (ATTACK, and it is due — cycles 5, 6, 7 were all builds): attack
+`demo8.py`, which I wrote two cycles ago.** The suspected defect, written down
+before running it: **`CLAIMED` requires only that a green provenance record
+EXISTS in the directory — it never checks the record is CURRENT.** `record()`
+stores dep state and source mtimes precisely so staleness is decidable, and
+demo8 reads none of it, so a spike whose code changed after its last green
+certify still reads CLAIMED. That is family C — the artifact is not what you
+think — sitting in the tool built to stop §8 being resolved by eye. Falsify it by
+modifying a claimed spike's source and checking whether demo8's verdict moves;
+if it moves, the suspicion is wrong and that is the cycle's result. A
 run-book is a document, and §3 ranks drafts last — what makes this a deliverable
 rather than a draft is that every path and command in it is resolved by a checker,
 so "a stranger could follow it" is a property that can go red. Claim it in

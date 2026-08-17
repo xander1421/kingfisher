@@ -20,6 +20,9 @@ changes this tool's input rather than requiring it to be edited in step. Each
 item is matched against `demo8_evidence.tsv`, which is an EXPLICIT, reviewable,
 self-authored mapping of item -> the artifact that closes it.
 
+    STALE     the artifact is green, but its CODE has moved since -- modified
+              relative to HEAD, or last committed after the newest provenance
+              record. The record describes a run of different code (v2, H77)
     CLAIMED   the claimed artifact exists, is TRACKED IN GIT, and carries a
               provenance record with ok=true. **NOT "this item is done"** --
               see the A22 note below; the verdict is deliberately named for
@@ -118,6 +121,47 @@ def evidence():
     return rows
 
 
+def _commit_time(rel):
+    t = sh('git', 'log', '-1', '--format=%ct', '--', rel).strip()
+    return int(t) if t.isdigit() else None
+
+
+def stale_code(d):
+    """v2, H77. Code files the newest provenance record cannot describe.
+
+    DEFECT REMOVED: v1 called a spike CLAIMED on a green record that need not
+    describe the code the spike currently has. Measured in
+    `spikes/H77_demo8/attack.py`: editing a claimed spike's source moved demo8's
+    verdict NOT AT ALL. That is family C -- the artifact is not what you think --
+    inside the tool written to stop §8 being resolved by eye.
+
+    GIT, NOT MTIME, and the mtime version is withdrawn by the probe that found
+    this: a byte-identical revert bumps mtime, so an mtime rule reports STALE on
+    a rewrite that changed nothing.
+
+    THE NEWEST record, not the oldest: `provenance.attack.json` certifies the
+    attack and `provenance.json` the run (H49 requires them separate), so pairing
+    all code against the oldest makes every attacked spike permanently stale.
+    The cost, stated: a spike refreshing only one record masks the other's code.
+    """
+    ap = os.path.join(ROOT, d)
+    recs = [f for f in sorted(os.listdir(ap))
+            if re.match(r'provenance.*\.json$', f)]
+    if not recs:
+        return []
+    rt = _commit_time(f'{d}/{max(recs, key=lambda r: _commit_time(f"{d}/{r}") or 0)}') or 0
+    dirty = set(sh('git', 'status', '--porcelain', '--', d).split())
+    out = []
+    for f in sorted(os.listdir(ap)):
+        if not f.endswith(('.py', '.sh')):
+            continue
+        rel = f'{d}/{f}'
+        ct = _commit_time(rel)
+        if rel in dirty or ct is None or ct > rt:
+            out.append(f)
+    return out
+
+
 def certified(d):
     """(ok, detail) for a spike directory: a provenance record with ok true."""
     import json
@@ -164,7 +208,7 @@ def main():
               'REFUSING rather than reporting 0/0, which reads as pass.')
         return 2
 
-    used, broken, claimed, unproven = set(), [], [], []
+    used, broken, claimed, unproven, stale = set(), [], [], [], []
     print(f'MISSION_LOOP §8 — {len(its)} acceptance items\n' + '=' * 72)
     for it in its:
         row = next((r for r in ev if r['key'].lower() in it.lower()), None)
@@ -175,7 +219,15 @@ def main():
             continue
         used.add(row['key'])
         ok, detail = certified(row['dir'])
-        if ok:
+        moved = stale_code(row['dir']) if ok else []
+        if ok and moved:
+            stale.append((it, row, moved))
+            print(f'  STALE     {it[:66]}')
+            print(f'              {row["dir"]}: code moved since the newest '
+                  f'record — {moved}')
+            print('              green, but the record describes different code. '
+                  'Re-run to clear.')
+        elif ok:
             claimed.append((it, row))
             print(f'  CLAIMED   {it[:66]}')
             print(f'              {row["dir"]} ({detail}), claimed by {row["who"]}')
@@ -195,8 +247,8 @@ def main():
             print(f'  BROKEN    mapping key {r["key"]!r} matches no §8 item')
 
     print('=' * 72)
-    print(f'  CLAIMED {len(claimed)} · UNPROVEN {len(unproven)} · BROKEN {len(broken)}'
-          f'   of {len(its)}')
+    print(f'  CLAIMED {len(claimed)} · STALE {len(stale)} · UNPROVEN {len(unproven)}'
+          f' · BROKEN {len(broken)}   of {len(its)}')
     print('  CLAIMED means an artifact was named for this line, and that artifact is')
     print('  real, committed and green. It does NOT mean the line is closed — read the')
     print('  claim text, which is where each row says what it does NOT cover.')
@@ -247,7 +299,24 @@ def selfcheck():
     ok, d = certified('spikes/S36_witnessed_job')
     ck('a real certified spike IS claimed-and-green', ok, d)
 
-    # 5 · A mapping key that matches no item must be caught, because that is what
+    # 5 · H77 · STALENESS. v1 called a spike CLAIMED on a record that need not
+    #     describe its current code, and the probe that found it moved demo8's
+    #     verdict NOT AT ALL. These two cases are the fix and its false-positive
+    #     guard, and the second is the one that matters: an mtime rule reported
+    #     STALE on a byte-identical revert, and pairing code to the OLDEST record
+    #     made every attacked spike permanently stale.
+    ck('a clean committed spike is NOT stale',
+       stale_code('spikes/S26_cheat_attribution') == [],
+       str(stale_code('spikes/S26_cheat_attribution')))
+    ck('a spike carrying BOTH a run and its attack record is not stale',
+       stale_code('spikes/S36_witnessed_job') == [],
+       'pairing against the oldest record flags every attacked spike')
+    ck('an uncommitted code file IS stale',
+       'attack.py' in stale_code('spikes/H77_demo8') or
+       not os.path.isdir(os.path.join(ROOT, 'spikes/H77_demo8')),
+       str(stale_code('spikes/H77_demo8')))
+
+    # 6 · A mapping key that matches no item must be caught, because that is what
     #     happens when §8 is edited and the TSV is not.
     ck('a dangling mapping key is detectable',
        not any(r['key'].lower() in i.lower() for r in

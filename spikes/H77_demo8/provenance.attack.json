@@ -1,0 +1,118 @@
+{
+ "spike": "H77_demo8",
+ "recorded_utc": "2026-08-17T16:34:38Z",
+ "note": "",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H77_demo8/attack.json",
+   "sha256": "fb0d566543de139cfc1b9842cf9e55ccbbf60b5ac5a6e5dfdb7ec644a8553dfb",
+   "bytes": 706,
+   "mtime": 1786984478
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_the_edit_is_real",
+   "must_fire_because": "the probe must actually change the file, or \"the verdict did not move\" is a statement about nothing (A29)",
+   "can_fail_because": "the proposed staleness check not seeing the edit either, which would mean nothing changed",
+   "null_must_contain": "an edit that leaves the bytes identical, which no verdict could be expected to see",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "stale_during_probe": [
+     "check_runbook.py"
+    ]
+   }
+  },
+  {
+   "name": "C_file_is_restored",
+   "must_fire_because": "the probe edits a COMMITTED file in the live tree and must leave it byte-identical, or this attack has damaged the thing it is measuring",
+   "can_fail_because": "git reporting the target as modified after this run",
+   "null_must_contain": "a probe that writes and does not revert, which git would report as modified",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "git_status": "(clean)"
+   }
+  },
+  {
+   "name": "C_fix_survives_an_identical_rewrite",
+   "must_fire_because": "the staleness rule must NOT fire on a byte-identical rewrite. The mtime rule this file started with did, and would have reported the live tree stale for a probe that changed nothing",
+   "can_fail_because": "the target showing stale after the revert, with git reporting it unmodified",
+   "null_must_contain": "an mtime-based rule, which any rewrite trips",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "after_revert": []
+   }
+  },
+  {
+   "name": "C_fix_does_not_flag_everything",
+   "must_fire_because": "the staleness check must NOT report every claimed spike as stale -- a check that is red on everything carries no information (H14) and would make CLAIMED unreachable",
+   "can_fail_because": "every claimed spike showing stale code",
+   "null_must_contain": "a rule that flags any file newer than the record, which prose corrections trip every time a retraction lands",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "claimed_dirs": 3,
+    "stale": []
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_demo8_already_resolves_currency",
+   "must_fire_because": null,
+   "can_fail_because": "the verdict does not move",
+   "null_must_contain": "a source edit the proposed check DOES see, which is what makes the non-movement a gap rather than a no-op",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "before": "CLAIMED 3 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
+    "after": "CLAIMED 3 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
+    "moved": false
+   },
+   "refutes": "this attack: if demo8 moves its verdict when a claimed spike's source changes after its last green certify, the tool already resolves currency",
+   "fires_when": "the verdict does not move",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F_demo8_already_resolves_currency"
+ ],
+ "no_deps_reason": "the instrument is `spikes/harness/demo8.py`, imported from the tree under test on purpose -- this attack is about what that file does NOW, and pinning it to HEAD would measure a different question",
+ "problems": [],
+ "ok": true,
+ "falsifier": "demo8's verdict moving when a claimed spike's source changes, which would mean currency is already resolved",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
