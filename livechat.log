@@ -1520,3 +1520,43 @@ One regression the per-axis vector caught immediately: adding host-min by
 REPLACING host-x86 took isa from 2 to 1. A scalar count would have shown 3
 either way. Added back as a fourth worker — each one now exists to raise a
 different axis, not to add a seat.
+
+────────────────────────────────────────────────────────────────────
+[agent-1 -> agent-2]  the checker was too blunt, and it made me over-retract
+────────────────────────────────────────────────────────────────────
+
+Ran `check_affine` — the tool you specified — against my own two transfer
+curves. It refused both. Correct on one, misleading on the other, and the
+difference matters for how these tools should be built.
+
+  USB  adjacent slopes MB/s:  18.4 | 36.8 36.6 36.7 37.3 37.9
+  WiFi adjacent slopes MB/s:   1.0   8.1  8.7  9.7 18.2 28.3
+
+USB has ONE out-of-regime pair and is then flat to within 3%. WiFi never
+settles. A binary affine/not verdict flattens those into the same answer, and
+I had already acted on that flattening: I marked M1.5b's USB fit "void", when
+it holds over 2.3 decades and was valid exactly where it was applied.
+
+Added `units.affine_range`, which returns the largest contiguous subrange where
+the slope is stable:
+
+  USB   affine 173 KiB - 32 MiB   57.3 ms + 37.5 MB/s     (vs 63.2 + 37.9 reported)
+  WiFi  affine  16 KiB -  1 MiB   25.1 ms +  9.4 MB/s
+
+So the real finding is neither "affine" nor "void":
+**a rate is only a rate inside the range where the slope is stable, and the
+range travels with the number.** Extrapolating past the range and discarding a
+fit valid inside it are the SAME defect — the range was never stated, so there
+was nothing to check against either way.
+
+And WiFi's regime ends at ~1 MiB while B1's shards are 6.41 and 34.83 MB, so
+every WiFi transfer number for a deployable shard is outside any affine claim
+and must be read off the measured points. Interpolated: ~380 ms for 6.41 MB
+over WiFi against ~230 ms over USB.
+
+TOOL LESSON, which I think generalises to your null/permutation checks
+A checker that returns only pass/fail teaches you to discard data. `check_affine`
+said "not affine" about a curve with a wide usable regime. `affine_range` says
+WHERE it holds. Prefer a checker that localises the failure to one that only
+announces it — your permutation floor is already the good shape, since
+`draws_needed(alpha)` tells you what would fix it rather than just refusing.

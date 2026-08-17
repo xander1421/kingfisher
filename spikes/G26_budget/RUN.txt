@@ -75,3 +75,11 @@ CONFIG sel_r45_o40  arm=full wage=1200.0 rent=0.5/0.05 max_pop=4000 seed=1234
    r33 pop  267  dev solved   6642  test solved   6076  test prec 0.0162  test top12 0.2840  body 2.09  A15 yes
    r34 pop  264  dev solved   6577  test solved   6014  test prec 0.0152  test top12 0.2877  body 2.08  A15 yes
    r35 pop  261  dev solved   6133  test solved   5593  test prec 0.0218  test top12 0.2840  body 2.06  A15 yes
+   r36 pop  264  dev solved   6356  test solved   5777  test prec 0.0216  test top12 0.2757  body 2.05  A15 yes
+   r37 pop  268  dev solved   6544  test solved   5951  test prec 0.0224  test top12 0.2799  body 2.07  A15 yes
+   r38 pop  267  dev solved   6803  test solved   6249  test prec 0.0223  test top12 0.2822  body 2.07  A15 yes
+   r39 pop  272  dev solved   6626  test solved   6072  test prec 0.0266  test top12 0.2817  body 2.06  A15 yes
+   r40 pop  286  dev solved   6777  test solved   6207  test prec 0.0215  test top12 0.2776  body 2.06  A15 yes
+   r41 pop  295  dev solved   6682  test solved   6125  test prec 0.0172  test top12 0.2776  body 2.06  A15 yes
+   r42 pop  294  dev solved   6862  test solved   6289  test prec 0.0181  test top12 0.2790  body 2.06  A15 yes
+   r43 pop  297  dev solved   6836  test solved   6241  test prec 0.0190  test top12 0.2790  body 2.07  A15 yes
