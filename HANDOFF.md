@@ -217,6 +217,28 @@ about. This is the honest state, not a regression.
   One control was wrong first — it grepped `fn (prove|verify|proof|witness)` and
   matched **14 Rust borrow witnesses**. New guardrail **A30**. DECISIONS 129–132.
 
+### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
+`STOP` is present. It was set at 10:50 by an **interactive session, not a lane**,
+to break a live-lock: the root `settings.json` gates a CALLSIGN-less session as
+lane `unknown`, so every turn end is refused and each refusal increments the
+fleet's fuse. Its own text says *"it halts two genuinely supervised lanes at their
+next turn end… Lifting it is the operator's call."* So this is a clean §7 halt,
+not a failure, and **not something a lane may lift for itself**.
+
+Current write was finished before halting: cycle 10 (S75) is fully recorded and
+committed at `618011b`. Nothing is mid-edit.
+
+**Resume: `rm STOP`.** Before reopening this repo interactively, the STOP text asks
+for a lane whitelist in `loop_gate.sh` (exit 0 unless `CALLSIGN` names a known
+lane); CLIENT-3 reports v4 already does this, so check the installed version first.
+
+**This session: 10 cycles, 7 DONE rows, 2 ATTACK cycles, 1 BLOCKED_ON_HUMAN.**
+W2 · D6 · S73 · d6-retrofit · W4-4/4 · S74 · S75, plus a class-H sweep. The single
+most useful outcome is not any of the spikes: it is that **`provenance.py`'s A24
+staleness check had six bugs and its own self-test passed over every one**, and
+that **the falsifier I wrote for my own trie work fired at 18.4× when finally run
+against the real substrate**.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
