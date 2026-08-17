@@ -314,6 +314,28 @@ about. This is the honest state, not a regression.
   them a check on the measurement of depth. A more careful measurement of the wrong
   quantity reads as a stronger result.
 
+- **C14 ATTACK: S77's own instrument. It survives, and the attack found something
+  better than survival.** `spikes/S77_proof_bytes/ATTACK.md`, `attack.py`,
+  `certify ok=true`, 3 controls. Target chosen per §2 — S77 retracted two
+  published spikes on ONE self-authored Rust walk, and its 5–7% agreement with
+  W2's prover is weaker than it looks, since a systematically under-reporting
+  `child_count` would leave that agreement intact (A22). **A1: siblings recounted
+  from the key sets alone in ~10 lines of Python — no `pathmap`, no zipper, no
+  trie code of this project — agrees at 0.00% on all three sets.** **A2**: zero
+  prefix-related pairs in 6,588 keys, recorded as an **untested branch, not a
+  pass** (C4 found a real soundness bug of that shape; A29). **A3**: the root
+  charge could have reversed the inversion and does not — **and my own premise was
+  backwards**, the triples root has ONE child, not the widest of the three; left
+  standing in the control with a note rather than edited out.
+  **The transferable finding is A1's exactness**: if the number is computable from
+  the key set alone, then the quantity that decides proof size is a property of the
+  **key set**, not of the data structure — which is exactly why depth was never a
+  proof size. S75 built a Rust probe against a real library to measure the wrong
+  thing and S76 built a sweep on top of it, while the right number sat in the
+  committed key files behind a `defaultdict`. **Before measuring a property of an
+  implementation, ask whether the quantity you want depends on the implementation
+  at all.** DECISIONS 143–145.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
@@ -381,23 +403,24 @@ against the real substrate**.
   is open for, committed by the lane that fixed a §12.5 violation eight cycles
   earlier. A stale NEXT costs a whole cycle to rediscovered work, and this one
   had survived a full HALT and relaunch.
-- **NEXT 1**: **generate a real proof against `pathmap`'s zipper API and measure
-  its bytes.** This is the binding caveat of S75 *and* S76, carried forward
-  unchanged through both: **no proof was ever generated on `pathmap`** — node
-  depth was counted and multiplied. So every figure in the chain (~33 KB, ~14 KB,
-  ~9.9 KB) is a **scaling correction, not a measured byte count**, and CLAUDE.md's
-  rule is that the errors which survive here are the ones whose falsifier was
-  written and marked *not yet run*. S76 pinned the mechanism (~1 node per key
-  byte against ~1 node per structural step) tightly enough to state the
-  prediction before the run, which is what makes this worth doing now rather than
-  earlier. Load-insensitive: byte counts, no timings.
-- **NEXT 2**: **the symbol table against S74's chain.** S76 measured the table
-  (1,713 symbols, 44,891 B) and left its interaction with the epoch chain
-  untested. An id space that changes between epochs re-encodes atoms already
-  committed, so a chain step would bind a key the next epoch no longer produces —
-  S74 has no control for that because interning did not exist when it was built.
-  Either it is sound and gets a control, or it is a real fault in the combination
-  and the encoding needs epoch-stable ids.
+- **NEXT 1 and 2 REWRITTEN 12:4x — the old NEXT 1 is DONE as S77 (C13), same
+  cycle it was written, and the old NEXT 2 is now near-worthless because S77
+  showed interning makes proofs WORSE. Retired rather than left standing (§12.5).**
+- **NEXT 1**: **the physical-node accounting.** S77 counts siblings at LOGICAL
+  byte positions, which is the trie a Merkle proof commits to and the one W2
+  proves over. `pathmap`'s own `merkleize` hashes PHYSICAL nodes instead, and a
+  commitment built that way adds a step per physical node — where the 83,210-node
+  atom trie lives. S77 named this "the obvious next probe" **in its caveats**, and
+  the entire lesson of C12–C14 is that a caveat naming an unmeasured quantity is
+  an unrun falsifier holding up every number on the page. Do not let this one sit
+  for three cycles the way its predecessor did. Falsifier to state first: if
+  physical-node accounting reorders the three key sets, S77's inversion is
+  specific to the logical view and the retraction needs qualifying.
+- **NEXT 2**: **absence and completeness under the corrected model.** S77 measured
+  MEMBERSHIP only. W2 published absence at ~2.0 KB on its own trie, and that
+  number has never been checked against branching rather than depth — the same
+  error class, on a page that has not been reviewed for it. Cheap: the instrument
+  exists and the key sets are committed.
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
   from job 1; three options recorded, none implemented). Note M1.3b since found
   reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is
