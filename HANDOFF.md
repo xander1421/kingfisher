@@ -32,23 +32,38 @@ D1+, D5, D3 — all DONE. No live claims. `CHANNEL.md` is current.
 - device `quiet.sh --device`: **OPEN**.
 
 ## Next 3 items
-1. **D2** canonical result serialization per job class — last P0 freeze-gate
+1. **W4** prefilter read set — now top of P1. The gating question above. Start
+   by instrumenting `realkg.c` to count bundles scored per query; then ask
+   whether any index makes it sublinear *without* changing the timings S52
+   published on the linear version.
+2. **D2** canonical result serialization per job class — last P0 freeze-gate
    item. Load-insensitive; links the hyperon nondeterminism drafts and must
    state Tier-A exclusions pending upstream.
-2. **W3** witness sizes under non-aligned access — quantify W1's 0.9×
-   pathology, grade the shaping-as-verification claim. **Was blocked on the W1
-   attacker; check `CHANNEL.md` and the task notification for its verdict
-   before starting, and fold its findings in.**
 3. **M1.8** quorum-3 pipeline as 3 host processes — the first M1 item that
    needs no second device and no open gate.
 
-## Watcher notes
-- An adversary was launched against **W1** and had not reported when this
-  session wrapped. Its verdict must be folded into W1 *and* W3 before either is
-  built on. W1 is currently load-bearing (it revived the fleet-wide
-  verification pool and gave wedge #2 its second justification) and was
-  self-verified — the same pattern that killed S69/S70.
+## Watcher notes — RESOLVED, and badly
+- **The W1 attacker reported. W1 is INVALID.** `witness.py` modelled a
+  clustered-index engine that does not exist: `S52/realkg.c:184` scores every
+  bundle on every query, so the read set is **100% of the prefilter index**.
+  Corrected witness **1.54–12.23 MB, not 4.4 KB**. Plus a unit error (12.8 MB is
+  a B=8 index over 800k triples) and **four controls, none able to fail**.
+- **W3 cancelled** — its premise is falsified by S52 on the identical corpus:
+  measured 0.2 / 1.0 / 8.8% store checked against W1's 7.7 / 100 / 100%.
+- **The consequence is the important part.** The S69/S70 *diagnosis* — eligibility
+  coupled to residency — still stands. **The fix does not.** Residency coupling
+  is not cut, the fleet-wide verification pool is not restored, and **C4's
+  rare-shard attack is live again.**
 - `L1` needs a second physical device for its cross-device half.
+
+## The gating question now (W4, top of P1)
+> **What is the read set of the HDC prefilter, and can it be made sublinear
+> without invalidating S52's timings?**
+
+The engine scores every bundle on every query. Nothing about verification
+eligibility can be decided before this is measured — and note the trap: building
+a clustered-index engine to make the read set small would invalidate S52's
+timings, which were measured on the linear prefilter.
 
 ## Standing caution
 Shard demand (`Δ`) is unmeasured **and unmeasurable from inside this

@@ -25,3 +25,9 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
    change — `#[cfg(feature = "minimal")]` around those registrations — closes
    all three, and it is the same ask as M0.2 for `json.rs`.
    **Ask: raise it with the hyperon maintainers alongside U1.**
+7. **Note on W1, for anyone briefed on it before today.** W1 was cited in
+   conversation as killing S69's traffic objection and restoring the fleet-wide
+   verification pool. It is now **INVALID**. If that claim reached anyone
+   outside the workspace, it needs retracting: the witness is 1.54–12.23 MB, not
+   4.4 KB, because the measured engine reads the whole prefilter index on every
+   query.
