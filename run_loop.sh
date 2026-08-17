@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
-# v2, 2026-08-17. Four defects fixed; each one had ended or could end a lane
+# v3, 2026-08-17. Five defects fixed; each one had ended or could end a lane
 # silently. Numbered so a stall can be diagnosed against this list.
 #
 # 1. THE LAUNCHER DECIDED THE LOOP WAS OVER BY GREPPING ITS OWN LOG for
@@ -19,6 +19,23 @@
 #    respawned every 5s forever -- a hot spin that looks alive and does nothing.
 # 4. NO TIMEOUT. The loop handled a crash and not a hang; a wedged turn waited
 #    forever. macOS ships no timeout(1), so the watchdog is inline.
+# 5. A TERMINAL SIGNAL OUTLIVED THE SPAN THAT WROTE IT (v3, class H16). The turn
+#    -start cleanup cleared .loop_blocks and .loop_exit and NOT
+#    .loop_signal.$CALLSIGN, so a signal written by a previous span was live
+#    ammunition for the next one. Observed, not theorised: AGENT-1 wrote
+#    LOOP-HALT at 11:30 under STOP; loop_gate.sh's STOP branch (its section 1)
+#    exits BEFORE it consumes a signal, so the file survived; the operator then
+#    removed STOP; the relaunched lane would have had that signal consumed at its
+#    FIRST turn end and exited having done no work, logging "terminal signal,
+#    exiting" as though the span had finished. Cleared here rather than in the
+#    hook's STOP branch because the launcher is the one choke point every span
+#    passes through, so it also covers the arming paths the hook cannot see: a
+#    crash or SIGKILL between the signal write and the turn end, the watchdog's
+#    own pkill, and a hand-written signal. A signal that survives a completed
+#    turn is stale by construction -- the hook consumes a live one at the turn
+#    end that follows it -- so clearing at turn start cannot destroy an in-flight
+#    exit. Checked by spikes/harness/test_loop_gate.sh, which drives this script
+#    with a stub claude and fails if a seeded stale signal reaches the turn.
 set -u
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # FAIL CLOSED, same rule the hook enforces. This defaulted to BUILDER-1 -- a
@@ -43,7 +60,7 @@ BRIEF_FILE="prompts/${CALLSIGN}.md"
 
 fails=0
 while [ ! -f STOP ]; do
-  rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK"
+  rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK" ".loop_signal.${CALLSIGN}"
   date +%s > "$BEAT"
   started=$(date +%s)
 

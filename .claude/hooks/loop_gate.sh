@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# loop_gate.sh v5 — Stop hook for MISSION_LOOP continuous mode.
+# loop_gate.sh v6 — Stop hook for MISSION_LOOP continuous mode.
 # Terminal signals are FILES, not prose: to end legally, the agent must
 # write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.$CALLSIGN.
 # Bare .loop_signal is NO LONGER ACCEPTED -- see v5 below.
@@ -47,6 +47,10 @@ if [ -z "${CALLSIGN:-}" ]; then
   exit 0
 fi
 LANE="$CALLSIGN"
+# v6 defect 2: LANE is interpolated into filenames and into the JSON below.
+# Whitelist, because a blacklist of path and quote metacharacters is the kind of
+# thing that is right until someone finds the character it forgot.
+case "$LANE" in (*[!A-Za-z0-9._-]*) exit 0 ;; esac
 EXIT_MARK=".loop_exit.${LANE}"
 BLOCKS=".loop_blocks.${LANE}"
 
@@ -104,7 +108,17 @@ if [ "$N" -gt "${MAX_BLOCKS:-400}" ]; then
 fi
 
 # 5 · Otherwise: refuse the stop, hand back the loop contract
-cat <<'JSON'
-{"decision":"block","reason":"Loop contract: stopping is unavailable. A legal exit requires writing exactly one of LOOP-DONE / LOOP-HALT / LOOP-IDLE into the file .loop_signal, and only under MISSION_LOOP section 7 conditions. Otherwise, in order: (1) refresh HANDOFF.md as the write-ahead checkpoint; (2) release stale CLAIMs in CHANNEL.md; (3) SELECT the highest-priority ungated unclaimed WORK_QUEUE item and run the next cycle. Quoting marker words in prose does nothing."}
-JSON
+#
+# v6, 2026-08-17 (H16): THIS MESSAGE NAMED A PATH THIS HOOK NO LONGER ACCEPTS.
+# It said "into the file .loop_signal" -- the bare name v5 removed one section
+# above, in the same file, in the same edit that stopped §7 instructing lanes
+# into it. A lane obeying the refusal verbatim writes .loop_signal, section 3
+# never looks at it, and the lane cannot exit at all. H9 was recorded DONE with
+# this live: the deferral was called circular and cut on the §7 side only, which
+# is §12.2 -- the site, not the class -- inside the fix for a class defect.
+# The path is now interpolated from $LANE, so it cannot drift from the path
+# section 3 reads. test_loop_gate.sh extracts the path out of this string,
+# writes a signal to exactly it, and requires the hook to honour it: an
+# instruction the hook gives must be an instruction the hook obeys.
+printf '{"decision":"block","reason":"Loop contract: stopping is unavailable. A legal exit requires writing exactly one of LOOP-DONE / LOOP-HALT / LOOP-IDLE into the file .loop_signal.%s , and only under MISSION_LOOP section 7 conditions. Otherwise, in order: (1) refresh HANDOFF.md as the write-ahead checkpoint; (2) release stale CLAIMs in CHANNEL.md; (3) SELECT the highest-priority ungated unclaimed WORK_QUEUE item and run the next cycle. Quoting marker words in prose does nothing."}\n' "$LANE"
 exit 0

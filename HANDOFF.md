@@ -12,19 +12,23 @@ scaffolding around making that asset usable.
 Two lanes: **agent-1 (this one) = M1/M2 device chain**; **agent-2 = G-series
 graph learning / attention**. Coordinate via `livechat.log`.
 
-## Loop state — READ THIS
-The Stop hook (`.claude/hooks/loop_gate.sh`) was **inert for the whole first
-session**: settings lived in `~/kingfisher/.claude/settings.json` but the
-session project dir is `spikes/S51_multicore`, which had no `.claude/`.
-`CLAUDE_PROJECT_DIR` was unset so the `$(pwd)` fallback would also have missed.
-
-Fixed: `spikes/S51_multicore/.claude/settings.json` now registers the hook by
-absolute path, and `ROOT` is pinned inside the script. **`settings.json` binds
-at session start, so this takes effect on the next restart.** Until then use
-`ScheduleWakeup` each turn as the re-entry mechanism.
+## Loop state — READ THIS  (rewritten 2026-08-17 11:5x, AGENT-1 span 2)
+`STOP` is **gone** — the operator lifted it. Both registrations
+(`.claude/settings.json` and `spikes/S51_multicore/.claude/settings.json`) pin
+the hook by absolute path and are checked mechanically by
+`test_loop_gate.sh`; `ROOT` is pinned inside the script. Re-entry is
+`run_loop.sh`, not `ScheduleWakeup`.
 
 To stop legally: write exactly `LOOP-DONE` / `LOOP-HALT` / `LOOP-IDLE` into
-`.loop_signal`. Human kill switch: `touch STOP`.
+**`.loop_signal.$CALLSIGN`**. Bare `.loop_signal` has not been accepted since
+hook v5 and no longer appears in §7 or in the hook's own refusal text (H16).
+Human kill switch: `touch STOP`.
+
+**If a span ends without doing work, suspect H16 first.** A terminal signal
+that outlives its span kills the next lane at its first turn end and logs
+`terminal signal, exiting`, which reads exactly like a completed span. Fixed in
+`run_loop.sh` v3; the check is `test_loop_gate.sh`, and that check is itself
+falsified by `test_h16_falsify.sh`.
 
 ## State of the M1 chain — complete, correctly refusing, verified 2026-08-17 12:xx
 ```
@@ -224,7 +228,39 @@ about. This is the honest state, not a regression.
   One control was wrong first — it grepped `fn (prove|verify|proof|witness)` and
   matched **14 Rust borrow witnesses**. New guardrail **A30**. DECISIONS 129–132.
 
+## Cycle log — span 2 (AGENT-1, from ~11:49)
+- **C11 DONE: H16** — a class-H row, and it was aimed at this lane before it had
+  run a cycle. `.loop_signal.AGENT-1` still held the `LOOP-HALT` written at 11:30;
+  the hook's STOP branch returns **before** signal consumption, so `STOP` left it
+  armed, and `run_loop.sh` cleared `.loop_blocks` and `.loop_exit` at turn start
+  but not the signal. **The first turn end would have consumed it and the launcher
+  would have logged `terminal signal, exiting` — indistinguishable from a span
+  that finished its work.** CLASS: *a terminal signal that outlives the span that
+  wrote it.* Fixed at the launcher (`run_loop.sh` v3, defect 5), not at the hook's
+  STOP branch, because the launcher is the choke point every span passes through
+  and so also covers crash, SIGKILL, the watchdog's own `pkill`, and a
+  hand-written signal. **Second site, same class, found by the §12.2 grep**: the
+  hook's own refusal message instructed lanes to write the bare `.loop_signal`,
+  the path v5 removed one section above — H9 cut that circular deferral on the §7
+  side only, so a lane obeying its own refusal could never exit. Hook v6
+  interpolates `$LANE`. `test_loop_gate.sh` 26→28 (another lane has since taken it
+  to 37): the launcher is driven **end to end with a stub `claude`**, the first
+  check in that suite to execute `run_loop.sh` at all, and the refusal is tested
+  as a **round trip** — path extracted from the emitted message, written to, and
+  the hook must honour it. Both shown to fail with the defects restored:
+  `spikes/harness/test_h16_falsify.sh`. Opened H17 (§10 vs `mktemp -d`, not
+  decidable by me — A22) and H18 (two `## H —` sections, two id spaces).
+  DECISIONS 133–135.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
+> **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
+> relaunched this lane. The halt below stands as written and as correct at the
+> time; what it did not anticipate is that **the signal it wrote was still on
+> disk, armed**, because the hook returns at its STOP check before it consumes a
+> signal and the launcher never cleared it. That is H16, found and fixed in this
+> span's first cycle — see the cycle log below and the rewritten *Loop state*
+> section at the top of this file.
+
 `STOP` is present. It was set at 10:50 by an **interactive session, not a lane**,
 to break a live-lock: the root `settings.json` gates a CALLSIGN-less session as
 lane `unknown`, so every turn end is refused and each refusal increments the

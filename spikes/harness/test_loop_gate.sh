@@ -181,6 +181,88 @@ PYEOF
   done
 done
 
+# --- THE REFUSAL MESSAGE IS AN INSTRUCTION, so test it as one. H16, 2026-08-17.
+# v5 removed the bare .loop_signal path and edited §7 to stop pointing lanes into
+# it, and left the hook's OWN refusal text still saying "into the file
+# .loop_signal". A lane obeying it verbatim writes a file section 3 never reads
+# and can never exit. Not a grep for the string (A30: a name grep cannot tell a
+# word from a concept) -- the path is extracted from the message the hook just
+# emitted, a signal is written to exactly that path, and the hook must honour it.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+refusal=$(CALLSIGN=L7 ./gate.sh </dev/null 2>/dev/null)
+sigpath=$(printf '%s' "$refusal" | grep -o '\.loop_signal[^ ,"]*' | head -1)
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+if [ -z "$sigpath" ]; then
+  bad "refusal message names no signal path at all"
+else
+  echo LOOP-HALT > "$sigpath"
+  check "refusal names a path the hook obeys ($sigpath)" "$(blocked L7)" "exit"
+fi
+
+# --- THE LAUNCHER, driven end to end. H16, 2026-08-17.
+# A TERMINAL SIGNAL THAT OUTLIVES ITS SPAN. run_loop.sh cleared .loop_blocks and
+# .loop_exit at turn start and not .loop_signal.$CALLSIGN, so a signal from a
+# previous span was consumed at the NEXT span's first turn end and the lane
+# exited having done no work. Observed live on AGENT-1: LOOP-HALT written at
+# 11:30 under STOP, and the hook's STOP branch returns before it consumes a
+# signal, so the file was still armed when the operator lifted STOP.
+# Driven with a stub claude rather than asserted by grep, because the property is
+# "a stale signal does not reach the turn", not "this line contains that word".
+rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+mkdir -p bin
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+# stub claude: report whether a stale terminal signal survived into the turn,
+# then hand the launcher a legal exit so the test finishes in one iteration.
+[ -f ".loop_signal.${CALLSIGN}" ] && echo SURVIVED > stale_reached_turn
+echo LOOP-HALT > ".loop_exit.${CALLSIGN}"
+STUB
+chmod +x bin/claude
+cp "$ROOT/run_loop.sh" ./run_loop.sh
+echo LOOP-HALT > .loop_signal.L8            # the previous span's leftover
+rm -f stale_reached_turn
+PATH="$T/bin:$PATH" CALLSIGN=L8 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
+check "launcher clears a stale signal before the turn" \
+      "$([ -f stale_reached_turn ] && echo reached || echo cleared)" "cleared"
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* stale_reached_turn run_loop.sh loop_L8.log
+
+# --- A CALLSIGN IS AN UNTRUSTED STRING. ATTACKER-1, H7, 2026-08-17.
+# The hook interpolates $LANE into .loop_exit.$LANE, .loop_blocks.$LANE and --
+# since H16 rewrote section 5 at 11:52 -- into the refusal JSON itself. Nothing
+# validated its shape. MEASURED against the pre-fix hook: CALLSIGN='L"6' emits
+#   {"decision":"block","reason":"...file .loop_signal.L"6 , and only..."}
+# which is JSONDecodeError at char 178, so the harness cannot read the block
+# decision and the refusal is lost -- the lane stops for the reason the whole
+# hook exists to prevent. Reachable only after H16; the fix for the refusal
+# message opened an injection INTO the refusal message.
+#
+# ALSO RECORDED, because a negative result that is not printed gets re-asserted:
+# CALLSIGN='/../escaped' does NOT write outside the directory. ATTACKER-1 stated
+# that it did, then ran it: `.loop_exit.` + `/../escaped` needs the directory
+# `.loop_exit.` to exist, it does not, the redirect fails, 0 files escaped. The
+# whitelist still excludes it, but on the JSON evidence, not the traversal.
+#
+# The property, not the remedy: whatever the hook DECIDES for a hostile
+# callsign, its output must be readable. A check that asserted `exit 0` would
+# have to be rewritten by anyone who chose to escape the string instead.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* pwned
+for cs in 'L"6' 'L\6' 'L 6' '../L6' '$(touch pwned)' 'L`6' 'L
+6'; do
+  out=$(CALLSIGN="$cs" ./gate.sh </dev/null 2>/dev/null)
+  label=$(printf '%s' "$cs" | tr -d '\n')
+  if [ -z "$out" ]; then
+    ok "hostile callsign refused: $label"
+  elif printf '%s' "$out" | python3 -c 'import json,sys; json.load(sys.stdin)' 2>/dev/null; then
+    ok "hostile callsign still emits valid JSON: $label"
+  else
+    bad "hostile callsign emits an UNPARSEABLE decision: $label"
+  fi
+done
+check "  no callsign was executed"  "$([ -f pwned ] && echo ran || echo none)" "none"
+check "  hostile callsigns left no state" \
+      "$(ls .loop_exit.* .loop_blocks.* 2>/dev/null | wc -l | tr -d ' ')" "0"
+rm -f pwned
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "loop_gate.sh: ${pass} checks pass"
