@@ -123,6 +123,30 @@ about. This is the honest state, not a regression.
   the very bug it hunted. New guardrail **A29**.
   `spikes/W2_witnessed_trie/ATTACK.md`, `attack.py`, `attack.json`.
 
+- **C5 DONE: the D6 retro-fit** — `spikes/harness/retrofit_d6.py`. Built as
+  **extraction**, never transcription: retyping a prose number into a provenance
+  file is D6's own H5 hole performed deliberately. **Q1 2/2 and B1 4/4 COMPLIANT;
+  W4 3/4, N1 2/4, S72 1/5** (`ok:false`). **9 of 20 stated controls across the
+  five spikes have no observation on disk** — so **R4 is where this project
+  actually failed**, and it is now measurable. Two worth naming: W4's missing
+  control is the one its own page calls *"the one that matters"*; and S72's
+  `gate_green_before_and_after` has **no pre-run gate file in any commit** of that
+  directory, with `k4.sh` never invoking `quiet.sh`. All five pages gained a
+  changelog line, none edited above it (P3). **D6 compliance is not retroactively
+  achievable where the observation was never written down — only re-running is.**
+- **C5 FOUND: `provenance.py` E1 bugs 4 and 5** (that check is now at five bugs
+  across two cycles, all while its self-test passed). (4) It compared an
+  artifact's **mtime** against its dep tree's **commit time** — a file is always
+  written before it is committed, so every committed artifact inside its own dep
+  tree read as stale by the commit latency (Q1 by 43 s). `artifact_time()` now
+  keeps both sides on one clock. (5) `record` writes `provenance.json` INTO
+  `spike_dir`, so **its own output became the newest "source"** and raised the
+  floor above the artifacts it described. `.md` is now excluded from the floor —
+  **checked, not assumed convenient**: B1/W4/S72's later commits touched
+  `RESULT.md` alone, N1's touched `pfx.c`, and **N1 is still flagged**.
+  A29-adjacent: F2 itself only tested that `provenance.json` *existed*, which
+  scored three `ok:false` records as passing. Fixed to read the verdict.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
@@ -152,12 +176,13 @@ about. This is the honest state, not a regression.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: the **retro-fit D6 owes** — Q1, S72, N1, W4, B1 each cite "per D6"
-  with no `provenance.json` beside them (W1 is INVALID already, skip it). Either
-  record one or drop the citation. This is D6's own consequence 2 and the F2
-  falsifier currently reads 6/6 failing, i.e. the standard is decorative
-  everywhere it appears. Cheap, load-insensitive, and it stops the newest spec
-  from being the least honoured one.
+- **NEXT 1**: **re-run W4 and commit its per-shape table.** The retro-fit left it
+  at 3/4, and the missing control is the one W4's own page calls *"the one that
+  matters"* — it ties the instrumented binary to S52's 0.2/1.0/8.8%. `rk_inst.c`
+  is committed and the measurement is a **read count, not a timing**, so it is
+  load-insensitive and runnable while `quiet.sh` refuses. This is the only one of
+  the three PARTIAL spikes that can be closed without the device gate: N1 and S72
+  need timings under a gate that is refusing.
 - **NEXT 2**: **history binding for the epoch chain** — S73 proved the root
   commits to state and *not* to the path taken to it. A `(root, delta)` chain
   hashed together is what makes an epoch SEQUENCE evidence. Small, and it is the
