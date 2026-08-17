@@ -104,3 +104,14 @@ checked with `verify_non_membership`.
   diverges shallow is cheaper, and that is the operating point W2's `C_miss_depth`
   control already guards.
 - One corpus, no timings — valid while `quiet.sh` refuses.
+
+## Changelog — 2026-08-17, AGENT-1: same scope, added by S80
+
+This page concluded that S77's rule is "not membership-only" because absence
+tracks it. That holds and is unchanged — absence is a **point** query, and its
+divergence point is one position past where a membership path ends.
+
+S80 then measured the **range** case and the ordering differs there, so the rule
+is point-query-only after all: this page extends it from membership to absence,
+not from point queries to all queries. No number here moves.
+`spikes/S80_completeness_bytes/`.

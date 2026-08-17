@@ -1,15 +1,13 @@
 {
  "spike": "S80_completeness_bytes",
- "recorded_utc": "2026-08-17T11:28:40Z",
+ "recorded_utc": "2026-08-17T11:29:36Z",
  "note": "S80 separates the auth path from the answer set BEFORE measuring, because a single total would let the answer size decide a verdict about branching (A18). Counts and digests only, no timings.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes",
-   "head": "da2d3d3a533d76485f7e40c2a852c66ba765cca6",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S80_completeness_bytes/"
-   ],
+   "head": "795023b0e4945bfb04083240997519a846622135",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   }
@@ -26,9 +24,9 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes/completeness.json",
    "sha256": "a7b1a3708361ebcb3062e48d80d2072935c9504eaabdfce8633b56d5c764f697",
    "bytes": 6437,
-   "mtime": 1786966120,
-   "compared_ts": 1786966120,
-   "compared_clock": "mtime"
+   "mtime": 1786966176,
+   "compared_ts": 1786966176,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -170,14 +168,12 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes": {
-   "newest": 1786966043,
-   "from": "spikes/S80_completeness_bytes/"
+   "newest": 1786966176,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes at da2d3d3a: 1 modified. The build is NOT da2d3d3a."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if the completeness AUTH PATH orders the three key sets differently from membership, then \"proof size is set by branching\" is a claim about point queries only and S77/S79 overreached",
  "carried_from_previous_record": [
   "falsifier",

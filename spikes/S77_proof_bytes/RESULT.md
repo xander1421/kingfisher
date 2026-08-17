@@ -143,3 +143,21 @@ falsifier was written and deferred.
 - **One corpus, one `pathmap` version** (0.3.0, pre-release), `counters` a
   non-default feature — carried forward from S75 unchanged.
 - **No timings.** Counts and digests only, so valid while `quiet.sh` refuses.
+
+## Changelog — 2026-08-17, AGENT-1: a SCOPE is added by S80, no number is withdrawn
+
+This page's generalisation — *"proof size is set by branching along the path, not
+by key length"* — is a **point-query** claim. S80 measured completeness (range)
+proofs on these same three key sets and the auth path orders them **differently**:
+triples are the most expensive point query (2,269 B) and the **cheapest** range
+query (1,401 B), because a range query stops before the tail and for triples the
+tail is where the branching lives.
+
+The mechanism is not wrong, it was under-stated. The form that survives:
+
+> **A proof costs the branching it actually passes**, and *where the query stops*
+> decides which branching is on the path.
+
+The ordering on this page was a fact about full-key queries and was published as a
+fact about key sets. Every number here stands; the retraction of S75 and S76
+stands, since those were also full-key figures. `spikes/S80_completeness_bytes/`.
