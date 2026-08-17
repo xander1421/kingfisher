@@ -872,3 +872,27 @@ D6. Did NOT move any grade. The LEDGER's own grade note already says neither
 D7. Scope declared in the CLAIM as S77's headline only and honoured. S79/S80/S84
     are named unmeasured with their terms sized, rather than swept in — PARTIAL is
     not a verdict, so the scoped item was finished and the rest is a row.
+
+2026-08-17 ok-1 · H29 cycle · three decisions, each with what it costs.
+1. SPLIT rather than a PARTIAL verdict (§2). H29's title is "runs nowhere
+   automatic" and only H17 stands in the way of that, so H29 stays OPEN and goes
+   to BLOCKED.log; the suite work is H62, DONE; the launcher defect the falsifier
+   turned up is H61, OPEN and NOT fixed in the same cycle. Cost: three rows for
+   one cycle's work. Taken because posting `DONE H29` with the row still OPEN is
+   the CHANNEL/queue divergence H50 spent a cycle cataloguing.
+2. The absence assertions are KEPT, not replaced (§5: a control is not deleted to
+   make progress). They are racy and now belt-and-braces behind a synchronous
+   assertion in the same block. Cost: the suite counts checks that can be won by
+   being early, and `probe.out` says which two. The alternative — deleting them —
+   removes coverage of a defect that does not need the race to be caught.
+3. H61 is FILED, not fixed. It is a defect in `run_loop.sh`, the file every lane's
+   supervisor runs, and the fleet has 15 live launcher processes against it. A
+   second component in the same cycle is a second verdict, and the row has a fix
+   shape written down plus the check that already fails when it breaks. Cost: the
+   window stays open, closed only by a sleep, until someone takes H61.
+
+2026-08-17 AGENT-1 S22 — THE GATING CONTROL COMPARED COUNTS AND THAT WAS NOT ENOUGH. First version asserted M1.3b's published 31 raw / 1 canon / 1 alpha, which today's build reproduces exactly — while 31 of its 61 committed ROWS have different digests. A control that checks the SHAPE of a table cannot see a change in its CONTENT. Fixed by comparing the committed probe canon digest too, and the row-level comparison was made a Falsifier (firing is the finding, and a Falsifier does not gate ok — H25).
+
+2026-08-17 AGENT-1 S22 — THE BUILD DIFFERENCE IS REPORTED AS A CANDIDATE, NOT A CAUSE. `545deb3` matched cargo features, FEATURE_EQUIVALENCE measures a feature moving fuel_used, and the digest hashes `fuel=`, so the story is coherent. It is not established: the only artifact from the 08:47 run is a table of digests, and no digest can say what changed inside it. Naming a coherent cause as the cause is CLAUDE.md's second unmechanisable failure mode (correct numbers, wrong attribution), so it is written as a candidate with the three facts that bound it.
+
+2026-08-17 AGENT-1 S22 — IMPORT `devsweep.gate()` RATHER THAN WRITE A THIRD §10 GATE. Two already exist (devsweep, q3). A gate reimplemented per spike is how one of them ends up warning where the others refuse, and §10 says the gate must refuse. Cost of importing is that `devsweep` must stay import-safe; it has a `__main__` guard, checked before relying on it.

@@ -788,6 +788,30 @@ about. This is the honest state, not a regression.
   length 8, 9 and 10 are the same query. And a **fabricated self-criticism was
   struck before publishing** — a second "defect of my own" claiming the first run
   used `steps_bytes`, which it never did. DECISIONS 214–217.
+- **C31 DONE: S22 — process reuse is safe on the PHONE, which is the deployment
+  target M1.3b never ran on.** `spikes/S22_soak_device/`, `certify ok=true`, 4
+  controls, §10 gate imported from `devsweep.gate()` (refuses, not warns).
+  `SM-S938B` / `arm64-v8a` / `AC powered: true`, 39.3 → 43.6 °C.
+  **31 distinct raw / 1 canon / 1 alpha over 31 probe positions, identical to
+  the host; probe canon `f1865d68983bfe33`, the digest M1.3b committed at 08:47;
+  30 of 30 interleaved corpus programs identical across ISAs on canon AND raw.**
+  `soakrun` hashes `fuel=<N>\n<results>`, so that asserts **identical fuel
+  counts** too — the asset, now shown to survive a REUSED process across ISAs.
+  M1.3b's stated limit (*"host only. Not run on device"*) is closed for the
+  ground-result class; its aliasing boundary is untouched.
+  **A second falsifier FIRED: M1.3b's committed `soak.tsv` no longer reproduces
+  — 30 of 61 rows.** First divergence position 3,
+  `integration_tests__das__test.metta`, `38c175ea4e18e8da` → `0601ee88358e7610`;
+  everything after is raw-only drift, the counter shift that page is about. The
+  program is deterministic run-to-run today, the corpus file is unchanged since
+  Aug 16, and the three binaries are three builds (08:47 / 09:18 aarch64 /
+  14:13 x86_64), so the change is in the BUILD — candidate `545deb3` "matched
+  cargo features", **candidate and not cause, because a TSV of digests cannot
+  say what moved in it.**
+  **Own defect, caught before publishing**: the gating control compared M1.3b's
+  COUNTS (which reproduce) and not its rows (which do not) — a control that
+  checks the shape of a table passes over a change in its content.
+  DECISIONS 218–220.
 - **NEXT 1: the range-query crossover — verification against RE-EXECUTION for
   completeness proofs.** S85 settled it for membership (F\* ≈ 47–54 fuel steps);
   S20 shows verifier cost for a range query grows with the answer set while the

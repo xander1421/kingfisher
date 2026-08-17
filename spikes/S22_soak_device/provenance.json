@@ -1,0 +1,215 @@
+{
+ "spike": "S22_soak_device",
+ "recorded_utc": "2026-08-17T15:23:59Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse",
+   "head": "b496fd1679497b79bfa7b77744eeae9ce83551ad",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S22_soak_device/soak_device.json",
+   "sha256": "b920628c67e192cc5a3fddd0d07d7fba3b0cf135cdbf5e08960c1fad80ca1494",
+   "bytes": 1404,
+   "mtime": 1786980239,
+   "compared_ts": 1786980239,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S22_soak_device/device_soak.tsv",
+   "sha256": "dd5e003d787ff6e33b0d70c14281e868432bfe715ec038b5cae7f16520985d8e",
+   "bytes": 5155,
+   "mtime": 1786980239,
+   "compared_ts": 1786980239,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_host_reproduces_M1_3b",
+   "must_fire_because": "the host side of this run must reproduce M1.3b's published 31 raw / 1 canon / 1 alpha over 31 probe positions AND its committed probe canon digest, before any device number is compared against it",
+   "can_fail_because": "the host run gives a different number of probe positions, of distinct digests, or a different canon digest than M1.3b committed",
+   "null_must_contain": "a changed corpus, binary or probe would move the counts or the digest",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "published_counts": {
+     "raw": 31,
+     "canon": 1,
+     "alpha": 1,
+     "positions": 31
+    },
+    "now_counts": {
+     "raw": 31,
+     "canon": 1,
+     "alpha": 1,
+     "positions": 31
+    },
+    "committed_probe_canon": [
+     "f1865d68983bfe33"
+    ],
+    "host_probe_canon": [
+     "f1865d68983bfe33"
+    ]
+   }
+  },
+  {
+   "name": "C_raw_drifts_on_device",
+   "must_fire_because": "raw digests MUST differ across positions on the device, or the run is not exercising process reuse at all and a constant canon is a clean null from a probe that never reached its target (A29)",
+   "can_fail_because": "device raw distinct count is 1, i.e. no drift to canonicalise away",
+   "null_must_contain": "a device where the process-global variable counter did not advance would give raw == 1",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "device_raw_distinct": 31,
+    "device_positions": 31,
+    "host_raw_distinct": 31
+   }
+  },
+  {
+   "name": "C_device_identified",
+   "must_fire_because": "the numbers must be attributable to a named aarch64 device with a live battery service -- family B: a frozen override reports whatever it was told to",
+   "can_fail_because": "model or abi is empty, abi is not arm64, or the battery dump is a frozen override",
+   "null_must_contain": "an emulator, an empty getprop, or a battery service pinned by a test override",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "model": "SM-S938B",
+    "abi": "arm64-v8a",
+    "battery_instrument_ok": true,
+    "battery_instrument_detail": "not frozen",
+    "thermal_before_m": 39300,
+    "thermal_after_m": 42800
+   }
+  },
+  {
+   "name": "C_binary_provenance",
+   "must_fire_because": "A24: a digest pins WHICH artifact. Both binaries are hashed and the device binary must post-date the source it was built from -- the `fuelrun.v2.*` case that burned both lanes",
+   "can_fail_because": "the device binary predates its source, or the two binaries hash identically (which would mean one ISA never ran)",
+   "null_must_contain": "a device binary older than soakrun.rs, which is the stale-artifact case",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "host_sha256": "9d884386f7dcd2a8c85c0474763f20130963bce426671eebe3d9b9932ef8bc8c",
+    "device_sha256": "15c0817b17131044a88215dfdf86bb70ed9043540f3b057c170e0a3dbde1aced",
+    "source_sha256": "a4475ea9a7edcc1ea6e1f68fb2be618c3ea641cc6485ea50d2abfb0e1ff57b9b",
+    "device_binary_newer_than_source": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_reuse_not_safe_on_device",
+   "must_fire_because": null,
+   "can_fail_because": "the device shows more than one distinct canon digest across positions, OR the device probe canon digest differs from the host's",
+   "null_must_contain": "a device whose canon digests drift with position, or differ from the host's",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "device_canon_distinct": 1,
+    "probe_canon_host": [
+     "f1865d68983bfe33"
+    ],
+    "probe_canon_device": [
+     "f1865d68983bfe33"
+    ],
+    "corpus_canon_identical": 30,
+    "corpus_programs_compared": 30
+   },
+   "refutes": "M1.3b's conclusion transferring to the deployment target: if it fires, process reuse is not safe on the phone and WorkManager goes back to blocked",
+   "fires_when": "the device shows more than one distinct canon digest across positions, OR the device probe canon digest differs from the host's",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F_committed_rows_reproduce",
+   "must_fire_because": null,
+   "can_fail_because": "any row of the committed TSV differs from the same position measured today",
+   "null_must_contain": "a build whose per-row digests are unchanged since 08:47, which is what \"the corpus is deterministic\" is usually taken to mean",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rows_compared": 61,
+    "rows_identical": 30,
+    "first_divergence": {
+     "pos": "3",
+     "program": "integration_tests__das__test.metta",
+     "committed": [
+      "38c175ea4e18e8da",
+      "38c175ea4e18e8da",
+      "38c175ea4e18e8da"
+     ],
+     "device_today": [
+      "0601ee88358e7610",
+      "0601ee88358e7610",
+      "0601ee88358e7610"
+     ]
+    },
+    "committed_probe_canon": [
+     "f1865d68983bfe33"
+    ],
+    "probe_canon_today": [
+     "f1865d68983bfe33"
+    ]
+   },
+   "refutes": "M1.3b's committed soak.tsv as a REPRODUCIBLE artifact: if its rows do not reproduce, the digests in it are a record of one build, not of the corpus",
+   "fires_when": "any row of the committed TSV differs from the same position measured today",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F_committed_rows_reproduce"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse": {
+   "newest": 1786966693,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "device canon digests drifting with position, or differing from the host's, which would mean process reuse is unsafe on the deployment target",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

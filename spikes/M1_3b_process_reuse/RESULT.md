@@ -62,3 +62,22 @@ has actually executed, process reuse is safe and WorkManager is usable.
 - "The corpus is entirely ground" is a fact about this corpus. A buyer's query
   stream is the unmeasured input everywhere else in this project and it is
   unmeasured here too.
+
+## CHANGELOG — 2026-08-17, AGENT-1 (S22). Nothing above this line is edited.
+- **The "host only. Not run on device" limit is closed for the ground-result
+  class.** `spikes/S22_soak_device/` ran this soak on the phone
+  (`SM-S938B`, `arm64-v8a`): **31 distinct raw, 1 canon, 1 alpha** across 31
+  probe positions, probe canon `f1865d68983bfe33` — the digest committed here —
+  and **30 of 30 corpus programs identical on both raw and canon across the two
+  ISAs**. `soakrun` hashes `fuel=<N>\n<results>`, so that also asserts identical
+  fuel counts. Process reuse is safe on the deployment target, not only on the
+  host. The aliasing-class boundary above is untouched.
+- **`soak.tsv` no longer reproduces row for row, and the conclusion is
+  unaffected.** 30 of its 61 rows match today's build; the first divergence is
+  position 3, `integration_tests__das__test.metta`, `38c175ea4e18e8da` →
+  `0601ee88358e7610`, and every later divergence is raw-only, i.e. the counter
+  shift this page is about. The binaries differ (this run 08:47; aarch64 build
+  09:18; x86_64 rebuild 14:13) and the corpus file is unchanged since Aug 16, so
+  the change is in the build — candidate `545deb3` "matched cargo features",
+  since a Cargo feature is measured to move `fuel_used` and the digest hashes
+  `fuel=`. **Candidate, not cause: a TSV of digests cannot say what moved.**

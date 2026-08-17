@@ -1,0 +1,64 @@
+{
+  "binaries": {
+    "device_binary_newer_than_source": true,
+    "device_sha256": "15c0817b17131044a88215dfdf86bb70ed9043540f3b057c170e0a3dbde1aced",
+    "host_sha256": "9d884386f7dcd2a8c85c0474763f20130963bce426671eebe3d9b9932ef8bc8c",
+    "source_sha256": "a4475ea9a7edcc1ea6e1f68fb2be618c3ea641cc6485ea50d2abfb0e1ff57b9b"
+  },
+  "committed_rows": {
+    "compared": 61,
+    "first_divergence": {
+      "committed": [
+        "38c175ea4e18e8da",
+        "38c175ea4e18e8da",
+        "38c175ea4e18e8da"
+      ],
+      "device_today": [
+        "0601ee88358e7610",
+        "0601ee88358e7610",
+        "0601ee88358e7610"
+      ],
+      "pos": "3",
+      "program": "integration_tests__das__test.metta"
+    },
+    "identical": 30
+  },
+  "corpus_cross_isa": {
+    "canon_disagreements": [],
+    "canon_identical": 30,
+    "programs_compared": 30,
+    "raw_identical": 30
+  },
+  "device": {
+    "abi": "arm64-v8a",
+    "model": "SM-S938B",
+    "thermal_after_m": 42800,
+    "thermal_before_m": 39300
+  },
+  "distinct": {
+    "device": {
+      "alpha": 1,
+      "canon": 1,
+      "raw": 31
+    },
+    "host": {
+      "alpha": 1,
+      "canon": 1,
+      "raw": 31
+    }
+  },
+  "falsifier_fired": false,
+  "positions_requested": 30,
+  "probe_canon": {
+    "device": [
+      "f1865d68983bfe33"
+    ],
+    "host": [
+      "f1865d68983bfe33"
+    ]
+  },
+  "probe_positions": {
+    "device": 31,
+    "host": 31
+  }
+}
