@@ -77,7 +77,14 @@ distinct: FAIL (code broken), DECLINED (a safety gate refused -- the gate
 working), PRECONDITION (driver intact, environment moved, e.g. the phone on a
 VPN off the host subnet). 3 of 13 annotations named a document or a prebuilt
 binary and could re-derive nothing; all repointed, `reprocheck` now refuses
-them. **28 of 43 A-grade claims still name no reproducer.**
+them. **27 of 44 A-grade claims name no reproducer -- but they are UNNAMED, not
+unreproducible** (`M1_11_repro_audit/unannotated.json`): 13 already have a
+`.py`/`.sh` in their own spike, 6 have a compiled binary plus source, 7 name no
+spike in the row at all, 2 are genuinely bare. **Six of those binaries are
+Android-only** (`Exec format error` on host) and reproduce only over adb, so a
+host-only sweep never reaches them. `S34_packed_popcount/s34_check.py` is the
+conversion pattern: run both machines, assert one hash, and keep a
+second-buffer hash as the discriminator control.
 Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
 (no attestation root) and `manifest` (all binaries from one Cargo.toml, which
 FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
