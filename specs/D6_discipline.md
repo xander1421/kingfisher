@@ -100,7 +100,7 @@ exercises one of two mechanisms cannot detect the other one being broken.**
 | | falsifier | status |
 |---|---|---|
 | **F1** | Ship a spike whose controls cannot fail but whose `null_must_contain` strings are plausible. `record` must return `ok=false`. | **KNOWN-FAILING** (H1). It returns `ok=true`. W1 is the historical instance. Human review is the only defence. |
-| **F2** | Any `RESULT.md` citing D6 with no `provenance.json` beside it means the citation is decorative. | **FAILING, 6/6 today.** Runnable: `grep -rl '\bD6\b' --include=RESULT.md spikes/` then test for the sibling file. |
+| **F2** | Any `RESULT.md` citing D6 with no `provenance.json` beside it means the citation is decorative — **and** any spike with a provenance record that never cites D6 means the standard is met without being claimed. | **FAILING, 6/6** on the first direction. On the second, **6 spikes comply silently** (`W2_witnessed_trie`, `S73_epoch_commitment`, `M1_1_android`, `M1_8_quorum3`, `M2_1_fleet`, `G25_carrying_capacity`). Runnable: `spikes/W2_witnessed_trie/attack.py`, attack A5. |
 | **F3** | Patch a dep source without committing; re-record without rebuilding. E1 must fire. | **PASSES** since 2026-08-17. Asserted in `provenance.demo()`. Would have failed every prior day of this project. |
 | **F4** | Record with `deps=()` and a stale artifact. The configuration must be refused. | **PASSES** via E7 — it refuses the *configuration*, which is not the same as detecting the staleness. Weaker than F3. |
 | **F5** | Put a number in a `RESULT.md` that appears in no artefact. It must be caught. | **KNOWN-FAILING** (H5). Not enforced anywhere. |
@@ -120,3 +120,17 @@ tested; it has been written to pass.**
    decides whether a number is admissible as evidence at all.
 4. **This spec is self-applying.** Its own F2 measurement is a `grep` anyone can
    re-run, which is the minimum standard it imposes on everything else.
+
+## Changelog
+- **2026-08-17, ATTACK cycle 4 (AGENT-1).** F2 was **one-directional** as first
+  written: it counted citation without compliance and was blind to compliance
+  without citation, so it scored the two spikes that actually honour this spec as
+  neither pass nor fail. Restated in both directions and the second population
+  measured (6 spikes comply silently). No other clause changed. Per P3 this
+  document keeps its path and gains this line rather than being edited silently.
+- **2026-08-17, same cycle.** E8's enforcement moved from a `record()` problem to a
+  hard `ValueError` in `Control.__init__` by another lane, and the field is now
+  `can_fail_because` — a control must state what observation would have made it
+  *not* fire. E-table wording still says `null_must_contain`; both are required
+  and both are refused when absent. H1 is unchanged and still the load-bearing
+  hole: absence is catchable, vacuity is not.

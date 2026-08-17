@@ -1,0 +1,35 @@
+{
+ "seed": 20260817,
+ "findings": [
+  {
+   "id": "A2-independent-build",
+   "verdict": "SURVIVES",
+   "text": "7/7 key sets agree, across fixed-length triple keys (4 shards) and variable-length atom keys (3 sizes, 1246 atoms). Insertion-order construction and sorted-divide construction reach the same root, so the lcp logic in `build` is not carrying a bug that the verifier would mirror."
+  },
+  {
+   "id": "A3-omission-shapes",
+   "verdict": "SURVIVES",
+   "text": "all 5 untested cheat shapes rejected on a 253-row answer: drop-middle, swap-for-another-real-key, claim-empty, claim-empty-as-a-miss, duplicate-row. W2 only tested drop-last; the gap was in its CONTROL SET, not in the verifier."
+  },
+  {
+   "id": "A4-unreachable-cases",
+   "verdict": "SURVIVES",
+   "text": "forced with prefix-nested synthetic keys, case hits {2: 1, 3: 2, 1: 4}, every computed root matches a full rebuild. The two branches S73 could not exercise are correct; that was luck, not evidence, until now."
+  },
+  {
+   "id": "A1-encoding-ceiling",
+   "verdict": "SURVIVES",
+   "text": "2-byte length fields cap symbols and arity at 65,535. Corpus maxima: symbol 365 B, arity 10, longest atom encoding 1155 B -- headroom 179x. Overflow RAISES rather than truncating (encode True, node_hash True), so it is a liveness limit, never a silent collision. A single 64 KB string literal in a corpus would abort a commit."
+  },
+  {
+   "id": "A5-D6-F2-remeasured",
+   "verdict": "HONEST-DEBT",
+   "text": "6 RESULT.md cite D6, 0 have a provenance.json -- still failing 6/6. Debt: ['B1_bundling_real', 'N1_prefilter_cost', 'Q1_quorum_sim', 'S72_c3_cpuset', 'W1_witnessed_reexec', 'W4_prefilter_readset']. My own two spikes this session are in the OTHER population: ['G25_carrying_capacity', 'M1_1_android', 'M1_8_quorum3', 'M2_1_fleet', 'S73_epoch_commitment', 'W2_witnessed_trie'] carry a provenance record and never mention D6, so F2 as written scores neither of them. F2 counts citation without compliance and is blind to compliance without citation; the falsifier needs both directions."
+  },
+  {
+   "id": "A6-provenance-floor",
+   "verdict": "SURVIVES",
+   "text": "a dep subdir with no commits of its own and an UNTRACKED source still raises the floor (ts=1786960586, from='dep/'), and a year-2020 artifact is caught."
+  }
+ ]
+}

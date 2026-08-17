@@ -155,7 +155,14 @@ def walk(root, q):
             return MISS_PREFIX, steps, node, {'at': i, 'depth': depth}
         i += take
         if i == len(q):
-            return COVER, steps, node, {'depth': depth}
+            # `matched` is load-bearing: q can be exhausted INSIDE this node's
+            # compressed prefix, and `node.term` describes a key ending at the
+            # prefix's END, not wherever q stopped. Conflating the two made
+            # prove_non_membership report b'ab' as PRESENT in a trie holding only
+            # b'abc'. Unreachable for W2 (fixed-length keys) and S73 (prefix-free
+            # encoding), but it was wrong, and the ATTACK cycle 4 A4 probe found
+            # it only because it could not reach the case it was aiming at.
+            return COVER, steps, node, {'depth': depth, 'matched': take}
         b = q[i]
         if b not in node.children:
             return MISS_BYTE, steps, node, {'byte': b, 'depth': depth}
@@ -208,7 +215,7 @@ def desc_bytes(d):
 # --------------------------------------------------------------------- proofs
 def prove_membership(root, k):
     kind, steps, node, _x = walk(root, k)
-    if kind != COVER or not node.term:
+    if kind != COVER or not node.term or _x.get('matched') != len(node.prefix):
         return None
     return {'steps': steps, 'leaf': desc(node)}
 
@@ -236,7 +243,7 @@ def verify_membership(root_hash, k, pf):
 
 def prove_non_membership(root, k):
     kind, steps, node, x = walk(root, k)
-    if kind == COVER and node.term:
+    if kind == COVER and node.term and x.get('matched') == len(node.prefix):
         return None                       # key IS present; no honest proof exists
     return {'steps': steps, 'node': desc(node), 'kind': kind, 'extra': x}
 
@@ -264,7 +271,10 @@ def verify_non_membership(root_hash, k, pf):
         return True                       # diverges inside the compressed prefix
     i += take
     if i == len(k):
-        return not term                   # key ends here and there is no terminal
+        # present only if the key consumed the WHOLE compressed prefix and a key
+        # ends at this node. `take < len(prefix)` means k stops mid-prefix, so k
+        # is absent however `term` reads.
+        return not (take == len(prefix) and term)
     return k[i] not in have               # no branch for the next byte
 
 
@@ -613,6 +623,24 @@ def main():
     return out
 
 
+# The observation that would have made each control NOT fire, written against
+# the values in `observed` so a third party can recheck it. `harness/provenance.py`
+# refuses a control without one (A15); D6 H1 states the limit -- it catches an
+# ABSENT statement, never a vacuous one.
+CAN_FAIL = {
+    'C_honest': 'membership_ok or completeness_ok reads 0',
+    'C_omit': 'verify_completeness returns True on the short answer',
+    'C_add': 'verify_completeness returns True on the padded answer',
+    'C_tamper': 'verify_completeness returns True after the one-bit flip',
+    'C_forged_nonmembership': 'forgery_rejected reads 0, or the prover emits an '
+                              'honest absence proof for a present key',
+    'C_wrong_root': 'the honest proof verifies under the foreign root',
+    'C_child_order': 'the sorted and reversed digests are equal',
+    'C_replay': "key A's membership proof verifies for key B",
+    'C_miss_depth': 'deep_steps <= shallow_steps',
+}
+
+
 def provenance(here, out):
     """Persist the controls' OBSERVATIONS, not just their verdicts (harness rule
     A20: a control reported in prose cannot be rechecked)."""
@@ -624,7 +652,8 @@ def provenance(here, out):
     cs = []
     for name, c in out['controls'].items():
         ctl = P.Control(name, c['fails_if'],
-                        null_must_contain='the cheat this control injects')
+                        null_must_contain='the cheat this control injects',
+                        can_fail_because=CAN_FAIL[name])
         ctl.observe(c['fires'], c['observed'])
         cs.append(ctl)
     # deps MUST name the corpus tree. `deps=()` silently disables BOTH the

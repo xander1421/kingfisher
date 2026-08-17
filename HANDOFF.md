@@ -271,3 +271,9 @@ range, and the real figure is 6× larger.) ·
 `provenance.py` stored `null_must_contain` for the whole project without ever
 checking it, and `deps=()` silently disabled the entire staleness path. Same
 class as A26's hand-picked constant: it looks like a mechanism from the outside.)
+ ·
+**A29 (a probe that cannot show it reached its target has produced no evidence** —
+ATTACK cycle 4's A4 probe aimed at two unreachable branches, was blocked from
+reaching them *by the very bug it was hunting*, and reported SURVIVES on a clean
+null. "No FATAL" from a probe that missed is not a pass. Reaching the target is a
+precondition of the verdict, not a detail of it.)

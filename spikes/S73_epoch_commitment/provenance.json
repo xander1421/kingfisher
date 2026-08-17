@@ -1,23 +1,47 @@
 {
  "spike": "S73_epoch_commitment",
- "recorded_utc": "2026-08-17T09:49:10Z",
+ "recorded_utc": "2026-08-17T09:56:41Z",
  "note": "S73 canonical space state at an epoch boundary; fold-forward delta proofs, XOR null shown forgeable",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/../S57_hyperon_corpus",
-   "head": "e990f11c696e85382e64403f33cadff2d95cad7d",
+   "head": "261f0f670bfd41316fe3a8688ca6b7169122aad0",
    "clean": false,
    "dirty_files": [
-    "loop_blocks.unknown",
+    "claude/hooks/loop_gate.sh",
+    ".loop_blocks.unknown",
+    ".loop_exit.unknown",
+    ".loop_signal.last",
+    "CHANNEL.md",
+    "CLAUDE.md",
+    "DECISIONS.log",
+    "MISSION_LOOP.md",
+    "WORK_QUEUE.md",
+    "run_loop.sh",
+    "spikes/G24_population/RUN.txt",
+    "spikes/G24_population/evo.py",
     "spikes/G26_budget/RUN.txt",
-    "spikes/S73_epoch_commitment/epoch.json",
-    "spikes/S73_epoch_commitment/epoch.py",
+    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MainActivity.java",
+    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MettaWorker.java",
+    "spikes/M1_1_android/app/src/main/java/net/kingfisher/Transport.java",
+    "spikes/M1_7_transport/result_app.json",
+    "spikes/M1_7_transport/run_app.py",
+    "spikes/M1_8_quorum3/worker_app.py",
     "spikes/S73_epoch_commitment/provenance.json",
-    "spikes/harness/units.py",
-    "spikes/G26_budget/runs/sel_r15_o160.json"
+    "spikes/W2_witnessed_trie/trie_witness.py",
+    "spikes/harness/test_loop_gate.sh",
+    "STOP",
+    "prompts/",
+    "spikes/G24_population/RUN_v2.txt",
+    "spikes/G24_population/evo_v2.json",
+    "spikes/G26_budget/runs/sel_r30_o40.json",
+    "spikes/G26_budget/runs/sel_r45_o160.json",
+    "spikes/G26_budget/runs/sel_r45_o40.json",
+    "spikes/W2_witnessed_trie/attack.json",
+    "spikes/W2_witnessed_trie/attack.py"
    ],
-   "diff_sha256": "8721d938400e1ec10a62ba13356071c31418377c4582072c25fab7615277b1a7",
-   "diff_bytes": 36264
+   "diff_sha256": "50f71577a340ac1730a02a4865e93dc95da3a454618cd0bea1e51afd4b9abcfb",
+   "diff_bytes": 62259
   }
  ],
  "manifests": {
@@ -38,7 +62,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/epoch.json",
    "sha256": "96cd720f34700e02504d6754a6729b746e31edd65d936cd07a334a5f48cea80c",
    "bytes": 27907,
-   "mtime": 1786960150
+   "mtime": 1786960601
   }
  ],
  "missing_artifacts": [],

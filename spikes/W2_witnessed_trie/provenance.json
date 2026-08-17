@@ -1,19 +1,47 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T09:37:19Z",
+ "recorded_utc": "2026-08-17T09:57:00Z",
  "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "068cd2e62aec7327e5b04f233971e90ddd4505e0",
+   "head": "261f0f670bfd41316fe3a8688ca6b7169122aad0",
    "clean": false,
    "dirty_files": [
-    "pikes/G25_carrying_capacity/RUN.txt",
-    "spikes/harness/provenance.py",
-    "spikes/G25_carrying_capacity/runs/wage1200_s31337.json"
+    "claude/hooks/loop_gate.sh",
+    ".loop_blocks.unknown",
+    ".loop_exit.unknown",
+    ".loop_signal.last",
+    "CHANNEL.md",
+    "CLAUDE.md",
+    "DECISIONS.log",
+    "MISSION_LOOP.md",
+    "WORK_QUEUE.md",
+    "run_loop.sh",
+    "spikes/G24_population/RUN.txt",
+    "spikes/G24_population/evo.py",
+    "spikes/G26_budget/RUN.txt",
+    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MainActivity.java",
+    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MettaWorker.java",
+    "spikes/M1_1_android/app/src/main/java/net/kingfisher/Transport.java",
+    "spikes/M1_7_transport/result_app.json",
+    "spikes/M1_7_transport/run_app.py",
+    "spikes/M1_8_quorum3/worker_app.py",
+    "spikes/S73_epoch_commitment/provenance.json",
+    "spikes/W2_witnessed_trie/trie_witness.py",
+    "spikes/harness/test_loop_gate.sh",
+    "STOP",
+    "prompts/",
+    "spikes/G24_population/RUN_v2.txt",
+    "spikes/G24_population/evo_v2.json",
+    "spikes/G26_budget/runs/sel_r30_o40.json",
+    "spikes/G26_budget/runs/sel_r45_o160.json",
+    "spikes/G26_budget/runs/sel_r45_o40.json",
+    "spikes/W2_witnessed_trie/attack.json",
+    "spikes/W2_witnessed_trie/attack.py"
    ],
-   "diff_sha256": "c84dfc25d4d6f241790ad6530c7e00c6d05f198f2502e0129118ae7ad74d65bb",
-   "diff_bytes": 6033
+   "diff_sha256": "6e1134216c5d7009b6d842796710278c57e4e20d1be225d1cc71c01238bc8557",
+   "diff_bytes": 65154
   }
  ],
  "manifests": {
@@ -26,15 +54,15 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
-   "sha256": "c403f70c0514eed655833553eb5d49054c84feda71d9bcb762d40b4c9fb600a1",
-   "bytes": 30479,
-   "mtime": 1786959209
+   "sha256": "2c466651822db8a311dd3fdf0b35072fa5e5c60031a5286a62f6c8a9b161bc61",
+   "bytes": 32341,
+   "mtime": 1786960618
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
    "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
    "bytes": 5102,
-   "mtime": 1786959439
+   "mtime": 1786960620
   }
  ],
  "missing_artifacts": [],
@@ -56,9 +84,11 @@
   {
    "name": "C_honest",
    "must_fire_because": "any honest proof verifies False -- then all rejections below are vacuous",
+   "can_fail_because": "membership_ok or completeness_ok reads 0",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "membership_ok": 1,
     "completeness_ok": 1
@@ -67,9 +97,11 @@
   {
    "name": "C_omit",
    "must_fire_because": "a short answer verifies -- omission would be undetectable and completeness would be theatre",
+   "can_fail_because": "verify_completeness returns True on the short answer",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "honest_rows": 253,
     "cheat_rows": 252
@@ -78,9 +110,11 @@
   {
    "name": "C_add",
    "must_fire_because": "a fabricated row inside the proven prefix verifies",
+   "can_fail_because": "verify_completeness returns True on the padded answer",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "honest_rows": 253,
     "cheat_rows": 254
@@ -89,9 +123,11 @@
   {
    "name": "C_tamper",
    "must_fire_because": "a one-byte-tampered answer verifies",
+   "can_fail_because": "verify_completeness returns True after the one-bit flip",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "flipped_bit": 1,
     "rows": 253
@@ -100,9 +136,11 @@
   {
    "name": "C_forged_nonmembership",
    "must_fire_because": "a doctored divergence node verifies as absence -- a worker could then deny any row it did not want to return",
+   "can_fail_because": "forgery_rejected reads 0, or the prover emits an honest absence proof for a present key",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "prover_refused_honest_proof": 1,
     "forgery_rejected": 1
@@ -111,9 +149,11 @@
   {
    "name": "C_wrong_root",
    "must_fire_because": "an honest proof verifies under a foreign root",
+   "can_fail_because": "the honest proof verifies under the foreign root",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "root": "571a8eb14ab70411",
     "other": "ac20e58e7be9dab6"
@@ -122,9 +162,11 @@
   {
    "name": "C_child_order",
    "must_fire_because": "reversed child order gives the same digest -- the sort would be decorative and two tries could share a root",
+   "can_fail_because": "the sorted and reversed digests are equal",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "children": 3,
     "sorted": "571a8eb14ab70411",
@@ -134,9 +176,11 @@
   {
    "name": "C_replay",
    "must_fire_because": "key A's proof verifies for key B -- proofs would not bind the key they answer",
+   "can_fail_because": "key A's membership proof verifies for key B",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "a": "0000000000000044000017d3",
     "b": "000000000000005c0000169d"
@@ -145,9 +189,11 @@
   {
    "name": "C_miss_depth",
    "must_fire_because": "the deep arm does not authenticate a longer path than the random arm -- then \"hard miss\" is a label, not a case",
+   "can_fail_because": "deep_steps <= shallow_steps",
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "shallow_steps": 0.015,
     "deep_steps": 2.985,
