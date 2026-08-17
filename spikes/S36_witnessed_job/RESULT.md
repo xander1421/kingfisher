@@ -37,6 +37,29 @@ of the honest answer has not lied, and testing that would prove nothing.
 | one liar, honest peer | **37/37 caught** | **37/37 caught** |
 | **two non-independent liars** | **0/37 caught** | **37/37 caught** |
 
+**This table is TRUE FOR ONE CHEAT SHAPE and reads as though it were true for
+omission.** Corrected in place, `ATTACK.md`, one cycle later — the liar column
+has a second row and the committed verifier loses it:
+
+| cheat shape | committed verifier | replication, honest peer | replication, two non-independent liars |
+|---|---|---|---|
+| rewritten key list (omit / add / alter) | rejects **37/37** | catches 37/37 | catches **0/37** |
+| **deeper-prefix replay**, nothing forged | **ACCEPTS 37/37** | catches 37/37 | catches **0/37** |
+| deeper-prefix replay, **q-bound verifier** | rejects **37/37** | — | — |
+
+**So this spike's own falsifier fires on the committed verifier** — replication
+with an honest peer catches the replay 37/37 and the single verifier catches
+0/37, which is precisely *"a cheat that a 2-of-2 replication check would catch"*.
+The `falsifier did NOT fire` line at the top of this page was true only over the
+cheat catalogue this run happened to test, and it is left standing rather than
+edited so the correction is legible.
+
+The conclusion is **repaired, not withdrawn**: world 3 is real and the witnessed
+route does reach the case replication cannot — but only with a verifier that
+binds the answer to the query, which the committed one does not. The eight-line
+fix, and both sides of its measurement, are in `ATTACK.md`; the upstream lift is
+**S37**.
+
 **World 3 is the whole argument for witnessing.** Two workers running the same
 wrong computation agree with each other, so byte compare reads consensus; the
 single verifier holding the root rejects every one. This is not hypothetical for
@@ -46,6 +69,14 @@ blind spot from the other side (a wrong replica is caught **0/64**).
 
 All three tamper classes are rejected by the single verifier: **omit 37/37,
 add 37/37, alter 37/37**. One class alone could be an accident of encoding.
+
+> **CORRECTED one cycle later by `ATTACK.md`, and the sentence above is the
+> defect.** Three classes is not a class list: `make_env` builds all three by
+> rewriting `pf['keys']` and keeping the honest authentication path, so they are
+> **one attack shape counted three times**. A fourth shape — ship a complete,
+> unforged proof for a *deeper prefix* — is **accepted 37/37 by the committed
+> verifier**, omitting **96.7%** of the answers (3,854 true, 127 delivered; worst
+> job 394 → 12). See the corrected table below.
 
 ## Cost, cited and not recomputed
 

@@ -161,11 +161,23 @@ def attack_a3():
                 f'verify_completeness ACCEPTED these cheats: {accepted} (rows in '
                 f'honest answer: {len(good["keys"])})')
     else:
+        # NARROWED 2026-08-17 by spikes/S36_witnessed_job/ATTACK.md, and the old
+        # wording is the reason it needed narrowing. All 5 shapes below are
+        # `dict(good)` with `keys` rewritten and the HONEST authentication path
+        # kept -- five shapes, one shape. The shape none of them reaches is a
+        # DIFFERENT honest proof: verify_completeness re-walks the query against
+        # the proven descriptions in its non-COVER branch and not in its COVER
+        # branch, so a complete unforged proof for a deeper prefix is accepted as
+        # the answer to a shallower query -- measured 37/37, 96.7% of answers
+        # omitted. The verdict is kept SURVIVES for what it tested and now says
+        # what that is; the fix is S37.
         finding('A3-omission-shapes', 'SURVIVES',
-                f'all 5 untested cheat shapes rejected on a {len(good["keys"])}-row '
+                f'all 5 key-list rewrites rejected on a {len(good["keys"])}-row '
                 f'answer: drop-middle, swap-for-another-real-key, claim-empty, '
                 f'claim-empty-as-a-miss, duplicate-row. W2 only tested drop-last; '
-                f'the gap was in its CONTROL SET, not in the verifier.')
+                f'the gap was in its CONTROL SET, not in the verifier. SCOPE: all '
+                f'5 keep the honest path, so this is ONE shape. A proof issued '
+                f'for a DEEPER PREFIX is accepted -- S36 ATTACK, fix in S37.')
 
 
 # ===================================================================== A4

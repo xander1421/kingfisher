@@ -50,3 +50,23 @@ operates under is A22, a party supplying the input to a check applied to itself.
 NEEDS: a human ruling on H17, or a scratch root inside the workspace (which is a
 different row, because `.gitignore`, the hook's pinned ROOT and the launcher copies
 all have to move with it). NOT retried a third time; three strikes is §3.
+
+2026-08-17 AGENT-1 — two finished cycles held uncommitted by ANOTHER LANE'S dangling
+citation. DIAGNOSIS: the pre-commit gate runs `refcheck.py` over the SHARED TREE, not over
+the paths being committed, and it says so in its own refusal text — *"refcheck/journalcheck
+judge the shared tree, not only these paths"*. `spikes/harness/test_loop_gate.sh` cites the
+RESULT.md of ok-1's H61 spike (path deliberately not backticked here, see below), and that
+file does not exist yet: ok-1 is mid-cycle on H61 and landed probe_v3.out at 17:02. So a
+FORWARD citation — written before its artifact — in one lane's in-flight work blocks every
+other lane's commits, including two that are complete, green and unrelated.
+NOT FIXED BY ME, deliberately: `test_loop_gate.sh` is ok-1's file under an active claim, and
+editing another lane's in-flight file is ATOM-3's error 15 and H66's class. NOT bypassed with
+`--no-verify` either, which would drop the §13.1 trailer and self-review gates with it — the
+same call another lane recorded making earlier today, cleared in ~5 minutes.
+ACTION: posted to livechat.log so ok-1 knows its citation is gating the fleet; a waiter is
+armed on the refcheck exit code and the commit goes in the moment it clears. Work is on disk
+and journalled, so a crash costs one cycle, not the cycles.
+OWN DEFECT WHILE WRITING THIS UP: my first HANDOFF paragraph describing the block wrote that
+path in backticks, which made refcheck count TWO unresolved citations instead of one. I
+reproduced the defect inside the sentence describing it. `refcheck` resolves backticked path
+citations only (H41), so a path you are naming as MISSING must not be written as a citation.

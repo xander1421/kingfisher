@@ -921,6 +921,13 @@ about. This is the honest state, not a regression.
   covers all three proof kinds. S20's page gained a changelog; its
   *"implementation-shaped"* scope note is marked REFUTED by S27.
   DECISIONS 232–234.
+> **SUPERSEDED IN POSITION 2026-08-17 by Span 4's NEXT list below — §12.5, and
+> this file has carried two live NEXT lists before (H5).** Both items here are
+> still OPEN and neither is recorded DONE anywhere; Span 4's NEXT 1 and NEXT 2
+> are ahead of them, and `journalcheck.py` flags NEXT 1 as a SUSPECT only because
+> it shares the string `M1` with DONE M1 rows, which is the heuristic working as
+> documented rather than a contradiction.
+
 - **NEXT 1: M1.13 — `adjudicate()` must name the defendant.** S26 measured the
   attribution is a set difference over what `result.json` already records
   (200/200). Blocked only on another lane's uncommitted `q3.py` edit landing;
@@ -931,6 +938,75 @@ about. This is the honest state, not a regression.
   absence fold a path and rebuild nothing, so their floor is a different
   quantity and S27 does not extend to them by inspection — the same trap S79 and
   S80 named on the prover side.
+
+### Span 4 — resumed 16:5x after an 86-minute session-limit outage (18 backoffs in `loop_AGENT-1.log`)
+
+**The span died between EXECUTE and RECORD, and that is the shape to look for
+first after any outage.** `spikes/S36_witnessed_job/` existed on disk, ran green,
+and was **entirely untracked** — no CHANNEL `DONE`, no `WORK_QUEUE` row, no
+commit. §13: an uncommitted result is indistinguishable from one that was never
+run. Recovered by reading `CHANNEL.md`'s last `CLAIM` for this lane, which said
+`S29` — an id I had mistyped, and which the spike itself had already corrected to
+`S36`. **After an outage, reconcile the last CLAIM against the filesystem before
+selecting anything new; the work may already be done and only the record missing.**
+
+- **DONE — S36 recorded** (`164ea59`). M1-DEMO §8 item 6, witnessed verification
+  driven as a JOB. 37 jobs: honest pair both routes accept; one liar with an
+  honest peer both catch; **two non-independent liars — replication 0/37, single
+  witnessed verifier 37/37**.
+- **DONE — S36-ATTACK, on my own work committed one cycle earlier.** `certify
+  ok=true` into `provenance.attack.json`, 5 controls fire, **falsifier FIRED**.
+  **CLASS: a verifier that authenticates its answer against the COMMITMENT and
+  never binds it to the QUERY.** `verify_completeness` re-walks the query against
+  the proven descriptions in its non-COVER branch and not in its COVER branch;
+  both siblings do it unconditionally. The committed verifier **ACCEPTS 37/37**
+  deeper-prefix replays — **96.7% of answers omitted, worst job 394 claimed as
+  12** — and the liar **forges nothing**. S36's own falsifier fires on it.
+  Repaired by an 8-line q-binding fix: honest 37/37 accept, replay 37/37 reject,
+  omit/add/alter 37/37 reject. **No published cost number moves** — all nine
+  importers measure honest proofs.
+- **The transferable lesson, and it is not about tries.** S36 tested three cheat
+  classes, W2's older attack tested five, and **all eight are one shape**:
+  rewrite the answer list, keep the honest path. Both pages read as breadth.
+  **If a control set was built by mutating one artifact, count the SHAPES.**
+- **My own defect this span, caught by a control.**
+  `C_sibling_verifiers_are_not_exposed` refused the first attack run at
+  `absence_replayed 20/20` and it was **not** a second finding — both absent keys
+  flipped the FIRST byte, so both diverged at the root and one honest proof
+  covered them correctly (A29). `certify` refusing was the difference between a
+  finding and a fabricated one, in the file whose whole subject is a check that
+  was never reached.
+
+**NEXT 1: S37 — lift `verify_completeness_qbound` into
+`spikes/W2_witnessed_trie/trie_witness.py` as v2 with a §12.7 rationale block.**
+Body is written and measured on both sides in `spikes/S36_witnessed_job/attack.py`.
+**Blocked only on that file being clean**: it carries 145 uncommitted lines from
+another lane. Check `git status --porcelain spikes/W2_witnessed_trie/trie_witness.py`
+first and do not commit it while dirty (H19, H66). S21's class is why this is a
+row and not a footnote: a fix that corrects the instrument and leaves every
+consumer on the broken one.
+
+**NEXT 2: H71 — write the safe recipe into §13 and gate it in `githygiene.py`.**
+`git commit --only` **refuses an untracked path**, and every cycle here creates a
+new spike directory, so §13's only stated commit form cannot express the
+operation every cycle performs. Reproduced twice. Workaround in use:
+`git add -N <your paths only>` then `git commit --only <same paths>` — chosen for
+blast radius, because an intent-to-add entry has no content, so a co-lane's bare
+commit landing in the window captures an empty file rather than a whole spike
+under the wrong `Atom:`.
+
+**Standing, and it cost this span a commit:** the pre-commit gate runs
+`refcheck.py` over the **shared tree**, so another lane's dangling citation
+blocks your commit. On 2026-08-17 `spikes/harness/test_loop_gate.sh` cited the
+RESULT.md of ok-1's H61 spike while ok-1 was mid-cycle on it. **Hold and retry;
+do not reach for `--no-verify`**, which drops the trailer and self-review gates
+with it.
+
+*(The path in that sentence is deliberately NOT backticked. Written with
+backticks, it made `refcheck.py` count TWO unresolved citations instead of one —
+I reproduced the defect inside the paragraph describing it. `refcheck` resolves
+backticked path citations only (H41), so a path you are naming as *missing* must
+not be written as a citation.)*
 
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)

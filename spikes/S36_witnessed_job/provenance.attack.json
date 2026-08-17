@@ -1,0 +1,169 @@
+{
+ "spike": "S36_witnessed_job",
+ "recorded_utc": "2026-08-17T16:04:50Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds",
+   "head": "41f3f5a5d447c6bfb3a52892ade78f3b1a50fdf5",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/attack.json",
+   "sha256": "c8dec5b47497b5abacada8d076dc8d9f92576d3ddf2c4c3f5baea8d95aa34f85",
+   "bytes": 17128,
+   "mtime": 1786982690,
+   "compared_ts": 1786982690,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_replay_proof_is_honest",
+   "must_fire_because": "the replayed proof must be BYTE-IDENTICAL to what an honest prover returns for q2 -- no forged digest, no edited key. If it is not, this is a tamper under a new name and S36 already covered tampers",
+   "can_fail_because": "any row where the replay differs from a fresh prove_completeness(root, q2)",
+   "null_must_contain": "a proof with any field rewritten, which is what all three of S36 tamper classes are",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 37,
+    "unforged": 37
+   }
+  },
+  {
+   "name": "C_replay_actually_omits",
+   "must_fire_because": "the replayed answer must be a STRICT subset of the true answer, or the probe never reached its target and \"accepted\" is a statement about nothing (A29)",
+   "can_fail_because": "any row with omitted == 0, or fewer than 10 jobs surviving the deeper-node filter",
+   "null_must_contain": "a deeper prefix selecting the same key set, which a path-compressed trie produces whenever the node does not branch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 37,
+    "no_deeper_node": 0,
+    "min_omitted": 2
+   }
+  },
+  {
+   "name": "C_fix_does_not_reject_honest",
+   "must_fire_because": "the q-bound verifier must still ACCEPT every honest proof. A verifier that returns False unconditionally rejects every cheat in this file and is worthless",
+   "can_fail_because": "any honest proof rejected under the fix",
+   "null_must_contain": "a verifier that rejects everything, which scores 100% on the attack and 0% here",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 37,
+    "accepted": 37
+   }
+  },
+  {
+   "name": "C_fix_keeps_the_three_published_tampers",
+   "must_fire_because": "omit / add / alter must still be rejected under the fix, so the q-binding is shown not to have replaced one check with another",
+   "can_fail_because": "any of the three tamper classes rejected < n under the fixed verifier",
+   "null_must_contain": "a verifier that checks only the query binding and not the fold, which would accept all three",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "omit": {
+     "n": 37,
+     "rejected": 37
+    },
+    "add": {
+     "n": 37,
+     "rejected": 37
+    },
+    "alter": {
+     "n": 37,
+     "rejected": 37
+    }
+   }
+  },
+  {
+   "name": "C_sibling_verifiers_are_not_exposed",
+   "must_fire_because": "the same replay shape against verify_membership and verify_non_membership -- the two that DO re-walk -- must be REJECTED. If they accepted, the defect would be in the commitment rather than in the missing check, and the fix would be aimed at the wrong layer",
+   "can_fail_because": "either sibling accepting a proof issued for a different key, or the two absent keys sharing a divergence node, where nothing is replayed",
+   "null_must_contain": "a verifier that folds to the root and stops, which is exactly what the COVER branch does",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "membership_replayed": 0,
+    "membership_n": 20,
+    "absence_replayed": 0,
+    "absence_n": 20,
+    "absence_paths_differ": 20
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_missing_rewalk_is_compensated",
+   "must_fire_because": null,
+   "can_fail_because": "the committed verifier ACCEPTS such a proof",
+   "null_must_contain": "a genuine subtrie of the committed root, which folds correctly by construction",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "accepted": 37,
+    "n": 37,
+    "omitted_share": 0.967
+   },
+   "refutes": "this attack: if a complete unforged proof for a deeper prefix is REJECTED when presented as the answer to a shallower query, S36 37/37 stands as a general claim about omission",
+   "fires_when": "the committed verifier ACCEPTS such a proof",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F_missing_rewalk_is_compensated"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds": {
+   "newest": 1786981983,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the committed completeness verifier rejecting an unforged proof for a deeper prefix, which would leave S36 37/37 intact",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
