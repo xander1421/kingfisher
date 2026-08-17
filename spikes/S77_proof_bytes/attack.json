@@ -77,7 +77,7 @@
    "fired": true,
    "must_fire_because": "S77's inversion is the whole retraction; if it depends on charging a proof for the root node, whose digest the verifier already holds, then the retraction is an artefact of the accounting",
    "name": "A3_finding_survives_dropping_the_root_charge",
-   "null_must_contain": "the triples set, whose root is the widest of the three, so removing the root charge moves it DOWN the ordering -- the direction that would undo the inversion",
+   "null_must_contain": "a root charge of (root children - 1) per key, which is free to be large enough to reorder the sets -- 256 children at the root would swamp every other position on a short key",
    "observations": {
     "by_depth": [
      "triples",
