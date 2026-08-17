@@ -1,0 +1,56 @@
+{
+  "seed": 20260817,
+  "shard_triples": 4096,
+  "chunks": 13,
+  "chunk_bytes": 4096,
+  "shard_bytes": 49152,
+  "modes": {
+    "ps": {
+      "queries": 400,
+      "chunks_touched_median": 1,
+      "chunks_touched_max": 1,
+      "frac_of_shard_median": 0.07692307692307693,
+      "witness_bytes_median": 4224,
+      "proof_bytes_median": 128,
+      "vs_full_shard": 11.636363636363637
+    },
+    "po": {
+      "queries": 400,
+      "chunks_touched_median": 13,
+      "chunks_touched_max": 13,
+      "frac_of_shard_median": 1.0,
+      "witness_bytes_median": 54848,
+      "proof_bytes_median": 1600,
+      "vs_full_shard": 0.8961493582263711
+    },
+    "so": {
+      "queries": 400,
+      "chunks_touched_median": 13,
+      "chunks_touched_max": 13,
+      "frac_of_shard_median": 1.0,
+      "witness_bytes_median": 54848,
+      "proof_bytes_median": 1600,
+      "vs_full_shard": 0.8961493582263711
+    }
+  },
+  "controls": {
+    "null_full_scan": {
+      "touched": 13,
+      "of": 13,
+      "pass": true
+    },
+    "fabricated_chunk_detected": {
+      "pass": true
+    },
+    "omission_is_detectable": {
+      "pass": true,
+      "note": "verifier re-executing with a short read set hits the same missing chunk index on every honest replica -> agreed, payable fault"
+    },
+    "nonmembership_bounded": {
+      "chunks": 0,
+      "hits": 0,
+      "pass": true,
+      "note": "clustered prefix bounds it to 0 chunks; an UNCLUSTERED miss scans all -> needs an authenticated ordered structure for a succinct non-membership proof. The substrate is already a trie."
+    }
+  }
+}
