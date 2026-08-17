@@ -35,6 +35,47 @@ def canon(text: str) -> str:
     return VARID.sub(sub, text)
 
 
+VARANY = re.compile(r'\$[^\s()]+')
+
+
+def canon_alpha(text: str) -> str:
+    """Alpha-canonicalise: rename EVERY variable by first appearance.
+
+    Mechanism 1 makes `(pair $z $z)` matched by `(pair $x $y)` return `($x $x)`
+    or `($y $y)` depending on process history. Those two are **alpha-
+    equivalent** -- the same term up to renaming -- so for result comparison
+    they should be equal.
+
+    Measured on device: every mechanism-1 case collapses to a single hash
+    (A1 2->1, A2 3->1, A3/A4/D3/E2 all ->1) while the heap-address control
+    stays at 40/40.
+
+    OPT-IN, NOT DEFAULT. It is strictly stronger than `canon` and strictly
+    riskier, because it changes the notion of equality rather than removing
+    noise:
+      - it discards the requester's own variable names;
+      - it equates `($x $y)` with `($y $x)` -- alpha-equivalent as terms, but a
+        different statement about which of the requester's variables landed
+        where. Vacuous while both are unbound, which is why this is judged
+        acceptable, but it IS a loss.
+    Structure survives: `($x $y)` never equals `($x $x)`, and `($x $y $x)`
+    never equals `($x $y $y)`.
+
+    Default to `canon`, which only removes process history. Enable `canon_alpha`
+    per job class, where alpha-equivalence is the intended semantics.
+    """
+    mapping, n = {}, [0]
+
+    def sub(m):
+        v = m.group(0)
+        if v not in mapping:
+            n[0] += 1
+            mapping[v] = n[0]
+        return f'$v{mapping[v]}'
+
+    return VARANY.sub(sub, text)
+
+
 def demo():
     # same structure, different process history -> identical after canon
     a = "((Frog $x#24605) (Green $x#24605))"
@@ -65,7 +106,40 @@ def demo():
 
     # idempotent
     assert canon(canon(a)) == canon(a)
-    print('canon: 12 assertions pass')
+    # --- alpha-canonicalisation, mechanism 1
+    # the two divergent outcomes of an aliased match are alpha-equivalent
+    assert canon_alpha("($x $x)") == canon_alpha("($y $y)") == "($v1 $v1)"
+    # ...and the 3-way case
+    assert canon_alpha("($w $w $w)") == canon_alpha("($x $x $x)")
+
+    # NEGATIVE CONTROLS -- these must NOT collapse
+    assert canon_alpha("($x $y)") != canon_alpha("($x $x)"), \
+        'distinct variables must not equal a repeated variable'
+    assert canon_alpha("($x $y)") == "($v1 $v2)"
+    assert canon_alpha("(f $x $y)") != canon_alpha("(g $x $y)"), \
+        'different functors must stay different'
+    assert canon_alpha("($x A)") != canon_alpha("($x B)"), \
+        'different ground terms must stay different'
+    assert canon_alpha("($x $y $x)") != canon_alpha("($x $y $y)"), \
+        'different repeat PATTERNS must stay different'
+    # ordering of first appearance is what carries the structure
+    assert canon_alpha("($b $a $b)") == "($v1 $v2 $v1)"
+    # a heap address is still not a variable
+    assert canon_alpha("GroundingSpace-0xdeadbeef") == "GroundingSpace-0xdeadbeef"
+    # subsumes canon for id-bearing variables
+    assert canon_alpha("((Frog $x#24605) (Green $x#24605))") == "((Frog $v1) (Green $v1))"
+    assert canon_alpha(canon_alpha("($x $y)")) == canon_alpha("($x $y)")
+
+    # --- DOCUMENTED INFORMATION LOSS, not a correctness claim.
+    # alpha collapses a permutation of unbound variables. As terms these ARE
+    # alpha-equivalent, but the requester distinguishes them positionally: a
+    # device answering ($y $x) made a different statement about which of the
+    # requester's variables landed where. Both are vacuous while unbound, so
+    # this is judged acceptable -- but it is a real loss and it is why alpha is
+    # OPT-IN per job class rather than the default.
+    assert canon_alpha("($x $y)") == canon_alpha("($y $x)")
+
+    print('canon: 24 assertions pass (12 canon, 11 alpha, 1 documented loss)')
 
 
 if __name__ == '__main__':

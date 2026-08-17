@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
 from shardstore import ShardStore
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'harness'))
-from canon import canon
+from canon import canon, canon_alpha
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_3_worker'))
 import preflight
@@ -22,6 +22,9 @@ import preflight
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin')
 DEVDIR = '/data/local/tmp/m18'
+
+ALPHA = False   # set by --alpha; opt-in per job class, never the default
+
 
 def key(e):
     """Agreement key. `sorted_hash` is hashed by fuelrun from raw output, which
@@ -36,8 +39,9 @@ def key(e):
     if e is None: return None
     txt = e.get('results_text')
     if txt is not None:
+        norm = canon_alpha(txt) if ALPHA else canon(txt)
         return (e.get('status'), e.get('fuel_used'),
-                hashlib.sha256(canon(txt).encode()).hexdigest())
+                hashlib.sha256(norm.encode()).hexdigest())
     return (e.get('status'), e.get('fuel_used'), e.get('sorted_hash'))
 
 def adjudicate(envs):
@@ -72,6 +76,11 @@ def main():
     ap.add_argument('--store', default=os.path.join(HERE, 'run', 'store'))
     ap.add_argument('--cap-mb', type=int, default=64)
     ap.add_argument('--keep-device-cache', action='store_true')
+    ap.add_argument('--alpha', action='store_true',
+                    help='alpha-canonicalise results before comparing. Fixes '
+                         'mechanism 1 (which variable represents an aliased '
+                         'class) but changes the notion of equality -- opt-in '
+                         'per job class, see harness/canon.py')
     ap.add_argument('--chunk', type=int, default=16,
                     help='jobs per work session; preflight runs once per session '
                          '(M1.3: batched preflight is 0.51x a job, so per-job is '
@@ -189,6 +198,7 @@ def main():
           f'({uniq} distinct shards)')
 
     json.dump({'gate': gate, 'fuel': a.fuel, 'bytes_pushed': pushed,
+               'normalisation': 'canon_alpha' if ALPHA else 'canon',
                'sessions': sessions, 'chunk': a.chunk, 'refusals': refusals,
                'workers': [w[0] for w in workers],
                'tally': dict(tally),

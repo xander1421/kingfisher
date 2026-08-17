@@ -168,9 +168,40 @@ Wired into `M1_8_quorum3/q3.py`'s agreement key. Where `fuelrun` returns result
 text we canonicalise and key on that; where it returns only its own hash we
 cannot, and the envelope is flagged rather than silently trusted.
 
-**Mechanism 1 remains open** and is not ours to paper over: which variable
-represents an aliased class is a genuine semantic choice, and it needs a
-per-runner id space or an ordered binding map upstream.
+## Mechanism 1 also closes — under alpha-equivalence, opt-in
+
+`($x $x)` and `($y $y)` are **the same term up to renaming**. Renaming every
+variable by first appearance (`canon_alpha`) collapses them:
+
+| program | raw | canon | **alpha** |
+|---|---|---|---|
+| A1 aliased pair | 2 | 2 | **1** |
+| A2 three-way alias | 3 | 3 | **1** |
+| A3 projected / A4 nested / D3 / E2 | 2 | 2 | **1** |
+| E1 counter only | 40 | 1 | 1 |
+| B/C/D stable rows | 1 | 1 | 1 |
+| **POSCTL_space** heap address | 40 | 40 | **40** |
+
+Every mechanism-1 case collapses to one hash; the negative control does not.
+
+**It is OPT-IN (`q3.py --alpha`), not the default, and the reason is recorded
+rather than glossed.** `canon` removes process history — noise by any reading.
+`canon_alpha` *changes the notion of equality*:
+
+- it discards the requester's own variable names;
+- it equates `($x $y)` with `($y $x)`. Those are alpha-equivalent as terms, but
+  a device answering `($y $x)` made a different statement about which of the
+  requester's variables landed where. Both are vacuous while unbound, which is
+  why this is judged acceptable — but it is a real loss, and it is asserted in
+  `canon.py` as a **documented behaviour, not a correctness claim**.
+
+Structure survives either way: `($x $y)` never equals `($x $x)`, and
+`($x $y $x)` never equals `($x $y $y)`.
+
+So the upstream fix (per-runner id space, or an ordered binding map) is no
+longer *required* for job classes where alpha-equivalence is the intended
+semantics — but it is still the correct fix, because alpha-canonicalisation
+buys agreement by weakening the question.
 
 ## Consequence for M1.3 / WorkManager
 `PORT_PLAN` M1.3 requires a fresh process per job on two derivations. This

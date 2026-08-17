@@ -44,6 +44,27 @@ public final class Soak {
         return sb.toString();
     }
 
+    static final java.util.regex.Pattern VARANY =
+            java.util.regex.Pattern.compile("\\$[^\\s()]+");
+
+    /** Alpha-canonicalise: rename EVERY variable by first appearance.
+     *  ($x $x) and ($y $y) are the same term up to renaming, which is what
+     *  mechanism 1 produces. Structure is preserved: ($x $y) stays distinct
+     *  from ($x $x). */
+    static String canonAlpha(String t) {
+        java.util.Map<String,Integer> map = new LinkedHashMap<>();
+        java.util.regex.Matcher m = VARANY.matcher(t);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            String v = m.group(0);
+            Integer k = map.get(v);
+            if (k == null) { k = map.size() + 1; map.put(v, k); }
+            m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement("$v" + k));
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
     static String sha(String s) throws Exception {
         byte[] d = MessageDigest.getInstance("SHA-256").digest(s.getBytes("UTF-8"));
         StringBuilder b = new StringBuilder();
@@ -113,6 +134,7 @@ public final class Soak {
         for (Map.Entry<String, String> e : progs.entrySet()) {
             Set<String> seen = new LinkedHashSet<>();
             Set<String> seenCanon = new LinkedHashSet<>();
+            Set<String> seenAlpha = new LinkedHashSet<>();
             String first = null, lastOut = "";
             int firstDiffAt = -1;
             for (int i = 0; i < reps; i++) {
@@ -126,14 +148,17 @@ public final class Soak {
                 if (first == null) first = h;
                 else if (!h.equals(first) && firstDiffAt < 0) firstDiffAt = i;
                 seen.add(h);
-                try { seenCanon.add(sha(canon(out))); } catch (Exception ex) {}
+                try { seenCanon.add(sha(canon(out)));
+                      seenAlpha.add(sha(canonAlpha(out))); } catch (Exception ex) {}
             }
             Log.i(TAG, "  sample[" + e.getKey() + "] = " + lastOut);
-            Log.i(TAG, String.format("%-13s raw=%2d canon=%2d  %s",
-                    e.getKey(), seen.size(), seenCanon.size(),
-                    seenCanon.size() == 1
-                        ? (seen.size() == 1 ? "stable both" : "FIXED BY CANON")
-                        : "STILL DIVERGES"));
+            String verdict;
+            if (seen.size() == 1)             verdict = "stable raw";
+            else if (seenCanon.size() == 1)   verdict = "FIXED BY CANON";
+            else if (seenAlpha.size() == 1)   verdict = "FIXED BY ALPHA";
+            else                              verdict = "STILL DIVERGES";
+            Log.i(TAG, String.format("%-13s raw=%2d canon=%2d alpha=%2d  %s",
+                    e.getKey(), seen.size(), seenCanon.size(), seenAlpha.size(), verdict));
         }
         Log.i(TAG, "SOAK DONE");
     }
