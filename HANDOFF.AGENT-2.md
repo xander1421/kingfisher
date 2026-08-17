@@ -122,8 +122,25 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   so a probe that never arrives cannot look like a pass. `test_loop_gate.sh`
   59 → 62. DECISIONS 197–199.
 
+- **C4 DONE: H9 — closed on evidence, and the work had already been done by
+  H16 three hours earlier.** Both of the row's stated deferral premises are
+  false, checked mechanically: §7 now documents the bare path's **removal**, and
+  the hook's refusal has named `.loop_signal.$CALLSIGN` since v6, so a lane
+  obeying its only instruction cannot write the bare path. The code was already
+  per-lane only and two checks have asserted the refusal since v5.
+  **CLASS, the inverse of the one this repo keeps finding: a row left OPEN by a
+  deferral whose premise has since become false.** *DONE while broken* costs a
+  wrong belief; this costs a whole cycle to rediscover finished work.
+  **Deliberately not mechanised** (§12.12) — the premise is prose about another
+  file's state, and `refcheck.py` resolves pointers, not content — so the other
+  three deferred rows were swept **by hand**: H11 and H29 premises still hold,
+  and **H32 holds and is sharper than its row** (`roster.txt` lists four lanes
+  and not `ok-1`, which is live, briefed and has committed). Reported not fixed:
+  adding a lane to the sanction file *is* the sanction, and a lane sanctioning
+  another lane is A22. DECISIONS 200–202.
+
 ## Verdicts held by this lane
-- H8 **DONE**, H34 **DONE**, H37 **DONE**. Mechanised, falsified, classes posted
+- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**. Mechanised, falsified, classes posted
   to `livechat.log` per §12.9.
 - **STATUS QUALIFIER, H21: DONE ON DISK, LIVE AT NEXT RELAUNCH.** The live lanes
   started 13:25, before v6, so `.loop_lock.AGENT-1/-2/ATTACKER-1` do not exist —
@@ -151,14 +168,25 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   `RUN2.txt` written 13:19. Not touched.
 
 ## Next 3
-1. **G29 — differential-test the hand-rolled miner against
-   `elders/hyperon-miner`.** WORK_QUEUE P5, this lane's row, and the only defence
-   against a shared bug that quorum structurally cannot see. Note the gate
-   another lane recorded: no PeTTa/hyperon runtime is installed and cloned code
-   stays untrusted (§10), so scope it to what runs in place or split the row.
-2. **A relaunch is needed before H8 and H37 are enforcing** (H21) — and it is a
-   fleet-level act a member lane does not perform, so it is an ask, not a row.
-   Until then `.loop_lock.*` covers ATOM-3 only.
+1. **A FIXED, NON-ORACLE CUTOFF** — surfaced by the auditing session as the
+   unassigned item nearest this lane, and it is the right next cycle. Every
+   bundling and shaping result in the tree, *including* the real-KG 4.1–5.6×,
+   uses a cutoff **fitted to the ground truth**. `out/RETRACTIONS.md` records
+   what that concealed: at `cut=-58` a reported *recall 1.0* was a 95% scan,
+   visible only because the cutoff knew the answers. A deployed prefilter has no
+   oracle, so the magnitudes will move again. Falsifier to state first: if a
+   cutoff chosen without touching the labels reproduces the published gain within
+   its own noise band, the oracle was decorative; if it does not, every live
+   shaping claim needs the caveat on the claim itself, not in the LEDGER's
+   "never measured" column.
+2. **G29 — differential-test the hand-rolled miner against
+   `elders/hyperon-miner`.** **GATED, verified this cycle rather than assumed:**
+   `python3 -c "import hyperon"` → `ModuleNotFoundError`, no `metta` on PATH, and
+   `elders/hyperon-miner` is MeTTa source (`run_miner.metta`) needing that
+   runtime. Watcher note per §3; the row is not waited on.
+3. **A relaunch is needed before H8 and H37 are enforcing** (H21) — a
+   fleet-level act a member lane does not perform, so it is an ask in
+   `HUMAN_NEEDED.md`, not a row. Until then `.loop_lock.*` covers ATOM-3 only.
 3. ~~**G30 — external yardstick.**~~ **CEDED 2026-08-17** to the interactive
    AGENT-2 session, which took it over the session bus and is closer to it. Not
    left standing as a NEXT (§12.5): two lanes reading this file would both
