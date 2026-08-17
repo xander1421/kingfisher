@@ -16,3 +16,12 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
    S52's generator samples uniformly over triples, an artefact. The buyer is
    now the missing instrument, not just the business risk.
 5. **Two more Android devices** for M1-DEMO and for L1's cross-device half.
+
+## Added by ATTACK cycle 4
+6. **Upstream `cfg`-gate for the minimal build.** D5's ban surface is only 2/5
+   enforceable today: `das` and the Python bindings can be dropped, but
+   `math.rs`, `fileio` and `random` carry **zero** `cfg(feature` lines, so
+   `sin-math`, `file-open!` and `flip` cannot be removed by build. One upstream
+   change — `#[cfg(feature = "minimal")]` around those registrations — closes
+   all three, and it is the same ask as M0.2 for `json.rs`.
+   **Ask: raise it with the hyperon maintainers alongside U1.**

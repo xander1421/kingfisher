@@ -38,16 +38,37 @@ fetches the witnesses it needs (W1: ~4.2 KB, not the shard). Locality remains a
 *scheduling* preference for latency and a *caching* policy — it is not an input
 to seat selection, and coverage is therefore not a security parameter (POL).
 
-### R4 — Offline is a fault, not an exclusion
-A drawn device that does not respond within `T_seat`:
-1. the seat times out;
-2. the device is **penalised** — stake slashed by `p_timeout`, or reputation
-   decremented in the MVP where no stake exists;
-3. the seat is **redrawn from `REG_e`, stake-weighted**, excluding devices
-   already seated on this job.
+### R4 — Two-phase: offer, then acknowledge. Penalty attaches to the ack, not to being offline.
 
-So staying online buys an adversary nothing except not-missing slots it was
-already going to be offered in proportion to stake.
+**Corrected by ATTACK cycle 4. The first version of R4 was fatal**: it penalised
+any drawn device that did not respond, and an honest charge-time device at duty
+0.05 is offline **95%** of the time. It would have been penalised on 95% of the
+seats it was offered, making honest participation net-negative. Measured across
+the honest range:
+
+| honest duty | offered-while-offline | penalised under R4-v1 |
+|---|---|---|
+| 0.05 | 95% | 95% |
+| 0.10 | 90% | 90% |
+| 0.25 | 75% | 75% |
+
+Corrected mechanism:
+
+1. **Offer.** The drawn device is offered the seat. Silence within `T_offer` is
+   **not a fault** — it is the normal state of a charge-time device. The seat is
+   silently **redrawn from `REG_e`, stake-weighted**, excluding devices already
+   offered this job.
+2. **Acknowledge.** A device that accepts is now **bound**.
+3. **Penalty attaches only after ack.** Failing to deliver within `T_seat`
+   *after acknowledging* is the fault: stake slashed by `p_timeout`, or
+   reputation decremented in the MVP.
+
+This is Acurast's `propose_matching` → `acknowledge_match`
+(`marketplace/src/lib.rs:542,556`) — a two-phase shape `hyperjob_v0.proto` lacks
+and now needs. It preserves the property that matters: **the draw is still
+stake-weighted over the whole registry, so availability is not a selection
+input.** Staying online only lets an adversary accept more of the seats its
+stake was already going to win.
 
 ### R5 — Same rule for every seat
 There is no local/global seat distinction. R3 makes the split unnecessary; S69's
@@ -59,7 +80,8 @@ This spec is wrong if any of these can be shown:
 | # | falsifier | how to test |
 |---|---|---|
 | F1 | An adversary at duty 1.0 with share *s* of **stake** wins more than ~*s* of seats | simulate R2+R4 against honest duty 0.05–0.25; adversary seat share must track stake share, not duty |
-| F2 | Timeout-redraw (R4) lets an adversary raise its seat share by *deliberately timing out* others' jobs | model a griefing adversary; redraw must not concentrate |
+| F2 | Redraw lets an adversary raise its seat share by *declining* until favourably matched | R4 offers are stake-weighted without replacement per job; model a declining adversary and require its accepted share to track stake |
+| F2b | An always-on adversary captures a larger share of **accepted** seats than its stake | simulate offer/ack against honest duty 0.05–0.25; accepted share must track stake, since offers are redrawn on silence |
 | F3 | A device can influence `seed` | `beacon_e` must be unpredictable to any single participant at commit time |
 | F4 | Mid-epoch stake changes affect the current epoch's draws | R1 freezing must be enforced, not assumed |
 | F5 | W1's witness cost is not bounded for some job class, making R3 unaffordable | W3 measures non-aligned access; if witnesses approach shard size, R3 needs a locality term back |

@@ -29,7 +29,8 @@ does both jobs.
 | **permitted by spec** | `sqrt-math` | IEEE-754 *requires* correct rounding. Guaranteed, not observed |
 | **unseeded randomness** | `flip` `&rng` `reset-random-generator` | S58: `flip` calls global `rand::random()` and takes no generator (`random.rs:186-188`); `&rng` is `from_os_rng()` bound at module load (`:127-128`); `reset-random-generator` re-seeds from OS entropy (`:43-45`) |
 | **permitted, conditional** | `random-int` `random-float` via `new-random-generator <seed>` bound **once** | S58: 40 seeds × 3 platforms, bit-exact. `(= (g) …)` re-seeds per call — must be `bind!`/`let` |
-| **ambient reads** | all of `fileio`; the eleven `das-*` network ops | `lib/Cargo.toml:47` has `default = ["pkg_mgmt", "das"]`, so `!(match &das …)` is a network query **by default** |
+| **ambient reads — `das-*` (excludable today)** | eleven network ops | `builtin_mods/mod.rs:13,24` is `#[cfg(feature = "das")]` and `Cargo.toml:46` has it in `default`. **Dropping the default feature excludes them now** |
+| **ambient reads — `fileio` (NOT excludable today)** | `file-open!` etc. | **ATTACK cycle 4:** `builtin_mods/mod.rs` has cfg gates for `pkg_mgmt` and `das` but **none for `fileio`**. It cannot be removed by build without an upstream patch |
 | **not exposed — recorded as a non-risk** | wall clock | S58: no time operation reaches MeTTa at all |
 
 ### Carried from this round, unmeasured, provisionally excluded
@@ -60,8 +61,26 @@ quorum split (D3 reasoning).
 | F4 | A permitted op reaches an excluded one indirectly | audit the stdlib `.metta` definitions for compositions |
 | F5 | Binary hash is forgeable as an enforcement signal | **known and accepted**: it is a *matching hint*, not a security control. A liar produces a different result and loses 2-of-3 (C1) |
 
+## Enforceability today — the honest split (ATTACK cycle 4)
+
+| exclusion | enforceable by build **now**? |
+|---|---|
+| `das-*` network ops | **yes** — drop the `das` default feature |
+| Python bindings / `py-atom` | **yes** — do not build them |
+| `sin/cos/tan/asin/acos/atan-math` | **no** — `math.rs` has zero `cfg(feature`; needs an upstream gate |
+| `fileio` | **no** — `builtin_mods/mod.rs` gates `pkg_mgmt` and `das` but not `fileio` |
+| unseeded randomness (`flip`, `&rng`, `reset-random-generator`) | **no** — same file, no gates |
+
+**So BAN_SURFACE_V1 is not shippable today.** Two of five classes are
+enforceable; three need one upstream change — a `#[cfg(feature = "minimal")]`
+around the affected registrations. That is a **single** ask covering `math.rs`,
+`fileio` and `random`, and it is the same shape as the M0.2 minimal-build
+request already in the backlog for `builtin_mods/json.rs`.
+
+**This is the gating item for D5, and it is a human action** (HUMAN_NEEDED):
+until the gate exists, jobs must be admitted on a *declared* surface the runner
+cannot actually enforce, which is a trust concession and is recorded as one.
+
 ## Open
 - F3 is unrun; `log`/`pow` stay provisional.
 - Float print/parse and sort stability are excluded on precaution, not evidence.
-- The upstream `cfg`-gate does not exist yet. Until it does, exclusion of
-  `sin-math` is **aspirational** — the shipped runner still registers it.
