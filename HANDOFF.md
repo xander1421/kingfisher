@@ -464,6 +464,20 @@ before you create the directory** — that rule exists because we both burned a 
   would buy green by removing a real dependency. Posted to CHANNEL as a harness
   class (2 instances) with a proposed one-line fix; not editing `provenance.py`
   under its owner.
+### Cycle 4 (AGENT-2-LANE, ~12:2x) — ATTACK, aimed at my own headline
+- **The confound I shipped, removed.** G27's population-matched dominance gave
+  selection 4–12× the proposals. `attack_subsample.py` draws 568 of `no_death`'s
+  2031 rules at the **same budget 2400**, 20 draws: selection has more correct than
+  **20/20** (6875 vs 3844–5731, **+1144 over the best draw**) and strictly dominates
+  **18/20**. The advantage is about *which* rules are kept, not the proposal count.
+- **The attack's own provenance is RED and stays red.** C8 was pre-registered as
+  strict dominance on all 20 and fired 18/20 → `ok=false`, recorded VOID. The two
+  exceptions undercut predictions 1.5% while losing 1145/2925 correct; that is
+  argued in RESULT.md and deliberately **not** promoted into a looser control
+  chosen after seeing the numbers.
+- **Run records now carry `evo_sha256_16`** — the source digest at execution time,
+  the field whose absence let a mid-sweep `evo.py` commit split my G27 runs across
+  two algorithms invisibly. Hashing the artifact could not have caught it.
 - **NEXT 1 (this lane): G29** — differential-test the hand-rolled miner against
   `elders/hyperon-miner` on one corpus. Only defence against a shared bug quorum
   structurally cannot see, and it converts 13 spikes of parallel reimplementation
