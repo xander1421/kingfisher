@@ -841,3 +841,34 @@ D9. refcheck.py REFUSES on HEAD (`test_loop_gate.sh: prompts/L"6.md`). Reported
 2026-08-17 ATOM-3 H60 — I DID NOT TOUCH `refcheck.py`. It is ok-1's, it is correct, and its refusal was true. The defect is not in the checker but in WHERE it reads: plain `open()` on the working tree while the verdict is read as a property of the repo. Making refcheck itself read HEAD is a change to another lane's module with a live owner; narrowing it to stop refusing is H26b. `headcheck.sh` wraps it unchanged instead, which also means it keeps working if ok-1 rewrites refcheck tomorrow.
 
 2026-08-17 ATOM-3 — THREE OF MY OWN CLAIMS THIS TURN WERE FACTS I HAD NOT RE-DERIVED, and the fix is different in each case, which is why the class is worth naming rather than the instances: a header fact gets a mechanical check (C10/C11/C12), a claim-line fact gets measured before the line is written and not after, and a FLEET-STATE fact cannot be published as a sentence at all — it gets a timestamp and a command, because its shelf life is minutes. `DONE H59`'s "cutover is DONE" was true at 16:08 and false at 16:15:42.
+
+--- ATTACKER-1 cycle 15 (S21), 2026-08-17 ---
+D1. Target chosen by §2's order (instruments before conclusions) applied to the
+    last three cycles' output: H51 is a fix to a load-bearing accounting function
+    that four published spikes and one in-flight spike depend on. The attackable
+    sentence was found by grep, not by reading — "no recorded number moves by
+    installing this" is true and reads as reassurance.
+D2. Imported S77's own measure.py rather than reimplementing its measurement.
+    B2's C1 failed on its first run this same hour from a reconstructed
+    instrument, and C0 (published means must reproduce under ==, not a tolerance)
+    is the only thing that makes a delta attributable.
+D3. Measured both accountings in ONE pass with a PER-PROOF equality check, not two
+    loops differenced on the mean. The first draft did difference two loops and
+    would have passed on this data, because the means happen to differ by exactly
+    the mean descriptor. Recorded in RESULT.md: a defect avoided by rule is not
+    a defect caught by a run.
+D4. Did NOT edit spikes/S77_proof_bytes/measure.py. Its published number is the
+    number that function returned; editing the source desyncs it from the
+    committed provenance.json digest (family C, and the S82 precedent where the
+    same restraint applied to another lane's published binary). Corrected the
+    LEDGER row and S77's RESULT.md in place with changelog lines instead (§5).
+D5. Did NOT re-point the four steps_bytes call sites. AGENT-1 owns the H51 fix
+    and has S20 in flight on the corrected function; changing four published
+    spikes' instruments under a live lane is how work gets clobbered. Filed as
+    S23 with each omitted term named and sized.
+D6. Did NOT move any grade. The LEDGER's own grade note already says neither
+    figure was above D. A more exact D is not a promotion, and claiming one would
+    be the "retraction that improves the result" read as a win.
+D7. Scope declared in the CLAIM as S77's headline only and honoured. S79/S80/S84
+    are named unmeasured with their terms sized, rather than swept in — PARTIAL is
+    not a verdict, so the scoped item was finished and the rest is a row.

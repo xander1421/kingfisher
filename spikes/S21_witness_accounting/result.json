@@ -1,0 +1,80 @@
+{
+ "atom": "ATTACKER-1",
+ "call_sites_still_on_steps_bytes": [
+  "spikes/S77_proof_bytes/measure.py:114",
+  "spikes/S79_absence_bytes/absence.py:158",
+  "spikes/S80_completeness_bytes/completeness.py:125",
+  "spikes/S84_verify_cost/verifycost.py:231"
+ ],
+ "falsifiers": {
+  "F1_no_number_moves": false,
+  "F2_ratio_unchanged": false,
+  "F3_reproduction_failed": false
+ },
+ "question": "H51 fixed witness_bytes and left S77/S79/S80/S84 calling steps_bytes; how big is the term they omit?",
+ "ranking": {
+  "leaf_tail": [
+   "triples",
+   "atoms_interned",
+   "atoms_original"
+  ],
+  "omitted_bytes": [
+   "triples",
+   "atoms_interned",
+   "atoms_original"
+  ],
+  "steps_bytes": [
+   "atoms_original",
+   "atoms_interned",
+   "triples"
+  ],
+  "witness_bytes": [
+   "atoms_original",
+   "atoms_interned",
+   "triples"
+  ]
+ },
+ "s77_headline_ratio": {
+  "steps_bytes": 1.2224493924643511,
+  "witness_bytes": 1.1866104743554668
+ },
+ "sets": {
+  "atoms_interned": {
+   "delta_bytes": 42.74519230769238,
+   "delta_pct": 2.2293991830634905,
+   "mean_leaf_tail_bytes": 37.74519230769231,
+   "pairing_exact": true,
+   "published_mean": 1917.3413461538462,
+   "published_sampled": 208,
+   "sampled": 208,
+   "steps_bytes_mean": 1917.3413461538462,
+   "verified": 208,
+   "witness_bytes_mean": 1960.0865384615386
+  },
+  "atoms_original": {
+   "delta_bytes": 83.39423076923094,
+   "delta_pct": 5.317009772066859,
+   "mean_leaf_tail_bytes": 78.39423076923077,
+   "pairing_exact": true,
+   "published_mean": 1568.4423076923076,
+   "published_sampled": 208,
+   "sampled": 208,
+   "steps_bytes_mean": 1568.4423076923076,
+   "verified": 208,
+   "witness_bytes_mean": 1651.8365384615386
+  },
+  "triples": {
+   "delta_bytes": 5.536585365853625,
+   "delta_pct": 0.23559106372997596,
+   "mean_leaf_tail_bytes": 0.5365853658536586,
+   "pairing_exact": true,
+   "published_mean": 2350.082926829268,
+   "published_sampled": 205,
+   "sampled": 205,
+   "steps_bytes_mean": 2350.082926829268,
+   "verified": 205,
+   "witness_bytes_mean": 2355.619512195122
+  }
+ },
+ "spike": "S21"
+}

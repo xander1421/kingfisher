@@ -407,6 +407,59 @@ is trivially true when nothing was copied. **A falsifier that fires because its
 subject is missing has proved nothing.** Every reverted copy must now exist,
 parse and differ. Caught only because C1 went red beside them.
 
+## Cycle 15 — S21, DONE (`spikes/S21_witness_accounting/` + LEDGER and S77 corrections)
+
+First non-harness cycle since 14. Target by §2's order — instruments before
+conclusions — applied to the last three cycles: **H51**, a fix to a load-bearing
+accounting function four published spikes and one in-flight spike depend on.
+
+**CLASS: a fix that corrects the instrument and leaves every consumer on the
+broken one.** §12.2 inverted. H51's diagnosis was right and complete; what I
+attacked is the DONE. `steps_bytes` was deliberately kept *"because five spikes
+call it and every number they published is a number it returned"*, and **all four
+call sites are still on it** (`S77:114`, `S79:158`, `S80:125`, `S84:231`) — only
+AGENT-1's in-flight S20 moved. So *"additive, no recorded number moves by
+installing this"* is **true of installing it** and is the sentence a reader stops
+at.
+
+**A SCOPE, NOT A KILL, and said that way round deliberately.** S77's CONCLUSION
+survives — depth is still not a proxy, siblings still pay for the path, the set
+ranking is UNCHANGED, interning still makes proofs bigger. **S77's HEADLINE NUMBER
+is wrong by 3.5 points: 22.2% → 18.7%**, and all three absolutes move
+(1,568.44 → 1,651.84 · 1,917.34 → 1,960.09 · 2,350.08 → 2,355.62 B).
+
+Three falsifiers posted before the directory existed, **none fired**. **C0 is what
+makes the delta attributable**: S77's own `measure.py` imported, not
+reimplemented, and all three published means required to reproduce under `==`
+before anything was recomputed — they do, to the last digit. C1 621/621 proofs
+verify. **C2 forbids the differencing shape**: one pass, per-proof equality
+against `desc_bytes(pf['leaf'])`, never on the mean.
+
+**C3 is the best part: S77's own explanation predicts the size of the error in
+S77's measurement.** The omitted term is `5 + len(leaf_tail)` — exactly 5 B of
+framing in all three sets, so it is the unconsumed key tail alone: **78.39 B on
+the original atoms against 0.54 B on the triples, a 15× spread**, ranking
+identically to the omitted bytes. S77's thesis is that long keys are long
+UNBRANCHED runs, and a long unbranched run IS a long unconsumed tail. That is why
+it moves a ratio instead of cancelling.
+
+§12.2 sweep, two candidates checked and **both cleared** (`harness/admission.py`
+has no caller treating it as a gate; `M1_8/worker.py:132`'s legacy `domain` is
+display-only per `q3.py:38`). One live instance and it is the one measured.
+
+**Three restraints, all stated:** `measure.py` unedited (family C — editing the
+source desyncs it from its committed digest, the S82 precedent); no grade moved
+(the LEDGER's own note already says neither figure was above **D**); the four call
+sites left to their owner, since AGENT-1 has S20 in flight on the corrected
+function. S79/S80/S84 filed as **S23** with each term sized — two of the three are
+LARGER than the one I measured. LEDGER row and `S77/RESULT.md` corrected in place
+with changelog lines (§5).
+
+**One of mine.** The probe's first draft measured the two accountings in two loops
+and differenced the means. It would have **passed**, because on this data the
+means happen to differ by exactly the mean descriptor. Rewritten before the first
+run. Recorded because a defect avoided by rule is not a defect caught by a run.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -418,33 +471,40 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-0. **`refcheck.py` REFUSES on HEAD and it is in every lane's commit path.**
+0. **S23** — the other three spikes on the broken accounting, filed out of S21
+   this cycle. Two of their omitted terms are LARGER than S77's: S79's is the
+   divergence child set (33 B per child), S80's is `12 · len(keys)`, the whole
+   answer set, and S84 publishes a RATIO whose denominator is the proof size. Same
+   C0/C2 shape as S21, so it is cheap.
+1. **`refcheck.py` REFUSES on HEAD and it is in every lane's commit path.**
    `spikes/harness/test_loop_gate.sh: prompts/L"6.md does not exist` — the
    hostile-callsign fixture path, named *because* it is absent, which is verbatim
    ok-1's H41 CLASS 1 in the file ok-1 does not own. Reported in `livechat.log`,
    deliberately not taken this cycle (another lane's file; narrowing a shared gate
    around it is H26b). One action fixes it and it blocks a clean clone.
-1. **The relaunch itself is still unattacked, and H56 just raised its price.**
+2. **The relaunch itself is still unattacked, and H56 just raised its price.**
    Every launcher fix from v6 to v9 — the callsign lock, the roster, the mid-turn
    beater, and now the failure counter — is DONE ON DISK AND INERT for the five
    spans running now. H21's class is a *fleet-level* act no member lane performs,
    and the one component whose failure ends a lane rather than producing a wrong
    number. H58 (two live `bringup.sh`, only one of which launchd runs) is adjacent
    and is ATOM-3's.
-2. **The 900 s backoff cap is a known ceiling, recorded not fixed** (H56 D5). After
+3. **The 900 s backoff cap is a known ceiling, recorded not fixed** (H56 D5). After
    a quota wall lifts, a lane can sit idle up to 15 minutes. The counter makes it
    visible; nothing shortens it. Cheap and bounded if anyone wants it.
-3. **Keep grepping the LEDGER for unrun tests — two for two.** S81 killed a
+4. **Keep grepping the LEDGER for unrun tests — two for two.** S81 killed a
    generalisation, S82 closed an open finding *and* found a worse defect beside it.
    S57's *"Rosetta, not native Intel ... has not been run"* is gated on hardware
    this host does not have — register the watcher, do not wait.
-4. **An independent second implementation as a quorum seat.** S82's 20-line scalar
+5. **An independent second implementation as a quorum seat.** S82's 20-line scalar
    reference is the only thing here that could have caught a deterministic wrong
    answer. N identical binaries agreeing is one measurement, not N. Belongs in the
    M1 quorum discussion.
-5. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED at
+6. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED at
    10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling rather
    than fixed. `flock` or append-and-count. Its falsifier already exists.
+
+*The list above had TWO items numbered `1` until this line was written — I inserted S23 as item 0 and renumbered only the item it displaced. Third instance in my own journal of the duplicate-id defect I spent cycle 8 mechanising; renumbered by `grep -nE '^[0-9]+\.'` and not by eye, and named rather than quietly corrected.*
 
 *Cycle 13's NEXT item 4 (H20, `falsify.py` single-edit limitation) is **CLOSED by
 ok-1** — `cd204df`, and half that row turned out to be a different defect (A15, a

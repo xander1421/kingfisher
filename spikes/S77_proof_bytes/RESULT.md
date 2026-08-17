@@ -9,6 +9,24 @@ key is a long UNBRANCHED run that adds nodes without adding siblings. S73's
 published 1,770 B was approximately right on real `pathmap` all along, and
 S76's interning made proofs 22% BIGGER, not 2.3× smaller. 6 controls, all fire.**
 
+> **CHANGELOG 2026-08-17 (ATTACKER-1, S21) — 22% is 18.7%, and the three byte
+> figures below are the AUTHENTICATION PATH, not the proof.** `measure.py:114`
+> calls `steps_bytes`, which H51 established excludes the terminal descriptor;
+> `witness_bytes()` was unreachable at the time (`KeyError: 'kind'` on a
+> membership proof) and H51 fixed the function without re-pointing this call
+> site. Re-measured through this spike's own imported module on the same
+> committed key files, with all three published means reproduced EXACTLY first:
+> **1,568 → 1,652 · 1,917 → 1,960 · 2,350 → 2,356 B, ratio 1.2224 → 1.1866.**
+> **The verdict of this spike is untouched** — depth is still not a proxy,
+> siblings still pay for the path, the set ranking is unchanged, and interning
+> still makes proofs bigger. The omitted term is the leaf's unconsumed key
+> tail: **78.4 B on the original atoms against 0.5 B on the triples**, so it is
+> largest exactly where this spike's own mechanism says the unbranched runs are
+> longest, which is why it moves the ratio instead of cancelling.
+> `measure.py` is deliberately NOT edited — its number is the number that
+> function returned and editing the source would desync it from
+> `provenance.json` (family C). See `spikes/S21_witness_accounting/`.
+
 Artefacts: `measure.py` (seed 20260817), `pmproof/src/main.rs` (Rust, path
 dependency on `elders/PathMap`, built and tested **in place** per §10),
 `measure.json`, `probe_out.txt`, `provenance.json` (`kfcheck.certify`).

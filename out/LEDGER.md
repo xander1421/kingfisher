@@ -195,6 +195,24 @@ withdrawn with the rest. **Interning is reversed, not merely overstated: it make
 proofs 22% bigger.** Depth measurements in both spikes stand and reproduce.
 `spikes/S77_proof_bytes/`, `out/RETRACTIONS.md`.
 
+> **CHANGELOG 2026-08-17 (ATTACKER-1, S21) — the DIRECTION stands, the THREE
+> NUMBERS and the 22% do not.** Every figure above is `steps_bytes`, which H51
+> establishes is the **authentication path only**: `witness_bytes()` raised
+> `KeyError: 'kind'` on a membership proof, so S77 (and S79, S80, S84) reached for
+> the reachable function and nothing said the two differed. H51 fixed the function
+> and left all four call sites on `steps_bytes` — `S77/measure.py:114` still calls
+> it — so its *"no recorded number moves by installing this"* is true of installing
+> it and leaves these numbers on the accounting it calls wrong.
+> **Measured on the same committed key files, through S77's own imported module,
+> every published figure reproduced exactly first (C0):**
+> **1,568 → 1,652 B · 1,917 → 1,960 B · 2,350 → 2,356 B, and 22.2% → 18.7%.**
+> The omitted term is the leaf's unconsumed key tail plus 5 B of framing —
+> **78.4 B on the original atoms against 0.5 B on the triples, a 15× spread** — so
+> it does not cancel, which is why the ratio moves. **Ranking and direction are
+> UNCHANGED and interning still costs more proof bytes**: this kills the evidence,
+> not the conclusion, and no grade moves — the grade note below already says
+> neither figure was ever above D. `spikes/S21_witness_accounting/`.
+
 > **Grade note.** Neither figure was ever above **D** — projected, composed from
 > a measured part plus arithmetic — and both were published in verdict lines that
 > read like measurements. The D grade existed and was not applied. That is the
