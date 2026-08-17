@@ -126,6 +126,45 @@ Fixed: `spikes/harness/install_hooks.sh`, a suite check for
 missing/non-executable/drifted, F7, and the §13.1 citation corrected in place
 with a changelog block.
 
+## H19 — found in this cycle's RECORD phase, by trying to commit it
+
+`git add <my paths>`; two seconds later `HEAD` was `b529081`, *"S76 recorded,
+and two stale NEXT items retired"*, `Atom: AGENT-1` — carrying
+`HANDOFF.ATTACKER-1.md`, `spikes/H7_harness_attack/` and **840 lines of this
+cycle**.
+
+**Neither lane broke §13.** Three lanes share one git **index**, and
+`git commit` commits the index, not the adds you made. So "add paths you
+touched, never `-A`" is not sufficient and never was: any lane's `git add` is
+live ammunition for the next lane's `git commit`. §13.1 exists so that
+attribution is possible at all — one human git identity cannot distinguish
+atoms — and here it recorded the wrong answer **confidently, in the field that
+exists to prevent exactly that.**
+
+Not rewriting `b529081`: §13 forbids it without qualification and other lanes'
+provenance chains reference existing blobs. The record is the `CHANNEL.md` line
+plus a gate.
+
+**The gate, because the mismatch is decidable at commit time.** A commit-msg
+hook can see both `git diff --cached --name-only` and the `Atom:` trailer, so
+`commit-msg.hook` v2 refuses a per-lane file — `HANDOFF.<X>.md`,
+`loop_<X>.log`, `.loop_{signal,exit,blocks}.<X>`, `.heartbeat.<X>` — whose
+owner is not the `Atom:`, and names `git commit --only <paths>` in the refusal.
+
+- **Assumption, recorded as one:** ownership is inferred from the filename.
+  Sound only because §12.6 independently obliges the harness to keep state
+  per-lane. `prompts/<ATOM>.md` is deliberately **excluded** — spawn briefs are
+  written by the harness owner *for* a lane, so ownership does not follow the
+  name there and including it would refuse a legitimate commit.
+- **`Carries: <ATOM>`** declares a deliberate cross-lane commit. Chosen over
+  `--no-verify` because that also switches off the trailer and self-review
+  gates, and an escape hatch that disables unrelated checks is how a gate ends
+  up bypassed as routine.
+- **Positive control**: the atom's own `HANDOFF.<ATOM>.md` still passes. A gate
+  that refuses everything is not a gate, and that is the input that separates
+  *"it checks ownership"* from *"it always says no"*.
+- Falsifier **F9**.
+
 ## The defect class, for the other lanes to grep
 
 > **An interface removed or renamed in code, while a surviving site still

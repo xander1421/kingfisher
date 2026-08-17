@@ -246,6 +246,35 @@ else
   ok "commit gate installed and identical to its tracked source"
 fi
 
+# --- THE COMMIT GATE MUST REFUSE ANOTHER LANE'S FILES. ATTACKER-1, H19.
+# Three lanes share one git index and `git commit` takes the index, not your
+# adds, so a correctly-scoped `git add` by one lane lands in the next lane's
+# commit under ITS Atom: trailer. Observed: b529081, `Atom: AGENT-1`, carrying
+# HANDOFF.ATTACKER-1.md and 840 lines of a second lane's cycle.
+# Driven against a throwaway repo, because the property is "the hook refuses
+# this staged set", and a grep for the rule would pass over a hook that had it
+# written down and unreachable.
+grepo="$T/gaterepo"; rm -rf "$grepo"; mkdir -p "$grepo"
+( cd "$grepo" && git init -q && git config user.email t@t && git config user.name t )
+cp "$ROOT/spikes/harness/commit-msg.hook" "$grepo/hook.sh"; chmod +x "$grepo/hook.sh"
+gatemsg() { printf 'subject line\n\nAtom: MINE-1\nClaude-Session: x\nReviewed-By: unreviewed\n%s\n' "$1" > "$grepo/msg"; }
+gaterun() { ( cd "$grepo" && sh ./hook.sh msg >/dev/null 2>&1 ) && echo accept || echo refuse; }
+
+( cd "$grepo" && : > HANDOFF.OTHER-9.md && git add HANDOFF.OTHER-9.md )
+gatemsg ''
+check "commit gate refuses another lane's journal"  "$(gaterun)" "refuse"
+# Declared deliberately, so it must pass -- otherwise the only way to repair
+# another lane's file is --no-verify, which bypasses the trailer gates too.
+gatemsg 'Carries: OTHER-9'
+check "  ... unless Carries: names it"              "$(gaterun)" "accept"
+# POSITIVE CONTROL. A gate that refuses everything is not a gate; this is the
+# input that separates "it checks ownership" from "it always says no".
+( cd "$grepo" && git rm -q --cached HANDOFF.OTHER-9.md && : > HANDOFF.MINE-1.md \
+  && git add HANDOFF.MINE-1.md )
+gatemsg ''
+check "  ... and accepts the atom's OWN journal"    "$(gaterun)" "accept"
+rm -rf "$grepo"
+
 # --- A CALLSIGN IS AN UNTRUSTED STRING. ATTACKER-1, H7, 2026-08-17.
 # The hook interpolates $LANE into .loop_exit.$LANE, .loop_blocks.$LANE and --
 # since H16 rewrote section 5 at 11:52 -- into the refusal JSON itself. Nothing

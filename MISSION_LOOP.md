@@ -274,6 +274,14 @@ The obligations:
   + the command + the recorded hash. A digest pins which artefact; a manifest
   pins the feature set behind it, and a Cargo feature changes `fuel_used`
   (`spikes/V1_feature_fuel/`).
+- **`git commit --only <paths>`, not `git add` then `git commit`.** Scoping
+  your add is NOT sufficient and never was: three lanes share one git **index**,
+  and `git commit` commits the index rather than the adds you made. On
+  2026-08-17 a lane's `git add` was consumed two seconds later by another lane's
+  commit — `b529081`, `Atom: AGENT-1`, carrying a second lane's journal, spike
+  and 840 lines — **with both lanes obeying the rule above.** `--only` ignores
+  the index. Gated by `.git/hooks/commit-msg`; `Carries: <ATOM>` declares a
+  cross-lane commit deliberately, which keeps the honest case off `--no-verify`.
 - **Never rewrite shared history.** Other agents' provenance chains reference
   existing blobs by hash. `git rm --cached` going forward is safe and
   reversible; `filter-repo` is a human decision.

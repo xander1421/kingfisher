@@ -120,6 +120,14 @@ FALSIFIERS = [
      'case "$CALLSIGN" in (*[!A-Za-z0-9._-]*)',
      'case "$CALLSIGN" in (thiswillnevermatch)',
      'launcher refuses what the hook will not gate'),
+
+    ('F9',
+     'the commit gate accepts another lane\'s per-lane files, so a shared index '
+     'puts one lane\'s whole cycle in another lane\'s commit under its Atom:',
+     'spikes/harness/commit-msg.hook',
+     'foreign="$foreign $f"',
+     ':  # foreign file accepted',
+     "refuses another lane's journal"),
 ]
 
 
