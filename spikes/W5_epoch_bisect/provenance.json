@@ -1,11 +1,11 @@
 {
  "spike": "W5_epoch_bisect",
- "recorded_utc": "2026-08-17T12:54:58Z",
+ "recorded_utc": "2026-08-17T15:41:36Z",
  "note": "bisection over S73 space state only; interpreter-step bisection is OUT of scope (S68 RED, blocked upstream on hyperon Issue 3)",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../S73_epoch_commitment",
-   "head": "32e0766ef3f9666ba8068f33d6ff0a2d799c50bd",
+   "head": "ea3341243069d1c706bac84e94885652bc7a2f17",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,11 +13,14 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie",
-   "head": "32e0766ef3f9666ba8068f33d6ff0a2d799c50bd",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "ea3341243069d1c706bac84e94885652bc7a2f17",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W2_witnessed_trie/trie_witness.py",
+    "spikes/W2_witnessed_trie/witness.json"
+   ],
+   "diff_sha256": "3dc1f5b0ab42930a88608811cc24b2000783425071a7a814d157bd81edb912af",
+   "diff_bytes": 7471
   }
  ],
  "manifests": {
@@ -38,16 +41,16 @@
    "sha256": "f80be740069d40970248229211a99327870f9b5dcf10506eed203d303fc104cd",
    "bytes": 23693,
    "mtime": 1786971094,
-   "compared_ts": 1786971094,
-   "compared_clock": "mtime"
+   "compared_ts": 1786971422,
+   "compared_clock": "last-commit"
   },
   {
    "path": "result.json",
    "sha256": "4c37b5543be92c355f893a059f8a5c292ec1481f4df98205ab65f324124a1fc4",
    "bytes": 3594,
-   "mtime": 1786971298,
-   "compared_ts": 1786971298,
-   "compared_clock": "mtime"
+   "mtime": 1786981296,
+   "compared_ts": 1786971422,
+   "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
  ],
  "missing_artifacts": [],
@@ -235,12 +238,15 @@
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie": {
-   "newest": 1786965691,
-   "from": "<HEAD commit>"
+   "newest": 1786977076,
+   "from": "spikes/W2_witnessed_trie/witness.json"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "STALE ARTIFACT epoch_bisect.py predates W2_witnessed_trie source by 1.6h (newest source: spikes/W2_witnessed_trie/witness.json; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie at ea334124: 2 modified. The build is NOT ea334124."
+ ],
+ "ok": false,
  "falsifier": "if the referee must execute more than one epoch, or rounds exceed ceil(log2 N), bisection saves nothing over re-execution and the dispute path is decorative",
  "carried_from_previous_record": [
   "falsifier",
