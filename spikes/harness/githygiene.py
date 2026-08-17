@@ -95,6 +95,36 @@ BAD_PATH = ("/target/", "/__pycache__/", "/node_modules/", "/.gradle/",
 #     whole day.
 REQUIRED_TRAILERS = ("Atom", "Claude-Session", "Reviewed-By")
 
+# PRESENCE IS NOT VALIDATION. The first version of this rule checked only that
+# the trailer key existed, and the history shows exactly what that buys:
+#
+#   Atom:        AGENT-1 x8, agent-1 x4, mutation-detection x5,
+#                harness-hardening x3, corpus-composition x3, AGENT-2 x2
+#   Reviewed-By: unreviewed x14, self x11, ATOM-3 x1
+#
+#   * 11 of 26 `Atom:` values are TOPIC LABELS, not callsigns. The field that
+#     exists to name an atom was being used to name a subject.
+#   * AGENT-1 and agent-1 are one atom counted as two, so every tally splits.
+#   * `Reviewed-By: self` DEFEATED the A22 rejection 11 times, because the guard
+#     compared `rev.lower() == atom.lower()` and "self" is not "agent-1". A
+#     guard against self-review, defeated by typing the word self.
+#
+# Exactly one genuine peer attestation exists in the entire history. So the
+# check now validates VALUES: a callsign must look like a callsign, and a
+# reviewer must be a different callsign or the literal `unreviewed`.
+CALLSIGN_RE = re.compile(r"^[A-Z][A-Z0-9]*(-[A-Z0-9]+)+$")
+NOT_A_REVIEWER = {"SELF", "ME", "NONE", "N/A", "NA", "UNKNOWN", "NOBODY",
+                  "MYSELF", "OWN", "-", ""}
+
+
+def check_callsign(v):
+    """A callsign is upper-case, hyphenated, and contains a digit: AGENT-2,
+    ATOM-3, ATTACKER-1, AGENT-2-LANE. Case-folded, so agent-1 == AGENT-1."""
+    u = v.strip().upper()
+    if not CALLSIGN_RE.match(u) or not any(c.isdigit() for c in u):
+        return None
+    return u
+
 WEAK_SUBJECTS = ("wip", "update", "updates", "fix", "fixes", "misc", "stuff",
                  "changes", "cleanup", "temp", "test", "asdf", "more work",
                  "address feedback", "minor", "tweak", "tweaks")
@@ -217,9 +247,22 @@ def main():
                     return ln.split(":", 1)[1].strip()
             return ""
         atom, rev = val("Atom"), val("Reviewed-By")
-        if rev.lower() == "unreviewed":
+        ca = check_callsign(atom)
+        if ca is None:
+            print(f"\nHEAD TRAILERS: Atom {atom!r} is not a callsign — that "
+                  f"field names WHO, not what.")
+            violations.append(("HEAD", f"Atom {atom!r} not a callsign"))
+        elif rev.strip().upper() in NOT_A_REVIEWER:
+            print(f"\nHEAD TRAILERS: Reviewed-By {rev!r} is self-review in "
+                  f"plain language. A22 — use another atom or 'unreviewed'.")
+            violations.append(("HEAD", f"Reviewed-By {rev!r} is not a reviewer"))
+        elif rev.lower() == "unreviewed":
             print(f"\nHEAD TRAILERS: ok — Atom {atom}, explicitly UNREVIEWED")
-        elif rev and atom and rev.lower() == atom.lower():
+        elif check_callsign(rev) is None:
+            print(f"\nHEAD TRAILERS: Reviewed-By {rev!r} is neither a callsign "
+                  f"nor 'unreviewed'.")
+            violations.append(("HEAD", f"Reviewed-By {rev!r} malformed"))
+        elif check_callsign(rev) == ca:
             print(f"\nHEAD TRAILERS: SELF-REVIEW — Atom {atom} reviewed by "
                   f"{rev}. A22: the reviewed party supplied the review.")
             violations.append(("HEAD", f"self-review by {atom}"))

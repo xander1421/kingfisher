@@ -1,11 +1,11 @@
 {
  "spike": "S73_epoch_commitment",
- "recorded_utc": "2026-08-17T10:52:53Z",
+ "recorded_utc": "2026-08-17T11:12:21Z",
  "note": "S73 canonical space state at an epoch boundary; fold-forward delta proofs, XOR null shown forgeable. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/../S57_hyperon_corpus",
-   "head": "a724e0894d03c70da1b655b392a0f987bb4fb87a",
+   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -32,7 +32,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/epoch.json",
    "sha256": "96cd720f34700e02504d6754a6729b746e31edd65d936cd07a334a5f48cea80c",
    "bytes": 27907,
-   "mtime": 1786963973,
+   "mtime": 1786965141,
    "compared_ts": 1786960155,
    "compared_clock": "last-commit"
   }
@@ -222,6 +222,7 @@
  "ok": true,
  "falsifier": "Exhibit an epoch delta this verifier folds to the prover's new root while the added atom set differs from the one it declares -- that refutes the delta proof. Or: show two epoch groupings of one atom set reaching different roots, which refutes it as a state commitment at all.",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

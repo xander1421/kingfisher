@@ -103,6 +103,27 @@ whole purpose is deciding what a binary is. It is also the same mtime mechanism
 `provenance.artifact_time` exists to police, reached from the other side: not a
 stale artifact next to fresh source, but fresh source made to *look* stale.
 
+## A second harness defect, from the same run
+
+Certifying this kept refusing with `STALE ARTIFACT ... cannot have been built
+from the tree recorded here` — about artifacts that had *just* been rebuilt.
+
+Cause: a **deterministic** pipeline regenerates its artifact byte-identically,
+so git creates no new blob and the file keeps an older last-commit than a source
+file that did change. The commit clock then reports the success case of
+reproducible output as a failure. On this project that is the *common* case, and
+a gate that refuses forever is a gate that gets bypassed with `allow_dirty` —
+which voids it entirely, the exact failure recorded one cycle earlier.
+
+`provenance` now takes a second opinion on **one** clock — artifact mtime
+against the newest source mtime, never mtime-against-commit-time, which was the
+E1 bug — and reports stale only if both clocks agree. Stated hole: after a fresh
+clone every mtime is the checkout time, so the fallback passes for everything;
+the commit clock remains primary and is unaffected.
+
+Both artifacts also now carry the elders `HEAD` + patch sha256, so a baseline
+swept from a different tree is identifiable as such.
+
 ## Scope — what this does NOT license
 
 - **Two mutations, both evaluation-semantic.** A mutation to stdlib

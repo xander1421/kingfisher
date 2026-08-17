@@ -1,11 +1,11 @@
 {
  "spike": "S75_pathmap_check",
- "recorded_utc": "2026-08-17T10:52:55Z",
+ "recorded_utc": "2026-08-17T11:12:23Z",
  "note": "S75 runs W2/S74 declared falsifier against elders/PathMap 0.3.0. Fires on variable-length atom keys, does not on fixed-length triple keys. pathmap merkleize is dedup, not a commitment.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/../S57_hyperon_corpus",
-   "head": "a724e0894d03c70da1b655b392a0f987bb4fb87a",
+   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -32,7 +32,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/compare.json",
    "sha256": "d34fe3f7da74e0cc343eef4b6aaa48724734da1c554cb8eb415d9a0afd567a29",
    "bytes": 4648,
-   "mtime": 1786963975,
+   "mtime": 1786965143,
    "compared_ts": 1786962564,
    "compared_clock": "last-commit"
   },
@@ -40,7 +40,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/probe_out.txt",
    "sha256": "972bf67898d6e8b5a247da481b268cca28bb66c4d1dd48c452a7aad975661f7e",
    "bytes": 33267,
-   "mtime": 1786963975,
+   "mtime": 1786965143,
    "compared_ts": 1786962564,
    "compared_clock": "last-commit"
   },

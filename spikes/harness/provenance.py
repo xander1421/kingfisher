@@ -100,6 +100,26 @@ def newest_source_mtime(path, exclude=()):
     return newest, newest_file
 
 
+def _newest_file_mtime(root):
+    """Newest real mtime under a dep tree, on the mtime clock.
+
+    Skips .git and target/: a cargo target dir is both enormous and always
+    newer than its own source, so including it would make every artifact look
+    stale against a tree nobody edited.
+    """
+    newest = 0
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [x for x in dirnames if x not in ('.git', 'target', '__pycache__')]
+        for fn in filenames:
+            if fn.endswith('.md') or fn == 'provenance.json':
+                continue
+            try:
+                newest = max(newest, int(os.path.getmtime(os.path.join(dirpath, fn))))
+            except OSError:
+                pass
+    return newest
+
+
 def artifact_time(path):
     """When this artifact last changed, on the SAME clock as the staleness floor.
 
@@ -329,6 +349,26 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         for a in prov['artifacts']:
             a_ts, a_clock = artifact_time(a['path'])
             a['compared_ts'], a['compared_clock'] = a_ts, a_clock
+            # A DETERMINISTIC pipeline regenerates an artifact byte-identically,
+            # so git makes no new blob and the file keeps an older last-commit
+            # than a source file that did change. The commit clock then reports
+            # "cannot have been built from this tree" about an artifact that was
+            # literally just rebuilt from it -- the success case of reproducible
+            # output reading as a failure. On this project that is the common
+            # case, and a gate that refuses forever gets bypassed with
+            # allow_dirty, which voids it entirely.
+            #
+            # Second opinion, on ONE clock (mtime vs mtime -- never mixed, that
+            # was the E1 bug). Stale only if BOTH clocks agree it is.
+            # CAVEAT, stated because it is a real hole: after a fresh clone every
+            # mtime is the checkout time, so this fallback passes for everything.
+            # It weakens the check to "clone-time evidence only" on a fresh
+            # clone; the commit clock remains the primary and is unaffected.
+            if a_ts < src_ts:
+                src_mt = _newest_file_mtime(d)
+                if src_mt and int(os.path.getmtime(a['path'])) >= src_mt:
+                    a['compared_clock'] = 'regenerated (mtime >= newest source mtime)'
+                    continue
             if a_ts < src_ts:
                 age = (src_ts - a_ts) / 3600.0
                 problems.append(

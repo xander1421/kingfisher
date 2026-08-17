@@ -1,11 +1,11 @@
 {
  "spike": "M1_9_mutation",
- "recorded_utc": "2026-08-17T11:08:54Z",
+ "recorded_utc": "2026-08-17T11:12:06Z",
  "note": "REFUTED. Baseline binary probe-verified unmutated before sweeping.",
  "repos": [
   {
    "path": ".",
-   "head": "cd00df6bb0e235e1a3abaa074eece90ddce3ba83",
+   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,7 +13,7 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun",
-   "head": "cd00df6bb0e235e1a3abaa074eece90ddce3ba83",
+   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -40,16 +40,16 @@
    "path": "mutation.json",
    "sha256": "ec29b480c035d415deadc464ea8eb8ecfd9a86a269322c847eec83cef4d57f9d",
    "bytes": 902,
-   "mtime": 1786964915,
+   "mtime": 1786965014,
    "compared_ts": 1786964934,
    "compared_clock": "last-commit"
   },
   {
    "path": "baseline.json",
-   "sha256": "5b5b1f5e511b0ac3c26229d9932ed5d05b21d9fb20d1e55fd33ef9d3c5f85015",
-   "bytes": 11818,
-   "mtime": 1786964734,
-   "compared_ts": 1786964528,
+   "sha256": "e60858318830acec72dafeda2508de84aadb76dbe2ad528a23796f14ab4df2d6",
+   "bytes": 11908,
+   "mtime": 1786964981,
+   "compared_ts": 1786964981,
    "compared_clock": "last-commit"
   }
  ],
@@ -112,7 +112,7 @@
  "no_deps_reason": null,
  "source_mtimes": {
   ".": {
-   "newest": 1786964934,
+   "newest": 1786964981,
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
@@ -120,10 +120,8 @@
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "STALE ARTIFACT baseline.json predates . source by 0.1h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "the corpus detects these mutations broadly -- a wrong evaluator changes many agreement keys",
  "carried_from_previous_record": [
   "falsifier",

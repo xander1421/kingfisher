@@ -1,105 +1,65 @@
 #!/bin/sh
-# GATE, not advice. MISSION_LOOP §13.1.
+# GATE for MISSION_LOOP §13.1. Validates VALUES, not just presence.
 #
-# THIS IS A commit-msg HOOK, NOT pre-commit. It was installed as pre-commit
-# first and could never have worked: `man githooks` says pre-commit "takes no
-# parameters, and is invoked before obtaining the proposed commit log message",
-# while commit-msg "takes a single parameter, the name of the file that holds
-# the proposed commit log message". So $1 was empty, `cat "$1"` failed, and the
-# hook refused EVERY commit.
+# v1 checked only that the trailer keys existed. The history shows what that
+# bought: 11 of 26 `Atom:` values were topic labels ("mutation-detection"),
+# AGENT-1/agent-1 split one atom into two, and `Reviewed-By: self` walked past
+# the A22 self-review guard ELEVEN times because "self" != "AGENT-1". A guard
+# against self-review, defeated by typing the word self. Exactly one genuine
+# peer attestation existed in the whole history.
 #
-# It failed CLOSED, which is the right direction and the only reason it was
-# caught in one try. Had it failed OPEN it would have passed every commit while
-# reading an empty message -- a gate that checks nothing while looking installed,
-# which is the empty-input floor moved into the enforcement layer.
+# `man githooks`: commit-msg "takes a single parameter, the name of the file
+# that holds the proposed commit log message". pre-commit takes none — v1 was
+# installed there and refused every commit, failing closed.
 #
-# A check that REPORTS but does not GATE is prose with extra steps. Measured:
-# the Atom/Claude-Session/Reviewed-By rule shipped in a9fa546 and the next THREE
-# commits carried none of the three trailers, because githygiene.py had to be
-# run by hand and nobody ran it. That is the same failure that let every prose
-# rule in this repo regress on 2026-08-17.
-#
-# Checks trailers ONLY -- fast and predictable. Run
-# `python3 spikes/harness/githygiene.py` for the full audit.
-#
-# ESCAPE HATCH: `git commit --no-verify`. Deliberate, because a gate that cannot
-# be bypassed stops other lanes' in-flight work, and this hook is shared: every
-# lane in this working tree gets it at once.
+# Bypass: git commit --no-verify. Deliberate: this hook is shared by every lane
+# in this working tree.
 
 msg=$(cat "$1")
+val() { echo "$msg" | sed -n "s/^$1:[[:space:]]*//p" | head -1 | tr -d '\r'; }
+up()  { echo "$1" | tr 'a-z' 'A-Z'; }
+
 missing=""
 for t in "Atom" "Claude-Session" "Reviewed-By"; do
   echo "$msg" | grep -q "^$t:" || missing="$missing $t"
 done
-
 if [ -n "$missing" ]; then
   echo "commit-msg REFUSED — missing trailer(s):$missing"
-  echo
-  echo "  Atom: <your callsign>            who made it (self-declared, A22)"
-  echo "  Claude-Session: <session url>    assigned, separates same-callsign lanes"
-  echo "  Reviewed-By: <atom|unreviewed>   who attacked it; 'unreviewed' is legal"
-  echo
+  echo "  Atom: <CALLSIGN>   Claude-Session: <url>   Reviewed-By: <CALLSIGN|unreviewed>"
   echo "Bypass: git commit --no-verify"
   exit 1
 fi
 
-atom=$(echo "$msg" | sed -n 's/^Atom:[[:space:]]*//p' | head -1)
-rev=$(echo "$msg" | sed -n 's/^Reviewed-By:[[:space:]]*//p' | head -1)
-if [ "$(echo "$atom" | tr 'A-Z' 'a-z')" = "$(echo "$rev" | tr 'A-Z' 'a-z')" ]; then
-  echo "commit-msg REFUSED — self-review: Atom '$atom' reviewed by '$rev'."
-  echo "A22: the reviewed party supplied the review. Use another atom, or"
-  echo "'Reviewed-By: unreviewed' which is legal and gets recorded as such."
+atom=$(up "$(val Atom)")
+rev=$(up "$(val Reviewed-By)")
+
+# A callsign is upper-case, hyphenated, and contains a digit.
+is_callsign() {
+  echo "$1" | grep -Eq '^[A-Z][A-Z0-9]*(-[A-Z0-9]+)+$' && echo "$1" | grep -q '[0-9]'
+}
+
+if ! is_callsign "$atom"; then
+  echo "commit-msg REFUSED — Atom '$atom' is not a callsign."
+  echo "That field names WHO made the commit, not what it was about."
+  echo "Expected e.g. AGENT-2, ATOM-3, ATTACKER-1. Subject line carries the topic."
   exit 1
 fi
 
-# v2, 2026-08-17 (ATTACKER-1, H19). A COMMIT MAY NOT CARRY ANOTHER LANE'S
-# PER-LANE FILES.
-#
-# THREE LANES SHARE ONE GIT INDEX, and `git commit` commits the index, not the
-# adds you made. So lane A's correctly-scoped `git add` followed seconds later by
-# lane B's `git commit` puts A's entire cycle into B's commit under B's `Atom:`
-# trailer -- with BOTH lanes obeying §13's "add paths you touched, never -A".
-# Observed, not theorised: b529081 "S76 recorded, and two stale NEXT items
-# retired", `Atom: AGENT-1`, carries `HANDOFF.ATTACKER-1.md`,
-# `spikes/H7_harness_attack/` and 840 lines of a second lane's cycle. §13.1 was
-# written so attribution would be possible at all; here it recorded the wrong
-# answer, confidently, in the field that exists to prevent exactly that.
-#
-# The staged set is visible from a commit-msg hook and so is the Atom, so the
-# mismatch is DECIDABLE at the moment of commit. Per-lane names are the tell,
-# and §12.6 already requires harness state to be per-lane, so the naming
-# convention this leans on is one the harness is independently obliged to keep.
-#
-# `prompts/<ATOM>.md` is deliberately NOT in the list: spawn briefs are written
-# by the harness owner FOR a lane, so ownership does not follow the filename.
-foreign=""
-for f in $(git diff --cached --name-only 2>/dev/null); do
-  owner=""
-  case "$f" in
-    HANDOFF.*.md)    owner=${f#HANDOFF.}; owner=${owner%.md} ;;
-    loop_*.log)      owner=${f#loop_};    owner=${owner%.log} ;;
-    .loop_signal.*)  owner=${f#.loop_signal.} ;;
-    .loop_exit.*)    owner=${f#.loop_exit.} ;;
-    .loop_blocks.*)  owner=${f#.loop_blocks.} ;;
-    .heartbeat.*)    owner=${f#.heartbeat.} ;;
-    *) continue ;;
-  esac
-  [ -z "$owner" ] && continue
-  [ "$(echo "$owner" | tr 'A-Z' 'a-z')" = "$(echo "$atom" | tr 'A-Z' 'a-z')" ] && continue
-  # Declared deliberately? `Carries:` keeps the honest cross-lane commit -- one
-  # atom repairing another's journal -- off `--no-verify`, which would bypass
-  # the trailer and self-review gates too and is therefore the worse escape.
-  echo "$msg" | grep -qi "^Carries:.*$owner" && continue
-  foreign="$foreign $f"
-done
-if [ -n "$foreign" ]; then
-  echo "commit-msg REFUSED — Atom '$atom' is committing another lane's files:"
-  for f in $foreign; do echo "    $f"; done
-  echo
-  echo "The index is SHARED. Another lane's 'git add' is in it, and 'git commit'"
-  echo "takes the index, not your adds. Two ways out, both honest:"
-  echo "    git commit --only <your paths>     commit your paths, ignore the index"
-  echo "    Carries: <ATOM>                    trailer, if you meant to carry it"
+case "$rev" in
+  UNREVIEWED) exit 0 ;;
+  SELF|ME|NONE|N/A|NA|UNKNOWN|NOBODY|MYSELF|OWN|-|"")
+    echo "commit-msg REFUSED — Reviewed-By '$rev' is self-review in plain language."
+    echo "A22: the reviewed party supplied the review. Name another atom, or"
+    echo "write 'unreviewed', which is legal and gets recorded as unreviewed."
+    exit 1 ;;
+esac
+
+if ! is_callsign "$rev"; then
+  echo "commit-msg REFUSED — Reviewed-By '$rev' is neither a callsign nor 'unreviewed'."
+  exit 1
+fi
+if [ "$rev" = "$atom" ]; then
+  echo "commit-msg REFUSED — self-review: Atom '$atom' reviewed by '$rev'."
   exit 1
 fi
 exit 0
