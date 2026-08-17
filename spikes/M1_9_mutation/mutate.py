@@ -165,11 +165,19 @@ def main():
     if '--baseline' in sys.argv:
         build()
         assert_clean_binary()
-        json.dump(sweep(), open(BASELINE, 'w'), indent=1)
-        print(f'baseline written: {len(json.load(open(BASELINE)))} programs')
+        # Same tree stamp as mutation.json, and it matters more here: a
+        # baseline swept from a different elders tree is not a baseline.
+        out = {'_tree': {
+            'elders_head': _run_out(['git', 'rev-parse', '--short', 'HEAD'], ELDERS),
+            'elders_patch_sha256': hashlib.sha256(
+                _run_out(['git', 'diff'], ELDERS).encode()).hexdigest()[:16]}}
+        out.update(sweep())
+        json.dump(out, open(BASELINE, 'w'), indent=1)
+        print(f'baseline written: {len(json.load(open(BASELINE))) - 1} programs')
         return
 
     base = json.load(open(BASELINE))
+    base.pop('_tree', None)
     classes = sorted({v['class'] for v in base.values()})
     results = {}
 
