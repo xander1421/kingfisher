@@ -9,8 +9,10 @@ broadly — a wrong evaluator changes many agreement keys.*
 
 | mutation | what it breaks | detected |
 |---|---|---|
-| `sub-is-add` — `def_binary_number_op!(SubOp, +, …)` | `(- a b)` computes `a + b` | **4 / 64** |
-| `less-is-lesseq` — `def_binary_number_op!(LessOp, <=, …)` | `(< a a)` returns `True` | **0 / 64** |
+| `sub-is-add` | `(- a b)` computes `a + b` | **4 / 64** |
+| `less-is-lesseq` | `(< a a)` returns `True` | **0 / 64** |
+| `resolver-message` | the text a missing `import!` produces | **24 / 64** |
+| `stdlib-init` | one extra (unused) stdlib rule | **0 / 64** |
 
 A replica whose `<` is wrong at every boundary agrees **byte-identically with an
 honest replica on all 64 admitted programs**. Quorum would return UNANIMOUS.
@@ -18,18 +20,27 @@ honest replica on all 64 admitted programs**. Quorum would return UNANIMOUS.
 ## Detection by corpus class
 
 ```
-                  sub-is-add   less-is-lesseq
-empty        14      0/14           0/14
-import-fail  24      0/24           0/24
-error-only    4       0/4            0/4
-evaluated    22      4/22           0/22
-             --      ----           ----
-             64      4/64           0/64
+                  sub-is-add  less-is-lesseq  resolver-msg  stdlib-init
+empty        14      0/14         0/14            0/14         0/14
+import-fail  24      0/24         0/24           24/24         0/24
+error-only    4       0/4          0/4             0/4          0/4
+evaluated    22      4/22         0/22            0/22         0/22
+             --      ----         ----           -----        -----
+             64      4/64         0/64           24/64         0/64
 ```
 
-All detection lives in the 22 `evaluated` programs, which is what
-`CORPUS_COMPOSITION.md` predicted. The four detectors are
-`c1_grounded_basic`, `d2_higherfunc`, `d3_deptypes`, `d4_type_prop`.
+**The classes partition by layer, and each polices something the others cannot.**
+The 24 import-failures catch the resolver mutation **24/24** — perfectly, and
+they are the only class that catches it at all. They are not padding: they are
+the only evidence in the corpus that module resolution is deterministic across
+ISA and OS. Equally, no evaluation mutation touches them, which is why they
+looked inert until something in their own layer was broken.
+
+The 14 `empty` programs detected **nothing, in any of the four**. They remain
+padding on the current evidence, and they already adjudicate `NO_RESULTS`.
+
+The four `sub-is-add` detectors are `c1_grounded_basic`, `d2_higherfunc`,
+`d3_deptypes`, `d4_type_prop`.
 
 ## The two controls, because 0/64 is an ambiguous number
 
@@ -103,6 +114,29 @@ whole purpose is deciding what a binary is. It is also the same mtime mechanism
 `provenance.artifact_time` exists to police, reached from the other side: not a
 stale artifact next to fresh source, but fresh source made to *look* stale.
 
+## A mutation can be applied, compiled, and still not exist
+
+The first `resolver-message` targeted `mod.rs:871`:
+
+```rust
+#[cfg(not(feature = "pkg_mgmt"))]
+return Err(format!("Failed to resolve module {absolute_mod_path}"));
+```
+
+We build **with** `pkg_mgmt`, so that line is never compiled. The anchor
+matched, `anchored_replace` applied the edit, cargo rebuilt without error, and
+the mutant was inert — it would have been logged as `resolver-message 0/64`,
+which reads exactly like "the corpus cannot see resolver faults". The truth is
+the opposite: the live site is `mod.rs:916`, and the corpus catches it 24/24.
+
+The probe control reported **VOID** and no rate.
+
+`anchored_replace` guarantees the anchor **exists**, never that the line is
+**live**, and a feature-gated site is indistinguishable from a reachable one by
+reading the source. On this project that is a standing hazard rather than a
+one-off: the `manifest` domain axis exists precisely because feature flags
+change which code is in the binary.
+
 ## A second harness defect, from the same run
 
 Certifying this kept refusing with `STALE ARTIFACT ... cannot have been built
@@ -126,11 +160,17 @@ swept from a different tree is identifiable as such.
 
 ## Scope — what this does NOT license
 
-- **Two mutations, both evaluation-semantic.** A mutation to stdlib
-  initialisation would shift `fuel_used`, which is in the agreement key
-  `(status, fuel_used, hash)`, and would likely be caught by nearly all 64
-  including the import-failures. Untested here; do not assume 4/64 generalises
-  to every fault class.
+- ~~**Two mutations, both evaluation-semantic.** A mutation to stdlib
+  initialisation would shift `fuel_used` … and would likely be caught by nearly
+  all 64 including the import-failures.~~ **WITHDRAWN 2026-08-17 — run and
+  refuted.** `stdlib-init` is detected by **0/64**. Adding a rule to
+  `stdlib.metta` changes `!(kf-canary)` from `(kf-canary)` to `1`, so the mutant
+  is live, and yet not one program's agreement key moves. **`fuel_used` counts
+  program reduction only; it does not move when the stdlib grows.** So a replica
+  carrying extra or altered stdlib rules agrees byte-identically on all 64,
+  provided no dispatched program invokes the changed rule. That is a second
+  blind spot of the same shape as `<`, and it was written here as a confident
+  prediction one cycle before being measured.
 - It says nothing about whether hyperon is correct. Both mutants were injected
   deliberately into a correct evaluator.
 - It does not say quorum is worthless. Quorum catches a replica that *diverges*.

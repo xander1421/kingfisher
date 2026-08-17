@@ -1,22 +1,19 @@
 {
  "spike": "M1_9_mutation",
- "recorded_utc": "2026-08-17T11:18:24Z",
- "note": "REFUTED for the 24: resolver-message 24/24, and they are the ONLY class that catches it. NOT refuted for the 14 empty: 0 across all four.",
+ "recorded_utc": "2026-08-17T11:19:27Z",
+ "note": "REFUTED for the 24 (resolver-message 24/24, only class that catches it). NOT refuted for the 14 empty: 0 across all four.",
  "repos": [
   {
    "path": ".",
-   "head": "319413750d3bd52d9e24f0651cf149e55da50e93",
-   "clean": false,
-   "dirty_files": [
-    "spikes/M1_9_mutation/mutate.py",
-    "spikes/M1_9_mutation/mutation.json"
-   ],
-   "diff_sha256": "baaca09285ff30edb01af699b08a5e2e9401f7df63e7f686b9185e5271ffd63c",
-   "diff_bytes": 4529
+   "head": "87dbaae90503c5d21eaecd7dfb7e08933a5e23e6",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun",
-   "head": "319413750d3bd52d9e24f0651cf149e55da50e93",
+   "head": "87dbaae90503c5d21eaecd7dfb7e08933a5e23e6",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -44,8 +41,8 @@
    "sha256": "576884aaced5c0a5e624b94b5987d778dff8982856d65b20e6c6af22d4c09024",
    "bytes": 2810,
    "mtime": 1786965471,
-   "compared_ts": 1786965471,
-   "compared_clock": "mtime"
+   "compared_ts": 1786965549,
+   "compared_clock": "last-commit"
   },
   {
    "path": "baseline.json",
@@ -75,7 +72,7 @@
   {
    "name": "mutant-is-live",
    "must_fire_because": "0/64 is what a dead mutant, a failed rebuild or a missed anchor also produce",
-   "can_fail_because": "it DID fail this cycle: resolver-message v1 targeted mod.rs:871, which is under #[cfg(not(feature=\"pkg_mgmt\"))] and never compiled. Reported VOID instead of a phantom 0/64",
+   "can_fail_because": "it DID fail this cycle: resolver-message v1 hit mod.rs:871, under #[cfg(not(feature=\"pkg_mgmt\"))], never compiled. Reported VOID, not a phantom 0/64",
    "null_must_contain": "probe differs before vs after for every mutation",
    "fired": true,
    "detail": "",
@@ -102,7 +99,7 @@
   },
   {
    "name": "baseline-binary-verified-unmutated",
-   "must_fire_because": "copy2 preserved mtime, cargo skipped the rebuild and left the MUTATED binary on disk",
+   "must_fire_because": "copy2 preserved mtime, cargo skipped the rebuild, leaving the MUTATED binary on disk",
    "can_fail_because": "it DID fail -- the binary answered !(< 1 1)=True after the first run",
    "null_must_contain": "!(- 5 3)=2 and !(< 1 1)=False before the baseline is recorded",
    "fired": true,
@@ -116,7 +113,7 @@
   {
    "name": "classes-are-not-uniform",
    "must_fire_because": "if every class detected the same mutations the partition would be meaningless",
-   "can_fail_because": "if only `evaluated` ever fired, the other 42 programs would be shown to be pure padding -- which is what this run was testing for and did not find",
+   "can_fail_because": "if only `evaluated` ever fired, the other 42 would be shown pure padding -- what this run tested for and did not find",
    "null_must_contain": "at least one mutation detected by a class other than `evaluated`",
    "fired": true,
    "detail": "",
@@ -132,19 +129,16 @@
  "no_deps_reason": null,
  "source_mtimes": {
   ".": {
-   "newest": 1786965429,
-   "from": "spikes/M1_9_mutation/mutate.py"
+   "newest": 1786965549,
+   "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
    "newest": 1786955408,
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "STALE ARTIFACT baseline.json predates . source by 0.1h (newest source: spikes/M1_9_mutation/mutate.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "DIRTY TREE . at 31941375: 2 modified. The build is NOT 31941375."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "the 38 non-evaluating programs (14 empty + 24 import-failure) are pure padding -- no mutation is detectable by them",
  "carried_from_previous_record": [
   "falsifier",
