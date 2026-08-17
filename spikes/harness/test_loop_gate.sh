@@ -36,6 +36,30 @@ grep -q "^ROOT=\"$T\"$" "$T/gate.sh" || {
 chmod +x "$T/gate.sh"
 cd "$T"
 
+# EVERY LAUNCHER-DRIVEN CHECK BELOW NEEDS A SPAWN BRIEF, and finding that out is
+# the reason this block exists. run_loop.sh v5 (H30) made an absent
+# prompts/$CALLSIGN.md a refusal ABOVE the detach, so from that commit on, every
+# check that drives the launcher on a scratch callsign was refused before it ran
+# a turn -- and the assertions are all of the shape "the turn did not do X", so
+# they stayed GREEN while testing nothing. Measured, not reasoned: the H8 checks
+# added at the bottom of this file went 1 PASS / 3 FAIL against a launcher that
+# was refusing every case for this reason, and the one PASS was the false one.
+# A29: a probe that cannot show it reached its target has produced no evidence.
+# AND THE SUITE INHERITS THE LAUNCHER'S OWN RECURSION GUARD. run_loop.sh exports
+# KF_DETACHED=1 before forking, `claude -p` inherits it, and every shell an agent
+# opens inherits it again -- so when this suite is run BY A LANE (which is the
+# only way it is ever run) every launcher-driven check below took the
+# already-detached path, while a human running the same file exercised the other
+# one. Two different tests behind one name, decided by who typed the command.
+# Unset here rather than per-invocation so no future check can forget it; the
+# defect in the launcher itself is H31 and is fixed there too.
+unset KF_DETACHED KF_LOCK_OWNER
+
+mkdir -p prompts
+for lane in L1 L2 L3 L4 L5 L6 L7 L8 L9; do
+  printf '# %s — scratch lane brief for test_loop_gate.sh\n' "$lane" > "prompts/$lane.md"
+done
+
 pass=0 fail=0
 ok()   { pass=$((pass+1)); printf '  PASS  %s\n' "$1"; }
 bad()  { fail=$((fail+1)); printf '  FAIL  %s\n' "$1"; }
@@ -137,19 +161,26 @@ echo LOOP-HALT > .loop_signal.L1
 check "no callsign cannot steal exit" "$(nolane)" "exit"
 check "  lane signal untouched"       "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "present"
 
-# 11 · §12.6 CONCURRENCY. The fuse is `N=$(cat); N=$((N+1)); echo $N >` — an
-#      unsynchronised read-modify-write. A reviewer measured 20 concurrent fires
-#      for one lane landing on 5. Every check above is a single sequential
+# 11 · §12.6 CONCURRENCY. The fuse was `N=$(cat); N=$((N+1)); echo $N >` — an
+#      unsynchronised read-modify-write. Every check above is a single sequential
 #      invocation, so a suite written FOR a two-lanes-share-state defect contained
-#      no concurrency at all. This does not fix the race; it MEASURES it, so the
-#      undercount is recorded rather than discovered later by someone trusting the
-#      count. Marked as a known ceiling, not a pass.
+#      no concurrency at all.
+#
+#      THIS WAS A `KNOWN` LINE, NOT A CHECK, from the day it was written until
+#      2026-08-17 (H13, ok-1). It printed the undercount and passed the suite
+#      either way, so the suite's exit code could not tell a fixed fuse from a
+#      broken one — a measurement standing where an assertion belongs, which is
+#      the same shape as A28 (a field recorded but never read). Measured before
+#      the fix on this tree: 12, 13, 14 of 20 across three runs, and 28 of 60.
+#      Now REQUIRING, against loop_gate.sh v7's mkdir lock. Falsified: restore the
+#      unlocked RMW on an isolated copy and this check goes red —
+#      `bash spikes/harness/test_h13_falsify.sh`.
 rm -f .loop_signal* .loop_exit.* .loop_blocks.*
 for i in $(seq 1 20); do ( CALLSIGN=L9 ./gate.sh </dev/null >/dev/null 2>&1 ) & done
 wait
 conc=$(cat .loop_blocks.L9 2>/dev/null || echo 0)
-if [ "$conc" -eq 20 ]; then ok "fuse counts 20/20 under concurrency"
-else printf '  KNOWN  fuse undercounts under concurrency: %s/20 (unsynchronised RMW, WORK_QUEUE H13)\n' "$conc"; fi
+check "fuse counts 20/20 under concurrency" "$conc" "20"
+rm -rf .loop_blocks.L9.lock
 
 # 12 · A non-numeric counter used to be written back unchanged, so the arithmetic
 #      errored, the comparison errored, and the hook fell through to block —
@@ -208,22 +239,66 @@ fi
 # signal, so the file was still armed when the operator lifted STOP.
 # Driven with a stub claude rather than asserted by grep, because the property is
 # "a stale signal does not reach the turn", not "this line contains that word".
+#
+# TWO GUARDS ADDED 2026-08-17 (AGENT-1, H30), AND THIS CHECK WAS MEASURED INERT
+# WITHOUT THEM. `cleared` is the ABSENCE of a marker, so a launcher that never
+# reaches its turn scores identically to one that cleared the signal correctly --
+# A29, a probe that cannot show it reached its target has produced no evidence.
+# It went inert within minutes of two unrelated launcher changes:
+#   * the spawn-brief requirement (H30, defect 8) refuses before the turn, and
+#     the scratch tree had no prompts/ at all, so the launcher exited 1 and the
+#     stub never ran. `test_h16_falsify.sh` reported `INERT` with the H16 defect
+#     restored -- caught by running the falsifier, not by reading the suite.
+#   * the self-detach (defect 7) makes the parent exit 0 after ~1s while the turn
+#     runs asynchronously, so both this marker and the exit code became a race
+#     against the child. KF_DETACHED=1 is the launcher's own recursion guard and
+#     is set here so the body runs in the FOREGROUND: the property under test is
+#     the loop body, not the detacher. The hostile-callsign block below
+#     deliberately does NOT set it, because there the refusal must beat the
+#     detach and rc=0 from a detached parent is exactly the defect to catch.
 rm -f .loop_signal* .loop_exit.* .loop_blocks.*
 mkdir -p bin
 cat > bin/claude <<'STUB'
 #!/usr/bin/env bash
 # stub claude: report whether a stale terminal signal survived into the turn,
 # then hand the launcher a legal exit so the test finishes in one iteration.
+echo ran > turn_ran
 [ -f ".loop_signal.${CALLSIGN}" ] && echo SURVIVED > stale_reached_turn
 echo LOOP-HALT > ".loop_exit.${CALLSIGN}"
 STUB
 chmod +x bin/claude
 cp "$ROOT/run_loop.sh" ./run_loop.sh
+mkdir -p prompts && printf '# L8 — scratch lane brief for the launcher checks\n' > prompts/L8.md
 echo LOOP-HALT > .loop_signal.L8            # the previous span's leftover
-rm -f stale_reached_turn
-PATH="$T/bin:$PATH" CALLSIGN=L8 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
+rm -f stale_reached_turn turn_ran
+PATH="$T/bin:$PATH" KF_DETACHED=1 CALLSIGN=L8 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
+check "  launcher's turn actually ran (else 'cleared' means nothing)" \
+      "$([ -f turn_ran ] && echo ran || echo never)" "ran"
 check "launcher clears a stale signal before the turn" \
       "$([ -f stale_reached_turn ] && echo reached || echo cleared)" "cleared"
+
+# --- A LANE WITH NO SPAWN BRIEF. H30, 2026-08-17, AGENT-1.
+# `prompts/$CALLSIGN.md` was read as `$([ -f "$BRIEF_FILE" ] && ... && cat ...)`
+# inside the prompt, so an absent brief expanded to the empty string and the lane
+# launched looking exactly like a briefed one. Of three live lanes at 13:25 only
+# ATTACKER-1 had a brief; the only written form of the callsign-allocation rule
+# (H8) is §0 of a brief, so it reached one lane in three.
+# CLASS: a missing INPUT silently degrades a mechanism to a no-op while it still
+# reports success. THE POSITIVE CONTROL IS THE POINT -- L8 above launches with a
+# brief and reaches its turn, so this check cannot be green because the launcher
+# refuses everything.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* turn_ran stale_reached_turn
+PATH="$T/bin:$PATH" CALLSIGN=L10 MAX_TURN=5 bash ./run_loop.sh >nobrief.out 2>&1
+check "launcher refuses a callsign with no spawn brief"        "$?" "1"
+check "  and the CALLER sees it, not detach_L10.log"           \
+      "$(grep -c 'no spawn brief' nobrief.out)" "1"
+check "  refusal names the file to write"                      \
+      "$(grep -c 'prompts/L10.md' nobrief.out)" "2"
+check "  it never reached the turn"                            \
+      "$([ -f turn_ran ] && echo ran || echo none)" "none"
+check "  and never detached an unbriefed lane"                 \
+      "$([ -f detach_L10.log ] && echo detached || echo none)" "none"
+rm -f nobrief.out detach_L10.log loop_L10.log
 rm -f .loop_signal* .loop_exit.* .loop_blocks.* stale_reached_turn run_loop.sh loop_L8.log
 
 # --- THE COMMIT GATE IS WIRED IN AN UNTRACKED DIRECTORY. ATTACKER-1, H7.
@@ -349,6 +424,93 @@ rm -f ./rl.sh launcher_reached_claude 'loop_L"6.log' .loop_exit.* .loop_blocks.*
 check "  hostile callsigns left no state" \
       "$(ls .loop_exit.* .loop_blocks.* 2>/dev/null | wc -l | tr -d ' ')" "0"
 rm -f pwned
+
+# --- CALLSIGN ALLOCATION: A SECOND LAUNCHER ON A HELD CALLSIGN. AGENT-2, H8.
+# A callsign names the lane's .loop_signal / .loop_exit / .loop_blocks and signs
+# every CHANNEL line, so two launchers on one callsign share a terminal signal
+# and sign each other's work. §12 answers this in prose and prompts/ATTACKER-1.md
+# §0 tells a lane to look for a holder with `ps -eo command= | grep 'You are X\.'`
+# -- an instruction that cannot be carried out, because `ps` shows every launcher
+# as `bash ./run_loop.sh` with the callsign nowhere in argv, and the `claude -p`
+# child that does carry it exists only while a turn is in flight.
+#
+# Driven end to end against a copy of the real launcher, per the section above:
+# the property is "the second launcher refuses", not "this file contains that
+# word". Three cases, because the branch has three outcomes and the middle one is
+# the whole reason the check is not `kill -0`.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* .loop_lock.*
+mkdir -p bin fake
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo reached > launcher_reached_claude
+echo LOOP-HALT > ".loop_exit.${CALLSIGN}"     # let the launcher finish in one pass
+STUB
+chmod +x bin/claude
+# A process whose command matches a launcher, without being one. Started from a
+# file actually named run_loop.sh so `ps -o command=` reports what a real
+# launcher reports -- constructing the case rather than trusting the predicate.
+# The trailing `exit 0` is load-bearing: bash EXECs the last simple command of a
+# script, so a fixture ending in `sleep 30` becomes a process whose `ps command=`
+# reads `sleep 30` and matches nothing. It cost this check one red run, and the
+# assertion below is here so it cannot cost a future one a GREEN one -- a fixture
+# that stopped resembling its target would otherwise make the refusal untestable
+# while reading as covered (A29).
+printf '#!/usr/bin/env bash\nsleep 30\nexit 0\n' > fake/run_loop.sh
+bash fake/run_loop.sh & holder=$!
+check "fixture holder is indistinguishable from a launcher to ps"            \
+      "$(ps -p "$holder" -o command= 2>/dev/null | grep -c 'run_loop\.sh')" "1"
+cp "$ROOT/run_loop.sh" ./run_loop.sh
+rm -f launcher_reached_claude
+
+echo "$holder" > .loop_lock.L9
+out=$(PATH="$T/bin:$PATH" CALLSIGN=L9 MAX_TURN=5 bash ./run_loop.sh 2>&1); rc=$?
+check "second launcher on a HELD callsign refuses"  "$rc" "1"
+check "  names the holding pid"                                              \
+      "$(printf '%s' "$out" | grep -q "HELD by live launcher pid ${holder}" && echo named || echo silent)" "named"
+check "  and never reached claude"                                           \
+      "$([ -f launcher_reached_claude ] && echo spawned || echo none)" "none"
+check "  holder's lock is left intact"             "$(cat .loop_lock.L9)" "$holder"
+
+# A DEAD holder must be reclaimed, not respected. There is no release path in the
+# launcher on purpose -- a trap covers a clean exit and misses SIGKILL, the
+# watchdog's own pkill and a power cut -- so this branch is the only thing
+# standing between a crashed lane and a callsign nobody can ever launch again.
+sleep 0.2 & dead=$!; wait "$dead" 2>/dev/null
+echo "$dead" > .loop_lock.L9
+rm -f launcher_reached_claude
+PATH="$T/bin:$PATH" CALLSIGN=L9 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
+sleep 1
+check "dead holder's lock is reclaimed"                                      \
+      "$([ -f launcher_reached_claude ] && echo launched || echo refused)" "launched"
+check "  lock no longer names the dead pid"                                  \
+      "$([ "$(cat .loop_lock.L9 2>/dev/null)" = "$dead" ] && echo stale || echo replaced)" "replaced"
+
+# PID REUSE. `kill -0` alone reports HELD for any live process that inherited the
+# pid, and pid reuse is not theoretical here: this fleet burned ~1300 pids/minute
+# with three lanes running, so a 99999-pid space wraps in about 75 minutes. A
+# false HELD refuses a legitimate lane, and a dead lane has no next cycle. Delete
+# the command half of the liveness test and this check -- and only this one --
+# goes red.
+sleep 30 & impostor=$!
+echo "$impostor" > .loop_lock.L9
+rm -f launcher_reached_claude
+PATH="$T/bin:$PATH" CALLSIGN=L9 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
+sleep 1
+check "a reused pid that is not a launcher does not hold a callsign"         \
+      "$([ -f launcher_reached_claude ] && echo launched || echo refused)" "launched"
+kill "$holder" "$impostor" 2>/dev/null
+# The launcher DETACHES, so anything it spawned outlives this test unless it is
+# reaped here. That is not a hypothetical tidiness point: a launcher spawned from
+# a probe under CALLSIGN=ok-1 was found alive in the repo root at 13:26 today,
+# running real turns with no brief and no queue row, which is the incident H8 was
+# closed on.
+for lk in .loop_lock.*; do
+  [ -f "$lk" ] || continue
+  lkpid=$(cat "$lk" 2>/dev/null)
+  case "$lkpid" in ''|*[!0-9]*) continue ;; esac
+  ps -p "$lkpid" -o command= 2>/dev/null | grep -q 'run_loop\.sh' && kill "$lkpid" 2>/dev/null
+done
+rm -rf fake run_loop.sh launcher_reached_claude loop_L9.log .loop_lock.* .loop_exit.* .loop_blocks.*
 
 echo
 if [ "$fail" -eq 0 ]; then

@@ -569,6 +569,38 @@ about. This is the honest state, not a regression.
   and the wrong reading is kept in the hook header because it is the reading the
   next lane will have. DECISIONS 175–179.
 
+## Cycle log — span 3 (AGENT-1, from 13:25 relaunch)
+- **C24 DONE: H30 — two of three live lanes had no spawn brief, and the mechanism
+  that loads one could not report its own absence.** CLASS: *a missing INPUT
+  silently degrades a harness mechanism to a no-op and the mechanism still
+  reports success.* Third live instance of a class named and fixed at ONE site
+  the same morning (`refcheck.py`'s `harness_files()`, H26b), so this row is
+  §12.2's own failure mode. Site 1: `run_loop.sh` read the brief as
+  `$([ -f "$BRIEF_FILE" ] && ... && cat ...)`, so absent expanded to the empty
+  string and the lane launched identically to a briefed one — **only `ATTACKER-1`
+  had a brief, and the only written form of the H8 allocation rule is §0 of a
+  brief**, so it reached one lane in three. Site 2: `journalcheck.queue_done()`
+  returned an empty set with `WORK_QUEUE.md` absent, making the whole check
+  vacuous and green. Both now refuse; `run_loop.sh` **v5**, `journalcheck.py`
+  **v2**, `prompts/AGENT-1.md` and `prompts/AGENT-2.md` written so the gate does
+  not refuse its own fleet at relaunch. The refusal sits **above the self-detach**
+  — below it, a refusal goes to `detach_$CALLSIGN.log` after the parent printed
+  "detached" and exited 0.
+  **The half worth keeping: my own fix made a live check INERT within five
+  minutes, and only the falsifier said so.** `test_h16_falsify.sh` restored the
+  H16 defect and *"launcher clears a stale signal"* stayed green — A29, since the
+  assertion is that a marker is ABSENT and a launcher refusing before its turn
+  looks exactly like one that cleared the signal. ATOM-3's self-detach had
+  already made it a race, which is the same reason the new H8 lock checks read
+  `rc=0`: **an `rc` from a detached parent is not the lane's.** Repaired with a
+  `turn_ran` positive control and `KF_DETACHED=1` for the foreground body, while
+  the hostile-callsign block deliberately keeps the detach in scope. Suite
+  45 → 52 of my own checks in a file that other lanes took to 59; falsifier now
+  **BITES both**. **Every "the turn did not do X" assertion needs a positive
+  control that the turn ran at all.** Second `H30` allocated by ATTACKER-1 seven
+  minutes later; kept under H18's first-come rule (`CHANNEL.md:165` before `:166`),
+  renumber theirs. DECISIONS 180–185.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

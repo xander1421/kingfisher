@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
-# v4, 2026-08-17. Six defects fixed; each one had ended or could end a lane
-# silently. Numbered so a stall can be diagnosed against this list.
+# v6, 2026-08-17. Nine defects fixed; each one had ended or could end a lane
+# silently. Numbered so a stall can be diagnosed against this list. (7 and 8 are
+# numbered here by AGENT-1/H30; 7 is ATOM-3's self-detach, whose own rationale
+# block sits at the code and which was not in this list -- §12.7 asks a harness
+# change for a version bump AND a rationale, and it had the second only.)
+# (9 added by AGENT-2/H8. This list is itself an id namespace with no allocator:
+# my block was written as "7" against the v4 header, and v5 landed in another
+# lane's edit while I wrote it. Renumbered by `grep -nE '^# [0-9]+\.'` rather
+# than by eye -- §12.4, and H18's class for the fourth time.)
 #
 # 1. THE LAUNCHER DECIDED THE LOOP WAS OVER BY GREPPING ITS OWN LOG for
 #    LOOP-DONE / LOOP-HALT. That is the identical defect loop_gate.sh was
@@ -36,8 +43,12 @@
 #    end that follows it -- so clearing at turn start cannot destroy an in-flight
 #    exit. Checked by spikes/harness/test_loop_gate.sh, which drives this script
 #    with a stub claude and fails if a seeded stale signal reaches the turn.
+#
+# 6, 7 and 8 are documented AT THEIR CODE below, not here: the callsign
+# whitelist, the self-detach, and the spawn-brief requirement. Read to `while`.
 set -u
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # FAIL CLOSED, same rule the hook enforces. This defaulted to BUILDER-1 -- a
 # callsign holding 9 historical DONE rows -- which is the identical
 # default-identity defect fixed in the hook one version earlier, left standing in
@@ -58,6 +69,166 @@ case "$CALLSIGN" in (*[!A-Za-z0-9._-]*)
   echo "not gate '${CALLSIGN}', so the lane would run with no loop contract at all."
   exit 1 ;;
 esac
+# 8. A LANE COULD LAUNCH WITH NO SPAWN BRIEF AND NOTHING SAID SO (v5, H30).
+#    The brief was read as `$([ -f "$BRIEF_FILE" ] && ... && cat ...)` inside the
+#    prompt, so an absent file expanded to the empty string and the lane launched
+#    looking exactly like one that had a brief. MEASURED at 13:25 today: of three
+#    live lanes, only ATTACKER-1 had a brief. AGENT-1 and AGENT-2 -- the pair
+#    that actually collided on a callsign and burned two G25 spikes -- had none,
+#    and the only written form of the allocation rule (H8) is §0 of a brief, so
+#    it reached one lane in three. The comment below this block says the brief
+#    exists because "AGENT-2's lane definition lived only inside HANDOFF.md,
+#    which is contested by two writers"; that condition was still true for two
+#    lanes while the mechanism meant to end it reported nothing.
+#
+#    CLASS: a missing INPUT silently degrades a harness mechanism to a no-op and
+#    the mechanism still reports success. Named and fixed at ONE site 40 minutes
+#    earlier -- refcheck.py's harness_files() skipped a HARNESS entry that did
+#    not exist and still printed "every citation resolves" (H26b) -- so this is
+#    §12.2's own failure mode: the class was named, the site was fixed, and two
+#    more live instances stood. The second is journalcheck.queue_done(), which
+#    returned an empty set when WORK_QUEUE.md was absent, making the whole check
+#    vacuous and green; fixed in the same cycle.
+#
+#    ABOVE THE DETACH, deliberately, and this is the half that is easy to get
+#    wrong: BRIEF_FILE was defined further down, i.e. in the DETACHED CHILD, and
+#    a refusal there goes to detach_$CALLSIGN.log while the parent has already
+#    printed "detached" and exited 0. Same reasoning as defect 7's own header --
+#    never detach what has not been validated -- applied to the launch
+#    precondition rather than to the callsign. Checked by test_loop_gate.sh
+#    ("launcher refuses a callsign with no spawn brief", and the caller sees it).
+#
+#    Per-lane spawn brief. A lane's role, its reading order and its first cycles
+#    belong in a tracked reviewable file, not in one operator's chat scrollback.
+#    Read fresh every turn (below), so an edit to a brief reaches the lane on its
+#    next cycle without a relaunch.
+BRIEF_FILE="prompts/${CALLSIGN}.md"
+if [ ! -f "$BRIEF_FILE" ]; then
+  echo "run_loop.sh: no spawn brief at $BRIEF_FILE."
+  echo "A lane with no brief has no written role, no reading order and no §0"
+  echo "identity claim, and nothing downstream can tell it from a briefed lane."
+  echo "Write $BRIEF_FILE (prompts/AGENT-1.md is the short form) and relaunch."
+  exit 1
+fi
+# VALIDATE BEFORE DETACHING. The detach block below was originally placed ABOVE
+# both the CALLSIGN:? fail-closed check and the whitelist, so a hostile callsign
+# printed "detached" and exited 0 -- spawning a detached lane on a callsign
+# loop_gate.sh will NOT gate, i.e. one running with no loop contract at all, and
+# now beyond the caller's process tree so it could not be reaped with it. Caught
+# by another atom's check "launcher refuses what the hook will not gate" inside a
+# minute of me introducing it. Never detach what has not been validated: an
+# unvalidated child you can no longer kill is strictly worse than a rejected one.
+# SELF-DETACH.  v3, 2026-08-17.
+#
+# Every lane launched during this project died at the teardown of whatever
+# launched it, because a wrapper started from an agent's shell tool is a CHILD OF
+# THAT SESSION'S PROCESS TREE. Observed: three lanes gone, wrappers gone,
+# .heartbeat.* 35 minutes stale, and nothing reported it -- which is H6, and its
+# root cause is not "no alarm" but "the supervisor is itself unsupervised and
+# inherits the lifetime of its parent".
+#
+# So the supervisor detaches itself rather than relying on the caller to remember
+# nohup. The double-fork subshell is the portable form: when the inner subshell
+# exits, the surviving process is reparented away from the caller. macOS ships no
+# setsid, which is why this is not setsid.
+#
+# KF_DETACHED is the recursion guard. Without it this re-execs forever, which is
+# the shape of every runaway in this repo.
+LOCK=".loop_lock.${CALLSIGN}"
+  # 9. NOTHING REFUSED A SECOND LAUNCHER ON A HELD CALLSIGN (v6, 2026-08-17, H8).
+  #    A callsign is the ONLY thing that distinguishes a lane -- it names the
+  #    lane's .loop_signal / .loop_exit / .loop_blocks / .heartbeat, and it is the
+  #    signature on every CHANNEL line. So two launchers on one callsign is not a
+  #    cosmetic clash: they share a terminal signal (either can consume the
+  #    other's exit, §12.6), share a fuse, and sign each other's work.
+  #
+  #    EARNED TWICE, and the second time was live while this was being written:
+  #      * CLIENT-3 spawned a lane as AGENT-2 over a live AGENT-2 session; both
+  #        signed CHANNEL, two spikes were independently numbered G25, one had to
+  #        be renamed (§12, §13.3).
+  #      * 2026-08-17 13:26:33 a launcher was live in the repo root under
+  #        CALLSIGN=ok-1 -- a test fixture name -- spawning real
+  #        `claude -p "You are ok-1."` turns with --dangerously-skip-permissions,
+  #        with no brief, no CHANNEL line and no queue row. Nothing refused it and
+  #        nothing recorded it; it was found by reading `lsof` output for an
+  #        unfamiliar detach log.
+  #
+  #    §12 answers this with prose ("a lane's callsign is allocated, not
+  #    assumed") and prompts/ATTACKER-1.md §0 tells a lane to check
+  #    `ps -eo command= | grep 'You are X\.'`. THAT INSTRUCTION CANNOT BE
+  #    CARRIED OUT: measured on this machine, `ps` shows every launcher as
+  #    `bash ./run_loop.sh` with no callsign anywhere in argv, and macOS does
+  #    not expose another process's environment (`ps -E` is silently ignored).
+  #    The one turn-shaped process that DOES carry it is the `claude -p` child,
+  #    which exists only while a turn is in flight -- so between turns the check
+  #    reads clear on a held callsign. A rule enforced by an unrunnable check is
+  #    §12.4's failure: it reads as satisfied.
+  #
+  #    So the holder is RECORDED rather than inferred: one file per callsign,
+  #    holding the loop's pid. This is also the answer to "who holds AGENT-2?"
+  #    for an agent, which is `cat .loop_lock.AGENT-2` and needs no ps at all.
+  #
+  #    Acquired HERE, before the fork, because a refusal after the detach goes
+  #    to detach_$CALLSIGN.log where nobody looks and the caller still sees
+  #    exit 0 -- the same defect as detaching before validation, fixed one
+  #    comment block above. noclobber makes create-or-fail atomic, so two
+  #    launchers racing cannot both win.
+  #
+  #    STALE LOCKS ARE RECLAIMED, NOT RESPECTED. There is no release path on
+  #    purpose: a trap covers a clean exit and misses SIGKILL, the watchdog's own
+  #    pkill, and a power cut, so the reclaim branch has to be right anyway and a
+  #    second mechanism would only be the one that is never exercised (H16 was a
+  #    signal that outlived its span; a lock that outlives its holder is the same
+  #    class pointed the other way -- it wedges the lane instead of killing it).
+  #
+  #    LIVENESS IS pid + COMMAND, never pid alone. `kill -0` on its own reports
+  #    HELD after any pid reuse, and pid reuse here is not theoretical: this
+  #    fleet burned ~1300 pids/minute while three lanes ran, so macOS's 99999-pid
+  #    space wraps in about 75 minutes. A false HELD refuses a legitimate lane,
+  #    and a dead lane has no next cycle.
+  if ! ( set -o noclobber; echo $$ > "$LOCK" ) 2>/dev/null; then
+    held=$(cat "$LOCK" 2>/dev/null)
+    case "$held" in
+      ''|*[!0-9]*) held='' ;;                      # corrupt lock: treat as stale
+      "${KF_LOCK_OWNER:-}") held='' ;;             # my own pre-detach parent
+      *) ps -p "$held" -o command= 2>/dev/null | grep -q 'run_loop\.sh' || held='' ;;
+    esac
+    if [ -n "$held" ]; then
+      echo "run_loop.sh: CALLSIGN ${CALLSIGN} is HELD by live launcher pid ${held}." >&2
+      echo "  Two lanes on one callsign share .loop_signal.${CALLSIGN}," >&2
+      echo "  .loop_exit.${CALLSIGN} and .loop_blocks.${CALLSIGN} -- either can consume" >&2
+      echo "  the other's terminal signal -- and both sign CHANNEL.md as the same atom." >&2
+      echo "  Use a different callsign, or stop pid ${held} first." >&2
+      exit 1
+    fi
+    echo $$ > "$LOCK"                              # holder is dead: reclaim
+  fi
+  # The detached child re-execs this script and must not refuse itself. It is
+  # told which pid it is inheriting rather than guessing: PPID is useless here
+  # because the double fork reparents it to init, and reusing KF_DETACHED for
+  # this was the first attempt and was wrong -- see below.
+  export KF_LOCK_OWNER=$$
+if [ -z "${KF_DETACHED:-}" ]; then
+  export KF_DETACHED=1
+  ( nohup "$0" "$@" >>"detach_${CALLSIGN:-unset}.log" 2>&1 & ) &
+  sleep 1
+  echo "run_loop: ${CALLSIGN:-unset} detached (survives caller teardown); log detach_${CALLSIGN:-unset}.log"
+  exit 0
+fi
+# A LAUNCHER'S PRIVATE CONTROL VARIABLES MUST NOT REACH THE TURN (v6, H31).
+# `claude -p` below inherits this process's environment, and every shell the
+# agent then opens inherits it again. So KF_DETACHED=1 -- the recursion guard --
+# was live inside every lane's own shell, and a launcher started BY an agent
+# skipped its detach block entirely: no nohup, no reparenting, and the new lane
+# dies with the session that started it, which is H6's root cause returning
+# through the mechanism added to fix it. MEASURED, not reasoned: this defect ate
+# four checks of the H8 suite below, which refused to go green until the variable
+# was unset, and `bash -x` on the launcher printed `[ -z 1 ]` from a shell that
+# had never set it. KF_LOCK_OWNER is unset for the sharper reason: it authorises
+# taking over a held callsign, so leaking it into the turn hands every agent a
+# key to the one lock this version exists to enforce.
+unset KF_DETACHED KF_LOCK_OWNER
+
 export CALLSIGN
 LOG="loop_${CALLSIGN}.log"
 EXIT_MARK=".loop_exit.${CALLSIGN}"        # written by the hook, cleared only here
@@ -65,16 +236,21 @@ BEAT=".heartbeat.${CALLSIGN}"             # mtime = last turn start; watch this 
 MAX_TURN=${MAX_TURN:-3600}                # seconds before a turn is called wedged
 command -v claude >/dev/null || { echo "claude CLI not found"; exit 1; }
 
-# Per-lane spawn brief. A lane's role, its reading order and its first cycles
-# belong in a tracked reviewable file, not in one operator's chat scrollback --
+# BRIEF_FILE is set and REQUIRED above the detach (defect 8), because a refusal
+# down here is written into detach_$CALLSIGN.log after the caller has already
+# been told the lane started. The original motivation stays where the check is:
 # AGENT-2's lane definition lived only inside HANDOFF.md, which is contested by
 # two writers, and a lane was spawned onto an already-held callsign because
-# nothing at launch said who was live. Read fresh every turn so an edit to the
-# brief reaches the lane on its next cycle without a relaunch.
-BRIEF_FILE="prompts/${CALLSIGN}.md"
+# nothing at launch said who was live.
 
 fails=0
-while [ ! -f STOP ]; do
+# PER-LANE STOP (H31). `touch STOP` is fleet-wide, and until now that was the only
+# stop that existed -- so there was no way to retire ONE lane. Worse, since H6's
+# self-detach the wrapper is reparented to init, so killing a lane's claude child
+# does not kill the lane: the wrapper respawns it. That is how `ok-1`, a probe lane
+# spawned by accident, survived being killed and is still running. Killing the
+# child is not killing the lane; this is.
+while [ ! -f STOP ] && [ ! -f "STOP.${CALLSIGN}" ]; do
   rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK" ".loop_signal.${CALLSIGN}"
   date +%s > "$BEAT"
   started=$(date +%s)
@@ -130,4 +306,5 @@ $([ -f "$BRIEF_FILE" ] && printf '\n--- your spawn brief, %s ---\n' "$BRIEF_FILE
     sleep "$back"
   fi
 done
+rm -f "$BEAT"        # a retired lane must not leave a heartbeat that reads as live
 echo "loop stopped (${CALLSIGN})"

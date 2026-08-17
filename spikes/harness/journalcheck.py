@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""journalcheck.py v1 — H5. Nothing in both a DONE list and a NEXT list (§12.5).
+"""journalcheck.py v2 — H5, H30. Nothing in both a DONE list and a NEXT list (§12.5).
 
 HANDOFF is what an agent reads first after a restart, so a stale NEXT costs a
 whole cycle to rediscovered work. §12.5 was earned when HANDOFF's NEXT 1
@@ -170,10 +170,24 @@ def headline(block):
 
 
 def queue_done():
-    """Ids whose WORK_QUEUE row is DONE -- the authoritative status (§4)."""
+    """Ids whose WORK_QUEUE row is DONE -- the authoritative status (§4).
+
+    v2, 2026-08-17, H30. An absent WORK_QUEUE.md used to `return set()`, so
+    NOTHING was DONE, so no NEXT could collide with anything, so the whole check
+    ran GREEN and printed its clean summary -- vacuous and indistinguishable from
+    a clean journal. CLASS: a missing INPUT silently degrades a mechanism to a
+    no-op while it still reports success. Third live instance of a class named
+    and fixed at one site the same morning (refcheck.py's harness_files, H26b);
+    the second is run_loop.sh's spawn brief. §4 calls this file authoritative, so
+    running without it is not a degraded mode, it is no check at all.
+    """
     p = os.path.join(ROOT, 'WORK_QUEUE.md')
     if not os.path.exists(p):
-        return set()
+        sys.stderr.write(
+            'journalcheck: REFUSE -- no WORK_QUEUE.md at %s.\n'
+            'It is the authoritative status (§4); without it every id reads '
+            'not-DONE and this check passes vacuously.\n' % p)
+        sys.exit(2)
     out = set()
     for line in open(p, encoding='utf-8'):
         if not line.startswith('|'):
@@ -351,6 +365,25 @@ def selfcheck():
                  '- **NEXT 1**: an unrelated future thing\n'})
     assert not c and not s
     print('  QUIET    on an unrelated NEXT')
+
+    # v2, H30. The authoritative input is REQUIRED, not optional. Asserted by
+    # pointing ROOT at a directory that has no WORK_QUEUE.md -- this module's own
+    # directory, so no /tmp and no fixture tree, per the scan() note above. Before
+    # the fix this returned an empty set and the caller ran green.
+    print('  ...  exercising the refusal below; its message on stderr is expected')
+    global ROOT
+    was, ROOT = ROOT, os.path.dirname(os.path.abspath(__file__))
+    try:
+        queue_done()
+    except SystemExit as e:
+        assert e.code == 2, 'expected exit 2, got %r' % (e.code,)
+    else:
+        raise AssertionError('queue_done() returned instead of refusing with '
+                             'no WORK_QUEUE.md -- the check would pass vacuously')
+    finally:
+        ROOT = was
+    print('  REFUSES  when WORK_QUEUE.md, the authoritative input, is absent')
+
     print('selfcheck: both tiers fire, and the uncovered case is asserted uncovered')
     return 0
 
