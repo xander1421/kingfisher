@@ -889,12 +889,14 @@
   },
   "C_apply_insert_cases": {
    "fires": true,
-   "fails_if": "the branch-add (1) or the mid-prefix fork (4) case is never reached -- the equality control would then be blind to it",
+   "fails_if": "the branch-add (1) or mid-prefix fork (4) case is never reached, OR cases 2/3 fire while the encoding is still prefix-free, OR prefix_free goes False -- in which case cases 2 and 3 are live code that nothing here tests",
    "observed": {
     "case_1": 99,
     "case_2": 0,
     "case_3": 0,
-    "case_4": 301
+    "case_4": 301,
+    "encoding_prefix_free": true,
+    "cases_2_3_unreachable_by_construction": true
    }
   },
   "C_wrong_prior_root": {
@@ -959,8 +961,55 @@
     "trie_absence_proof_bytes": 257,
     "verified": true
    }
+  },
+  "C_root_is_state_not_history": {
+   "fires": true,
+   "fails_if": "two epoch groupings of one atom set reach different roots -- then the root is not a state commitment. It also means the root does NOT bind history: binding that needs the chain of (root, delta) pairs hashed together, which this spike does not build",
+   "observed": {
+    "grouping_a": "daf1d148be40a6a5",
+    "grouping_b": "daf1d148be40a6a5",
+    "chain_root": "daf1d148be40a6a5"
+   }
   }
  },
+ "scaling": [
+  {
+   "space_atoms": 100,
+   "nodes": 145,
+   "inserts_sampled": 25,
+   "probe_is_matched": true,
+   "proof_bytes_mean": 780.88,
+   "proof_bytes_max": 1100,
+   "new_digests_per_insert": 6.72
+  },
+  {
+   "space_atoms": 300,
+   "nodes": 442,
+   "inserts_sampled": 25,
+   "probe_is_matched": true,
+   "proof_bytes_mean": 1166.8,
+   "proof_bytes_max": 1580,
+   "new_digests_per_insert": 8.48
+  },
+  {
+   "space_atoms": 1000,
+   "nodes": 1423,
+   "inserts_sampled": 25,
+   "probe_is_matched": true,
+   "proof_bytes_mean": 1612.28,
+   "proof_bytes_max": 2240,
+   "new_digests_per_insert": 9.28
+  },
+  {
+   "space_atoms": 1222,
+   "nodes": 1746,
+   "inserts_sampled": 25,
+   "probe_is_matched": true,
+   "proof_bytes_mean": 1770.4,
+   "proof_bytes_max": 2603,
+   "new_digests_per_insert": 9.48
+  }
+ ],
  "final": {
   "atoms": 1247,
   "trie_root": "daf1d148be40a6a5784e70c13daf30b02f579a96e516be04792637903a1298eb",

@@ -830,3 +830,25 @@ slower") which is an artifact of the in-process harness doing extra work per
 program, not a real inversion. Recorded rather than dropped — a sweep that
 produces one implausible point has not been understood, and the honest response
 is to exclude it explicitly and say why.
+
+**A18, fourth instance — and the opposite error.** Having over-extrapolated a
+rate, I then over-retracted one. `units.affine_range` settles both by reporting
+the largest subrange where the slope is stable rather than a binary verdict:
+
+```
+USB   affine 173 KiB - 32 MiB   57.3 ms + 37.5 MB/s
+WiFi  affine  16 KiB -  1 MiB   25.1 ms +  9.4 MB/s
+```
+
+The USB fit was valid over 2.3 decades and I called it void; the WiFi regime
+ends an order of magnitude below the shard sizes that matter.
+
+**A rate is only a rate inside the range where the slope is stable, and the
+range travels with the number.** Reporting a rate without its range and
+withdrawing a rate that was valid within one are the same defect — the range was
+never stated, so there was nothing to check it against.
+
+Corollary for the tool: a checker that returns only pass/fail teaches you to
+discard data. `check_affine` said "not affine" for a curve with a wide stable
+regime; `affine_range` says where it holds. Prefer a checker that localises the
+failure to one that only announces it.

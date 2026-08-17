@@ -71,6 +71,35 @@ This is A18 applied to my own analysis one level up: A18 says check which
 regime the measurement sits in. Here the regime never stabilises within the
 range measured, so there is no single rate to report at all.
 
+## CORRECTION — "the affine model does not hold" was too broad
+
+`units.affine_range` finds the largest contiguous subrange where the model
+holds, rather than returning a binary verdict. Run on both curves:
+
+```
+USB   affine 173 KiB - 32 MiB   57.3 ms + 37.5 MB/s   (2.3 decades)
+WiFi  affine  16 KiB -  1 MiB   25.1 ms +  9.4 MB/s   (1.8 decades)
+```
+
+So the two curves fail differently, and I flattened that:
+
+- **USB has a wide stable regime and M1.5b's fit was valid in it.**
+  57.3 ms + 37.5 MB/s against the reported 63.2 ms + 37.9 MB/s. Only the first
+  pair (64 -> 173 KiB) is out of regime. Saying "the affine model is void" was
+  an over-retraction of a fit that held over 2.3 decades.
+- **WiFi has an affine regime too, but it ENDS at ~1 MiB** — and B1's
+  deployable shards are 6.41 MB and 34.83 MB, above it, where the measured
+  slope is still climbing (18.2 then 28.3 MB/s).
+
+The honest statement is neither "affine" nor "void": **a rate is only a rate
+inside the range where the slope is stable, and that range must be reported with
+it.** Both of my earlier statements omitted the range — first by extrapolating
+past it, then by discarding a fit that was valid inside it.
+
+Interpolated cost of a 6.41 MB shard, which is what the decision needs:
+**~380 ms over WiFi against ~230 ms over USB**, both outside any affine claim
+and read off the measured points.
+
 ## What this does to the QUIC decision
 `analysis/TRANSPORT_QUIC.md` deferred QUIC because the fixed component was "27%
 and falling" at deployable shard sizes — computed from the USB affine fit.

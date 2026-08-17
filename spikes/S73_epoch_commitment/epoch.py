@@ -332,25 +332,41 @@ def main():
     # denominator grows, which says nothing about the cost of one addition.
     # This is the number that decides deployability, so it is measured, not
     # extrapolated from the last row.
+    # MATCHED HOLD-OUT. The first version drew a fresh set of probe atoms for
+    # each space size, so the rows differed in BOTH space size and which atoms
+    # were inserted -- and the proof bytes came out non-monotonic (433 / 279 /
+    # 952), which is a confound reported as a rate (A18). The same 25 held-out
+    # atoms are now inserted into every space, so only the space size varies.
+    # ...and the matched hold-out needed a SECOND fix. Taking the probe as the
+    # lexicographic tail `ks_all[-25:]` and the base as `pool[:n]` made every
+    # probe diverge at or near the root, because a sorted prefix of the key space
+    # contains nothing adjacent to a sorted suffix of it. The result was 293 B
+    # flat across a 10x space range -- the cost of inserting OUTSIDE the occupied
+    # range, not the cost of an insert. Shuffle first so both probe and base are
+    # spread across the key space and the probes land surrounded.
     out['scaling'] = []
-    for n in (100, 300, 1000, len(ks_all := sorted(seen_keys))):
-        if n > len(ks_all):
+    ks_all = sorted(seen_keys)
+    shuf = list(ks_all)
+    random.Random(SEED).shuffle(shuf)
+    probe = shuf[:25]
+    pool = shuf[25:]
+    for n in (100, 300, 1000, len(pool)):
+        if n > len(pool):
             break
-        base = ks_all[:n]
+        base = set(pool[:n])
         rt = commit(base)
-        r3 = random.Random(SEED)
         pb, rh, dg = [], [], all_digests(rt)
-        for kk in [k for k in ks_all[n:] if k not in set(base)][:25] or ks_all[:0]:
+        for kk in probe:
             pf = prove_insert(rt, kk)
-            assert verify_insert(rt.h, kk, pf) == commit(set(base) | {kk}).h
+            assert verify_insert(rt.h, kk, pf) == commit(base | {kk}).h
             pb.append(steps_bytes(pf['steps']) + desc_bytes(pf['node']) + len(kk))
-            rh.append(len(all_digests(commit(set(base) | {kk})) - dg))
-        if pb:
-            out['scaling'].append({
-                'space_atoms': n, 'nodes': len(dg), 'inserts_sampled': len(pb),
-                'proof_bytes_mean': sum(pb) / len(pb),
-                'proof_bytes_max': max(pb),
-                'new_digests_per_insert': sum(rh) / len(rh)})
+            rh.append(len(all_digests(commit(base | {kk})) - dg))
+        out['scaling'].append({
+            'space_atoms': n, 'nodes': len(dg), 'inserts_sampled': len(pb),
+            'probe_is_matched': True,
+            'proof_bytes_mean': sum(pb) / len(pb),
+            'proof_bytes_max': max(pb),
+            'new_digests_per_insert': sum(rh) / len(rh)})
 
     out['final'] = {'atoms': len(seen_keys), 'trie_root': root.h.hex(),
                     'xor_root': xor_digest(sorted(seen_keys)).hex(),
@@ -405,11 +421,22 @@ def main():
         cases[1 if (m == len(P) and len(R) > len(P)) else
               2 if (m == len(P) and len(R) == len(P)) else
               3 if m == len(R) else 4] += 1
+    # Cases 2 and 3 need one atom's encoding to be a proper PREFIX of another's,
+    # and `encode` is self-delimiting, so it is prefix-free and they cannot occur.
+    # That is checked rather than asserted: if the encoding ever stops being
+    # prefix-free (interior subexpressions as keys would do it), `prefix_free`
+    # goes False and those two branches become live, untested code.
+    prefix_free = not any(ks[i + 1].startswith(ks[i]) for i in range(len(ks) - 1))
     C['C_apply_insert_cases'] = {
-        'fires': all(v > 0 for k_, v in cases.items() if k_ in (1, 4)),
-        'fails_if': 'the branch-add (1) or the mid-prefix fork (4) case is never '
-                    'reached -- the equality control would then be blind to it',
-        'observed': {f'case_{k_}': v for k_, v in cases.items()}}
+        'fires': cases[1] > 0 and cases[4] > 0 and prefix_free
+                 and cases[2] == 0 and cases[3] == 0,
+        'fails_if': 'the branch-add (1) or mid-prefix fork (4) case is never '
+                    'reached, OR cases 2/3 fire while the encoding is still '
+                    'prefix-free, OR prefix_free goes False -- in which case '
+                    'cases 2 and 3 are live code that nothing here tests',
+        'observed': {**{f'case_{k_}': v for k_, v in cases.items()},
+                     'encoding_prefix_free': prefix_free,
+                     'cases_2_3_unreachable_by_construction': prefix_free}}
 
     # C_wrong_prior_root -- fold a valid delta from the WRONG prior root.
     # FAILS IF it still produces a root; the chain would not bind history.

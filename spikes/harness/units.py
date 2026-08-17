@@ -70,6 +70,34 @@ def check_affine(points, tol=0.25):
     return True, f'adjacent slopes within {spread:.0%}; affine holds'
 
 
+def affine_range(points, tol=0.25, min_points=3):
+    """Largest CONTIGUOUS subrange over which the affine model holds.
+
+    A binary affine/not verdict is too blunt: a curve can have a stable regime
+    with a different one below it. Measured example -- over USB the adjacent
+    slopes are 18.4 | 36.8 36.6 36.7 37.3 37.9 MB/s, so the model holds from
+    173 KiB up and only the first pair is out of regime. Over WiFi they are
+    1.0 8.1 8.7 9.7 18.2 28.3 and never settle.
+
+    Returns (lo_x, hi_x, slope, intercept) or None. Report the RANGE with the
+    rate, always: a rate without the range it holds over is the A18 defect
+    in a more respectable coat.
+    """
+    pts = sorted((float(x), float(y)) for x, y in points)
+    best = None
+    for i in range(len(pts)):
+        for j in range(i + min_points - 1, len(pts)):
+            ok, _ = check_affine(pts[i:j + 1], tol)
+            if ok and (best is None or (j - i) > (best[1] - best[0])):
+                best = (i, j)
+    if best is None:
+        return None
+    i, j = best
+    sub = pts[i:j + 1]
+    a, b = fit_or_refuse(sub, min_decade_span=0.0)
+    return sub[0][0], sub[-1][0], b, a
+
+
 def attribute_intercept(total, components, tol=0.30):
     """(ok, detail). An intercept must be accounted for by named components.
 
@@ -134,7 +162,20 @@ def demo():
     r2, _ = ratio_with_operating_point(6.82, 59.0)
     assert round(r1) == 29 and round(r2, 2) == 1.12, (r1, r2)
     assert 'AT work=' in n1
-    print('units: 11 assertions pass')
+    # affine_range separates "no affine regime" from "affine above a threshold"
+    usb = [(64,54.4),(173,60.2),(512,69.2),(2048,110.2),(6560,230.1),
+           (13100,401.2),(32768,908.6)]
+    r = affine_range(usb)
+    assert r is not None, 'USB has a stable regime and affine_range missed it'
+    lo, hi, slope, icept = r
+    assert lo >= 173 and hi == 32768, r
+    mbs = (1/1024)/(slope/1000)
+    assert 35 < mbs < 40, mbs
+    # WiFi has no affine regime spanning most of its range
+    rw = affine_range(wifi)
+    assert rw is None or (rw[1]/rw[0]) < (16384/4)/3, \
+        f'WiFi should have no wide affine regime, got {rw}'
+    print('units: 15 assertions pass')
 
 
 if __name__ == '__main__':

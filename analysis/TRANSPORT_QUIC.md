@@ -5,7 +5,11 @@
 > real WiFi (`spikes/M1_7_transport/LAN_RESULT.md`), **the affine model does not
 > hold** — bandwidth climbs from 1.0 to 28.3 MB/s with transfer size, so there
 > is no single fixed component to be "27% and falling". The recommendation
-> (defer) still stands, but the *reason* below is void.
+> (defer) still stands. The *reason* below was first marked void and that was
+> **too broad**: `units.affine_range` shows the USB fit holds over 173 KiB-32 MiB
+> (57.3 ms + 37.5 MB/s), so it was valid where it was applied. What is actually
+> wrong is that it was carried to WiFi, whose affine regime ends at ~1 MiB while
+> deployable shards are 6.41 MB and above.
 >
 > The replacement reason was also tested and also false: plain-TCP keep-alive
 > saves only **1–11%**, so it does not capture a large win either. What it
