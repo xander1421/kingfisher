@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'harness'))
 from canon import canon, canon_alpha_strict, is_ground, AlphaLossy
 import bansurface
+from instrument import check_nonempty
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_3_worker'))
 import preflight
@@ -164,6 +165,30 @@ def key(e):
     only its own hash, we cannot, and the envelope is flagged so the gap is
     visible rather than silently trusted."""
     if e is None: return None
+
+    # SOUNDNESS. `results_text` was guarded for ABSENCE and not for EMPTINESS, so
+    # canon('') -> '' -> sha256('') = e3b0c442..., and three workers returning an
+    # empty results block keyed IDENTICALLY and adjudicated UNANIMOUS -- agreement
+    # on nothing. `sorted_hash` of '' or None agreed the same way. Because key()
+    # prefers results_text when present, an empty block also silently DISCARDED
+    # the worker's own sorted_hash.
+    #
+    # An empty capture is not a measurement, so such a worker did not answer:
+    # returning None routes it into the existing non-answer path
+    # (`live = [k for k in ks if k is not None]`) and out through
+    # REDUCED_QUORUM / NO_RESULTS, which already refuse to call a short quorum
+    # clean. No new verdict, no new branch.
+    #
+    # instrument.check_nonempty already refused both '' and the empty-hash
+    # constants; q3.py never called it. The guard existed at the shared site and
+    # was not wired -- found by a fresh reviewer 2026-08-17.
+    _res = e.get('results_text')
+    _cand = _res if _res is not None else e.get('sorted_hash')
+    _ok, _why = check_nonempty(_cand, 'result member')
+    if not _ok:
+        e['empty_result'] = _why
+        return None
+
     txt = e.get('results_text')
     if txt is not None:
         # alpha is lossless ONLY on a ground result set. A non-ground result can
@@ -200,7 +225,14 @@ def adjudicate(envs):
     live = [k for k in ks if k is not None]
     dispatched, returned = len(ks), len(live)
     if not live:
-        return 'NO_RESULTS', None, 0, dispatched, returned
+        # Was a 5-tuple while every sibling path and the only production caller
+        # (q3.py, `v, k, n, disp, ret, dom = adjudicate(envs)`) use 6, so total
+        # quorum loss -- the BEST case for the crafted-job availability attack
+        # described below -- took the coordinator down with a ValueError instead
+        # of recording NO_RESULTS. test_adjudicate.py asserted only [0], so the
+        # suite exercised the function differently from the caller and could not
+        # see it. Found by a fresh reviewer 2026-08-17.
+        return 'NO_RESULTS', None, 0, dispatched, returned, 0
     k, n = Counter(live).most_common(1)[0]
 
     # A worker that never answered SHRANK the quorum. Counting agreement over

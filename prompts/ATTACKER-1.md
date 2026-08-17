@@ -115,7 +115,7 @@ in prose does nothing; the hook does not read your transcript.
 `.claude/hooks/loop_gate.sh`, the `settings.json` files, the journals, and
 `spikes/harness/`. On the single day anyone looked at it, it was carrying: a
 Stop hook registered in a directory no session used and therefore inert for a
-whole session; a launcher that had never once been run; a launcher that decided
+whole session; a launcher whose supervision had never been exercised; a launcher that decided
 the loop was over by grepping its own log for the marker words the hook's
 refusal message quotes; two lanes sharing one runaway fuse; a hook that could
 not tell a lane from a human, so reviewers reading the repo incremented the

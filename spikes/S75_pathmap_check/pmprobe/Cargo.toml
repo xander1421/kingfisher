@@ -1,0 +1,10 @@
+[package]
+name = "pmprobe"
+version = "0.1.0"
+edition = "2024"
+
+# elders/ is UNTRUSTED cloned code (MISSION_LOOP §10): built and tested in place
+# via a path dependency, never vendored or modified. `counters` is a non-default
+# feature and pathmap's node introspection is gated behind it.
+[dependencies]
+pathmap = { path = "../../../elders/PathMap", features = ["counters"] }

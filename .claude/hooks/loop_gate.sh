@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# loop_gate.sh v4 — Stop hook for MISSION_LOOP continuous mode.
+# loop_gate.sh v5 — Stop hook for MISSION_LOOP continuous mode.
 # Terminal signals are FILES, not prose: to end legally, the agent must
-# write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal
-# (or, preferred with more than one lane, .loop_signal.$CALLSIGN).
+# write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.$CALLSIGN.
+# Bare .loop_signal is NO LONGER ACCEPTED -- see v5 below.
 # Mentioning those words in conversation has no effect.
 #
 # ROOT is pinned. CLAUDE_PROJECT_DIR was unset and the session project dir is
@@ -51,9 +51,24 @@ EXIT_MARK=".loop_exit.${LANE}"
 BLOCKS=".loop_blocks.${LANE}"
 
 # 3 · Agent terminal signal — exact content, consumed on use.
-#     Per-lane path first; bare .loop_signal still accepted because MISSION_LOOP
-#     §7 documents it and live agents were started against that contract.
-for SIGFILE in ".loop_signal.${LANE}" ".loop_signal"; do
+#
+# v5, 2026-08-17: BARE .loop_signal IS NO LONGER ACCEPTED, and its acceptance was
+# a live lane-isolation hole for three versions. Reproduced by a reviewer:
+#
+#   echo LOOP-HALT > .loop_signal    # exactly what MISSION_LOOP §7 instructed
+#   CALLSIGN=L2 ./gate.sh   -> EXIT, writes .loop_exit.L2, consumes the signal
+#   CALLSIGN=L1 ./gate.sh   -> BLOCKED, no marker, signal already gone
+#
+# L2 exits in L1's place and L1 can then never exit. §12.6 was satisfied in the
+# naming and defeated by the compatibility branch. Worse, ATOM-3 broadcast to the
+# whole fleet that isolation was "now per-callsign, and there is a test that fails
+# if lane isolation regresses" -- check 5 tested only the per-lane path, and
+# check 3 certified the UNSAFE path worked without ever testing its isolation.
+#
+# The deferral was circular: H9 kept the branch because §7 documented it, and §7
+# kept documenting it because the code accepted it. Both sides are cut in the
+# same edit. §7 now instructs the per-lane path only.
+for SIGFILE in ".loop_signal.${LANE}"; do
   [ -f "$SIGFILE" ] || continue
   SIG=$(tr -d '[:space:]' < "$SIGFILE")
   case "$SIG" in
@@ -75,7 +90,13 @@ done
 #     for the runaway it exists to stop. Left per-turn and relabelled rather
 #     than moved to per-session, because changing the semantics under two live
 #     lanes is a cutover change; opened as H11.
-N=$(cat "$BLOCKS" 2>/dev/null || echo 0); N=$((N+1))
+# A non-numeric counter used to be written back unchanged, so bash arithmetic
+# errored, the -gt comparison errored, and the hook fell through to block --
+# permanently, with a fuse that could never trip. `printf '3x' > .loop_blocks.L5`
+# reproduced it. Anything not all-digits is treated as absent.
+N=$(cat "$BLOCKS" 2>/dev/null || echo 0)
+case "$N" in (''|*[!0-9]*) N=0 ;; esac
+N=$((N+1))
 echo "$N" > "$BLOCKS"
 if [ "$N" -gt "${MAX_BLOCKS:-400}" ]; then
   echo LOOP-FUSE > "$EXIT_MARK"

@@ -160,7 +160,14 @@ def repo_state(path):
         'path': path,
         'head': head,
         'clean': dirty == '',
-        'dirty_files': [l[3:] for l in dirty.splitlines()] if dirty else [],
+        # Second site of the defect this file NAMES at line 81 and fixes at 84:
+        # _run strips the output, eating the leading space of porcelain's
+        # two-column status, so l[3:] is off by one on the FIRST line only --
+        # which is why 10 of 13 provenance.json files carry an unresolvable first
+        # entry ("ISSION_LOOP.md", "claude/hooks/loop_gate.sh"). Family C, in the
+        # module whose job is deciding the artifact is not what you think.
+        'dirty_files': [l.split(None, 1)[1] if len(l.split(None, 1)) > 1 else l
+                        for l in dirty.splitlines()] if dirty else [],
         # a third party can reproduce the exact tree from head + this patch
         'diff_sha256': hashlib.sha256(diff.encode()).hexdigest() if diff else None,
         'diff_bytes': len(diff),

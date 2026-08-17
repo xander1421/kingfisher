@@ -21,7 +21,12 @@
 #    forever. macOS ships no timeout(1), so the watchdog is inline.
 set -u
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export CALLSIGN=${CALLSIGN:-BUILDER-1}
+# FAIL CLOSED, same rule the hook enforces. This defaulted to BUILDER-1 -- a
+# callsign holding 9 historical DONE rows -- which is the identical
+# default-identity defect fixed in the hook one version earlier, left standing in
+# the launcher by the author of "fix the class, not the site". Found by a reviewer.
+: "${CALLSIGN:?run_loop.sh: set CALLSIGN explicitly, e.g. CALLSIGN=AGENT-1 ./run_loop.sh}"
+export CALLSIGN
 LOG="loop_${CALLSIGN}.log"
 EXIT_MARK=".loop_exit.${CALLSIGN}"        # written by the hook, cleared only here
 BEAT=".heartbeat.${CALLSIGN}"             # mtime = last turn start; watch this for staleness
@@ -47,7 +52,7 @@ while [ ! -f STOP ]; do
   # never match the other lane or a human's interactive session.
   ( claude -p "You are ${CALLSIGN}. Read CLAUDE.md, then MISSION_LOOP.md, then HANDOFF.md if present, then run cycles per the loop contract.
 
-The harness evolves with the codebase (MISSION_LOOP §12, CLAUDE.md §6). It is the instrument that runs every other instrument, and it had never been attacked before 2026-08-17 — it was carrying an inert Stop hook, a launcher that had never been run, and re-entry that depended on remembering one call per turn. So: a harness defect is a class-H WORK_QUEUE row, not a fix you make in passing. Fix the CLASS and not the site — name the defect class in one line, grep the whole harness for it, and post the class to livechat.log so the other lane greps its own tree. Resolve every reference to a section, spec or file mechanically rather than by eye. Any harness component you touch keeps a runnable check that fails when it breaks, and gains a version bump with a rationale block naming the defect removed. At least every fourth ATTACK cycle targets the loop itself rather than a spike.
+The harness evolves with the codebase (MISSION_LOOP §12). It is the instrument that runs every other instrument, and it had never been attacked before 2026-08-17 — it was carrying an inert Stop hook, a launcher whose supervision had never been exercised, and re-entry that depended on remembering one call per turn. So: a harness defect is a class-H WORK_QUEUE row, not a fix you make in passing. Fix the CLASS and not the site — name the defect class in one line, grep the whole harness for it, and post the class to livechat.log so the other lane greps its own tree. Resolve every reference to a section, spec or file mechanically rather than by eye. Any harness component you touch keeps a runnable check that fails when it breaks, and gains a version bump with a rationale block naming the defect removed. At least every fourth ATTACK cycle targets the loop itself rather than a spike.
 
 A wrong number gets retracted by the next cycle. A dead lane has no next cycle.
 $([ -f "$BRIEF_FILE" ] && printf '\n--- your spawn brief, %s ---\n' "$BRIEF_FILE" && cat "$BRIEF_FILE")" \
