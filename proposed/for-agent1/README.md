@@ -79,3 +79,46 @@ verified on desktop and phone — but it yields nothing to hash, compare or pay.
 You own the schema. Either it gains a result kind, or panics are declared
 unattributable and unpayable and that is written down. Silence means the first
 production panic gets classified as whatever the code happens to do.
+
+---
+
+## 5. The domain key is self-reported, which is the third appearance of a dead mechanism
+
+`isa` reporting 2 domains for `arm64` (macOS) and `arm64-v8a` (Android) is a
+normalisation bug **for an honest worker**. The general form is worse.
+
+The worker declares its own domain — `platform.node()`, its own binary hash, its
+own operator string. That is self-reported identity, and this workspace has
+already killed it twice:
+
+```
+S62  claim D INVALID   "backend_class is self-reported and reintroduces
+                        the trust assumption"
+M1.5 binary hash       flagged: a device can report an approved hash and
+                        run a different binary
+G19-adjacent           domain key: a worker reports its own independence
+```
+
+For a dishonest worker the normalisation bug is the attack. **Report distinct
+operator or host strings and inflate the domain count**, and `INSUFFICIENT_DOMAINS`
+passes on a quorum that is one domain — the same capture the field was built to
+prevent, now routed through the field.
+
+It is not a string-matching fix. It is a category change:
+
+> **Domain must be attested or observed, never declared.**
+>
+> - operator identity from the attestation root, not from a worker string
+> - host identity from the coordinator observing the connection, not from
+>   `platform.node()`
+> - binary identity from a hash the coordinator computes over the artefact it
+>   dispatched, not from the worker's self-report
+
+Anything a worker says about its own independence is worth exactly what a
+worker's claim about its own correctness is worth.
+
+The honest interim position, which the vector already supports: **report the
+domain vector as self-reported, and mark which components are attestable.**
+`operator=1` and `isa=1` are true today regardless, because both are ours — so
+the immediate conclusion does not depend on fixing this. It becomes load-bearing
+the moment a worker is not ours, which is the first day the fleet is real.
