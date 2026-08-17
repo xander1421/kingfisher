@@ -1,0 +1,78 @@
+{
+  "seed": 20260817,
+  "corpus_triples": 272115,
+  "D": 1024,
+  "vtcm_bytes": 8388608,
+  "B": {
+    "1": {
+      "bundles": 272115,
+      "store_bytes": 34830720,
+      "store_mb": 34.83072,
+      "compression_vs_B1": 1.0,
+      "fits_vtcm": false,
+      "store_frac_checked_median": 0.0,
+      "store_frac_checked_p90": 0.0,
+      "exact_rows_checked_median": 0.0
+    },
+    "4": {
+      "bundles": 68029,
+      "store_bytes": 8707712,
+      "store_mb": 8.707712,
+      "compression_vs_B1": 3.9999853003865997,
+      "fits_vtcm": false,
+      "store_frac_checked_median": 0.0,
+      "store_frac_checked_p90": 0.0,
+      "exact_rows_checked_median": 0.0
+    },
+    "8": {
+      "bundles": 34015,
+      "store_bytes": 4353920,
+      "store_mb": 4.35392,
+      "compression_vs_B1": 7.999853006026753,
+      "fits_vtcm": true,
+      "store_frac_checked_median": 0.0,
+      "store_frac_checked_p90": 0.0016666666666666668,
+      "exact_rows_checked_median": 0.0
+    },
+    "16": {
+      "bundles": 17008,
+      "store_bytes": 2177024,
+      "store_mb": 2.177024,
+      "compression_vs_B1": 15.999235653809972,
+      "fits_vtcm": true,
+      "store_frac_checked_median": 0.0,
+      "store_frac_checked_p90": 0.0016666666666666668,
+      "exact_rows_checked_median": 0.0
+    },
+    "32": {
+      "bundles": 8504,
+      "store_bytes": 1088512,
+      "store_mb": 1.088512,
+      "compression_vs_B1": 31.998471307619944,
+      "fits_vtcm": true,
+      "store_frac_checked_median": 0.0,
+      "store_frac_checked_p90": 0.005,
+      "exact_rows_checked_median": 0.0
+    },
+    "64": {
+      "bundles": 4252,
+      "store_bytes": 544256,
+      "store_mb": 0.544256,
+      "compression_vs_B1": 63.99694261523989,
+      "fits_vtcm": true,
+      "store_frac_checked_median": 0.0016666666666666668,
+      "store_frac_checked_p90": 0.011666666666666667,
+      "exact_rows_checked_median": 453.52500000000003
+    },
+    "128": {
+      "bundles": 2126,
+      "store_bytes": 272128,
+      "store_mb": 0.272128,
+      "compression_vs_B1": 127.99388523047978,
+      "fits_vtcm": true,
+      "store_frac_checked_median": 0.005,
+      "store_frac_checked_p90": 0.03166666666666667,
+      "exact_rows_checked_median": 1360.575
+    }
+  }
+}

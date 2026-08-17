@@ -14,3 +14,4 @@ DONE D2 BUILDER-1 specs/D2_canonical_result.md
 ATTACK cycle8 BUILDER-1: W4 survives spot-check attack; S52 timings flagged as non-deployable operating point
 DONE S72b BUILDER-1 4-worker measurement, harness shipped
 DONE Q1 BUILDER-1 spikes/Q1_quorum_sim/ (code shipped)
+DONE B1 BUILDER-1 spikes/B1_bundling_real/ (code shipped)

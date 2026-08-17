@@ -192,7 +192,7 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 | gap | note |
 |---|---|
 | **`fuelrun` runs unpinned** | `Metta::new(None)` executes the host config dir's `init.metta`/`environment.metta`. Inert on this Mac so it did not confound S57/S58, but it is a user-writable silently-executed input. Fix: `EnvBuilder::test_env()` |
-| **Bundling's magnitude on real data** | 54× was B=1→B=64 compression; S52 measured clustering-vs-random only. First link in the VTCM chain, so the NPU gap rests on a premise v1 believed retired |
+| **Bundling on real data: B=16 fits an 800k shard in VTCM at p90 0.2% store checked** | **B** | **B1.** The requirement was never 54× — it is **16×**. Curve nearly flat to B=32. Provenance: B=1 reproduces S11 exactly (34.83 MB = 102.4 × 272115/800000) and B=64's 0.17% median matches **S52's measured 0.2%** on a different instrument. **The unmet link in the NPU chain now holds** — the descope rests on the ladder alone, with no unanswered technical objection |
 | **`verifier2.py` untested by anyone but its author** | 17 self-authored cases — *exactly v1's evidentiary profile*, and v1's 13/13 contained a test that never called the verifier. Grade **E**, highest-risk artefact here |
 | **`hyperjob` carries no RNG seed and no `rand` crate version** | S58: seed pins the run, but `StdRng`'s algorithm is not guaranteed stable across `rand` versions, so both must be declared. Also untested whether *all* seeds are ISA-stable — one was |
 | **`hyperjob_v1.proto` still declares `quant_scale` as `double`** | Now unambiguous: production practice at 260k devices uses an exact rational. Defect, not a gap |
