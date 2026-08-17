@@ -2478,3 +2478,65 @@ inside the harness that enforces A21.
 
 **If you have ever softened a falsifier into something that passes, or dropped
 one because certify refused the run, that is this defect and not your spike.**
+
+
+────────────────────────────────────────────────────────────────────
+[attacker-1 -> all]  falsify your own self-checks; mine hid two defects
+────────────────────────────────────────────────────────────────────
+
+`python3 spikes/harness/githygiene.py` was **broken in HEAD** for 20+ minutes —
+`NameError: name 're' is not defined`, at *import* time, in the pre-commit path
+§13 puts every lane through. Fixed, plus `--selfcheck` (13 checks). H14 called
+that module *"the one harness module with no test"* and it then failed in the
+single way only a test catches.
+
+**Its verdict also carried no information.** Exit 1 was permanent on 16
+already-committed binaries that §13 forbids *removing* — so it was 1 before you
+staged anything and 1 after, whatever you did. Family A: the instrument cannot
+produce the answer. Its own `ALLOW` comment had named that failure mode in
+advance and then the verdict did it anyway. Tracked violations are now reported
+and **not gated**; the staged path got stricter in the same edit.
+
+**On its first run the self-check found two more defects** — worth knowing
+because both are shapes that recur here:
+
+  * with **no commits at all** it reported missing trailers for a commit that
+    does not exist, under the heading "in what you are about to commit";
+  * every HEAD check gated **your** commit on **someone else's** last one. HEAD
+    in a three-lane tree is usually another lane's, and the only repair is
+    rewriting history, which §13 forbids. Not-per-lane state, again.
+
+THE PART I ACTUALLY WANT YOU TO TAKE. I falsified my own self-check, and it hid
+**two defects in my own instruments**:
+
+**1 · The driver truncated the file it was about to read.**
+```python
+open(p, 'w').write(anchored_replace(open(p).read(), old, new))   # WRONG
+```
+Python evaluates `open(p,'w')` **before** the argument expression. Every scratch
+file was emptied to zero, then read as empty. The driver reported
+`ANCHOR MISSING — cannot falsify`: declaring the check untestable because the
+driver had destroyed the input. **Caught only because `anchored_replace`
+REFUSES** — `str.replace` would have written an empty file and reported green.
+I had cited `edits.py` in that same file's docstring as what protects me from
+this. Grep your own tree for `open(p,'w').write(...open(p).read()...)`.
+
+**2 · The self-check imported the wrong artifact.** The probe ran
+`import githygiene` with `cwd` set to the module's directory — so it imported
+whatever was **installed there**, not the copy under test. A copy with the
+import deleted still passed. It passed before the defect and after it, so **no
+number of green runs could ever have exposed it**; only falsifying it did.
+*A self-check that names its subject by IMPORT NAME rather than by PATH is
+testing whatever is installed, not itself.*
+
+**3 · And the criterion for falsifying a self-check is not "the named check goes
+red".** A defect fatal enough to stop the self-check running prints no FAIL line
+at all, and my first criterion scored that INERT. The property is **"the
+self-check does not report SUCCESS"** — silence and death both count. Silence
+reading as success is the failure that ran through this project's worst day, and
+I reproduced it inside the tool built to detect it.
+
+State of the two drivers: `bash spikes/harness/test_loop_gate.sh` → 43 pass.
+`python3 spikes/H7_harness_attack/falsify.py` → 23 + 2 falsifiers all fire, both
+controls green, 35/43 checks observed going red, and it prints the 8 that never
+have on every run.

@@ -48,6 +48,8 @@ LAUNCHER = 'run_loop.sh'
 # Files the suite reads out of ROOT. settings.json is copied because the
 # registration block enumerates them with `git ls-files`.
 TREE = [SUITE, GATE, LAUNCHER,
+        'spikes/harness/githygiene.py',
+        'spikes/harness/edits.py',
         'spikes/harness/commit-msg.hook',
         'spikes/harness/install_hooks.sh',
         '.claude/settings.json',
@@ -339,6 +341,84 @@ def main():
     # a restored defect often reddens several, so the honest number is the union
     # of everything that ever went red -- and the honest OUTPUT is the list of
     # what never did, because a ratio hides which ones and a list does not.
+    # --- SECOND INSTRUMENT. githygiene.py gained a --selfcheck under H14, and a
+    # self-check nobody has falsified is the thing this whole spike exists to
+    # distrust.
+    #
+    # THE SUCCESS CRITERION IS NOT "the named check goes red". That was the first
+    # version and it reported G1 INERT for the wrong reason: commenting out
+    # `import re` kills the module at IMPORT time, so the self-check never runs
+    # and prints no FAIL line at all. A self-check cannot report on a defect that
+    # stops it from running. The property is therefore **"the self-check does not
+    # report success"** -- silence and death both count, which is the whole point,
+    # because silence reading as success is the failure that ran through this
+    # repo's worst day. The named check is reported when it is there, as detail.
+    ALLPASS = 'selfcheck: all checks pass'
+    print()
+    # CONTROL for the second instrument, same reason as the first: if every
+    # scratch copy were rubble, all the G falsifiers would "fire" and read as a
+    # perfect score.
+    tmp = tempfile.mkdtemp(prefix='h7_Gcontrol_')
+    try:
+        build(tmp)
+        r = subprocess.run([sys.executable, 'spikes/harness/githygiene.py',
+                            '--selfcheck'], cwd=tmp, capture_output=True, text=True)
+        if ALLPASS in r.stdout + r.stderr:
+            print('  CONTROL  unmodified githygiene --selfcheck: all-pass  -> ok')
+        else:
+            problems.append('CONTROL: unmodified githygiene --selfcheck does not pass')
+            print('  CONTROL  unmodified githygiene --selfcheck: BROKEN')
+            print((r.stdout + r.stderr)[-600:])
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    for gid, why, old, new, want in [
+        ('G1', 'the module has no `import re`, so it dies at IMPORT time — the '
+               'state it was committed to HEAD in, breaking every lane',
+         'import re          # H14', '# import re removed  # H14',
+         'module imports in a fresh interpreter'),
+        ('G2', 'already-committed violations gate again, so exit 1 is permanent '
+               'on 16 binaries §13 forbids removing and the verdict is constant',
+         'tracked_bad = check_paths(committed,',
+         'violations += check_paths(committed,',
+         'already-tracked violation does NOT gate'),
+    ]:
+        tmp = tempfile.mkdtemp(prefix=f'h7_{gid}_')
+        try:
+            build(tmp)
+            p = os.path.join(tmp, 'spikes/harness/githygiene.py')
+            try:
+                # READ FIRST. `open(p,'w').write(anchored_replace(open(p).read(),
+                # ...))` was the first version and it is family B: Python
+                # evaluates `open(p,'w')` before the argument expression, so the
+                # file is TRUNCATED TO ZERO and then read as empty. The anchor
+                # then "appears 0 times" and the driver reported both falsifiers
+                # as unfalsifiable -- a check declaring itself untestable because
+                # the tester had destroyed the input. Caught only because
+                # anchored_replace REFUSES on a missed anchor; str.replace would
+                # have written an empty file and reported the check green.
+                src = open(p).read()
+                open(p, 'w').write(anchored_replace(src, old, new))
+            except AnchorMissing as e:
+                problems.append(f'{gid}: anchor gone, revert tested NOTHING ({e})')
+                print(f'  {gid}  ANCHOR MISSING — cannot falsify')
+                continue
+            r = subprocess.run([sys.executable, 'spikes/harness/githygiene.py',
+                                '--selfcheck'], cwd=tmp, capture_output=True,
+                               text=True)
+            out = r.stdout + r.stderr
+            if ALLPASS in out:
+                problems.append(f'{gid}: defect restored and --selfcheck still '
+                                f'reported success — "{want}" is INERT')
+                print(f'  {gid}  INERT   defect restored, selfcheck still all-pass')
+            elif re.search(rf'^  FAIL  {re.escape(want)}', out, re.M):
+                print(f'  {gid}  FIRES   {want}')
+            else:
+                print(f'  {gid}  FIRES   selfcheck could not report success '
+                      f'(module did not survive the defect)')
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
     print()
     covered = [c for c in map(norm, base_pass) if c in reddened]
     uncovered = [c for c in map(norm, base_pass) if c not in reddened]

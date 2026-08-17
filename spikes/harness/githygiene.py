@@ -35,8 +35,14 @@ Exit 0 clean, 1 violations, 2 could not run.
 """
 
 import os
-import subprocess
-import sys
+import re          # H14: absent when CALLSIGN_RE shipped. The module died at
+import subprocess  # IMPORT TIME with `NameError: name 're' is not defined`, so
+import sys         # `python3 githygiene.py` -- which §13 puts in every lane's
+                   # pre-commit path -- was a hard crash for every lane for at
+                   # least 20 minutes, committed to HEAD, while the checker whose
+                   # job is catching bad commits could not run to catch its own.
+                   # H14 predicted exactly this: the one harness module with no
+                   # runnable check. See selfcheck() at the bottom.
 
 MAX_ADD = 1_048_576          # 1 MB
 
@@ -209,8 +215,32 @@ def main():
     else:
         print("nothing staged")
 
-    tracked = sh("git", "ls-files").splitlines()
-    violations += check_paths(tracked, "TRACKED (already committed)")
+    # H14: TRACKED violations are REPORTED, never part of the verdict.
+    #
+    # This module's own ALLOW comment names the failure mode -- "a checker that
+    # fires on known-accepted items every run is a checker everyone learns to
+    # ignore" -- and then the verdict did exactly that: exit 1 was PERMANENT on
+    # 16 already-committed binaries that §13 forbids REMOVING (other lanes'
+    # provenance chains reference those blobs by hash). So the exit code carried
+    # no information: it was 1 before you staged anything and 1 after, whatever
+    # you did. A gate whose output does not depend on your input is not a gate,
+    # which is family A -- the instrument cannot produce the answer.
+    #
+    # Reported, and loudly, because they are real; just not conflated with
+    # "something you did just now is wrong". This is NOT weakening a gate to
+    # pass it (§10): the staged path, which is the one a commit can still fix,
+    # got STRICTER in the same edit -- it now also fails on a weak subject.
+    # `git ls-files` reads the INDEX, so it includes what you just staged: a
+    # brand-new violation was printed twice, once as STAGED and again under
+    # "already committed", which is the label that means "not your fault and not
+    # yours to fix". It still gated correctly via the STAGED list, so this was a
+    # mislabel and not a hole -- but the tracked list is the one a reader is
+    # invited to ignore, and putting new violations in it teaches exactly the
+    # wrong reflex. `git ls-tree -r HEAD` is what "already committed" means.
+    committed = (sh("git", "ls-tree", "-r", "--name-only", "HEAD").splitlines()
+                 if sh("git", "rev-parse", "--verify", "-q", "HEAD") else [])
+    tracked_bad = check_paths(committed,
+                              "TRACKED (already committed, reported not gated)")
 
     if do_all:
         out = sh("bash", "-c",
@@ -231,15 +261,39 @@ def main():
                 print(f"   {int(size) / 1048576:7.1f} MB  {path}")
             print("   (history is NOT rewritten by this tool — see CLAUDE.md 3)")
 
-    trailers = sh("git", "log", "-1", "--pretty=%(trailers:unfold=true)")
-    missing = [t for t in REQUIRED_TRAILERS if f"{t}:" not in trailers]
-    if missing:
+    # H14, 2026-08-17. EVERYTHING BELOW REPORTS ON **HEAD**, WHICH IS ALREADY
+    # COMMITTED, so it goes in `head_bad` and NOT in `violations`. Two defects,
+    # both surfaced by the selfcheck at the bottom the first time it ran:
+    #
+    #  * with NO COMMITS AT ALL, `git log -1` returns empty, every required
+    #    trailer read as "missing", and the tool reported a violation about a
+    #    commit that does not exist -- family B, the instrument reporting
+    #    fiction, printed under the heading "in what you are about to commit";
+    #  * HEAD in a THREE-LANE SHARED TREE is usually somebody else's commit. So
+    #    another lane's bad message failed YOUR pre-commit check, and you could
+    #    not fix it: the only repair is rewriting history, which §13 forbids
+    #    without qualification. Harness state that is not per-lane, again.
+    #
+    # This is NOT weakening a gate to pass it. The PROSPECTIVE gate on trailers
+    # is `.git/hooks/commit-msg`, which refuses the commit being written and got
+    # stricter today. This is the RETROSPECTIVE report, and a retrospective
+    # report on an unfixable artifact must not gate.
+    head_bad = []
+    if not sh("git", "rev-parse", "--verify", "-q", "HEAD"):
+        print("\nHEAD: no commits yet — nothing to report")
+        trailers, missing = "", []
+    else:
+        trailers = sh("git", "log", "-1", "--pretty=%(trailers:unfold=true)")
+        missing = [t for t in REQUIRED_TRAILERS if f"{t}:" not in trailers]
+    if not sh("git", "rev-parse", "--verify", "-q", "HEAD"):
+        pass
+    elif missing:
         print(f"\nHEAD TRAILERS: missing {missing}")
         print("   Every commit must name the atom that made it and the session "
               "it came from:")
         print("     Atom: AGENT-2")
         print("     Claude-Session: <assigned session url>")
-        violations.append(("HEAD", f"missing trailers {missing}"))
+        head_bad.append(("HEAD", f"missing trailers {missing}"))
     else:
         def val(key):
             for ln in trailers.splitlines():
@@ -251,21 +305,21 @@ def main():
         if ca is None:
             print(f"\nHEAD TRAILERS: Atom {atom!r} is not a callsign — that "
                   f"field names WHO, not what.")
-            violations.append(("HEAD", f"Atom {atom!r} not a callsign"))
+            head_bad.append(("HEAD", f"Atom {atom!r} not a callsign"))
         elif rev.strip().upper() in NOT_A_REVIEWER:
             print(f"\nHEAD TRAILERS: Reviewed-By {rev!r} is self-review in "
                   f"plain language. A22 — use another atom or 'unreviewed'.")
-            violations.append(("HEAD", f"Reviewed-By {rev!r} is not a reviewer"))
+            head_bad.append(("HEAD", f"Reviewed-By {rev!r} is not a reviewer"))
         elif rev.lower() == "unreviewed":
             print(f"\nHEAD TRAILERS: ok — Atom {atom}, explicitly UNREVIEWED")
         elif check_callsign(rev) is None:
             print(f"\nHEAD TRAILERS: Reviewed-By {rev!r} is neither a callsign "
                   f"nor 'unreviewed'.")
-            violations.append(("HEAD", f"Reviewed-By {rev!r} malformed"))
+            head_bad.append(("HEAD", f"Reviewed-By {rev!r} malformed"))
         elif check_callsign(rev) == ca:
             print(f"\nHEAD TRAILERS: SELF-REVIEW — Atom {atom} reviewed by "
                   f"{rev}. A22: the reviewed party supplied the review.")
-            violations.append(("HEAD", f"self-review by {atom}"))
+            head_bad.append(("HEAD", f"self-review by {atom}"))
         else:
             print(f"\nHEAD TRAILERS: ok — Atom {atom}, reviewed by {rev}")
 
@@ -276,22 +330,152 @@ def main():
         note = subject_note(last)
         if why:
             print(f"   -> {why}")
-            violations.append(("HEAD", why))
+            head_bad.append(("HEAD", why))
         elif note:
             print(f"   -> ok ({note})")
         else:
             print("   -> ok")
 
     print(f"\n{'=' * 60}")
+    if tracked_bad:
+        print(f"{len(tracked_bad)} already-tracked violation(s) — REPORTED, not "
+              f"gated. `git rm --cached <path>`\ngoing forward is reversible and "
+              f"does not touch history or other agents'\nprovenance hashes. They "
+              f"do not affect the exit code, so it stays informative.")
     if violations:
-        print(f"{len(violations)} violation(s). New ones: fix before "
-              f"committing.\nAlready-tracked ones: `git rm --cached <path>` "
-              f"going forward — reversible,\nand it does not touch history or "
-              f"other agents' provenance hashes.")
+        print(f"\n{len(violations)} ACTIONABLE violation(s) in what you are "
+              f"about to commit. Fix before committing.")
         return 1
-    print("clean")
+    print("\nclean — nothing you are about to commit violates §13")
+    return 0
+
+
+def selfcheck():
+    """H14: the runnable check §12.3 requires, which this module shipped without.
+
+    It was `the one harness module with no test`, and it then died at IMPORT
+    time with `NameError: name 're' is not defined` -- committed to HEAD, in
+    every lane's §13 pre-commit path, for at least twenty minutes. The checker
+    whose job is catching bad commits could not run to catch its own.
+
+    Every case below is a defect this module actually had or a property §13
+    actually needs, driven against throwaway repos. The live repo is never
+    touched: a checker that can only be tested by breaking the real tree is
+    exactly the thing this file warns other lanes about.
+    """
+    import shutil
+    import tempfile
+    here = os.path.dirname(os.path.abspath(__file__))
+    fails = []
+
+    def ck(name, cond, detail=""):
+        print(f"  {'PASS' if cond else 'FAIL'}  {name}{'' if cond else '  ' + detail}")
+        if not cond:
+            fails.append(name)
+
+    # 0 · THE DEFECT THAT MOTIVATED THIS ONE. No behavioural test would have
+    #     caught it -- the module never got far enough to behave. Only importing
+    #     it does, so that is the first check.
+    # BY PATH, NOT BY NAME. The first version ran `import githygiene` with cwd
+    # set to this directory, which imports whatever `githygiene.py` is installed
+    # THERE -- so a copy of this module with `import re` deleted still passed,
+    # because the probe imported the healthy original. Family C: the artifact is
+    # not what you think. Found by falsifying this very check (falsify.py G1),
+    # which is the only way it could have been found: it passed both before and
+    # after the defect, so no amount of running it green proved anything.
+    me = os.path.abspath(__file__)
+    r = subprocess.run(
+        [sys.executable, "-c",
+         "import runpy,sys; runpy.run_path(sys.argv[1], run_name='probe')", me],
+        capture_output=True, text=True)
+    ck("module imports in a fresh interpreter", r.returncode == 0,
+       r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "")
+
+    def run_in(setup):
+        d = tempfile.mkdtemp(prefix="ghsc_")
+        try:
+            for c in (["git", "init", "-q"],
+                      ["git", "config", "user.email", "t@t"],
+                      ["git", "config", "user.name", "t"]):
+                subprocess.run(c, cwd=d, check=True,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            setup(d)
+            p = subprocess.run([sys.executable, os.path.join(here, "githygiene.py")],
+                               cwd=d, capture_output=True, text=True)
+            return p.returncode, p.stdout + p.stderr
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+
+    def git(d, *a):
+        subprocess.run(["git", *a], cwd=d, check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def stage(d, name, data=b"x"):
+        p = os.path.join(d, name)
+        os.makedirs(os.path.dirname(p), exist_ok=True) if os.path.dirname(name) else None
+        open(p, "wb").write(data)
+        git(d, "add", name)
+
+    # 1 · POSITIVE CONTROL FIRST. A checker that refuses everything passes every
+    #     negative case below while being useless, and that is the shape this
+    #     module was in an hour ago -- exit 1 unconditionally.
+    rc, out = run_in(lambda d: stage(d, "RESULT.md", b"a finding\n"))
+    ck("clean staged text passes", rc == 0, f"rc={rc}")
+
+    # 2 · The three things §13 says must never be committed.
+    rc, out = run_in(lambda d: stage(d, "model.gguf"))
+    ck("staged model weights fail", rc == 1 and "binary/model" in out, f"rc={rc}")
+
+    rc, out = run_in(lambda d: stage(d, "big.txt", b"0" * (2 * 1024 * 1024)))
+    ck("staged oversized file fails", rc == 1 and "exceeds" in out, f"rc={rc}")
+
+    # NOTE the assertion, which was wrong first: it demanded the words "build
+    # tree", but `.pyc` is caught by the EXTENSION rule before the path rule ever
+    # runs. The behaviour was right and the check was too specific about HOW.
+    # A check that pins the mechanism instead of the outcome fails on a correct
+    # refactor, which is how a suite trains people to delete checks.
+    rc, out = run_in(lambda d: stage(d, "__pycache__/x.pyc"))
+    ck("staged build tree fails", rc == 1 and "__pycache__/x.pyc" in out, f"rc={rc}")
+
+    # 3 · H14's headline: an already-tracked violation must be REPORTED and must
+    #     NOT set the exit code. It was permanent exit 1 on 16 committed
+    #     binaries that §13 forbids removing, so the verdict was the same before
+    #     and after anything you did -- family A, the instrument cannot produce
+    #     the answer.
+    def tracked_only(d):
+        stage(d, "old.gguf")
+        git(d, "commit", "-q", "-m", "a finding was recorded here")
+    rc, out = run_in(tracked_only)
+    ck("already-tracked violation does NOT gate", rc == 0, f"rc={rc}")
+    ck("  ... but is still reported", "already-tracked" in out)
+
+    # 4 · The wrinkle this module documents about itself: `git rm --cached` is
+    #     the remedy it prescribes, and it must not be reported as a violation.
+    def removal(d):
+        stage(d, "old.gguf")
+        git(d, "commit", "-q", "-m", "a finding was recorded here")
+        git(d, "rm", "-q", "--cached", "old.gguf")
+    rc, out = run_in(removal)
+    ck("the remedy it prescribes is not a violation", rc == 0, f"rc={rc}")
+
+    # 5 · Subject quality, checked as a function since it is pure.
+    ck("weak subject rejected", bool(check_subject("wip")))
+    ck("finding subject accepted",
+       not check_subject("A18 audit: the 29x advantage is 1.09x at real sizes"))
+
+    # 6 · Trailer value validation (the sibling lane's finding): a callsign must
+    #     look like a callsign, and "self" is not a reviewer.
+    ck("topic label rejected as a callsign", check_callsign("mutation-detection") is None)
+    ck("callsign accepted and case-folded", check_callsign("agent-1") == "AGENT-1")
+    ck("'self' is not a reviewer", "SELF" in NOT_A_REVIEWER)
+
+    print()
+    if fails:
+        print(f"githygiene selfcheck: {len(fails)} FAILED — {', '.join(fails)}")
+        return 1
+    print("githygiene selfcheck: all checks pass")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(selfcheck() if "--selfcheck" in sys.argv else main())

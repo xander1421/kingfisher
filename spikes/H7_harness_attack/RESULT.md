@@ -202,6 +202,63 @@ owner is not the `Atom:`, and names `git commit --only <paths>` in the refusal.
   *"it checks ownership"* from *"it always says no"*.
 - Falsifier **F9**.
 
+## H14 — the module with no test, tested (cycle 4)
+
+`githygiene.py` was **broken in HEAD**: no `import re`, so it died at *import*
+time with `NameError`, in every lane's §13 pre-commit path, for at least twenty
+minutes while its owner committed twice more. H14's one-line description of it
+was *"the one harness module with no test"*, and the checker whose job is
+catching bad commits could not run to catch its own.
+
+**Its verdict also carried no information.** Exit 1 was permanent on 16
+already-committed binaries that §13 forbids *removing* — other lanes'
+provenance chains reference those blobs by hash. So the exit code was 1 before
+you staged anything and 1 after, whatever you did: family **A**, the instrument
+cannot produce the answer. Its own `ALLOW` comment had named this failure mode
+in advance. Tracked violations are now reported and not gated; the *staged*
+path, the one a commit can still fix, is unchanged.
+
+**Then the new `--selfcheck` found two more defects on its first run:**
+
+- with **no commits at all**, `git log -1` returns empty, every required trailer
+  read as missing, and the tool reported a violation about a commit that does
+  not exist — family **B**, printed under the heading *"in what you are about to
+  commit"*;
+- every HEAD check gated **your** commit on **someone else's** last one. In a
+  three-lane shared tree HEAD is usually another lane's, and the only repair is
+  rewriting history, which §13 forbids. Harness state that is not per-lane,
+  again. HEAD findings are now reported, never gated — the *prospective* trailer
+  gate is `.git/hooks/commit-msg`, which refuses, and which got stricter today.
+- and `git ls-files` reads the **index**, so a brand-new violation was printed a
+  second time under *"already committed"* — the label that means *not yours to
+  fix*. `git ls-tree -r HEAD` is what that phrase means.
+
+### Two defects in my own instruments, both found only by falsifying them
+
+**1 · The driver truncated the file it was about to read.**
+`open(p,'w').write(anchored_replace(open(p).read(), old, new))` — Python
+evaluates `open(p,'w')` *before* the argument expression, so the file was
+**emptied to zero bytes and then read as empty**. Both `G` falsifiers reported
+`ANCHOR MISSING — cannot falsify`: a driver declaring the check untestable
+because the driver had destroyed the input. Family **B**, in the tool whose job
+is catching exactly this. **Caught only because `anchored_replace` refuses** —
+`str.replace` would have written an empty file and reported the check green.
+
+**2 · The self-check imported the wrong artifact.** The import probe ran
+`import githygiene` with `cwd` set to the module's own directory, so it imported
+whatever was **installed there** — a scratch copy with `import re` deleted still
+passed, because the probe imported the healthy original. Family **C**. It passed
+before the defect and after it, so no number of green runs could have exposed
+it; only falsifying the check did. Now probed by absolute path via
+`runpy.run_path`.
+
+**3 · And the criterion for falsifying a self-check was wrong.** "The named
+check goes red" fails for any defect fatal enough to stop the self-check
+running — `G1` was reported INERT when in fact the module could not load at all.
+The property is **"the self-check does not report success"**. Silence and death
+both count, which is the point: silence reading as success is the failure that
+ran through this repo's worst day.
+
 ## The defect class, for the other lanes to grep
 
 > **An interface removed or renamed in code, while a surviving site still
