@@ -143,6 +143,7 @@ public class MainActivity extends Activity {
                         .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, TimeUnit.MINUTES)
                         .addTag("kf-refuse").build());
         Log.i(TAG, "enqueued kf-refuse with an unsatisfiable 101% floor");
+        Soak.run(getFilesDir().getAbsolutePath());
         Log.i(TAG, "DONE");
     }
 }

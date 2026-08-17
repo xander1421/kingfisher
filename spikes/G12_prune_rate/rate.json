@@ -1,0 +1,107 @@
+{
+ "target": 26,
+ "rates": [
+  0.05,
+  0.1,
+  0.2,
+  0.35,
+  1.0
+ ],
+ "results": {
+  "attention_0.05": {
+   "rate": 0.05,
+   "cycles": 23,
+   "live": 26,
+   "mean": 0.6379620602107325,
+   "per_query": {
+    "q_red": 0.5348837209302325,
+    "q_invalid": 1.0,
+    "q_green": 0.22972972972972974,
+    "q_2hop_red": 0.4251968503937008,
+    "q_yellow": 1.0
+   }
+  },
+  "attention_0.10": {
+   "rate": 0.1,
+   "cycles": 9,
+   "live": 26,
+   "mean": 0.6379620602107325,
+   "per_query": {
+    "q_red": 0.5348837209302325,
+    "q_invalid": 1.0,
+    "q_green": 0.22972972972972974,
+    "q_2hop_red": 0.4251968503937008,
+    "q_yellow": 1.0
+   }
+  },
+  "attention_0.20": {
+   "rate": 0.2,
+   "cycles": 4,
+   "live": 26,
+   "mean": 0.6379620602107325,
+   "per_query": {
+    "q_red": 0.5348837209302325,
+    "q_invalid": 1.0,
+    "q_green": 0.22972972972972974,
+    "q_2hop_red": 0.4251968503937008,
+    "q_yellow": 1.0
+   }
+  },
+  "attention_0.35": {
+   "rate": 0.35,
+   "cycles": 2,
+   "live": 26,
+   "mean": 0.6379620602107325,
+   "per_query": {
+    "q_red": 0.5348837209302325,
+    "q_invalid": 1.0,
+    "q_green": 0.22972972972972974,
+    "q_2hop_red": 0.4251968503937008,
+    "q_yellow": 1.0
+   }
+  },
+  "attention_1.00": {
+   "rate": 1.0,
+   "cycles": 1,
+   "live": 26,
+   "mean": 0.6379620602107325,
+   "per_query": {
+    "q_red": 0.5348837209302325,
+    "q_invalid": 1.0,
+    "q_green": 0.22972972972972974,
+    "q_2hop_red": 0.4251968503937008,
+    "q_yellow": 1.0
+   }
+  },
+  "control_0.10": {
+   "rate": 0.1,
+   "cycles": 9,
+   "live": 26,
+   "mean": 0.16325492311575446,
+   "per_query": {
+    "q_red": 0.13953488372093023,
+    "q_invalid": 0.5,
+    "q_green": 0.12162162162162163,
+    "q_2hop_red": 0.05511811023622047,
+    "q_yellow": 0.0
+   }
+  }
+ },
+ "verdict": "ITERATION IS CEREMONY \u2014 one shot 64% matches gradual 64%; spread across all rates 0%",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "prune_rate": [
+    0.05,
+    0.1,
+    0.2,
+    0.35,
+    1.0
+   ]
+  }
+ },
+ "cites": [
+  "G10_closed_loop"
+ ]
+}
