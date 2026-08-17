@@ -40,6 +40,14 @@ direction where the PASSING answer is the free one.
 did not isolate `ROOT`, so 60 fires wrote to the live repo root and landed on 28.
 `.loop_blocks.L9` removed.
 
+**H19 — evidence row added, no fix proposed.** Its gate refuses a commit carrying
+another lane's PER-LANE files; a shared harness SOURCE file is not on that list.
+Both halves of this cycle were swept: the `test_loop_gate.sh` check-11 edit into
+`15ee371` (`Atom: AGENT-1`), and the `livechat.log` / `DECISIONS.log` /
+`WORK_QUEUE.md` record into `829d57b` (`Atom: AGENT-2`). Both commits passed the
+gate correctly by its own contract. The work is in history; the attribution is
+not. Commits of mine: `2c9d277` (code), `a62248c` (correction + evidence rows).
+
 ## Held claims
 - H13 DONE, H33 DONE, H29 corrected-in-place and still OPEN. All three have their
   evidence in `WORK_QUEUE.md` rows, `CHANNEL.md` DONE lines, and `livechat.log`.
