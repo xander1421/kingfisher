@@ -21,3 +21,40 @@ spikes/S14_mork_server/mork-server/
 spikes/S16_mork_android/crossrun/
 spikes/M1_1_android/app/build/
 spikes/M1_1_android/.gradle/
+
+# --- git hygiene (CLAUDE.md §2.2, enforced by spikes/harness/githygiene.py) ---
+# The history is training data. 86% of history bytes were files >1MB while
+# every result in this workspace is plain text. Commit the thing that MAKES
+# the artefact -- source, Cargo.toml AND Cargo.lock, the command, the hash --
+# not the artefact. A digest pins which artefact; a manifest pins the feature
+# set behind it, and a Cargo feature changes fuel_used (V1_feature_fuel).
+
+# third-party model weights: size, and a §7 licence question
+*.gguf
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# compiled output — rebuild from source + pinned manifest
+*.so
+*.dylib
+*.dll
+*.a
+*.apk
+*.aar
+*.jar
+spikes/*/bin/fuelrun.*
+**/jniLibs/
+
+# archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# regenerable run artefacts (the script that makes them IS committed)
+spikes/G21_null_rust/split.txt
+spikes/G21_null_rust/nulls.txt
+**/.cxx/
