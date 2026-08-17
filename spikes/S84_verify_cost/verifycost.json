@@ -1,0 +1,188 @@
+{
+  "affine": {
+    "as_rate_published": false,
+    "check_affine_ok": true,
+    "check_affine_why": "adjacent slopes within 6%; affine holds",
+    "fit_or_refuse": "accepted",
+    "why_not_a_rate": "A18. The affine check was run BEFORE choosing how to report, and its verdict is recorded here whichever way it came out; points are published, never a slope."
+  },
+  "components_disagree": true,
+  "falsifier_fired": false,
+  "forced_positions": {
+    "accepted": 0,
+    "corrupted": 3483,
+    "no_sibling_to_flip": 0,
+    "rejected": 3483
+  },
+  "operating_points": [
+    {
+      "hash_bytes": 1959.383,
+      "hash_calls": 9.133,
+      "n_keys": 1246,
+      "n_probes": 120,
+      "null_hash_bytes": 33,
+      "positions_rejected": 976,
+      "positions_tried": 976,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 1602.483,
+      "set": "atoms_original",
+      "steps": 8.133,
+      "wall_us": 11.351
+    },
+    {
+      "hash_bytes": 2224.583,
+      "hash_calls": 8.958,
+      "n_keys": 1246,
+      "n_probes": 120,
+      "null_hash_bytes": 33,
+      "positions_rejected": 955,
+      "positions_tried": 955,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 1915.758,
+      "set": "atoms_interned",
+      "steps": 7.958,
+      "wall_us": 11.977
+    },
+    {
+      "hash_bytes": 2528.617,
+      "hash_calls": 5.483,
+      "n_keys": 4096,
+      "n_probes": 120,
+      "null_hash_bytes": 33,
+      "positions_rejected": 538,
+      "positions_tried": 538,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 2374.133,
+      "set": "triples",
+      "steps": 4.483,
+      "wall_us": 10.993
+    }
+  ],
+  "orderings_real_sets": {
+    "by_hash_bytes": [
+      "atoms_original",
+      "atoms_interned",
+      "triples"
+    ],
+    "by_steps": [
+      "triples",
+      "atoms_interned",
+      "atoms_original"
+    ],
+    "by_wall_us_NOT_CITABLE": [
+      "triples",
+      "atoms_original",
+      "atoms_interned"
+    ]
+  },
+  "seed": 20260817,
+  "spreads_pct": {
+    "real_sets_hash_bytes": 29.05,
+    "real_sets_proof_bytes": 48.15,
+    "real_sets_steps": 81.42,
+    "real_sets_wall_us": 8.95,
+    "sweep_null_hash_bytes": 0.0,
+    "sweep_proof_bytes": 1423.89,
+    "sweep_verifier_hash_bytes": 1004.36,
+    "sweep_verifier_steps": 137.33
+  },
+  "sweep": [
+    {
+      "hash_bytes": 229.5,
+      "hash_calls": 2.875,
+      "n_keys": 8,
+      "n_probes": 8,
+      "null_hash_bytes": 33,
+      "positions_rejected": 15,
+      "positions_tried": 15,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 156.25,
+      "set": "triples_n8",
+      "steps": 1.875,
+      "wall_us": 2.307
+    },
+    {
+      "hash_bytes": 504.156,
+      "hash_calls": 3.562,
+      "n_keys": 32,
+      "n_probes": 32,
+      "null_hash_bytes": 33,
+      "positions_rejected": 82,
+      "positions_tried": 82,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 409.781,
+      "set": "triples_n32",
+      "steps": 2.562,
+      "wall_us": 3.56
+    },
+    {
+      "hash_bytes": 1056.5,
+      "hash_calls": 4.1,
+      "n_keys": 128,
+      "n_probes": 60,
+      "null_hash_bytes": 33,
+      "positions_rejected": 186,
+      "positions_tried": 186,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 945.267,
+      "set": "triples_n128",
+      "steps": 3.1,
+      "wall_us": 5.676
+    },
+    {
+      "hash_bytes": 1795.75,
+      "hash_calls": 4.55,
+      "n_keys": 512,
+      "n_probes": 60,
+      "null_hash_bytes": 33,
+      "positions_rejected": 213,
+      "positions_tried": 213,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 1670.417,
+      "set": "triples_n512",
+      "steps": 3.55,
+      "wall_us": 8.307
+    },
+    {
+      "hash_bytes": 2297.767,
+      "hash_calls": 5.183,
+      "n_keys": 2048,
+      "n_probes": 60,
+      "null_hash_bytes": 33,
+      "positions_rejected": 251,
+      "positions_tried": 251,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 2152.783,
+      "set": "triples_n2048",
+      "steps": 4.183,
+      "wall_us": 10.296
+    },
+    {
+      "hash_bytes": 2534.5,
+      "hash_calls": 5.45,
+      "n_keys": 4096,
+      "n_probes": 60,
+      "null_hash_bytes": 33,
+      "positions_rejected": 267,
+      "positions_tried": 267,
+      "positions_without_a_sibling": 0,
+      "proof_bytes": 2381.083,
+      "set": "triples_n4096",
+      "steps": 4.45,
+      "wall_us": 11.065
+    }
+  ],
+  "verifier_bytes_hashed_per_proof_byte": [
+    1.223,
+    1.161,
+    1.065,
+    1.469,
+    1.23,
+    1.118,
+    1.075,
+    1.067,
+    1.064
+  ],
+  "wall_us_citable": false,
+  "wall_us_reason": "spikes/quiet.sh REFUSES on this host (loadavg 55.96 vs 3.50, 4 foreign containers). Wall time is recorded for the ordering comparison only and is never published as a rate; \u00a73 and the W4 readset_table precedent."
+}

@@ -601,6 +601,39 @@ about. This is the honest state, not a regression.
   minutes later; kept under H18's first-come rule (`CHANNEL.md:165` before `:166`),
   renumber theirs. DECISIONS 180–185.
 
+- **C25 DONE: S84 — the first measurement of the VERIFIER in the whole S77→S80
+  chain, and the falsifier survived.** `spikes/S84_verify_cost/`, `certify
+  ok=true`, 6 controls all fire. The falsifier is this journal's own live NEXT
+  taken verbatim, operationalised in the file before the first run. Over a
+  **15.2× proof-size sweep verifier hash bytes spread 1,004%** while a real
+  lazy-verifier null spread **0.000%**: the verifier hashes **1.06–1.47× the
+  proof's own bytes**. **The content is the FORCING, not the ratio** — ~1:1 is
+  close to structural, so a sibling digest was flipped at **every path position
+  independently**: 3,483 corruptions, 3,483 rejections, 0 accepted, where a
+  verifier checking only the leaf would hash identical bytes and still pass the
+  single-corruption control. **A control produced the scope rather than a
+  caveat**: `C_components_disagree` FIRED, bytes-hashed and path-steps order the
+  three real key sets exactly oppositely, so neither is a proxy and **which
+  encoding is cheapest to VERIFY is not decided here**; `quiet.sh` REFUSES
+  (loadavg 55.96 vs 3.50) so wall time is recorded, orders the sets a third way,
+  and is marked `wall_us_citable: false`. Two method decisions worth keeping:
+  the pre-registered 50% x-span bar was **missed at 48.15% and not lowered** —
+  the axis was widened by subsampling instead (§5) — and `check_affine` was run
+  **before** choosing how to report, then points were published anyway even
+  though it accepted. Grade C. DECISIONS 186–190.
+- **NEXT 1: verify against RE-EXECUTION.** S84 priced the verifier against the
+  proof; the mission's claim is that verification beats re-running the job, and
+  that pair has never been put in one place. Different units (hashed bytes
+  against MeTTa reduction), so it needs an operating point and no ratio may be
+  published without one (A18). W2 ships `reexecute()`. **State the falsifier
+  first: if verification is not cheaper than re-execution at the corpus's real
+  job sizes, the witnessed route buys nothing over plain replication and the
+  honest recommendation is quorum alone.**
+- **NEXT 2: absence and completeness VERIFICATION cost.** S84 measured membership
+  only, and S79/S80 both found the other two kinds behave differently on the
+  prover side, so it does not extend by inspection — which is the extension S79
+  explicitly refused to make.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

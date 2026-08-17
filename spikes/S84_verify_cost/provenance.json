@@ -1,0 +1,210 @@
+{
+ "spike": "S84_verify_cost",
+ "recorded_utc": "2026-08-17T12:48:29Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S84_verify_cost/../W2_witnessed_trie",
+   "head": "d6b390cb2b0c2ae756e8653d92e885ebf962bf63",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S84_verify_cost/../W2_witnessed_trie": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S84_verify_cost/verifycost.json",
+   "sha256": "d756ef5855fc5fe79626ef8a13a99cb874bdb3ebc849a61d858674083a369dc9",
+   "bytes": 4772,
+   "mtime": 1786970909,
+   "compared_ts": 1786970909,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_counter_live",
+   "must_fire_because": "the hashlib substitution must actually reach node_hash/desc_hash; a counter that never incremented would report a flat verifier that is really an uninstrumented one",
+   "can_fail_because": "if TW.hashlib were bound at definition time, or verify called hashlib directly, every count stays 0",
+   "null_must_contain": "a run where every count is 0 or constant",
+   "fired": true,
+   "detail": "distinct hash-call counts inside the verifier",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    3,
+    7,
+    6,
+    8,
+    7,
+    8,
+    6,
+    7,
+    9,
+    9,
+    9,
+    10
+   ]
+  },
+  {
+   "name": "C_reject_corrupt",
+   "must_fire_because": "every counted verification must be doing real work: the good proof must verify TRUE and a corrupted copy must verify FALSE, or the numbers describe a function returning early (A29)",
+   "can_fail_because": "if the flipped sibling digest were unused by the fold, the corrupted proof would still verify",
+   "null_must_contain": "a verifier that accepts the corrupted proof, which would put corrupt_rejected at 0",
+   "fired": true,
+   "detail": "both directions of the verifier, counted",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "good_accepted": 640,
+    "corrupt_rejected": 640,
+    "corrupt_accepted": 0
+   }
+  },
+  {
+   "name": "C_null_bounds_the_flat_case",
+   "must_fire_because": "the flat null must be FLAT and the real verifier must not be, or \"not flat\" is asserted against nothing (A20)",
+   "can_fail_because": "if flat_verify hashed the proof it would scale, and if the real verifier ignored the path it would match the null",
+   "null_must_contain": "a null whose work varies with proof size",
+   "fired": true,
+   "detail": "flat null vs the real verifier over the sweep",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "null_hash_bytes": [
+     33,
+     33,
+     33,
+     33,
+     33,
+     33
+    ],
+    "real_hash_bytes": [
+     229.5,
+     504.156,
+     1056.5,
+     1795.75,
+     2297.767,
+     2534.5
+    ],
+    "null_spread_pct": 0.0,
+    "real_spread_pct": 1004.36
+   }
+  },
+  {
+   "name": "C_proof_size_varies",
+   "must_fire_because": "the x-axis must span a real range, or flatness in y is unreadable",
+   "can_fail_because": "if proof size were set by something the key count does not move, the sweep would be flat in x -- and on the three REAL sets it was, at 48.15% against this file's pre-registered 50% bar",
+   "null_must_contain": "a sweep whose proof sizes are all within a few percent",
+   "fired": true,
+   "detail": "mean proof bytes across the sweep; spread 1423.9%",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    156.25,
+    409.781,
+    945.267,
+    1670.417,
+    2152.783,
+    2381.083
+   ]
+  },
+  {
+   "name": "C_components_disagree",
+   "must_fire_because": "verifier work has two load-free components -- bytes hashed and path steps -- and this control asks whether either one alone can stand for verify cost. It FIRES when they order the key sets differently, which means neither is a proxy and only a timed run could settle which dominates",
+   "can_fail_because": "bytes and steps could rise together across the three sets, as they do across the sweep",
+   "null_must_contain": "two components that order the sets identically, in which case either would be a usable proxy",
+   "fired": true,
+   "detail": "three real sets ordered by hash bytes vs by path steps",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    [
+     "triples",
+     "atoms_interned",
+     "atoms_original"
+    ]
+   ]
+  },
+  {
+   "name": "C_every_position_forced",
+   "must_fire_because": "the finding is that the verifier is FORCED to read the proof, not merely that it happens to hash that many bytes. Corrupting a sibling digest at EVERY path position, one at a time, must be rejected at every position",
+   "can_fail_because": "a verifier checking only the leaf, or only the final fold step, would accept corruption at earlier positions while hashing exactly the same number of bytes",
+   "null_must_contain": "a verifier that accepts a corruption at some position, i.e. one that hashes bytes whose value it does not depend on",
+   "fired": true,
+   "detail": "one flipped sibling digest per path position, all proofs",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "positions_corrupted": 3483,
+    "positions_rejected": 3483,
+    "positions_accepted": 0,
+    "positions_with_no_sibling_to_flip": 0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_verify_flat",
+   "must_fire_because": null,
+   "can_fail_because": "verifier hash-byte spread across the sweep is under 10% while proof-size spread is over 50%",
+   "null_must_contain": "the flat_verify null, which does one hash regardless of proof size",
+   "fired": false,
+   "detail": "work 1004.4% / proof 1423.9% / null 0.000% / steps 137.3%",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    1004.36,
+    1423.89,
+    0.0,
+    137.33
+   ],
+   "refutes": "that the S77->S80 branching-cost result matters to the job class at all: if the verifier pays the same whatever the proof size, only the prover pays and the branching model is a prover-side curiosity",
+   "fires_when": "verifier hash-byte spread across the sweep is under 10% while proof-size spread is over 50%",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S84_verify_cost/../W2_witnessed_trie": {
+   "newest": 1786965691,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "verifier hash work flat (<10% spread) while proof size spans >50%",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
