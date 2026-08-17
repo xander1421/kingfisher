@@ -1,0 +1,117 @@
+{
+  "affine": {
+    "affine": false,
+    "detail": "adjacent slopes span 6.001..50.94 (749% > 25%): NOT affine. Report the measured points, not a rate.",
+    "points_answers_vs_verify_bytes": [
+      [
+        4096,
+        205184
+      ],
+      [
+        1943.233,
+        95529.85
+      ],
+      [
+        204.783,
+        10961.017
+      ],
+      [
+        97.583,
+        6074.017
+      ],
+      [
+        3.233,
+        2547.9
+      ],
+      [
+        1,
+        2534.5
+      ]
+    ]
+  },
+  "crossover": {
+    "answers_frac_of_shard": 1.0,
+    "answers_there": 4096,
+    "first_prefix_len_at_or_above_rebuild": 1
+  },
+  "falsifier_fired": false,
+  "n_keys": 4096,
+  "rebuild_hash_bytes": 205184,
+  "rebuild_hash_calls": 5181,
+  "rows": [
+    {
+      "answers": 4096,
+      "answers_frac_of_shard": 1.0,
+      "auth_path_bytes": 0,
+      "bandwidth_frac_of_shard": 1.0,
+      "prefix_len": 1,
+      "queries": 60,
+      "verified_true": 60,
+      "verify_hash_bytes": 205184,
+      "verify_per_rebuild": 1.0,
+      "witness_bytes": 49152
+    },
+    {
+      "answers": 1943.233,
+      "answers_frac_of_shard": 0.47442,
+      "auth_path_bytes": 75,
+      "bandwidth_frac_of_shard": 0.47595,
+      "prefix_len": 6,
+      "queries": 60,
+      "verified_true": 60,
+      "verify_hash_bytes": 95529.85,
+      "verify_per_rebuild": 0.4656,
+      "witness_bytes": 23393.8
+    },
+    {
+      "answers": 204.783,
+      "answers_frac_of_shard": 0.05,
+      "auth_path_bytes": 1320.5,
+      "bandwidth_frac_of_shard": 0.07686,
+      "prefix_len": 7,
+      "queries": 60,
+      "verified_true": 60,
+      "verify_hash_bytes": 10961.017,
+      "verify_per_rebuild": 0.0534,
+      "witness_bytes": 3777.9
+    },
+    {
+      "answers": 97.583,
+      "answers_frac_of_shard": 0.02382,
+      "auth_path_bytes": 1465.35,
+      "bandwidth_frac_of_shard": 0.05364,
+      "prefix_len": 8,
+      "queries": 60,
+      "verified_true": 60,
+      "verify_hash_bytes": 6074.017,
+      "verify_per_rebuild": 0.0296,
+      "witness_bytes": 2636.35
+    },
+    {
+      "answers": 3.233,
+      "answers_frac_of_shard": 0.00079,
+      "auth_path_bytes": 2304.183,
+      "bandwidth_frac_of_shard": 0.04767,
+      "prefix_len": 11,
+      "queries": 60,
+      "verified_true": 60,
+      "verify_hash_bytes": 2547.9,
+      "verify_per_rebuild": 0.0124,
+      "witness_bytes": 2342.983
+    },
+    {
+      "answers": 1,
+      "answers_frac_of_shard": 0.00024,
+      "auth_path_bytes": 2381.083,
+      "bandwidth_frac_of_shard": 0.04869,
+      "prefix_len": 12,
+      "queries": 60,
+      "verified_true": 60,
+      "verify_hash_bytes": 2534.5,
+      "verify_per_rebuild": 0.0124,
+      "witness_bytes": 2393.083
+    }
+  ],
+  "seed": 20260817,
+  "shard_bytes": 49152
+}

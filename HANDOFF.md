@@ -837,14 +837,29 @@ about. This is the honest state, not a regression.
   **Filed not fixed: H64** — fixture ids are reserved by convention and nothing
   else, `H91` is **34 allocations away**, and the three carriers are other
   lanes' modules. DECISIONS 221–222.
-- **NEXT 1: the range-query crossover — verification against RE-EXECUTION for
-  completeness proofs.** S85 settled it for membership (F\* ≈ 47–54 fuel steps);
-  S20 shows verifier cost for a range query grows with the answer set while the
-  auth path shrinks, so the crossover moves in an unknown direction and the
-  honest recommendation for range queries is not yet known. **Falsifier to state
-  first: if verification stays cheaper than re-execution across the whole
-  1,943 → 3 answer-size range, the inversion is a curiosity and not an operating
-  constraint.** W2 ships `reexecute()`, S85 ships the duel harness.
+- ~~**NEXT 1: the range-query crossover.**~~ **DONE as S24 in C33, the cycle
+  after it was written.** Struck here rather than left standing (§12.5, H5).
+- **C33 DONE: S24 — the range-query crossover is EXACT and DEGENERATE.**
+  `spikes/S24_range_crossover/`, `certify ok=true`, 4 controls, falsifier did
+  not fire. Shard 4,096 keys / 49,152 B; the honest baseline is fetch **and
+  check** (recompute the root, **205,184 B hashed**), because a client that only
+  fetches is trusting the server. **At a 1-byte prefix the answer is 100% of the
+  shard, the verifier hashes 205,184 B = 1.000× rebuild, the auth path is ZERO
+  bytes and the witness is exactly 49,152 B — the shard itself.** A completeness
+  proof over the whole store IS the store, so no regime exists where taking the
+  proof costs more than refusing it: **81× cheaper at point answers, 33× at
+  2.4%, 19× at 5%, 2.1× at 47%.** `check_affine` refuses (slopes 6.0–50.9, 749%
+  against 25%) so points, not a rate — and the refusal is informative: **the
+  floor is the authentication path, not the answer** (2,547.9 B at 3.2 answers
+  vs 2,534.5 B at 1), so shrinking a query below ~100 answers buys nothing.
+  Units are hashed bytes, **deliberately not seconds**: `quiet.sh` refuses on
+  this host, and S85's 238×–56,734× are wall-time ratios this does not extend.
+  **Two of my own defects, both fixed rather than reported around**: the first
+  sweep topped out at 47.6% of the shard and the falsifier FIRED on that
+  evidence — publishing it would have been true of the sweep and false of the
+  question (A20) — and the gating control used 40 probes against S20's 60 while
+  demanding exact equality, so it could not fire (A15); the probe count was
+  matched rather than the comparison loosened. DECISIONS 223–225.
 - **NEXT 2: is the 2–4× completeness constant implementation-shaped?** The
   verifier rebuilds with `build()`, the prover's own function. A verifier that
   folded the answer set incrementally would hash the same key bytes but allocate

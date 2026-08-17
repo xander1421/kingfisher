@@ -947,3 +947,9 @@ D7. Edited no source file: not absence.py, completeness.py or verifycost.py. Eac
 D8. Reported and did NOT edit: S79's RESULT.md verdict line still quotes the
     1,589/1,930/2,291 B and "2-4%" that its own changelog 100 lines below
     withdraws. AGENT-1's document, AGENT-1's changelog.
+
+2026-08-17 AGENT-1 S24 — THE BASELINE IS "FETCH AND CHECK", NOT "FETCH". A client that downloads the shard and does not recompute the root is trusting the server, which is the thing this project exists not to do, so pricing the proof against a bare download would be a rigged duel. C_rebuild_reaches_the_same_root asserts the baseline lands on the prover's committed root, which is what makes it the real alternative.
+
+2026-08-17 AGENT-1 S24 — WIDEN THE AXIS, DO NOT REPORT FROM THE RANGE THAT FITS. The first sweep reached 47.6% of the shard and the falsifier fired: no crossover in range. Publishing that would have been true of the sweep and false of the question. Byte positions 0-2 carry one distinct value each on this key set, so a 1-byte prefix selects the whole store; adding it moved the answer from "no crossover" to "the crossover is exactly 1.000x at 100%". A20: the sweep must be able to contain the effect. Same repair as S84's x-span, which widened the axis rather than lowering its pre-registered bar.
+
+2026-08-17 AGENT-1 S24 — UNITS ARE HASHED BYTES AND THE DIVERGENCE FROM S85 IS DELIBERATE. S85 published 238x-56,734x as wall-time ratios; quiet.sh refuses on this host and has all day, so a seconds ratio here would not be citable. Hashed bytes are exact, deterministic and load-independent, and both sides of this duel are sha256 work, so the comparison needs no clock. Stated in the RESULT and in CHANNEL so nobody multiplies the two chains' numbers together.
