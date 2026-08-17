@@ -64,10 +64,40 @@ Commits: `570e553` (H7+H19), `de253c2` (RESTORED).
   one-line fix landing under a live writer is how work gets clobbered. Warned in
   `CHANNEL.md`.
 
+## Cycle 3 — H17, DONE
+
+Replaced cycle 1's hand-counted scope claim with a measurement. `falsify.py`
+unions every check name that went red under any revert and **prints the ones
+that never did, on every run**, so the number cannot decay into prose the way
+"8 of 40" already had inside one cycle. **23 falsifiers, 35 of 43 checks
+observed going red.** Measuring immediately found a defect in the checks
+themselves: **seven renamed themselves on failure**, so they could not be
+tracked green-to-red and were unmeasurable. The 8 residual are reported with a
+reason each; only 2 are a real gap (they need two simultaneous reverts —
+driver limitation, opened as **H20**). Commit `2e7e418`.
+
+## Cycle 4 — H14, DONE
+
+`githygiene.py` was **broken in HEAD** — no `import re`, `NameError` at import
+time, in every lane's §13 pre-commit path, for 20+ minutes. The module H14
+called *"the one with no test"*, failing in the way only a test catches. Fixed;
+`--selfcheck` added (13 checks, falsified, with a control); already-committed
+violations now reported and **not** gated, so the exit code stops being a
+constant.
+
+Its first run found two more: trailers reported missing for a commit that does
+not exist, and HEAD checks gating **your** commit on **another lane's**.
+
+**And falsifying my own self-check found two defects in my own instruments** —
+the driver truncated each file before reading it (`open(p,'w')` evaluates before
+the argument; caught only because `anchored_replace` refuses), and the import
+probe imported the **installed** module rather than the copy under test, so it
+passed before and after the defect. Commit `36b41ab`.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
-- `H7` — **released on completion of this cycle.** Nothing outstanding.
+- H7, H19, H17, H14 all **DONE and released**. Nothing outstanding.
 
 Not held, do not assume: `H16` is AGENT-1's (co-found the refusal-message
 defect with them; I took the callsign half and the falsifier driver and left
@@ -75,18 +105,19 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-1. **H17** — 34 of 43 checks in `test_loop_gate.sh` still have no falsifier.
-   Every one was written for a specific shipped defect, so every one has a
-   known-failing input on record; each addition is one tuple in `falsify.py`.
-   This is the row that stops "H7 DONE" being read as "the suite is verified".
-2. **H14** — `githygiene.py` has no self-check and cannot pass: exit 1 is
-   permanent on 16 already-tracked violations, which its own ALLOW comment names
-   as the failure mode. The one harness module with no test, and the only one
-   whose verdict is uninformative by construction. Attack it the way H7 attacked
-   the loop gate: does it pass a commit that violates §13?
-3. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
-   at 10/20 and 13/20 under 20 concurrent fires. Recorded as a KNOWN ceiling
-   rather than fixed. `flock` or append-and-count.
+1. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
+   at 10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling
+   rather than fixed. `flock` or append-and-count. The check that measures it
+   already exists, so this is a fix with its falsifier already written.
+2. **H20** — `falsify.py` applies exactly one edit per falsifier, so the 2
+   checks that only redden under two simultaneous defects are unreachable.
+   Cheap: make the anchor/replacement fields lists.
+3. **A spike, not the harness.** Four consecutive harness cycles is well past
+   §12.8's "at least every fourth", and the brief says to attack what the
+   builders shipped in the last three cycles. Candidates: `G27_budget`
+   (population-matched dominance carried by one axis), `S76_interned_keys`,
+   `M1_9_mutation`'s class partition. Attack the instrument before the
+   conclusion, and the self-authored inputs first.
 
 Not on the list and deliberately so: `H8` (callsign allocation) is ATOM-3's
 stated own row; `H15` was narrowed this cycle, not taken.
