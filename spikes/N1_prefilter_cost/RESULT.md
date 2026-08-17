@@ -203,3 +203,67 @@ treatment cannot affect, and its spread is your noise floor.*
   **Limit: Rust-only, so it does not apply to the DAS C++ patch.**
 - **Skipped:** `bbqueue`, `ringbuf`. SPSC solutions to a problem not measured
   here — M1.7 transport does not exist and no buffer has been profiled. YAGNI.
+
+---
+
+# N1d — the positive control does not fire, and the reason is that I built the wrong control.
+
+**Verdict: N1c's null is UNINFORMATIVE, as predicted. But the diagnosis is not "the instrument cannot see false sharing" — it is that my forced-shared build does not create false sharing. It creates *true* sharing, which padding cannot help.**
+
+The objection was correct: T=1 is a *negative* control, and without a positive
+one, "no effect >6%" and "cannot detect the effect" are the same reading — the
+W1 shape, in a control written because of W1.
+
+## The sweep: work-per-crossing down to 5 cycles, three layouts
+
+| chunks | cycles/crossing | adjacent | padded | **forced onto one line** | forced/padded |
+|---|---|---|---|---|---|
+| 1 | 21,667 | — | — | — | **1.06×** |
+| 32 | 677 | — | — | — | **1.00×** |
+| 512 | 42 | — | — | — | **0.99×** |
+| 4096 | 5 | — | — | — | **0.99×** |
+
+**The positive control never fires**, even at 5 cycles of work per barrier
+crossing — the most contended regime this harness can reach.
+
+## Why: it is true sharing, not false sharing
+`gen` is written by the coordinator and read by every worker. `left` is
+`fetch_sub`-ed by every worker and read by the coordinator. **Both are barrier
+state that every core must observe.** The line bounces between cores whether the
+atomics are on one line or three, because the *sharing is real*.
+
+False sharing is **unrelated** data colliding on a line. Padding separates
+unrelated things. There is nothing unrelated here to separate — which is why
+padding did nothing in N1c and why forcing them together does nothing either.
+Both results are consistent, and neither says anything about the instrument.
+
+## The control I should have built
+A valid positive control needs **per-thread private data co-located with hot
+shared data** — e.g. each worker's private iteration counter placed inside the
+same 64-byte line as `left`. Then padding has something to separate and the
+effect is real. Not built here.
+
+## Disposition
+- **N1c's claim is withdrawn**, not because it is wrong but because it is
+  unfalsifiable as constructed. "No false-sharing effect >6%" should read
+  **"this experiment contains no false sharing to detect."**
+- **S51 remains the open question and is now better characterised.** Its
+  `b_dyn` is a work-stealing claim counter every thread hammers continuously,
+  declared on one line with four other atomics (`mc.c:59`). That *is* a
+  candidate — not because it is finer-grained, but because a continuously
+  contended counter next to barrier state is a different pattern from N1's
+  static split, and the amortisation argument explaining N1's null explicitly
+  does not cover it.
+- **A15 needs correcting**: a negative control bounds resolution, but only a
+  positive control establishes that the instrument can see the effect at all.
+  Both are required and I shipped one.
+
+## Pricing the T>=NCPUS refusal, so it is not over-weighted
+T=3 is 23.9 µs; a perfect T=4 would be ~17.9 µs. That saves ~6 µs against a
+~274 µs query — **about 2% end-to-end**. So `Backoff` is not urgent for the
+prefilter and refusing is an adequate answer here. It is urgent wherever the
+barrier is fine-grained, which is S51 again.
+
+**Both open questions now land on the same file** — and it is the file whose
+headline figures the LEDGER already flags as from a configuration the product
+cannot enter.

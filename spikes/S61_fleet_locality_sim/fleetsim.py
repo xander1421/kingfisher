@@ -103,7 +103,7 @@ K_CANDIDATES = 8   # power-of-k-choices; a matcher samples bids, it does not
 
 
 def run(n_devices, n_shards, cache_cap, n_jobs, policy, zipf_a,
-        duty, seed, warmup_frac=0.3, k=K_CANDIDATES):
+        duty, seed, warmup_frac=0.3, k=K_CANDIDATES, prefill=False):
     """One configuration. Returns dict of invariants.
 
     policy: 'random' (the null) or 'locality'.
@@ -117,10 +117,25 @@ def run(n_devices, n_shards, cache_cap, n_jobs, policy, zipf_a,
     holders = {}                       # shard -> set of device idx holding it
     cum = cumulative(zipf_weights(n_shards, zipf_a))
 
+    if prefill:
+        # Force universal replication. NOT reachable by running the policy:
+        # locality is self-reinforcing, so non-holders never acquire and
+        # holders never approaches N. The inert-control state has to be
+        # constructed, not warmed into.
+        assert cache_cap >= n_shards, 'prefill needs cap >= shards'
+        for d in devices:
+            for sh in range(n_shards):
+                d.touch(sh, holders)
+
     warmup = int(n_jobs * warmup_frac)
     fetches = hits = counted = 0
     counted_loads = [0] * n_devices
     randrange, rnd = rng.randrange, rng.random
+    # Damping draws from its OWN stream. Sharing `rnd` makes `damped`
+    # consume a different number of draws than `locality`, so the two
+    # runs diverge and are not paired even at an identical seed — the
+    # control caught exactly that.
+    dcoin = random.Random(seed ^ 0x5EED).random
 
     def sample_online(k_):
         """k_ uniformly-drawn devices that are online right now. Never empty:
@@ -138,10 +153,30 @@ def run(n_devices, n_shards, cache_cap, n_jobs, policy, zipf_a,
         shard = pick(cum, rnd())
         fallback = sample_online(k)
 
-        if policy == "locality":
+        if policy in ("locality", "damped", "damped_c"):
             h = holders.get(shard)
             cands = []
-            if h:
+            # k8s `scaledImageScore`: locality preference is scaled by how widely
+            # the artefact is ALREADY replicated (`holders/N`), to fight what they
+            # name the "node heating problem" — S61's own 102x imbalance.
+            # A shard held by one device exerts near-zero pull, so following
+            # locality cannot concentrate load on it.
+            #
+            # `damped`   = the literal k8s port, holders/N.
+            # `damped_c` = the same principle renormalised to THIS fleet's
+            #   achievable replication. k8s images sit on an O(1) fraction of
+            #   nodes; our shards sit on ~coverage = N*C/S devices out of N,
+            #   which is O(1/N). The literal port therefore disables locality
+            #   almost always. Renormalising against coverage keeps the intent
+            #   — do not chase a singleton — without switching the mechanism off.
+            use_locality = True
+            if h is not None:
+                if policy == "damped":
+                    use_locality = dcoin() < (len(h) / n_devices)
+                elif policy == "damped_c":
+                    cov = max(1.0, n_devices * cache_cap / n_shards)
+                    use_locality = dcoin() < min(1.0, len(h) / cov)
+            if h and use_locality:
                 # A bid is only usable if that device is online right now.
                 for idx in (h if len(h) <= k else rng.sample(sorted(h), k)):
                     if rnd() < duty:

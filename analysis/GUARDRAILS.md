@@ -480,3 +480,12 @@ the two builds — 15.56 vs 16.48 cycles/bundle, **5.9%** — is pure noise.
 The honest claim is therefore *no false-sharing effect larger than ~6%*, not
 *no effect*. A control the treatment cannot reach costs one extra row and turns
 a null result into a bounded one.
+
+**Corrected by N1d: a negative control bounds resolution; only a POSITIVE
+control shows the instrument can see the effect at all. Both are required.**
+N1c shipped the negative one and read its null as evidence. The positive control
+— atomics forced onto one line — then failed to fire at every granularity down
+to 5 cycles per crossing, because the forced build creates **true** sharing
+(barrier state every core must observe), not false sharing. Padding separates
+*unrelated* data; there was nothing unrelated to separate. The null was
+unfalsifiable as constructed, and one control could not reveal that.
