@@ -85,6 +85,13 @@ CONFIGS = [
     ("wage600",           "full",              600.0, 0.5, 0.05, 2000),
     ("wage300",           "full",              300.0, 0.5, 0.05, 2000),
     ("wage1200",          "full",             1200.0, 0.5, 0.05, 2000),
+    # the dial turned out SUBLINEAR: 10x the pool bought 2.1x the population,
+    # because a rule only draws a wage if its confidence exceeds the adversary's
+    # and the supply of such rules is finite. These two say whether that is
+    # saturation or just a slow climb -- it decides whether a selected
+    # population can be grown to no_death's 557 at all.
+    ("wage2400",          "full",             2400.0, 0.5, 0.05, 4000),
+    ("wage4800",          "full",             4800.0, 0.5, 0.05, 4000),
     # is the capacity gain (if any) abduction-driven at the larger capacity too?
     ("wage600_noabduct",  "no_abduct",         600.0, 0.5, 0.05, 2000),
     # no_death re-run under this harness rather than cited from G24's json, so
@@ -93,16 +100,26 @@ CONFIGS = [
 ]
 
 
-def one(name, arm, wage, rent, rent_pred, max_pop, data):
+# The three points the headline rests on, repeated under two more run seeds.
+# One seed per point makes a coverage DIFFERENCE uninterpretable, and this sweep
+# is already visibly noisy: wage600 (4455) came out BELOW wage300 (4981) and
+# wage2400 (5724) below wage1200 (5934), on a dial that should be monotone. So
+# the gap-closing fraction gets an error bar or it does not get quoted.
+REPEATS = [(base, s) for base in ("full_base", "wage1200", "nodeath")
+           for s in (777, 31337)]
+
+
+def one(name, arm, wage, rent, rent_pred, max_pop, data, seed=evo.RUN_SEED):
     train, p_dev, p_test, npred, planted = data
     evo.WAGE_POOL, evo.RENT, evo.RENT_PRED, evo.MAX_POP = \
         wage, rent, rent_pred, max_pop
+    evo.RUN_SEED = seed
     print(f"CONFIG {name}  arm={arm} wage={wage} rent={rent}/{rent_pred} "
-          f"max_pop={max_pop}", flush=True)
+          f"max_pop={max_pop} seed={seed}", flush=True)
     hist, capped, pop = evo.run(arm, train, p_dev, p_test, npred, planted)
     rec = {"name": name, "arm": arm,
            "params": {"wage_pool": wage, "rent": rent, "rent_pred": rent_pred,
-                      "max_pop": max_pop, "rounds": evo.ROUNDS,
+                      "max_pop": max_pop, "run_seed": seed, "rounds": evo.ROUNDS,
                       "offspring": evo.OFFSPRING, "pop_seed": evo.POP_SEED,
                       "min_pairs": evo.MIN_PAIRS, "max_pairs": evo.MAX_PAIRS,
                       "adv_tries": evo.ADV_TRIES},
@@ -113,13 +130,18 @@ def one(name, arm, wage, rent, rent_pred, max_pop, data):
 
 def main():
     os.makedirs(RUNS, exist_ok=True)
-    want = sys.argv[1:] or [c[0] for c in CONFIGS]
-    todo = [c for c in CONFIGS if c[0] in want
-            and not os.path.exists(os.path.join(RUNS, c[0] + ".json"))]
+    byname = {c[0]: c for c in CONFIGS}
+    jobs = [(c[0],) + c[1:] + (evo.RUN_SEED,) for c in CONFIGS]
+    for base, s in REPEATS:
+        c = byname[base]
+        jobs.append((f"{base}_s{s}",) + c[1:] + (s,))
+    want = sys.argv[1:] or [j[0] for j in jobs]
+    todo = [j for j in jobs if j[0] in want
+            and not os.path.exists(os.path.join(RUNS, j[0] + ".json"))]
     if todo:
         data = evo.dataset()
-        for c in todo:
-            one(*c, data=data)
+        for j in todo:
+            one(*j[:6], data=data, seed=j[6])
             print(flush=True)
     return 0
 

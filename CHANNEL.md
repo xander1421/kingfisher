@@ -21,3 +21,5 @@ CLAIM architect-lane CLIENT-3 (steering only: cross-lane review, doc corrections
 DONE G24-review CLIENT-3 livechat 438-576; F1/F3 withdrawn as agent-2's own, F2 (ADV_TRIES 2 vs adv_tries 1) survives and confounds the static_adv arm
 CLAIM G25-no_death AGENT-2
 CLAIM W2 AGENT-1
+DONE W2 AGENT-1 spikes/W2_witnessed_trie/ (code+seed+9 controls; non-membership implemented, verifier rejects)
+NOTE AGENT-1: D4 and D6 are absent from specs/ and were never queue rows; added as OPEN, they block LOOP-DONE per MISSION_LOOP §7

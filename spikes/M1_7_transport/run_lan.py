@@ -59,8 +59,13 @@ for i, p in enumerate(progs):
     server.JOBS.put({'job_id': f'j{i:04d}', 'shard_cid': cid_of(d),
                      'fuel': 2000000, 'name': p})
 
-server.serve(PORT, bind=ip)
-print(f'coordinator on {ip}:{PORT}  (LAN bind, token required)')
+import tempfile
+certdir = tempfile.mkdtemp(prefix='kf-tls-')
+key, crt, spki = server.make_cert(certdir, ip)
+server.serve(PORT, bind=ip, certfile=crt, keyfile=key)
+SCHEME = 'https'
+print(f'coordinator on {ip}:{PORT}  (LAN bind, TLS, token required)')
+print(f'  pinned SPKI sha256: {spki}')
 print(f'{len(progs)} jobs queued')
 
 sh('adb', 'shell', f'mkdir -p {DEV}/shards')
@@ -71,12 +76,24 @@ sh('adb', 'shell', f'chmod +x {DEV}/agent.sh')
 sh('adb', 'shell', f'rm -rf {DEV}/shards; mkdir -p {DEV}/shards')
 
 # CONTROL: an unauthenticated request from the phone must be refused
+# CONTROL 1: no token -> 401 (pin supplied, so TLS itself must succeed)
 bad = sh('adb', 'shell',
-         f'curl -s -m 8 -o /dev/null -w "%{{http_code}}" http://{ip}:{PORT}/stats')
-print(f'control, no token from phone: HTTP {bad.stdout.strip()} (expect 401)')
+         f'curl -s -m 8 -o /dev/null -k --pinnedpubkey sha256//{spki} '
+         f'-w "%{{http_code}}" https://{ip}:{PORT}/stats')
+print(f'control A, no token:        HTTP {bad.stdout.strip() or "(fail)"} (expect 401)')
+# CONTROL 2: WRONG pin must be refused by TLS before auth is even reached
+wrongpin = 'A' * 43 + '='
+bad2 = sh('adb', 'shell',
+          f'curl -s -m 8 -o /dev/null -k --pinnedpubkey sha256//{wrongpin} '
+          f'-w "%{{http_code}}" https://{ip}:{PORT}/stats')
+print(f'control B, wrong pin:       HTTP {bad2.stdout.strip() or "(refused)"} (expect refused)')
+# CONTROL 3: plain HTTP against a TLS port must fail
+bad3 = sh('adb', 'shell',
+          f'curl -s -m 8 -o /dev/null -w "%{{http_code}}" http://{ip}:{PORT}/stats')
+print(f'control C, cleartext:       HTTP {bad3.stdout.strip() or "(refused)"} (expect refused)')
 
 t0 = time.time()
-env = (f'KF_DIR={DEV} KF_BASE=http://{ip}:{PORT} '
+env = (f'KF_DIR={DEV} KF_BASE=https://{ip}:{PORT} KF_PIN={spki} '
        f'KF_TOKEN={os.environ["KF_TOKEN"]} KF_MAXIDLE=2')
 proc = subprocess.Popen(['adb', 'shell', f'{env} sh {DEV}/agent.sh'],
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -88,6 +105,6 @@ wall = time.time() - t0
 ok = sum(1 for e in server.RESULTS if e.get('status') == 'OK')
 print(f'\nover WiFi: {len(server.RESULTS)}/{len(progs)} envelopes in {wall:.1f}s, {ok} OK')
 print('server stats:', json.dumps(server.STATS))
-json.dump({'lan_ip': ip, 'envelopes': server.RESULTS, 'stats': server.STATS,
+json.dump({'lan_ip': ip, 'tls': True, 'spki_sha256': spki, 'envelopes': server.RESULTS, 'stats': server.STATS,
            'wall_s': round(wall, 1)},
           open(os.path.join(HERE, 'result_lan.json'), 'w'), indent=1)

@@ -25,4 +25,18 @@ AT MATCHED-OR-BETTER PRECISION, WHO COVERS MORE:
    seed prec 0.2377 corr   967   vs   evolved prec 0.2418 corr   893   -> SEED
    seed prec 0.2215 corr    35   vs   evolved prec 0.2418 corr   893   -> EVOLVED
 
-VERDICT: MIXED — evolved wins 1/7 of the seed's precision levels; neither curve dominates
+PARETO FRONTIER (precision, correct) — non-dominated points:
+   prec 0.2418  correct   893   evolved @ t=0.15
+   prec 0.2377  correct   967   seed @ t=0.20
+   prec 0.2205  correct  1127   seed @ t=0.00
+   prec 0.2205  correct  1127   seed @ t=0.02
+   prec 0.2205  correct  1127   seed @ t=0.05
+   prec 0.2205  correct  1127   seed @ t=0.10
+   prec 0.2205  correct  1127   seed @ t=0.15
+   prec 0.2087  correct  1199   evolved @ t=0.10
+   prec 0.1092  correct  2633   evolved @ t=0.05
+   prec 0.0580  correct  3865   evolved @ t=0.02
+   prec 0.0357  correct  4144   evolved @ t=0.00
+   5/11 frontier points are the evolved population's.
+
+VERDICT: CURVES CROSS, NEITHER DOMINATES — 5 of 11 non-dominated points are the evolved population's. It offers more precision at lower coverage and more coverage at lower precision; the seed's single point sits between them. Evolution bought a DIFFERENT TRADE, not a better one.

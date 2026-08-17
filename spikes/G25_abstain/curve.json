@@ -148,7 +148,7 @@
    ]
   }
  },
- "verdict": "MIXED \u2014 evolved wins 1/7 of the seed's precision levels; neither curve dominates",
+ "verdict": "CURVES CROSS, NEITHER DOMINATES \u2014 5 of 11 non-dominated points are the evolved population's. It offers more precision at lower coverage and more coverage at lower precision; the seed's single point sits between them. Evolution bought a DIFFERENT TRADE, not a better one.",
  "conditions": {
   "data": "real:FB15k-237+planted",
   "split": "70/15/15",

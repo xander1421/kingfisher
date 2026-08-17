@@ -105,6 +105,10 @@ MAX_PAIRS = 40_000       # a rule whose body matches more than this is
                          # evaluations in v1's full arm, 525 in no_death.
                          # This is a stated exclusion criterion, not a silent cap.
 SEED = 0xC0FFEE
+RUN_SEED = 1234          # was inline in run(). Hoisted so repeats are possible:
+                         # G24 ran one seed per arm and its own RESULT.md lists
+                         # that as a limitation, which makes any coverage
+                         # DIFFERENCE between arms unbounded below by noise.
 
 POP_SEED = 60            # enumerated rules the population starts from
 OFFSPRING = 40           # offspring generated per round
@@ -433,7 +437,7 @@ def plant(npred, nent, n=600, ents=None, rng=None):
 
 # --------------------------------------------------------------------- loop
 def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
-    rng = random.Random(1234)
+    rng = random.Random(RUN_SEED)
     idx = Idx(train)
     p_tr = idx.pair
     preds = sorted(idx.by_pred)

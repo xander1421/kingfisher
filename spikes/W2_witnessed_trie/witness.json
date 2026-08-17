@@ -1,0 +1,203 @@
+{
+ "seed": 20260817,
+ "corpus": {
+  "path": "../S52_realkg/triples.bin",
+  "triples": 272115,
+  "preds": 237,
+  "entities": 14505
+ },
+ "shard_triples": 4096,
+ "shard_bytes": 49152,
+ "shard_offset": 0,
+ "composition": {
+  "distinct_preds": 3,
+  "distinct_ps_pairs": 521,
+  "ps_fanout_median": 3,
+  "ps_fanout_max": 394
+ },
+ "root": "571a8eb14ab70411127598df4bd7e5c4cb4f6be47ee706fc316fdc6076d55560",
+ "shapes": {
+  "p_s_?o": {
+   "queries": 200,
+   "verified": 200,
+   "witness_mean": 2541.11,
+   "witness_median": 2111,
+   "witness_p95": 5972,
+   "witness_max": 5972,
+   "pct_shard_mean": 2.19677734375,
+   "pct_shard_median": 0.6103515625,
+   "pct_shard_p95": 9.619140625,
+   "vs_full_shard": 0.05169901529947917,
+   "answer_rows_mean": 89.98,
+   "answer_rows_median": 25,
+   "path_bytes_mean": 1461.35,
+   "answer_bytes_mean": 1079.76
+  },
+  "p_?s_o": {
+   "queries": 200,
+   "verified": 200,
+   "witness_mean": 23624.88,
+   "witness_median": 30387,
+   "witness_p95": 30387,
+   "witness_max": 30387,
+   "pct_shard_mean": 47.912353515625,
+   "pct_shard_median": 61.669921875,
+   "pct_shard_p95": 61.669921875,
+   "vs_full_shard": 0.4806494140625,
+   "answer_rows_mean": 6.085,
+   "answer_rows_median": 2,
+   "path_bytes_mean": 75.0,
+   "answer_bytes_mean": 23549.88
+  },
+  "?p_s_o": {
+   "queries": 200,
+   "verified": 200,
+   "witness_mean": 49152.0,
+   "witness_median": 49152,
+   "witness_p95": 49152,
+   "witness_max": 49152,
+   "pct_shard_mean": 100.0,
+   "pct_shard_median": 100.0,
+   "pct_shard_p95": 100.0,
+   "vs_full_shard": 1.0,
+   "answer_rows_mean": 1.0,
+   "answer_rows_median": 1,
+   "path_bytes_mean": 0.0,
+   "answer_bytes_mean": 49152.0
+  }
+ },
+ "nonmembership": {
+  "shallow_random": {
+   "queries": 200,
+   "verified": 200,
+   "witness_mean": 121.465,
+   "witness_median": 107,
+   "witness_p95": 107,
+   "witness_max": 2068,
+   "path_steps_mean": 0.015,
+   "vs_full_shard": 0.0024712117513020835
+  },
+  "deep_present_ps": {
+   "queries": 200,
+   "verified": 200,
+   "witness_mean": 1951.56,
+   "witness_median": 2010,
+   "witness_p95": 2373,
+   "witness_max": 2736,
+   "path_steps_mean": 2.985,
+   "vs_full_shard": 0.03970458984375
+  }
+ },
+ "scaling": [
+  {
+   "shard_triples": 1024,
+   "shard_bytes": 12288,
+   "aligned_witness_mean": 1294.1,
+   "aligned_path_mean": 1216.82,
+   "nonmembership_witness_mean": 1400.34,
+   "aligned_vs_shard": 0.10531412760416665
+  },
+  {
+   "shard_triples": 4096,
+   "shard_bytes": 49152,
+   "aligned_witness_mean": 2551.16,
+   "aligned_path_mean": 1523.24,
+   "nonmembership_witness_mean": 2272.96,
+   "aligned_vs_shard": 0.051903483072916666
+  },
+  {
+   "shard_triples": 16384,
+   "shard_bytes": 196608,
+   "aligned_witness_mean": 3181.52,
+   "aligned_path_mean": 2709.2,
+   "nonmembership_witness_mean": 3120.86,
+   "aligned_vs_shard": 0.016182047526041667
+  },
+  {
+   "shard_triples": 65536,
+   "shard_bytes": 786432,
+   "aligned_witness_mean": 3564.56,
+   "aligned_path_mean": 3279.44,
+   "nonmembership_witness_mean": 3670.72,
+   "aligned_vs_shard": 0.004532572428385417
+  }
+ ],
+ "controls": {
+  "C_honest": {
+   "fires": true,
+   "fails_if": "any honest proof verifies False -- then all rejections below are vacuous",
+   "observed": {
+    "membership_ok": 1,
+    "completeness_ok": 1
+   }
+  },
+  "C_omit": {
+   "fires": true,
+   "fails_if": "a short answer verifies -- omission would be undetectable and completeness would be theatre",
+   "observed": {
+    "honest_rows": 253,
+    "cheat_rows": 252
+   }
+  },
+  "C_add": {
+   "fires": true,
+   "fails_if": "a fabricated row inside the proven prefix verifies",
+   "observed": {
+    "honest_rows": 253,
+    "cheat_rows": 254
+   }
+  },
+  "C_tamper": {
+   "fires": true,
+   "fails_if": "a one-byte-tampered answer verifies",
+   "observed": {
+    "flipped_bit": 1,
+    "rows": 253
+   }
+  },
+  "C_forged_nonmembership": {
+   "fires": true,
+   "fails_if": "a doctored divergence node verifies as absence -- a worker could then deny any row it did not want to return",
+   "observed": {
+    "prover_refused_honest_proof": 1,
+    "forgery_rejected": 1
+   }
+  },
+  "C_wrong_root": {
+   "fires": true,
+   "fails_if": "an honest proof verifies under a foreign root",
+   "observed": {
+    "root": "571a8eb14ab70411",
+    "other": "ac20e58e7be9dab6"
+   }
+  },
+  "C_child_order": {
+   "fires": true,
+   "fails_if": "reversed child order gives the same digest -- the sort would be decorative and two tries could share a root",
+   "observed": {
+    "children": 3,
+    "sorted": "571a8eb14ab70411",
+    "reversed": "bc4bad64c2ae9fac"
+   }
+  },
+  "C_replay": {
+   "fires": true,
+   "fails_if": "key A's proof verifies for key B -- proofs would not bind the key they answer",
+   "observed": {
+    "a": "0000000000000044000017d3",
+    "b": "000000000000005c0000169d"
+   }
+  },
+  "C_miss_depth": {
+   "fires": true,
+   "fails_if": "the deep arm does not authenticate a longer path than the random arm -- then \"hard miss\" is a label, not a case",
+   "observed": {
+    "shallow_steps": 0.015,
+    "deep_steps": 2.985,
+    "shallow_bytes": 121.465,
+    "deep_bytes": 1951.56
+   }
+  }
+ },
+ "all_controls_fire": true
+}

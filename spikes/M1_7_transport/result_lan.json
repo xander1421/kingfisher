@@ -1,5 +1,7 @@
 {
  "lan_ip": "192.168.1.25",
+ "tls": true,
+ "spki_sha256": "1P74+TNkmPdy3RsPwg2P1iDNY7j9nemszQHS/0eo2C8=",
  "envelopes": [
   {
    "job_id": "j0000",
@@ -190,5 +192,5 @@
   "misses": 0,
   "unauthorised": 1
  },
- "wall_s": 10.6
+ "wall_s": 10.8
 }

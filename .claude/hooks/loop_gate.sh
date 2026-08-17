@@ -1,37 +1,55 @@
 #!/usr/bin/env bash
-# loop_gate.sh v2 — Stop hook for MISSION_LOOP continuous mode.
+# loop_gate.sh v3 — Stop hook for MISSION_LOOP continuous mode.
 # Terminal signals are FILES, not prose: to end legally, the agent must
-# write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.
+# write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal
+# (or, preferred with more than one lane, .loop_signal.$CALLSIGN).
 # Mentioning those words in conversation has no effect.
+#
 # ROOT is pinned. CLAUDE_PROJECT_DIR was unset and the session project dir is
 # spikes/S51_multicore, so the $(pwd) fallback would have looked for STOP and
 # .loop_signal in the wrong directory even once the hook was registered.
+#
+# v3, 2026-08-17: v2 consumed the signal to .loop_signal.last, which no other
+# process read, so run_loop.sh could not see a legal exit and fell back to
+# grepping its own log for the marker words -- reintroducing at the launcher
+# exactly the prose-matching defect this hook was written to remove. The signal
+# now lands in .loop_exit.$CALLSIGN, which only run_loop.sh clears. State is
+# per-lane because two lanes sharing one .loop_signal let one consume the
+# other's exit, and one .loop_blocks gave them a shared fuse.
 ROOT="/Users/victorianikolenko/kingfisher"
 cd "$ROOT" 2>/dev/null || true
-cat >/dev/null   # consume hook payload; no transcript parsing in v2
+cat >/dev/null   # consume hook payload; no transcript parsing since v2
+
+LANE="${CALLSIGN:-unknown}"
+EXIT_MARK=".loop_exit.${LANE}"
+BLOCKS=".loop_blocks.${LANE}"
 
 # 1 · Human kill switch (never auto-removed; human rm's it to resume)
 [ -f STOP ] && exit 0
 
-# 2 · Agent terminal signal — exact content, consumed on use
-if [ -f .loop_signal ]; then
-  SIG=$(tr -d '[:space:]' < .loop_signal)
+# 2 · Agent terminal signal — exact content, consumed on use.
+#     Per-lane path first; bare .loop_signal still accepted because MISSION_LOOP
+#     §7 documents it and live agents were started against that contract.
+for SIGFILE in ".loop_signal.${LANE}" ".loop_signal"; do
+  [ -f "$SIGFILE" ] || continue
+  SIG=$(tr -d '[:space:]' < "$SIGFILE")
   case "$SIG" in
     LOOP-DONE|LOOP-HALT|LOOP-IDLE)
-      mv -f .loop_signal .loop_signal.last
+      printf '%s\n' "$SIG" > "$EXIT_MARK"
+      mv -f "$SIGFILE" "${SIGFILE}.last"
       exit 0
       ;;
     *)
-      rm -f .loop_signal   # malformed signal: ignore it and block
+      rm -f "$SIGFILE"   # malformed signal: ignore it and block
       ;;
   esac
-fi
+done
 
 # 3 · Runaway fuse: cap blocked stops per session; relauncher resets
-N=$(cat .loop_blocks 2>/dev/null || echo 0); N=$((N+1))
-echo "$N" > .loop_blocks
+N=$(cat "$BLOCKS" 2>/dev/null || echo 0); N=$((N+1))
+echo "$N" > "$BLOCKS"
 if [ "$N" -gt "${MAX_BLOCKS:-400}" ]; then
-  echo LOOP-FUSE > .loop_signal.last
+  echo LOOP-FUSE > "$EXIT_MARK"
   exit 0
 fi
 

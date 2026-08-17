@@ -152,18 +152,43 @@ def main():
               f"evolved prec {best['prec']:.4f} corr {best['correct']:5d}"
               f"   -> {win}")
 
+    # The matched-precision test above is too crude when the curves CROSS, and
+    # here they do: evolved offers more coverage at lower precision (1199 @
+    # 0.2087) and more precision at lower coverage (893 @ 0.2418), with the
+    # seed's single operating point (1127 @ 0.2205) sitting between them.
+    # "Who covers more at matched precision" scores that as a seed win by
+    # picking one axis. The Pareto frontier asks the question without choosing.
+    pts = [(f["prec"], f["correct"], "evolved", f["t"])
+           for f in res["full"]["curve"] if f["preds"]] + \
+          [(s["prec"], s["correct"], "seed", s["t"])
+           for s in res["no_variation"]["curve"] if s["preds"]]
+    front = [p for p in pts
+             if not any(q[0] >= p[0] and q[1] >= p[1] and q[:2] != p[:2]
+                        for q in pts)]
+    front.sort(key=lambda p: -p[0])
+    print("\nPARETO FRONTIER (precision, correct) — non-dominated points:")
+    for prec, corr, who, t in front:
+        print(f"   prec {prec:.4f}  correct {corr:5d}   {who} @ t={t:.2f}")
+    ev_front = sum(1 for p in front if p[2] == "evolved")
+    print(f"   {ev_front}/{len(front)} frontier points are the evolved "
+          f"population's.")
+
     wins = sum(1 for w, _ in verdict_rows if w == "EVOLVED")
     tot = len(verdict_rows)
-    if tot and wins == tot:
-        v = ("EVOLVED DOMINATES — at every precision the seed reaches, the "
-             "evolved population covers more")
-    elif wins == 0:
+    seed_front = len(front) - ev_front
+    if ev_front and not seed_front:
+        v = ("EVOLVED DOMINATES — every non-dominated operating point belongs "
+             "to the evolved population")
+    elif seed_front and not ev_front:
         v = ("SEED DOMINATES — evolution bought nothing abstention could not "
              "buy more cheaply; G24's coverage gain was an operating-point "
              "artifact")
     else:
-        v = (f"MIXED — evolved wins {wins}/{tot} of the seed's precision "
-             f"levels; neither curve dominates")
+        v = (f"CURVES CROSS, NEITHER DOMINATES — {ev_front} of {len(front)} "
+             f"non-dominated points are the evolved population's. It offers "
+             f"more precision at lower coverage and more coverage at lower "
+             f"precision; the seed's single point sits between them. "
+             f"Evolution bought a DIFFERENT TRADE, not a better one.")
     print(f"\nVERDICT: {v}")
 
     json.dump({"thresholds": THRESHOLDS, "arms": res, "verdict": v,

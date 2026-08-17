@@ -1,0 +1,195 @@
+{
+ "spike": "W2_witnessed_trie",
+ "recorded_utc": "2026-08-17T09:33:37Z",
+ "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
+   "head": "ea4f4628717409904e4b31c9bd70c3857797d360",
+   "clean": false,
+   "dirty_files": [
+    "claude/hooks/loop_gate.sh",
+    "CHANNEL.md",
+    "DECISIONS.log",
+    "HANDOFF.md",
+    "WORK_QUEUE.md",
+    "livechat.log",
+    "run_loop.sh",
+    "spikes/G24_population/evo.py",
+    "spikes/G25_abstain/RUN.txt",
+    "spikes/G25_abstain/curve.json",
+    "spikes/G25_abstain/curve.py",
+    "spikes/G25_carrying_capacity/RUN.txt",
+    "spikes/G25_carrying_capacity/sweep.py",
+    "spikes/M1_7_transport/agent.sh",
+    "spikes/M1_7_transport/result_lan.json",
+    "spikes/M1_7_transport/run_lan.py",
+    "spikes/M1_7_transport/server.py",
+    ".loop_exit.unknown",
+    "spikes/G25_abstain/RESULT.md",
+    "spikes/G25_carrying_capacity/analyse.py",
+    "spikes/G25_carrying_capacity/runs/full_cap2000.json",
+    "spikes/G25_carrying_capacity/runs/nodeath.json",
+    "spikes/G25_carrying_capacity/runs/nodeath_noabduct.json",
+    "spikes/G25_carrying_capacity/runs/wage1200.json",
+    "spikes/G25_carrying_capacity/runs/wage2400.json",
+    "spikes/G25_carrying_capacity/runs/wage300.json",
+    "spikes/G25_carrying_capacity/runs/wage4800.json",
+    "spikes/G25_carrying_capacity/runs/wage600.json",
+    "spikes/G25_carrying_capacity/runs/wage600_noabduct.json",
+    "spikes/G25_carrying_capacity/sweep.json",
+    "spikes/W2_witnessed_trie/"
+   ],
+   "diff_sha256": "8b705eaccf92d74d59af1b9d0164d01d9a5dccc51fd92d9211ae79a771164c47",
+   "diff_bytes": 57954
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
+   "sha256": "c403f70c0514eed655833553eb5d49054c84feda71d9bcb762d40b4c9fb600a1",
+   "bytes": 30479,
+   "mtime": 1786959209
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
+   "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
+   "bytes": 5102,
+   "mtime": 1786959217
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_honest",
+   "must_fire_because": "any honest proof verifies False -- then all rejections below are vacuous",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "membership_ok": 1,
+    "completeness_ok": 1
+   }
+  },
+  {
+   "name": "C_omit",
+   "must_fire_because": "a short answer verifies -- omission would be undetectable and completeness would be theatre",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "honest_rows": 253,
+    "cheat_rows": 252
+   }
+  },
+  {
+   "name": "C_add",
+   "must_fire_because": "a fabricated row inside the proven prefix verifies",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "honest_rows": 253,
+    "cheat_rows": 254
+   }
+  },
+  {
+   "name": "C_tamper",
+   "must_fire_because": "a one-byte-tampered answer verifies",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "flipped_bit": 1,
+    "rows": 253
+   }
+  },
+  {
+   "name": "C_forged_nonmembership",
+   "must_fire_because": "a doctored divergence node verifies as absence -- a worker could then deny any row it did not want to return",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "prover_refused_honest_proof": 1,
+    "forgery_rejected": 1
+   }
+  },
+  {
+   "name": "C_wrong_root",
+   "must_fire_because": "an honest proof verifies under a foreign root",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "root": "571a8eb14ab70411",
+    "other": "ac20e58e7be9dab6"
+   }
+  },
+  {
+   "name": "C_child_order",
+   "must_fire_because": "reversed child order gives the same digest -- the sort would be decorative and two tries could share a root",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "children": 3,
+    "sorted": "571a8eb14ab70411",
+    "reversed": "bc4bad64c2ae9fac"
+   }
+  },
+  {
+   "name": "C_replay",
+   "must_fire_because": "key A's proof verifies for key B -- proofs would not bind the key they answer",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "a": "0000000000000044000017d3",
+    "b": "000000000000005c0000169d"
+   }
+  },
+  {
+   "name": "C_miss_depth",
+   "must_fire_because": "the deep arm does not authenticate a longer path than the random arm -- then \"hard miss\" is a label, not a case",
+   "null_must_contain": "the cheat this control injects",
+   "fired": true,
+   "detail": "",
+   "observations": {
+    "shallow_steps": 0.015,
+    "deep_steps": 2.985,
+    "shallow_bytes": 121.465,
+    "deep_bytes": 1951.56
+   }
+  }
+ ],
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg": {
+   "newest": 1786958749,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true
+}

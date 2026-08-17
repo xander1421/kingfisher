@@ -139,3 +139,50 @@ binding beyond the local network becomes a real exposure rather than a
 documented one, and where TLS stops being optional.
 
 Recorded rather than resolved.
+
+---
+
+# TLS on the LAN path — done, with three controls
+
+We had no encryption and no server identity at all. Now:
+
+```
+coordinator 192.168.1.25:18080   LAN bind, TLS 1.2+, token required
+pinned SPKI sha256: 1P74+TNkmPdy3RsPwg2P1iDNY7j9nemszQHS/0eo2C8=
+
+control A, no token:        HTTP 401   (TLS succeeded, auth refused)
+control B, wrong pin:       refused    (TLS refused before auth)
+control C, cleartext:       refused
+
+over WiFi+TLS: 20/20 envelopes in 10.8 s, 83,375 shard bytes
+```
+
+Against 10.6 s for the same run without TLS — **~2% cost on this path**, which
+removes any performance argument for leaving it off.
+
+## Design: pinning, not a PKI
+The cert is self-signed, generated per run, valid one day, and neither the key
+nor the cert leaves the workspace or outlives the process. Nothing is installed
+into a device trust store. The device pins the **public key by hash**
+(`--pinnedpubkey sha256//…`), which is the right shape when there is exactly one
+server and it is ours.
+
+### The thing that made it fail first
+`--pinnedpubkey` is an **additional** check, not a replacement for chain
+validation. Curl still walked the system CA store, rejected the self-signed
+cert, and never reached the pin — all three controls returned `000`, including
+the one that should have produced a 401. It needs `-k` **and** the pin together:
+skip the CA path, require an exact public key.
+
+`-k` alone would be strictly insecure. `-k` + pinning is **stronger** than CA
+validation for a single known server, because it accepts exactly one key rather
+than anything a public CA will sign. Worth stating precisely, because the flag
+that makes it work is the one that usually means "I gave up on security".
+
+## What this does and does not buy
+- **Confidentiality on the wire.** The bearer token no longer crosses the LAN in
+  clear text. That was a live defect in the previous run.
+- **Server identity.** The phone can prove it is talking to *our* coordinator.
+- **NOT device authentication.** Pinning says nothing about *which* phone is
+  connecting. `operator = 1` is untouched, and the domain vector still binds
+  there. TLS was never going to fix that and should not be read as progress on it.

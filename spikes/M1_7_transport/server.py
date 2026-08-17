@@ -16,7 +16,7 @@ Endpoints, all device-initiated:
   POST /result           submit an envelope
   GET  /stats            for the harness, not the device
 """
-import hmac, json, os, queue, secrets, sys, threading, time
+import hmac, json, os, queue, secrets, ssl, subprocess, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -133,7 +133,33 @@ class H(BaseHTTPRequestHandler):
         return self._send(200, b'ok')
 
 
-def serve(port, bind='127.0.0.1'):
+def make_cert(dirpath, ip):
+    """Ephemeral self-signed cert for this run only.
+
+    Not a PKI and not trying to be. There is no CA, nothing is installed into a
+    trust store, and the key never leaves the workspace or outlives the process
+    -- the device pins the public key by hash instead (`curl --pinnedpubkey`),
+    which is the right shape when there is exactly one server and it is ours.
+
+    This is transport confidentiality and server identity. It is NOT device
+    authentication: pinning proves the phone is talking to OUR coordinator, and
+    says nothing about which phone is talking. That remains `operator = 1`.
+    """
+    key = os.path.join(dirpath, 'kf-key.pem')
+    crt = os.path.join(dirpath, 'kf-crt.pem')
+    subprocess.run([
+        'openssl', 'req', '-x509', '-newkey', 'rsa:2048', '-nodes',
+        '-keyout', key, '-out', crt, '-days', '1',
+        '-subj', '/CN=kingfisher-coordinator',
+        '-addext', f'subjectAltName=IP:{ip}'], check=True, capture_output=True)
+    spki = subprocess.run(
+        f"openssl x509 -in {crt} -pubkey -noout | openssl pkey -pubin -outform der | "
+        f"openssl dgst -sha256 -binary | openssl base64",
+        shell=True, capture_output=True, text=True).stdout.strip()
+    return key, crt, spki
+
+
+def serve(port, bind='127.0.0.1', certfile=None, keyfile=None):
     """Default stays loopback. `bind` is explicit at every call site so that
     putting a job-dispatch endpoint on a network is always a visible decision,
     never a default. Callers that widen it MUST have a token set."""
@@ -141,5 +167,10 @@ def serve(port, bind='127.0.0.1'):
         raise RuntimeError(
             'refusing to bind beyond loopback without KF_TOKEN set explicitly')
     srv = ThreadingHTTPServer((bind, port), H)
+    if certfile:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ctx.minimum_version = ssl.TLSVersion.TLSv1_2
+        ctx.load_cert_chain(certfile, keyfile)
+        srv.socket = ctx.wrap_socket(srv.socket, server_side=True)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     return srv

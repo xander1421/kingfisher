@@ -55,6 +55,25 @@ about. This is the honest state, not a regression.
    `proposed/hyperon-nondeterminism/`, `proposed/hyperon-match-arity/`,
    `proposed/das-concurrency/`, `proposed/mork-license/`.
 
+## Cycle log — this session (AGENT-1)
+- **C1 DONE: W2** — `spikes/W2_witnessed_trie/`. Witnessed re-exec on the trie
+  substrate. Membership + **non-membership** + **completeness** over a
+  Merkle-committed radix-256 trie, with a verifier that returns False (W1 had no
+  verification function at all — that is why its four controls were dead). 9
+  controls, all fire, observations in `provenance.json`. Took W4's route 1: the
+  prefilter stays an untrusted accelerator, W4's kill is not reopened.
+  Absence costs **~2.0 KB** on the realistic miss; the 107 B random-miss number
+  is corpus arithmetic (shard holds 3 of 237 predicates) and `C_miss_depth`
+  exists to stop it being reported as the answer. Aligned `(p s ?o)` witness
+  **0.05× shard**, auth path 1.5–2.4 KB **independent of answer size**;
+  `(?p s o)` exactly **1.00×** — never worth witnessing, measured boundary.
+  Self-caught: 2541 B vs 2474 B across two shards is an *accidental* agreement,
+  the path grew 64% while the answer shrank 93%. See DECISIONS 103–105.
+- **NOTE: D4 and D6 do not exist** — §7 gates LOOP-DONE on D1–D6 as written
+  specs; `specs/` has only D1+, D2, D3, D5, and neither was ever a queue row.
+  Added as OPEN P0 rows. Reading "D1–D6" as "the four we wrote" would be
+  weakening a gate to pass it.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
@@ -84,15 +103,22 @@ about. This is the honest state, not a regression.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: **W2** — witnessed re-exec on the trie substrate, non-membership
-  via an authenticated ordered structure, code+seed+controls. Highest-priority
-  ungated unclaimed item in P1 per §3 (it unblocks the verification substrate;
-  W1 is INVALID and W3 is cancelled, so W2 carries that lane alone).
-- **NEXT 2**: canonical **state** serialization at an epoch boundary. D2
+- **NEXT 1**: canonical **state** serialization at an epoch boundary. D2
   canonicalises *results*; nothing canonicalises interpreter state. It is the
   shared dependency of (a) optimistic-execution/bisection, which is how
   verification stops costing a second full run, and (b) verifiable adaptation
   across epochs (G11 is the n=6 existence proof). One artifact, two unblocks.
+  **Split it before starting** — W2 just showed the two halves are different
+  problems. *Space* state is a pathmap trie, and `W2/trie_witness.py:node_hash`
+  already canonicalises a trie (child bytes sorted, digest a function only of
+  `(prefix, term, children)`), so that half is reachable today. *Interpreter*
+  state is the plan stack, and S68 is RED on it — 4 contaminants, one
+  unidentified, blocked upstream. Do the space half; record the interpreter half
+  as gated on S68, do not re-measure it.
+- **NEXT 2**: **D4 and D6 as written specs.** They gate LOOP-DONE (§7) and
+  neither exists. D6 in particular is cited as a standard on every result page
+  while living only as MISSION_LOOP §5 prose. Freeze-gate priority per §3, so
+  this outranks the measurements below.
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
   from job 1; three options recorded, none implemented). Note M1.3b since found
   reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is

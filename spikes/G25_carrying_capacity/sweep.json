@@ -1,0 +1,186 @@
+{
+ "rows": {
+  "full_base": {
+   "name": "full_base",
+   "arm": "full",
+   "wage": 120.0,
+   "max_pop": 200,
+   "pop": 110,
+   "preds": 116752,
+   "correct": 4144,
+   "prec": 0.03549403864601891,
+   "top12": 0.24578352591780195,
+   "delta": 2842,
+   "cov_per_rule": 37.67272727272727,
+   "a15": true,
+   "capped": 273
+  },
+  "full_cap2000": {
+   "name": "full_cap2000",
+   "arm": "full",
+   "wage": 120.0,
+   "max_pop": 2000,
+   "pop": 110,
+   "preds": 116752,
+   "correct": 4144,
+   "prec": 0.03549403864601891,
+   "top12": 0.24578352591780195,
+   "delta": 2842,
+   "cov_per_rule": 37.67272727272727,
+   "a15": true,
+   "capped": 273
+  },
+  "nodeath": {
+   "name": "nodeath",
+   "arm": "no_death",
+   "wage": 120.0,
+   "max_pop": 200,
+   "pop": 557,
+   "preds": 969298,
+   "correct": 6361,
+   "prec": 0.006562481300900239,
+   "top12": 0.2971764182223239,
+   "delta": 5059,
+   "cov_per_rule": 11.420107719928186,
+   "a15": true,
+   "capped": 548
+  },
+  "nodeath_noabduct": {
+   "name": "nodeath_noabduct",
+   "arm": "no_death+no_abduct",
+   "wage": 120.0,
+   "max_pop": 200,
+   "pop": 531,
+   "preds": 442116,
+   "correct": 1514,
+   "prec": 0.0034244406445367278,
+   "top12": 0.30115747300983026,
+   "delta": 212,
+   "cov_per_rule": 2.8512241054613936,
+   "a15": false,
+   "capped": 167
+  },
+  "wage1200": {
+   "name": "wage1200",
+   "arm": "full",
+   "wage": 1200.0,
+   "max_pop": 2000,
+   "pop": 229,
+   "preds": 286436,
+   "correct": 5934,
+   "prec": 0.020716669692357106,
+   "top12": 0.28879035433944406,
+   "delta": 4632,
+   "cov_per_rule": 25.912663755458514,
+   "a15": true,
+   "capped": 265
+  },
+  "wage2400": {
+   "name": "wage2400",
+   "arm": "full",
+   "wage": 2400.0,
+   "max_pop": 4000,
+   "pop": 228,
+   "preds": 269743,
+   "correct": 5724,
+   "prec": 0.021220198485224825,
+   "top12": 0.284314230954741,
+   "delta": 4422,
+   "cov_per_rule": 25.105263157894736,
+   "a15": true,
+   "capped": 246
+  },
+  "wage300": {
+   "name": "wage300",
+   "arm": "full",
+   "wage": 300.0,
+   "max_pop": 2000,
+   "pop": 153,
+   "preds": 249938,
+   "correct": 4981,
+   "prec": 0.01992894237770967,
+   "top12": 0.26825503684638824,
+   "delta": 3679,
+   "cov_per_rule": 32.55555555555556,
+   "a15": true,
+   "capped": 328
+  },
+  "wage4800": {
+   "name": "wage4800",
+   "arm": "full",
+   "wage": 4800.0,
+   "max_pop": 4000,
+   "pop": 239,
+   "preds": 369616,
+   "correct": 5980,
+   "prec": 0.016178953292065278,
+   "top12": 0.2899009881318712,
+   "delta": 4678,
+   "cov_per_rule": 25.02092050209205,
+   "a15": true,
+   "capped": 289
+  },
+  "wage600": {
+   "name": "wage600",
+   "arm": "full",
+   "wage": 600.0,
+   "max_pop": 2000,
+   "pop": 171,
+   "preds": 178571,
+   "correct": 4455,
+   "prec": 0.024948059875343702,
+   "top12": 0.27976267242607317,
+   "delta": 3153,
+   "cov_per_rule": 26.05263157894737,
+   "a15": true,
+   "capped": 284
+  },
+  "wage600_noabduct": {
+   "name": "wage600_noabduct",
+   "arm": "no_abduct",
+   "wage": 600.0,
+   "max_pop": 2000,
+   "pop": 184,
+   "preds": 68140,
+   "correct": 1533,
+   "prec": 0.022497798649838568,
+   "top12": 0.2892940543381616,
+   "delta": 231,
+   "cov_per_rule": 8.331521739130435,
+   "a15": false,
+   "capped": 120
+  }
+ },
+ "verdict": "CALIBRATION, PARTLY \u2014 turning WAGE_POOL alone closes 83% of the coverage gap G24 attributed to death (4144 -> 5980 vs no_death's 6361) while asserting 2.6x fewer predictions and holding 2.5x the precision. Neither point dominates the other, so death is not shown to cost coverage; the published capacity was simply low. The remaining 17% is not reachable by this dial: selection saturates at pop 239. ATTRIBUTION: at matched population and NO selection either side (531 vs 557), dropping abduction costs 4847 correct triples (6361 -> 1514). no_death's coverage is problem-directed proposal, not population volume \u2014 so 'coverage rises with population size almost mechanically' is false as stated in G24.",
+ "conditions": {
+  "data": "real:FB15k-237+planted",
+  "split": "70/15/15",
+  "split_seed": "0xC0FFEE",
+  "run_seed": 1234,
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ]
+  ],
+  "swept": {
+   "wage_pool": [
+    120.0,
+    300.0,
+    600.0,
+    1200.0,
+    2400.0,
+    4800.0
+   ],
+   "arm": [
+    "full",
+    "no_abduct",
+    "no_death",
+    "no_death+no_abduct"
+   ]
+  }
+ },
+ "cites": [
+  "G24_population"
+ ]
+}
