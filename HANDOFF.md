@@ -59,6 +59,16 @@ nothing at all. Two blind spots -- a replica whose `<` is wrong at every
 boundary passes quorum UNANIMOUS, and `fuel_used` does not move when the stdlib
 grows, so altered stdlib rules are invisible unless invoked. Corpus
 fault-expression is a measured quantity; `python3 mutate.py` costs ~40 s.
+
+**Patch-liveness is verified, not assumed** (2026-08-17,
+`spikes/M1_10_patchlive/RESULT.md`). The six nondeterminism patches are live in
+all four dispatched binaries -- 4 members x 4 probes x 30 runs, all
+`distinct=1`, phone on-device. The finding is the negative control: reverting
+the patches showed **2 of the 4 probes scored `distinct=1` against a build with
+the bug fully present**. A passing check and an inert check are the same
+observation. Builtin mods (`random`, `fileio`, `json`, `skel`) are NOT
+auto-imported -- a probe without `!(import! &self <mod>)` silently tests the
+parser.
 Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
 (no attestation root) and `manifest` (all binaries from one Cargo.toml, which
 FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
