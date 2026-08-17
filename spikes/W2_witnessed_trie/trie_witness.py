@@ -202,6 +202,15 @@ def keys_under(node, prefix_so_far, out):
 HASH = 32
 
 def steps_bytes(steps):
+    """Bytes of the AUTHENTICATION PATH. NOT the size of a proof.
+
+    It excludes the terminal descriptor: the leaf for a membership proof, the
+    DIVERGENCE NODE for an absence proof, the answer set for a completeness
+    proof. `witness_bytes` is what a prover transmits. Kept unchanged and named
+    here rather than renamed, because five spikes call it and every number they
+    published is a number this function returned -- see `auth_path_bytes` for the
+    same thing under a name that says so, and H51 for what the confusion cost.
+    """
     n = 0
     for (prefix, term, pairs), _b in steps:
         n += 2 + len(prefix) + 1 + 2 + len(pairs) * (1 + HASH) + 1
@@ -340,10 +349,44 @@ def reexecute(pf, filt):
 
 
 def witness_bytes(pf):
+    """Bytes a prover must TRANSMIT for this proof, whatever kind it is.
+
+    v2, 2026-08-17 (AGENT-1, H51). DEFECT REMOVED: this function **raised
+    `KeyError: 'kind'` on a membership proof** -- `prove_membership` returns
+    `{'steps', 'leaf'}` and only the other two kinds carry `kind`. So the one
+    correct accounting in this module did not work for the commonest proof
+    shape, and four spikes (S77, S79, S80, S84) reached for `steps_bytes`
+    instead, which is the AUTHENTICATION PATH ONLY. Nothing said they differed.
+
+    That silence cost a published figure: for a non-membership proof the missing
+    `desc_bytes(pf['node'])` is the DIVERGENCE CHILD SET -- precisely the term
+    S79's own model charges and calls the entire structural difference between
+    absence and membership -- so S79's model-vs-prover cross-check compared two
+    different quantities and its residual was misattributed (80.2 / 53.6 /
+    100.9 B; `spikes/S79_absence_bytes/ATTACK.md`). This was not a naming
+    problem. The correct function did not run, and the reachable one was wrong.
+
+    Dispatch is on WHICH KEY IS PRESENT, not on `kind`, because `kind` is what
+    was absent. Additive: every existing caller of `steps_bytes` keeps its
+    behaviour, so no recorded number moves by installing this.
+    """
     n = steps_bytes(pf['steps'])
-    if pf['kind'] == COVER:
+    if 'leaf' in pf:                       # membership: the terminal descriptor
+        return n + desc_bytes(pf['leaf'])
+    if pf.get('kind') == COVER:            # completeness: the answer set
         return n + 12 * len(pf['keys'])
-    return n + desc_bytes(pf['node'])
+    return n + desc_bytes(pf['node'])      # absence: the divergence node
+
+
+def auth_path_bytes(pf):
+    """The AUTHENTICATION PATH only -- what `steps_bytes` has always returned.
+
+    Exists so a call site can SAY which of the two accountings it means. The two
+    differ by the terminal descriptor, and for absence that descriptor is the
+    divergence child set rather than framing. Prefer `witness_bytes` unless you
+    specifically want the path.
+    """
+    return steps_bytes(pf['steps'])
 
 
 # ----------------------------------------------------------------------- main
@@ -732,5 +775,45 @@ def report(o):
     print(f"\nall controls fire: {o['all_controls_fire']}")
 
 
+def selfcheck():
+    """H51: `witness_bytes` must size ALL THREE proof kinds, and must exceed the
+    authentication path by exactly the terminal descriptor.
+
+    Verified to fail when the fix is removed: restore `pf['kind']` as the
+    dispatch and the membership arm raises `KeyError: 'kind'`, which is what it
+    did for every spike that tried it.
+    """
+    keys = sorted({key(p, s, o)
+                   for p in range(3) for s in range(12) for o in range(12)})
+    root = build(keys)
+
+    mp = prove_membership(root, keys[7])
+    assert mp is not None and verify_membership(root.h, keys[7], mp)
+    assert witness_bytes(mp) == auth_path_bytes(mp) + desc_bytes(mp['leaf'])
+    assert witness_bytes(mp) > auth_path_bytes(mp), \
+        'the membership terminal descriptor must cost something'
+
+    absent = key(0, 0, 9999)
+    ap = prove_non_membership(root, absent)
+    assert ap is not None and verify_non_membership(root.h, absent, ap)
+    assert witness_bytes(ap) == auth_path_bytes(ap) + desc_bytes(ap['node'])
+
+    cp = prove_completeness(root, struct.pack('>I', 1))
+    assert cp is not None and verify_completeness(root.h, struct.pack('>I', 1), cp)
+    assert witness_bytes(cp) == auth_path_bytes(cp) + 12 * len(cp['keys'])
+    assert cp['keys'], 'the completeness arm must carry an answer set to charge for'
+
+    # The gap is not decorative on the shape that cost a published figure: an
+    # absence proof's terminal descriptor is the DIVERGENCE CHILD SET.
+    gap = witness_bytes(ap) - auth_path_bytes(ap)
+    assert gap > 33, ('the divergence descriptor must carry child digests, not '
+                      'framing alone; got %d B' % gap)
+    print('trie_witness selfcheck: witness_bytes sizes all three proof kinds; '
+          'absence terminal descriptor = %d B over the auth path' % gap)
+
+
 if __name__ == '__main__':
-    main()
+    if '--selfcheck' in sys.argv:
+        selfcheck()
+    else:
+        main()

@@ -1,11 +1,11 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T11:21:23Z",
+ "recorded_utc": "2026-08-17T13:12:49Z",
  "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit on them.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "4b57921ee16472fcec43a0e4d6ade9b6e494de2e",
+   "head": "31bfd2b294f2f2610093426a3f7c474d8a448ad6",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -22,17 +22,17 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
-   "sha256": "fa9ca7061752bca5c24d97d3a91b74f01dd92f7feeb006c4546f5c14427ad703",
-   "bytes": 33868,
-   "mtime": 1786961746,
-   "compared_ts": 1786961749,
-   "compared_clock": "last-commit"
+   "sha256": "e4cf0aac4c4a41b917a3db08b8d2ca6559af215dcb12f07c8e62b56a9bd2d8fe",
+   "bytes": 38234,
+   "mtime": 1786972333,
+   "compared_ts": 1786972333,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
    "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
    "bytes": 5102,
-   "mtime": 1786965683,
+   "mtime": 1786972369,
    "compared_ts": 1786959236,
    "compared_clock": "last-commit"
   }
@@ -60,6 +60,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "membership_ok": 1,
@@ -73,6 +74,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "honest_rows": 253,
@@ -86,6 +88,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "honest_rows": 253,
@@ -99,6 +102,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "flipped_bit": 1,
@@ -112,6 +116,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "prover_refused_honest_proof": 1,
@@ -125,6 +130,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "root": "571a8eb14ab70411",
@@ -138,6 +144,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "children": 3,
@@ -152,6 +159,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "a": "0000000000000044000017d3",
@@ -165,6 +173,7 @@
    "null_must_contain": "the cheat this control injects",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "shallow_steps": 0.015,
@@ -174,6 +183,8 @@
    }
   }
  ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg": {
