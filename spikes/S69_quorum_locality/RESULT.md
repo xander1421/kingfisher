@@ -1,3 +1,7 @@
+> **RED — BROKEN BY ADVERSARIAL REVIEW, 2026-08-17. Do not build on this.**
+> Corrections in `analysis/DESCOPE_ATTACKS.md`; the headline claims below are
+> retained only so the errors are legible.
+
 # S69 — pricing the rare-shard attack C4 opened, and its mitigations
 
 **Verdict: GREEN, and it closes the question with a cheap fix. The rare-shard attack is real and cheap; forcing one of the three replicas to be drawn fleet-wide collapses it. Minimum replication breadth alone does not.**

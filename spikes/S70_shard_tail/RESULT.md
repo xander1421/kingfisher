@@ -1,3 +1,7 @@
+> **RED — BROKEN BY ADVERSARIAL REVIEW, 2026-08-17. Do not build on this.**
+> Corrections in `analysis/DESCOPE_ATTACKS.md`; the headline claims below are
+> retained only so the errors are legible.
+
 # S70 — the shard-pool tail, and the coverage floor it forces
 
 **Verdict: GREEN, and it converts S69's `R ≥ 25` from an assumption into a condition on one parameter. Demand-driven caching leaves most shards with tiny pools; enforcing a replication floor is free above a coverage threshold and unaffordable below it. The threshold is `N·C/S ≳ 4R`.**
