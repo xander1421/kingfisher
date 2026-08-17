@@ -84,7 +84,25 @@ def scan():
     ml = open(ML).read() if os.path.exists(ML) else ''
     gr = open(GR).read() if os.path.exists(GR) else ''
     secs, subs = sections(ml), subsections(ml)
+    # §N DOES NOT ALWAYS MEAN MISSION_LOOP, and assuming it did made this tool
+    # file a FALSE ACCUSATION against another lane on its first run. It reported
+    # `HANDOFF.ATTACKER-1.md` citing a broken §0; that line reads "per §12 and
+    # THE BRIEF'S §0", and `prompts/ATTACKER-1.md:8` is `## 0 · Claim your
+    # identity before you claim any work`. The citation was perfect and the
+    # checker was wrong -- a resolver that resolves against one document while
+    # the repo cites several is the same defect it exists to find.
+    # Sections are therefore resolved against every harness document that DEFINES
+    # them. The duplicate check below stays MISSION_LOOP-only: two `## 9 ·` there
+    # is what made every §9 ambiguous, and briefs are per-lane.
     sec_set = set(secs)
+    for rel in harness_files():
+        if rel.startswith('prompts/') and rel.endswith('.md'):
+            try:
+                other = open(os.path.join(ROOT, rel), encoding='utf-8').read()
+            except (UnicodeDecodeError, OSError):
+                continue
+            sec_set |= set(sections(other))
+            subs |= subsections(other)
     guards = set(re.findall(r'^###\s+A(\d+)', gr, re.M))
     problems = []
 
@@ -108,8 +126,8 @@ def scan():
                     problems.append(f'{rel}: §{ref} does not resolve -- '
                                     f'MISSION_LOOP.md has no such bullet')
             elif ref not in sec_set:
-                problems.append(f'{rel}: §{ref} does not resolve -- '
-                                f'MISSION_LOOP.md has sections {sorted(sec_set, key=int)}')
+                problems.append(f'{rel}: §{ref} does not resolve -- no harness '
+                                f'document defines it; known: {sorted(sec_set, key=int)}')
 
         # 1b · `§N` in GUARDRAILS.md cites EXTERNAL documents (a standard's section 46,
         #      a paper's section), not this repo's loop contract, so § resolution
