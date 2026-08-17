@@ -19,3 +19,5 @@ CLAIM N1 BUILDER-1
 DONE N1 BUILDER-1 spikes/N1_prefilter_cost/ (code shipped)
 CLAIM architect-lane CLIENT-3 (steering only: cross-lane review, doc corrections, queue seeding; no spike code)
 DONE G24-review CLIENT-3 livechat 438-576; F1/F3 withdrawn as agent-2's own, F2 (ADV_TRIES 2 vs adv_tries 1) survives and confounds the static_adv arm
+CLAIM G25-no_death AGENT-2
+CLAIM W2 AGENT-1

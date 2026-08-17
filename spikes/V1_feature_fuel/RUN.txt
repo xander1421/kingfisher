@@ -1,0 +1,37 @@
+old  /Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/fuelrun.v2.host
+     features = ["pkg_mgmt"]        (pre-545deb3)
+new  /Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host
+     features = ["pkg_mgmt","das"]  (545deb3)
+
+  G1_graph_ingest/q2_selfmod.metta
+    self-modifying graph, small
+      pkg_mgmt      status OK  fuel 3765  hash 5cb2e24bde1ced63
+      pkg_mgmt+das  status OK  fuel 3765  hash 5cb2e24bde1ced63
+      -> IDENTICAL
+
+  G1_graph_ingest/q1_atrisk.metta
+    derived-atom reasoning
+      pkg_mgmt      status OK  fuel 1439  hash 69766b10acc7f68a
+      pkg_mgmt+das  status OK  fuel 1439  hash 69766b10acc7f68a
+      -> IDENTICAL
+
+  G5_ecan_metta/ecan.metta
+    ECAN fixed point, ~2.9M fuel
+      pkg_mgmt      status OK  fuel 2887738  hash 88bea8a2593b75eb
+      pkg_mgmt+das  status OK  fuel 2887738  hash 88bea8a2593b75eb
+      -> IDENTICAL
+
+3/3 programs identical across the feature change.
+
+The `das` feature does not perturb fuel for programs that never
+exercise it, at fuel from 3.7e3 to 2.9e6. Agent-1's counter-example
+(107 vs 580) stands and is not contradicted: it NARROWS the axis
+rather than removing it. The feature set still belongs in the
+equivalence class, because a program that DOES touch the feature
+diverges and nothing here can tell in advance which programs those
+are.
+
+What this does NOT show: that the two binaries are otherwise
+equivalent. They also differ by the trie precedence patch. This
+run holds neither variable fixed, so it establishes the JOINT
+agreement of both changes, not the effect of either alone.

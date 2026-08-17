@@ -1,5 +1,14 @@
 # QUIC for the device transport — evaluated against our own numbers
 
+> **SUPERSEDED IN PART, 2026-08-17.** The deferral below rests on a
+> `63.2 ms fixed + 37.9 MB/s` affine model measured over **USB**. Measured over
+> real WiFi (`spikes/M1_7_transport/LAN_RESULT.md`), **the affine model does not
+> hold** — bandwidth climbs from 1.0 to 28.3 MB/s with transfer size, so there
+> is no single fixed component to be "27% and falling". The recommendation
+> (defer) still stands, but the *reason* below is void; the live reason is that
+> plain-TCP connection reuse would capture most of the same win and has not been
+> tested against it.
+
 **Recommendation: not now, and the reason is measured, not architectural.**
 QUIC's advantages land almost entirely on costs we have already shown are not
 dominant. Revisit when one specific condition changes.

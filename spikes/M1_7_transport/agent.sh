@@ -1,13 +1,16 @@
 #!/system/bin/sh
 # M1.7 device agent. Dials out only: long-polls for a job, fetches the shard by
 # CID, verifies it, runs fuelrun, posts the envelope back. Never listens.
-BASE="http://127.0.0.1:${KF_PORT:-18080}"
-DIR=/data/local/tmp/m17
+BASE="${KF_BASE:-http://127.0.0.1:${KF_PORT:-18080}}"
+# bearer token: the coordinator refuses to bind beyond loopback without one
+AUTH="Authorization: Bearer ${KF_TOKEN}"
+# overridable so a LAN run does not silently reuse the adb run's warm cache
+DIR="${KF_DIR:-/data/local/tmp/m17}"
 mkdir -p "$DIR/shards"
 WORKER="${KF_WORKER:-phone}"
 IDLE=0
 while [ "$IDLE" -lt "${KF_MAXIDLE:-3}" ]; do
-  JOB=$(curl -s -m 30 "$BASE/job?worker=$WORKER")
+  JOB=$(curl -s -m 30 -H "$AUTH" "$BASE/job?worker=$WORKER")
   if [ -z "$JOB" ]; then IDLE=$((IDLE+1)); continue; fi
   IDLE=0
   CID=$(echo "$JOB" | sed 's/.*"shard_cid": *"\([^"]*\)".*/\1/')
@@ -18,7 +21,7 @@ while [ "$IDLE" -lt "${KF_MAXIDLE:-3}" ]; do
   # body to $F, exits 0, and fuelrun runs on an empty file and posts a result
   # for a shard that was never delivered -- the empty-capture failure again.
   if [ ! -f "$F" ]; then
-    curl -fsS -m 60 -o "$F" "$BASE/shard/$CID" || { rm -f "$F"; continue; }
+    curl -fsS -m 60 -H "$AUTH" -o "$F" "$BASE/shard/$CID" || { rm -f "$F"; continue; }
   fi
   # Verify against the CID before running. The CID IS the hash, so this needs no
   # extra metadata, and it catches a truncated transfer as well as a wrong body.
@@ -35,6 +38,6 @@ while [ "$IDLE" -lt "${KF_MAXIDLE:-3}" ]; do
   printf '{"job_id":"%s","worker":"%s","shard_cid":"%s","status":"%s","fuel_used":"%s","sorted_hash":"%s","raw_hash":"%s"}' \
     "$JID" "$WORKER" "$CID" "$ST" "$FU" "$SH" "$RH" > "$DIR/env.json"
   curl -s -m 30 -X POST --data-binary @"$DIR/env.json" \
-    -H 'Content-Type: application/json' "$BASE/result" >/dev/null
+    -H "$AUTH" -H 'Content-Type: application/json' "$BASE/result" >/dev/null
 done
 echo "agent exiting after $IDLE idle polls"

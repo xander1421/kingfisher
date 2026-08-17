@@ -558,7 +558,7 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
                   f"  A15 {'yes' if found else '-'}")
         if not pop:
             break
-    return hist, stats["rejected_capped"]
+    return hist, stats["rejected_capped"], pop
 
 
 def main():
@@ -586,7 +586,7 @@ def main():
     for arm in ("full", "no_variation", "no_abduct", "no_death",
                 "static_adv", "no_waves"):
         print(f"ARM {arm}")
-        h, capped = run(arm, train, p_dev, p_test, npred, planted)
+        h, capped, _pop = run(arm, train, p_dev, p_test, npred, planted)
         out[arm] = {"hist": h, "capped_evals": capped}
         print()
 

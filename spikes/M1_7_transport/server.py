@@ -16,18 +16,28 @@ Endpoints, all device-initiated:
   POST /result           submit an envelope
   GET  /stats            for the harness, not the device
 """
-import json, os, queue, sys, threading, time
+import hmac, json, os, queue, secrets, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'M1_5_shardstore'))
 from shardstore import cid_of, parse_cid
 
+# Shared-secret bearer token. Generated per run unless KF_TOKEN is set.
+#
+# This is NOT a substitute for the attestation root the `operator` domain axis
+# needs -- it authenticates *the fleet*, not *a device*, so it cannot tell two
+# workers apart and does nothing about collusion. What it does is stop an
+# arbitrary host on the LAN from pulling jobs or posting envelopes, which
+# becomes possible the moment this binds beyond loopback.
+TOKEN = os.environ.get('KF_TOKEN') or secrets.token_urlsafe(24)
+
 JOBS = queue.Queue()
 SHARDS = {}
 RESULTS = []
 LOCK = threading.Lock()
-STATS = {'polls': 0, 'jobs_out': 0, 'shard_bytes': 0, 'results': 0, 'misses': 0}
+STATS = {'polls': 0, 'jobs_out': 0, 'shard_bytes': 0, 'results': 0,
+         'misses': 0, 'unauthorised': 0}
 
 
 class H(BaseHTTPRequestHandler):
@@ -55,7 +65,21 @@ class H(BaseHTTPRequestHandler):
         if body:
             self.wfile.write(body)
 
+    def _authed(self):
+        got = self.headers.get('Authorization', '')
+        want = 'Bearer ' + TOKEN
+        # constant-time: a length/prefix-leaking compare on a LAN endpoint is
+        # a real oracle, not a theoretical one
+        if hmac.compare_digest(got, want):
+            return True
+        with LOCK:
+            STATS['unauthorised'] = STATS.get('unauthorised', 0) + 1
+        self._send(401, b'unauthorised')
+        return False
+
     def do_GET(self):
+        if not self._authed():
+            return
         path, _, qs = self.path.partition('?')
         if path == '/job':
             with LOCK:
@@ -94,6 +118,8 @@ class H(BaseHTTPRequestHandler):
         return self._send(404)
 
     def do_POST(self):
+        if not self._authed():
+            return
         if self.path != '/result':
             return self._send(404)
         n = int(self.headers.get('Content-Length', 0))
@@ -107,9 +133,13 @@ class H(BaseHTTPRequestHandler):
         return self._send(200, b'ok')
 
 
-def serve(port):
-    # 127.0.0.1 ONLY. Never 0.0.0.0 -- binding wide would put a job-dispatch
-    # endpoint on the LAN, and nothing here authenticates anything.
-    srv = ThreadingHTTPServer(('127.0.0.1', port), H)
+def serve(port, bind='127.0.0.1'):
+    """Default stays loopback. `bind` is explicit at every call site so that
+    putting a job-dispatch endpoint on a network is always a visible decision,
+    never a default. Callers that widen it MUST have a token set."""
+    if bind != '127.0.0.1' and not os.environ.get('KF_TOKEN'):
+        raise RuntimeError(
+            'refusing to bind beyond loopback without KF_TOKEN set explicitly')
+    srv = ThreadingHTTPServer((bind, port), H)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     return srv

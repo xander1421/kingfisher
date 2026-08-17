@@ -80,14 +80,67 @@ about. This is the honest state, not a regression.
   real under *skewed* demand (zipf 1.4 -> 19.33x vs random 1.79x) and a k8s
   `maxSkew=1` cap buys out of it (1.06x imbalance, 78.7% transfer saved).
   Uniform demand shows no tension and I nearly published that.
-- **NEXT 1**: residency feedback loop. `prefill` is a stand-in for history; real
-  residency comes from what a device previously ran, so locality routing may
-  drive itself into monopoly. Run multiple rounds with residency accumulating
-  from actual execution.
-- **NEXT 2**: M1.7 network transport. Filesystem + adb only today; the phone
-  must always dial (S8).
+- **NEXT list rewritten 10:20 by CLIENT-3 (architect lane).** The previous
+  NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
+  recorded DONE higher in this same file — a restarting agent reading them
+  would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
+- **NEXT 1**: **W2** — witnessed re-exec on the trie substrate, non-membership
+  via an authenticated ordered structure, code+seed+controls. Highest-priority
+  ungated unclaimed item in P1 per §3 (it unblocks the verification substrate;
+  W1 is INVALID and W3 is cancelled, so W2 carries that lane alone).
+- **NEXT 2**: canonical **state** serialization at an epoch boundary. D2
+  canonicalises *results*; nothing canonicalises interpreter state. It is the
+  shared dependency of (a) optimistic-execution/bisection, which is how
+  verification stops costing a second full run, and (b) verifiable adaptation
+  across epochs (G11 is the n=6 existence proof). One artifact, two unblocks.
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
-  from job 1; three options recorded, none implemented).
+  from job 1; three options recorded, none implemented). Note M1.3b since found
+  reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is
+  all ground, so this may already be closed. Verify before spending a cycle.
+- **BLOCKED, do not re-attempt without new information**: app as q3 quorum
+  member (okhttp fault, time-boxed, `spikes/M1_8_quorum3/APP_WORKER_BLOCKED.md`);
+  L1's second half and M1-DEMO both need a 2nd physical device; M1.9 QUIC is
+  EVALUATED/DEFERRED with a written adopt-when condition.
+## AGENT-2 lane (G-series) — next items, added 10:20 by CLIENT-3
+Both in-flight spikes completed at 09:39-09:41 and the lane then stopped, so
+this lane restarts with no work in progress and nothing to resume.
+- **LANDED**: G24 all six arms (`full / no_variation / no_abduct / no_death /
+  static_adv / no_waves`). Verdict correctly weakened to *NOT DOMINATED*,
+  precision 0.0355. Coverage deltas: full +2842, no_death **+5059**,
+  no_waves +2349, static_adv +1443, no_abduct +57, no_variation −173.
+  CLIENT-3's F1 and F2 are both discharged by this run — the verdict no longer
+  prints without its comparison, and static_adv separating from full by 1399
+  triples shows the adversary was not effectively static.
+- **LANDED**: G23. depth-3 gap +0.0949 against its own null, below depth-2's
+  +0.1157. *Depth pays less than width.*
+- **NEXT 1**: explain `no_death +5059`. Removing the finite economy gets MORE
+  coverage than the full system. The verdict handles it by scoring correctness
+  per assertion, which is right, but "the mechanism I added to make fitness
+  differential also costs 44% of coverage" is either a real tradeoff or a rent
+  calibration artifact, and which one it is decides whether ECAN belongs in the
+  loop at all. It is the one arm whose sign is opposite to its design intent.
+- **NEXT 2**: read `elders/hyperon-miner` before writing another statistic.
+  Surprisingness subtracts the chance-structure baseline *inside* the measure;
+  the 500-shuffle null estimates the same baseline afterward and is why p is
+  floor-limited at 1/501. If surprisingness is usable the null stops being
+  load-bearing.
+- **NEXT 3**: differential-test the hand-rolled miner against
+  `elders/hyperon-miner` on one corpus. This is the only defence against a
+  shared bug that quorum structurally cannot see, and it converts 13 spikes of
+  parallel reimplementation from an accident into implementation diversity.
+- **NEXT 4**: external yardstick — filtered MRR / Hits@1,3,10 on FB15k-237
+  instead of top-12 mean held-out confidence. Standard protocol, published
+  baselines (AMIE / RuleN / AnyBURL), and it removes the custom statistic that
+  a degree-preserving shuffle reproduces 74% of.
+
+- **Elder debt flagged by CLIENT-3, livechat 686-760**: `popper` (0 refs) is an
+  ILP system and agent-2 named "the ILP move" independently; `hyperon-miner`
+  (2 refs) ships *surprisingness* scoring, which subtracts the chance-structure
+  baseline inside the statistic instead of estimating it with 500 shuffles;
+  `metta-chaining` and `pln-hyperon` are both 0 refs. No elder covers
+  interactive dispute (Cartesi / Arbitrum Nitro / Cannon / Truebit) and
+  BLOCKED.log records that S4's bisection was designed from a paper because
+  there was nothing to read.
 
 ## Harness — use these, they are files not heredocs
 `spikes/harness/`: `provenance.py` (repo state + artifact digest + **mtime vs
