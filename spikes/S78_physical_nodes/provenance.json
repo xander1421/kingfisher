@@ -1,15 +1,13 @@
 {
  "spike": "S78_physical_nodes",
- "recorded_utc": "2026-08-17T11:21:44Z",
+ "recorded_utc": "2026-08-17T11:22:30Z",
  "note": "S78 is GRADE D: arithmetic over inputs measured in S77, plus one E input read from pathmap source. Published as a threshold, never as a measured byte count.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes",
-   "head": "ad1a35df57ca8fbdeb2732e6588f4209bf241dec",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S78_physical_nodes/"
-   ],
+   "head": "07b575f464bc334af27eee0c8ef8444e119c29bb",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   }
@@ -26,9 +24,9 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes/threshold.json",
    "sha256": "5d4c556350c82539ee06947e2b99354f147e597a1de9bedc9be036fb6bee3a43",
    "bytes": 5112,
-   "mtime": 1786965704,
-   "compared_ts": 1786965704,
-   "compared_clock": "mtime"
+   "mtime": 1786965750,
+   "compared_ts": 1786965750,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -128,13 +126,14 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes": {
-   "newest": 1786965704,
-   "from": "spikes/S78_physical_nodes/"
+   "newest": 1786965750,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes at ad1a35df: 1 modified. The build is NOT ad1a35df."
- ],
- "ok": false,
- "falsifier": "a physical-node commitment that charges a digest per node rather than per sibling, or a framing cost above the computed threshold, would reorder the key sets and make S77 a statement about the logical view only"
+ "problems": [],
+ "ok": true,
+ "falsifier": "a physical-node commitment that charges a digest per node rather than per sibling, or a framing cost above the computed threshold, would reorder the key sets and make S77 a statement about the logical view only",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }
