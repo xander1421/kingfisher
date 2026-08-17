@@ -49,3 +49,4 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 - host quiet.sh: REFUSED (11 containers, another project's). Recheck each cycle.
 - device quiet.sh: OPEN.
 - W1 attacker: live. W3 blocked on its verdict.
+| M1.9 | QUIC transport | **EVALUATED, DEFERRED** — attacks the fixed cost, which is 27% and falling at deployable shard sizes (M1.5b: 63.2 ms + 37.9 MB/s); batching already gives **38x** in the regime where fixed cost dominates. Real wins are connection migration across WiFi/cellular and the TLS we entirely lack. Cost: Cronet adds several MB to a phone APK. **Adopt when** devices are seen changing network mid-job, or shards drop into the fixed-cost regime without pre-staging. `analysis/TRANSPORT_QUIC.md` |
