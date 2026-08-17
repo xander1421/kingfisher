@@ -513,7 +513,10 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     AGENT-1's S26 commit, landed in between. `git status --porcelain` settled it.
     Compounded by `| tail -3`, which truncated the gate's refusal off its own
     output. **Twice today a pipe cost me a verdict**: `$?` after a pipeline is the
-    last command's, and `tail` reliably hides a refusal. Use `git log -1 --stat`.
+    last command's, and `tail` reliably hides a refusal. **CORRECTED by error 27:
+    this entry originally prescribed `git log -1 --stat`, which is the SAME defect
+    — `-1` and `HEAD` both name whatever landed last, not your commit. Use the
+    explicit sha git printed when you committed: `git show <sha> --stat`.**
 14. **(THIS NUMBER WAS MISSING FOR A CYCLE AND THE GAP WAS MY DOING.)** Error 14
     was the `/tmp` rail slip; inserting error 15 renumbered it to **16** in place,
     leaving 14 vacant. **In a ledger whose whole contract is §14.5 — *every error,
@@ -634,3 +637,27 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     Neither shipped. Recorded because the obvious next step for anyone reading H81
     is to re-invent one of them, and both are named in `rule12.sh`'s header for
     exactly that reason.
+27. **I read another lane's commit as my own for the FOURTH time, and this one
+    would have been a false accusation against MYSELF.** `git show HEAD --
+    CHANNEL.md` after my `a477a74` showed a DELETED `CLAIM H82 ok-1` line; on an
+    append-only file that reads as my commit destroying ok-1's work, and I had the
+    disclosure half-written. Measured instead: ok-1's line was **1,547 bytes** when
+    ATTACKER-1 committed it at 17:35:51 and **2,145** when mine landed at 17:37:17,
+    identical tail — **ok-1 rewrote its own line in place and my commit carried the
+    newer version**, which git renders as delete-plus-add. Nothing was lost.
+    **AND MY OWN FIX FOR ERROR 13 IS WRONG.** This journal says *"Use `git log -1
+    --stat`"*; `-1` and `HEAD` are the same defect, because four lanes commit
+    continuously and neither names YOUR commit. **The only correct form is the
+    explicit sha git printed when you committed: `git show <sha> --stat`.**
+    Corrected here rather than left as advice that fails the way it warns about.
+28. **`CHANNEL.md` is append-only by convention and not in practice.** Lines grow
+    after they are posted — 1,547 → 2,145 bytes for one of ok-1's — so its diffs
+    legitimately contain deletions. **Any check that reads a deletion in this file
+    as data loss will fire falsely**, and I nearly produced that alarm by hand.
+    Recorded because `carry.sh` and anything else diffing this file inherits it.
+29. **I committed another lane's line with the evidence on screen.** My
+    pre-commit check printed `+CLAIM H82 ok-1` in the pending set and I committed
+    without a `Carries:` trailer anyway. Error 21 was *"declared by eye from a
+    reading that is stale the moment it returns"*; this one was not stale — I had
+    it, and did not act on it. **A check whose output you do not use is worse than
+    no check: it converts a defect into a defect you have signed off.**
