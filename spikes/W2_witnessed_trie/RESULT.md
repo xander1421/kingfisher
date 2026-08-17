@@ -210,3 +210,15 @@ eight are positive controls that establish detectability. Both are required.
   size, which is why this page reports the path and answer bytes separately.
   A soundness bug in `walk`/`prove_non_membership` was also fixed this cycle — see
   `ATTACK.md`. Every published number is byte-identical after it.
+
+- **2026-08-17, S75 — falsifier run, and this spike's caveat holds.** Against real
+  `pathmap` the mean node depth for 12-byte triple keys is 10.3 against this
+  spike's 4.2 — **2.4×**, under the 10× threshold that was fixed before the numbers
+  were read. So the auth path here becomes roughly **3.6–5.8 KB** rather than
+  1.5–2.4 KB: a constant factor, which is what the caveat claimed. The same test
+  **fires at 18.4× on S73's variable-length atom keys**, so the caveat holds *for
+  this key layout* and not in general. Separately, `pathmap`'s own
+  `merkleization.rs` turns out to be a **dedup pass keyed by a 128-bit
+  non-cryptographic `gxhash`, with no proof and no verifier** — the crate depends
+  on no cryptographic hash at all. **W2 did not reimplement something that
+  existed.**

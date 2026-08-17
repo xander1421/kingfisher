@@ -186,3 +186,17 @@ one.
   proof" is an endpoint ratio over four measured points, not a rate**, and nothing
   may be extrapolated from it to the million-atom spaces the caveats already flag.
   No number on this page changed.
+
+- **2026-08-17, S75 — THIS SPIKE'S FALSIFIER FIRED.** Run against MORK's real
+  `pathmap` (`spikes/S75_pathmap_check/`), the **mean node depth for these atom
+  keys is 139.1 against this spike's 7.6 — 18.4×**, and max depth 1,148 against 15.
+  Authentication overhead scales with nodes on the path, so **the 1,770 B isolated
+  insert would be roughly 33 KB on real `pathmap`.** The caveat above said "same
+  shape, different constants"; **18.4× is not a constant and that caveat was too
+  weak.** The load-bearing variable is the *key length* my `encode` produces (up to
+  1,155 B), which `pathmap` splits into ~1,148 bounded-span nodes. Fixed-length
+  keys do not have this problem — W2's 12-byte triples come out at 2.4×. The
+  indicated fix is in the **encoding** (intern symbols to fixed-width ids), not in
+  the proof system. Nothing on this page is retracted: the controls, the epoch
+  chain and the XOR result stand, and the cost figures are correct **for the
+  structure they were measured on**.

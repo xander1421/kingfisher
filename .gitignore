@@ -67,3 +67,8 @@ spikes/W4_prefilter_readset/triples.bin
 # MCP config may carry API keys — never commit
 .mcp.json
 **/.mcp.json
+
+# S75 builds a probe against elders/PathMap; source and rustc version are
+# committed, the 1 MB binary and the exported key dumps are not
+spikes/S75_pathmap_check/pmprobe/target/
+spikes/S75_pathmap_check/keys_*.bin

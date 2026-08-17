@@ -1,0 +1,143 @@
+{
+ "seed": 20260817,
+ "threshold_stated_before_reading": 10.0,
+ "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+ "pathmap_version": "0.3.0 (elders/PathMap, path dep, untrusted per \u00a710)",
+ "sets": {
+  "atoms": {
+   "keys": 1246,
+   "key_bytes_max": 1155,
+   "key_bytes_mean": 106.6051364365971,
+   "python": {
+    "nodes": 1852,
+    "max_node_depth": 15,
+    "mean_node_depth": 7.5626349892008635
+   },
+   "pathmap": {
+    "keys": 1246,
+    "nodes": 83210,
+    "child_items": 84455,
+    "merkle_hash": "0xcdff8af0a38b239c89b10da07ad72621",
+    "reused": 61,
+    "cloned": 3846,
+    "replaced": 324,
+    "merkleize_stable": true,
+    "max_node_depth": 1148,
+    "mean_node_depth": 139.0532147578416
+   },
+   "depth_ratio_mean": 18.38687374921624,
+   "depth_ratio_max": 76.53333333333333,
+   "node_ratio": 44.929805615550755
+  },
+  "triples": {
+   "keys": 4096,
+   "key_bytes_max": 12,
+   "key_bytes_mean": 12.0,
+   "python": {
+    "nodes": 5181,
+    "max_node_depth": 5,
+    "mean_node_depth": 4.206909862960819
+   },
+   "pathmap": {
+    "keys": 4096,
+    "nodes": 3160,
+    "child_items": 7255,
+    "merkle_hash": "0xd79dc03c60a8f282a831c3583b6c440e",
+    "reused": 1565,
+    "cloned": 2264,
+    "replaced": 2138,
+    "merkleize_stable": true,
+    "max_node_depth": 11,
+    "mean_node_depth": 10.260126582278481
+   },
+   "depth_ratio_mean": 2.4388748312894477,
+   "depth_ratio_max": 2.2,
+   "node_ratio": 0.6099208646979347
+  }
+ },
+ "controls": {
+  "C_identical_key_sets": {
+   "fires": true,
+   "fails_if": "pathmap and the Python trie disagree on how many keys they loaded -- the comparison would be between different inputs",
+   "can_fail": "either pathmap keys count differs from the dumped count",
+   "observed": {
+    "atoms_py": 1246,
+    "atoms_pm": 1246,
+    "triples_py": 4096,
+    "triples_pm": 4096
+   }
+  },
+  "C_probe_reads_pathmap_correctly": {
+   "fires": true,
+   "fails_if": "pathmap's own 8-path test set does not give 6 nodes through this probe -- then the probe is misreading the library and the verdict is VOID, not negative",
+   "can_fail": "the tiny set reports any node count other than 6",
+   "observed": {
+    "nodes": 6,
+    "expected": 6
+   }
+  },
+  "C_falsifier_fires_on_atoms": {
+   "fires": true,
+   "fails_if": "the mean node-depth ratio on atom keys is under 10.0x -- the falsifier would NOT fire and S73/S74's proof sizes would transfer to real pathmap",
+   "can_fail": "depth_ratio_mean for atoms reads below the threshold",
+   "observed": {
+    "py_mean_depth": 7.5626349892008635,
+    "pm_mean_depth": 139.0532147578416,
+    "ratio_mean": 18.38687374921624,
+    "ratio_max": 76.53333333333333,
+    "key_bytes_max": 1155,
+    "threshold": 10.0
+   }
+  },
+  "C_falsifier_does_not_fire_on_triples": {
+   "fires": true,
+   "fails_if": "fixed-length triple keys ALSO exceed the threshold -- then the cause is not key length and the mechanism claimed here is wrong",
+   "can_fail": "depth_ratio_mean for triples reads above the threshold",
+   "observed": {
+    "py_mean_depth": 4.206909862960819,
+    "pm_mean_depth": 10.260126582278481,
+    "ratio_mean": 2.4388748312894477,
+    "key_bytes_max": 12
+   }
+  },
+  "C_merkleize_is_deterministic": {
+   "fires": true,
+   "fails_if": "pathmap's merkleize hash changes between two runs on the same trie -- it would not be content-derived",
+   "can_fail": "either same_hash reads false",
+   "observed": {
+    "atoms_stable": true,
+    "triples_stable": true,
+    "atoms_hash": "0xcdff8af0a38b239c89b10da07ad72621",
+    "triples_hash": "0xd79dc03c60a8f282a831c3583b6c440e"
+   }
+  },
+  "C_merkleize_is_dedup_not_commitment": {
+   "fires": true,
+   "fails_if": "pathmap depends on any cryptographic hash -- then it can emit a real commitment and W2 may have reimplemented something that existed",
+   "can_fail": "a sha2/sha3/blake3/keccak/digest dependency appears in pathmap Cargo.toml",
+   "observed": {
+    "crypto_hash_deps": [],
+    "digest_bits": 128,
+    "hash_is_gxhash_declared_for": "for dag_serialization, merkleization, and caching catamorphism",
+    "result_type_fields": [
+     "hash",
+     "reused",
+     "cloned",
+     "replaced"
+    ],
+    "name_grep_was_a_false_positive": "fn witness in pathmap is a Rust borrow token (-> Self::WitnessT, several -> ()), not a proof"
+   }
+  },
+  "C_dedup_actually_reuses": {
+   "fires": true,
+   "fails_if": "merkleize reuses no nodes on either corpus -- the structural sharing S73's cost model leans on would be absent here",
+   "can_fail": "reused reads 0 for atoms or for triples",
+   "observed": {
+    "atoms_reused": 61,
+    "triples_reused": 1565,
+    "triples_nodes": 3160
+   }
+  }
+ },
+ "all_controls_fire": true
+}

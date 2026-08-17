@@ -367,3 +367,9 @@ ATTACK cycle 4's A4 probe aimed at two unreachable branches, was blocked from
 reaching them *by the very bug it was hunting*, and reported SURVIVES on a clean
 null. "No FATAL" from a probe that missed is not a pass. Reaching the target is a
 precondition of the verdict, not a detail of it.)
+ ·
+**A30 (a name grep cannot tell a word from a concept** — S75's control searched
+`fn (prove|verify|proof|witness)` in `pathmap`, matched 14 Rust *borrow* witnesses
+(`-> Self::WitnessT`, several `-> ()`), and therefore did not fire. Test the
+property, not the vocabulary: "depends on no cryptographic hash" cannot collide on
+a name, and it settled the same question in one line.)

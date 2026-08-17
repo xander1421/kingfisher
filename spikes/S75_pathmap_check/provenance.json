@@ -1,0 +1,205 @@
+{
+ "spike": "S75_pathmap_check",
+ "recorded_utc": "2026-08-17T10:27:03Z",
+ "note": "S75 runs W2/S74 declared falsifier against elders/PathMap 0.3.0. Fires on variable-length atom keys, does not on fixed-length triple keys. pathmap merkleize is dedup, not a commitment.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/../S57_hyperon_corpus",
+   "head": "ce3f30b6eb6937006b7ed530d9bc3047dbb7bd28",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G25_carrying_capacity/RUN_regen.txt",
+    "spikes/S75_pathmap_check/pmprobe/src/main.rs",
+    "spikes/G25_carrying_capacity/runs/nodeath_noabduct.json",
+    "spikes/S75_pathmap_check/compare.json",
+    "spikes/S75_pathmap_check/compare.py",
+    "spikes/S75_pathmap_check/keys_tiny.bin",
+    "spikes/S75_pathmap_check/probe_out.txt",
+    "spikes/S75_pathmap_check/provenance.json"
+   ],
+   "diff_sha256": "4daabf986121e9a992894ae544deb8d68982e14613737d8edd9aa234f235aec9",
+   "diff_bytes": 4273
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/../S57_hyperon_corpus": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/compare.py",
+   "sha256": "5097b92f1fefe9feb890166b3963f5c5c97b32efc3b86590db2d83aed3ae878e",
+   "bytes": 16849,
+   "mtime": 1786962422,
+   "compared_ts": 1786962422,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/compare.json",
+   "sha256": "d34fe3f7da74e0cc343eef4b6aaa48724734da1c554cb8eb415d9a0afd567a29",
+   "bytes": 4648,
+   "mtime": 1786962423,
+   "compared_ts": 1786962423,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/probe_out.txt",
+   "sha256": "972bf67898d6e8b5a247da481b268cca28bb66c4d1dd48c452a7aad975661f7e",
+   "bytes": 33267,
+   "mtime": 1786962423,
+   "compared_ts": 1786962423,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/pmprobe/src/main.rs",
+   "sha256": "404dac1d8566052dec37cc9336d2fe948810fbfdef5340c2bfc5fca207ba7183",
+   "bytes": 2376,
+   "mtime": 1786962386,
+   "compared_ts": 1786962386,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_identical_key_sets",
+   "must_fire_because": "pathmap and the Python trie disagree on how many keys they loaded -- the comparison would be between different inputs",
+   "can_fail_because": "either pathmap keys count differs from the dumped count",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_py": 1246,
+    "atoms_pm": 1246,
+    "triples_py": 4096,
+    "triples_pm": 4096
+   }
+  },
+  {
+   "name": "C_probe_reads_pathmap_correctly",
+   "must_fire_because": "pathmap's own 8-path test set does not give 6 nodes through this probe -- then the probe is misreading the library and the verdict is VOID, not negative",
+   "can_fail_because": "the tiny set reports any node count other than 6",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "nodes": 6,
+    "expected": 6
+   }
+  },
+  {
+   "name": "C_falsifier_fires_on_atoms",
+   "must_fire_because": "the mean node-depth ratio on atom keys is under 10.0x -- the falsifier would NOT fire and S73/S74's proof sizes would transfer to real pathmap",
+   "can_fail_because": "depth_ratio_mean for atoms reads below the threshold",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "py_mean_depth": 7.5626349892008635,
+    "pm_mean_depth": 139.0532147578416,
+    "ratio_mean": 18.38687374921624,
+    "ratio_max": 76.53333333333333,
+    "key_bytes_max": 1155,
+    "threshold": 10.0
+   }
+  },
+  {
+   "name": "C_falsifier_does_not_fire_on_triples",
+   "must_fire_because": "fixed-length triple keys ALSO exceed the threshold -- then the cause is not key length and the mechanism claimed here is wrong",
+   "can_fail_because": "depth_ratio_mean for triples reads above the threshold",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "py_mean_depth": 4.206909862960819,
+    "pm_mean_depth": 10.260126582278481,
+    "ratio_mean": 2.4388748312894477,
+    "key_bytes_max": 12
+   }
+  },
+  {
+   "name": "C_merkleize_is_deterministic",
+   "must_fire_because": "pathmap's merkleize hash changes between two runs on the same trie -- it would not be content-derived",
+   "can_fail_because": "either same_hash reads false",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_stable": true,
+    "triples_stable": true,
+    "atoms_hash": "0xcdff8af0a38b239c89b10da07ad72621",
+    "triples_hash": "0xd79dc03c60a8f282a831c3583b6c440e"
+   }
+  },
+  {
+   "name": "C_merkleize_is_dedup_not_commitment",
+   "must_fire_because": "pathmap depends on any cryptographic hash -- then it can emit a real commitment and W2 may have reimplemented something that existed",
+   "can_fail_because": "a sha2/sha3/blake3/keccak/digest dependency appears in pathmap Cargo.toml",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "crypto_hash_deps": [],
+    "digest_bits": 128,
+    "hash_is_gxhash_declared_for": "for dag_serialization, merkleization, and caching catamorphism",
+    "result_type_fields": [
+     "hash",
+     "reused",
+     "cloned",
+     "replaced"
+    ],
+    "name_grep_was_a_false_positive": "fn witness in pathmap is a Rust borrow token (-> Self::WitnessT, several -> ()), not a proof"
+   }
+  },
+  {
+   "name": "C_dedup_actually_reuses",
+   "must_fire_because": "merkleize reuses no nodes on either corpus -- the structural sharing S73's cost model leans on would be absent here",
+   "can_fail_because": "reused reads 0 for atoms or for triples",
+   "null_must_contain": "the opposite depth ratio, or a pathmap proof function",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_reused": 61,
+    "triples_reused": 1565,
+    "triples_nodes": 3160
+   }
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/../S57_hyperon_corpus": {
+   "newest": 1786923851,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Show that authentication path length does NOT scale with node depth on pathmap -- e.g. a proof scheme over it whose size is independent of the number of nodes on the path. That would restore S73/S74 proof sizes on variable-length keys.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

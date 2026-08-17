@@ -22,7 +22,15 @@ fn read_keys(path: &str) -> Vec<Vec<u8>> {
 }
 
 fn main() {
-    for (name, file) in [("atoms", "../keys_atoms.bin"), ("triples", "../keys_triples.bin")] {
+    // --tiny drives pathmap's OWN 8-path test set, which is the negative control:
+    // if this probe cannot reproduce the node count that test implies, every other
+    // number here is suspect and the verdict is VOID rather than negative.
+    let sets: Vec<(&str, &str)> = if std::env::args().any(|a| a == "--tiny") {
+        vec![("tiny", "../keys_tiny.bin")]
+    } else {
+        vec![("atoms", "../keys_atoms.bin"), ("triples", "../keys_triples.bin")]
+    };
+    for (name, file) in sets {
         let keys = read_keys(file);
         let mut m = PathMap::from_iter(keys.iter().map(|k| (k.as_slice(), ())));
         let c = Counters::count_ocupancy(&m);
@@ -38,7 +46,9 @@ fn main() {
                  name, r2.hash == r.hash, r2.reused);
         // DEPTH is what decides proof length: every node on the path to a key is
         // one authenticated step. A node count alone cannot answer that.
-        println!("--- {} depth histogram (node depth, not byte depth) ---", name);
-        c.print_histogram_by_depth();
+        if name != "tiny" {
+            println!("--- {} depth histogram (node depth, not byte depth) ---", name);
+            c.print_histogram_by_depth();
+        }
     }
 }

@@ -127,3 +127,13 @@ sentence in the caveats.
 - **1,247 atoms, 67 epochs, one corpus.** The 32 B/epoch cost is exact and
   structural; the corpus size is not what it depends on.
 - **Python, not `pathmap`** — inherited from W2, same constant-factor caveat.
+
+## Changelog
+- **2026-08-17, S75 — the falsifier was run and this spike is UNAFFECTED.**
+  `spikes/S75_pathmap_check/` found real `pathmap` needs **18.4×** the node depth of
+  W2's trie on these atom keys, which costs S73 roughly 18× its insert-proof size.
+  **The chain is untouched**, because a chain step commits to digests — a prior
+  head, a state root, a delta root — and never walks a path. So the cheapest of the
+  three constructions is the only one the finding does not scratch. Recorded here
+  rather than left implicit, since "the falsifier fired on the neighbouring spike"
+  is exactly the kind of thing a reader would otherwise assume applies.
