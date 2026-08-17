@@ -71,28 +71,84 @@ public class MettaWorker extends Worker {
             Log.i(TAG, "PREFLIGHT REFUSED: " + refuse + " -> retry with backoff");
             return Result.retry();
         }
-        String prog = getInputData().getString("program");
-        if (prog == null) prog = "!(+ 1 2)\n";
+        // M1.7: the worker is now a FLEET MEMBER, not an adb puppet. It dials
+        // the coordinator, pulls shards by CID, runs in-process, posts back.
+        // Preflight is re-checked per job -- measured at 98.5 us in M1.1, so
+        // per-job is viable and SCHEDULER_SPEC marks it required.
+        int port = getInputData().getInt("port", 18080);
+        Transport net = new Transport(port);
+        String dir = getApplicationContext().getFilesDir().getAbsolutePath();
+        java.io.File cache = new java.io.File(dir, "shards");
+        cache.mkdirs();
 
-        // PORT_PLAN M1.3: a fresh process per job is a hard requirement
-        // (S60/A8 atomspace pollution; process-global NEXT_VARIABLE_ID).
-        // NOT satisfied here -- WorkManager reuses the app process. Logged.
+        int done = 0, idle = 0;
         long t0 = System.nanoTime();
-        String out;
-        try {
-            out = Metta.run(prog, getApplicationContext().getFilesDir().getAbsolutePath());
-        } catch (Throwable e) {
-            Log.i(TAG, "METTA FAILED: " + e);
-            return Result.failure();
+        while (idle < 2 && !isStopped()) {
+            String refuse2 = preflight();          // per job, per SCHEDULER_SPEC
+            if (refuse2 != null) {
+                Log.i(TAG, "PREFLIGHT REFUSED mid-run: " + refuse2);
+                return Result.retry();
+            }
+            String job = net.pollJob("android", 25000);
+            if (job == null) { idle++; continue; }
+            idle = 0;
+            String cid = field(job, "shard_cid"), jid = field(job, "job_id");
+            String fuel = field(job, "fuel");
+            if (cid == null || jid == null) continue;
+
+            java.io.File f = new java.io.File(cache, cid);
+            if (!f.exists() || f.length() == 0) {
+                byte[] d = net.fetchShard(cid);
+                if (d == null) {                   // miss: do NOT fabricate a result
+                    Log.i(TAG, "shard miss " + cid.substring(0, 12) + ", skipping");
+                    continue;
+                }
+                try (java.io.FileOutputStream o = new java.io.FileOutputStream(f)) {
+                    o.write(d);
+                } catch (Exception e) { continue; }
+            }
+            String out;
+            try {
+                out = Metta.run(readFile(f), dir);
+            } catch (Throwable e) {
+                Log.i(TAG, "METTA FAILED on " + jid + ": " + e);
+                continue;
+            }
+            String env = "{\"job_id\":\"" + jid + "\",\"worker\":\"android\","
+                       + "\"shard_cid\":\"" + cid + "\",\"status\":\"OK\","
+                       + "\"results\":\"" + out.trim().replace("\n", " | ").replace("\"", "'") + "\"}";
+            if (net.postResult(env)) done++;
         }
         double ms = (System.nanoTime() - t0) / 1e6;
-
-        if (isStopped()) {                    // onStopped(): constraints went false
-            Log.i(TAG, "STOPPED mid-job; no checkpoint exists (S68) -> retry whole job");
-            return Result.retry();
-        }
-        Log.i(TAG, String.format("JOB OK in %.2f ms, results=[%s]",
-                ms, out.trim().replace("\n", " | ")));
+        Log.i(TAG, String.format("FLEET RUN: %d jobs in %.1f ms, exited on %s",
+                done, ms, isStopped() ? "onStopped" : "idle"));
         return Result.success();
+    }
+
+    private static String field(String json, String key) {
+        int i = json.indexOf("\"" + key + "\"");
+        if (i < 0) return null;
+        int c = json.indexOf(':', i);
+        int a = json.indexOf('"', c + 1);
+        if (a >= 0 && a < json.indexOf(',', c) + 1 || json.charAt(c + 1) == ' '
+                && json.charAt(c + 2) == '"') {
+            int b = json.indexOf('"', a + 1);
+            return json.substring(a + 1, b);
+        }
+        int e = c + 1;
+        while (e < json.length() && "0123456789 ".indexOf(json.charAt(e)) >= 0) e++;
+        return json.substring(c + 1, e).trim();
+    }
+
+    private static String readFile(java.io.File f) throws Exception {
+        byte[] b = new byte[(int) f.length()];
+        try (java.io.FileInputStream in = new java.io.FileInputStream(f)) {
+            int off = 0, n;
+            while (off < b.length && (n = in.read(b, off, b.length - off)) > 0) off += n;
+        }
+        return new String(b, "UTF-8");
+    }
+
+    private void unusedTail() {
     }
 }

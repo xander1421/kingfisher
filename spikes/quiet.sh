@@ -30,11 +30,23 @@ if [ "${1:-}" = "--device" ] || [ "${2:-}" = "--device" ]; then
   DRUN=$(adb shell 'cat /proc/loadavg' 2>/dev/null | tr -d '\r' | awk -F'[ /]' '{print $4}')
   DC=$(adb shell 'cat /sys/devices/system/cpu/present' 2>/dev/null | tr -d '\r' | awk -F- '{print $2+1}')
   DT=$(adb shell 'cat /sys/class/thermal/thermal_zone0/temp' 2>/dev/null | tr -d '\r')
-  # Charging state: use `status`, NOT `AC/USB powered`. Android clears the
-  # powered flags at 100% because the charger disengages, so a plugged phone at
-  # full reads "AC powered: false". 2=CHARGING and 5=FULL are both plugged;
-  # 3=DISCHARGING and 4=NOT_CHARGING are not. Getting this wrong is the same
-  # misdiagnosis that had the energy measurement filed as "blocked: needs root".
+  # Charging state. CORRECTED 2026-08-17.
+  #
+  # The previous rule accepted `status` in {2 CHARGING, 5 FULL} and rejected the
+  # AC/USB powered flags, reasoning that a charger disengages at 100% so a
+  # plugged phone at full reads "AC powered: false". That phenomenon is real and
+  # the conclusion drawn from it was wrong: **an UNPLUGGED phone at 100% also
+  # reports status 5**, so the rule cannot distinguish the two cases and
+  # silently passes a device running on battery.
+  #
+  # Caught when WorkManager refused to run: `Unsatisfied constraints: CHARGING`
+  # while this gate reported "device quiet ... battery status=5". The platform
+  # and the gate disagreed, and the platform was right — `dumpsys deviceidle get
+  # charging` said false and all three powered flags said false.
+  #
+  # Now: ask the OS the same question JobScheduler asks. `deviceidle get
+  # charging` is authoritative; the powered flags are the fallback; `status`
+  # alone is never sufficient.
   BSTAT=$(adb shell 'dumpsys battery | grep -E "^  status"' 2>/dev/null | tr -d '\r' | awk '{print $2}')
   BLVL=$(adb shell 'dumpsys battery | grep -E "^  level"' 2>/dev/null | tr -d '\r' | awk '{print $2}')
   BAT="status=$BSTAT level=$BLVL"
@@ -45,7 +57,12 @@ if [ "${1:-}" = "--device" ] || [ "${2:-}" = "--device" ]; then
   # thermal: millidegrees. Above 45C the governor is already throttling.
   [ -n "$DT" ] && [ "$DT" -gt 45000 ] 2>/dev/null && DFAIL="$DFAIL thermal(${DT}m)"
   # S6: the deployable configuration is charge-time. Not charging = wrong config.
-  case "$BSTAT" in 2|5) ;; *) DFAIL="$DFAIL not-plugged(status=$BSTAT)" ;; esac
+  DCHG=$(adb shell 'dumpsys deviceidle get charging' 2>/dev/null | tr -d '\r' | tr -d ' ')
+  DPWR=$(adb shell 'dumpsys battery | grep -cE "^  (AC|USB|Wireless|Dock) powered: true"' 2>/dev/null | tr -d '\r')
+  BAT="$BAT charging=$DCHG powered=$DPWR"
+  if [ "$DCHG" = "true" ] || [ "${DPWR:-0}" -gt 0 ] 2>/dev/null; then :; else
+    DFAIL="$DFAIL not-charging(status=$BSTAT deviceidle=$DCHG powered=$DPWR)"
+  fi
   if [ "${3:-}${2:-}" = "--json" ] || [ "${1:-}" = "--json" ]; then
     printf '{"quiet":%s,"device_cpu_busy_pct":%s,"device_limit_pct":%s,"device_cores":%s,"thermal_m":%s,"battery":"%s","refusals":"%s"}\n' \
       "$([ -z "$DFAIL" ] && echo true || echo false)" "$D" "$DLIM" "${DC:-null}" "${DT:-null}" "$(echo $BAT) runnable=$DRUN" "$(echo $DFAIL)"

@@ -1,3 +1,15 @@
 split  train 217692  test 54423
 
 DEPTH 2   3527 rules   top-12 conf 0.4405
+DEPTH 3   4659 rules   top-12 conf 0.3914   (prefixes: top 60 depth-2 bodies, 9032120 prefix pairs)
+            (86, 32, 185)=>28  n=   58  conf 0.586
+            (28, 2, 51)=>14  n=  102  conf 0.520
+            (185, 15, 198)=>51  n=   75  conf 0.453
+            (28, 15, 198)=>14  n=  407  conf 0.447
+            (13, 15, 198)=>14  n=  391  conf 0.407
+
+NULLS  20 degree-preserving shuffles per depth. Each depth is compared to
+       its own null; the raw statistics are NOT compared across depths.
+       draw  1/20   depth2 0.3298   depth3 0.2656
+       draw  2/20   depth2 0.3484   depth3 0.3259
+       draw  3/20   depth2 0.3214   depth3 0.3231

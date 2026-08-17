@@ -56,17 +56,30 @@ def parse_probe(text: str) -> dict:
         out[key] = int(m.group(1)) if m else None
     m = re.search(r'^/dev/\S+\s+\d+\s+\d+\s+(\d+)', text, re.M)
     out['free_kb'] = int(m.group(1)) if m else None
+    # any power source actually delivering. Absent from the probe text -> None,
+    # which `decide` treats as unreadable and refuses, rather than as False.
+    if re.search(r'^\s{2}(AC|USB|Wireless|Dock) powered:', text, re.M):
+        out['powered'] = bool(re.search(
+            r'^\s{2}(AC|USB|Wireless|Dock) powered: true', text, re.M))
+    else:
+        out['powered'] = None
     return out
 
 
 def decide(s: dict, p: Policy):
     """Return (ok, reason). Missing signals REFUSE -- an unreadable sensor is
     not a passing sensor (A15: a control that cannot fail proves nothing)."""
-    for k in ('thermal', 'level', 'scale', 'status', 'free_kb'):
+    for k in ('thermal', 'level', 'scale', 'status', 'free_kb', 'powered'):
         if s.get(k) is None:
             return False, f'unreadable:{k}'
     if s['thermal'] > p.thermal_max:
         return False, f"thermal:{s['thermal']}>{p.thermal_max}"
+    # CORRECTED 2026-08-17. `status` in {CHARGING, FULL} is NOT a charging test:
+    # an UNPLUGGED phone at 100% reports FULL. WorkManager refused to run with
+    # `Unsatisfied constraints: CHARGING` while this returned ok. Ask what the
+    # platform asks -- `powered` is any of AC/USB/Wireless/Dock true.
+    if not s.get('powered'):
+        return False, (f"not_charging:status={s['status']} powered={s.get('powered')}")
     if s['status'] not in (STATUS_CHARGING, STATUS_FULL):
         return False, f"not_charging:status={s['status']}"
     if s['scale'] <= 0:

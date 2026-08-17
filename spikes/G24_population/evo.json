@@ -1,0 +1,206 @@
+{
+ "arms": {
+  "full": {
+   "hist": [
+    {
+     "round": 0,
+     "pop": 46,
+     "dev": {
+      "solved": 1021,
+      "predicted": 48755,
+      "precision": 0.020941441903394524,
+      "top12": 0.29542944378424807
+     },
+     "test": {
+      "solved": 1001,
+      "predicted": 48755,
+      "precision": 0.020531227566403444,
+      "top12": 0.26556039884165494
+     },
+     "unsolved": 40081,
+     "a15": false,
+     "mean_body": 2.0652173913043477
+    },
+    {
+     "round": 1,
+     "pop": 63,
+     "dev": {
+      "solved": 2957,
+      "predicted": 232858,
+      "precision": 0.012698726262357317,
+      "top12": 0.29747419687066784
+     },
+     "test": {
+      "solved": 2986,
+      "predicted": 232858,
+      "precision": 0.012823265681230621,
+      "top12": 0.26556039884165494
+     },
+     "unsolved": 38145,
+     "a15": false,
+     "mean_body": 2.0793650793650795
+    },
+    {
+     "round": 2,
+     "pop": 78,
+     "dev": {
+      "solved": 3354,
+      "predicted": 293214,
+      "precision": 0.011438744398289303,
+      "top12": 0.29747419687066784
+     },
+     "test": {
+      "solved": 3390,
+      "predicted": 293214,
+      "precision": 0.011561521619022285,
+      "top12": 0.26556039884165494
+     },
+     "unsolved": 37748,
+     "a15": false,
+     "mean_body": 2.0128205128205128
+    },
+    {
+     "round": 3,
+     "pop": 78,
+     "dev": {
+      "solved": 4178,
+      "predicted": 320378,
+      "precision": 0.013040845501251647,
+      "top12": 0.356583951320629
+     },
+     "test": {
+      "solved": 3636,
+      "predicted": 320378,
+      "precision": 0.011349093882850882,
+      "top12": 0.2666015081030062
+     },
+     "unsolved": 36880,
+     "a15": true,
+     "mean_body": 2.076923076923077
+    },
+    {
+     "round": 4,
+     "pop": 85,
+     "dev": {
+      "solved": 4295,
+      "predicted": 241104,
+      "precision": 0.017813889441900592,
+      "top12": 0.356583951320629
+     },
+     "test": {
+      "solved": 3840,
+      "predicted": 241104,
+      "precision": 0.015926737009755127,
+      "top12": 0.26850687488611197
+     },
+     "unsolved": 36588,
+     "a15": true,
+     "mean_body": 2.0823529411764707
+    },
+    {
+     "round": 5,
+     "pop": 85,
+     "dev": {
+      "solved": 4562,
+      "predicted": 301465,
+      "precision": 0.015132768314729737,
+      "top12": 0.356583951320629
+     },
+     "test": {
+      "solved": 4116,
+      "predicted": 301465,
+      "precision": 0.013653326256779393,
+      "top12": 0.26850687488611197
+     },
+     "unsolved": 36525,
+     "a15": true,
+     "mean_body": 2.070588235294118
+    },
+    {
+     "round": 6,
+     "pop": 85,
+     "dev": {
+      "solved": 4555,
+      "predicted": 246699,
+      "precision": 0.018463795961880674,
+      "top12": 0.34677218457241143
+     },
+     "test": {
+      "solved": 4080,
+      "predicted": 246699,
+      "precision": 0.016538372672771272,
+      "top12": 0.2671489612170472
+     },
+     "unsolved": 36384,
+     "a15": true,
+     "mean_body": 2.0470588235294116
+    },
+    {
+     "round": 7,
+     "pop": 85,
+     "dev": {
+      "solved": 4415,
+      "predicted": 308982,
+      "precision": 0.014288858250642432,
+      "top12": 0.3336171200366073
+     },
+     "test": {
+      "solved": 3893,
+      "predicted": 308982,
+      "precision": 0.012599439449547223,
+      "top12": 0.2606239730572885
+     },
+     "unsolved": 36316,
+     "a15": true,
+     "mean_body": 2.0941176470588236
+    }
+   ],
+   "capped_evals": 54
+  }
+ },
+ "verdict": "FULL SYSTEM WINS \u2014 +2892 test triples, ahead of every ablation",
+ "planted": [
+  238,
+  239,
+  240
+ ],
+ "params": {
+  "pop_seed": 25,
+  "offspring": 25,
+  "rounds": 8,
+  "wage_pool": 120.0,
+  "rent": 0.5,
+  "adv_tries": 1,
+  "max_pairs": 40000,
+  "ops": [
+   "swap",
+   "extend",
+   "contract",
+   "rehead",
+   "recombine",
+   "duplicate"
+  ]
+ },
+ "conditions": {
+  "data": "real:FB15k-237+planted",
+  "split": "70/15/15",
+  "split_seed": 12648430,
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ]
+  ],
+  "concurrency": "single-process",
+  "swept": {
+   "arm": [
+    "full"
+   ]
+  }
+ },
+ "cites": [
+  "G17_composition_redo",
+  "G22_evolve",
+  "G5_ecan_metta"
+ ]
+}
