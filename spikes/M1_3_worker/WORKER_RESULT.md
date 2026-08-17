@@ -67,8 +67,11 @@ Options, none implemented:
 - accept in-process reuse and drop the determinism guarantee for a device agent,
   which contradicts the project's one surviving claim.
 
-**This is the single largest open issue in M1**, and it was invisible until the
-worker existed.
+**RESOLVED 2026-08-17 — see `spikes/M1_3b_process_reuse/RESULT.md`.** A fresh
+`Metta` per job handles derivation (1); `canon` at the comparison boundary
+handles derivation (2), measured at 31 distinct raw hashes collapsing to 1.
+Process reuse is safe for **ground-result** jobs, which is the entire corpus.
+It remains unsafe for the aliasing class, whose admission gate is still open.
 
 ## `onStopped()` — stubbed, honestly
 The worker checks `isStopped()` after evaluation and returns `Result.retry()`,
