@@ -682,13 +682,30 @@ about. This is the honest state, not a regression.
   coefficient was wrong for exactly one cycle. Caught a fabricated observation in
   my own control on the way: it displayed the PUBLISHED value labelled
   `recomputed_...`, verdict right, evidence decorative. DECISIONS 194–198.
-- **NEXT 3: name the accounting.** Two definitions of "proof bytes" live in
-  `trie_witness.py` with nothing stating which a caller means, and five spikes
-  have now picked one silently. The fix is not a new number: it is
-  `witness_bytes` taking an explicit mode, or `steps_bytes` renamed to what it
-  is (`auth_path_bytes`), plus a sweep of the five call sites. **Falsifier: if a
-  rename changes no published figure anywhere, the confusion was cosmetic and
-  this row is closed by the rename alone.**
+- ~~**NEXT 3: name the accounting.**~~ **DONE as H51 in C28, the next cycle — and
+  the NEXT was the WRONG FIX, which is the finding.** It proposed renaming
+  `steps_bytes` and sweeping five call sites, i.e. it read the defect as five
+  authors each choosing silently. One call disproved that:
+  `witness_bytes(prove_membership(...))` **raises `KeyError: 'kind'`**, because a
+  membership proof is `{steps, leaf}` and only the other two kinds carry `kind`.
+  **The correct accounting did not run for the commonest proof shape, so the
+  wrong one was the only thing reachable.** A rename would have left that intact.
+  *When several independent authors make the same careless choice, check whether
+  the careful one was reachable.* `witness_bytes` v2 dispatches on which key is
+  present; `auth_path_bytes` added; `steps_bytes` keeps its name, because five
+  spikes call it and every number they published is a number it returned.
+  Additive and **measured**: W2 re-run end to end gives `witness.json`
+  byte-identical. Falsified by `spikes/harness/test_h51_falsify.sh`, which
+  derives the broken copy at run time rather than committing one (A24) and
+  asserts its own patch anchor matched first. DECISIONS 205–208.
+
+- **C28's own process defects, both inside one hour and both now mechanised
+  rather than remembered:** a `sed -i 's/\bH42\b/H49/g'` rename matched nothing
+  (BSD `sed` has no `\b`), exited 0, and `refcheck` went green anyway because the
+  `WORK_QUEUE` renumber alone removes the duplicate check 5 looks for — while
+  four harness files still cited an id that had become **another lane's row**.
+  And my first draft wrote `H50` into the code before claiming it, which was
+  already ATOM-3's; ids now come from `sh spikes/harness/allocid.sh H`.
 
 - **C27b DONE: H49 — my own attack destroyed the record of the spike it was
   attacking, and I found it 60 seconds after committing.** CLASS: *an ATTACK that
@@ -709,6 +726,27 @@ about. This is the honest state, not a regression.
   each got its own record name — the gate was not loosened. Sweep: S77's attack
   is a second, LATENT site, patched; W2's does not certify. S79 restored from
   `f21f21b`. DECISIONS 199–202.
+
+- **C28 DONE: H51** — the root cause of C27's accounting finding, and the NEXT
+  item I had written for it was the wrong fix. See the retired NEXT 3 above.
+
+## Span 3 so far — five cycles, and the two worth carrying
+`H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
+· `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's
+provenance record) · `H51` (the root cause).
+
+1. **A shared helper makes agreement worthless.** S77, S79, S80 and S84 all
+   import `steps_bytes`, so all four would agree whichever accounting it was, and
+   no control on any of them could see the difference. Four agreeing spikes read
+   as replication and were one measurement wearing four hats. The test is not
+   *did they agree* but ***could they have disagreed***.
+2. **Twice this span a check went green over a fix that had not happened**: the
+   H16 launcher check stayed green with its defect restored (the assertion was
+   that a marker is ABSENT, and a launcher refusing before its turn looks exactly
+   like one that cleared the signal), and a BSD-`sed` rename matched nothing
+   while `refcheck` passed on a different file. **Every "X did not happen"
+   assertion needs a positive control that the run reached the point where X
+   could have.**
 
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
