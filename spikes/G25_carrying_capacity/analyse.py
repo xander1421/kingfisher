@@ -62,7 +62,12 @@ def main():
     if not runs:
         print("no runs yet")
         return 1
-    rows = {k: row(v) for k, v in runs.items()}
+    allrows = {k: row(v) for k, v in runs.items()}
+    for k, r in allrows.items():
+        r["base"], r["seed"] = split_name(k)
+    # The dial and the plane are read at the reference seed only; the repeats
+    # exist to bound the noise on the differences, not to widen the table.
+    rows = {r["base"]: r for r in allrows.values() if r["seed"] == 1234}
     order = [n for n in ("full_base", "full_cap2000", "wage300", "wage600",
                          "wage1200", "wage2400", "wage4800",
                          "wage600_noabduct", "nodeath",
@@ -188,6 +193,34 @@ def main():
     print(f"  {'nodeath':<16} {nd['correct']:>6} correct /{nd['preds']:>8} "
           f"preds  prec {nd['prec']:.4f}")
 
+    # ---- seed repeats: the headline is a RATIO OF DIFFERENCES in coverage
+    # counts, so it inherits run-to-run variance twice over. Computed per seed
+    # and quoted as a range.
+    seeds = sorted({r["seed"] for r in allrows.values()})
+    fracs = {}
+    if len(seeds) > 1:
+        print("\nSEED REPEATS (test correct / preds / pop)")
+        print(f"  {'config':<12}" + "".join(f"{('seed ' + str(s)):>26}"
+                                            for s in seeds))
+        for b in ("full_base", "wage1200", "nodeath"):
+            cells = []
+            for s in seeds:
+                r = next((x for x in allrows.values()
+                          if x["base"] == b and x["seed"] == s), None)
+                cells.append(f"{r['correct']:>8}/{r['preds']:>8}/{r['pop']:<5}"
+                             if r else " " * 26)
+            print(f"  {b:<12}" + "".join(cells))
+        for s in seeds:
+            g = {b: next((x for x in allrows.values()
+                          if x["base"] == b and x["seed"] == s), None)
+                 for b in ("full_base", "wage1200", "nodeath")}
+            if all(g.values()) and g["nodeath"]["correct"] != g["full_base"]["correct"]:
+                fracs[s] = ((g["wage1200"]["correct"] - g["full_base"]["correct"])
+                            / (g["nodeath"]["correct"] - g["full_base"]["correct"]))
+        if fracs:
+            print("  gap closed by WAGE_POOL alone, per seed: "
+                  + ", ".join(f"{s}: {v:.0%}" for s, v in fracs.items()))
+
     base = rows.get("full_base")
     if dom:
         w = max(dom, key=lambda r: r["correct"])
@@ -207,6 +240,11 @@ def main():
              f"not shown to cost coverage; the published capacity was simply "
              f"low. The remaining {1 - closed:.0%} is not reachable by this "
              f"dial: selection saturates at pop {best['pop']}.")
+        if fracs:
+            v += (f" Across {len(fracs)} run seeds the gap closed by WAGE_POOL "
+                  f"alone is {min(fracs.values()):.0%}-{max(fracs.values()):.0%} "
+                  f"(wage1200 vs full_base vs no_death, same three configs each "
+                  f"seed), so the fraction is a band, not the single 83%.")
     else:
         v = "UNRESOLVED — no A15-passing selected arm to compare."
     # C4 attribution is independent of all of the above and overturns the

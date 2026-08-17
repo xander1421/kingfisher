@@ -1,47 +1,20 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T09:33:37Z",
+ "recorded_utc": "2026-08-17T09:34:30Z",
  "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "ea4f4628717409904e4b31c9bd70c3857797d360",
+   "head": "8d466f0cff0ba4363027098fd5898e67a46fffa3",
    "clean": false,
    "dirty_files": [
-    "claude/hooks/loop_gate.sh",
-    "CHANNEL.md",
-    "DECISIONS.log",
-    "HANDOFF.md",
-    "WORK_QUEUE.md",
-    "livechat.log",
-    "run_loop.sh",
-    "spikes/G24_population/evo.py",
-    "spikes/G25_abstain/RUN.txt",
-    "spikes/G25_abstain/curve.json",
-    "spikes/G25_abstain/curve.py",
-    "spikes/G25_carrying_capacity/RUN.txt",
-    "spikes/G25_carrying_capacity/sweep.py",
-    "spikes/M1_7_transport/agent.sh",
-    "spikes/M1_7_transport/result_lan.json",
-    "spikes/M1_7_transport/run_lan.py",
-    "spikes/M1_7_transport/server.py",
-    ".loop_exit.unknown",
-    "spikes/G25_abstain/RESULT.md",
+    "pikes/G25_carrying_capacity/RUN.txt",
     "spikes/G25_carrying_capacity/analyse.py",
-    "spikes/G25_carrying_capacity/runs/full_cap2000.json",
-    "spikes/G25_carrying_capacity/runs/nodeath.json",
-    "spikes/G25_carrying_capacity/runs/nodeath_noabduct.json",
-    "spikes/G25_carrying_capacity/runs/wage1200.json",
-    "spikes/G25_carrying_capacity/runs/wage2400.json",
-    "spikes/G25_carrying_capacity/runs/wage300.json",
-    "spikes/G25_carrying_capacity/runs/wage4800.json",
-    "spikes/G25_carrying_capacity/runs/wage600.json",
-    "spikes/G25_carrying_capacity/runs/wage600_noabduct.json",
-    "spikes/G25_carrying_capacity/sweep.json",
-    "spikes/W2_witnessed_trie/"
+    "spikes/harness/provenance.py",
+    "spikes/G25_carrying_capacity/runs/full_base_s777.json"
    ],
-   "diff_sha256": "8b705eaccf92d74d59af1b9d0164d01d9a5dccc51fd92d9211ae79a771164c47",
-   "diff_bytes": 57954
+   "diff_sha256": "abfcec3799f283a0c009d9f272db0da097008132ba8aab01fc6eddd53d7f1ae6",
+   "diff_bytes": 8367
   }
  ],
  "manifests": {
@@ -62,7 +35,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
    "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
    "bytes": 5102,
-   "mtime": 1786959217
+   "mtime": 1786959270
   }
  ],
  "missing_artifacts": [],
@@ -184,12 +157,15 @@
    }
   }
  ],
+ "no_deps_reason": "",
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg": {
-   "newest": 1786958749,
+   "newest": 1786959236,
    "from": "<HEAD commit>"
   }
  },
- "problems": [],
- "ok": true
+ "problems": [
+  "STALE ARTIFACT trie_witness.py predates S52_realkg source by 0.0h (newest source: <HEAD commit>). It cannot have been built from the tree recorded here."
+ ],
+ "ok": false
 }

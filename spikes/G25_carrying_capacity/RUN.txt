@@ -178,3 +178,60 @@ split  train 191730  dev 41367  test 40818
 A15 planted 238,239=>240  1250 train edges, 550 dev conclusions
 
 CONFIG full_base_s777  arm=full wage=120.0 rent=0.5/0.05 max_pop=200 seed=777
+   r0  pop   93  dev solved   1339  test solved   1300  test prec 0.0570  test top12 0.2786  body 2.03  A15 -
+   r1  pop  128  dev solved   3097  test solved   3167  test prec 0.0184  test top12 0.2786  body 2.05  A15 -
+   r2  pop  157  dev solved   3611  test solved   3670  test prec 0.0236  test top12 0.2837  body 2.06  A15 -
+   r3  pop  163  dev solved   3697  test solved   3783  test prec 0.0239  test top12 0.2973  body 2.08  A15 -
+   r4  pop  156  dev solved   3910  test solved   3979  test prec 0.0217  test top12 0.2896  body 2.08  A15 -
+   r5  pop  152  dev solved   4003  test solved   4049  test prec 0.0234  test top12 0.2908  body 2.05  A15 -
+   r6  pop  148  dev solved   4029  test solved   4069  test prec 0.0227  test top12 0.2898  body 2.07  A15 -
+   r7  pop  147  dev solved   4071  test solved   4088  test prec 0.0261  test top12 0.2779  body 2.08  A15 -
+   r8  pop  134  dev solved   4643  test solved   4055  test prec 0.0309  test top12 0.2715  body 2.08  A15 yes
+   r9  pop  135  dev solved   4615  test solved   4047  test prec 0.0232  test top12 0.2727  body 2.10  A15 yes
+   r10 pop  129  dev solved   4571  test solved   4006  test prec 0.0214  test top12 0.2638  body 2.10  A15 yes
+   r11 pop  129  dev solved   4937  test solved   4352  test prec 0.0308  test top12 0.2638  body 2.08  A15 yes
+   r12 pop  127  dev solved   4700  test solved   4135  test prec 0.0209  test top12 0.2653  body 2.07  A15 yes
+   r13 pop  128  dev solved   4969  test solved   4420  test prec 0.0239  test top12 0.2626  body 2.05  A15 yes
+   r14 pop  134  dev solved   5280  test solved   4719  test prec 0.0208  test top12 0.2607  body 2.08  A15 yes
+
+CONFIG full_base_s31337  arm=full wage=120.0 rent=0.5/0.05 max_pop=200 seed=31337
+   r0  pop   92  dev solved   1401  test solved   1389  test prec 0.0107  test top12 0.2786  body 2.10  A15 -
+   r1  pop  121  dev solved   2177  test solved   1621  test prec 0.0140  test top12 0.2868  body 2.12  A15 yes
+   r2  pop  146  dev solved   2765  test solved   2212  test prec 0.0143  test top12 0.2875  body 2.08  A15 yes
+   r3  pop  147  dev solved   4019  test solved   3570  test prec 0.0204  test top12 0.2875  body 2.04  A15 yes
+   r4  pop  135  dev solved   4530  test solved   4100  test prec 0.0217  test top12 0.2784  body 2.08  A15 yes
+   r5  pop  125  dev solved   3792  test solved   3287  test prec 0.0184  test top12 0.2707  body 2.11  A15 yes
+   r6  pop  120  dev solved   4116  test solved   3554  test prec 0.0188  test top12 0.2635  body 2.08  A15 yes
+   r7  pop  124  dev solved   3969  test solved   3398  test prec 0.0228  test top12 0.2651  body 2.11  A15 yes
+   r8  pop  122  dev solved   4142  test solved   3556  test prec 0.0219  test top12 0.2651  body 2.13  A15 yes
+   r9  pop  111  dev solved   4056  test solved   3511  test prec 0.0189  test top12 0.2576  body 2.13  A15 yes
+   r10 pop  113  dev solved   3794  test solved   3291  test prec 0.0277  test top12 0.2539  body 2.16  A15 yes
+   r11 pop  116  dev solved   4096  test solved   3534  test prec 0.0290  test top12 0.2472  body 2.18  A15 yes
+   r12 pop  122  dev solved   4492  test solved   3927  test prec 0.0179  test top12 0.2504  body 2.16  A15 yes
+   r13 pop  120  dev solved   4163  test solved   3578  test prec 0.0208  test top12 0.2504  body 2.15  A15 yes
+   r14 pop  117  dev solved   3936  test solved   3381  test prec 0.0348  test top12 0.2515  body 2.11  A15 yes
+
+CONFIG wage1200_s777  arm=full wage=1200.0 rent=0.5/0.05 max_pop=2000 seed=777
+   r0  pop   93  dev solved   1339  test solved   1300  test prec 0.0570  test top12 0.2786  body 2.03  A15 -
+   r1  pop  128  dev solved   3035  test solved   3080  test prec 0.0195  test top12 0.2786  body 2.05  A15 -
+   r2  pop  158  dev solved   3329  test solved   3391  test prec 0.0258  test top12 0.2793  body 2.05  A15 -
+   r3  pop  160  dev solved   3669  test solved   3738  test prec 0.0168  test top12 0.2793  body 2.08  A15 -
+   r4  pop  171  dev solved   4240  test solved   4310  test prec 0.0199  test top12 0.2793  body 2.08  A15 -
+   r5  pop  170  dev solved   4867  test solved   4375  test prec 0.0219  test top12 0.2793  body 2.05  A15 yes
+   r6  pop  179  dev solved   4885  test solved   4398  test prec 0.0221  test top12 0.2711  body 2.05  A15 yes
+   r7  pop  184  dev solved   4889  test solved   4438  test prec 0.0166  test top12 0.2725  body 2.06  A15 yes
+   r8  pop  198  dev solved   5007  test solved   4540  test prec 0.0191  test top12 0.2741  body 2.08  A15 yes
+   r9  pop  195  dev solved   5102  test solved   4640  test prec 0.0214  test top12 0.2735  body 2.09  A15 yes
+   r10 pop  198  dev solved   5367  test solved   4917  test prec 0.0214  test top12 0.2735  body 2.06  A15 yes
+   r11 pop  204  dev solved   6043  test solved   5563  test prec 0.0234  test top12 0.2735  body 2.04  A15 yes
+   r12 pop  213  dev solved   6210  test solved   5681  test prec 0.0216  test top12 0.2757  body 2.04  A15 yes
+   r13 pop  216  dev solved   6297  test solved   5744  test prec 0.0276  test top12 0.2757  body 2.06  A15 yes
+   r14 pop  224  dev solved   6367  test solved   5795  test prec 0.0226  test top12 0.2807  body 2.05  A15 yes
+
+CONFIG wage1200_s31337  arm=full wage=1200.0 rent=0.5/0.05 max_pop=2000 seed=31337
+   r0  pop   92  dev solved   1401  test solved   1389  test prec 0.0107  test top12 0.2786  body 2.10  A15 -
+   r1  pop  121  dev solved   2177  test solved   1621  test prec 0.0138  test top12 0.2868  body 2.12  A15 yes
+   r2  pop  145  dev solved   2750  test solved   2197  test prec 0.0158  test top12 0.2875  body 2.09  A15 yes
+   r3  pop  154  dev solved   4502  test solved   4048  test prec 0.0253  test top12 0.2875  body 2.08  A15 yes
+   r4  pop  161  dev solved   4865  test solved   4390  test prec 0.0243  test top12 0.2796  body 2.08  A15 yes
+   r5  pop  166  dev solved   5068  test solved   4579  test prec 0.0255  test top12 0.2706  body 2.09  A15 yes

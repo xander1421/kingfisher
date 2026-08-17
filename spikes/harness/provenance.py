@@ -41,20 +41,30 @@ def newest_source_mtime(path):
     Used to answer: could this artifact have been built from this tree? An
     artifact older than the source it claims to come from could not have been.
     """
-    head_ts = _run(['git', 'log', '-1', '--format=%ct'], cwd=path)
+    # SCOPED TO `path`, not to the repo. Unscoped `git log -1` returns the
+    # monorepo's HEAD time, so a commit by ANY agent to ANY unrelated spike
+    # raised the staleness floor for every artifact in the tree -- a false
+    # positive that fired the moment two agents ran concurrently.
+    head_ts = _run(['git', 'log', '-1', '--format=%ct', '--', '.'], cwd=path)
     head_ts = int(head_ts) if head_ts.isdigit() else 0
     newest, newest_file = head_ts, '<HEAD commit>'
-    files = _run(['git', 'ls-files'], cwd=path).splitlines()
     # only the dirty ones can be newer than HEAD, and scanning every tracked
-    # file in a large repo is slow for no gain
-    dirty = [l[3:] for l in _run(['git', 'status', '--porcelain'],
+    # file in a large repo is slow for no gain.
+    #
+    # THIS LOOP WAS DEAD until 2026-08-17. `git status --porcelain` prints paths
+    # relative to the REPO ROOT, and they were joined onto `path` (the dep dir),
+    # so every getmtime raised OSError and was swallowed by `continue`. The
+    # consequence is the exact case A24 exists for: patch a source, do not commit
+    # it, run a binary built before the patch -- and the floor stayed at the last
+    # commit, so nothing fired. Resolve against the root and scope the pathspec.
+    root = _run(['git', 'rev-parse', '--show-toplevel'], cwd=path) or path
+    dirty = [l[3:] for l in _run(['git', 'status', '--porcelain', '--', '.'],
                                  cwd=path).splitlines()]
     for f in dirty:
-        fp = os.path.join(path, f)
-        try:
-            m = int(os.path.getmtime(fp))
-        except OSError:
+        fp = os.path.join(root, f)
+        if not os.path.exists(fp):
             continue
+        m = int(os.path.getmtime(fp))
         if m > newest:
             newest, newest_file = m, f
     return newest, newest_file
@@ -165,7 +175,7 @@ class Control:
 
 
 def record(spike_dir, deps=(), artifacts=(), controls=(),
-           allow_dirty=False, note=''):
+           allow_dirty=False, note='', no_deps_reason=''):
     """Write provenance.json next to the spike. Returns (ok, provenance).
 
     ok is False when a dependency tree is dirty without acknowledgement, or a
@@ -187,7 +197,19 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         'device': device(),
         'controls': [c.as_dict() for c in controls],
     }
+    prov['no_deps_reason'] = no_deps_reason
     problems = []
+
+    # D6 E1/E2 HOLE, closed 2026-08-17. `deps=()` skipped the staleness AND the
+    # dirty-tree loops below entirely, so a spike that declared no dependency
+    # tree got no A24 check at all -- and 2 of the 4 provenance.json on disk were
+    # recorded that way. Declaring nothing is now a claim that must be justified,
+    # not the quiet default.
+    if not deps and not no_deps_reason:
+        problems.append(
+            'NO DEPS DECLARED and no no_deps_reason given -- staleness (A24) and '
+            'dirty-tree checks are both silently skipped when deps is empty. '
+            'Name the corpus/source tree, or state why there is none.')
 
     # STALENESS. A digest pins WHICH artifact, never WHAT IS IN IT. Both agents
     # on this project independently reasoned about a patched tree while running
@@ -224,6 +246,16 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
             problems.append(
                 f"CONTROL {c['name']} DID NOT FIRE -- run is VOID, not negative. "
                 f"({c['must_fire_because']})")
+        # `null_must_contain` was RECORDED and never CHECKED -- a field shaped
+        # like enforcement that was documentation. Absence is now refused. This
+        # catches an omitted statement, NOT a vacuous one: no check here can tell
+        # a real failing input from plausible filler, which is why D6 F1 stays
+        # human-verified.
+        if c.get('null_must_contain') in (None, ''):
+            problems.append(
+                f"CONTROL {c['name']} declares no null_must_contain -- a null "
+                f"that cannot contain the effect is not a null (A20), and a "
+                f"control with no stated failing input is W1's failure mode")
     if prov['missing_artifacts']:
         problems.append(f"missing artifacts: {prov['missing_artifacts']}")
     prov['problems'] = problems
@@ -237,12 +269,27 @@ def demo():
     import tempfile
     d = tempfile.mkdtemp()
 
-    c_good = Control('posctl', 'must vary or the instrument is blind')
+    NR = 'synthetic control test, there is no source tree'
+
+    def ctl(name='posctl', why='must vary or the instrument is blind'):
+        return Control(name, why, null_must_contain='40 identical hashes')
+
+    c_good = ctl()
     c_good.observe(True, [f'hash{i}' for i in range(40)], '40/40 distinct')
-    ok, p = record(d, deps=(), artifacts=(), controls=[c_good])
+    ok, p = record(d, deps=(), artifacts=(), controls=[c_good], no_deps_reason=NR)
     assert ok, p['problems']
 
-    c_dead = Control('posctl', 'must vary or the instrument is blind')
+    # deps=() used to disable the staleness AND dirty-tree checks silently
+    ok, p = record(d, deps=(), controls=[c_good])
+    assert not ok and 'NO DEPS DECLARED' in p['problems'][0], p['problems']
+
+    # null_must_contain was recorded and never checked
+    c_nonull = Control('posctl', 'why')
+    c_nonull.observe(True, ['v'])
+    ok, p = record(d, controls=[c_nonull], no_deps_reason=NR)
+    assert not ok and 'null_must_contain' in p['problems'][0], p['problems']
+
+    c_dead = ctl()
     c_dead.observe(False, ['same'] * 40, '1/40 distinct')
 
     # a control asserted with no data is refused at the point of observation
@@ -251,11 +298,11 @@ def demo():
         raise AssertionError('should have refused a control with no observations')
     except ValueError:
         pass
-    ok, p = record(d, controls=[c_dead])
+    ok, p = record(d, controls=[c_dead], no_deps_reason=NR)
     assert not ok and 'VOID' in p['problems'][0], p['problems']
 
-    c_unobs = Control('posctl', 'x')
-    ok, p = record(d, controls=[c_unobs])
+    c_unobs = ctl()
+    ok, p = record(d, controls=[c_unobs], no_deps_reason=NR)
     assert not ok and 'never observed' in p['problems'][0]
 
     # a dirty dependency must block by default and be recordable on purpose
