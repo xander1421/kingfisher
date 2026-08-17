@@ -563,3 +563,30 @@ by a claim resting on a misread field, and only a reader pointing at one specifi
 repository exposed it. **A correction is a new claim and inherits no credibility
 from the error it replaces.** Verify it to the same standard, including the
 metadata field you are reading.
+
+### A18. One point is not a rate. Fit the intercept before you extrapolate.
+
+M1.5 measured 173 KiB crossing to a device in ~40 ms. Dividing gives 4.21 MB/s,
+and that rate priced B1's deployable shards at **22–120x** the compute they feed.
+
+Sweeping the same code path from 64 KiB to 32 MiB shows the apparent rate rising
+**monotonically by 32x** — 1.1 to 35.2 MB/s. A bandwidth cannot depend on
+transfer size, so the single-point model was refuted by its own units. The real
+shape is `63.2 ms fixed + 37.9 MB/s marginal`, and the extrapolation was
+6.5–8.4x too high because the measured point sat in the fixed-cost regime.
+
+**Before dividing a cost by a size, check which regime the measurement is in.**
+Any quantity with a per-call setup — network transfers, syscalls, process spawn,
+kernel launches, DB round trips — needs at least two points spanning an order of
+magnitude, and the reported result is the pair `(intercept, slope)`, never the
+quotient.
+
+Then attribute the intercept. Here ~47 of 63.2 ms was **three separate `adb`
+invocations in the harness**, not a property of the system — so publishing 63 ms
+as a system constant would have seeded exactly the kind of inherited figure N1
+had to retract.
+
+Note what the error did *not* do: the reviewer's qualitative conclusion (transfer
+dominates compute; pre-stage rather than fetch during a job) held at 3.4–14x just
+as it did at 22–120x. **A wrong magnitude does not imply a wrong direction** —
+correct the number without discarding the finding.

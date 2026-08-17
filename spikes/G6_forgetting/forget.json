@@ -1,0 +1,68 @@
+{
+ "baseline_findings": [
+  [
+   "B1",
+   "W1"
+  ],
+  [
+   "N1",
+   "W1"
+  ],
+  [
+   "Q1",
+   "W1"
+  ],
+  [
+   "S62",
+   "S63"
+  ],
+  [
+   "S63",
+   "S62"
+  ],
+  [
+   "W4",
+   "W1"
+  ]
+ ],
+ "drop": 30,
+ "arms": {
+  "keep_high": {
+   "kept": 30,
+   "status": "OK",
+   "fuel": 617,
+   "findings": 1,
+   "preserved": 0.16666666666666666
+  },
+  "keep_low": {
+   "kept": 30,
+   "status": "OK",
+   "fuel": 823,
+   "findings": 2,
+   "preserved": 0.3333333333333333
+  },
+  "arbitrary": {
+   "kept": 30,
+   "status": "OK",
+   "fuel": 381,
+   "findings": 0,
+   "preserved": 0.0
+  }
+ },
+ "verdict": "INVERTED \u2014 arbitrary or keep-low beat attention",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "arm": [
+    "keep_high",
+    "keep_low",
+    "arbitrary"
+   ]
+  }
+ },
+ "cites": [
+  "G1_graph_ingest",
+  "G5_ecan_metta"
+ ]
+}
