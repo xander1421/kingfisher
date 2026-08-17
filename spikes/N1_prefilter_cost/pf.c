@@ -24,7 +24,8 @@
 
 #define D 1024
 #define WORDS (D/64)
-#define NB 12500              /* B=64 over 800k triples: S11's 1.60 MB shard */
+static int NB = 12500;        /* B=64 over 800k triples: S11's 1.60 MB shard.
+                               * Override with argv[1] to isolate shard size. */
 
 static uint64_t *Tp, Qs[WORDS], Qm[WORDS];
 static int32_t *scores, Qnnz;
@@ -73,7 +74,8 @@ static void*worker(void*p){
         atomic_fetch_sub(&left,1);
     }
 }
-int main(void){
+int main(int argc,char**argv){
+    if(argc>1) NB=atoi(argv[1]);
     Tp=malloc((size_t)NB*WORDS*8); scores=malloc((size_t)NB*4);
     for(size_t i=0;i<(size_t)NB*WORDS;i++) Tp[i]=r64();
     for(int w=0;w<WORDS;w++){ Qm[w]=r64(); Qs[w]=r64()&Qm[w]; Qnnz+=__builtin_popcountll(Qm[w]); }
@@ -84,7 +86,17 @@ int main(void){
     double base=0;
     /* background cpuset is 0-1,4-5 (S54). Coordinator excluded from the split. */
     static const int cpus[4]={0,1,4,5};
+    int NCPUS=4;                 /* background cpuset 0-1,4-5 (S54) */
     for(int T=1;T<=4;T++){
+        /* A spin barrier needs a free core for the coordinator. T==NCPUS makes
+         * the coordinator timeslice against a worker: measured 337x slower at
+         * T=4. S51 hit it at T=8, S53 at T=1, N1 at T=4 -- the rule was in the
+         * LEDGER all three times. Refuse rather than remind. */
+        if(T>=NCPUS){
+            printf("  %8d %12s %14s %11s   REFUSED: spin barrier needs a free core (T>=%d)\n",
+                   T,"-","-","-",NCPUS);
+            continue;
+        }
         NT_THREADS=T; pthread_t th[4]; warg wa[4];
         atomic_store(&gen,0); atomic_store(&stop,0); atomic_store(&left,0);
         for(int i=0;i<T;i++){ wa[i].id=i; wa[i].cpu=cpus[i];

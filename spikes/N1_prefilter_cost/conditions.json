@@ -1,0 +1,12 @@
+{
+  "conditions": {
+    "concurrency": "threads-spin-barrier",
+    "workers": 3,
+    "cpuset": "0-1,4-5",
+    "data": "synthetic r64 bundles, D=1024",
+    "shard": "B=64, 12500 bundles, 1.60 MB",
+    "device": "SM8750 aarch64-android",
+    "clock": "measured 2729 MHz, plausibility-gated"
+  },
+  "cites": ["S56_mork_amortise", "S72_c3_cpuset", "S11", "S54_cpuset"]
+}

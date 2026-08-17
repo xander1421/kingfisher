@@ -78,3 +78,66 @@ Thermal drifted 34.3 → 38.6 °C across the run, inside the 45 °C gate.
   12.8 MB is inferred from S72b, not measured here.
 - Best-of-9 over 200 iterations per sample; a single invocation, so process-scoped
   variance (S55/S56's 2.1× lesson) is not sampled.
+
+---
+
+# N1b — two inheritance defects in N1, both confirmed. One conclusion survives as a range; one is false.
+
+## 1. The 8.7% inherited a band S56 explicitly retracted
+S56 measured stage 2 at **191.88–319.01 µs — a 1.66× DVFS band** — and recorded
+the rule: *"any absolute time on this device is a governor reading unless it is
+normalised or bracketed by three invocations."* N1 used 250 µs as a value.
+
+| stage 2 | prefilter share |
+|---|---|
+| 191.88 µs | **11.1%** |
+| 250 µs | 8.7% |
+| 319.01 µs | **7.0%** |
+
+**The honest figure is 7.0–11.1%, not 8.7%.** The conclusion survives — every
+point in the band is well under the inherited ~17% — but quoting one number
+re-asserted a precision S56 withdrew. Fifth DVFS catch here.
+
+And the asymmetry underneath is the sharper point: N1 reports **cycles/bundle**
+(normalised, per standing rule 1) and then divides it by a **governor-dependent
+millisecond**. Numerator normalised, denominator not.
+
+## 2. "Compute-bound at 1.6 MB, bandwidth-bound at 12.8 MB" is FALSE
+The reconciliation was confounded two ways — thread count (3 vs 4) *and*
+concurrency model (threads on a spin barrier vs independent processes with no
+barrier). Isolated by running **the same code, same barrier, same T=3, varying
+only shard size**:
+
+| shard | T=1 | T=2 | T=3 | cycles/bundle @T=3 |
+|---|---|---|---|---|
+| 1.60 MB | 71.2 µs | 35.6 (2.00×) | 24.0 (**2.96×**) | 5.23 |
+| 12.8 MB | 572.9 µs | 290.4 (1.97×) | 196.7 (**2.91×**) | 5.70 |
+
+**Both scale ~2.9×.** Shard size costs ~7% in cycles/bundle (15.48 → 16.61 at
+T=1) and **nothing in scaling**. It does not explain S72b's 2.68×.
+
+### The actual explanation
+S72b ran **four processes each scanning the full 100k rows** — 4× the total work
+and 4× the memory traffic. N1 splits **one query's rows across threads** — the
+same traffic divided. Those are different memory behaviours, and the difference
+is the **workload shape**, not the shard size and not the barrier.
+
+So S72b's saturation is real *for throughput scaling under 4× working set*, and
+N1's near-linear scaling is real *for latency scaling of fixed work*. Both
+correct, measuring different things, and my sentence claiming shard size
+reconciled them was wrong.
+
+## 3. The T=4 collapse is now refused, not remembered
+`pf.c` gains, at the loop head:
+```c
+if(T>=NCPUS){ printf("... REFUSED: spin barrier needs a free core (T>=%d)\n",NCPUS); continue; }
+```
+The rule was in the LEDGER for all three occurrences — S51 at T=8, S53 at T=1,
+N1 at T=4 — and it never fired. It is now a construction-time refusal in the
+harness, the same move A10 made for the quiet gate.
+
+## 4. Conditions block added
+`conditions.json` declares `concurrency: threads-spin-barrier`, `workers: 3`,
+`cpuset: 0-1,4-5`, and cites `S56_mork_amortise` and `S72_c3_cpuset` — so
+`claimcheck.py` reports both findings above as inheritance diffs without anyone
+needing to notice them. This is the first spike to opt in.
