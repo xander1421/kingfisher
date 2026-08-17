@@ -1,0 +1,105 @@
+{
+ "seed": 20260817,
+ "corpus": {
+  "programs": 67,
+  "distinct_atoms": 1246
+ },
+ "epochs": 67,
+ "final_atoms": 1247,
+ "final_trie_root": "daf1d148be40a6a5784e70c13daf30b02f579a96e516be04792637903a1298eb",
+ "chain_head": "08e4e1450ecb0071d4c7c2b5acfccce4275d76388bcf0ff46fecec3d8bf85980",
+ "bytes_per_epoch": 32,
+ "chain_bytes_total": 2176,
+ "honest_chain_verifies": true,
+ "controls": {
+  "C_honest_chain_verifies": {
+   "fires": true,
+   "fails_if": "the honest chain does not reproduce its own heads -- then every rejection below is vacuous",
+   "can_fail": "honest_chain_verifies reads false",
+   "observed": {
+    "epochs": 67,
+    "head": "08e4e1450ecb0071",
+    "verified": true
+   }
+  },
+  "C_regrouping_detected": {
+   "fires": true,
+   "fails_if": "two epoch groupings of one atom set share a chain head -- the chain would add nothing to the root, which S73 already showed is grouping-blind",
+   "can_fail": "head_a == head_b, or root_a != root_b (which would mean the groupings were not equivalent in state and the test is void)",
+   "observed": {
+    "root_a": "daf1d148be40a6a5",
+    "root_b": "daf1d148be40a6a5",
+    "roots_equal": true,
+    "head_a": "256a8e0f73cf31db",
+    "head_b": "a254ca7dda69e1bf",
+    "heads_equal": false
+   }
+  },
+  "C_reorder_detected": {
+   "fires": true,
+   "fails_if": "swapping two epochs leaves the chain head unchanged -- order would not be committed",
+   "can_fail": "head_swapped == head_honest",
+   "observed": {
+    "final_root_unchanged": true,
+    "head_honest": "08e4e1450ecb0071",
+    "head_swapped": "2ca15cfc31fa6ed0"
+   }
+  },
+  "C_dropped_epoch_detected": {
+   "fires": true,
+   "fails_if": "dropping an epoch leaves the chain head unchanged",
+   "can_fail": "head_dropped == head_honest",
+   "observed": {
+    "epochs_honest": 67,
+    "epochs_dropped": 66,
+    "head_dropped": "a25d0cc3a6504a3c"
+   }
+  },
+  "C_split_epoch_detected": {
+   "fires": true,
+   "fails_if": "splitting one epoch in two leaves the head unchanged -- a prover could inflate its epoch count for free",
+   "can_fail": "head_split == head_honest",
+   "observed": {
+    "final_root_unchanged": true,
+    "epochs_split": 68,
+    "head_split": "aa2393440539bab6"
+   }
+  },
+  "C_delta_content_bound": {
+   "fires": true,
+   "fails_if": "substituting one atom inside a delta, at identical size and identical roots, leaves the head unchanged -- the chain would bind shape, not content (S65)",
+   "can_fail": "the recomputed head equals the honest head",
+   "observed": {
+    "epoch_tampered": 0,
+    "delta_size": 57,
+    "head_honest": "08e4e1450ecb0071",
+    "head_tampered": "fa8bc992db7ad0a1"
+   }
+  },
+  "C_replayed_epoch_rejected": {
+   "fires": true,
+   "fails_if": "an epoch's (root, delta) pair verifies at a different position -- epochs would be transplantable",
+   "can_fail": "verify_chain returns True on the transplanted sequence",
+   "observed": {
+    "transplanted_from": 5,
+    "to": 6,
+    "accepted": false,
+    "honest_head": "08e4e1450ecb0071"
+   }
+  },
+  "C_chain_alone_cannot_catch_a_forged_delta": {
+   "fires": true,
+   "fails_if": "the chain alone rejects a root its declared delta does not produce -- then it would subsume S73 and this boundary claim is wrong. Also fails if the fold does not reproduce the honest root, which would make the comparison vacuous",
+   "can_fail": "chain_ok reads false, or folded != honest3 (broken fold, control void), or folded == the lied root",
+   "observed": {
+    "chain_accepts_the_lie": true,
+    "lied_root": "0b1b2c53ac0df797",
+    "honest_root": "e0fe5ae82c0bf85e",
+    "fold_forward_gives": "e0fe5ae82c0bf85e",
+    "fold_reproduces_honest": true,
+    "fold_rejects_the_lie": true
+   }
+  }
+ },
+ "all_controls_fire": true
+}

@@ -1,0 +1,194 @@
+{
+ "spike": "S74_epoch_chain",
+ "recorded_utc": "2026-08-17T10:20:21Z",
+ "note": "S74 epoch-chain commitment: binds sequence, explicitly does NOT bind state (that is S73 fold-forward). 32 B per epoch.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/../S57_hyperon_corpus",
+   "head": "c79a6adf1e22076f5c82cf397ef654b76cba5aa5",
+   "clean": false,
+   "dirty_files": [
+    "HANNEL.md",
+    "out/LEDGER.md",
+    "spikes/S74_epoch_chain/"
+   ],
+   "diff_sha256": "91275b8ad6d059096c3a438b88b2c5566e7d4c0eec6d0a432b4540aad1dec810",
+   "diff_bytes": 8642
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/../S57_hyperon_corpus": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/chain.py",
+   "sha256": "0c36dd59f4c032739cc27509dbf96fbadf3c38afcaf92622f2e40e8623b4618b",
+   "bytes": 16415,
+   "mtime": 1786962021,
+   "compared_ts": 1786962021,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/chain.json",
+   "sha256": "fcc8109a514a67e347f68d9775cd536f4b502bfc0d26b00cb0619e0506e493e8",
+   "bytes": 3717,
+   "mtime": 1786962021,
+   "compared_ts": 1786962021,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_honest_chain_verifies",
+   "must_fire_because": "the honest chain does not reproduce its own heads -- then every rejection below is vacuous",
+   "can_fail_because": "honest_chain_verifies reads false",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "epochs": 67,
+    "head": "08e4e1450ecb0071",
+    "verified": true
+   }
+  },
+  {
+   "name": "C_regrouping_detected",
+   "must_fire_because": "two epoch groupings of one atom set share a chain head -- the chain would add nothing to the root, which S73 already showed is grouping-blind",
+   "can_fail_because": "head_a == head_b, or root_a != root_b (which would mean the groupings were not equivalent in state and the test is void)",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "root_a": "daf1d148be40a6a5",
+    "root_b": "daf1d148be40a6a5",
+    "roots_equal": true,
+    "head_a": "256a8e0f73cf31db",
+    "head_b": "a254ca7dda69e1bf",
+    "heads_equal": false
+   }
+  },
+  {
+   "name": "C_reorder_detected",
+   "must_fire_because": "swapping two epochs leaves the chain head unchanged -- order would not be committed",
+   "can_fail_because": "head_swapped == head_honest",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "final_root_unchanged": true,
+    "head_honest": "08e4e1450ecb0071",
+    "head_swapped": "2ca15cfc31fa6ed0"
+   }
+  },
+  {
+   "name": "C_dropped_epoch_detected",
+   "must_fire_because": "dropping an epoch leaves the chain head unchanged",
+   "can_fail_because": "head_dropped == head_honest",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "epochs_honest": 67,
+    "epochs_dropped": 66,
+    "head_dropped": "a25d0cc3a6504a3c"
+   }
+  },
+  {
+   "name": "C_split_epoch_detected",
+   "must_fire_because": "splitting one epoch in two leaves the head unchanged -- a prover could inflate its epoch count for free",
+   "can_fail_because": "head_split == head_honest",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "final_root_unchanged": true,
+    "epochs_split": 68,
+    "head_split": "aa2393440539bab6"
+   }
+  },
+  {
+   "name": "C_delta_content_bound",
+   "must_fire_because": "substituting one atom inside a delta, at identical size and identical roots, leaves the head unchanged -- the chain would bind shape, not content (S65)",
+   "can_fail_because": "the recomputed head equals the honest head",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "epoch_tampered": 0,
+    "delta_size": 57,
+    "head_honest": "08e4e1450ecb0071",
+    "head_tampered": "fa8bc992db7ad0a1"
+   }
+  },
+  {
+   "name": "C_replayed_epoch_rejected",
+   "must_fire_because": "an epoch's (root, delta) pair verifies at a different position -- epochs would be transplantable",
+   "can_fail_because": "verify_chain returns True on the transplanted sequence",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "transplanted_from": 5,
+    "to": 6,
+    "accepted": false,
+    "honest_head": "08e4e1450ecb0071"
+   }
+  },
+  {
+   "name": "C_chain_alone_cannot_catch_a_forged_delta",
+   "must_fire_because": "the chain alone rejects a root its declared delta does not produce -- then it would subsume S73 and this boundary claim is wrong. Also fails if the fold does not reproduce the honest root, which would make the comparison vacuous",
+   "can_fail_because": "chain_ok reads false, or folded != honest3 (broken fold, control void), or folded == the lied root",
+   "null_must_contain": "the regrouping/reorder/forgery injected",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "chain_accepts_the_lie": true,
+    "lied_root": "0b1b2c53ac0df797",
+    "honest_root": "e0fe5ae82c0bf85e",
+    "fold_forward_gives": "e0fe5ae82c0bf85e",
+    "fold_reproduces_honest": true,
+    "fold_rejects_the_lie": true
+   }
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/../S57_hyperon_corpus": {
+   "newest": 1786923851,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Exhibit two epoch SEQUENCES that differ in grouping, order, count or delta content and share a chain head. Or show a sequence the chain rejects that is in fact honest.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
