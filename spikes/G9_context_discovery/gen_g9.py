@@ -211,9 +211,14 @@ def main():
 
     g1, dk, rk, dn = (res[k_]["mean_preserved"] for k_ in
                       ("global_1", "discovered_k", "random_k", "declared_N"))
+    # A single `random_k` arm cannot separate discovery from luck: with 5
+    # queries into 3 groups the gap was 79% vs 77%, a tenth of one query.
+    # exhaustive.py enumerates ALL 25 partitions and puts discovered at
+    # rank 4/25, p=0.160. Verdict is stated from that, not from one draw.
     if dk > rk and dk > g1:
-        v = (f"DISCOVERY WORKS — {k} discovered contexts beat {k} arbitrary "
-             f"({dk:.0%} vs {rk:.0%}) and 1 global ({g1:.0%})")
+        v = (f"k HELPS, DISCOVERY UNPROVEN — {k} discovered {dk:.0%} vs {k} "
+             f"arbitrary {rk:.0%} vs 1 global {g1:.0%}. See exhaustive.py: "
+             f"discovered ranks 4/25 over all partitions, p=0.160")
     elif dk > g1 and dk <= rk:
         v = (f"NOT DISCOVERY — {k} contexts help ({dk:.0%} vs {g1:.0%}) but "
              f"arbitrary grouping does as well ({rk:.0%}). The win is k, not clustering")
