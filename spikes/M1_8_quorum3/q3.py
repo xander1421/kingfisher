@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
 from shardstore import ShardStore
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'harness'))
-from canon import canon, canon_alpha
+from canon import canon, canon_alpha_strict, is_ground, AlphaLossy
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_3_worker'))
 import preflight
@@ -39,7 +39,17 @@ def key(e):
     if e is None: return None
     txt = e.get('results_text')
     if txt is not None:
-        norm = canon_alpha(txt) if ALPHA else canon(txt)
+        # alpha is lossless ONLY on a ground result set. A non-ground result can
+        # be carried into another query, where "which of my variables landed
+        # where" stops being vacuous. Fall back rather than weaken silently.
+        if ALPHA:
+            try:
+                norm = canon_alpha_strict(txt)
+            except AlphaLossy:
+                e['alpha_refused'] = True
+                norm = canon(txt)
+        else:
+            norm = canon(txt)
         return (e.get('status'), e.get('fuel_used'),
                 hashlib.sha256(norm.encode()).hexdigest())
     return (e.get('status'), e.get('fuel_used'), e.get('sorted_hash'))
@@ -86,6 +96,8 @@ def main():
                          '(M1.3: batched preflight is 0.51x a job, so per-job is '
                          'not viable -- amortise it)')
     a = ap.parse_args()
+    global ALPHA
+    ALPHA = a.alpha
 
     progs = sorted(f for f in os.listdir(a.corpus) if f.endswith('.metta'))
     if a.limit: progs = progs[:a.limit]
@@ -194,6 +206,14 @@ def main():
 
     pushed = sum(e.get('bytes_pushed', 0) for _, _, _, _, es in rows
                  for e in es if e)
+    if ALPHA:
+        refused = sum(1 for _, _, _, _, es in rows for e in es
+                      if e and e.get('alpha_refused'))
+        nonground = sum(1 for _, _, _, _, es in rows for e in es
+                        if e and e.get('results_text') is not None
+                        and not is_ground(e['results_text']))
+        print(f'alpha: {nonground} envelope(s) non-ground -> {refused} fell back '
+              f'to canon (alpha is lossless only on ground results)')
     print(f'device cache: {pushed/1024:.1f} KiB crossed the wire '
           f'({uniq} distinct shards)')
 

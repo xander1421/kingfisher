@@ -38,6 +38,36 @@ def canon(text: str) -> str:
 VARANY = re.compile(r'\$[^\s()]+')
 
 
+def is_ground(text: str) -> bool:
+    """True when a result set carries no free variables.
+
+    This is the exact condition under which `canon_alpha` is LOSSLESS. Alpha
+    discards which of the requester's variables landed where; that is vacuous
+    while the variables are unbound and never read again, but it stops being
+    vacuous the moment a result carrying free variables is fed into another
+    query -- the match/add-atom/match shape of a self-modifying pass.
+
+    Checkable per result at runtime, and cheaper than a static analysis of the
+    program, so it is enforced rather than trusted.
+    """
+    return not VARANY.search(text)
+
+
+class AlphaLossy(Exception):
+    """Raised when alpha-canonicalisation would discard real information."""
+
+
+def canon_alpha_strict(text: str) -> str:
+    """`canon_alpha`, but refuses on a non-ground result instead of silently
+    weakening the comparison. The failure this guards is silent, so it raises."""
+    if not is_ground(text):
+        raise AlphaLossy(
+            'result carries free variables; alpha-canonicalisation is lossy here '
+            '(it equates ($x $y) with ($y $x), which matters once a free '
+            'variable is carried into another query)')
+    return canon_alpha(text)
+
+
 def canon_alpha(text: str) -> str:
     """Alpha-canonicalise: rename EVERY variable by first appearance.
 
@@ -139,7 +169,28 @@ def demo():
     # OPT-IN per job class rather than the default.
     assert canon_alpha("($x $y)") == canon_alpha("($y $x)")
 
-    print('canon: 24 assertions pass (12 canon, 11 alpha, 1 documented loss)')
+    # --- the losslessness condition, enforced
+    assert is_ground("(at-risk B1 W1)")
+    assert is_ground("((Frog A) (Green A))")
+    assert not is_ground("($x $x)")
+    assert not is_ground("((Frog $x#24605) (Green $x#24605))")
+    assert not is_ground("(at-risk $x $y)")
+
+    # ground results: alpha is a no-op, so it cannot lose anything
+    for g in ("(at-risk B1 W1)", "(pair A B)", "3", "()"):
+        assert canon_alpha(g) == g, g
+        assert canon_alpha_strict(g) == g
+
+    # non-ground: strict refuses rather than silently weakening
+    for ng in ("($x $y)", "($x $x)", "((Frog $x#1))"):
+        try:
+            canon_alpha_strict(ng)
+            raise AssertionError(f'should have refused: {ng}')
+        except AlphaLossy:
+            pass
+
+    print('canon: 37 assertions pass '
+          '(12 canon, 11 alpha, 1 documented loss, 13 ground-gate)')
 
 
 if __name__ == '__main__':
