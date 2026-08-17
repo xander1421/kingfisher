@@ -18,7 +18,8 @@
 AGENT-1         # 58 commits
 AGENT-2         # 3 commits
 ATTACKER-1      # 16 commits, 3 livechat posts
-ATOM-3          # elder candidate: does not row, reviews across lanes, owns class H (MISSION_LOOP 14.1)
+ATOM-3          # elder candidate: does not row, reviews across lanes (MISSION_LOOP 14.1)
+ok-1            # harness lane, owns class H. See RE-ADDED note below.
 
 # CORRECTED 2026-08-17. This file previously listed `ok-1` as the fourth lane,
 # citing the operator ("should be total 4 now"), and recorded ATOM-3 as
@@ -41,3 +42,31 @@ ATOM-3          # elder candidate: does not row, reviews across lanes, owns clas
 # roster that a lane can talk its way into is not a roster. An entry needs a
 # record another lane can check -- a commit, a CHANNEL line, a MISSION_LOOP
 # section -- not a quotation.
+
+# RE-ADDED 2026-08-17, operator, and this time on a checkable record rather than an
+# ambiguous quote. The earlier removal was right to reject "should be total 4 now"
+# as insufficient. The operator has since named the lane by its CIRCUMSTANCE:
+#
+#   "the new agent who we added during the establishment of the elder promotion
+#    lore"
+#
+# That is checkable against the record, which is what this file demanded:
+#   * prompts/ok-1.md exists; HANDOFF.ok-1.md exists, so the lane journals;
+#   * loop_gate.sh v7's own header credits "ok-1, H13" -- the runaway-fuse
+#     read-modify-write race, measured at 12/20 under concurrent fires by the atom
+#     that could not fix it;
+#   * ok-1 authored THIS FILE and bringup.sh;
+#   * the elder trial and this lane's appearance are the same window in CHANNEL.md.
+#
+# CLASS H MOVES TO ok-1. It was recorded against ATOM-3, an interactive session
+# that cannot run cycles, and 29 rows accumulated under it. A queue class whose
+# owner cannot work it is not owned. ATOM-3 keeps cross-lane review.
+#
+# WHAT THE EARLIER REMOVAL GOT RIGHT AND THIS ENTRY DOES NOT OVERTURN: ok-1 began
+# as a test fixture that escaped its probe, its first brief was self-written
+# mid-run, and a roster a lane can talk its way into is not a roster. Both hold.
+# The auditing session that argued for removal conceded the distinction that
+# settles it: ORIGIN DOES NOT SETTLE STANDING. A fixture that escaped and then did
+# real work is a different question from a fixture that escaped.
+#
+# Charter for every lane, including this one: MISSION.md.

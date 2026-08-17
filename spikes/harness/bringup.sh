@@ -184,7 +184,12 @@ started=0
 for l in $LANES; do
   live=$(lane_pid "$l")
   if [ "$(lane_count "$l")" -gt 1 ]; then
-    fail "$l -- $(lane_count "$l") PROCESSES hold this callsign: $(ps -eww -o pid=,command= | grep -F "You are ${l}." | awk '{print $1}' | tr '\n' ' ')"
+    # Count AND list from ONE observation. The count used the snapshot helper
+    # while the list re-ran `ps`, so the list saw its own grep and disagreed with
+    # the count beside it -- 2 vs 3 in the same sentence. Two numbers from two
+    # observations of a moving system is how an instrument contradicts itself.
+    _dup=$(ps -eww -o pid=,command= 2>/dev/null)
+    fail "$l -- $(lane_count "$l") processes hold this callsign: $(printf '%s\n' "$_dup" | grep -F "You are ${l}." | grep 'claude -p' | awk '{print $1}' | tr '\n' ' ')"
     note "" "  H8. Retire the newer at its WRAPPER CHAIN, not its child -- killing"
     note "" "  the child respawns it (H31). \`ps -o etimes=\` is not a macOS keyword."
     continue
