@@ -66,6 +66,35 @@ ALLOW = {
 BAD_PATH = ("/target/", "/__pycache__/", "/node_modules/", "/.gradle/",
             "/build/outputs/", "/.venv/", "/jniLibs/")
 
+# H12: in a repo where every commit carries ONE human's git identity, commit
+# authorship cannot distinguish agents AT ALL. Two lanes independently mis-
+# attributed a 300-file sweep (e990f11) to the wrong atom from the same evidence,
+# and the existing `Co-Authored-By: Claude Opus 5` trailer is identical on every
+# commit from every session, so it distinguishes nothing either.
+#
+# `Atom:` is the callsign (§14.1 vocabulary). It is SELF-DECLARED, so it has the
+# same A22 weakness as CALLSIGN in CHANNEL.md: a party supplying the input to a
+# check applied to itself. It fixes "no attribution exists", not "attribution
+# can be false".
+#
+# `Claude-Session:` is the harder half. It is assigned, not typed, and differs
+# per session, so two lanes cannot collide on it even when both sign the same
+# callsign — which is exactly what happened today with two AGENT-2s.
+# `Reviewed-By:` records WHO ATTACKED IT, which is the thing this workspace's
+# credibility actually rests on — a claim here is worth what the review of it was
+# worth, and until now the history recorded neither.
+#
+# Two rules, both mechanical:
+#   * Reviewed-By MUST NOT equal Atom. Self-review is the A22 defect exactly: a
+#     party supplying the input to a check applied to itself. Every real finding
+#     today came from another lane; not one atom's own suite caught its own bug.
+#   * `Reviewed-By: unreviewed` is LEGAL and explicit. Unreviewed work is normal
+#     and must be committable — but it gets RECORDED as unreviewed rather than
+#     left silent, so `git log --grep` can enumerate exactly what nobody checked.
+#     Silence reading identical to success is the failure that ran through this
+#     whole day.
+REQUIRED_TRAILERS = ("Atom", "Claude-Session", "Reviewed-By")
+
 WEAK_SUBJECTS = ("wip", "update", "updates", "fix", "fixes", "misc", "stuff",
                  "changes", "cleanup", "temp", "test", "asdf", "more work",
                  "address feedback", "minor", "tweak", "tweaks")
@@ -171,6 +200,31 @@ def main():
                 seen.add(path)
                 print(f"   {int(size) / 1048576:7.1f} MB  {path}")
             print("   (history is NOT rewritten by this tool — see CLAUDE.md 3)")
+
+    trailers = sh("git", "log", "-1", "--pretty=%(trailers:unfold=true)")
+    missing = [t for t in REQUIRED_TRAILERS if f"{t}:" not in trailers]
+    if missing:
+        print(f"\nHEAD TRAILERS: missing {missing}")
+        print("   Every commit must name the atom that made it and the session "
+              "it came from:")
+        print("     Atom: AGENT-2")
+        print("     Claude-Session: <assigned session url>")
+        violations.append(("HEAD", f"missing trailers {missing}"))
+    else:
+        def val(key):
+            for ln in trailers.splitlines():
+                if ln.strip().startswith(key + ":"):
+                    return ln.split(":", 1)[1].strip()
+            return ""
+        atom, rev = val("Atom"), val("Reviewed-By")
+        if rev.lower() == "unreviewed":
+            print(f"\nHEAD TRAILERS: ok — Atom {atom}, explicitly UNREVIEWED")
+        elif rev and atom and rev.lower() == atom.lower():
+            print(f"\nHEAD TRAILERS: SELF-REVIEW — Atom {atom} reviewed by "
+                  f"{rev}. A22: the reviewed party supplied the review.")
+            violations.append(("HEAD", f"self-review by {atom}"))
+        else:
+            print(f"\nHEAD TRAILERS: ok — Atom {atom}, reviewed by {rev}")
 
     last = sh("git", "log", "-1", "--pretty=%s")
     if last:
