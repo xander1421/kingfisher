@@ -96,6 +96,11 @@ def main():
                 print(f'                       | {ln[:100]}')
     print(f'\n{len(DRIVERS)} drivers, broken: {bad or "none"}, '
           f'precondition unmet: {unmet or "none"}')
+    # Say what this sweep CANNOT see. Six spike reproducers are aarch64
+    # binaries that give `Exec format error` here, so a clean run above is
+    # silent about them rather than evidence for them.
+    print('NOTE: host-only. The aarch64 device reproducers (S31 S45 S51 S52) '
+          'are not covered here -- run `python3 devsweep.py`.')
     return 1 if bad else 0
 
 

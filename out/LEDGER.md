@@ -139,7 +139,7 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 | ~~Descoping retires the biggest grade-E claim~~ | **weakened** | Cross-vendor requantisation bit-exactness was the single largest unmeasured assumption in the architecture. Removing the NPU from the critical path removes the claim. Cheaper resolution, same risk retired |
 | NPU tok/s figures are **READ**, not measured here | **E** | Sourced to `~/alex/oflineAI` (CPU 6-thread 48/22; NPU HTP0 v79 700/18.8). No NPU code has ever run in this workspace |
 | `background` cpuset = `0-1,4-5` | **B** | S54, read from `/dev/cpuset` on device |
-| NNAPI exposes no accelerator on SM8750 | **A** | S31; a second agent independently searched HAL/VINTF — for a negative existence claim, an independent search *is* the attack |
+| NNAPI exposes no accelerator on SM8750 · repro: `spikes/devsweep.py --only nnapi` | **A** | S31; a second agent independently searched HAL/VINTF — for a negative existence claim, an independent search *is* the attack |
 | Rule: **scale ≥ 2·nnz(Q)/126** — pick the scale from the cutoff, not the observed range | **B** | S31. v1 had the symptom (recall 0/8), not the rule |
 | Transmit the scale as an **exact rational**, never a float | **A** | **Independently confirmed from outside this workspace**: Acurast ships `MetricInput = (PoolId, u128, u128)` → `FixedU128` as `numerator/denominator` at 260k devices (`acurast/common/src/types.rs:558-561`). First external confirmation any claim here has received. **And `hyperjob_v1.proto` still declares `quant_scale` as `double`** |
 | *(original note)* | | S49: the boundary sat on .5, so float-vs-double splits two honest verifiers. `rint` in a spec is insufficient — rounding modes differ across Python/C/Go/JS |
