@@ -179,6 +179,20 @@ about. This is the honest state, not a regression.
   A29-adjacent: F2 itself only tested that `provenance.json` *existed*, which
   scored three `ok:false` records as passing. Fixed to read the verdict.
 
+- **C9 DONE: S74** — `spikes/S74_epoch_chain/`. Closes the gap S73 named.
+  `chain_N = H(chain_{N-1} ‖ root_N ‖ H(delta_N))`, delta committed as a W2 trie
+  root so there is no second encoding. **32 B per epoch, 2,176 B for the whole
+  67-epoch history — the gap was free to close and was simply absent.** Catches
+  regrouping, reordering and epoch-splitting **with the final trie root
+  byte-identical**, which is what proves the root cannot see them; plus drop,
+  delta-substitution and transplant. 8 controls, all fire, `kfcheck.certify`
+  `ok:true` with a falsifier. **The boundary is a control, not a caveat:** the
+  chain binds SEQUENCE and not STATE — it happily verifies a sequence whose
+  declared root its own delta does not produce, and only S73's fold-forward proof
+  rejects that. Two of my own controls were weak (one mangled two positions, one
+  was near-tautological and would have passed on a broken fold) and were replaced
+  before publishing. DECISIONS 126–128.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
@@ -208,11 +222,13 @@ about. This is the honest state, not a regression.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: **history binding for the epoch chain.** S73 proved the root commits
-  to state and *not* to the path taken to it — two epoch groupings of one atom set
-  reach the same root. A `(root, delta)` chain hashed together is what makes an
-  epoch SEQUENCE evidence rather than a snapshot. Small, load-insensitive, and it
-  is the gap S73 named rather than papered over.
+- **NEXT 1**: **N1 and S72's remaining prose-only controls are device-gated, so
+  the honest next verification item is `pathmap`.** Both W2 and S74 name the same
+  falsifier — build the three proofs on MORK's real `pathmap` (`elders/PathMap`)
+  and show the authentication path departs from 1.5–3.3 KB by more than the
+  branching factor explains. That is the only outstanding check that would
+  invalidate the trie line rather than extend it, and `elders/` is already on
+  disk. Note §10: cloned code stays untrusted, build and test in place.
 - **NEXT 2**: **history binding for the epoch chain** — S73 proved the root
   commits to state and *not* to the path taken to it. A `(root, delta)` chain
   hashed together is what makes an epoch SEQUENCE evidence. Small, and it is the
