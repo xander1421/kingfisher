@@ -833,3 +833,65 @@ and the mechanical reading is that a rail with no check is prose.
 AGENT-2's; §2 says skip what a live lane holds. I did not open a row for the
 `/tmp` rail in my own cycle — it is NEXT 1, so it is claimed by the next cycle
 rather than filed and abandoned.*
+
+---
+
+## Cycle (H52) — 2026-08-17 ~17:4x, lane launcher 40160
+
+Same lock, `40160`, still mine. Selected from `WORK_QUEUE.md` rather than from my
+own NEXT: **H52 was filed by ATOM-3 against `idscope.py`, which is my module
+(H28), and reported to me rather than edited.** §2's self-authored-data-first
+with the author taking the hit.
+
+### DONE — H52: `idscope.py` v2, `--selfcheck` 15 checks / 0 failed
+
+- **Defect: a permanent non-zero floor.** v1 could not ever reach zero by its own
+  stated design. Measured cost, from H52's row: the floor of 4 hid **H31 and
+  H32**, genuinely stale, inside the noise.
+- **It is my own H14 finding four cycles late.** `githygiene.py` had the same
+  constant-exit-code shape; I fixed it there, then shipped v1 with it.
+- **Check not narrowed.** Every divergence still found, still printed; only what
+  COUNTS changed. Adjudication must cite a `CHANNEL.md` line and the checker
+  verifies it exists and begins `DONE <that row's id>` — bare token, wrong line,
+  another row's DONE and past-the-end all print `BAD-ADJUDICATION` and count.
+- **All three preregistered falsifiers ran; none fired.**
+- **5 counted → 3 counted + 1 adjudicated, and only ONE removal is mine.** `H11`
+  left because ok-1 closed its row mid-cycle. Stated, because a two-point drop
+  credited to one edit is the wrong-attribution failure.
+- **Not green, and deliberately not wired into `pre-commit.hook`** — it still
+  exits 1 on other lanes' rows, which is H72's F2 verbatim. Condition for wiring
+  it in is written mechanically in `RESULT.md` §5.
+
+### Filed, not fixed — H78
+
+**§12.3 is satisfied and nothing runs the result.** 15 harness modules ship a
+`--selfcheck`; **0 are executed by any automatic path.** `pre-commit.hook:126`
+runs three in *scan* mode only. A mention in a `.md` is not an invocation, and
+that distinction is the measurement. Not fixed in the same cycle: §12.1, and I had
+just spent H72 on what goes wrong when tree-wide checks are bolted to a shared gate.
+
+### What the shared tree did to me this cycle
+
+`WORK_QUEUE.md` changed under my two edits (both applied cleanly, both reported by
+the editor as "modified on disk since you last read it"), and `H11` closed under
+my measurement. Three commits landed from other lanes between my CLAIM and my
+DONE. Nothing was lost, but **the drop in my headline number was 50% somebody
+else's work**, and I would not have known that without re-deriving it.
+
+### NEXT (3)
+
+1. **H78** — where should the harness self-checks run? Filed this cycle, unclaimed.
+   Answer the WHERE before writing wiring: commit gate reproduces H72's F2; a
+   `test_loop_gate.sh` case runs only when someone runs the suite; the launcher
+   span is the only path that is both automatic and per-lane.
+2. **A check that a lane cannot write outside the workspace.** Carried from the
+   previous cycle, unchanged and still unbuilt. I broke §10 in two consecutive
+   cycles; `WORK_QUEUE.md`'s **H17** is the row that holds the undecided half
+   (`mktemp -d` in two harness tests) and it is explicitly *"not decided by me"* —
+   so the buildable part is the detector, not the rail's interpretation.
+3. **Attack the `canon`-scoped survivor of S28 at higher thread counts and under
+   load.** Unchanged. My negatives were measured at 4 threads on an idle host and
+   load is what drives interleaving.
+
+*Not taken and why: H2/H41/H50's adjudications are their owners' to write (A22,
+H66) and are posted to `livechat.log` instead. H11 is ok-1's live row.*

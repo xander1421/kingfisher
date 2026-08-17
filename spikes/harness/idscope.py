@@ -1,6 +1,39 @@
 #!/usr/bin/env python3
-"""idscope.py v1 — H27. The queue and the append-only log must not disagree
+"""idscope.py v2 — H27, H52. The queue and the append-only log must not disagree
 about whether a row is closed.
+
+v2 — DEFECT REMOVED: A PERMANENT NON-ZERO FLOOR (H52, filed by ATOM-3, fixed by
+this module's author)
+--------------------------------------------------------------------------
+v1 refused on every divergence and **could not ever reach zero by its own stated
+design** — an append-only log cannot be corrected when a namespace moves under
+it, so `DONE H17` will name a renumbered row forever. A gate that is ALWAYS red
+is bypassed exactly as thoroughly as one that is randomly red, and the cost was
+measured rather than feared: the floor of 4 hid **H31 and H32**, genuinely
+stale and a live SELECT hazard, for as long as the total sat at 6-8.
+
+**This is my own H14 finding at a second site.** `githygiene.py` had the same
+shape — a constant exit code — and I fixed it there, four cycles before shipping
+v1 of this file with the defect. §12.2: fix the class, not the site.
+
+THE CHECK IS NOT NARROWED. Every divergence is still found and still printed.
+What changes is what COUNTS toward the refusal: an ADJUDICATED divergence is
+listed informationally, an unadjudicated one still refuses.
+
+    | H17 | … | OPEN — LOG-DONE-ADJUDICATED CHANNEL.md:122 (means H22) |
+
+and the adjudication is a MECHANISM, not a marker, because a marker is an escape
+hatch anyone can paste (H52's own words). To be honoured it must cite a line
+number in the log, and **that line must exist and must begin `DONE <this row's
+id>`**. A bare token fails. A wrong line number fails. A line that is some other
+row's DONE fails. So the adjudicator has to have read the line it is explaining,
+and a row whose id never appears in a DONE line cannot be silenced at all.
+An adjudication that does not validate is printed as `BAD-ADJUDICATION` and
+counts toward the refusal — louder than having written nothing.
+
+Falsified in `--selfcheck`: all four forms above, on one fixture id, plus the
+control that an unadjudicated divergence still refuses (without which "adjudicate
+everything" would pass) and that a clean pair still exits 0.
 
 WHY THIS EXISTS, AND IT IS A COST OF MY OWN FIX
 -----------------------------------------------
@@ -117,27 +150,76 @@ def log_done(text):
             re.finditer(r'^DONE\s+([A-Za-z][A-Za-z0-9._-]*)', text, re.M)}
 
 
+ADJ = re.compile(r'LOG-DONE-ADJUDICATED\s+' + re.escape(LOG) + r':(\d+)')
+
+
+def adjudications(text):
+    """id -> cited log line number, for rows carrying the adjudication token.
+
+    Parsed by ROW IDENTITY like everything else here, so a token sitting in one
+    row's prose cannot adjudicate a neighbour. The number is NOT trusted at this
+    point -- `scan` resolves it against the log, which is the half that makes
+    this a mechanism instead of a marker.
+    """
+    out = {}
+    for line in text.split('\n'):
+        if not line.startswith('| '):
+            continue
+        cells = re.split(r'(?<!\\)\|', line)
+        if len(cells) < 4:
+            continue
+        rid = cells[1].strip().strip('*` ')
+        m = ADJ.search(line)
+        if m:
+            out[rid] = int(m.group(1))
+    return out
+
+
 def scan(queue_text=None, log_text=None):
-    q = queue_rows(queue_text if queue_text is not None
-                   else open(os.path.join(ROOT, QUEUE), encoding='utf-8').read())
-    d = log_done(log_text if log_text is not None
-                 else open(os.path.join(ROOT, LOG), encoding='utf-8').read())
-    problems = []
+    qtext = (queue_text if queue_text is not None
+             else open(os.path.join(ROOT, QUEUE), encoding='utf-8').read())
+    ltext = (log_text if log_text is not None
+             else open(os.path.join(ROOT, LOG), encoding='utf-8').read())
+    q = queue_rows(qtext)
+    d = log_done(ltext)
+    adj = adjudications(qtext)
+    lines = ltext.split('\n')
+
+    problems, settled = [], []
     for rid in sorted(d):
-        if q.get(rid) == 'OPEN':
-            problems.append(
-                f'{LOG} declares `DONE {rid}` while {QUEUE} holds row {rid} OPEN '
+        if q.get(rid) != 'OPEN':
+            continue
+        base = (f'{LOG} declares `DONE {rid}` while {QUEUE} holds row {rid} OPEN '
                 f'-- a reader of the log closes a row the queue still owns')
-    for p in problems:
-        print('  DISAGREE ' + p)
+        n = adj.get(rid)
+        if n is None:
+            problems.append(('DISAGREE', base))
+        elif not (1 <= n <= len(lines)
+                  and re.match(r'^DONE\s+' + re.escape(rid) + r'\b', lines[n - 1])):
+            # An adjudication that does not resolve is worse than none: it reads
+            # as settled. Counted, and named as the reason.
+            problems.append(('BAD-ADJUDICATION',
+                             f'row {rid} cites {LOG}:{n}, which is not a '
+                             f'`DONE {rid}` line -- ' + base))
+        else:
+            settled.append(f'row {rid} adjudicated against {LOG}:{n}')
+
+    for s in settled:
+        print('  ADJUDICATED ' + s)
+    for kind, p in problems:
+        print(f'  {kind} ' + p)
     if problems:
-        print(f'\nREFUSE: {len(problems)} id(s) resolve to a different status '
-              f'depending on which file you read. An append-only log cannot be\n'
-              f'        corrected when a namespace moves under it, so the '
-              f'divergence has to be loud rather than silently resolved.')
+        print(f'\nREFUSE: {len(problems)} UNADJUDICATED id(s) resolve to a '
+              f'different status depending on which file you read '
+              f'({len(settled)} adjudicated, not counted).\n'
+              f'        An append-only log cannot be corrected when a namespace '
+              f'moves under it, so the divergence has to be loud rather than\n'
+              f'        silently resolved. Adjudicate one with '
+              f'`LOG-DONE-ADJUDICATED {LOG}:<line>` in its queue row -- the line '
+              f'must be that row\'s own DONE.')
         return 1
     print(f'idscope: {QUEUE} and {LOG} agree on every id the log declares DONE '
-          f'({len(d)} declared, {len(q)} rows)')
+          f'({len(d)} declared, {len(q)} rows, {len(settled)} adjudicated)')
     return 0
 
 
@@ -202,6 +284,47 @@ def selfcheck():
         print('  MISSES  it did not refuse at all'); bad.append('refusal')
     else:
         print('  REFUSES on a real divergence')
+
+    # ---- v2, H52: the adjudication must be a MECHANISM, not a marker --------
+    # One fixture id, four token forms, so no new id has to be reserved (H64:
+    # fixture ids live in the same namespace as real allocations).
+    def mini(extra, log_text):
+        queue = ('| id | item | status |\n|---|---|---|\n'
+                 f'| {stale} | held open by the queue | OPEN{extra} |\n')
+        b = io.StringIO()
+        with contextlib.redirect_stdout(b):
+            r = scan(queue, log_text)
+        return r, b.getvalue()
+
+    donel = f'DONE {stale} LANE-1 the log closes what the queue holds open\n'
+    log_2 = 'NOTE LANE-1 filler so the DONE is not on line 1\n' + donel
+    log_o = f'DONE {agreed} LANE-1 a DIFFERENT row\'s DONE\n' + donel
+
+    r, o = mini(f' -- LOG-DONE-ADJUDICATED {LOG}:2', log_2)
+    check(r == 0 and 'ADJUDICATED' in o, True,
+          'a VALID adjudication (cited line is that row\'s own DONE) stops the refusal')
+    # Without this, "adjudicate everything" satisfies the check above (H68).
+    r, o = mini('', log_2)
+    check(r == 1 and 'DISAGREE' in o, True,
+          'an UNADJUDICATED divergence still refuses')
+    r, o = mini(' -- LOG-DONE-ADJUDICATED', log_2)
+    check(r == 1 and 'DISAGREE' in o, True,
+          'a BARE marker with no line citation does not silence anything')
+    r, o = mini(f' -- LOG-DONE-ADJUDICATED {LOG}:1', log_2)
+    check(r == 1 and 'BAD-ADJUDICATION' in o, True,
+          'a citation to a line that is not a DONE line is named and counted')
+    r, o = mini(f' -- LOG-DONE-ADJUDICATED {LOG}:1', log_o)
+    check(r == 1 and 'BAD-ADJUDICATION' in o, True,
+          "a citation to ANOTHER row's DONE line is named and counted")
+    r, o = mini(f' -- LOG-DONE-ADJUDICATED {LOG}:99', log_2)
+    check(r == 1 and 'BAD-ADJUDICATION' in o, True,
+          'a citation past the end of the log is named and counted')
+    # F3, anti-inversion: the exit code must still be able to be 0. A checker
+    # whose floor moved from "always 1" to "always 1 unless you paste a token"
+    # is a different constant, not a fix.
+    r, _ = mini('', f'DONE {agreed} LANE-1 unrelated, and {stale} is not closed\n')
+    check(r == 0, True, 'a pair with no divergence at all still exits 0')
+
     if bad:
         print(f'SELFCHECK FAILED: {bad}')
         return 1

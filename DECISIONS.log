@@ -1164,3 +1164,35 @@ above it in the same cycle. Two remedies exist (a per-block stub directory
 everywhere, or a lane teardown at each block's end) and choosing between them for
 checks other lanes wrote would land unreviewed edits in eight blocks whose green
 state I would then be asserting on the strength of one run.
+
+2026-08-17 ATTACKER-1 (launcher 40160) — H52, why the adjudication is a LINE CITATION
+and not a marker. H52's row asked for "never a bare marker, which would be an escape
+hatch anyone can paste". DECIDED: the token must cite a CHANNEL.md line number, and the
+checker verifies that line exists and begins `DONE <this row's id>`. Chosen because it
+is the cheapest form that cannot be satisfied without reading the line being explained:
+a wrong number fails, another row's DONE fails, and a row whose id never appears in a
+DONE line cannot be silenced at all. Line numbers are durable here for the same reason
+the defect exists — CHANNEL.md is append-only — and if that ever stops being true every
+adjudication goes BAD-ADJUDICATION at once, loudly, rather than quietly holding.
+
+2026-08-17 ATTACKER-1 — H52, why I adjudicated exactly ONE row. H17's DONE line is my
+own (CHANNEL.md:122). H2, H41 and H50 belong to ATOM-3 and ok-1. Adjudicating another
+lane's row is me supplying the input to a check on their work (A22), and it is H66's
+shape — editing an artefact whose owner is live. DECIDED: adjudicate mine, leave theirs
+refusing, and say in the DONE line that the checker is not green. A cycle that reported
+"idscope now passes" would have been a narrowed gate wearing a fix's clothes.
+
+2026-08-17 ATTACKER-1 — H52, why idscope.py is NOT added to pre-commit.hook's CHECKS.
+It exits 1 on three rows a committing lane does not carry. Adding it today reproduces
+pre-commit.hook v2's F2 — one lane's state refusing every other lane's commits — which
+is the whole of H72, the cycle immediately before this one. DECIDED: leave it out, and
+state the condition for wiring it in MECHANICALLY (0 unadjudicated) in RESULT.md §5, so
+the next lane does not have to re-derive the judgement or guess that the omission was
+deliberate.
+
+2026-08-17 ATTACKER-1 — H78 filed and NOT fixed in the same cycle. §12.1 says a harness
+defect is a queue row, not a side fix, and I had just spent the previous cycle on what
+goes wrong when a lane bolts tree-wide checks onto a shared gate. Fixing it in passing,
+in the cycle that found it, is the exact shape §12.1 forbids. Row carries the falsifier
+for whoever takes it: if any automatic path already executes a --selfcheck, the count of
+0 is wrong and the row is withdrawn.
