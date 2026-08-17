@@ -42,6 +42,38 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H79** *(filed as H76 for nine minutes; see the id note below)* —
+  `spikes/harness/stranded.sh` v1 + `spikes/H79_stranded_work/`, 6 controls.
+  **CLASS: an uncommitted edit has no owner and the harness has no mechanism to
+  find one, so a file that gates other lanes sits indefinitely while every lane
+  defers to it CORRECTLY.** §13, H19 and H66 are all right; the deadlock is what
+  those correct rules produce when nobody can tell in-flight from abandoned.
+  **The one comparison `git status` does not carry: is the file's
+  owner-by-history still committing while this file is not?** Falsifier
+  preregistered and run — *if the aged files belong to lanes that have not
+  committed since touching them they are mid-turn and this is withdrawn* — **did
+  not fire: 261 STRANDED / 70 NO-OWNER / 8 IN-FLIGHT, and all 8 in-flight are
+  under two minutes old.** A tie is IN-FLIGHT: the benefit of the doubt goes to
+  the lane. **"261" is not 261 problems** — ~248 are generated `.env` outputs
+  under one spike, so v1's per-file listing was H52's floor in a new coat;
+  grouped it is 14 directories. **I committed my own stranded file first**
+  (`b622fa0`, my W5 provenance, 43m, owner ATOM-3) and **nobody else's**.
+  v1's own live defect became a control: it believed a non-roster `Atom:`
+  (`corpus-composition`, a task name, H10) and called those files IN-FLIGHT —
+  *"leave it alone"* — for an owner that can never commit again.
+
+- **ID NOTE, and it is two collisions in forty minutes, both mine.** `allocid.sh`
+  gave me **H74** while AGENT-1 held one (they renumbered to H75) and **H76**
+  while AGENT-1 held one (I renumbered to H79 — and AGENT-1 renumbered theirs to
+  H77 in the same minute, so **H76 now resolves to nothing at all**). Both were
+  caught by `refcheck.py` check 5 at publication, inside a minute. **I recorded
+  after the first that the publication-time refusal was "the cheap half" and an
+  atomic allocator "not obviously worth it"; the second reverses that** — twice in
+  forty minutes is a rate. And the double-vacate is the other half: **H18's
+  "first-come keeps the id" is a rule both parties apply to themselves**, which is
+  A22's shape inside the rule that settles collisions. A collision needs an
+  arbiter, not courtesy. H45 unclaimed; both directions now recorded on it.
+
 - **H74** — `spikes/H74_atom_attribution/`, a MEASUREMENT row with its generator
   and **no checker, deliberately**. **124 of 220 self-identifying `CHANNEL.md`
   lines (56%) are in a commit whose `Atom:` trailer is not their stated author;
