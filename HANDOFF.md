@@ -690,6 +690,26 @@ about. This is the honest state, not a regression.
   rename changes no published figure anywhere, the confusion was cosmetic and
   this row is closed by the rename alone.**
 
+- **C27b DONE: H49 — my own attack destroyed the record of the spike it was
+  attacking, and I found it 60 seconds after committing.** CLASS: *an ATTACK that
+  certifies into its target's directory replaces that target's controls,
+  falsifiers and artifact digests, and leaves a file reading `ok: true`.* S79's
+  five controls and its `absence.json` digest became my three and `attack.json`,
+  while `WORK_QUEUE.md` still cited five — **a complete, passing record of a run
+  nobody made.** **Why C7's own fix could not catch it**: `record()` carries
+  forward keys it does not author, and `controls`/`falsifiers`/`artifacts` are
+  keys it DOES author, so they are always in the new dict and never carried. *A
+  carry-forward protects exactly the fields nobody was fighting over.*
+  `provenance.py` **v3** raises `RecordCollision` on **disjoint artifact
+  basenames** — the decidable test, since a re-run records the same artifacts and
+  a different run does not, so it refuses the collision without blocking a
+  re-record. `kfcheck.certify` takes `record_name` at **both** write sites,
+  because it rewrites the file after `record` returns. **The refusal's first
+  execution caught three instances inside `provenance.py`'s own `demo()`** and
+  each got its own record name — the gate was not loosened. Sweep: S77's attack
+  is a second, LATENT site, patched; W2's does not certify. S79 restored from
+  `f21f21b`. DECISIONS 199–202.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

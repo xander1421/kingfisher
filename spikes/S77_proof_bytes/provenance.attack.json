@@ -1,0 +1,147 @@
+{
+ "spike": "S77_proof_bytes",
+ "recorded_utc": "2026-08-17T13:06:41Z",
+ "note": "ATTACK cycle on S77, by its own author, one cycle after it retracted two spikes on a single self-authored measurement (A22).",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes",
+   "head": "c32a93647df01ca7698b647c9b1190c367899c4c",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S77_proof_bytes/attack.json",
+    "spikes/S77_proof_bytes/attack.py",
+    "spikes/S77_proof_bytes/provenance.attack.json"
+   ],
+   "diff_sha256": "b6c162b0fe4b0d42a3ccb19c5d473c2f6f6fee121c0494398930ff0780ac9967",
+   "diff_bytes": 3060
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes": {
+   "files": 2,
+   "combined_sha256": "cbe9c5b0ebb1a09c",
+   "per_file": {
+    "pmproof/Cargo.toml": "ec572471f4ee8911",
+    "pmproof/Cargo.lock": "71ae4815710bd364"
+   }
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/attack.json",
+   "sha256": "d069481a210665364e3c77d7e8f8f36d20a3bac415099b50913d6867b54ace7b",
+   "bytes": 4757,
+   "mtime": 1786972001,
+   "compared_ts": 1786972001,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "A1_independent_recount_agrees",
+   "must_fire_because": "S77's sibling counts come from one self-authored Rust walk; this recomputes them from the key sets alone, with no pathmap, no zipper and no trie code of this project in the path",
+   "can_fail_because": "any set differs by more than 1% between the pathmap walk and the independent recount",
+   "null_must_contain": "the same three key files S77 measured, so a disagreement is expressible and would land on the exact numbers the retraction rests on",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "pathmap": 45.658,
+     "independent": 45.65810593900481,
+     "rel_diff": 2.3202725658430468e-06
+    },
+    "atoms_interned": {
+     "pathmap": 56.356,
+     "independent": 56.35553772070626,
+     "rel_diff": 8.202840757728373e-06
+    },
+    "triples": {
+     "pathmap": 70.194,
+     "independent": 70.1943359375,
+     "rel_diff": 4.78584351935187e-06
+    }
+   }
+  },
+  {
+   "name": "A2_prefix_key_exposure_is_known",
+   "must_fire_because": "a key that is a proper prefix of another makes a position both a terminal and a branch; C4 found a real soundness bug of that shape in this project, so whether the corpus contains the case has to be a recorded fact rather than an assumption",
+   "can_fail_because": "any set contains a key that is a proper prefix of another, which would put S77 on an untested and historically buggy path",
+   "null_must_contain": "three key sets totalling 6,588 keys, any pair of which could be prefix-related; the encodings are claimed prefix-free but nothing had checked",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": 0,
+    "atoms_interned": 0,
+    "triples": 0
+   }
+  },
+  {
+   "name": "A3_finding_survives_dropping_the_root_charge",
+   "must_fire_because": "S77's inversion is the whole retraction; if it depends on charging a proof for the root node, whose digest the verifier already holds, then the retraction is an artefact of the accounting",
+   "can_fail_because": "dropping the root charge makes the sibling ordering agree with the depth ordering, which would restore depth as a valid proxy",
+   "null_must_contain": "a root charge of (root children - 1) per key, which is free to be large enough to reorder the sets -- 256 children at the root would swamp every other position on a short key",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "with_root": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "without_root": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_depth": [
+     "triples",
+     "atoms_interned",
+     "atoms_original"
+    ],
+    "excluding_root": {
+     "atoms_original": 44.65810593900481,
+     "atoms_interned": 55.35553772070626,
+     "triples": 70.1943359375
+    }
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes": {
+   "newest": 1786971959,
+   "from": "spikes/S77_proof_bytes/attack.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes at c32a9364: 3 modified. The build is NOT c32a9364."
+ ],
+ "ok": false,
+ "falsifier": "an independent recount of siblings from the key sets alone disagreeing with S77's pathmap walk, or the inversion disappearing once the root charge is removed, would make S77 wrong and its retraction of S75/S76 unfounded",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

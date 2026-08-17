@@ -369,9 +369,17 @@ class Falsifier(Control):
         return d
 
 
+class RecordCollision(Exception):
+    """A DIFFERENT run is about to overwrite this spike's provenance record.
+
+    v3, 2026-08-17, H49. Refuses rather than warns (§12.13).
+    """
+
+
 def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
-           allow_dirty=False, note='', no_deps_reason=''):
-    """Write provenance.json next to the spike. Returns (ok, provenance).
+           allow_dirty=False, note='', no_deps_reason='',
+           record_name='provenance.json'):
+    """Write `record_name` next to the spike. Returns (ok, provenance).
 
     ok is False when a dependency tree is dirty without acknowledgement, or a
     declared positive control did not fire. A caller that ignores `ok` and
@@ -521,11 +529,40 @@ def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     # file is additive instead of clobbering, and NAME what was carried so a
     # stale block cannot masquerade as fresh. `certify` inherits this because its
     # own dict is the one returned here.
-    dest = os.path.join(spike_dir, 'provenance.json')
+    dest = os.path.join(spike_dir, record_name)
     if os.path.exists(dest):
         try:
             with open(dest) as f:
                 old = json.load(f)
+            # v3, 2026-08-17, H49. THE CARRY-FORWARD ABOVE CANNOT HELP FOR THE
+            # KEYS THIS FUNCTION AUTHORS. `controls`, `falsifiers` and
+            # `artifacts` are always in `prov`, so they are never carried, and a
+            # DIFFERENT RUN recording into the same directory replaces them
+            # outright. Earned the same day, by the author of the carry-forward:
+            # an ATTACK cycle called certify(HERE) with HERE = the target spike's
+            # own directory, and S79's provenance.json -- five controls and the
+            # absence.json digest -- became the attack's three controls and
+            # attack.json. The spike's D6 evidence was destroyed on disk and the
+            # live file read as a complete, passing record of a run nobody made.
+            # Recoverable from git, which is not the point: WORK_QUEUE cited five
+            # controls and the file showed three.
+            #
+            # DECIDABLE, and this is why it refuses rather than warns: a
+            # legitimate RE-RUN of the same spike records the same artifacts. A
+            # different run records different ones. Disjoint artifact basenames
+            # mean the two records are about different work, and the remedy is in
+            # the message rather than in a convention nobody reads.
+            def _basenames(rec):
+                return {os.path.basename(a.get('path', '')) for a in
+                        rec.get('artifacts', []) if a.get('path')}
+            old_a, new_a = _basenames(old), _basenames(prov)
+            if old_a and new_a and not (old_a & new_a):
+                raise RecordCollision(
+                    '%s already records a DIFFERENT run: artifacts %s, and this '
+                    'one records %s. Overwriting would destroy that run\'s '
+                    'controls and digests. Pass record_name="provenance.<what>.'
+                    'json" -- an attack on a spike belongs beside it, not on top '
+                    'of it.' % (dest, sorted(old_a), sorted(new_a)))
             carried = [k for k in old if k not in prov]
             for k in carried:
                 prov[k] = old[k]
@@ -628,8 +665,14 @@ def demo():
         fresh = os.path.join(d, 'fresh.bin')
         with open(fresh, 'wb') as f:
             f.write(b'x')
+        # record_name, because this is a SECOND, different synthetic run sharing
+        # one scratch dir with the stale-artifact arm above -- exactly the shape
+        # H49 refuses, and the first thing the new refusal caught was this
+        # self-test. Two different runs in one directory is the confusion; giving
+        # the second its own record is the remedy, not a loosening.
         ok, p = record(d, deps=[kf], artifacts=[fresh],
-                       controls=[c_good], allow_dirty=True)
+                       controls=[c_good], allow_dirty=True,
+                       record_name='provenance.fresh.json')
         assert ok, p['problems']
 
     # --- the DIRTY-FILE half of the staleness floor, in a throwaway git repo.
@@ -655,14 +698,17 @@ def demo():
     with open(art, 'wb') as f:
         f.write(b'x')
     os.utime(art, (head + 10, head + 10))          # built AFTER the commit
+    # record_name again: a third synthetic run in the same scratch dir. H49's
+    # refusal caught all three on its first execution, which is the check
+    # earning its place before it ever saw a real spike.
     ok, p = record(d, deps=[g], artifacts=[art], controls=[c_good],
-                   allow_dirty=True)
+                   allow_dirty=True, record_name='provenance.a24.json')
     assert ok, ('an artifact newer than the dep commit must pass', p['problems'])
     with open(src, 'a') as f:                      # patch, do NOT commit
         f.write('// patched after the build\n')
     os.utime(src, (head + 20, head + 20))
     ok, p = record(d, deps=[g], artifacts=[art], controls=[c_good],
-                   allow_dirty=True)
+                   allow_dirty=True, record_name='provenance.a24.json')
     assert not ok and any('STALE ARTIFACT' in x for x in p['problems']), \
         ('the dirty-file staleness floor did not fire -- the A24 loop is dead',
          p['problems'])
@@ -736,6 +782,46 @@ def demo():
         dead.observe(False, {'x': 1})
         ok4, p4 = record(d, controls=[dead], no_deps_reason=NR)
         assert not ok4 and any('VOID' in x for x in p4['problems']), p4['problems']
+
+    # ---- H49: a DIFFERENT run must not overwrite a spike's record ----------
+    # Verified to fail when the refusal is removed: delete the RecordCollision
+    # raise and the first assert below goes AssertionError instead.
+    d2 = tempfile.mkdtemp()
+    a1 = os.path.join(d2, 'spike.json')
+    a2 = os.path.join(d2, 'attack.json')
+    open(a1, 'w').write('{"real": 1}')
+    open(a2, 'w').write('{"attack": 1}')
+
+    def _c(name):
+        c = Control(name, 'why', null_must_contain='n', can_fail_because='c')
+        c.observe(True, [1, 2])
+        return c
+
+    record(d2, artifacts=[a1], controls=[_c('spike_control')],
+           no_deps_reason=NR)
+    try:
+        record(d2, artifacts=[a2], controls=[_c('attack_control')],
+               no_deps_reason=NR)
+    except RecordCollision as e:
+        assert 'record_name' in str(e), str(e)
+    else:
+        raise AssertionError(
+            'a run recording attack.json overwrote a record describing '
+            'spike.json -- the spike\'s controls and digests are gone and the '
+            'file reads as a complete passing record of a run nobody made')
+    # the original survived untouched
+    got = json.load(open(os.path.join(d2, 'provenance.json')))
+    assert [c['name'] for c in got['controls']] == ['spike_control'], got
+    # and the remedy the message names actually works
+    record(d2, artifacts=[a2], controls=[_c('attack_control')],
+           no_deps_reason=NR, record_name='provenance.attack.json')
+    side = json.load(open(os.path.join(d2, 'provenance.attack.json')))
+    assert [c['name'] for c in side['controls']] == ['attack_control'], side
+    # a genuine RE-RUN of the same spike still overwrites, which is the whole
+    # reason this refuses on DISJOINT artifacts rather than on any overwrite
+    ok5, _p5 = record(d2, artifacts=[a1], controls=[_c('spike_control')],
+                      no_deps_reason=NR)
+    assert ok5
 
     print('provenance: all assertions pass')
 

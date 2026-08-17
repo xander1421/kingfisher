@@ -25,7 +25,8 @@ from provenance import record, Control          # noqa: F401  (re-exported)
 def certify(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
             measurements=(), captures=(), instrument_texts=(),
             counters=None, expect_nonzero=(),
-            falsifier=None, allow_dirty=False, no_deps_reason=None, note=''):
+            falsifier=None, allow_dirty=False, no_deps_reason=None, note='',
+            record_name='provenance.json'):
     """(ok, problems). Refuses rather than warns.
 
     measurements     [{'name':…, 'points':[(x,y)…], 'as_rate':bool,
@@ -35,6 +36,7 @@ def certify(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     falsifier        str; what result would have refuted the claim
     """
     ok, prov = record(spike_dir, deps=deps, artifacts=artifacts,
+                      record_name=record_name,
                       controls=controls, falsifiers=falsifiers,
                       allow_dirty=allow_dirty,
                       no_deps_reason=no_deps_reason, note=note)
@@ -88,7 +90,10 @@ def certify(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     prov['problems'] = problems
     prov['ok'] = not problems
     import json
-    with open(os.path.join(spike_dir, 'provenance.json'), 'w') as f:
+    # H49: the SAME name record() wrote. certify rewrites the file after record
+    # returns, so a hardcoded name here silently reinstates the clobber record
+    # now refuses -- the fix at one site and not the other, §12.2.
+    with open(os.path.join(spike_dir, record_name), 'w') as f:
         json.dump(prov, f, indent=1)
     return prov['ok'], problems
 

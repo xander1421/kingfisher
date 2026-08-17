@@ -208,6 +208,13 @@ def main():
                   "disagreeing with S77's pathmap walk, or the inversion "
                   'disappearing once the root charge is removed, would make S77 '
                   'wrong and its retraction of S75/S76 unfounded',
+        # H49, 2026-08-17: BESIDE S77's record, not on top of it. As written
+        # this certified into S77's own directory with artifacts=[attack.json],
+        # so re-running it replaced S77's six controls and its measure.json
+        # digest with this attack's. Latent rather than live -- S77's record was
+        # regenerated afterwards and survived by luck of ordering -- and found by
+        # the §12.2 sweep when the same defect went LIVE in S79.
+        record_name='provenance.attack.json',
         note='ATTACK cycle on S77, by its own author, one cycle after it '
              'retracted two spikes on a single self-authored measurement (A22).')
     for p in problems:

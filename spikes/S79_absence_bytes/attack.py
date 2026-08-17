@@ -184,6 +184,13 @@ def main():
         HERE, deps=[os.path.join(HERE, '..', 'W2_witnessed_trie')],
         artifacts=[os.path.join(HERE, 'attack.json')],
         controls=C, falsifiers=[F], allow_dirty=True,
+        # H49: BESIDE the target's record, not on top of it. The first version of
+        # this file wrote provenance.json into S79's own directory and replaced
+        # its five controls and its absence.json digest with this attack's three
+        # -- the spike's D6 evidence destroyed on disk while the file read as a
+        # complete passing record of a run nobody made, and WORK_QUEUE still
+        # cited five. record() now REFUSES that; this is the remedy it names.
+        record_name='provenance.attack.json',
         no_deps_reason='attacking a committed spike from its own directory',
         note='allow_dirty is set and stated rather than flagged past: the dirty '
              'entry is THIS attack being written into the target spike dir. The '

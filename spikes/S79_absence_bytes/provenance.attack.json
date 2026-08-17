@@ -1,0 +1,140 @@
+{
+ "spike": "S79_absence_bytes",
+ "recorded_utc": "2026-08-17T13:09:17Z",
+ "note": "allow_dirty is set and stated rather than flagged past: the dirty entry is THIS attack being written into the target spike dir. The dependency under measurement, W2_witnessed_trie/trie_witness.py, is untouched by this cycle, and C_reproduces_S79 is the check that matters -- it lands on the committed figures to 0.0 B, which no edit to the prover could survive.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/../W2_witnessed_trie",
+   "head": "4c7b75d88234fa89d1424a4a959bc963030557ce",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/../W2_witnessed_trie": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/attack.json",
+   "sha256": "f986f7fb9bf5691a9a10ad06a6684dd2aebcfaa25388dd34df36b5d362957878",
+   "bytes": 2293,
+   "mtime": 1786972157,
+   "compared_ts": 1786971699,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_reproduces_S79",
+   "must_fire_because": "a refutation must reproduce the target first; if these probes do not land on the committed figures, this attack is about a different measurement and says so instead of publishing",
+   "can_fail_because": "absent_probes could be seed- or order-dependent, in which case the recomputed means would drift from the committed ones",
+   "null_must_contain": "a rerun that misses the committed numbers, which would mean the target is not reproducible",
+   "fired": true,
+   "detail": "recomputed against committed, per set \u2014 a gap of 0.0 B on all three is exact reproduction, which is what licenses the refutation below",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "recomputed_steps_bytes_mean": [
+     1588.85,
+     1929.61,
+     2291.2
+    ],
+    "committed_in_absence_json": [
+     1588.85,
+     1929.61,
+     2291.2
+    ],
+    "absolute_gap_B": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "C_proofs_still_verify",
+   "must_fire_because": "the omitted term must belong to proofs that are REAL: every non-membership proof measured here must verify against the root, or the bytes being counted are bytes of nothing (A29)",
+   "can_fail_because": "a probe that is actually present has no honest absence proof and prove_non_membership returns None, which would drop n below the probe count",
+   "null_must_contain": "proofs that fail verification, whose sizes would describe a broken prover",
+   "fired": true,
+   "detail": "every counted absence proof verifies against the root",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "all_probes_verified": true,
+    "probes_per_set": 200
+   }
+  },
+  {
+   "name": "C_omission_is_structural_not_framing",
+   "must_fire_because": "the omitted term must be the DIVERGENCE CHILD SET that the model charges, not per-step framing; otherwise this is S77 residual again and not a new finding",
+   "can_fail_because": "if divergence nodes were single-child, desc_bytes would be ~5 B of framing and the omission would be the naming problem, not a measurement one",
+   "null_must_contain": "a divergence descriptor whose bytes are all prefix and framing, with no child digests",
+   "fired": true,
+   "detail": "a 33 B child entry each, so >40 B cannot be framing alone (framing is 5 B + prefix)",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    80.2,
+    53.6,
+    100.9
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_omission_is_negligible",
+   "must_fire_because": null,
+   "can_fail_because": "the omitted descriptor is under 1% of the full proof in every key set",
+   "null_must_contain": "a corpus whose divergence nodes are narrow, making the omitted term small",
+   "fired": false,
+   "detail": "omitted descriptor as a percentage of the full proof, per set",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    4.8,
+    2.7,
+    4.22
+   ],
+   "refutes": "this attack -- if the divergence descriptor is under 1% of the proof, the two accountings differ by nothing that matters and S79 has a naming problem, not a measurement one",
+   "fires_when": "the omitted descriptor is under 1% of the full proof in every key set",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "attacking a committed spike from its own directory",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/../W2_witnessed_trie": {
+   "newest": 1786965691,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the divergence descriptor is under 1% of the proof in every set",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

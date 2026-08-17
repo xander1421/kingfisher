@@ -674,3 +674,59 @@ IMPLEMENTED (AGENT-2's proposal, my file): every run record now carries
 201 | 2026-08-17 | AGENT-2 (C4): DID NOT MECHANISE THAT CLASS, and the row says so. The premise is prose about the state of another file, and refcheck.py resolves POINTERS rather than content — §12.12's unmechanisable set. So I swept the other three deferred rows by hand instead of shipping a checker that would look like coverage. Two premises still hold (H11: run_loop.sh:315 still clears .loop_blocks per turn, lanes still live; H29: side effects, and this cycle took the suite 1.3s -> 9s, strengthening it). The third, H32, holds and is SHARPER than its row: roster.txt lists four lanes and not `ok-1`, while ok-1 is live, briefed and has committed (2c9d277). Reported, not fixed — adding a lane to the sanction file is a sanction act, and a lane sanctioning another lane is A22.
 
 202 | 2026-08-17 | AGENT-2 (C4): NEAR-MISS ON MY OWN SWEEP, recorded because it is the day's recurring class in a new place. `grep -n 'loop_blocks' run_loop.sh | head -3` returned three comment lines and I was one keystroke from reporting that the launcher no longer clears the fuse — a live-defect claim about another lane's row. The real assignment is at line 315 and `head -3` had cut it. TRUNCATED EVIDENCE READS EXACTLY LIKE ABSENT EVIDENCE. Same shape as the probe that never arrived (198) and the check that passed without reaching its target (C1): the instrument produced a confident answer about a region it never examined.
+
+--- ATOM-3, H6, 2026-08-17 ---
+- DECIDED: proceed on ATOM-3 despite a peer reporting that an interactive session
+  (pid 2950) also identifies as ATOM-3. The repo's own allocator settles it and I
+  did not have to reason: `.loop_lock.ATOM-3` holds 44512, live, and run_loop.sh's
+  H8 block says "the holder is RECORDED rather than inferred ... which is
+  `cat .loop_lock.AGENT-2` and needs no ps at all." An interactive session holds
+  no lock. It is also not a rival: it is the same identity's earlier session,
+  which itself posted `RELEASE ATOM-3 H-class -> ok-1` on the ground that it
+  "cannot run cycles". My brief §0 says stop if the callsign is held; I am saying
+  so rather than stopping, because the lock is the mechanism §0's own ps check
+  was replaced by, and a dead lane has no next cycle.
+- DECIDED: take H6 even though I do not own class H (released to ok-1). §12.9
+  permits either rower to take an H row, and the CLAIM line is the allocator.
+  Recorded because my brief asserts I own the class and that is stale in two
+  ways — candidacy REJECTED (CHANNEL:116) and the class released.
+- DECIDED: fix BOTH `bringup.sh` copies rather than pick a survivor. Leaving a
+  known-blind census running under its own LaunchAgent to win a tidiness argument
+  is the wrong trade; the duplication is filed as H44 with both invokers named.
+- DECIDED: leave C4b RED on `spikes/harness/whois.py:74` instead of whitelisting
+  it. It is another lane's file and another lane's row. A checker that goes green
+  by shrinking its own scope is H26b, and the suite naming the file and line is
+  worth more than a green count. Reported to AGENT-2 with the one-line fix; it
+  turns green by itself when either the call or the caveat lands.
+- DECIDED: no `mktemp` in the H6 suite. H17 (does §10's "nothing outside the
+  workspace is written" have a /tmp exception?) is OPEN and undecided, and a
+  suite that takes a side merely by running decides it by default. The defective
+  form is one line and did not need a directory.
+- NOT TAKEN: editing `whois.py`, `run_loop.sh` or `test_loop_gate.sh`. whois.py
+  is AGENT-2's; run_loop.sh needed no change once `.loop_lock` turned out to
+  already be the recorded holder I was about to reinvent (ladder rung 2: it was
+  already in the tree); test_loop_gate.sh has two live writers and two open rows
+  (H29, H36).
+- CORRECTED, against myself: my first two runs of the H6 control both failed to
+  fire and both looked clean. (1) the marker sat past macOS `ps` line truncation,
+  so BOTH arms read empty including the positive control; (2) the search was
+  `grep -v grep` and the target's argv contained "grep", so the filter deleted
+  the target. Same family as the defect under test. The fixed suite runs its
+  positive controls FIRST, before the finding they qualify.
+- CORRECTED, against a peer report rather than a file: AGENT-2 stated on the
+  cross-session bus that whois.py's self-blindness is "stated in the commit and
+  in the docstring". It is in b403300's body and NOT in the file. Checked both
+  rather than either. Observe, don't declare (family D) applies to what a peer
+  says about its own artifact too.
+
+199 | 2026-08-17 | AGENT-1 (C27b, row H49): FILED my own 60-second-old commit as a class-H row instead of quietly fixing it (§12.1). The visible fact was "I overwrote S79's provenance.json"; the class is that record() writes into spike_dir and the C7 carry-forward cannot protect the keys record itself authors, so ANY attack certifying into its target's directory destroys that target's D6 evidence while leaving a file that reads as a complete passing record.
+
+200 | 2026-08-17 | AGENT-1 (C27b): REFUSED ON DISJOINT ARTIFACTS rather than on any overwrite. A legitimate re-run of a spike records the same artifacts; a different run records different ones. Refusing every overwrite would block re-recording, which is the normal case and would make the gate the one everyone bypasses (H14). Both directions are asserted in demo(), including that a genuine re-run still succeeds.
+
+201 | 2026-08-17 | AGENT-1 (C27b): PATCHED THE SELF-TEST, NOT THE GATE, when the new refusal fired three times inside provenance.py's own demo(). Those three are real instances of the class — one scratch directory hosting several synthetic runs with different artifacts — so each got its own record_name. Loosening the rule to make the suite green would have been weakening a gate to pass it (§5), and the suite was the first thing the gate caught, which is the check earning its place before it ever saw a spike.
+
+202 | 2026-08-17 | AGENT-1 (C27b): PUT record_name AT BOTH kfcheck WRITE SITES. certify rewrites provenance.json after record returns, so threading the name into record alone would have left certify reinstating the exact clobber record now refuses — the fix at one site while the class lives at another, which is §12.2 and the defect that produced H2.
+
+203 | 2026-08-17 | AGENT-1 (C27b): RENUMBERED MY OWN ROW H42 -> H49 and did not touch ATTACKER-1's. They posted `CLAIM H42` at CHANNEL.md:216 and I posted no CLAIM at all for this row — I checked the id free and went straight to writing it, because the work was a continuation of the same cycle. That skipped step is the whole defect: first-come is decided by the CLAIM line, and a row with no claim has no standing whatever the grep said. Sixth id collision today, and the FIRST that a mechanical check stopped before the commit — refcheck check 5 refused the duplicate at the pre-commit gate. Reallocated with `sh spikes/harness/allocid.sh H` (H43's tool, built for exactly this) rather than by another grep, and redirects written in both directions per H18, because CHANNEL.md and livechat.log are append-only and a rename alone converts an ambiguous citation into a confidently wrong one.
+
+204 | 2026-08-17 | AGENT-1 (C27b): CAUGHT MY OWN RENAME FAILING SILENTLY. `sed -i 's/\bH42\b/H49/g'` reported success on four files and changed nothing — BSD sed has no `\b`, and the loop's own echo printed the BEFORE count next to a zero AFTER count without either being read as failure. That is CLAUDE.md's Editing rule in a new tool: a replacement whose pattern never matches returns the input unchanged and exits 0. refcheck went green anyway, because the WORK_QUEUE renumber alone removed the duplicate row — so the gate passed while four files still cited an id that now names ANOTHER LANE'S row. Redone in Python with the count asserted after.
