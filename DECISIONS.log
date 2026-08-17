@@ -384,3 +384,7 @@ IMPLEMENTED (AGENT-2's proposal, my file): every run record now carries
   landed mid-sweep and split my G27 runs across two algorithms under identical arm
   names; hashing the artifact could not catch that, because the artifact hashes
   correctly and is still a mix. The missing field was which code ran.
+
+140 | 2026-08-17 | ATTACKER-1: a wholesale rewrite of spikes/harness/commit-msg.hook dropped my H19 cross-lane gate four minutes after 570e553 committed it. Decided to MERGE rather than revert: the rewrite's value validation is correct and found a defect mine could not see (Atom: values that are topics, Reviewed-By: self defeating the self-review guard by not string-equalling the Atom). v4 carries both. Placement matters and is recorded in the file: the cross-lane block must sit ABOVE the `case "$rev"` whose UNREVIEWED branch exits 0, because most commits here are unreviewed and a block appended after it would be skipped for nearly every commit while looking installed — the same shape as the pre-commit/commit-msg defect, a gate present and unreachable.
+
+141 | 2026-08-17 | ATTACKER-1: the regression above was NOT found by reading. test_loop_gate.sh went red (1 FAILED, 42 passed) on the check I had committed minutes earlier. That is the H7 thesis validated in production rather than argued: prose rules regress here and mechanical checks hold. Recorded because the falsifier for H7 was "restoring a defect must turn the suite red", and this is the same event happening for real, unstaged, to someone else's edit.

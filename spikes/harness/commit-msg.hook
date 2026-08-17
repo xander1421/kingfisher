@@ -1,5 +1,12 @@
 #!/bin/sh
-# GATE for MISSION_LOOP §13.1. Validates VALUES, not just presence.
+# commit-msg.hook v4 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
+# presence, and refuses a commit carrying another lane's per-lane files.
+#
+# v2 (H19, ATTACKER-1) added the cross-lane block. v3 rewrote this file wholesale
+# to validate trailer VALUES and dropped v2 four minutes after it was committed.
+# v4 is both: the two gates are orthogonal and each caught a defect the other
+# cannot see. Version bumped per §12.7 so the next stall is diagnosed against a
+# list rather than rediscovered.
 #
 # v1 checked only that the trailer keys existed. The history shows what that
 # bought: 11 of 26 `Atom:` values were topic labels ("mutation-detection"),
@@ -42,6 +49,62 @@ if ! is_callsign "$atom"; then
   echo "commit-msg REFUSED — Atom '$atom' is not a callsign."
   echo "That field names WHO made the commit, not what it was about."
   echo "Expected e.g. AGENT-2, ATOM-3, ATTACKER-1. Subject line carries the topic."
+  exit 1
+fi
+
+# --- A COMMIT MAY NOT CARRY ANOTHER LANE'S PER-LANE FILES. (H19, ATTACKER-1.)
+#
+# RESTORED 2026-08-17 after a wholesale rewrite of this file dropped it four
+# minutes after it was committed (570e553). That is the same event this block
+# exists for and the second time this day one lane's committed work vanished
+# under another's rewrite of a shared file -- see CHANNEL, "my git-hygiene
+# sections (9e355d4) were replaced wholesale by e990f11". It was not noticed by
+# reading; `test_loop_gate.sh` went red on it.
+#
+# MUST STAY ABOVE the `case "$rev"` below, whose UNREVIEWED branch exits 0 --
+# and most commits here are unreviewed, so a block appended after it would be
+# skipped for almost every commit while looking installed.
+#
+# THREE LANES SHARE ONE GIT INDEX, and `git commit` commits the index, not the
+# adds you made. Lane A's correctly-scoped `git add` followed seconds later by
+# lane B's `git commit` puts A's whole cycle into B's commit under B's `Atom:`,
+# with BOTH lanes obeying §13's "add paths you touched, never -A". Observed:
+# b529081, `Atom: AGENT-1`, carrying HANDOFF.ATTACKER-1.md,
+# spikes/H7_harness_attack/ and 840 lines of a second lane's work. The staged
+# set and the Atom are both visible here, so the mismatch is DECIDABLE.
+#
+# Ownership is inferred from per-lane FILENAMES, which is sound only because
+# §12.6 independently obliges the harness to keep state per-lane. Recorded as
+# the assumption it is. `prompts/<ATOM>.md` is deliberately NOT listed: spawn
+# briefs are written by the harness owner FOR a lane.
+foreign=""
+for f in $(git diff --cached --name-only 2>/dev/null); do
+  owner=""
+  case "$f" in
+    HANDOFF.*.md)    owner=${f#HANDOFF.}; owner=${owner%.md} ;;
+    loop_*.log)      owner=${f#loop_};    owner=${owner%.log} ;;
+    .loop_signal.*)  owner=${f#.loop_signal.} ;;
+    .loop_exit.*)    owner=${f#.loop_exit.} ;;
+    .loop_blocks.*)  owner=${f#.loop_blocks.} ;;
+    .heartbeat.*)    owner=${f#.heartbeat.} ;;
+    *) continue ;;
+  esac
+  [ -z "$owner" ] && continue
+  [ "$(up "$owner")" = "$atom" ] && continue
+  # `Carries:` keeps the honest cross-lane commit -- one atom repairing
+  # another's journal -- off `--no-verify`, which would switch off the trailer
+  # and self-review gates too and is therefore the worse escape.
+  echo "$msg" | grep -qi "^Carries:.*$owner" && continue
+  foreign="$foreign $f"
+done
+if [ -n "$foreign" ]; then
+  echo "commit-msg REFUSED — Atom '$atom' is committing another lane's files:"
+  for f in $foreign; do echo "    $f"; done
+  echo
+  echo "The index is SHARED. Another lane's 'git add' is in it, and 'git commit'"
+  echo "takes the index, not your adds. Two ways out, both honest:"
+  echo "    git commit --only <your paths>     commit your paths, ignore the index"
+  echo "    Carries: <ATOM>                    trailer, if you meant to carry it"
   exit 1
 fi
 
