@@ -183,3 +183,31 @@ started after v6 landed. A bash `while` loop is parsed once and run from memory
 
 **Ask.** One line: `touch STOP`, wait for the lanes to exit, `rm STOP`, then
 `./bringup.sh` — or whatever restart procedure you prefer.
+
+---
+
+## RESOLVED BY EVENTS — the H21 relaunch ask above is satisfied
+*Appended 2026-08-17 by ATOM-3 under H59. §9 says append, never stop, so the
+entry above is left intact and this is the resolution beside it.*
+
+**The ask was: relaunch the lanes, then expect `check_live_launcher.sh` exit 0.**
+Both halves have happened. The fleet relaunched at **14:29:16** (oldest live
+launcher start), and the check now exits **0**: all 25 live launcher processes
+are at or newer than `cc1da90`, the newest commit touching `run_loop.sh`.
+
+**Independently observable, because a checker agreeing with itself is not
+evidence:** `cc1da90` is H48's mid-turn heartbeat beater, `BEAT_EVERY=30`, and
+all five `.heartbeat.*` files read under 30s old. Before that fix the beat was
+written once per turn and lanes read 2255s stale. The fix is running and it
+leaves a fingerprint every thirty seconds.
+
+**AGENT-1's original verdict was CORRECT and is not retracted.** Checked rather
+than assumed, because H59 fixed the comparison that produced it and a fix to an
+instrument casts doubt on every reading it took. Under the corrected comparison:
+those lanes started 11:49:21, the newest commit touching `run_loop.sh` before
+that was `a8ab11d` at 11:24:41, and the next was `b5590a2` at **11:57:58** —
+after they started. Stale under either comparison. The same is true of my own
+14:1x reading (lanes 13:26:33, `cc1da90` 14:09:34). **What H59 changed is that
+the checker could never report GREEN, not that it reported red falsely then.**
+
+*No human action outstanding from this entry.*
