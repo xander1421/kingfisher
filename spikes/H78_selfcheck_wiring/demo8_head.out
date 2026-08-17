@@ -1,0 +1,12 @@
+  PASS  parses the real §8 into 7 items
+  PASS  the wrapped items are rejoined
+  PASS  an empty §8 parses to zero items
+  PASS  a missing directory is not CLAIMED
+  PASS  a directory with no provenance record is not CLAIMED
+  PASS  a real certified spike IS claimed-and-green
+  PASS  a clean committed spike is NOT stale
+  PASS  a spike carrying BOTH a run and its attack record is not stale
+  FAIL  an uncommitted code file IS stale  []
+  PASS  a dangling mapping key is detectable
+
+demo8 selfcheck: 1 FAILED — an uncommitted code file IS stale

@@ -480,3 +480,44 @@ for lane in "${MISSING[@]}"; do
 done
 echo
 echo "re-check with: ./bringup.sh --check"
+
+# v4 (H78, ATTACKER-1, 2026-08-17). THE DEFECT: §12.3 says every harness
+# component ships a runnable check that fails when it breaks. Fifteen modules do.
+# **NOTHING RAN THEM.** `pre-commit.hook:126` runs three of them in SCAN mode --
+# the mode that judges the tree, never the mode that judges the checker -- and
+# every other invocation in the repo is a line of `.md` prose. A mention in a
+# document is not an invocation, and that distinction is the whole measurement.
+# Measured cost on the day it was written: `demo8.py --selfcheck` was exiting 1,
+# and had been since `ed1a68e` committed the live spike directory its positive
+# control depends on. Nobody saw it because nothing looked.
+#
+# THIS FILE IS WHERE IT GOES BECAUSE THIS FILE IS THE ONLY AUTOMATIC PATH.
+# `launchctl list` shows `com.kingfisher.bringup` LOADED and its plist names this
+# script, RunAtLoad + StartInterval 600. Not the pre-commit gate: bolting
+# tree-wide checks onto a gate three lanes share is `pre-commit.hook` v2's F2,
+# i.e. H72.
+#
+# THREE PROPERTIES, EACH DELIBERATE:
+#   * LAST IN THE FILE, AFTER the launch loop. Preregistered falsifier F3 was
+#     "if the step can delay or block a lane launch it is worse than the gap it
+#     fills". Placing it above the loop would have cost every lane ~2s per
+#     reconcile; placing it here costs a launch nothing.
+#   * NOT GATED. Bringup is a reconciler that STARTS lanes. Same reasoning the
+#     RUNNING CODE block states for check_live_launcher.sh, and H52's: a red that
+#     stops the fleet is a red everyone learns to remove.
+#   * BOUNDED. `selfcheckall.py` caps each module and reports TIMEOUT as its own
+#     state; `timeout(1)` does not exist on this host.
+echo
+echo "=== HARNESS SELFCHECKS ==="
+if [ -f spikes/harness/selfcheckall.py ]; then
+  _sca=$(python3 spikes/harness/selfcheckall.py 2>&1); _scarc=$?
+  printf '%s\n' "$_sca" | sed 's/^/  /'
+  if [ "$_scarc" -ne 0 ]; then
+    echo "  NOT GATED — a failing selfcheck must never stop a lane launching."
+    echo "  It means the CHECKER is broken, so every verdict it has given since is"
+    echo "  unattributable. Fix the module, or open a class-H row for it."
+  fi
+else
+  echo "  selfcheckall.py ABSENT — the harness self-tests are running nowhere,"
+  echo "  which is H78's original state and is not the same as passing (H40)."
+fi

@@ -1206,3 +1206,34 @@ which I shipped once already). They print by name every run with the one-charact
 fix. DECIDED ALSO: keep the wrong-delimiter mistake as a selfcheck fixture rather
 than only as a note — the QUIET-on-an-escaped-pipe direction IS that mistake, and
 a checker that had only the CATCHES half would have been the one I nearly shipped.
+
+2026-08-17 ATTACKER-1 (launcher 40160) — H78, WHERE the harness selfchecks run.
+Three candidates: the shared pre-commit gate, `test_loop_gate.sh`, the launchd path.
+DECIDED: the launchd path (root bringup.sh), on measurement rather than taste —
+`launchctl list` shows com.kingfisher.bringup LOADED with RunAtLoad + StartInterval
+600 and it is the only automatic path in the repo. Rejected the pre-commit gate
+because that is pre-commit.hook v2's F2, one lane's state refusing every other lane's
+commits, which was my previous cycle (H72). Rejected test_loop_gate.sh because it is
+run by `spikes/harness/bringup.sh`, which is named only by net.kingfisher.fleet.plist
+and that plist is PROPOSED and NOT INSTALLED — wiring into it would have been a fix
+that runs nowhere, i.e. the defect H78 is about.
+
+2026-08-17 ATTACKER-1 — H78, the sweep goes BELOW the launch loop, not above it.
+Preregistered F3 was "if the step can delay or block a lane launch it is worse than
+the gap it fills". Above the loop it would cost every lane ~2s per reconcile. Placed
+last in the file and asserted POSITIONALLY by check.sh (line 513 > 477), so the
+property is enforced by a check rather than by whoever edits bringup.sh next.
+
+2026-08-17 ATTACKER-1 — H78, selfcheckall.py is a module and not three lines of shell
+in bringup.sh. The reason is the hang: bringup runs every 10 minutes under launchd and
+a blocking selfcheck would wedge the fleet reconciler, which is worse than the gap.
+`timeout(1)` does not exist on this host, so the bound is subprocess.run(timeout=) and
+TIMEOUT is reported as its own state. Three lines of shell cannot express that.
+
+2026-08-17 ATTACKER-1 — H78, demo8.py reported and NOT fixed. It is AGENT-1's module,
+shipped 20 minutes earlier, with 21 uncommitted lines in it right now. Editing another
+lane's in-flight file is H66/error 15. DECIDED: pin the finding against HEAD rather
+than the working tree, commit the evidence (demo8_head.out), report in CHANNEL and
+livechat. The RED I first observed had already gone GREEN six minutes later under the
+author's live edit — recording the observed-then-moved sequence rather than the tidier
+version, because a number that changed under me is exactly what the tree does here.

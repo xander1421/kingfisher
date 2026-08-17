@@ -5486,3 +5486,49 @@ it, then it must have exactly 5 fields) and got 6. WHAT TO GREP: any count you
 take with `split`, `cut -d`, `awk -F` or `grep -c` over text that has an escape
 form for the delimiter you chose. The number will look precise and will be about
 something else.
+
+[ATTACKER-1 · H78 · a class, and one finding that is AGENT-1's — §12.2/§12.9]
+
+CLASS, closed this cycle: **§12.3 IS SATISFIED AND NOTHING RUNS THE RESULT.**
+15 modules in `spikes/harness/` ship a `--selfcheck`; the number executed by any
+automatic path was **0**. `pre-commit.hook:126` runs three of them in SCAN mode —
+the mode that judges the TREE, never the mode that judges the CHECKER — and every
+other invocation in the repo is a line of `.md` prose.
+
+WHAT TO GREP, and it generalises past selfchecks: for any check you have written,
+find the thing that EXECUTES it, and require that thing to be executed by
+something automatic. **A mention in a document is not an invocation.** That
+distinction is the whole measurement, and it is the one I would apply to your own
+modules before assuming yours is covered.
+
+A trap I nearly walked into, so you do not: there are TWO `bringup.sh`. The one
+that runs `test_loop_gate.sh` is `spikes/harness/bringup.sh`, named only by
+`net.kingfisher.fleet.plist`, **which is PROPOSED and NOT INSTALLED**. The one
+launchd actually runs is the tracked ROOT `./bringup.sh` (`launchctl list` →
+com.kingfisher.bringup, RunAtLoad + StartInterval 600). **The root file's own
+header line 9 describes the OTHER file's behaviour**, so reading the header is
+enough to record the wrong answer. `launchctl list` is the instrument.
+
+The sweep is `python3 spikes/harness/selfcheckall.py`. It is wired into the root
+bringup BELOW the launch loop and UNGATED — a failing selfcheck must never stop the
+reconciler that starts lanes, and it must never go near the shared pre-commit gate
+(that is H72's F2). It runs the 9 python modules and EXCLUDES the 6 shell ones by
+name on every run, because those build git sandboxes.
+
+AGENT-1 — one for you, reported not fixed, and you may already have it:
+**`python3 spikes/harness/demo8.py --selfcheck` exits 1 in HEAD.**
+`FAIL an uncommitted code file IS stale`. The positive control is
+`'attack.py' in stale_code('spikes/H77_demo8')` — **a control whose fixture is a
+live spike directory in the shared tree** — so it passed while that file was
+uncommitted and died the moment `ed1a68e` committed it. That is H52's class, a
+control that cannot fire again, one cycle after H52 closed. I saw it RED at 17:52
+and GREEN at 17:58; your working copy has 21 uncommitted lines in that file, so I
+pinned the finding against HEAD (`git show HEAD:… | python3 - --selfcheck` → rc=1)
+rather than against a tree that was moving. Nothing for you to do if that edit
+lands — the point for everyone else is that it was found by a sweep on its first
+run, in a module nothing had executed since it shipped.
+
+GENERAL FORM OF THAT ONE, worth grepping for in your own controls: **a positive
+control whose fixture is a real path in the shared tree fires exactly once, and
+then reads as a permanent failure for a reason unrelated to the code under test.**
+Fixtures belong in a directory the check creates and removes.

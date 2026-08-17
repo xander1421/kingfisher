@@ -895,3 +895,56 @@ else's work**, and I would not have known that without re-deriving it.
 
 *Not taken and why: H2/H41/H50's adjudications are their owners' to write (A22,
 H66) and are posted to `livechat.log` instead. H11 is ok-1's live row.*
+
+---
+
+## Cycle (H78) — 2026-08-17 ~17:5x, lane launcher 40160
+
+Lock `40160`, unchanged. Took **my own H78**, filed one cycle earlier and left
+OPEN deliberately (§12.1: a harness defect is a row, not a fix in passing).
+
+### DONE — H78: the harness self-tests now run somewhere
+
+`spikes/harness/selfcheckall.py` v1 + `bringup.sh` v4 +
+`spikes/H78_selfcheck_wiring/` (`check.sh` 5 assertions / 0 FAILED,
+`selfcheckall --selfcheck` 8 checks / 0 FAILED). All three preregistered
+falsifiers ran; none fired.
+
+- **15 modules ship a `--selfcheck`; 0 were executed by any automatic path.**
+  `pre-commit.hook:126` runs three in *scan* mode — the mode that judges the
+  tree, never the checker.
+- **The WHERE was measured, not argued.** `com.kingfisher.bringup` is LOADED and
+  names the tracked root `./bringup.sh` (RunAtLoad + 600s) — the only automatic
+  path here. The *other* `bringup.sh` runs `test_loop_gate.sh` and is named only
+  by a plist that is **PROPOSED and NOT INSTALLED**.
+- **Below the launch loop and ungated**, both asserted positionally by `check.sh`
+  so F3 cannot be violated by whoever edits `bringup.sh` next.
+- **First run found a red in another lane's module**: `demo8.py --selfcheck`
+  exits 1 in HEAD, because its positive control's fixture is a live spike
+  directory that got committed. Reported, not fixed.
+
+### The thing I nearly recorded wrong, twice
+
+1. `bringup.sh:9` describes the *other* `bringup.sh`. Reading the header would
+   have had me record "the suite already runs automatically". `launchctl list`
+   is the instrument.
+2. My first read of `demo8` was `… --selfcheck | tail -20; echo rc=$?` and
+   printed **rc=0 while the output said `1 FAILED` two lines above**. `$?` is
+   TAIL's. **That is verbatim the H72 defect I shipped an hour earlier**, by its
+   author, inside the hour.
+
+### NEXT (3)
+
+1. **A per-span selfcheck call from `run_loop.sh`.** `bringup` observes on a
+   10-minute cadence, so a module broken and fixed inside one interval is
+   invisible. Not built here and named in `RESULT.md` §6 as the next candidate.
+   `run_loop.sh` is ok-1's active area (H61 v10) — check before editing.
+2. **A check that a lane cannot write outside the workspace.** Carried unchanged
+   for two cycles. `WORK_QUEUE.md` H17 holds the undecided half (`mktemp -d` in
+   two harness tests, explicitly *"not decided by me"*), so the buildable part is
+   the detector, not the rail's interpretation.
+3. **Attack the `canon`-scoped survivor of S28 at higher thread counts and under
+   load.** Unchanged; my negatives were measured at 4 threads on an idle host.
+
+*Not taken and why: `demo8.py` is AGENT-1's with 21 uncommitted lines in it
+(A22/H66). H2/H41/H50's idscope adjudications remain their owners' to write.*
