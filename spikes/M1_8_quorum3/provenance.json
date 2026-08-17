@@ -1,21 +1,34 @@
 {
  "spike": "M1_8_quorum3",
- "recorded_utc": "2026-08-17T10:43:04Z",
- "note": "REFUTED: 14 empty / 25 import-failure / 25 evaluated",
+ "recorded_utc": "2026-08-17T10:47:38Z",
+ "note": "REFUTED: 14 empty / 24 import-failure / 4 error-only / 22 evaluated",
  "repos": [
   {
-   "path": "q3.py",
-   "head": "<error: [Errno 20] Not a directory: 'q3.py'>",
+   "path": ".",
+   "head": "73b0de5ad802f13bbb4dab1620ddfce369e1cee1",
    "clean": false,
    "dirty_files": [
-    "[Errno 20] Not a directory: 'q3.py'>"
+    "spikes/M1_8_quorum3/provenance.json"
    ],
-   "diff_sha256": "92f9c86de1e754d5c034e8d142119ef7f08e3e659cd0a5692dec0dc1d355e146",
-   "diff_bytes": 44
+   "diff_sha256": "af2f68cbdc598bc9cdb0c18321557fe9024628053ae18d54f8aa40e36a95964d",
+   "diff_bytes": 2274
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "73b0de5ad802f13bbb4dab1620ddfce369e1cee1",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
-  "q3.py": {
+  ".": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
    "files": 0,
    "combined_sha256": "44136fa355b3678a",
    "per_file": {}
@@ -27,8 +40,8 @@
    "sha256": "4126a0b04b115c5219a4f18ec36162487e01d2a9ab4cd62bb051f7365db06866",
    "bytes": 348694,
    "mtime": 1786963279,
-   "compared_ts": 1786963279,
-   "compared_clock": "mtime"
+   "compared_ts": 1786963426,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -50,7 +63,7 @@
   {
    "name": "empty-result-guard-fires",
    "must_fire_because": "unwired, all 64 key on sha256(\"\") and adjudicate INSUFFICIENT_DOMAINS",
-   "can_fail_because": "a corpus where every program emits output leaves this all-INSUFFICIENT_DOMAINS and the guard unexercised",
+   "can_fail_because": "a corpus where every program emits output leaves this all-INSUFFICIENT_DOMAINS, guard unexercised",
    "null_must_contain": "at least one NO_RESULTS",
    "fired": true,
    "detail": "",
@@ -144,8 +157,8 @@
     "evaluated",
     "empty",
     "import-failure",
-    "evaluated",
-    "evaluated",
+    "error-only",
+    "error-only",
     "import-failure",
     "evaluated",
     "import-failure",
@@ -191,23 +204,32 @@
     "import-failure",
     "import-failure",
     "empty",
-    "evaluated",
+    "error-only",
     "evaluated",
     "empty",
-    "evaluated"
+    "error-only"
    ]
   }
  ],
  "no_deps_reason": null,
  "source_mtimes": {
-  "q3.py": {
-   "newest": 0,
+  ".": {
+   "newest": 1786963426,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1786963646,
    "from": "<HEAD commit>"
   }
  },
  "problems": [
-  "DIRTY TREE q3.py at <error: : 1 modified. The build is NOT <error: ."
+  "STALE ARTIFACT result.json predates harness source by 0.1h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "DIRTY TREE . at 73b0de5a: 1 modified. The build is NOT 73b0de5a."
  ],
  "ok": false,
- "falsifier": "the corpus has full discriminating power: all 64 programs evaluate, so 64/64 agreement is evidence of cross-architecture evaluation determinism"
+ "falsifier": "the corpus has full discriminating power: all 64 programs evaluate, so 64/64 agreement is evidence of cross-architecture evaluation determinism",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
 }

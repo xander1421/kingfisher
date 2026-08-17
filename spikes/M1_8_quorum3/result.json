@@ -1,5 +1,5 @@
 {
- "gate": "device quiet: cpu_busy 1.9% (limit 15%), runnable 1, thermal 38600m, battery status=5 level=100 charging=true powered=1",
+ "gate": "device quiet: cpu_busy 7.4% (limit 15%), runnable 1, thermal 42000m, battery status=5 level=100 charging=true powered=1",
  "fuel": 2000000,
  "bytes_pushed": 174063,
  "normalisation": "canon",
@@ -67,8 +67,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 17.6,
-     "observed_ms": 61.9,
+     "wall_ms": 13.1,
+     "observed_ms": 59.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -101,8 +101,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 14.2,
-     "observed_ms": 58.7,
+     "wall_ms": 12.0,
+     "observed_ms": 53.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -135,8 +135,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 674.9,
-     "observed_ms": 719.7,
+     "wall_ms": 561.7,
+     "observed_ms": 604.4,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -173,8 +173,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 2002,
-     "wall_ms": 122.6,
-     "observed_ms": 169.6,
+     "wall_ms": 113.2,
+     "observed_ms": 166.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -219,8 +219,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.0,
-     "observed_ms": 75.0,
+     "wall_ms": 11.7,
+     "observed_ms": 70.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -253,8 +253,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.5,
-     "observed_ms": 71.2,
+     "wall_ms": 10.8,
+     "observed_ms": 64.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -287,8 +287,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.3,
-     "observed_ms": 743.0,
+     "wall_ms": 24.0,
+     "observed_ms": 628.3,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -325,8 +325,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 631,
-     "wall_ms": 123.9,
-     "observed_ms": 293.6,
+     "wall_ms": 114.1,
+     "observed_ms": 280.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -371,8 +371,8 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0,
-     "observed_ms": 86.0,
+     "wall_ms": 11.3,
+     "observed_ms": 82.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -405,8 +405,8 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0,
-     "observed_ms": 82.3,
+     "wall_ms": 11.7,
+     "observed_ms": 75.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -439,8 +439,8 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.4,
-     "observed_ms": 766.5,
+     "wall_ms": 23.5,
+     "observed_ms": 652.0,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -477,8 +477,8 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 2648,
-     "wall_ms": 119.5,
-     "observed_ms": 413.2,
+     "wall_ms": 121.2,
+     "observed_ms": 401.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -523,8 +523,8 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 96.8,
+     "wall_ms": 11.3,
+     "observed_ms": 93.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -557,8 +557,8 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 93.0,
+     "wall_ms": 11.1,
+     "observed_ms": 86.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -591,8 +591,8 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.8,
-     "observed_ms": 790.4,
+     "wall_ms": 24.0,
+     "observed_ms": 675.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -629,8 +629,8 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 1919,
-     "wall_ms": 118.2,
-     "observed_ms": 531.5,
+     "wall_ms": 120.6,
+     "observed_ms": 522.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -675,8 +675,8 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.8,
-     "observed_ms": 108.9,
+     "wall_ms": 11.5,
+     "observed_ms": 104.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -709,8 +709,8 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.2,
-     "observed_ms": 103.2,
+     "wall_ms": 10.3,
+     "observed_ms": 96.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -743,8 +743,8 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.5,
-     "observed_ms": 814.0,
+     "wall_ms": 24.4,
+     "observed_ms": 699.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -781,8 +781,8 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 1667,
-     "wall_ms": 114.5,
-     "observed_ms": 646.1,
+     "wall_ms": 120.0,
+     "observed_ms": 641.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -827,8 +827,8 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.5,
-     "observed_ms": 120.3,
+     "wall_ms": 11.7,
+     "observed_ms": 115.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -861,8 +861,8 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1,
-     "observed_ms": 114.3,
+     "wall_ms": 10.4,
+     "observed_ms": 106.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -895,8 +895,8 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.2,
-     "observed_ms": 837.3,
+     "wall_ms": 23.5,
+     "observed_ms": 723.1,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -933,8 +933,8 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 1413,
-     "wall_ms": 119.1,
-     "observed_ms": 765.2,
+     "wall_ms": 118.0,
+     "observed_ms": 759.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -979,8 +979,8 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.4,
-     "observed_ms": 132.6,
+     "wall_ms": 11.4,
+     "observed_ms": 127.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1013,8 +1013,8 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.3,
-     "observed_ms": 127.2,
+     "wall_ms": 10.8,
+     "observed_ms": 117.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1047,8 +1047,8 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.7,
-     "observed_ms": 861.1,
+     "wall_ms": 23.0,
+     "observed_ms": 745.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -1085,8 +1085,8 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 501,
-     "wall_ms": 116.7,
-     "observed_ms": 882.1,
+     "wall_ms": 117.3,
+     "observed_ms": 876.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1131,8 +1131,8 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1,
-     "observed_ms": 143.7,
+     "wall_ms": 11.2,
+     "observed_ms": 138.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1165,8 +1165,8 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2,
-     "observed_ms": 138.5,
+     "wall_ms": 10.4,
+     "observed_ms": 127.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1199,8 +1199,8 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.7,
-     "observed_ms": 884.8,
+     "wall_ms": 24.2,
+     "observed_ms": 770.1,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -1237,8 +1237,8 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 607,
-     "wall_ms": 118.2,
-     "observed_ms": 1000.4,
+     "wall_ms": 115.0,
+     "observed_ms": 991.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1283,8 +1283,8 @@
      "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2,
-     "observed_ms": 154.7,
+     "wall_ms": 12.0,
+     "observed_ms": 150.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1317,8 +1317,8 @@
      "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.4,
-     "observed_ms": 148.6,
+     "wall_ms": 9.9,
+     "observed_ms": 137.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1352,7 +1352,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 23.5,
-     "observed_ms": 908.0,
+     "observed_ms": 793.7,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -1389,8 +1389,8 @@
      "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
      "bytes_pushed": 91,
-     "wall_ms": 115.9,
-     "observed_ms": 1116.2,
+     "wall_ms": 121.4,
+     "observed_ms": 1112.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1435,8 +1435,8 @@
      "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.1,
-     "observed_ms": 169.7,
+     "wall_ms": 14.7,
+     "observed_ms": 164.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1469,8 +1469,8 @@
      "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.0,
-     "observed_ms": 161.4,
+     "wall_ms": 13.6,
+     "observed_ms": 150.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1503,8 +1503,8 @@
      "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 27.9,
-     "observed_ms": 935.7,
+     "wall_ms": 28.3,
+     "observed_ms": 821.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -1541,8 +1541,8 @@
      "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
      "bytes_pushed": 59489,
-     "wall_ms": 126.5,
-     "observed_ms": 1242.6,
+     "wall_ms": 143.7,
+     "observed_ms": 1256.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1591,8 +1591,8 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 72.2,
-     "observed_ms": 242.0,
+     "wall_ms": 72.3,
+     "observed_ms": 237.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1632,8 +1632,8 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 71.2,
-     "observed_ms": 232.5,
+     "wall_ms": 71.9,
+     "observed_ms": 222.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1673,8 +1673,8 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 124.8,
-     "observed_ms": 1060.4,
+     "wall_ms": 122.6,
+     "observed_ms": 944.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -1718,8 +1718,8 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 3952,
-     "wall_ms": 272.1,
-     "observed_ms": 1514.6,
+     "wall_ms": 262.0,
+     "observed_ms": 1518.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1778,8 +1778,8 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.0,
-     "observed_ms": 255.1,
+     "wall_ms": 10.9,
+     "observed_ms": 247.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1812,8 +1812,8 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0,
-     "observed_ms": 243.6,
+     "wall_ms": 10.8,
+     "observed_ms": 233.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1846,8 +1846,8 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.5,
-     "observed_ms": 1085.0,
+     "wall_ms": 23.9,
+     "observed_ms": 968.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -1884,8 +1884,8 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 45,
-     "wall_ms": 122.4,
-     "observed_ms": 1637.0,
+     "wall_ms": 119.1,
+     "observed_ms": 1637.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1934,8 +1934,8 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.9,
-     "observed_ms": 268.3,
+     "wall_ms": 11.4,
+     "observed_ms": 259.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -1975,8 +1975,8 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.4,
-     "observed_ms": 255.1,
+     "wall_ms": 11.2,
+     "observed_ms": 244.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2016,8 +2016,8 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 25.1,
-     "observed_ms": 1110.0,
+     "wall_ms": 24.2,
+     "observed_ms": 992.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -2061,8 +2061,8 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 808,
-     "wall_ms": 123.8,
-     "observed_ms": 1761.0,
+     "wall_ms": 135.7,
+     "observed_ms": 1773.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2125,8 +2125,8 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.9,
-     "observed_ms": 281.3,
+     "wall_ms": 12.4,
+     "observed_ms": 271.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2166,8 +2166,8 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.8,
-     "observed_ms": 268.7,
+     "wall_ms": 12.1,
+     "observed_ms": 257.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2207,8 +2207,8 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 26.3,
-     "observed_ms": 1136.1,
+     "wall_ms": 26.0,
+     "observed_ms": 1018.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -2252,8 +2252,8 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 378,
-     "wall_ms": 124.4,
-     "observed_ms": 1885.3,
+     "wall_ms": 133.4,
+     "observed_ms": 1906.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2316,8 +2316,8 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.7,
-     "observed_ms": 294.6,
+     "wall_ms": 12.3,
+     "observed_ms": 283.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2357,8 +2357,8 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.1,
-     "observed_ms": 280.5,
+     "wall_ms": 11.9,
+     "observed_ms": 269.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2398,8 +2398,8 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 26.6,
-     "observed_ms": 1162.6,
+     "wall_ms": 25.5,
+     "observed_ms": 1044.0,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -2443,8 +2443,8 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 156,
-     "wall_ms": 125.7,
-     "observed_ms": 2010.8,
+     "wall_ms": 124.4,
+     "observed_ms": 2031.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2507,8 +2507,8 @@
      "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0,
-     "observed_ms": 305.4,
+     "wall_ms": 11.8,
+     "observed_ms": 295.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2548,8 +2548,8 @@
      "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.6,
-     "observed_ms": 292.2,
+     "wall_ms": 11.1,
+     "observed_ms": 279.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2589,8 +2589,8 @@
      "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.8,
-     "observed_ms": 1187.2,
+     "wall_ms": 24.6,
+     "observed_ms": 1068.3,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -2634,8 +2634,8 @@
      "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
      "bytes_pushed": 518,
-     "wall_ms": 129.3,
-     "observed_ms": 2140.0,
+     "wall_ms": 129.9,
+     "observed_ms": 2161.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2699,7 +2699,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 12.2,
-     "observed_ms": 269.9,
+     "observed_ms": 261.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2739,8 +2739,8 @@
      "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.6,
-     "observed_ms": 256.1,
+     "wall_ms": 11.9,
+     "observed_ms": 246.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2780,8 +2780,8 @@
      "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.8,
-     "observed_ms": 1164.5,
+     "wall_ms": 25.3,
+     "observed_ms": 1048.0,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -2825,8 +2825,8 @@
      "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
      "bytes_pushed": 2422,
-     "wall_ms": 118.7,
-     "observed_ms": 2211.1,
+     "wall_ms": 124.3,
+     "observed_ms": 2239.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2889,8 +2889,8 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0,
-     "observed_ms": 280.8,
+     "wall_ms": 11.8,
+     "observed_ms": 273.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2930,8 +2930,8 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.5,
-     "observed_ms": 267.6,
+     "wall_ms": 10.8,
+     "observed_ms": 257.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -2971,8 +2971,8 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.4,
-     "observed_ms": 1188.8,
+     "wall_ms": 23.9,
+     "observed_ms": 1071.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -3016,8 +3016,8 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 2045,
-     "wall_ms": 121.5,
-     "observed_ms": 2332.5,
+     "wall_ms": 127.5,
+     "observed_ms": 2367.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3080,8 +3080,8 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.3,
-     "observed_ms": 291.9,
+     "wall_ms": 12.2,
+     "observed_ms": 285.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3121,8 +3121,8 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.5,
-     "observed_ms": 278.1,
+     "wall_ms": 11.3,
+     "observed_ms": 268.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3162,8 +3162,8 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 25.3,
-     "observed_ms": 1214.1,
+     "wall_ms": 24.1,
+     "observed_ms": 1095.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -3207,8 +3207,8 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 1342,
-     "wall_ms": 123.6,
-     "observed_ms": 2456.0,
+     "wall_ms": 117.2,
+     "observed_ms": 2484.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3271,8 +3271,8 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.5,
-     "observed_ms": 303.3,
+     "wall_ms": 11.6,
+     "observed_ms": 297.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3312,8 +3312,8 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9,
-     "observed_ms": 289.1,
+     "wall_ms": 10.8,
+     "observed_ms": 279.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3353,8 +3353,8 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 38.5,
-     "observed_ms": 1252.6,
+     "wall_ms": 24.7,
+     "observed_ms": 1120.4,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -3398,8 +3398,8 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 199,
-     "wall_ms": 113.1,
-     "observed_ms": 2569.1,
+     "wall_ms": 121.8,
+     "observed_ms": 2606.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3462,8 +3462,8 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.6,
-     "observed_ms": 314.7,
+     "wall_ms": 12.5,
+     "observed_ms": 308.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3503,8 +3503,8 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.6,
-     "observed_ms": 299.5,
+     "wall_ms": 10.9,
+     "observed_ms": 289.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3544,8 +3544,8 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.8,
-     "observed_ms": 1277.3,
+     "wall_ms": 23.9,
+     "observed_ms": 1143.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -3589,8 +3589,8 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 348,
-     "wall_ms": 125.4,
-     "observed_ms": 2694.3,
+     "wall_ms": 123.8,
+     "observed_ms": 2729.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3653,8 +3653,8 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.6,
-     "observed_ms": 326.3,
+     "wall_ms": 12.1,
+     "observed_ms": 320.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3694,8 +3694,8 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 309.4,
+     "wall_ms": 11.6,
+     "observed_ms": 300.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3735,8 +3735,8 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.9,
-     "observed_ms": 1300.4,
+     "wall_ms": 25.0,
+     "observed_ms": 1167.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -3780,8 +3780,8 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 377,
-     "wall_ms": 116.1,
-     "observed_ms": 2809.5,
+     "wall_ms": 127.2,
+     "observed_ms": 2856.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3844,8 +3844,8 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.0,
-     "observed_ms": 338.2,
+     "wall_ms": 11.8,
+     "observed_ms": 331.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3885,8 +3885,8 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.7,
-     "observed_ms": 321.0,
+     "wall_ms": 11.6,
+     "observed_ms": 311.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -3926,8 +3926,8 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 25.0,
-     "observed_ms": 1325.4,
+     "wall_ms": 24.3,
+     "observed_ms": 1191.6,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -3971,8 +3971,8 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 801,
-     "wall_ms": 127.0,
-     "observed_ms": 2936.5,
+     "wall_ms": 131.8,
+     "observed_ms": 2987.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4035,8 +4035,8 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.9,
-     "observed_ms": 352.2,
+     "wall_ms": 11.3,
+     "observed_ms": 342.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4076,8 +4076,8 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.8,
-     "observed_ms": 332.9,
+     "wall_ms": 11.4,
+     "observed_ms": 322.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4117,8 +4117,8 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.2,
-     "observed_ms": 1349.6,
+     "wall_ms": 24.5,
+     "observed_ms": 1215.7,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -4162,8 +4162,8 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 602,
-     "wall_ms": 122.8,
-     "observed_ms": 3059.3,
+     "wall_ms": 120.7,
+     "observed_ms": 3107.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4226,8 +4226,8 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.5,
-     "observed_ms": 363.5,
+     "wall_ms": 12.0,
+     "observed_ms": 354.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4267,8 +4267,8 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 343.4,
+     "wall_ms": 10.8,
+     "observed_ms": 332.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4308,8 +4308,8 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.9,
-     "observed_ms": 1373.3,
+     "wall_ms": 33.7,
+     "observed_ms": 1249.4,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -4353,8 +4353,8 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 2327,
-     "wall_ms": 125.6,
-     "observed_ms": 3184.8,
+     "wall_ms": 119.7,
+     "observed_ms": 3227.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4417,8 +4417,8 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.8,
-     "observed_ms": 374.8,
+     "wall_ms": 12.8,
+     "observed_ms": 367.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4458,8 +4458,8 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.8,
-     "observed_ms": 353.5,
+     "wall_ms": 10.6,
+     "observed_ms": 343.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4499,8 +4499,8 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.1,
-     "observed_ms": 1396.8,
+     "wall_ms": 24.5,
+     "observed_ms": 1273.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -4544,8 +4544,8 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 735,
-     "wall_ms": 119.0,
-     "observed_ms": 3303.2,
+     "wall_ms": 120.3,
+     "observed_ms": 3347.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4608,8 +4608,8 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.3,
-     "observed_ms": 386.6,
+     "wall_ms": 11.3,
+     "observed_ms": 378.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4649,8 +4649,8 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 364.0,
+     "wall_ms": 11.0,
+     "observed_ms": 353.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4690,8 +4690,8 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.1,
-     "observed_ms": 1420.5,
+     "wall_ms": 24.3,
+     "observed_ms": 1298.1,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -4735,8 +4735,8 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 1367,
-     "wall_ms": 129.0,
-     "observed_ms": 3431.7,
+     "wall_ms": 117.9,
+     "observed_ms": 3465.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4799,8 +4799,8 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.5,
-     "observed_ms": 397.9,
+     "wall_ms": 11.2,
+     "observed_ms": 389.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4840,8 +4840,8 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.5,
-     "observed_ms": 374.3,
+     "wall_ms": 11.4,
+     "observed_ms": 365.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4881,8 +4881,8 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.3,
-     "observed_ms": 1444.7,
+     "wall_ms": 24.0,
+     "observed_ms": 1321.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -4926,8 +4926,8 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 701,
-     "wall_ms": 121.3,
-     "observed_ms": 3552.9,
+     "wall_ms": 123.4,
+     "observed_ms": 3588.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -4990,8 +4990,8 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.0,
-     "observed_ms": 409.7,
+     "wall_ms": 11.4,
+     "observed_ms": 399.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5031,8 +5031,8 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.8,
-     "observed_ms": 385.0,
+     "wall_ms": 10.7,
+     "observed_ms": 375.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5072,8 +5072,8 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.5,
-     "observed_ms": 1468.1,
+     "wall_ms": 23.7,
+     "observed_ms": 1344.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -5117,8 +5117,8 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 336,
-     "wall_ms": 116.5,
-     "observed_ms": 3669.2,
+     "wall_ms": 118.7,
+     "observed_ms": 3706.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5181,8 +5181,8 @@
      "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.4,
-     "observed_ms": 421.6,
+     "wall_ms": 11.9,
+     "observed_ms": 410.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5222,8 +5222,8 @@
      "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2,
-     "observed_ms": 395.9,
+     "wall_ms": 10.0,
+     "observed_ms": 384.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5264,7 +5264,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 24.0,
-     "observed_ms": 1491.8,
+     "observed_ms": 1367.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -5308,8 +5308,8 @@
      "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
      "bytes_pushed": 1648,
-     "wall_ms": 125.5,
-     "observed_ms": 3794.5,
+     "wall_ms": 125.1,
+     "observed_ms": 3830.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5372,8 +5372,8 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.5,
-     "observed_ms": 434.0,
+     "wall_ms": 11.8,
+     "observed_ms": 422.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5413,8 +5413,8 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9,
-     "observed_ms": 406.8,
+     "wall_ms": 10.4,
+     "observed_ms": 394.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5454,8 +5454,8 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.2,
-     "observed_ms": 1514.9,
+     "wall_ms": 23.5,
+     "observed_ms": 1391.2,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -5499,8 +5499,8 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 1257,
-     "wall_ms": 113.8,
-     "observed_ms": 3908.3,
+     "wall_ms": 127.7,
+     "observed_ms": 3958.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5563,8 +5563,8 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.9,
-     "observed_ms": 445.7,
+     "wall_ms": 11.6,
+     "observed_ms": 432.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5604,8 +5604,8 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.7,
-     "observed_ms": 418.4,
+     "wall_ms": 11.3,
+     "observed_ms": 404.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5645,8 +5645,8 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.1,
-     "observed_ms": 1539.1,
+     "wall_ms": 23.9,
+     "observed_ms": 1413.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -5690,8 +5690,8 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 4268,
-     "wall_ms": 118.8,
-     "observed_ms": 4027.0,
+     "wall_ms": 114.0,
+     "observed_ms": 4071.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5754,8 +5754,8 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0,
-     "observed_ms": 411.8,
+     "wall_ms": 10.8,
+     "observed_ms": 397.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5795,8 +5795,8 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.6,
-     "observed_ms": 385.2,
+     "wall_ms": 10.8,
+     "observed_ms": 369.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5836,8 +5836,8 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.7,
-     "observed_ms": 1517.9,
+     "wall_ms": 23.6,
+     "observed_ms": 1391.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -5881,8 +5881,8 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 841,
-     "wall_ms": 120.1,
-     "observed_ms": 4102.2,
+     "wall_ms": 130.2,
+     "observed_ms": 4155.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5946,7 +5946,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 11.4,
-     "observed_ms": 423.2,
+     "observed_ms": 409.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -5986,8 +5986,8 @@
      "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2,
-     "observed_ms": 396.5,
+     "wall_ms": 11.0,
+     "observed_ms": 380.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6027,8 +6027,8 @@
      "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 25.3,
-     "observed_ms": 1543.4,
+     "wall_ms": 24.0,
+     "observed_ms": 1415.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -6072,8 +6072,8 @@
      "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
      "bytes_pushed": 1329,
-     "wall_ms": 125.0,
-     "observed_ms": 4227.3,
+     "wall_ms": 130.4,
+     "observed_ms": 4285.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6136,8 +6136,8 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9,
-     "observed_ms": 434.1,
+     "wall_ms": 11.5,
+     "observed_ms": 420.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6177,8 +6177,8 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9,
-     "observed_ms": 407.5,
+     "wall_ms": 10.5,
+     "observed_ms": 390.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6218,8 +6218,8 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.9,
-     "observed_ms": 1567.4,
+     "wall_ms": 23.2,
+     "observed_ms": 1438.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -6263,8 +6263,8 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 33,
-     "wall_ms": 126.8,
-     "observed_ms": 4354.3,
+     "wall_ms": 125.1,
+     "observed_ms": 4411.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6327,8 +6327,8 @@
      "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 21.3,
-     "observed_ms": 455.5,
+     "wall_ms": 21.2,
+     "observed_ms": 441.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6369,7 +6369,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 20.4,
-     "observed_ms": 428.0,
+     "observed_ms": 411.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6409,8 +6409,8 @@
      "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 38.2,
-     "observed_ms": 1605.6,
+     "wall_ms": 38.6,
+     "observed_ms": 1477.4,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -6454,8 +6454,8 @@
      "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
      "bytes_pushed": 2436,
-     "wall_ms": 157.4,
-     "observed_ms": 4512.7,
+     "wall_ms": 157.9,
+     "observed_ms": 4569.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6518,8 +6518,8 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.4,
-     "observed_ms": 468.0,
+     "wall_ms": 13.0,
+     "observed_ms": 454.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6559,8 +6559,8 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.0,
-     "observed_ms": 440.1,
+     "wall_ms": 11.7,
+     "observed_ms": 422.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6600,8 +6600,8 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 25.5,
-     "observed_ms": 1631.2,
+     "wall_ms": 25.8,
+     "observed_ms": 1503.3,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -6645,8 +6645,8 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 915,
-     "wall_ms": 119.8,
-     "observed_ms": 4632.6,
+     "wall_ms": 122.0,
+     "observed_ms": 4691.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6709,8 +6709,8 @@
      "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 17.5,
-     "observed_ms": 485.4,
+     "wall_ms": 17.2,
+     "observed_ms": 472.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6751,7 +6751,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 16.1,
-     "observed_ms": 456.2,
+     "observed_ms": 439.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6791,8 +6791,8 @@
      "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 31.3,
-     "observed_ms": 1662.6,
+     "wall_ms": 32.0,
+     "observed_ms": 1535.4,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -6836,8 +6836,8 @@
      "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
      "bytes_pushed": 1611,
-     "wall_ms": 139.4,
-     "observed_ms": 4772.1,
+     "wall_ms": 141.3,
+     "observed_ms": 4832.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6900,8 +6900,8 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 17.7,
-     "observed_ms": 503.0,
+     "wall_ms": 18.0,
+     "observed_ms": 490.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6941,8 +6941,8 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 17.7,
-     "observed_ms": 473.7,
+     "wall_ms": 16.9,
+     "observed_ms": 456.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -6982,8 +6982,8 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 33.1,
-     "observed_ms": 1695.5,
+     "wall_ms": 33.7,
+     "observed_ms": 1569.0,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -7027,8 +7027,8 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 1428,
-     "wall_ms": 132.5,
-     "observed_ms": 4904.7,
+     "wall_ms": 136.1,
+     "observed_ms": 4968.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7091,8 +7091,8 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 52.1,
-     "observed_ms": 555.1,
+     "wall_ms": 21.0,
+     "observed_ms": 511.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7132,8 +7132,8 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 20.6,
-     "observed_ms": 494.3,
+     "wall_ms": 20.7,
+     "observed_ms": 476.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7173,8 +7173,8 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 40.0,
-     "observed_ms": 1735.7,
+     "wall_ms": 40.1,
+     "observed_ms": 1609.2,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -7218,8 +7218,8 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 2578,
-     "wall_ms": 144.1,
-     "observed_ms": 5048.9,
+     "wall_ms": 142.2,
+     "observed_ms": 5111.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7282,8 +7282,8 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 26.4,
-     "observed_ms": 581.5,
+     "wall_ms": 26.0,
+     "observed_ms": 537.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7323,8 +7323,8 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.2,
-     "observed_ms": 559.4,
+     "wall_ms": 25.6,
+     "observed_ms": 502.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7364,8 +7364,8 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 44.5,
-     "observed_ms": 1780.3,
+     "wall_ms": 45.1,
+     "observed_ms": 1654.3,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -7409,8 +7409,8 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 2946,
-     "wall_ms": 141.3,
-     "observed_ms": 5190.2,
+     "wall_ms": 151.0,
+     "observed_ms": 5262.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7473,8 +7473,8 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 17.2,
-     "observed_ms": 598.9,
+     "wall_ms": 17.1,
+     "observed_ms": 553.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7514,8 +7514,8 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 16.3,
-     "observed_ms": 575.6,
+     "wall_ms": 16.6,
+     "observed_ms": 518.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7555,8 +7555,8 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 33.6,
-     "observed_ms": 1813.9,
+     "wall_ms": 32.7,
+     "observed_ms": 1686.7,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -7600,8 +7600,8 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 1618,
-     "wall_ms": 125.0,
-     "observed_ms": 5315.2,
+     "wall_ms": 126.4,
+     "observed_ms": 5388.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7664,8 +7664,8 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 32.3,
-     "observed_ms": 631.0,
+     "wall_ms": 32.9,
+     "observed_ms": 586.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7705,8 +7705,8 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 32.0,
-     "observed_ms": 607.5,
+     "wall_ms": 32.5,
+     "observed_ms": 550.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7746,8 +7746,8 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 59.0,
-     "observed_ms": 1872.9,
+     "wall_ms": 55.5,
+     "observed_ms": 1742.1,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -7791,8 +7791,8 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 4562,
-     "wall_ms": 167.9,
-     "observed_ms": 5483.0,
+     "wall_ms": 158.6,
+     "observed_ms": 5547.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7855,8 +7855,8 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 49.6,
-     "observed_ms": 678.8,
+     "wall_ms": 48.0,
+     "observed_ms": 634.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7896,8 +7896,8 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 47.9,
-     "observed_ms": 653.6,
+     "wall_ms": 48.1,
+     "observed_ms": 598.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -7937,8 +7937,8 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 85.6,
-     "observed_ms": 1956.8,
+     "wall_ms": 81.9,
+     "observed_ms": 1823.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -7982,8 +7982,8 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 8400,
-     "wall_ms": 202.2,
-     "observed_ms": 5683.5,
+     "wall_ms": 191.8,
+     "observed_ms": 5738.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8046,8 +8046,8 @@
      "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 60.9,
-     "observed_ms": 739.8,
+     "wall_ms": 60.8,
+     "observed_ms": 695.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8088,7 +8088,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 59.4,
-     "observed_ms": 713.1,
+     "observed_ms": 658.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8128,8 +8128,8 @@
      "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 102.0,
-     "observed_ms": 2059.0,
+     "wall_ms": 103.1,
+     "observed_ms": 1926.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -8173,8 +8173,8 @@
      "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
      "bytes_pushed": 5222,
-     "wall_ms": 229.3,
-     "observed_ms": 5912.8,
+     "wall_ms": 217.9,
+     "observed_ms": 5956.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8237,8 +8237,8 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.7,
-     "observed_ms": 751.3,
+     "wall_ms": 11.5,
+     "observed_ms": 706.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8278,8 +8278,8 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 723.7,
+     "wall_ms": 10.9,
+     "observed_ms": 668.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8319,8 +8319,8 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.1,
-     "observed_ms": 2083.1,
+     "wall_ms": 23.5,
+     "observed_ms": 1950.0,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -8364,8 +8364,8 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 1811,
-     "wall_ms": 129.1,
-     "observed_ms": 6041.8,
+     "wall_ms": 119.4,
+     "observed_ms": 6075.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8424,8 +8424,8 @@
      "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.4,
-     "observed_ms": 762.5,
+     "wall_ms": 11.2,
+     "observed_ms": 716.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8459,7 +8459,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 10.5,
-     "observed_ms": 734.2,
+     "observed_ms": 678.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8492,8 +8492,8 @@
      "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.8,
-     "observed_ms": 2105.7,
+     "wall_ms": 22.5,
+     "observed_ms": 1972.1,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -8530,8 +8530,8 @@
      "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
      "bytes_pushed": 264,
-     "wall_ms": 129.2,
-     "observed_ms": 6170.9,
+     "wall_ms": 115.9,
+     "observed_ms": 6191.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8580,8 +8580,8 @@
      "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 53.3,
-     "observed_ms": 815.8,
+     "wall_ms": 52.6,
+     "observed_ms": 769.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8621,8 +8621,8 @@
      "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 53.8,
-     "observed_ms": 787.9,
+     "wall_ms": 52.2,
+     "observed_ms": 730.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8663,7 +8663,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 90.3,
-     "observed_ms": 2196.0,
+     "observed_ms": 2062.2,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -8707,8 +8707,8 @@
      "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
      "bytes_pushed": 2708,
-     "wall_ms": 223.7,
-     "observed_ms": 6394.8,
+     "wall_ms": 219.4,
+     "observed_ms": 6410.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8771,8 +8771,8 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 26.4,
-     "observed_ms": 797.3,
+     "wall_ms": 26.3,
+     "observed_ms": 750.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8812,8 +8812,8 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 26.0,
-     "observed_ms": 768.9,
+     "wall_ms": 25.5,
+     "observed_ms": 710.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8853,8 +8853,8 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 45.1,
-     "observed_ms": 2196.2,
+     "wall_ms": 49.7,
+     "observed_ms": 2066.6,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -8898,8 +8898,8 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 2467,
-     "wall_ms": 151.2,
-     "observed_ms": 6501.3,
+     "wall_ms": 150.2,
+     "observed_ms": 6515.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -8962,8 +8962,8 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 53.6,
-     "observed_ms": 850.9,
+     "wall_ms": 54.1,
+     "observed_ms": 804.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9003,8 +9003,8 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 53.8,
-     "observed_ms": 823.0,
+     "wall_ms": 54.5,
+     "observed_ms": 764.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9044,8 +9044,8 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 91.9,
-     "observed_ms": 2288.2,
+     "wall_ms": 93.4,
+     "observed_ms": 2159.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -9089,8 +9089,8 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 7205,
-     "wall_ms": 231.9,
-     "observed_ms": 6733.5,
+     "wall_ms": 212.0,
+     "observed_ms": 6728.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9153,8 +9153,8 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.5,
-     "observed_ms": 874.7,
+     "wall_ms": 23.2,
+     "observed_ms": 827.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9194,8 +9194,8 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 21.6,
-     "observed_ms": 844.7,
+     "wall_ms": 22.5,
+     "observed_ms": 787.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9235,8 +9235,8 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 39.7,
-     "observed_ms": 2328.0,
+     "wall_ms": 40.5,
+     "observed_ms": 2200.3,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -9280,8 +9280,8 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 2274,
-     "wall_ms": 155.4,
-     "observed_ms": 6889.6,
+     "wall_ms": 140.8,
+     "observed_ms": 6868.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9344,8 +9344,8 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 36.1,
-     "observed_ms": 910.8,
+     "wall_ms": 36.5,
+     "observed_ms": 863.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9385,8 +9385,8 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 35.3,
-     "observed_ms": 880.0,
+     "wall_ms": 36.4,
+     "observed_ms": 823.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9426,8 +9426,8 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 61.5,
-     "observed_ms": 2389.4,
+     "wall_ms": 60.9,
+     "observed_ms": 2261.1,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -9471,8 +9471,8 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 5571,
-     "wall_ms": 172.3,
-     "observed_ms": 7062.4,
+     "wall_ms": 171.1,
+     "observed_ms": 7039.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9535,8 +9535,8 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 18.1,
-     "observed_ms": 928.8,
+     "wall_ms": 18.6,
+     "observed_ms": 882.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9576,8 +9576,8 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 17.2,
-     "observed_ms": 897.2,
+     "wall_ms": 18.4,
+     "observed_ms": 842.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9617,8 +9617,8 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 34.0,
-     "observed_ms": 2423.4,
+     "wall_ms": 33.6,
+     "observed_ms": 2294.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -9662,8 +9662,8 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 2478,
-     "wall_ms": 150.3,
-     "observed_ms": 7213.3,
+     "wall_ms": 138.7,
+     "observed_ms": 7178.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9726,8 +9726,8 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 14.9,
-     "observed_ms": 943.8,
+     "wall_ms": 15.1,
+     "observed_ms": 897.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9767,8 +9767,8 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 14.5,
-     "observed_ms": 911.9,
+     "wall_ms": 14.2,
+     "observed_ms": 856.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9808,8 +9808,8 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 27.6,
-     "observed_ms": 2451.1,
+     "wall_ms": 28.8,
+     "observed_ms": 2323.6,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -9853,8 +9853,8 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 902,
-     "wall_ms": 123.2,
-     "observed_ms": 7337.2,
+     "wall_ms": 126.0,
+     "observed_ms": 7304.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9917,8 +9917,8 @@
      "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 37.8,
-     "observed_ms": 981.6,
+     "wall_ms": 37.2,
+     "observed_ms": 934.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9958,8 +9958,8 @@
      "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 36.0,
-     "observed_ms": 948.0,
+     "wall_ms": 36.1,
+     "observed_ms": 892.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -9999,8 +9999,8 @@
      "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 62.7,
-     "observed_ms": 2513.8,
+     "wall_ms": 63.1,
+     "observed_ms": 2386.7,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -10044,8 +10044,8 @@
      "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
      "bytes_pushed": 3571,
-     "wall_ms": 193.2,
-     "observed_ms": 7530.9,
+     "wall_ms": 173.0,
+     "observed_ms": 7477.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10108,8 +10108,8 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.8,
-     "observed_ms": 1004.4,
+     "wall_ms": 23.1,
+     "observed_ms": 957.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10149,8 +10149,8 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.6,
-     "observed_ms": 970.7,
+     "wall_ms": 21.4,
+     "observed_ms": 913.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10190,8 +10190,8 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 39.3,
-     "observed_ms": 2553.2,
+     "wall_ms": 40.8,
+     "observed_ms": 2427.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -10235,8 +10235,8 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 2383,
-     "wall_ms": 141.1,
-     "observed_ms": 7672.7,
+     "wall_ms": 144.4,
+     "observed_ms": 7622.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10299,8 +10299,8 @@
      "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 14.3,
-     "observed_ms": 1018.7,
+     "wall_ms": 14.0,
+     "observed_ms": 971.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10341,7 +10341,7 @@
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
      "wall_ms": 13.1,
-     "observed_ms": 983.7,
+     "observed_ms": 926.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10381,8 +10381,8 @@
      "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 26.2,
-     "observed_ms": 2579.3,
+     "wall_ms": 28.2,
+     "observed_ms": 2455.7,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -10426,8 +10426,8 @@
      "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
      "bytes_pushed": 5004,
-     "wall_ms": 121.6,
-     "observed_ms": 7794.7,
+     "wall_ms": 119.0,
+     "observed_ms": 7741.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10490,8 +10490,8 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.1,
-     "observed_ms": 1031.1,
+     "wall_ms": 11.4,
+     "observed_ms": 982.6,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10531,8 +10531,8 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1,
-     "observed_ms": 994.9,
+     "wall_ms": 11.2,
+     "observed_ms": 937.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10572,8 +10572,8 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.7,
-     "observed_ms": 2603.0,
+     "wall_ms": 23.2,
+     "observed_ms": 2478.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -10617,8 +10617,8 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 418,
-     "wall_ms": 127.6,
-     "observed_ms": 7923.0,
+     "wall_ms": 113.8,
+     "observed_ms": 7855.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10681,8 +10681,8 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.9,
-     "observed_ms": 1043.0,
+     "wall_ms": 11.7,
+     "observed_ms": 994.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10722,8 +10722,8 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.7,
-     "observed_ms": 1006.6,
+     "wall_ms": 10.7,
+     "observed_ms": 948.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10763,8 +10763,8 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.7,
-     "observed_ms": 2627.8,
+     "wall_ms": 24.3,
+     "observed_ms": 2503.2,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -10808,8 +10808,8 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 282,
-     "wall_ms": 125.7,
-     "observed_ms": 8049.3,
+     "wall_ms": 117.7,
+     "observed_ms": 7972.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10868,8 +10868,8 @@
      "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.6,
-     "observed_ms": 1054.5,
+     "wall_ms": 11.3,
+     "observed_ms": 1005.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10902,8 +10902,8 @@
      "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1,
-     "observed_ms": 1017.6,
+     "wall_ms": 10.5,
+     "observed_ms": 958.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -10936,8 +10936,8 @@
      "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.3,
-     "observed_ms": 2651.0,
+     "wall_ms": 22.7,
+     "observed_ms": 2525.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -10974,8 +10974,8 @@
      "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
      "bytes_pushed": 292,
-     "wall_ms": 120.8,
-     "observed_ms": 8170.2,
+     "wall_ms": 119.6,
+     "observed_ms": 8092.5,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11024,8 +11024,8 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 14.3,
-     "observed_ms": 1068.7,
+     "wall_ms": 15.3,
+     "observed_ms": 1021.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11065,8 +11065,8 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.2,
-     "observed_ms": 1032.8,
+     "wall_ms": 14.2,
+     "observed_ms": 973.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11106,8 +11106,8 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 27.6,
-     "observed_ms": 2678.6,
+     "wall_ms": 28.8,
+     "observed_ms": 2554.6,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -11151,8 +11151,8 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 3613,
-     "wall_ms": 126.0,
-     "observed_ms": 8296.3,
+     "wall_ms": 128.1,
+     "observed_ms": 8220.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11215,8 +11215,8 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.2,
-     "observed_ms": 1080.7,
+     "wall_ms": 11.7,
+     "observed_ms": 1032.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11256,8 +11256,8 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.8,
-     "observed_ms": 1043.4,
+     "wall_ms": 10.5,
+     "observed_ms": 983.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11297,8 +11297,8 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.1,
-     "observed_ms": 2701.6,
+     "wall_ms": 23.2,
+     "observed_ms": 2577.9,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -11342,8 +11342,8 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 64,
-     "wall_ms": 132.6,
-     "observed_ms": 8429.1,
+     "wall_ms": 130.1,
+     "observed_ms": 8350.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11402,8 +11402,8 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.6,
-     "observed_ms": 1092.3,
+     "wall_ms": 11.5,
+     "observed_ms": 1044.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11436,8 +11436,8 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.3,
-     "observed_ms": 1053.5,
+     "wall_ms": 10.6,
+     "observed_ms": 994.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11470,8 +11470,8 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.5,
-     "observed_ms": 2724.0,
+     "wall_ms": 22.4,
+     "observed_ms": 2600.4,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -11508,8 +11508,8 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 63,
-     "wall_ms": 120.4,
-     "observed_ms": 8549.6,
+     "wall_ms": 124.9,
+     "observed_ms": 8475.8,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11558,8 +11558,8 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.4,
-     "observed_ms": 1103.6,
+     "wall_ms": 12.2,
+     "observed_ms": 1056.4,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11599,8 +11599,8 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.3,
-     "observed_ms": 1063.7,
+     "wall_ms": 11.1,
+     "observed_ms": 1005.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -11640,8 +11640,8 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 23.6,
-     "observed_ms": 2747.8,
+     "wall_ms": 23.2,
+     "observed_ms": 2623.5,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -11685,8 +11685,8 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 1174,
-     "wall_ms": 120.1,
-     "observed_ms": 8669.9,
+     "wall_ms": 125.4,
+     "observed_ms": 8601.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
