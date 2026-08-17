@@ -32,6 +32,13 @@
 //! single-digit positions sort correctly and the defect only appears at the
 //! first two-digit value. Rows are now `(thread, pos, text)` tuples sorted on
 //! the numbers. No digest changes; only the print order does.
+//!
+//! v3 (S28) — `fuel_used` is now its own column. It was only ever folded into
+//! the digest, so "did fuel move under concurrency?" could be answered only by
+//! arguing that `canon` leaves the `fuel=` line alone. `fuel_used` is in M1.8's
+//! agreement key `(status, fuel_used, sorted_hash)` and it is the quantity that
+//! decides whether canonicalisation can repair a divergence at all, so it is
+//! measured directly. Digests are unchanged: the same string is still hashed.
 use hyperon::metta::runner::{Metta, RunnerState};
 use hyperon::metta::text::SExprParser;
 use sha2::{Digest, Sha256};
@@ -85,7 +92,7 @@ fn renumber(t: &str, all_vars: bool) -> String {
     out
 }
 
-fn run_one(path: &str, fuel_limit: u64) -> String {
+fn run_one(path: &str, fuel_limit: u64) -> (u64, String) {
     let program = std::fs::read_to_string(path).unwrap_or_default();
     let metta = Metta::new(None);
     let parser = SExprParser::new(program.as_str());
@@ -106,7 +113,11 @@ fn run_one(path: &str, fuel_limit: u64) -> String {
             raw.push_str(&format!("{}\t{}\n", i, atom));
         }
     }
-    format!("fuel={}\n{}", fuel, raw)
+    // v3: fuel returned ALONGSIDE the digest input, not only folded into it.
+    // `fuel_used` is in M1.8's agreement key, so "did fuel move under
+    // concurrency?" must be readable directly instead of inferred from the fact
+    // that `canon` leaves the `fuel=` line alone.
+    (fuel, format!("fuel={}\n{}", fuel, raw))
 }
 
 fn main() {
@@ -131,7 +142,7 @@ fn main() {
         fuel,
         progs.len()
     );
-    println!("repeat\tthread\tpos\tprogram\traw\tcanon\talpha");
+    println!("repeat\tthread\tpos\tprogram\tfuel_used\traw\tcanon\talpha");
 
     for rep in 0..repeats {
         // A BARRIER, so the threads are actually concurrent. Without it a fast
@@ -149,18 +160,19 @@ fn main() {
                 barrier.wait();
                 let mut rows: Vec<(usize, usize, String)> = Vec::new();
                 for (pos, p) in progs.iter().enumerate() {
-                    let out = run_one(p, fuel);
+                    let (used, out) = run_one(p, fuel);
                     rows.push((
                         t,
                         pos,
                         format!(
-                        "{}\t{}\t{}\t{}\t{}\t{}",
+                        "{}\t{}\t{}\t{}\t{}\t{}\t{}",
                         t,
                         pos,
                         std::path::Path::new(p)
                             .file_name()
                             .unwrap()
                             .to_string_lossy(),
+                        used,
                         sha8(&out),
                         sha8(&canon(&out)),
                         sha8(&canon_alpha(&out))
