@@ -169,9 +169,21 @@ takes a side on it merely by running is deciding it by default.
   records that the detached wrapper respawns it, so killing the child is not
   killing the lane. §2: PARTIAL is not a verdict; split and finish the half that
   is finishable.
-- **H44 — two `bringup.sh`.** `./bringup.sh` (tracked, 163 lines, what
-  `prompts/ATOM-3.md` and `com.kingfisher.bringup.plist` invoke) and
-  `spikes/harness/bringup.sh` (untracked, 228 lines, what `CHANNEL.md:182`'s
-  `DONE H6b` names, what `net.kingfisher.fleet.plist` invokes). They differ from
-  line 2. Both had this defect; I fixed both rather than pick a winner mid-cycle,
-  because a second census that disagrees is the H6 hazard in its own right.
+- **H44 — two `bringup.sh`.** `./bringup.sh` (what `prompts/ATOM-3.md` and the
+  LOADED `com.kingfisher.bringup` LaunchAgent invoke) and
+  `spikes/harness/bringup.sh` (what `CHANNEL.md:182`'s `DONE H6b` names, and what
+  `spikes/harness/net.kingfisher.fleet.plist` — PROPOSED, never installed —
+  invokes). They differ from line 2. Both had this defect; I fixed both rather
+  than pick a winner mid-cycle, because a second census that disagrees is the H6
+  hazard in its own right.
+
+  > **CORRECTED 2026-08-17, ATOM-3.** This paragraph said `./bringup.sh` was
+  > "163 lines" and `spikes/harness/bringup.sh` "untracked, 228 lines". The
+  > second copy had been TRACKED since `600d138` (13:56), and the counts were
+  > 230 and 273 at HEAD. Measured once, early, then restated unchanged in four
+  > documents — this file, the H44 queue row, `HANDOFF.ATOM-3.md:79`, and
+  > `./bringup.sh`'s own header. Claim decay across documents (`CLAUDE.md`,
+  > "three things no tool will catch"), inside the row whose subject is these
+  > two files. The counts are struck rather than updated: a line count of a file
+  > in the same repo is stale on the next edit. `C10`/`C12` of
+  > `test_h44_check_is_readonly.sh` now refuse both forms.

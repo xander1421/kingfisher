@@ -1,4 +1,42 @@
 #!/usr/bin/env bash
+# THERE ARE TWO `bringup.sh` IN THIS REPO AND THIS IS THE ONE THAT RUNS (H44).
+#   ./bringup.sh                    <- this file. TRACKED. The LOADED LaunchAgent
+#                                      `com.kingfisher.bringup` names this path;
+#                                      verified with `launchctl list`. Reconciler:
+#                                      census + start what is missing.
+#   spikes/harness/bringup.sh       <- ALSO TRACKED. The PRE-FLIGHT one: installs
+#                                      the untrackable .git/hooks, runs
+#                                      test_loop_gate.sh, clears stale signals,
+#                                      audits undeclared lanes. Named by
+#                                      `CHANNEL.md:182`'s `DONE H6b` and by
+#                                      spikes/harness/net.kingfisher.fleet.plist,
+#                                      which is PROPOSED and NOT installed --
+#                                      `ls ~/Library/LaunchAgents` confirms.
+#
+# CORRECTED 2026-08-17, ATOM-3, against this header's own first draft, which said
+# `spikes/harness/bringup.sh` was "UNTRACKED, 228 lines" and this file "163
+# lines". THREE FALSE FACTS IN THE HEADER OF THE ROW THAT IS ABOUT THESE TWO
+# FILES. It had been tracked since 600d138 (13:56), 28 minutes before I wrote
+# "UNTRACKED", and the two counts were 273 and 230 at HEAD. All three were
+# measured once, early, and then RESTATED from memory in four documents -- the
+# H44 queue row, `spikes/H6_liveness/RESULT.md:174`, `HANDOFF.ATOM-3.md:79` and
+# here. That is CLAUDE.md's "claim decay across documents", which it names as one
+# of the three things no tool catches, occurring inside the row whose subject is
+# the two files. CLASS: A PROSE HEADER ASSERTING A CHECKABLE FACT ABOUT ANOTHER
+# ARTIFACT, WITH NOTHING CHECKING IT. The line counts are GONE rather than
+# updated: a line count of a file in the same repo is stale on the next edit and
+# tells a reader nothing `wc -l` would not. What is left is the two facts that
+# decide which file you want, and C10/C11 of
+# `spikes/H6_liveness/test_h44_check_is_readonly.sh` now check both mechanically
+# -- tracked status, and which path the LOADED LaunchAgent actually names.
+# They no longer disagree about the fleet: both read `roster.txt` and both use the
+# same `ps`-based `lane_pid` (H6). Consolidating them to one implementation is
+# H58 -- this said H55, which was never a row and is now another lane's id;
+# corrected under §12.4, see the block at the top of spikes/harness/bringup.sh.
+# Changing which path launchd runs is a human action (§10, outside the
+# workspace), which is why the entry point was settled by MEASURING launchd
+# rather than by choosing.
+#
 # Mission bring-up. Idempotent: safe to run any number of times, including from
 # a LaunchAgent at login. Starts what is missing, touches what is already up
 # exactly not at all, and NEVER kills anything.
@@ -134,6 +172,29 @@ PLIST
   exit 0
 fi
 
+# 0 · THE FLEET KILL SWITCH OUTRANKS A BRING-UP (H44, ATOM-3, 2026-08-17).
+# THIS FILE HAD NO `STOP` CHECK AT ALL, and it is the copy launchd actually runs
+# (`com.kingfisher.bringup`, StartInterval 600). So a deliberately halted fleet
+# was relaunched every ten minutes, forever: each attempt spawns a launcher that
+# reads STOP at its own loop top, prints `loop stopped (X)` and exits, and
+# `bringup.log` records "N lane(s) launched" for lanes that never ran a turn.
+# `spikes/harness/bringup.sh` section 1 has always refused under STOP -- so the
+# two copies disagreed on the single most consequential precondition there is,
+# which is H44's whole point.
+# MEASURED, on myself: STOP had been present since 14:11 and I ran `./bringup.sh`
+# and it reported `STARTING 3 MISSING LANE(S)` and launched three. They refused
+# correctly, so nothing was damaged and the launcher's own gate held -- but the
+# bring-up should never have asked. The census is why: it reported the three
+# lanes DOWN, and DOWN reads as "restore me" when the truth was "retired on
+# purpose". Absent is not stale and halted is not dead.
+if [ -f STOP ]; then
+  echo "=== HALTED ==="
+  printf '  fleet STOP present (%s) -- the operator halted the fleet.\n' \
+    "$(stat -f '%Sm' -t '%H:%M' STOP 2>/dev/null)"
+  echo "  bringup will not start anything. rm STOP to resume."
+  [ "$CHECK_ONLY" = 1 ] || exit 1
+fi
+
 echo "=== ROLES ==="
 ROLE_FAIL=0
 for lane in "${ROSTER[@]}"; do
@@ -180,6 +241,12 @@ for lane in "${ROSTER[@]}"; do
     else
       printf '  %-12s UP   pid %-7s (%s) turn age %ss\n' "$lane" "$pid" "$src" "$age"
     fi
+  elif [ -f STOP ] || [ -f "STOP.$lane" ]; then
+    # HALTED IS NOT DOWN. A lane retired on purpose and a lane that died are the
+    # same observation to `ps`, and reporting both as DOWN is what invited a
+    # relaunch into a halted fleet. Not added to MISSING: nothing should restore it.
+    printf '  %-12s HALTED  (%s present -- retired on purpose, not a fault)\n' \
+      "$lane" "$([ -f "STOP.$lane" ] && echo "STOP.$lane" || echo STOP)"
   else
     printf '  %-12s DOWN\n' "$lane"
     MISSING+=("$lane")
@@ -207,6 +274,24 @@ done < <(ps -eo command | grep -oE 'You are [A-Za-z0-9_-]+\.' \
 
 if [ "$CHECK_ONLY" = 1 ]; then
   [ "${#MISSING[@]}" -eq 0 ] && [ "$ROLE_FAIL" = 0 ] && exit 0 || exit 1
+fi
+
+# A LAUNCHER THAT DOES NOT PARSE TAKES THE WHOLE FLEET DOWN SILENTLY (H44).
+# Observed today: a lane edited `run_loop.sh` in place at 14:08; three wrappers
+# and every relaunch for the next ten minutes died with
+# `run_loop.sh: line 173: syntax error near unexpected token '('`, straight into
+# `detach_$CALLSIGN.log` where nothing reads it, while `bringup.log` recorded
+# each attempt as "launched". `git commit --only` protects the shared INDEX from
+# concurrent lanes; nothing protected the shared WORKING FILE from being read
+# while half-written, and the launcher is the one file every lane must parse to
+# exist. One `bash -n` is cheaper than an outage nobody can see.
+if [ "${#MISSING[@]}" -gt 0 ] && ! bash -n ./run_loop.sh 2>/dev/null; then
+  echo
+  echo "bringup: REFUSING to launch -- ./run_loop.sh does not parse:"
+  bash -n ./run_loop.sh 2>&1 | sed 's/^/    /'
+  echo "  Every lane started from it would die at parse time, into detach_*.log."
+  echo "  Someone is probably mid-edit; edit to a temp file and mv it into place."
+  exit 1
 fi
 
 if [ "${#MISSING[@]}" -eq 0 ]; then

@@ -1,4 +1,23 @@
 #!/usr/bin/env bash
+# THERE ARE TWO `bringup.sh` IN THIS REPO AND THIS IS NOT THE ONE LAUNCHD RUNS
+# (H44). The loaded LaunchAgent `com.kingfisher.bringup` names `../../bringup.sh`
+# -- measured with `launchctl list`, not assumed. This file is the PRE-FLIGHT
+# copy: it installs the untrackable .git/hooks, runs test_loop_gate.sh, clears
+# stale signals and audits undeclared lanes, none of which the root copy does.
+# `net.kingfisher.fleet.plist` names this path and is PROPOSED, NOT installed --
+# `ls ~/Library/LaunchAgents` confirms. Consolidating the two is H58. Both now
+# read `roster.txt` and share the same `ps`-based `lane_pid` (H6), so they
+# cannot disagree about the fleet.
+#
+# CORRECTED 2026-08-17, ATOM-3: this line said "Consolidating the two is H55",
+# AND H55 WAS NEVER A ROW. §12.4 -- a citation to a missing artifact is weaker
+# than none, because it reads as satisfied: a reader sees a filed row and
+# concludes the fork is somebody's job. Nobody's. Resolved mechanically rather
+# than by eye, which is also how the second half surfaced: `.ids/` shows H55,
+# H56 and H57 all allocated to other lanes while this file cited H55, so the
+# invented id had since become someone else's real one. Row filed as H58, id
+# from `sh spikes/harness/allocid.sh H` and not from a grep (H45).
+#
 # bringup.sh — establish the fleet: verify roles, clear stale state, launch what
 # is missing, then report quorum. IDEMPOTENT: safe to run when everything is
 # already up, which is the property that makes it usable from launchd at boot.
@@ -19,7 +38,7 @@
 #
 # usage:
 #   sh spikes/harness/bringup.sh              # verify + launch what is missing
-#   sh spikes/harness/bringup.sh --check      # verify only, launch nothing
+#   sh spikes/harness/bringup.sh --check      # verify only: launches nothing AND writes nothing
 #   sh spikes/harness/bringup.sh --lanes "AGENT-1 ATTACKER-1"
 #
 # exit 0 = every declared lane is up. non-zero = at least one is not, and why.
@@ -121,8 +140,34 @@ done
 #     and bring-up correctly refused. Installed here rather than reported, because
 #     this is the one part of the harness a fresh machine cannot get any other way
 #     and it is precisely what breaks across a restart or a re-clone.
+# v3 (H44, ATOM-3, 2026-08-17): GUARDED BY --check. This installed the shared
+#     enforcing gates unconditionally, so `--check` -- documented as "verify
+#     only" -- REWROTE .git/hooks for every lane in this working tree. A lane
+#     mid-cycle on an uncommitted hook edit would have had it reverted to the
+#     tracked version under a flag whose whole promise is that it changes
+#     nothing. A read-only flag that writes is worse than no flag: it is the one
+#     people run when they are being careful.
 if [ -f spikes/harness/install_hooks.sh ]; then
-  if sh spikes/harness/install_hooks.sh >/dev/null 2>&1; then
+  if [ "$CHECK_ONLY" = yes ]; then
+    # Inline `cmp`, NOT `install_hooks.sh --check`: that flag does not exist. I
+    # wrote it, then resolved the reference mechanically (§12.4) before shipping
+    # -- a gate citing a flag that is not there reads as satisfied and silently
+    # never runs. Compared against the WORKING-TREE source, and worded as such,
+    # because that is what installing would copy; H36 is the open row about a
+    # message that says "tracked" while comparing the tree.
+    _drift=0
+    for _h in spikes/harness/*.hook; do
+      [ -e "$_h" ] || continue
+      _n=$(basename "$_h" .hook)
+      cmp -s "$_h" ".git/hooks/$_n" 2>/dev/null || {
+        _drift=1; note DRIFT "$_n differs from working-tree spikes/harness/$_n.hook, or is not installed"; }
+    done
+    if [ "$_drift" = 0 ]; then
+      note ok "git hooks match their working-tree source (not reinstalled: --check)"
+    else
+      problems=$((problems+1))
+    fi
+  elif sh spikes/harness/install_hooks.sh >/dev/null 2>&1; then
     note ok "git hooks installed/refreshed from tracked source"
   else
     fail "install_hooks.sh failed — the commit gates are not installed"
@@ -153,9 +198,31 @@ done
 #     the lane exits having done no work, logging a clean-looking exit. run_loop.sh
 #     clears these at turn start, but a signal for a lane we are ABOUT to start
 #     should be gone before the launch so the state the operator sees is true.
+#     v3 (H44, ATOM-3, 2026-08-17). TWO defects fixed here, and the second is
+#     the dangerous one.
+#     (a) It ran under `--check`, which promises to change nothing.
+#     (b) IT SWEPT EVERY LANE, not the lanes it was about to start. The comment
+#         one paragraph up says "a signal for a lane we are ABOUT to start" and
+#         the loop said `.loop_signal.*`. A signal belonging to a LIVE lane is
+#         not stale: `.loop_exit.$CALLSIGN` exists for the seconds between the
+#         Stop hook writing it and run_loop.sh reading it, and deleting it in
+#         that window means the lane MISSES ITS OWN TERMINAL SIGNAL and keeps
+#         looping after being told to stop. That is H16 inverted -- H16 was a
+#         signal that outlived its span; this is a lane that cannot be stopped --
+#         and it is the worse direction, because the H16 failure is visible in
+#         the log and this one is silent.
 for f in .loop_signal.* .loop_exit.*; do
   case "$f" in *'*'*) continue ;; esac
   case "$f" in *.last) continue ;; esac
+  _cs=${f#*.}; _cs=${_cs#*.}
+  if [ -n "$(lane_pid "$_cs")" ] || { [ -f ".loop_lock.$_cs" ] && kill -0 "$(tr -dc '0-9' < ".loop_lock.$_cs")" 2>/dev/null; }; then
+    note live "$f belongs to a LIVE lane ($_cs) -- NOT stale, left alone"
+    continue
+  fi
+  if [ "$CHECK_ONLY" = yes ]; then
+    note stale "$f ($(tr -d '\n' < "$f" 2>/dev/null | head -c 20)) -- would clear (not clearing: --check)"
+    continue
+  fi
   note cleared "stale $f ($(tr -d '\n' < "$f" 2>/dev/null | head -c 20))"
   rm -f "$f"
 done
