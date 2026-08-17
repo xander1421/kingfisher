@@ -1,0 +1,8 @@
+{
+  "hooks": {
+    "Stop": [
+      { "hooks": [ { "type": "command",
+        "command": "/Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh" } ] }
+    ]
+  }
+}

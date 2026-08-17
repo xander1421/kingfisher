@@ -3,6 +3,10 @@ split  train 190480  dev 40817  test 40818   (237 predicates, 14505 entities)
 ROUND 0   3109 rules minable from train
           top-12 conf on test 0.2922  (the G17 statistic)
 
+======================================================================
+MATERIALISE_TOP = 12
+======================================================================
+
 REWRITE   2688 edges written from 12 rules
           2688 were eligible; caps dropped 0  (MAX_BODY=20000, DERIVED_CAP=60000)
             rule (121, 4, 5)  conf 0.372  eligible     43  written     43
@@ -24,10 +28,83 @@ CONTROL   same 2688 edges, objects permuted within predicate
           24 rules not minable in round 0
           new-rule top-12 conf on test 0.0274
 
-A15       planted a second-order chain: 400 (s,c,d) edges into train,
-          400 (t,a,d) conclusions into the scored set. Body (r,s) has
+A15       planted a second-order chain: 467 (s,c,d) edges into train,
+          333 (t,a,d) conclusions into the scored set. Body (r,s) has
           support only via materialised r-edges.
-          NOT RECOVERED — the pipeline cannot see a second-order rule that
-          is present by construction. Every null result above is void.
+          RECOVERED (15,238)=>239  n=248  conf 0.165  -- machinery is not blind
 
-VERDICT: VOID — positive control failed; the machinery is blind
+VERDICT: NO DISCOVERY — new rules (0.0093) do not beat the shuffled-edge control (0.0274); the effect is edge count
+
+======================================================================
+MATERIALISE_TOP = 60
+======================================================================
+
+REWRITE   7528 edges written from 60 rules
+          7528 were eligible; caps dropped 0  (MAX_BODY=20000, DERIVED_CAP=60000)
+            rule (121, 4, 5)  conf 0.372  eligible     43  written     43
+            rule (78, 58, 15)  conf 0.347  eligible     49  written     49
+            rule (121, 5, 4)  conf 0.320  eligible     50  written     50
+            rule (127, 205, 133)  conf 0.303  eligible     66  written     66
+            rule (106, 219, 34)  conf 0.303  eligible     33  written     33
+
+ROUND 1   3248 rules minable from train+derived
+          206 of them were NOT minable in round 0
+          new-rule top-12 conf on test 0.1001
+            (201,110)=>91  n=   31  conf 0.290
+            (201,48)=>185  n=   34  conf 0.265
+            (152,206)=>139  n=   34  conf 0.147
+            (152,219)=>139  n=   38  conf 0.132
+            (223,48)=>28  n=   41  conf 0.122
+
+CONTROL   same 7528 edges, objects permuted within predicate
+          231 rules not minable in round 0
+          new-rule top-12 conf on test 0.1074
+
+A15       planted a second-order chain: 467 (s,c,d) edges into train,
+          333 (t,a,d) conclusions into the scored set. Body (r,s) has
+          support only via materialised r-edges.
+          RECOVERED (15,238)=>239  n=248  conf 0.165  -- machinery is not blind
+
+VERDICT: NO DISCOVERY — new rules (0.1001) do not beat the shuffled-edge control (0.1074); the effect is edge count
+
+======================================================================
+MATERIALISE_TOP = 300
+======================================================================
+
+REWRITE   60000 edges written from 268 rules
+          62663 were eligible; caps dropped 2663  (MAX_BODY=20000, DERIVED_CAP=60000)
+            rule (121, 4, 5)  conf 0.372  eligible     43  written     43
+            rule (78, 58, 15)  conf 0.347  eligible     49  written     49
+            rule (121, 5, 4)  conf 0.320  eligible     50  written     50
+            rule (127, 205, 133)  conf 0.303  eligible     66  written     66
+            rule (106, 219, 34)  conf 0.303  eligible     33  written     33
+
+ROUND 1   4526 rules minable from train+derived
+          1577 of them were NOT minable in round 0
+          new-rule top-12 conf on test 0.0956
+            (13,33)=>34  n=  144  conf 0.132
+            (141,230)=>97  n=   31  conf 0.129
+            (28,33)=>34  n=  141  conf 0.128
+            (185,221)=>51  n=   63  conf 0.111
+            (24,205)=>48  n=   49  conf 0.102
+
+CONTROL   same 60000 edges, objects permuted within predicate
+          1477 rules not minable in round 0
+          new-rule top-12 conf on test 0.1222
+
+A15       planted a second-order chain: 467 (s,c,d) edges into train,
+          333 (t,a,d) conclusions into the scored set. Body (r,s) has
+          support only via materialised r-edges.
+          RECOVERED (15,238)=>239  n=248  conf 0.165  -- machinery is not blind
+
+VERDICT: NO DISCOVERY — new rules (0.0956) do not beat the shuffled-edge control (0.1222); the effect is edge count
+
+======================================================================
+SWEEP
+======================================================================
+  written   new     conf  ctrl new  ctrl conf    A15
+     2688    18   0.0093        24     0.0274    yes
+     7528   206   0.1001       231     0.1074    yes
+    60000  1577   0.0956      1477     0.1222    yes
+
+OVERALL: NO DISCOVERY — at every size where the machinery is proven able to see a second-order rule, rules exposed by the rewrite do NOT beat the shuffled-edge control. New rules appear because edges were added, not because structure was

@@ -3,7 +3,10 @@
 # Terminal signals are FILES, not prose: to end legally, the agent must
 # write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.
 # Mentioning those words in conversation has no effect.
-ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+# ROOT is pinned. CLAUDE_PROJECT_DIR was unset and the session project dir is
+# spikes/S51_multicore, so the $(pwd) fallback would have looked for STOP and
+# .loop_signal in the wrong directory even once the hook was registered.
+ROOT="/Users/victorianikolenko/kingfisher"
 cd "$ROOT" 2>/dev/null || true
 cat >/dev/null   # consume hook payload; no transcript parsing in v2
 

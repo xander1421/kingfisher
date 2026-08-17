@@ -71,7 +71,7 @@ MIN_PAIRS = R.MIN_PAIRS      # 30
 INV_MAX = R.INV_MAX          # 0.30
 TOP_N = R.TOP_N              # 12
 
-MATERIALISE_TOP = 12         # round-0 rules whose conclusions get written back
+SWEEP = (12, 60, 300)        # round-0 rules whose conclusions get written back
 MAX_BODY = 20_000            # per-rule cap on materialised edges
 DERIVED_CAP = 60_000         # total cap; both caps are REPORTED, never silent
 SEED = 0xC0FFEE
@@ -146,22 +146,40 @@ def shuffle_derived(edges, seed):
     return out
 
 
-def plant_second_order(derived, train, npred, nent, rng):
+SEED_FRAC = 0.15             # share of planted conclusions visible in train
+
+
+def plant_second_order(derived, npred, nent, n_plant=400):
     """POSITIVE CONTROL (A15). Build a rule that is minable ONLY after the
     rewrite, so a pipeline that misses it is proven blind.
 
     For derived edges (r, a, c) -- which by construction do not exist in train
-    -- add (s, c, d) with a fresh predicate s and fresh entities d, and put the
-    conclusion (t, a, d) in the scored set. The body (r, s) then has support
-    only via materialised edges: in train, no r-edge joins a to c at all.
+    -- add (s, c, d) with a fresh predicate s and fresh entities d, and place
+    the conclusion (t, a, d). The body (r, s) then has support only via
+    materialised edges: in train, no r-edge joins a to c at all.
+
+    THE FIRST VERSION OF THIS PLANT FAILED, and the reason is structural rather
+    than a coding slip. `mine()` builds `head` from the MINING graph, so a rule
+    whose conclusions live entirely in the scored set is never a candidate --
+    it is not scored badly, it is never considered. Putting 100% of (t,a,d)
+    into the scored set guaranteed NOT RECOVERED for a rule that was present by
+    construction.
+
+    So the plant takes the shape of a real rule, the same shape G17's A20
+    needed: a minority of conclusions visible in train so the rule is
+    discovered, the majority held out so it can be scored.
     """
     s_pred, t_pred = npred + 1, npred + 2
-    use = derived[:400]
+    use = derived[:n_plant]
     extra_train, extra_score = [], []
     for i, (r, a, c) in enumerate(use):
         d = nent + 1 + i
         extra_train.append((s_pred, c, d))
-        extra_score.append((t_pred, a, d))
+        # deterministic seed selection, no RNG needed for a 1-in-k stride
+        if i % int(1 / SEED_FRAC) == 0:
+            extra_train.append((t_pred, a, d))
+        else:
+            extra_score.append((t_pred, a, d))
     return (s_pred, t_pred), extra_train, extra_score
 
 
@@ -189,6 +207,17 @@ def main():
     print(f"ROUND 0   {len(r0_dev)} rules minable from train")
     print(f"          top-{TOP_N} conf on test {base0:.4f}  (the G17 statistic)")
 
+    results = []
+    for top in SWEEP:
+        results.append(cycle(top, r0_dev, body0, known, train, p_tr, p_te,
+                             test, npred, nent))
+    summarise(results, base0)
+    return 0
+
+
+def cycle(MATERIALISE_TOP, r0_dev, body0, known, train, p_tr, p_te, test,
+          npred, nent):
+    print(f"\n{'=' * 70}\nMATERIALISE_TOP = {MATERIALISE_TOP}\n{'=' * 70}")
     # ---------------- rewrite -------------------------------------------
     derived, mlog = materialise(r0_dev, body0, p_tr, MATERIALISE_TOP)
     elig = sum(m["eligible"] for m in mlog)
@@ -202,7 +231,7 @@ def main():
     if not derived:
         print("\nNOTHING WAS WRITTEN — the rewrite is empty and every result "
               "below would be vacuous. Stopping.")
-        return 2
+        return {"top": MATERIALISE_TOP, "derived": 0, "verdict": "EMPTY"}
 
     # ---------------- round 1, treatment --------------------------------
     aug = train + derived
@@ -234,9 +263,7 @@ def main():
               f"{conf_c:.4f}")
 
     # ---------------- positive control ----------------------------------
-    rng = random.Random(99)
-    (s_pred, t_pred), ex_tr, ex_sc = plant_second_order(derived, train, npred,
-                                                        nent, rng)
+    (s_pred, t_pred), ex_tr, ex_sc = plant_second_order(derived, npred, nent)
     aug_p = aug + ex_tr
     p_te_p = pairs_of(test + ex_sc)
     r1p, _ = mine(aug_p, pairs_of(aug_p), p_te_p)
@@ -268,22 +295,53 @@ def main():
         v = (f"DISCOVERY — {len(new)} rules minable only after the rewrite, "
              f"test conf {conf_new:.4f} vs control {conf_c:.4f}")
     print(f"\nVERDICT: {v}")
+    return {"top": MATERIALISE_TOP, "derived": len(derived), "eligible": elig,
+            "materialised": mlog, "round1_rules": len(r1),
+            "new_rules": len(new), "new_conf": conf_new,
+            "control_new_rules": len(new_c), "control_conf": conf_c,
+            "a15_recovered": bool(found),
+            "a15_conf": (max(x["conf"] for x in found) if found else None),
+            "verdict": v}
 
-    json.dump({"split": [len(train), len(dev), len(test)],
-               "round0_rules": len(r0_dev), "round0_top_conf": base0,
-               "derived": len(derived), "eligible": elig,
+
+def summarise(results, base0):
+    print(f"\n{'=' * 70}\nSWEEP\n{'=' * 70}")
+    print(f"{'written':>9}{'new':>6}{'conf':>9}{'ctrl new':>10}"
+          f"{'ctrl conf':>11}{'A15':>7}")
+    for r in results:
+        if r.get("verdict") == "EMPTY":
+            print(f"{0:>9}{'-':>6}{'-':>9}{'-':>10}{'-':>11}{'-':>7}")
+            continue
+        print(f"{r['derived']:>9}{r['new_rules']:>6}{r['new_conf']:>9.4f}"
+              f"{r['control_new_rules']:>10}{r['control_conf']:>11.4f}"
+              f"{('yes' if r['a15_recovered'] else 'NO'):>7}")
+
+    live = [r for r in results if r.get("a15_recovered")]
+    if not live:
+        v = ("VOID at every rewrite size — the positive control never fired, "
+             "so no null result here is evidence about discovery")
+    else:
+        wins = [r for r in live if r["new_conf"] > r["control_conf"]]
+        if not wins:
+            v = ("NO DISCOVERY — at every size where the machinery is proven "
+                 "able to see a second-order rule, rules exposed by the "
+                 "rewrite do NOT beat the shuffled-edge control. New rules "
+                 "appear because edges were added, not because structure was")
+        else:
+            b = max(wins, key=lambda r: r["new_conf"] - r["control_conf"])
+            v = (f"DISCOVERY at {b['derived']} written edges — {b['new_rules']}"
+                 f" rules minable only after the rewrite, test conf "
+                 f"{b['new_conf']:.4f} vs control {b['control_conf']:.4f}")
+    print(f"\nOVERALL: {v}")
+    json.dump({"round0_top_conf_test": base0, "sweep": results, "overall": v,
                "caps": {"max_body": MAX_BODY, "derived_cap": DERIVED_CAP},
-               "materialised": mlog,
-               "round1_rules": len(r1), "new_rules": len(new),
-               "new_conf": conf_new,
-               "control_new_rules": len(new_c), "control_conf": conf_c,
-               "a15_recovered": bool(found), "verdict": v,
                "conditions": {"data": "real:FB15k-237", "split_seed": SEED,
+                              "split": "70/15/15 train/dev/test",
                               "platforms": [["macos", "aarch64"]],
-                              "concurrency": "single-process"},
+                              "concurrency": "single-process",
+                              "swept": {"materialise_top": SWEEP}},
                "cites": ["G17_composition_redo", "G21_null_rust"]},
               open(os.path.join(HERE, "evolve.json"), "w"), indent=1)
-    return 0
 
 
 if __name__ == "__main__":
