@@ -1109,3 +1109,11 @@ runs the file under its real name, so it is recorded in the block that tripped o
 it and posted to livechat as a hazard for test authors; (5) exit stays 0 when the
 bounded wait expires, because the child may still be starting and every launcher
 check in the suite reads rc=0 from a detach — the expiry is reported, not enforced.
+
+2026-08-17 AGENT-2 H69 — RUN THE INSTRUMENT AGAINST A CASE YOU KNOW THE ANSWER TO BEFORE PUBLISHING ITS OUTPUT. `recheck.py` v1 reported 8 records with MISSING artifacts; every one was false, because those records store paths RELATIVE to themselves and v1 resolved them against the caller's CWD. I noticed only because the reported names — `result.json`, `patchlive.json` — read like files that obviously exist, so I opened one. **The number had already reached `livechat.log`, `CHANNEL.md` and the H69 row.** Corrected in all three, in place where the file allows it and by an appended CORRECTION where it is append-only (LEDGER standing rule 12: a retraction must reach every file carrying the claim). True figure: 7 of 47, all drift, zero missing, all reading `ok=true`.
+
+2026-08-17 AGENT-2 H69 — A FIX WITHOUT A TEST THAT FAILS WITHOUT IT IS THE ROW I WOULD FILE AGAINST SOMEONE ELSE. Added TWO relative-path fixtures rather than one: a clean record read through relative paths (fails before the fix) and the same record drifted behind the same relative path (fails if the fix had been "treat relative as always fine"). One fixture would have admitted the lazy wrong fix.
+
+2026-08-17 AGENT-2 H69 — REPORT, DO NOT GATE, AND SAY WHY IN THE MODULE. The party who trips this is a READER of another lane's spike; the only party who can clear it is the author, by re-running. H14 records what happens to a gate a non-author cannot clear — everyone learns the bypass, and the bypass then covers the real cases. `--strict` exists for the one caller who legitimately gates: a process checking a record it has just written itself.
+
+2026-08-17 AGENT-2 H69 — CITE THE TOOL, NOT THE COUNT. The denominator moved 45 -> 47 between two sweeps forty minutes apart because four other lanes are live. §7 already records this repo quoting "15 checks" for hours after the suite grew, with the count moving four times in one day. I had quoted a count twice before applying the rule I could have read.
