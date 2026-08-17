@@ -1,5 +1,32 @@
 #!/usr/bin/env python3
-"""refcheck.py v4 — H4/H18/H33. Every §N / guardrail / file / ROW-ID citation resolves.
+"""refcheck.py v5 — H4/H18/H33/H41. Every §N / guardrail / file / ROW-ID citation resolves.
+
+v5 RATIONALE (§12.7) — TWO DEFECTS REMOVED, and H41 named only one of them:
+  (a) only INLINE backticked paths were matched, so a path inside a ```sh fence
+      -- the form a lane copies and runs -- was never read.
+  (b) a dot-slash path was skipped by check 4's first-segment rule, because the
+      first segment of a dot-slash token is `.`, not a listdir entry.
+MEASURED BEFORE WRITING ANYTHING, on all 45 harness files, because "a real
+false-positive surface" was the row's stated reason nobody had taken it: (a)
+alone flags NOTHING AT ALL — including the live instance the row itself cites —
+(b) alone flags 2, together 4, zero false positives at either half. So shipping
+the half the row named would have been a green checker over the row's own
+evidence: §12.2 at my own site, in the module whose v4 block is about that.
+THE FIRST RUN FLAGGED THIS FILE THREE TIMES: a rationale block naming an absent
+path is indistinguishable from a broken citation of it, which is the trap
+selfcheck() builds every fixture out of string parts to avoid. Noted at check 4.
+SCOPE, and it is a narrowing with a cost stated: `HANDOFF.<lane>.md` journals
+leave the PATH check and stay in every other. A journal has ONE legal writer
+(H10) and this module gates every lane's commit, so a broken path in one can be
+tripped only by lanes forbidden to fix it — a fleet stop whose remedy is
+forbidden, which is H33 again and mine again. Given up: a journal claiming
+evidence at a path that does not exist is now unchecked. Filed as its own row,
+not folded in here.
+LIVE INSTANCE CLOSED BY ANOTHER LANE MID-CYCLE: `peers.sh` was created at 14:16
+while this was being written, so the tree is green for a reason that is not this
+change. Selfcheck is therefore the only evidence v5 works, and it drives both
+halves in both directions. Falsified: revert either half on a copy and
+`--selfcheck` goes red naming which. (ok-1, H41.)
 
 v4 RATIONALE (§12.7) — THE DEFECT REMOVED: a path carrying an unexpanded variable
 is a TEMPLATE, not a citation, and check 4 skipped `$` only as a LEADING
@@ -277,23 +304,77 @@ def scan():
         # tracked path in this repo contains the character and nothing real is
         # hidden by skipping it. The other three named skips (external trees,
         # `.git/`, placeholders) each carry their reason the same way.
+        # v5, 2026-08-17 (ok-1, H41). TWO DEFECTS, and the row named only one.
+        # (a) only INLINE backticks were matched, so a path inside a ```sh fence
+        #     -- the form a lane copies and runs -- was unchecked.
+        # (b) a dot-slash path was skipped by the first-segment rule above,
+        #     because the first segment of ./peers.sh is `.` and `.` is not a
+        #     listdir entry. `./` is the one prefix that STATES the path is in
+        #     this repo, so it is the one case where the external-tree rule must
+        #     not apply.
+        #     NOTE THE BACKTICKS THIS BLOCK DOES NOT USE. v5's first run flagged
+        #     THIS FILE three times, because a rationale block naming an absent
+        #     path is indistinguishable from a broken citation of it -- the same
+        #     trap selfcheck() below builds its fixtures out of string parts to
+        #     avoid, walked into by the author of that note within the hour.
+        # MEASURED BEFORE WRITING, on all 45 harness files, because "false
+        # positives" was the row's stated reason nobody had taken it: (a) alone
+        # flags NOTHING AT ALL -- including the live instance the row cites --
+        # (b) alone flags 2, together 4, and all four are the same real defect:
+        # a dot-slash peers.sh is prescribed by two briefs, HANDOFF.ATTACKER-1.md
+        # and WORK_QUEUE.md, and does not exist. Zero false positives at either
+        # half. Fixing only the half the row named would have shipped a green
+        # checker over the row's own evidence, which is §12.2 at my own site.
+        # SCOPED: fences are read in `.md` only. A `.sh` harness file's fences
+        # are its own code, and the dot-slash gate.sh in test_loop_gate.sh names
+        # a file the suite creates in its scratch ROOT -- real there, absent
+        # here, and not a citation.
         top = set(os.listdir(ROOT))
-        for tok in set(re.findall(r'`([^`\s]+/[^`\s]*)`', text)):
+
+        def unresolved(tok):
+            """None if `tok` is not a repo-path citation or resolves; else the path."""
             if tok.startswith(('~', 'http', '/', '<')) or any(
                     c in tok for c in '<>*?:\\$'):
-                continue
+                return None
             tok = tok.rstrip('.,;:')
-            if tok.split('/')[0] not in top:
-                continue
+            body = tok[2:] if tok.startswith('./') else tok
+            if not body:
+                return None
+            if not tok.startswith('./') and body.split('/')[0] not in top:
+                return None
             # `.git/hooks/...` is INSTALLED STATE, not tracked content, and the
             # harness cites it both ways -- MISSION_LOOP names a hook that exists
             # and WORK_QUEUE's H15 row names one BECAUSE IT DOES NOT. A citation
             # asserting absence cannot be told from a broken one by any check
             # here, so this does not pretend to.
-            if tok.startswith('.git/'):
-                continue
-            if not os.path.exists(os.path.join(ROOT, tok)):
-                problems.append(f'{rel}: `{tok}` does not exist')
+            if body.startswith('.git/'):
+                return None
+            return None if os.path.exists(os.path.join(ROOT, body)) else tok
+
+        # SCOPE, v5: journals are OUT of the path check and stay in every other
+        # check. A `HANDOFF.<lane>.md` is a past-tense record with ONE legal
+        # writer (H10), so a broken path in it can only be tripped by a lane
+        # that is not allowed to fix it -- and this module gates every lane's
+        # commit. v5's first run proved that live: 4 red, and 3 of the 4 were
+        # lanes REPORTING this very defect, one of them inside a journal I may
+        # not edit. A gate whose only remedy is forbidden is a fleet stop, which
+        # is H33 again and mine again.
+        # WHAT THIS GIVES UP, stated rather than buried: a journal claiming
+        # evidence at a path that does not exist is now unchecked, and that is a
+        # real defect class. It needs a check that reports to the journal's own
+        # lane instead of to the shared gate -- filed, not folded in here.
+        # §N and A<n> citations in journals are UNAFFECTED: those resolve against
+        # documents any lane can read, and H26's retraction turned on one.
+        cited = set()
+        if not re.match(r'HANDOFF\..+\.md$', rel):
+            cited = set(re.findall(r'`([^`\s]+/[^`\s]*)`', text))
+            if rel.endswith('.md'):
+                for blk in re.findall(r'^```[^\n]*\n(.*?)^```', text, re.M | re.S):
+                    cited |= set(re.findall(r'[^\s`\'"|;()]+/[^\s`\'"|;()]*', blk))
+        for tok in cited:
+            bad = unresolved(tok)
+            if bad:
+                problems.append(f'{rel}: `{bad}` does not exist')
 
         # 5 · duplicate row ids. A citation that resolves to TWO rows is worse
         # than one that resolves to none, for §12.4's stated reason: it reads as
@@ -354,6 +435,13 @@ def selfcheck():
         # spikes/harness/. dup is allocated twice (the defect); uniq once (the
         # control that proves the check is not simply reporting every id).
         dup, uniq = 'H' + '99', 'H' + '98'
+        # v5 (H41). Four path fixtures in two PAIRS, because each half of v5 has
+        # a direction that a checker skipping every path would also satisfy.
+        fence_bad = 'spikes/' + 'harness/fenced_nope.sh'    # fenced, absent
+        fence_good = '.claude/' + 'settings.json'           # fenced, present
+        dot_bad = '.' + '/nosuch.sh'                        # dot-slash, absent
+        dot_good = '.' + '/run_loop.sh'                     # dot-slash, present
+        journal_bad = 'spikes/' + 'harness/journal_nope.py'  # broken, in a journal
         open(os.path.join(tmp, 'WORK_QUEUE.md'), 'w').write(
             '| id | item | status |\n|---|---|---|\n'
             f'| {dup} | first allocation, lane A | OPEN |\n'
@@ -376,9 +464,21 @@ def selfcheck():
             # the first draft of this fixture wrote "which only a per-lane brief
             # defines" and thereby handed CLAUDE.md the very permission the case
             # exists to deny. The fixture passed and tested nothing.
-            f'and \u00a7{brief_sec}, which MISSION_LOOP does not define.\n')
+            f'and \u00a7{brief_sec}, which MISSION_LOOP does not define.\n'
+            # v5's fixtures (H41). Assembled from parts for the same reason as
+            # every fixture above, and v5's FIRST RUN proved the reason live: the
+            # rationale block for this change backticked three absent paths and
+            # refcheck flagged its own source three times.
+            f'```sh\n{fence_bad}   # inside a fence, which v4 never read\n'
+            f'cat {fence_good}     # inside a fence and REAL\n```\n'
+            f'run `{dot_bad}` and `{dot_good}` -- one exists, one does not.\n')
         open(os.path.join(tmp, 'HANDOFF.md'), 'w').write(
             f"per \u00a71 and the brief's \u00a7{brief_sec}.\n")
+        # v5's SCOPE fixture: a per-lane journal, single-writer under H10, whose
+        # path citation is broken. It must stay QUIET -- and its \u00a7 citation must
+        # still be judged, because the scope narrows ONE check and not the file.
+        open(os.path.join(tmp, 'HANDOFF.' + 'L9' + '.md'), 'w').write(
+            f'ran `{journal_bad}` last cycle; cites {bad_sec} which does not exist.\n')
         # v3 (b)'s fixture: every remaining HARNESS entry EXISTS in this pass, so
         # the missing-file check is shown quiet here and driven separately below.
         os.makedirs(os.path.join(tmp, '.claude', 'hooks'))
@@ -409,7 +509,9 @@ def selfcheck():
         # literal broken citation for its own scan to trip over.
         want = [(bad_sec, 'unresolved section'), (bad_g, 'unresolved guardrail'),
                 ('nope.py', 'missing path'), ('numbered "2"', 'duplicate section'),
-                (f'numbered "{dup}"', 'duplicate row id')]
+                (f'numbered "{dup}"', 'duplicate row id'),
+                (fence_bad, 'absent path inside a ```sh fence (v5a)'),
+                (dot_bad, 'absent dot-slash path (v5b)')]
         bad = [w for w, _d in want if w not in out]
         for w, d in want:
             print(f"  {'CATCHES' if w in out else 'MISSES '} {d} ({w})")
@@ -431,6 +533,24 @@ def selfcheck():
             bad.append('template path refused')
         else:
             print(f'  QUIET   on a template path ({tmpl_path})')
+        # v5's three QUIET directions. Each is the half a checker that simply
+        # flagged every slash-bearing token would fail, and `nope.py` CATCHES
+        # above is what stops "quiet everywhere" from reading as a pass.
+        for tok, d in ((fence_good, 'a REAL path inside a fence'),
+                       (dot_good, 'a REAL dot-slash path'),
+                       (journal_bad, "a broken path in a per-lane JOURNAL (H10 scope)")):
+            if f'`{tok}` does not exist' in out:
+                print(f'  FALSE-POSITIVE on {d} ({tok})')
+                bad.append(d)
+            else:
+                print(f'  QUIET   on {d} ({tok})')
+        # ...and the scope narrows ONE check, not the file: the same journal's
+        # broken § citation must still be reported, or v5 silenced a document.
+        if f'HANDOFF.L9.md: §{bad_sec[1:]} does not resolve' in out:
+            print('  CATCHES a broken § citation in that same journal')
+        else:
+            print('  MISSES  a broken § citation in that same journal')
+            bad.append('journal section citation')
         # Check 5's other direction, and it is the one that matters: a check that
         # flagged EVERY id would also "catch" the duplicate and be useless.
         if f'numbered "{uniq}"' in out:
