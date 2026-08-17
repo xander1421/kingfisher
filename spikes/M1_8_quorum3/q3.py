@@ -96,6 +96,24 @@ def observed_domains(wid, binary, via):
     }
 
 
+def observed_residency(devdir):
+    """Which CIDs the device actually holds, read from the device.
+
+    A22: `prefer_cached_cids` (`hyperjob_v0:114`) makes matching depend on which
+    shards a device holds, and the schema has no field for it -- so the natural
+    implementation is the device declaring its own cache, i.e. a worker telling
+    the matcher which jobs it should win. That is a direct route to the S69/S70
+    residency capture.
+
+    The worker's `bytes_pushed` is the same defect in miniature: it is the
+    worker reporting whether it already had the shard. Neither is used for
+    residency. This is.
+    """
+    out = subprocess.run(['adb', 'shell', f'ls {devdir}/shards 2>/dev/null'],
+                         capture_output=True, text=True).stdout
+    return {l.strip() for l in out.splitlines() if l.strip().startswith('b')}
+
+
 def key(e):
     """Agreement key. `sorted_hash` is hashed by fuelrun from raw output, which
     embeds hyperon's process-global variable counter (`$x#24605`) whenever a
@@ -302,6 +320,7 @@ def main():
     # job -- 35.1 ms batched against a 68.8 ms job means per-job preflight would
     # cost 51%. A refusal stops dispatch; jobs already sent still drain.
     pol = preflight.Policy()
+    dispatch_at = {}
     sessions, dispatched, refusals = 0, 0, []
     for start in range(0, len(progs), a.chunk):
         if not a.no_device:
@@ -324,6 +343,7 @@ def main():
                 tmp = os.path.join(d, jid + '.tmp')
                 with open(tmp, 'w') as f: json.dump(job, f)
                 os.rename(tmp, os.path.join(d, jid + '.job'))
+            dispatch_at[jid] = time.time()
             dispatched += 1
     progs = progs[:dispatched]
     print(f'dispatched {dispatched} jobs in {sessions} work session(s), '
@@ -338,7 +358,17 @@ def main():
             fp = os.path.join(a.work, wid, 'out', jid + '.env')
             while not os.path.exists(fp) and time.time() - t0 < 1800:
                 time.sleep(0.02)
-            envs.append(json.load(open(fp)) if os.path.exists(fp) else None)
+            e = json.load(open(fp)) if os.path.exists(fp) else None
+            if e is not None:
+                # A22: `wall_ms` and hyperjob's `Timings` are worker-supplied and
+                # sit outside the agreement key, so nothing compares them -- and
+                # a device profits by understating cost once scheduling reads
+                # them. The coordinator brackets the envelope itself: it cannot
+                # see execution time, but it can see when the answer arrived,
+                # which is what scheduling actually needs.
+                e['observed_ms'] = round(
+                    (os.path.getmtime(fp) - dispatch_at[jid]) * 1000, 1)
+            envs.append(e)
         for e in envs:
             if not e:
                 continue
@@ -380,6 +410,24 @@ def main():
         print('   Fault classes NO axis separates (quorum cannot help at any size):')
         for name, why in UNSEPARABLE.items():
             print(f'     - {name}: {why}')
+    if not a.no_device:
+        held = observed_residency(DEVDIR)
+        pushed_claim = sum(1 for _,_,_,_,es,_,_,_ in rows for e in es
+                           if e and e.get('worker') == 'phone'
+                           and e.get('bytes_pushed', 0) > 0)
+        print(f'\nresidency (observed on device, not worker-reported): '
+              f'{len(held)} of {uniq} shards held; worker claimed {pushed_claim} '
+              f'fetches this run')
+    ow = [e['observed_ms'] for _,_,_,_,es,_,_,_ in rows for e in es
+          if e and e.get('worker') == 'phone' and 'observed_ms' in e]
+    wc = [float(e['wall_ms']) for _,_,_,_,es,_,_,_ in rows for e in es
+          if e and e.get('worker') == 'phone' and 'wall_ms' in e]
+    if ow and wc:
+        import statistics as _st
+        print(f'timing  phone: worker-declared median {_st.median(wc):.1f} ms | '
+              f'coordinator-observed median {_st.median(ow):.1f} ms '
+              f'(observed = queue + adb + poll granularity; an UPPER BOUND, not a check)')
+
     mism = [(e['worker'], e['domain_mismatch'])
             for _,_,_,_,es,_,_,_ in rows for e in es
             if e and e.get('domain_mismatch')]

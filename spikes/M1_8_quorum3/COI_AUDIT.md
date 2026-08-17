@@ -57,3 +57,50 @@ involved. Cheap now, ~free to keep, and it closes the hole before it opens.
 Worker-supplied and **safe**, because the checker holds the reference value.
 That is the shape every conflicted field should be converted into where
 possible: not "trust less", but "check against something you already hold".
+
+---
+
+## Follow-up: two fields converted, one that resists conversion
+
+**`prefer_cached_cids` / residency — CONVERTED.** The coordinator now reads the
+device's shard directory directly (`observed_residency`), instead of trusting
+either a declared cache list or the worker's `bytes_pushed`. Live run:
+`66 of 66 shards held; worker claimed 0 fetches` — consistent, and now observed.
+The hole is closed before the field that would have opened it was ever written.
+
+**Timing — RESISTS CONVERSION, and that is the finding.**
+
+The coordinator brackets each envelope itself, so `observed_ms` needs no worker
+claim. But it does not measure the same quantity:
+
+| dispatch | worker-declared | coordinator-observed |
+|---|---|---|
+| 16 jobs/session | 72.8 ms | **18,123 ms** |
+| 1 job/session | 68.2 ms | **193.8 ms** |
+
+The 18 s figure is **our own batch dispatch** — job 16 waits behind 15 others.
+Serialising removes that and still leaves 2.8x, which is polling interval, file
+mtime granularity, adb round trips and the per-session preflight.
+
+So the coordinator can observe **end-to-end latency**, which is a legitimate
+scheduling input, and cannot observe **execution time**, which is what a device
+would understate. The observation is ~3x coarser than the quantity it would
+check, so it cannot detect the lie it exists to catch.
+
+**A22's remedy is not always available.** "Observe it instead" works for
+identity (host, binary, residency) because those are facts the coordinator
+already holds or can query cheaply. It fails for quantities where the act of
+observing adds more noise than the misreport would — A23's observer effect
+setting the floor on A22's remedy.
+
+The honest options for timing, none free:
+- accept end-to-end latency as the scheduling input and **never** use it as a
+  fraud check;
+- get execution time from an attested runtime, i.e. the same attestation root
+  the `operator` axis needs;
+- bound it structurally instead — fuel is already coordinator-verifiable and is
+  a better proxy for work done than any clock reading.
+
+The third is probably right and costs nothing: **`fuel_used` is in the agreement
+key, so it is cross-checked by construction.** A device cannot understate work
+without diverging from its quorum. Timing is the wrong axis to police.
