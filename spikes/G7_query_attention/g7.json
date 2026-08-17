@@ -1,0 +1,67 @@
+{
+ "train": "(, (cites $x $y) (verdict $y RED))",
+ "test": "(, (cites $x $y) (verdict $y INVALID))",
+ "touched": 33,
+ "baseline": [
+  [
+   "B1",
+   "W1"
+  ],
+  [
+   "N1",
+   "W1"
+  ],
+  [
+   "Q1",
+   "W1"
+  ],
+  [
+   "S62",
+   "S63"
+  ],
+  [
+   "S63",
+   "S62"
+  ],
+  [
+   "W4",
+   "W1"
+  ]
+ ],
+ "arms": {
+  "query_attention": {
+   "findings": 0,
+   "preserved": 0.0
+  },
+  "indegree": {
+   "findings": 1,
+   "preserved": 0.16666666666666666
+  },
+  "keep_low": {
+   "findings": 3,
+   "preserved": 0.5
+  },
+  "arbitrary": {
+   "findings": 0,
+   "preserved": 0.0
+  }
+ },
+ "verdict": "NO SIGNAL \u2014 no better than pruning by name order",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "arm": [
+    "query_attention",
+    "indegree",
+    "keep_low",
+    "arbitrary"
+   ]
+  }
+ },
+ "cites": [
+  "G1_graph_ingest",
+  "G5_ecan_metta",
+  "G6_forgetting"
+ ]
+}
