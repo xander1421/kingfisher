@@ -115,3 +115,56 @@ S80 then measured the **range** case and the ordering differs there, so the rule
 is point-query-only after all: this page extends it from membership to absence,
 not from point queries to all queries. No number here moves.
 `spikes/S80_completeness_bytes/`.
+
+---
+
+## CHANGELOG — 2026-08-17, AGENT-1, ATTACK cycle C27. The cross-check is withdrawn; the headline stands.
+
+`spikes/S79_absence_bytes/ATTACK.md`, `attack.py`, `attack.json`,
+`certify ok=true`. Every figure on this page reproduces at **0.0 B** — that was
+asserted before anything below was written.
+
+**WITHDRAWN: the model-vs-W2 cross-check and its residual attribution.**
+`w2_real_absence_bytes_mean` is `steps_bytes(pf['steps'])` alone, and W2's own
+`witness_bytes()` is `steps_bytes + desc_bytes(pf['node'])`. `pf['node']` is the
+**divergence node**, whose child set is precisely the *"ALL children at the
+divergence position"* this page's own model charges and calls the entire
+structural difference between absence and membership. **The model includes that
+term and the measurement excludes it**, so the agreement was between two
+different quantities.
+
+| set | published W2 B | omitted divergence descriptor | corrected | published residual | true |
+|---|---|---|---|---|---|
+| atoms, original | 1,589 | 80.2 | **1,669** | +5.0% | **+10.3%** |
+| atoms, interned | 1,930 | 53.6 | **1,983** | +4.0% | **+6.9%** |
+| triples | 2,291 | 100.9 | **2,392** | −0.3% | **+4.0%** |
+
+So *"the model's absolute bytes are 4–7% under W2's real ones … the same residual
+as S77: W2's per-step framing"* is wrong twice: the residual is **4.0–10.3%**,
+and the **triples row flips sign** — the closest-looking agreement in the table
+was the most misaccounted row. Part of the gap is not framing but a term the
+measurement never counted; the descriptor is 53–101 B where framing alone is 5 B
+plus a prefix, i.e. child digests at 33 B each.
+
+**W2's confirmed absence cost moves to 1,669 / 1,983 / 2,392 B.** W2's published
+*"~2.0 KB on the realistic miss"* is still CONFIRMED — the corrected range
+brackets it more tightly, not less.
+
+**UNCHANGED: everything this page concluded.** The headline is computed **model
+over model** — `absence_auth_bytes_mean` against `membership_auth_bytes_mean`,
+both from the C14-validated recount, both charging the divergence set — so
+*absence costs 1.02–1.04× membership, orders the three key sets identically, and
+the intuition that absence is the expensive case is wrong* all stand, as does the
+extension of S77's rule from membership to absence.
+
+**The class, for anyone reading this page as a template:** two definitions of
+"proof bytes" have coexisted since W2 — `witness_bytes` (as transmitted) and
+`steps_bytes` (authentication path only) — and nothing anywhere states which is
+in use. S73 uses `steps + desc + key`; W2's own line 452 uses `steps + desc`;
+S77, S80 and S84 use `steps` alone. For **membership** that is defensible, since
+a leaf's prefix is derivable from the key by the verifier
+(`verify_membership`'s last line checks `k[i:] == prefix`) and the leaf carries
+no siblings. For **absence** it is not, because the divergence child set is
+neither derivable nor decorative. **Correct numbers, wrong attribution** —
+CLAUDE.md's second unmechanisable mode, and it was caught by reading the
+prover's own accounting function, not by any control on this page.

@@ -1,0 +1,51 @@
+{
+  "attack_stands": true,
+  "reproduced_committed_figures_within_B": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "rows": [
+    {
+      "divergence_node_descriptor_bytes": 80.2,
+      "full_proof_bytes": 1669.0,
+      "model_bytes": 1513.28,
+      "omitted_share_of_proof_pct": 4.8,
+      "published_residual_pct": 5.0,
+      "published_w2_bytes_steps_only": 1588.85,
+      "recomputed_steps_bytes_mean": 1588.85,
+      "set": "atoms_original",
+      "true_residual_pct": 10.3
+    },
+    {
+      "divergence_node_descriptor_bytes": 53.6,
+      "full_proof_bytes": 1983.2,
+      "model_bytes": 1855.68,
+      "omitted_share_of_proof_pct": 2.7,
+      "published_residual_pct": 4.0,
+      "published_w2_bytes_steps_only": 1929.61,
+      "recomputed_steps_bytes_mean": 1929.61,
+      "set": "atoms_interned",
+      "true_residual_pct": 6.9
+    },
+    {
+      "divergence_node_descriptor_bytes": 100.9,
+      "full_proof_bytes": 2392.1,
+      "model_bytes": 2299.04,
+      "omitted_share_of_proof_pct": 4.22,
+      "published_residual_pct": -0.3,
+      "published_w2_bytes_steps_only": 2291.2,
+      "recomputed_steps_bytes_mean": 2291.2,
+      "set": "triples",
+      "true_residual_pct": 4.0
+    }
+  ],
+  "scope_membership": "for MEMBERSHIP the same omission is the leaf descriptor at 87.5 / 45.2 / 5.5 B, it does NOT reorder the key sets, so S77's inversion survives; and a leaf prefix is derivable from the key by the verifier, so omitting it is defensible -- what was missing is that nobody said which accounting was in use.",
+  "sign_flips": [
+    "triples"
+  ],
+  "target": "spikes/S79_absence_bytes/RESULT.md, the model-vs-W2 cross-check and its residual attribution",
+  "thesis": "steps_bytes is not the size of a non-membership proof; W2's own witness_bytes is steps_bytes + desc_bytes(node), and that descriptor holds the divergence child set the model charges",
+  "what_does_not": "the CROSS-CHECK and its attribution. The residual is 4.0-10.3%, not 4-7%, the triples row flips sign, and part of it is a structurally omitted term rather than W2's per-step framing.",
+  "what_survives": "S79's headline is model-over-model (absence_auth vs membership_auth, both from the C14-validated recount) and is unaffected: absence still costs 1.02-1.04x membership and still orders the sets identically."
+}

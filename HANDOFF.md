@@ -654,6 +654,42 @@ about. This is the honest state, not a regression.
   same 26, so a disagreement would have meant one of the two documents is wrong
   about the corpus. DECISIONS 191–193.
 
+- **C27 ATTACK: the proof-byte accounting under four spikes, one of them mine
+  from the previous cycle — and it withdrew my own coefficient.**
+  `spikes/S79_absence_bytes/ATTACK.md`, `attack.py`, `certify ok=true`, 3
+  controls, the attack's own falsifier did not fire. **Reproduced S79's committed
+  figures at 0.0 B first**, using its own probe construction, imported not
+  reimplemented — made a gating control, not a habit.
+  **`steps_bytes(pf['steps'])` is not the size of a non-membership proof.** W2's
+  own `witness_bytes()` is `steps_bytes + desc_bytes(pf['node'])`, and that node
+  is the DIVERGENCE node whose child set is exactly the *"ALL children at the
+  divergence position"* S79's model charges and calls the entire structural
+  difference. **The model includes the term and the measurement excludes it**:
+  80.2 / 53.6 / 100.9 B, 2.7–4.8% of the proof, the same order as the residual it
+  was attributed to. Withdrawn: residual is **4.0–10.3%** not 4–7%; **the triples
+  row flips sign** and it was the closest-looking agreement in the table; the
+  attribution to per-step framing is wrong. W2's confirmed absence cost moves to
+  **1,669 / 1,983 / 2,392 B** and W2's ~2.0 KB is still CONFIRMED. **S79's
+  headline is untouched** (model over model, both sides charging the divergence
+  set) and S77's inversion survives.
+  **The real defect is that both accountings are correct and neither was named**,
+  coexisting since W2. Invisible to every control on all four spikes because all
+  four import the same function and agree with each other whichever it is —
+  correct numbers, wrong attribution, CLAUDE.md's second unmechanisable mode.
+  **My own S84 corrected in the same commit: 1.06–1.47× withdrawn to 1.06–1.16×**
+  — its falsifier tested FLATNESS and 1,004% against a 0.000% null does not
+  become flat under a 5% denominator correction, so the finding stands and the
+  coefficient was wrong for exactly one cycle. Caught a fabricated observation in
+  my own control on the way: it displayed the PUBLISHED value labelled
+  `recomputed_...`, verdict right, evidence decorative. DECISIONS 194–198.
+- **NEXT 3: name the accounting.** Two definitions of "proof bytes" live in
+  `trie_witness.py` with nothing stating which a caller means, and five spikes
+  have now picked one silently. The fix is not a new number: it is
+  `witness_bytes` taking an explicit mode, or `steps_bytes` renamed to what it
+  is (`auth_path_bytes`), plus a sweep of the five call sites. **Falsifier: if a
+  rename changes no published figure anywhere, the confusion was cosmetic and
+  this row is closed by the rename alone.**
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

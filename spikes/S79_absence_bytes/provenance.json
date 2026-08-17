@@ -1,11 +1,11 @@
 {
  "spike": "S79_absence_bytes",
- "recorded_utc": "2026-08-17T11:39:38Z",
- "note": "S79 uses the Python sibling recount that C14 validated against the pathmap walk at 0.00%, so no new unvalidated instrument sits under the number. Counts and digests only, no timings.",
+ "recorded_utc": "2026-08-17T12:59:22Z",
+ "note": "allow_dirty is set and stated rather than flagged past: the dirty entry is THIS attack being written into the target spike dir. The dependency under measurement, W2_witnessed_trie/trie_witness.py, is untouched by this cycle, and C_reproduces_S79 is the check that matters -- it lands on the committed figures to 0.0 B, which no edit to the prover could survive.",
  "repos": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes",
-   "head": "bf1548505bc3a89f1070f31e1b28141ce7ce4684",
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/../W2_witnessed_trie",
+   "head": "d728d4ffc4f636c5ef86f0c3e8d2a7b42ea44f20",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,7 +13,7 @@
   }
  ],
  "manifests": {
-  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/../W2_witnessed_trie": {
    "files": 0,
    "combined_sha256": "44136fa355b3678a",
    "per_file": {}
@@ -21,12 +21,12 @@
  },
  "artifacts": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/absence.json",
-   "sha256": "a9dff604c1b7ff2a70916d381681b363943c5b7fc36485a64be38a97f73494fd",
-   "bytes": 6143,
-   "mtime": 1786966778,
-   "compared_ts": 1786966777,
-   "compared_clock": "last-commit"
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/attack.json",
+   "sha256": "f986f7fb9bf5691a9a10ad06a6684dd2aebcfaa25388dd34df36b5d362957878",
+   "bytes": 2293,
+   "mtime": 1786971562,
+   "compared_ts": 1786971562,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -46,137 +46,93 @@
  },
  "controls": [
   {
-   "name": "C_probes_are_absent_and_proofs_verify",
-   "must_fire_because": "an \"absence proof\" for a key that is present, or one the verifier rejects, is a number about nothing -- W1 shipped four controls with no verification function at all",
-   "can_fail_because": "any probe is found present by prove_membership, or any absence proof fails verification",
-   "null_must_contain": "W2's prove_membership, which is free to find any probe present, and verify_non_membership, which is free to return False",
+   "name": "C_reproduces_S79",
+   "must_fire_because": "a refutation must reproduce the target first; if these probes do not land on the committed figures, this attack is about a different measurement and says so instead of publishing",
+   "can_fail_because": "absent_probes could be seed- or order-dependent, in which case the recomputed means would drift from the committed ones",
+   "null_must_contain": "a rerun that misses the committed numbers, which would mean the target is not reproducible",
    "fired": true,
-   "detail": "",
+   "detail": "recomputed against committed, per set \u2014 a gap of 0.0 B on all three is exact reproduction, which is what licenses the refutation below",
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "atoms_original": {
-     "probes": 200,
-     "absent": 200,
-     "built": 200,
-     "verified": 200
-    },
-    "atoms_interned": {
-     "probes": 200,
-     "absent": 200,
-     "built": 200,
-     "verified": 200
-    },
-    "triples": {
-     "probes": 200,
-     "absent": 200,
-     "built": 200,
-     "verified": 200
-    }
+    "recomputed_steps_bytes_mean": [
+     1588.85,
+     1929.61,
+     2291.2
+    ],
+    "committed_in_absence_json": [
+     1588.85,
+     1929.61,
+     2291.2
+    ],
+    "absolute_gap_B": [
+     0.0,
+     0.0,
+     0.0
+    ]
    }
   },
   {
-   "name": "C_probes_are_deep_misses",
-   "must_fire_because": "A27: probes that diverge at the root measure the CHEAP miss and S73 published a flat 293 B that way; W2's ~2.0 KB is about the realistic deep miss",
-   "can_fail_because": "mean divergence depth is below 2 for any set, i.e. the probes leave the trie immediately",
-   "null_must_contain": "a divergence depth free to come out at 0 or 1, which is exactly what a random-byte probe would give on these key sets",
+   "name": "C_proofs_still_verify",
+   "must_fire_because": "the omitted term must belong to proofs that are REAL: every non-membership proof measured here must verify against the root, or the bytes being counted are bytes of nothing (A29)",
+   "can_fail_because": "a probe that is actually present has no honest absence proof and prove_non_membership returns None, which would drop n below the probe count",
+   "null_must_contain": "proofs that fail verification, whose sizes would describe a broken prover",
    "fired": true,
-   "detail": "",
+   "detail": "every counted absence proof verifies against the root",
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "atoms_original": 95.5,
-    "atoms_interned": 54.3,
-    "triples": 11.0
+    "all_probes_verified": true,
+    "probes_per_set": 200
    }
   },
   {
-   "name": "C_absence_tracks_branching_like_membership",
-   "must_fire_because": "S77 generalised to 'proof size is set by branching, not key length' from membership alone; if absence orders the sets differently, that sentence is membership-only and S77 overreached",
-   "can_fail_because": "the absence ordering differs from the membership ordering on these three sets",
-   "null_must_contain": "three key sets whose absence proofs are built independently of the membership measurement and are free to rank in any of six orders",
+   "name": "C_omission_is_structural_not_framing",
+   "must_fire_because": "the omitted term must be the DIVERGENCE CHILD SET that the model charges, not per-step framing; otherwise this is S77 residual again and not a new finding",
+   "can_fail_because": "if divergence nodes were single-child, desc_bytes would be ~5 B of framing and the omission would be the naming problem, not a measurement one",
+   "null_must_contain": "a divergence descriptor whose bytes are all prefix and framing, with no child digests",
    "fired": true,
-   "detail": "",
+   "detail": "a 33 B child entry each, so >40 B cannot be framing alone (framing is 5 B + prefix)",
    "kind": "control",
    "constant_observations": false,
-   "observations": {
-    "by_membership": [
-     "atoms_original",
-     "atoms_interned",
-     "triples"
-    ],
-    "by_absence": [
-     "atoms_original",
-     "atoms_interned",
-     "triples"
-    ],
-    "absence_bytes": {
-     "atoms_original": 1513.28,
-     "atoms_interned": 1855.68,
-     "triples": 2299.04
-    },
-    "membership_bytes": {
-     "atoms_original": 1461.056,
-     "atoms_interned": 1803.392,
-     "triples": 2246.208
-    }
-   }
-  },
-  {
-   "name": "C_real_prover_agrees_on_absence_ordering",
-   "must_fire_because": "the model charges ALL children at the divergence point, which is a claim about what a proof must carry; a prover that exists is the check on it",
-   "can_fail_because": "W2's real absence bytes rank the sets differently from the modelled digest counts",
-   "null_must_contain": "W2's prove_non_membership, written before this spike and free to rank the sets any way",
-   "fired": true,
-   "detail": "",
-   "kind": "control",
-   "constant_observations": false,
-   "observations": {
-    "by_w2_real": [
-     "atoms_original",
-     "atoms_interned",
-     "triples"
-    ],
-    "by_model": [
-     "atoms_original",
-     "atoms_interned",
-     "triples"
-    ],
-    "w2_bytes": {
-     "atoms_original": 1588.85,
-     "atoms_interned": 1929.61,
-     "triples": 2291.2
-    }
-   }
-  },
-  {
-   "name": "C_absence_costs_more_than_membership",
-   "must_fire_because": "the model says absence carries every child at the divergence point where membership carries all but one, so absence must be strictly dearer -- if it is not, the model is wrong about what an absence proof has to show",
-   "can_fail_because": "any set shows absence costing no more than membership",
-   "null_must_contain": "membership digest counts measured in S77, which this spike does not recompute and cannot adjust",
-   "fired": true,
-   "detail": "",
-   "kind": "control",
-   "constant_observations": false,
-   "observations": {
-    "atoms_original": 1.0357440098120811,
-    "atoms_interned": 1.028994250833984,
-    "triples": 1.023520528820127
-   }
+   "observations": [
+    80.2,
+    53.6,
+    100.9
+   ]
   }
  ],
- "falsifiers": [],
+ "falsifiers": [
+  {
+   "name": "F_omission_is_negligible",
+   "must_fire_because": null,
+   "can_fail_because": "the omitted descriptor is under 1% of the full proof in every key set",
+   "null_must_contain": "a corpus whose divergence nodes are narrow, making the omitted term small",
+   "fired": false,
+   "detail": "omitted descriptor as a percentage of the full proof, per set",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    4.8,
+    2.7,
+    4.22
+   ],
+   "refutes": "this attack -- if the divergence descriptor is under 1% of the proof, the two accountings differ by nothing that matters and S79 has a naming problem, not a measurement one",
+   "fires_when": "the omitted descriptor is under 1% of the full proof in every key set",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
  "falsifiers_fired": [],
- "no_deps_reason": null,
+ "no_deps_reason": "attacking a committed spike from its own directory",
  "source_mtimes": {
-  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes": {
-   "newest": 1786965952,
+  "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/../W2_witnessed_trie": {
+   "newest": 1786965691,
    "from": "<HEAD commit>"
   }
  },
  "problems": [],
  "ok": true,
- "falsifier": "if non-membership proof cost does not track branching the way membership does -- i.e. if the absence ordering differs from the membership ordering -- then S77's \"proof size is set by branching, not key length\" is membership-only and overreached",
+ "falsifier": "the divergence descriptor is under 1% of the proof in every set",
  "carried_from_previous_record": [
   "falsifier",
   "carried_from_previous_record"

@@ -122,3 +122,34 @@ position, and the load-free-to-wall-clock link is **unmeasured on this host**.
   so this does **not** extend to them by inspection, which is the mistake S79
   explicitly refused to make.
 - **A quiet host.** Both open items above and the encoding question need one.
+
+---
+
+## CHANGELOG — 2026-08-17, AGENT-1, ATTACK cycle C27, one cycle after publishing. The coefficient is withdrawn; the finding is not.
+
+`spikes/S79_absence_bytes/ATTACK.md`. This page's `proof_bytes` is
+`steps_bytes(pf['steps'])`, which is the **authentication path only**. W2's own
+`witness_bytes()` adds `desc_bytes` for the leaf or divergence descriptor, so the
+denominator of every ratio here is short by the leaf descriptor: **87.5 / 45.2 /
+5.5 B** on atoms_original / atoms_interned / triples.
+
+**WITHDRAWN: "the verifier hashes 1.06–1.47× the proof's own bytes."** Counting
+the leaf descriptor, the operating points are **1.16 / 1.13 / 1.06×**, so the
+range on real key sets is **1.06–1.16×**, and the sweep's small-n points (where
+framing dominates most) fall by more than the large ones. The direction the
+coefficient describes — framing amortising toward 1 as proofs grow — is
+unchanged and, if anything, cleaner.
+
+**UNCHANGED: the falsifier and everything it answers.** It tested FLATNESS: a
+1,004% spread in verifier work against a 0.000% null does not become flat under a
+5% denominator correction, and the falsifier's own operationalisation is stated
+in spreads, not in the ratio. The forced-position result (3,483 corruptions,
+3,483 rejections) is about the verifier and does not touch proof accounting at
+all. `C_components_disagree` and its scope are unaffected.
+
+Worth stating plainly rather than filed away: **this page published a coefficient
+built on an accounting nobody had named, and it was withdrawn by the next
+cycle.** The accounting question was visible in `trie_witness.py` the whole time
+— `witness_bytes` sits eleven lines below `steps_bytes` — and no control on this
+page or on S77, S79 or S80 could see it, because all four import the same
+function and would agree with each other whichever one it was.
