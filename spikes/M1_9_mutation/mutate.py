@@ -116,6 +116,10 @@ def sweep():
     return out
 
 
+def _run_out(cmd, cwd):
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True).stdout
+
+
 def probe_result(src):
     """Evaluate a one-line MeTTa program and return its result text."""
     p = os.path.join(HERE, '_probe.metta')
@@ -218,6 +222,16 @@ def main():
             print(f'      detector: {d}')
 
     build()   # restore the real binary
+    # Record WHICH tree produced these numbers. Without it the artifact is
+    # byte-identical across unrelated trees, so a deterministic re-run leaves
+    # git with no new blob, the artifact keeps an older last-commit than its
+    # own source, and `certify` calls it stale -- the success case of a
+    # reproducible pipeline reading as a failure.
+    results['_tree'] = {
+        'elders_head': _run_out(['git', 'rev-parse', '--short', 'HEAD'], ELDERS),
+        'elders_patch_sha256': hashlib.sha256(
+            _run_out(['git', 'diff'], ELDERS).encode()).hexdigest()[:16],
+    }
     json.dump(results, open(os.path.join(HERE, 'mutation.json'), 'w'), indent=1)
     print('\nrebuilt unmutated; wrote mutation.json')
 

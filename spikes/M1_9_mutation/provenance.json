@@ -1,21 +1,19 @@
 {
  "spike": "M1_9_mutation",
- "recorded_utc": "2026-08-17T11:06:36Z",
+ "recorded_utc": "2026-08-17T11:07:04Z",
  "note": "REFUTED. Re-run from a baseline whose binary is probe-verified unmutated.",
  "repos": [
   {
    "path": ".",
-   "head": "cf0e962ec3de7d384ecdc81726d8b69a8bad0749",
-   "clean": false,
-   "dirty_files": [
-    "spikes/M1_9_mutation/mutate.py"
-   ],
-   "diff_sha256": "0f7aa451998c0bb9eb08675bea12db4a784d28ee725f35f3b3390f05e3b9d77c",
-   "diff_bytes": 2209
+   "head": "aa42ddb1ba3e1347a9ca7a5df0ac73d458791e89",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun",
-   "head": "cf0e962ec3de7d384ecdc81726d8b69a8bad0749",
+   "head": "aa42ddb1ba3e1347a9ca7a5df0ac73d458791e89",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -99,8 +97,8 @@
   },
   {
    "name": "baseline-binary-verified-unmutated",
-   "must_fire_because": "copy2 preserved mtime, cargo skipped the rebuild and left the MUTATED binary on disk; a baseline swept with it scores that mutation 0/64 for the wrong reason",
-   "can_fail_because": "it DID fail -- the binary answered !(< 1 1)=True after the first run, which is how the bug was found; the baseline now refuses to record",
+   "must_fire_because": "copy2 preserved mtime, cargo skipped the rebuild and left the MUTATED binary on disk",
+   "can_fail_because": "it DID fail -- the binary answered !(< 1 1)=True after the first run, which is how the bug was found",
    "null_must_contain": "!(- 5 3)=2 and !(< 1 1)=False before the baseline is recorded",
    "fired": true,
    "detail": "",
@@ -114,8 +112,8 @@
  "no_deps_reason": null,
  "source_mtimes": {
   ".": {
-   "newest": 1786964719,
-   "from": "spikes/M1_9_mutation/mutate.py"
+   "newest": 1786964809,
+   "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
    "newest": 1786955408,
@@ -123,9 +121,8 @@
   }
  },
  "problems": [
-  "STALE ARTIFACT mutation.json predates . source by 0.1h (newest source: spikes/M1_9_mutation/mutate.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "STALE ARTIFACT baseline.json predates . source by 0.1h (newest source: spikes/M1_9_mutation/mutate.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "DIRTY TREE . at cf0e962e: 1 modified. The build is NOT cf0e962e."
+  "STALE ARTIFACT mutation.json predates . source by 0.1h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "STALE ARTIFACT baseline.json predates . source by 0.1h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here."
  ],
  "ok": false,
  "falsifier": "the corpus detects these mutations broadly -- a wrong evaluator changes many agreement keys",
