@@ -1,34 +1,34 @@
 {
  "spike": "M1_8_quorum3",
- "recorded_utc": "2026-08-17T06:44:15Z",
- "note": "M1 re-run on KNOWN-PROVENANCE binaries, both built from the elders tree recorded below. Supersedes runs using S30 fuelrun.v2.* (built 16:16 the previous day, before every patch) -- those measured a stock binary against a patched tree.",
+ "recorded_utc": "2026-08-17T10:43:04Z",
+ "note": "REFUTED: 14 empty / 25 import-failure / 25 evaluated",
  "repos": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
-   "head": "3f76dc460da6961f57f69f6c3e550c59c74ada83",
+   "path": "q3.py",
+   "head": "<error: [Errno 20] Not a directory: 'q3.py'>",
    "clean": false,
    "dirty_files": [
-    "yperon-common/src/multitrie.rs",
-    "hyperon-space/src/index/trie.rs",
-    "lib/src/metta/runner/builtin_mods/fileio.rs",
-    "lib/src/metta/runner/builtin_mods/random.rs",
-    "lib/src/metta/runner/stdlib/atom.rs",
-    "lib/src/space/grounding/mod.rs"
+    "[Errno 20] Not a directory: 'q3.py'>"
    ],
-   "diff_sha256": "04189487f726a26df787823055ddd11e12261894b41118411b1fe2d8e083234c",
-   "diff_bytes": 12070
+   "diff_sha256": "92f9c86de1e754d5c034e8d142119ef7f08e3e659cd0a5692dec0dc1d355e146",
+   "diff_bytes": 44
   }
  ],
+ "manifests": {
+  "q3.py": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
  "artifacts": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host",
-   "sha256": "97d24cce709fdca29b73ef611f67e58ba0b0a18b264d4f29e5c38ac9d7c5aa6b",
-   "bytes": 3604032
-  },
-  {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.android",
-   "sha256": "409cae61351830e93435ca391897e70094b9a450e549539726e58958c14e7261",
-   "bytes": 3954864
+   "path": "result.json",
+   "sha256": "4126a0b04b115c5219a4f18ec36162487e01d2a9ab4cd62bb051f7365db06866",
+   "bytes": 348694,
+   "mtime": 1786963279,
+   "compared_ts": 1786963279,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -48,48 +48,166 @@
  },
  "controls": [
   {
-   "name": "admission-gate",
-   "must_fire_because": "a gate that never refuses is indistinguishable from no gate",
-   "null_must_contain": null,
+   "name": "empty-result-guard-fires",
+   "must_fire_because": "unwired, all 64 key on sha256(\"\") and adjudicate INSUFFICIENT_DOMAINS",
+   "can_fail_because": "a corpus where every program emits output leaves this all-INSUFFICIENT_DOMAINS and the guard unexercised",
+   "null_must_contain": "at least one NO_RESULTS",
    "fired": true,
-   "detail": "refused 1 of 67",
+   "detail": "",
+   "constant_observations": false,
    "observations": [
-    {
-     "program": "python__sandbox__test_gnd_conv.metta",
-     "reasons": [
-      "flip"
-     ]
-    }
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "NO_RESULTS",
+    "INSUFFICIENT_DOMAINS",
+    "NO_RESULTS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "NO_RESULTS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "NO_RESULTS",
+    "INSUFFICIENT_DOMAINS",
+    "INSUFFICIENT_DOMAINS",
+    "NO_RESULTS",
+    "INSUFFICIENT_DOMAINS"
    ]
   },
   {
-   "name": "domain-mismatch-detector",
-   "must_fire_because": "must be able to report a worker claiming a domain we did not observe",
-   "null_must_contain": null,
+   "name": "corpus-classifier-separates",
+   "must_fire_because": "separates real MeTTa evaluation from a program that died at its first import!",
+   "can_fail_because": "if every program were an import failure the observations collapse to one value and certify refuses",
+   "null_must_contain": "more than one class",
    "fired": true,
-   "detail": "198 envelopes flagged on the operator axis",
+   "detail": "",
+   "constant_observations": false,
    "observations": [
-    {
-     "operator": {
-      "declared": "operator:self",
-      "observed": "UNATTESTED"
-     }
-    },
-    {
-     "operator": {
-      "declared": "operator:self",
-      "observed": "UNATTESTED"
-     }
-    },
-    {
-     "operator": {
-      "declared": "operator:self",
-      "observed": "UNATTESTED"
-     }
-    }
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "evaluated",
+    "empty",
+    "import-failure",
+    "evaluated",
+    "evaluated",
+    "import-failure",
+    "evaluated",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "import-failure",
+    "empty",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "evaluated",
+    "import-failure",
+    "import-failure",
+    "import-failure",
+    "empty",
+    "evaluated",
+    "evaluated",
+    "empty",
+    "evaluated"
    ]
   }
  ],
- "problems": [],
- "ok": true
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "q3.py": {
+   "newest": 0,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [
+  "DIRTY TREE q3.py at <error: : 1 modified. The build is NOT <error: ."
+ ],
+ "ok": false,
+ "falsifier": "the corpus has full discriminating power: all 64 programs evaluate, so 64/64 agreement is evidence of cross-architecture evaluation determinism"
 }
