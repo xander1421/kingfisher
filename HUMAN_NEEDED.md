@@ -37,3 +37,11 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
   APK then fails `dlopen` with a `/Users/...` path. One-line fix upstream
   (`-Wl,-soname,libhyperonc.so` in the cdylib link args). Found in M1.1.
   Unfiled: publishing is disallowed by §11.
+
+- **`hyperjob` needs a result kind for a panic, or panics declared unattributable
+  in writing.** A panic is deterministic (both devices abort identically) but
+  produces no envelope. `RESULT_FUEL_EXHAUSTED` is deterministic and payable;
+  `RESULT_DEADLINE_EXCEEDED` is infrastructure and unpaid; a panic is neither.
+  Silence means the first production panic is classified by whatever the code
+  happens to do. M1.8c currently answers `AGREED_FAILURE` and refuses payment —
+  a safe default, not a specification.

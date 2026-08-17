@@ -55,16 +55,44 @@ def key(e):
                 hashlib.sha256(norm.encode()).hexdigest())
     return (e.get('status'), e.get('fuel_used'), e.get('sorted_hash'))
 
+# statuses that mean "nobody produced an answer", as opposed to "the answer is X"
+FAILED_STATUS = {'CRASH', 'TIMEOUT', 'SHARD_MISSING', 'NO_PARSE'}
+
+
 def adjudicate(envs):
-    """>=2 of 3 identical -> ACCEPT. Returns (verdict, key, agree_count)."""
+    """Returns (verdict, key, agree_count).
+
+    Four outcomes, not three. Agreement that a job FAILED is not agreement on a
+    RESULT, and the two need different handling: disagreement means somebody is
+    wrong, a crash means nobody answered. Conflating them would let three
+    aborting workers be counted as a successful quorum.
+
+    A panicking `fuelrun` exits 134 (SIGABRT) and prints no fields, so its
+    envelope carries status CRASH and no fuel_used -- hence the None-safe key.
+    """
     ks = [key(e) for e in envs]
     live = [k for k in ks if k is not None]
+    dispatched, returned = len(ks), len(live)
     if not live:
-        return 'NO_RESULTS', None, 0
+        return 'NO_RESULTS', None, 0, dispatched, returned
     k, n = Counter(live).most_common(1)[0]
+
+    # A worker that never answered SHRANK the quorum. Counting agreement over
+    # only the survivors turns an availability failure into a clean verdict,
+    # and that is exploitable: the panic threshold is result CARDINALITY, which
+    # depends on the shard, and the job author chooses the program. An
+    # adversary can author a job that crosses hyperon's 1024-result limit on an
+    # honest device's shard but not on their own, killing the honest workers
+    # and leaving their own nodes as the whole quorum. Cost: one crafted job --
+    # no stake, no Sybils, no collusion. Q1's 72% capture figure assumed quorum
+    # SIZE was fixed; it is not. So a short quorum is never a clean verdict.
+    if returned < dispatched:
+        return 'REDUCED_QUORUM', k, n, dispatched, returned
     if n >= 2:
-        return ('UNANIMOUS' if n == len(ks) else 'MAJORITY'), k, n
-    return 'NO_QUORUM', None, n
+        if k[0] in FAILED_STATUS:
+            return 'AGREED_FAILURE', k, n, dispatched, returned
+        return ('UNANIMOUS' if n == dispatched else 'MAJORITY'), k, n, dispatched, returned
+    return 'NO_QUORUM', None, n, dispatched, returned
 
 def stage_device(android_bin):
     subprocess.run(['adb', 'shell', f'mkdir -p {DEVDIR}/corpus'], check=True)
@@ -206,27 +234,38 @@ def main():
             while not os.path.exists(fp) and time.time() - t0 < 1800:
                 time.sleep(0.02)
             envs.append(json.load(open(fp)) if os.path.exists(fp) else None)
-        v, k, n = adjudicate(envs)
-        rows.append((p, v, n, k, envs))
+        v, k, n, disp, ret = adjudicate(envs)
+        rows.append((p, v, n, k, envs, disp, ret))
 
     for pr in procs: pr.terminate()
 
     # report
     tally = Counter(r[1] for r in rows)
-    print(f'\n{"program":56} {"verdict":10} {"agree":5} fuel')
-    for p, v, n, k, envs in rows:
-        flag = '' if v in ('UNANIMOUS',) else '   <<<'
-        print(f'{p[:56]:56} {v:10} {n}/3   {(k[1] if k else "-"):>9}{flag}')
+    print(f'\n{"program":56} {"verdict":14} {"agree":5} fuel')
+    for p, v, n, k, envs, disp, ret in rows:
+        flag = '' if v == 'UNANIMOUS' else '   <<<'
+        fuel = (k[1] if k and k[1] is not None else '-')
+        # agreed/returned(dispatched) -- a shrunken quorum must be visible
+        shape = f'{n}/{ret}' + (f'({disp})' if ret != disp else '')
+        print(f'{p[:52]:52} {v:14} {shape:>9} {str(fuel):>9}{flag}')
     print('\n' + '  '.join(f'{kk}={vv}' for kk, vv in sorted(tally.items())))
     accepted = tally['UNANIMOUS'] + tally['MAJORITY']
-    print(f'accepted {accepted}/{len(rows)}')
+    short = tally['REDUCED_QUORUM']
+    if short:
+        print(f'\n!! REDUCED_QUORUM on {short} job(s): fewer workers returned '
+              f'than were dispatched. Never payable -- a short quorum is an '
+              f'availability failure, and a craftable one.')
+    failed = tally['AGREED_FAILURE']
+    print(f'accepted {accepted}/{len(rows)}'
+          + (f'   |  AGREED_FAILURE {failed} (deterministic, but no result -- '
+             f'NOT accepted)' if failed else ''))
 
-    pushed = sum(e.get('bytes_pushed', 0) for _, _, _, _, es in rows
+    pushed = sum(e.get('bytes_pushed', 0) for _, _, _, _, es, _, _ in rows
                  for e in es if e)
     if ALPHA:
-        refused = sum(1 for _, _, _, _, es in rows for e in es
+        refused = sum(1 for _, _, _, _, es, _, _ in rows for e in es
                       if e and e.get('alpha_refused'))
-        nonground = sum(1 for _, _, _, _, es in rows for e in es
+        nonground = sum(1 for _, _, _, _, es, _, _ in rows for e in es
                         if e and e.get('results_text') is not None
                         and not is_ground(e['results_text']))
         print(f'alpha: {nonground} envelope(s) non-ground -> {refused} fell back '
@@ -242,7 +281,9 @@ def main():
                'workers': [w[0] for w in workers],
                'tally': dict(tally),
                'rows': [{'program': p, 'verdict': v, 'agree': n,
-                         'key': k, 'envelopes': e} for p, v, n, k, e in rows]},
+                         'key': k, 'envelopes': e,
+                         'dispatched': d, 'returned': r}
+                        for p, v, n, k, e, d, r in rows]},
               open(os.path.join(HERE, 'result.json'), 'w'), indent=1)
     print('-> result.json')
 

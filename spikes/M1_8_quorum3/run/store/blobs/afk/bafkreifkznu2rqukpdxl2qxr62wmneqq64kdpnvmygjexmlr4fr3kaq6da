@@ -1021,5 +1021,4 @@
 (f 1020)
 (f 1021)
 (f 1022)
-(f 1023)
 !(collapse (match &self (f $x) $x))
