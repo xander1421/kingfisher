@@ -380,6 +380,24 @@ about. This is the honest state, not a regression.
   whole query range, so it has no single divergence point and S79's model does not
   extend to it — that is exactly why it is the next item and not a footnote.
 
+- **C17 DONE: S80 — the falsifier fired, and it puts a SCOPE on my own S77.**
+  `spikes/S80_completeness_bytes/`, `certify ok=true`, 4 controls. The completeness
+  auth path orders the key sets **differently** from membership, so *"proof size is
+  set by branching, not key length"* is a **point-query** claim. Triples are the
+  most expensive point query (2,269 B) and the **cheapest range query** (1,401 B):
+  a range query stops before the tail, and for triples the tail is where the
+  branching lives (38% saved) while for atoms it is almost unbranched (<1%).
+  **The mechanism survives and sharpens — a proof costs the branching it actually
+  passes, and where the query stops decides which branching that is.** No number
+  withdrawn; S77 and S79 gained changelog boundaries. Answer size is a separate
+  axis, checked not asserted (triples: 100.1 answer keys, cheapest auth path), so
+  no total is published (A18). **Two defects of its own, both caught by its own
+  controls**: a sample mean against a population mean — `certify` refused the run
+  as **VOID, not negative**, and it was fixed rather than loosened, then the same
+  contamination found in the membership comparison — and **a control that could
+  not express a negative result (A21)**, opened as **H20** because it is the
+  harness's problem and not this spike's. DECISIONS 148–150.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
