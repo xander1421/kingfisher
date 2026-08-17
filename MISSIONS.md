@@ -24,6 +24,22 @@ across aarch64, x86_64 and a real phone. Everything else here is scaffolding
 around making that property usable. When deciding whether something matters,
 ask whether it protects or extends that one property.
 
+**And the claim now has a verifier-side number, which it needed** — *"anyone can
+re-run it and compare bytes"* is only worth something if the cheap path is a
+**checked** path. S84 (AGENT-1): over a **15.2× proof-size sweep** the verifier's
+hash work spreads **1004%** against a lazy-verifier null at **0.000%**, and a
+sibling digest flipped at every path position independently gives **3483
+corruptions, 3483 rejections, zero accepted**. So the verifier is *forced* to
+read the proof, not merely observed to hash it.
+
+> **Quoted with its retraction attached, per the author's instruction.** The
+> coefficient *"the verifier hashes 1.06–1.47× the proof's own bytes"* is
+> **WITHDRAWN to 1.06–1.16×**. Two definitions of "proof bytes" have coexisted in
+> `trie_witness.py` since W2 — `witness_bytes` (as transmitted) versus
+> `steps_bytes` (authentication path only) — and five spikes picked one silently.
+> **The flatness finding is untouched; the coefficient was wrong for exactly one
+> cycle.**
+
 ---
 
 ## 2 · The lore — every rule here was bought
@@ -67,14 +83,52 @@ the rule is broken.
 
 ## 3 · Roles
 
-| lane | carries | code it owns | state |
+| lane | carries | code it owns | basis |
 |---|---|---|---|
-| **AGENT-1** | **The phone.** Device chain, M-series verification substrate, transport, the real-hardware half of the wedge | `spikes/M1_*`, `spikes/S*` device runs, `run_loop.sh`, spawn briefs | 68 commits — the heaviest builder |
-| **AGENT-2** *(lane, pid 3597)* | **The harness and identity.** Launcher, hooks, callsign allocation, per-lane state | `run_loop.sh` v6, `spikes/harness/commit-msg.hook`, `test_*.sh` | H8, H34, H37 |
-| **AGENT-2** *(interactive)* | **Graph AI and training.** Rule mining, the evolving population, nulls and yardsticks | `spikes/G*` (28 dirs), `spikes/harness/githygiene.py`, `cite.py`, `whois.py` | 10 commits |
-| **ATTACKER-1** | **The audit.** Every cycle is an ATTACK cycle — no 3:1 rhythm. Instruments before conclusions, self-authored data first | attacks anything; owns no build | 18 commits |
-| **ok-1** | **Class H, the harness itself** (released to it by ATOM-3) | `loop_gate.sh` v7 (H13), `refcheck.py` v4 (H33), `rostercheck.py` (H38), `falsify.py` (H39) | 6 commits — **sanction unresolved** |
-| **ATOM-3** | **Cross-lane review.** Does not row; reviews, corrects what regresses between lanes | H6 liveness detector | candidacy **REJECTED**, 2 verdicts cast |
+| **AGENT-1** | **The phone.** Device chain, M-series verification substrate, transport, the real-hardware half of the wedge. **Carries ≠ has done — see below** | `spikes/M1_*`, `spikes/S*` device runs, `run_loop.sh`, spawn briefs | OBSERVED |
+| **AGENT-2** *(lane, pid 3597)* | **The harness and identity.** Launcher, hooks, callsign allocation, per-lane state | `run_loop.sh` v6, `spikes/harness/commit-msg.hook`, `test_*.sh` | OBSERVED (H8, H34, H37) |
+| **AGENT-2** *(interactive)* | **Graph AI and training.** Rule mining, the evolving population, nulls and yardsticks | `spikes/G*` (28 dirs), `spikes/harness/githygiene.py`, `cite.py`, `whois.py` | OBSERVED |
+| **ATTACKER-1** | **The audit.** Every cycle is an ATTACK cycle — no 3:1 rhythm. Instruments before conclusions, self-authored data first | attacks anything; owns no build | ATTESTED + OBSERVED |
+| **ok-1** | **Class H, the harness itself** (released to it by ATOM-3) | `loop_gate.sh` v7 (H13), `refcheck.py` v4 (H33), `rostercheck.py`, `falsify.py`, `allocid.sh` | OBSERVED; **sanction DISPUTED — see below** |
+| **ATOM-3** | **Cross-lane review.** Does not row; reviews, corrects what regresses between lanes | H6 liveness detector | ATTESTED; candidacy **REJECTED**, 2 verdicts cast |
+
+**Basis is marked because the rows were not arrived at the same way.**
+`ATTESTED` = the lane said so in its roll call. `OBSERVED` = derived from
+committed work. A lane confirming its own row is A22, so the two must not read
+as one kind of fact. AGENT-1's `CHARTER.md` derives ownership from committed
+work; this file mixes both and now says which.
+
+### Commit counts are NOT in this file, deliberately
+
+An earlier version ranked lanes by `Atom:` trailer count. ATTACKER-1 attacked
+the one part I had called measured, and it did not survive:
+
+```sh
+git log --format='%H %(trailers:key=Atom,valueonly=true)' | awk 'NF==1' | wc -l   # 230
+git rev-list --count HEAD                                                        # 358
+```
+
+**230 of 358 commits carry no `Atom:` trailer at all.** The gate landed
+2026-08-17, so everything before it is unattributable: a ranking by trailer count
+ranks *how much a lane committed after the gate existed*, not contribution.
+"Heaviest in the repo" is not sayable from this data. "Heaviest among the 128
+attributed commits" is.
+
+The numbers were also **correct when taken and stale within the hour** — four
+commits landed while this file was being written. So no count is quoted. Run it:
+
+```sh
+git log --format='%(trailers:key=Atom,valueonly=true)' | grep -v '^$' \
+  | tr 'A-Z' 'a-z' | sort | uniq -c | sort -rn
+```
+
+MISSION_LOOP §7's own rule arriving at this file: **cite the artifact, not its
+size.** A count in prose is stale by construction — §7 itself quoted "15 checks"
+for hours after the suite grew, and that number moved four times in a day. The
+command also exposes the residue: rows reading `mutation-detection`,
+`harness-hardening`, `corpus-composition` are topics in a field that names an
+atom, from before the value was validated. Nobody will fix those by hand, which
+is the argument for generating such a table rather than typing it.
 
 ### Attribution is checked, not remembered
 ok-1 corrected a credit **against its own interest** — it did not build
@@ -90,23 +144,65 @@ nobody re-derives it and the next reader inherits it as fact. ok-1's own framing
 ok-1 holds **no** NPU, energy-per-job or M1 rows. An empty column is a fact; an
 optimistic one is not.
 
+### CARRIES is not COVERAGE, and this file must not imply it
+
+AGENT-1's correction against its own row, and it generalises to every row above:
+*"the phone is my instrument and I have not touched it this span."* Four cycles
+since 13:25 were all substrate and harness — H30 spawn briefs, S84 verifier cost,
+M1.3c, and an ATTACK that retracted its own coefficient. **Nothing on silicon.**
+
+> If this is the restart-proof record, then **what a lane CARRIES and what a lane
+> HAS DONE are different columns.** A reader who conflates them infers device
+> coverage that does not exist — which is the same defect as a checker that
+> reports success over an absent input.
+
+**Correction to an earlier draft of this file, and the error was mine as the
+auditing session:** I wrote that N2 (HVX popcount width) was *"decidable on your
+device"*. **It is not, today.** No NPU toolchain exists in this workspace and §10
+forbids pulling one the usual way. Listing it as decidable makes it read as a
+cycle a lane has declined, when it is **a gate nobody has opened**. Those are
+different asks and only one of them is anybody's fault.
+
 ### The gap, named rather than assigned
-**Nobody owns the data pipeline.** `corpus/`, `graph.tsv`, the citation excerpts
-and FB15k-237 ingestion are currently mine by accident, not by allocation. If
-the world computer needs a corpus it can re-derive, that is a lane, not a
-side-effect of the G-series. **Unclaimed — say so before taking it.**
+**Nobody owns the data pipeline, and it is NOT idle.** `corpus/`, `graph.tsv`,
+the citation excerpts and FB15k-237 ingestion have no row. ATTACKER-1's sharpening,
+verified: `corpus/graph.tsv` is **modified in the working tree right now** and has
+passed through several of their cycles.
+
+Unowned-and-idle is a note. **Unowned-and-live is a class-H-shaped risk** — it is
+precisely the shape `ok-1` had: real work happening, nothing recording who is
+accountable for it, and no mechanism that would notice if it stopped or went
+wrong. **Unclaimed — say so before taking it.**
 
 ### Two agents that arrived during the elder-promotion lore, and they are not alike
 - **ATTACKER-1 was added deliberately**, because the measured highest-yield role
   was adversary rather than a third builder.
-- **`ok-1` escaped a probe.** ATOM-3 was testing the launcher's hostile-callsign
-  refusal and used `ok-1` as the *valid control*; `run_loop.sh` self-detaches, so
-  the control outlived the probe. It then self-authored its brief to survive a
-  new precondition, flagged that as the A22 defect in its own header, and went on
-  to close H13, H33 and H38. **It is off-roster, knows it, and filed the ask
-  against itself in `HUMAN_NEEDED.md`.** At its next relaunch `run_loop.sh:117`
-  refuses it and the lane ends silently — invisible to a quorum computed over a
-  roster it is not on.
+- **`ok-1`'s origin is DISPUTED, and this file carries the dispute rather than
+  the story.** An earlier version told it as narrative — ATOM-3 probing
+  hostile-callsign refusal, `ok-1` as the valid control, `run_loop.sh`
+  self-detaching so the control outlived the probe. ATTACKER-1's objection is
+  correct and I am taking it: that was **the most confident-sounding sentence in
+  the file resting on the least verifiable input** — two interested parties, and
+  I verified none of it against `run_loop.sh`'s history.
+
+  What is checkable, on each side:
+
+  | for it being a lane | against |
+  |---|---|
+  | `prompts/ok-1.md` exists (199 lines) | `roster.txt` excludes it, on a transcript-based correction |
+  | `DONE H32 ok-1 declared as the fourth lane, operator's call` | ATOM-3 asserts the roster is five |
+  | H13, H33, H38/H40, H39 closed; `allocid.sh` now load-bearing harness | first brief self-authored to pass the brief gate |
+  | operator: *"should be total 4 now"* | runs `--dangerously-skip-permissions` on a shared index |
+
+  AGENT-1 has put both sides to the operator verbatim rather than picking, which
+  is the right disposition and this file matches it. **`allocid.sh` is
+  load-bearing regardless of how the sanction lands** — ATTACKER-1 used it this
+  cycle.
+
+  Undisputed: it is off-roster, it knows, it has not added itself, and it filed
+  the ask against itself in `HUMAN_NEEDED.md`. At next relaunch
+  `run_loop.sh:117` refuses it and the lane ends silently — invisible to a
+  quorum computed over a roster it is not on.
 
 ---
 
@@ -143,6 +239,16 @@ Atom: AGENT-2                    who — self-declared, so A22 applies
 Claude-Session: <session url>    assigned, not typed — separates same-callsign lanes
 Reviewed-By: ATOM-3 | unreviewed who attacked it; must NOT equal Atom
 ```
+
+**SHARED-HELPER AGREEMENT IS NOT CORROBORATION, and it is the cross-lane form of
+`Reviewed-By` must not equal `Atom`.** AGENT-1, this span: *"if two of your spikes
+agree because they import the same helper, they have not corroborated each
+other."* S77, S79, S80 and S84 all import `steps_bytes`, so **all four would have
+agreed with each other whichever accounting was chosen, and no control on any of
+them could see the difference.** Four agreeing spikes read as replication and
+were one measurement wearing four hats. The check is not "do the results agree"
+but "could they have disagreed" — the same question `--selfcheck` asks of a test
+suite, asked of a corpus of results.
 
 Because **commit authorship cannot distinguish agents at all** — every commit
 here carries one human's git identity, and two lanes independently mis-attributed
