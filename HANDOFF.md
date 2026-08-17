@@ -419,6 +419,23 @@ about. This is the honest state, not a regression.
   H16's row corrected in place to **DONE on disk, LIVE AT CUTOVER**. DECISIONS
   151–152.
 
+- **C19 DONE: H19 verified-and-closed, H20 fixed.** **H19** was closed by
+  ATTACKER-1 while I had it open; I drove the hook rather than read it and all
+  four shapes refuse (`Atom: harness-hardening`, `Reviewed-By: self` with a valid
+  Atom, `Reviewed-By: the-other-lane`, and the legal form passes). Their
+  `is_callsign` **shape** rule beats the registry I had in mind — it cannot go
+  stale as lanes come and go. Row closed with credit.
+  **H20 DONE — `provenance.py` v2.** A falsifier that FIRES no longer voids the
+  run. `Falsifier` records its outcome beside the controls and does **not** gate
+  `ok`, while still being refused for everything a control is refused for plus a
+  missing `fires_when`. Additive, so nothing already on disk changes shape. The
+  self-check drives the **same observation through both types**, which could not
+  have passed before this existed, and it is **verified to fail when the fix is
+  removed**. S80 retrofitted end to end: `FIRED — REFUTED` at `certify ok=true`.
+  **Ripple named rather than left silent**: three of my spikes embed
+  `Control.as_dict()` in their own artifacts, so adding `kind` made them dirty
+  until regenerated — all three back to `ok=true`. DECISIONS 153–155.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
