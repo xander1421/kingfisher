@@ -25,7 +25,7 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 | M1.3 | charge-time worker: WorkManager charging+idle+UNMETERED, checkpointed chunks | OPEN |
 | M1.5 | shard store on iroh-blobs (BLAKE3 verified ranges — same proofs W1 uses) | OPEN |
 | M1.7 | transport phone↔coordinator on iroh | OPEN |
-| M1.8 | quorum-3 pipeline end to end; first 1 phone + host as 3 processes | OPEN |
+| M1.8 | quorum-3 pipeline end to end; first 1 phone + host as 3 processes | **DONE** — 66/67 unanimous, 3 processes / 2 OSes; the 1 refusal is `(flip)`, the corpus's own positive control. Not a trust-independent quorum (2 of 3 are the same binary on one host). `spikes/M1_8_quorum3/` |
 
 ## P3 — measurements
 | N1 | ~~re-derive the ~50 µs prefilter cost~~ **DONE** — `spikes/N1_prefilter_cost/`, 23.9 µs at T=3, 8.7% of query. Amdahl rung restored |
