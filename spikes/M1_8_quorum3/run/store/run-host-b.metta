@@ -1,61 +1,16 @@
-(@doc new-das!
-  (@desc "Creates a new Distributed AtomSpace (DAS) instance with specified server and known peer endpoints")
-  (@params (
-    (@param "Server endpoint with port range (e.g., 0.0.0.0:42000-42999 or localhost:52000-52099)")
-    (@param "Known peer endpoint (e.g., 0.0.0.0:40002 or localhost:40002)")))
-  (@return "A Space instance representing the DAS"))
 
-(@doc das-join-network!
-  (@desc "(re)Joins the DAS network using the configured parameters")
-  (@params ())
-  (@return "Unit atom"))
+; !(change-state! &ReplHistoryMaxLen 500) ; TODO: enable this when I have value bridging implemented.
 
-(@doc das-services!
-  (@desc "Prints information about available DAS services")
-  (@params ())
-  (@return "Unit atom"))
+!(change-state! &ReplPrompt "> ")
+!(change-state! &ReplStyledPrompt "\x1b[1;32m> \x1b[0m") ;
 
-(@doc das-service-status!
-  (@desc "Checks the status of a specific DAS service by name")
-  (@params (
-    (@param "Service name (string)")))
-  (@return "String: 'ServiceAvailable: <name>' if available, or error if not available or not registered"))
-
-(@doc das-set-param!
-  (@desc "Sets a DAS parameter value. The parameter must exist in the DAS configuration")
-  (@params (
-    (@param "Expression containing key-value pair, e.g., (max_answers 100)")))
-  (@return "String: 'DAS Param Updated: <param_name>' or error"))
-
-(@doc das-get-params!
-  (@desc "Prints all current DAS parameters")
-  (@params ())
-  (@return "Unit atom"))
-
-(@doc das-create-context!
-  (@desc "Creates a context in the DAS with specified query, determiner schema, and stimulus schema")
-  (@params (
-    (@param "Context name (string)")
-    (@param "ExpressionAtom containing schemas: ( (query) (determiner_schema) (stimulus_schema) )")))
-  (@return "Result atom from context creation"))
-
-(@doc das-evolution!
-  (@desc "Performs DAS evolution operation with query, fitness function, correlation queries, replacements, and mappings")
-  (@params (
-    (@param "ExpressionAtom containing evolution configuration: ( (query) (fitness-function) (correlation-queries) (correlation-replacements) (correlation-mappings) )")
-    (@param "Template atom to be filled with evolution results")))
-  (@return "Non-deterministic result: template with bindings from evolution"))
-
-(@doc das-link-creation!
-  (@desc "Creates links in the DAS based on a query pattern and one or more templates")
-  (@params (
-    (@param "Query atom to match against")
-    (@param "Template atoms (one or more) for link creation")))
-  (@return "Result atom from link creation"))
-
-(@doc das-helpers!
-  (@desc "Executes helper functions for DAS operations. Currently supports 'sleep' helper")
-  (@params (
-    (@param "Helper function name (string), e.g., 'sleep'")
-    (@param "Argument for the helper function (string), e.g., '5' for sleep duration in seconds")))
-  (@return "Unit atom"))
+; TODO: somebody with better design sense should tweak these, and also provide dark-mode setings
+; ANSI escape codes to configure the syntax highlighter
+!(change-state! &ReplBracketStyles ("36" "35" "33" "32")) ; 36: cyan, 35: magenta, 33: yellow, 32: green
+!(change-state! &ReplCommentStyle "90")                   ; 90: light gray
+!(change-state! &ReplVariableStyle "33")                  ; 33: yellow
+!(change-state! &ReplSymbolStyle "0")                     ; 0:  default text (as per terminal setting)
+!(change-state! &ReplStringStyle "31")                    ; 31: dark red
+!(change-state! &ReplErrorStyle "91")                     ; 91: bright red
+!(change-state! &ReplBracketMatchStyle "1;7")             ; 1:  bold, 7: reverse (swap background and foreground colors)
+; !(change-state! &ReplBracketMatchEnabled True) ;TODO: enable this when I have a reliable value interchange path built.  Another use for https://github.com/trueagi-io/hyperon-experimental/issues/351
