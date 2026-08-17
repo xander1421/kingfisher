@@ -169,8 +169,58 @@ as well as the imbalance.
 scheduler that occasionally imbalances — it is a scheduler that walks itself
 into the fleet configuration its own verification model is weakest against.
 
-## What would falsify what remains
-The ratchet is now measured at k=3,5,7 on one fleet size and one skew. It has
-**not** been shown at zipf 0 (where §1 found no tension at all), nor at fleet
-sizes where `njobs/fleet` is small enough that the ratchet cannot engage within
-12 rounds. Both are cheap and neither is run.
+## Both remaining falsifiers run — and they separate two phenomena I had fused
+
+### A. Does the ratchet need skewed demand? **No.**
+
+| zipf | locality_pure coverage | hot cov | imbalance |
+|---|---|---|---|
+| 0.0 (uniform) | **3.00** | 3.00 | 3.35x |
+| 0.4 | **3.00** | 3.00 | 6.30x |
+| 0.7 | **3.00** | 3.00 | 5.00x |
+| 1.0 | **3.00** | 3.00 | 6.91x |
+| 1.4 | 2.91 | 3.00 | 10.30x |
+
+Coverage pins to exactly `k` at **every** skew including uniform. Only the
+**imbalance** is skew-dependent.
+
+**This corrects §1 of this document.** §1 concluded "under uniform demand
+locality has no cost" — that was true of *imbalance* and I generalised it to
+locality. The coverage ratchet was present at zipf 0 the whole time; §1 did not
+measure coverage, so it could not see it.
+
+So `pool == quorum` is **not a skewed-demand pathology. It is inherent to pure
+locality routing**, and the most benign workload does not avoid it.
+
+### B. Does it need dense per-device load? **No — and it gets far worse.**
+
+| fleet | jobs/device/round | coverage | hot cov | imbalance |
+|---|---|---|---|---|
+| 8 | 74.2 | 3.00 | 3.00 | 11.5x |
+| 16 | 37.1 | 2.91 | 3.00 | 10.3x |
+| 64 | 9.3 | 2.86 | 3.00 | **89.0x** |
+| 198 | 3.0 | 3.00 | 3.00 | **79.0x** |
+
+Coverage pins at `k` across a 25x range of load density. Imbalance **explodes**
+at large fleets — 89x at fleet 64 — because most devices never become resident
+at all and the few that do absorb everything.
+
+**Fleet 16 was the flattering case.** A real fleet is thousands of devices with
+a handful of jobs each, which is the right-hand end of this table.
+
+The cap holds up but degrades: at fleet 198 it gives coverage 6.86, hot-shard
+coverage **23.88**, imbalance 6.0x. Better redundancy than uncapped by 8x, and
+6x imbalance is no longer negligible — `maxSkew=1` is tuned for fleet 16 and
+needs re-tuning per fleet size.
+
+### What this leaves standing
+- **`pool == quorum` under pure locality**: confirmed at 5 skews and 4 fleet
+  sizes. Skew-independent, density-independent.
+- **imbalance**: skew-dependent AND fleet-size-dependent, up to 89x.
+- **the cap**: fixes both at small fleets, fixes redundancy and only partly
+  fixes imbalance at large ones.
+
+### Still not falsified
+Every run above is 12 rounds. Nothing shows the ratchet is stable at 100+
+rounds, or what happens when devices join and leave — churn is the obvious
+escape hatch from a ratchet and it is entirely unmodelled.
