@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
-"""H7 — do the loop-harness checks FAIL when their defect comes back?  (v3)
+"""H7 — do the loop-harness checks FAIL when their defect comes back?  (v4)
+
+v4 RATIONALE (§12.7) — THE DEFECT REMOVED IS NOT IN THIS FILE: F8 was correct
+and had been reporting `INERT` for hours, unread, because nothing runs this
+driver automatically (H29). The suite's hostile-callsign block asserted only
+rc=1 and an artifact absence, and `run_loop.sh` refuses in gate order, so with
+the charset whitelist reverted the BRIEF gate exited 1 instead and the block
+stayed green. A driver whose verdict nobody reads is not a weaker gate than a
+missing one, it is the same thing. F25/F26 added, and the brief gate -- the
+defect that reached three of three live lanes -- had no falsifier at all until
+F26. (ok-1, H29.)
 
 v3 RATIONALE (§12.7) — THE DEFECT REMOVED: this driver applied EXACTLY ONE edit
 per falsifier, so a check that only reddens under two simultaneous defects was
@@ -340,6 +350,36 @@ FALSIFIERS = [
      [(GATE,
        'for SIGFILE in ".loop_signal.${LANE}"; do',
        'for SIGFILE in .loop_signal.*; do')]),
+
+    # --- H29, 2026-08-17 (ok-1). F8 above had been reporting INERT since the
+    # brief gate landed, and THIS DRIVER WAS RIGHT: the suite refused the hostile
+    # callsign on the brief gate instead of the charset one, so both checks in
+    # that block were green whatever the whitelist did. Nobody read the report,
+    # because nothing runs this driver automatically -- H29's own row. The suite
+    # now plants a brief for that callsign, which puts F8 back in contact with
+    # the gate it reverts; F25 is the assertion added so the NEXT time an earlier
+    # gate refuses first, the block goes RED instead of quietly inert.
+    ('F25',
+     'the launcher refuses a hostile callsign for some OTHER gate\'s reason, so '
+     'the check that the charset whitelist works is green over a dead whitelist',
+     LAUNCHER,
+     'case "$CALLSIGN" in (*[!A-Za-z0-9._-]*)',
+     'case "$CALLSIGN" in (thiswillnevermatch)',
+     'refuses for THAT reason'),
+
+    # The brief gate itself had NO falsifier at all -- the defect that let a lane
+    # run with no written role reached three of three live lanes (H30) and the
+    # check for it had never been driven against it. Targets the ANNOUNCEMENT
+    # check rather than the artifact ones: the artifacts are the detached child's
+    # and are a race, measured green-over-a-live-defect with run_loop.sh's
+    # post-fork sleep removed (spikes/H29_detach_race/probe.out).
+    ('F26',
+     'a lane with no spawn brief launches and detaches anyway, looking exactly '
+     'like a briefed one -- the state all three live lanes were in at 13:25',
+     LAUNCHER,
+     'if [ ! -f "$BRIEF_FILE" ]; then',
+     'if false; then   # brief gate neutered',
+     'announced no detach (synchronous'),
 ]
 
 

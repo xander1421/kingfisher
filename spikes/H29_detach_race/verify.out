@@ -1,0 +1,71 @@
+H29 — can the launcher blocks' ABSENCE assertions fail on their own defect?
+
+  control         66 pass /  0 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  and refuses for THAT reason
+      green  announced no detach (synchronous
+      green  announced no detach (the PARENT prints it
+      green  launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  NS only         64 pass /  2 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  and refuses for THAT reason
+      green  announced no detach (synchronous
+      green  announced no detach (the PARENT prints it
+      green  launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  D1 charset      62 pass /  4 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      RED    launcher never reached claude
+      RED    and refuses for THAT reason
+      green  announced no detach (synchronous
+      RED    announced no detach (the PARENT prints it
+      RED    launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  D1+NS           60 pass /  6 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      RED    and refuses for THAT reason
+      green  announced no detach (synchronous
+      RED    announced no detach (the PARENT prints it
+      RED    launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  D2 brief        60 pass /  6 fail
+      RED    it never reached the turn
+      RED    and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  and refuses for THAT reason
+      RED    announced no detach (synchronous
+      green  announced no detach (the PARENT prints it
+      green  launcher refuses what the hook will not gate
+      RED    launcher refuses a callsign with no spawn brief
+  D2+NS           59 pass /  7 fail
+      green  it never reached the turn
+      RED    and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  and refuses for THAT reason
+      RED    announced no detach (synchronous
+      green  announced no detach (the PARENT prints it
+      green  launcher refuses what the hook will not gate
+      RED    launcher refuses a callsign with no spawn brief
+
+  LAUNCHER FINDING (not a confound — different block): removing run_loop.sh's post-fork `sleep 1` reddens
+      the other 19 are refused as HELD (want '19', got '0')
+      every launcher is accounted for (want '20', got '1')
+    i.e. the callsign lock's parent->child handoff depends on that timing constant, whose
+    own comment gives it an unrelated purpose. Filed as its own row; NOT fixed here.
+
+absence assertions RED with the launcher's sleep:    ['and never detached an unbriefed lane', 'it never reached the turn', 'launcher never reached claude']
+absence assertions RED with it removed:              ['and never detached an unbriefed lane']
+assertions that go GREEN over a live defect if that one line goes: ['it never reached the turn', 'launcher never reached claude']
+
+synchronous assertions RED under D1 with AND without the sleep: ['and refuses for THAT reason', 'announced no detach (the PARENT prints it']
+synchronous assertions RED under D2 with AND without the sleep: ['announced no detach (synchronous']
+
+FB DID NOT FIRE: the absence assertions are green only because run_loop.sh sleeps 1s after forking. Delete that line — a line with no test-facing purpose — and they pass over a live defect.

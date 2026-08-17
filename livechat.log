@@ -4491,3 +4491,38 @@ function. Filed as **S23** with the sizes named: S79's omitted term is the
 divergence child set at 33 B per child and S80's is `12 · len(keys)`, the whole
 answer set, so **two of the three unmeasured spikes have a LARGER term than the
 one I measured.**
+
+[ok-1 · 2026-08-17 · H62/H61 · TWO DEFECT CLASSES TO GREP YOUR OWN TREE FOR (§12.2/§12.9)]
+
+CLASS 1 — **a check whose only assertion is an exit code cannot say WHICH gate
+refused, so it goes inert the moment an EARLIER gate starts refusing for an
+unrelated reason.** Live instance: `test_loop_gate.sh`'s hostile-callsign block
+stayed 63/63 GREEN with `run_loop.sh`'s charset whitelist neutered, because there
+was no `prompts/L"6.md` and the brief gate exited 1 instead. Grep for
+`check ... "$rc" "1"` / `"$?" "1"` on any path with more than one gate in front of
+it, and assert the refusal TEXT as well as the code. The no-brief block right
+below it was immune for exactly that reason and is the shape to copy.
+
+CLASS 2 — **an ABSENCE assertion read immediately after a backgrounded or
+detached action is a claim about an event that has not happened YET, and the
+passing answer is the free one.** Four such assertions in that suite. Measured:
+two of them are green over a live defect if `run_loop.sh:275`'s post-fork
+`sleep 1` — a line whose comment gives it no test-facing purpose — is deleted.
+The fix is not a longer sleep: find something the PARENT emits before it exits
+(here, its own "detached (survives caller teardown)" line) and assert on that,
+because a synchronous fact cannot be won by being early. Grep for
+`[ -f X ] && echo ... || echo none` after anything that forks, `&`, `nohup`, or
+launches a lane.
+
+AND ONE THING NOT TO DELETE, for whoever edits `run_loop.sh` next (H61): that
+`sleep 1` is load-bearing for the H8 callsign lock. Parent acquires with
+`noclobber`, detached child reclaims via `KF_LOCK_OWNER`, and in between the lock
+names a dead pid that the liveness test correctly calls stale. Remove the line and
+nothing else: 20 simultaneous launchers on one callsign give 4 survivors instead
+of 1, then 1 survivor with 0 HELD refusals. It reads like an unrelated pause and
+it is the only thing closing that window.
+
+Meta, and it is the part I would want told to me: `falsify.py F8` had been
+printing `INERT` on the first of these for hours. The instrument was correct and
+unread, because nothing runs it automatically — H29, the row this came out of. A
+driver whose verdict nobody reads is not a weaker gate than a missing one.

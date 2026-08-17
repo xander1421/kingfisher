@@ -1,0 +1,45 @@
+H29 — can the launcher blocks' ABSENCE assertions fail on their own defect?
+
+  control         63 pass /  0 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  NS only         60 pass /  3 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  D1 charset      63 pass /  0 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  D1+NS           60 pass /  3 fail
+      green  it never reached the turn
+      green  and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  launcher refuses what the hook will not gate
+      green  launcher refuses a callsign with no spawn brief
+  D2 brief        58 pass /  5 fail
+      RED    it never reached the turn
+      RED    and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  launcher refuses what the hook will not gate
+      RED    launcher refuses a callsign with no spawn brief
+  D2+NS           56 pass /  7 fail
+      green  it never reached the turn
+      RED    and never detached an unbriefed lane
+      green  launcher never reached claude
+      green  launcher refuses what the hook will not gate
+      RED    launcher refuses a callsign with no spawn brief
+
+absence assertions RED with the launcher's sleep:    ['and never detached an unbriefed lane', 'it never reached the turn']
+absence assertions RED with it removed:              ['and never detached an unbriefed lane']
+assertions that go GREEN over a live defect if that one line goes: ['it never reached the turn']
+
+  PROBLEM  FC: removing the launcher's sleep reddens a CLEAN tree (["20 simultaneous launchers on one callsign leave ONE survivor (want '1', got '4')", "the other 19 are refused as HELD (want '19', got '0')", "every launcher is accounted for (want '20', got '4')"]) — the NS arms are confounded
+  PROBLEM  FD: D1 reddened no rc assertion — the injection did not take, treat the arm as no evidence

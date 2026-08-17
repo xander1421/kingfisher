@@ -17,3 +17,36 @@
   Rejected as unsafe: `curl -sSf https://join.golem.network/as-requestor | bash -` (mission 11).
 [2026-08-17T12:__Z] UPDATE hyperon-no-default-features | re-read under "a blocked item's cost is not fixed at the moment you block it". Filed 2026-08-16 as cosmetic (3.53 MiB vs 5.83 MiB). That cost is now WRONG: since feature sets became the `manifest` domain axis, this blocker is what pins that axis at 2. The fix is two lines -- `#[cfg(feature = "pkg_mgmt")]` on `mod json;` (builtin_mods/mod.rs:9) and on its `load_module_direct` call (:20), since `serde_json` is optional and reached only via pkg_mgmt. NOT DONE, and deliberately: `operator` is pinned at 1, so it binds the verdict and manifest 2->3 changes no adjudication today. Recorded so the next reader sees a costed choice rather than an open question. | status: still blocked, cost restated
 [2026-08-17T12:__Z] SWEEP all-blocked-items | re-read all 9 against what changed since filing. 8 unchanged (5 external repos, mork ACT_PATH, the two bc0/exponential timeouts). 1 changed: hyperon-no-default-features, above. The sweep itself found nothing that silently became expensive -- but the previous cycle's okhttp workaround did, so the re-read stays worth doing.
+
+--- ATOM-3, 2026-08-17 14:2x ---
+BLOCKED: cannot commit. The shared pre-commit gate refuses on
+`spikes/harness/refcheck.py`: 4 unresolved citations of `./peers.sh`, which does
+not exist. Three of the four are not mine (HANDOFF.ATTACKER-1.md:303,
+WORK_QUEUE.md:132, prompts/ATTACKER-1.md:18) and two of those only MENTION the
+path as H41's worked example.
+DIAGNOSIS: an artifact cited by four files before it landed. Not a defect in my
+row and not fixable from inside it without either (a) writing a stub, which the
+rails forbid — a gate citing a missing artifact gets the missing thing filed as
+OPEN, never a placeholder — or (b) `--no-verify`, which drops the trailer and
+self-review gates with it. Neither taken.
+DONE ANYWAY: guarded my own site, `prompts/ATOM-3.md` §0, which prescribed
+`./peers.sh` unguarded in the section a lane runs before anything else (H23's
+class). Did not clear the check, which is itself the finding: refcheck cannot
+tell a USE from a MENTION (A30's shape).
+NEXT ITEM TAKEN: continuing per §3 rather than waiting. Work is on disk; RECORD
+completes when the gate clears. Reported to livechat.log for every lane, since
+the gate is shared and blocks all of them.
+
+2026-08-17 ok-1 — H29 BLOCKED on H17, after the decidable half shipped as H62.
+DIAGNOSIS: H29 asks that `test_loop_gate.sh` run somewhere automatic. Everything
+in the row that an agent can decide is now decided: the concurrency blocker it was
+filed with was false and is corrected in the row, and the launcher-check race is
+repaired and falsified (`spikes/H29_detach_race/`). What is left is one fact and it
+is not a defect I can fix: the suite `mktemp -d`s into `/tmp`, and MISSION_LOOP §10
+says nothing outside the workspace is written. Wiring the suite into the commit
+gate makes every lane's every commit depend on that write, which SETTLES H17's open
+dispute by default in the permissive direction — and an agent narrowing a rail it
+operates under is A22, a party supplying the input to a check applied to itself.
+NEEDS: a human ruling on H17, or a scratch root inside the workspace (which is a
+different row, because `.gitignore`, the hook's pinned ROOT and the launcher copies
+all have to move with it). NOT retried a third time; three strikes is §3.

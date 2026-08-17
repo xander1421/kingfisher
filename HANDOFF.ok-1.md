@@ -179,7 +179,12 @@ use it — it is cheaper than grepping and that is its only enforcement.
   excludes self, so the name is assigned and visible only to the receiver. H27's
   shape one artifact later. Both other lanes reached the same conclusion.
 
-## Cycle 5 — H41 DONE, H20 to a verdict, and two of my own claims corrected
+## Cycle 6 — H41 DONE, H20 to a verdict, and two of my own claims corrected
+
+*(Numbered `Cycle 5` when written, which is the second `5` in this file — my own
+§12.4 defect, "a reference that resolves to TWO things", in the journal that
+states the rule. Corrected in place at cycle 7; the ATTACK arithmetic below was
+computed on the correct count and is unaffected.)*
 
 **H41 — `refcheck.py` v5. The row named one of two defects and the one it named
 catches nothing alone.** Measured on all 45 harness files BEFORE writing the
@@ -237,17 +242,58 @@ can be exercised without an hour's wait.
 by the operator on a checkable record, and `rostercheck.py` is green over
 `bringup.sh` and `send.sh`. This lane will not be refused at its next relaunch.
 
-## NEXT 3
-1. **H29** — the decidable half: set `KF_DETACHED=1` in the two launcher checks
-   so the assertion observes the process it is asserting about (A29). The `/tmp`
-   half is H17 and is not agent-decidable — §10 is an absolute rail and an agent
-   narrowing a rail it operates under is A22.
-2. **H54** — the cost H41 paid. A journal's evidence-path citations need a check
-   that reports to the journal's OWN lane, not to the shared commit gate.
-3. **H23** — a stale instruction at a surviving call site, no mechanical
-   detector. Read it before taking it: the row states the distinguishing test is
-   whether the sentence tells a reader what to DO, which may not be mechanisable
-   at all (§12.12). If it is not, the honest verdict is to say so in the row.
+## Cycle 7 — H62 DONE, H29 BLOCKED, H61 filed. The fix I planned was the wrong fix.
 
-**Cycle 6 is not an ATTACK cycle; cycle 8 is, and §12.8 makes it the loop's turn
-— at least every fourth ATTACK targets the harness rather than a spike.**
+`spikes/H29_detach_race/`. Suite v2, 63 → 66 checks, **7.34 s from 9.06 s**.
+
+**Cycle 6's NEXT 1 was wrong, and the probe said so before I wrote a line of
+repair.** It said: set `KF_DETACHED=1` in the two launcher checks. That removes the
+fork, and with it the ordering property those blocks exist to test — which the
+suite's own comment states: *"there the refusal must beat the detach, and rc=0 from
+a detached parent is exactly the defect to catch."* Four falsifiers stated first,
+six arms, and what they found was bigger than the race:
+
+**The hostile-callsign block was INERT — 63/63 green with `run_loop.sh`'s charset
+whitelist neutered.** Gate order is charset, roster, brief; the suite never wrote
+`prompts/L"6.md`, so the BRIEF gate exited 1 and the block's two assertions (rc=1,
+an artifact absence) were satisfied for a reason the block is not about.
+**`falsify.py F8` had been printing `INERT` on it for hours.** Unread — because
+nothing runs the driver automatically, which is H29, the row I was working. The
+instrument was right and nobody was listening.
+
+**CLASS 1: rc=1 does not say WHICH gate refused.** CLASS 2: an absence assertion
+read at the parent's exit is a claim about an asynchronous event — measured, `it
+never reached the turn` and `launcher never reached claude` are RED under a live
+defect with `run_loop.sh:275`'s post-fork `sleep 1` and **GREEN without it**. The
+repair is not a sleep: the detach ANNOUNCEMENT is the parent's own, printed before
+it exits, so each block asserts on that instead. Both classes posted to livechat.
+
+**H61 is the finding I would keep if I could keep one:** removing that same
+`sleep 1` reddens the 20-launcher lock check — 4 survivors, then 1 survivor with 0
+HELD refusals. **The H8 callsign lock is held closed by a sleep** whose comment
+gives it an unrelated purpose. Filed with a fix shape, NOT fixed: different
+component, and the fleet has 15 live launcher processes against it.
+
+**Against me, twice.** (1) That NEXT item was wrong for a reason the file I was
+editing already explained; found by reading the section rather than the check name,
+which is H20's v2 lesson paid for a second time. (2) The probe's own FC arm treated
+*any* red in the no-sleep arm as a confound and `sys.exit(2)`'d before printing its
+verdict, so my first post-repair run printed no conclusion at all. The reds were in
+a different block and were H61. A probe that stops before its own answer is A29 in
+a control's clothes.
+
+## NEXT 3
+1. **Cycle 8 is an ATTACK cycle and §12.8 makes it the loop's turn.** Target: the
+   class hunt this cycle named and did not run — grep the whole harness for absence
+   assertions after anything that forks or backgrounds, and for `"$rc" "1"` on
+   multi-gate paths. Both classes were found in my own suite, so that is the wrong
+   place to stop looking.
+2. **H61** — the launcher lock handoff. Fix shape is in the row and the check that
+   fails when it breaks already exists. Do not take it while another lane is
+   mid-edit in `run_loop.sh` (H19: three lanes, one git index).
+3. **H54** — the cost H41 paid. A journal's evidence-path citations need a check
+   that reports to the journal's OWN lane, not to the shared commit gate.
+
+**H29 is BLOCKED on H17, not done, and the diagnosis is in BLOCKED.log.** Do not
+"finish" it by wiring the suite into pre-commit: that settles H17's open §10
+dispute by default, in the permissive direction, in favour of the agent doing it.

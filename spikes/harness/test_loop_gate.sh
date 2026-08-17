@@ -14,6 +14,29 @@
 # hook, rewrites ROOT to a scratch dir, and exercises the copy. A test that can
 # stop production is not a test.
 #
+# v2 RATIONALE (§12.7, and this file had never carried a version at all, which is
+# why the header records defects by date instead) — ok-1, H29, 2026-08-17.
+# TWO DEFECTS REMOVED, both in the LAUNCHER-DRIVEN blocks, both measured before
+# the repair in `spikes/H29_detach_race/probe.py` / `probe.out`:
+#   1. The hostile-callsign block was INERT. Its only assertions were rc=1 and an
+#      artifact absence, and `run_loop.sh` refuses in gate order -- charset,
+#      roster, brief -- so with the charset whitelist neutered the brief gate
+#      exited 1 instead and the block stayed green. `falsify.py F8` had been
+#      printing INERT since the brief gate landed (H30) and nothing read it,
+#      because nothing runs the driver automatically -- which is H29 itself.
+#      CLASS: rc=1 does not say WHICH gate refused.
+#   2. Four assertions were ABSENCE OF AN ASYNCHRONOUS EVENT read at the parent's
+#      exit. The launcher forks and the child acts later, so the not-yet-run child
+#      hands back the PASSING answer. They land green today only because
+#      run_loop.sh happens to `sleep 1` after its fork: delete that line and
+#      `it never reached the turn` passes over a live defect. Each block now also
+#      asserts on the parent's own detach ANNOUNCEMENT, which is synchronous.
+#      CLASS: an absence assertion that could be won by being early.
+# Not fixed here and filed instead: removing that same `sleep 1` takes the
+# 20-launcher lock check from 1 survivor to 4, so the launcher's parent->child
+# lock handoff is synchronised by a timing constant whose comment gives it an
+# unrelated purpose. That is a defect in `run_loop.sh`, not in this suite.
+#
 # usage: bash spikes/harness/test_loop_gate.sh
 # exit 0 = all pass. Non-zero = the loop contract is not enforceable as written.
 set -u
@@ -64,6 +87,22 @@ pass=0 fail=0
 ok()   { pass=$((pass+1)); printf '  PASS  %s\n' "$1"; }
 bad()  { fail=$((fail+1)); printf '  FAIL  %s\n' "$1"; }
 check(){ if [ "$2" = "$3" ]; then ok "$1"; else bad "$1 (want '$3', got '$2')"; fi; }
+
+# A launcher that DOES launch DETACHES, so the artifacts a launcher check wants to
+# see are written by a child after the parent has already exited. `sleep 1` was
+# the wait at two of those checks; a bounded poll is the same guarantee without
+# betting the suite on one constant, and it returns the moment the artifact
+# appears instead of always paying the second. Two of these checks assert the
+# artifact is THERE, so a wait that is too short is a false RED -- flaky, and a
+# flaky gate is a bypassed gate (H14). ok-1, H29, 2026-08-17.
+wait_file() {                      # wait_file <path> [tenths of a second, 50]
+  local n=${2:-50}
+  while [ "$n" -gt 0 ]; do
+    [ -f "$1" ] && return 0
+    sleep 0.1; n=$((n - 1))
+  done
+  return 1
+}
 
 # blocked() prints "block" when the hook refuses the stop, "exit" when it allows it.
 blocked() { if CALLSIGN="$1" ./gate.sh </dev/null 2>/dev/null | grep -q '"decision":"block"'; \
@@ -319,6 +358,14 @@ check "  it never reached the turn"                            \
       "$([ -f turn_ran ] && echo ran || echo none)" "none"
 check "  and never detached an unbriefed lane"                 \
       "$([ -f detach_L10.log ] && echo detached || echo none)" "none"
+# The two checks above this one are absence-of-an-async-event, and MEASURED under
+# the brief gate's own defect (spikes/H29_detach_race/probe.out): `it never
+# reached the turn` goes RED with run_loop.sh's post-fork `sleep 1` in place and
+# GREEN without it, over the same live defect. The child's artifacts are its own;
+# the announcement is the PARENT's, printed before it exits, so this check's
+# verdict does not depend on how fast the child gets scheduled. ok-1, H29.
+check "  and announced no detach (synchronous, unlike the child's artifacts)"   \
+      "$(grep -c 'detached (survives caller teardown)' nobrief.out)" "0"
 rm -f nobrief.out detach_L10.log loop_L10.log
 rm -f .loop_signal* .loop_exit.* .loop_blocks.* stale_reached_turn run_loop.sh loop_L8.log
 
@@ -436,12 +483,42 @@ STUB
 chmod +x bin/claude
 cp "$ROOT/run_loop.sh" ./rl.sh
 rm -f launcher_reached_claude
-PATH="$T/bin:$PATH" CALLSIGN='L"6' MAX_TURN=5 bash ./rl.sh >/dev/null 2>&1
+# THE BRIEF IS HERE SO THE CHARSET GATE IS WHAT REFUSES, and finding that out is
+# H29's first result. MEASURED, not reasoned (spikes/H29_detach_race/probe.out):
+# with the charset whitelist NEUTERED this block stayed ALL GREEN, because
+# run_loop.sh refuses in gate order -- charset, roster, brief -- and there is no
+# `prompts/L"6.md`, so the brief gate exited 1 for a reason this block is not
+# about. `falsify.py F8` has been printing `INERT` since the brief gate landed
+# (H30) and nobody read it, because nothing runs the driver automatically --
+# which is this row.
+#
+# CLASS: **rc=1 does not say WHICH gate refused, so a check asserting only the
+# exit code goes inert the moment an EARLIER gate refuses for an unrelated
+# reason.** Grep for launcher checks whose only assertion is `"$rc" "1"`. The
+# no-brief block below was already immune, for the reason worth copying: it
+# asserts the refusal TEXT as well as the code.
+printf '# scratch brief: leaves the CHARSET gate as the only refusal left\n' > 'prompts/L"6.md'
+out=$(PATH="$T/bin:$PATH" CALLSIGN='L"6' MAX_TURN=5 bash ./rl.sh 2>&1)
 rc=$?
 check "  launcher refuses what the hook will not gate" "$rc" "1"
+check "  and refuses for THAT reason, not an earlier gate's"                  \
+      "$(printf '%s' "$out" | grep -c 'CALLSIGN must contain only')" "1"
+# ABSENCE OF AN ASYNCHRONOUS EVENT IS NOT OBSERVABLE AT THE PARENT'S EXIT. The
+# launcher forks, the parent returns, and the child reaches `claude` some time
+# later -- so `[ -f launcher_reached_claude ]` read here is a race whose PASSING
+# answer is the free one. It lands green today only because run_loop.sh happens
+# to `sleep 1` after its fork, a line with no test-facing purpose sitting inside
+# the component under test: with that line deleted, the sibling check `it never
+# reached the turn` below PASSES OVER A LIVE DEFECT (measured, same probe).
+# So the load-bearing assertion is the second one: the parent ANNOUNCES its
+# detach on its own stdout before exiting, which is synchronous by construction
+# and cannot be won by being early.
 check "  launcher never reached claude"                                      \
       "$([ -f launcher_reached_claude ] && echo spawned || echo none)" "none"
-rm -f ./rl.sh launcher_reached_claude 'loop_L"6.log' .loop_exit.* .loop_blocks.*
+check "  and announced no detach (the PARENT prints it, so this cannot race)"  \
+      "$(printf '%s' "$out" | grep -c 'detached (survives caller teardown)')" "0"
+rm -f ./rl.sh launcher_reached_claude 'loop_L"6.log' 'prompts/L"6.md' \
+      .loop_exit.* .loop_blocks.* .loop_lock.*
 check "  hostile callsigns left no state" \
       "$(ls .loop_exit.* .loop_blocks.* 2>/dev/null | wc -l | tr -d ' ')" "0"
 rm -f pwned
@@ -500,7 +577,7 @@ sleep 0.2 & dead=$!; wait "$dead" 2>/dev/null
 echo "$dead" > .loop_lock.L9
 rm -f launcher_reached_claude
 PATH="$T/bin:$PATH" CALLSIGN=L9 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
-sleep 1
+wait_file launcher_reached_claude                # was `sleep 1` — H29
 check "dead holder's lock is reclaimed"                                      \
       "$([ -f launcher_reached_claude ] && echo launched || echo refused)" "launched"
 check "  lock no longer names the dead pid"                                  \
@@ -516,7 +593,7 @@ sleep 30 & impostor=$!
 echo "$impostor" > .loop_lock.L9
 rm -f launcher_reached_claude
 PATH="$T/bin:$PATH" CALLSIGN=L9 MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
-sleep 1
+wait_file launcher_reached_claude                # was `sleep 1` — H29
 check "a reused pid that is not a launcher does not hold a callsign"         \
       "$([ -f launcher_reached_claude ] && echo launched || echo refused)" "launched"
 kill "$holder" "$impostor" 2>/dev/null
