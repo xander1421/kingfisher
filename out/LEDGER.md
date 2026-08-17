@@ -128,6 +128,7 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 
 | claim | grade | note |
 |---|---|---|
+| **C3 measured: the CPU kernel is 15.2× short of the memory roof on the deployable cpuset** | **B** | **S72.** Predicted ~2.4×, measured **15.2×** — wrong by 6.3× because I treated the shortfall as linear in worker count when the roof does not move. **This argues against my own descope**, not for it. Exactness unchanged: all three kernels digest `f4e64fb7d70b9b0c`. First S34-family measurement taken behind a device gate |
 | **The NPU is descoped from the critical path** | **B** | The prefilter it was meant to accelerate costs ~50 µs, and the CPU runs it bit-exactly using `asimddp`+`i8mm` (**verified present on device**) at 13.9× scalar (S34). Measured on this silicon: NPU prefill 700 t/s vs CPU 48, but decode **18.8 vs 22 — worse**. It is a prefill/batch engine, not a per-query one |
 | Descoping **retires** the biggest grade-E claim rather than testing it | **B** | Cross-vendor requantisation bit-exactness was the single largest unmeasured assumption in the architecture. Removing the NPU from the critical path removes the claim. Cheaper resolution, same risk retired |
 | NPU tok/s figures are **READ**, not measured here | **E** | Sourced to `~/alex/oflineAI` (CPU 6-thread 48/22; NPU HTP0 v79 700/18.8). No NPU code has ever run in this workspace |
