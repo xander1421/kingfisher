@@ -1,0 +1,169 @@
+{
+ "min_pairs": 30,
+ "inv_max": 0.3,
+ "selfloop_preds": [
+  56,
+  81,
+  146
+ ],
+ "rejected_inverse": 357,
+ "rejected_tautology": 1331,
+ "tautology_control_passed": true,
+ "real_mean_top_ho_conf": 0.44054697045288443,
+ "nulls": [
+  {
+   "seed": 0,
+   "n_rules": 2732,
+   "mean_top_ho_conf": 0.34781316455095274
+  },
+  {
+   "seed": 1,
+   "n_rules": 2739,
+   "mean_top_ho_conf": 0.33095134579872526
+  },
+  {
+   "seed": 2,
+   "n_rules": 2602,
+   "mean_top_ho_conf": 0.3274804709662423
+  }
+ ],
+ "null_mean": 0.3354149937719734,
+ "top": [
+  {
+   "p": 121,
+   "q": 4,
+   "r": 5,
+   "pairs": 117,
+   "ho_pairs": 33,
+   "ho_conf": 0.5151515151515151,
+   "hits": 17,
+   "entities": 34
+  },
+  {
+   "p": 109,
+   "q": 60,
+   "r": 34,
+   "pairs": 76,
+   "ho_pairs": 33,
+   "ho_conf": 0.48484848484848486,
+   "hits": 16,
+   "entities": 77
+  },
+  {
+   "p": 116,
+   "q": 100,
+   "r": 14,
+   "pairs": 61,
+   "ho_pairs": 31,
+   "ho_conf": 0.4838709677419355,
+   "hits": 15,
+   "entities": 63
+  },
+  {
+   "p": 121,
+   "q": 5,
+   "r": 4,
+   "pairs": 116,
+   "ho_pairs": 39,
+   "ho_conf": 0.46153846153846156,
+   "hits": 18,
+   "entities": 34
+  },
+  {
+   "p": 10,
+   "q": 210,
+   "r": 182,
+   "pairs": 155,
+   "ho_pairs": 48,
+   "ho_conf": 0.4583333333333333,
+   "hits": 22,
+   "entities": 158
+  },
+  {
+   "p": 84,
+   "q": 100,
+   "r": 14,
+   "pairs": 67,
+   "ho_pairs": 30,
+   "ho_conf": 0.43333333333333335,
+   "hits": 13,
+   "entities": 69
+  },
+  {
+   "p": 127,
+   "q": 135,
+   "r": 133,
+   "pairs": 138,
+   "ho_pairs": 49,
+   "ho_conf": 0.42857142857142855,
+   "hits": 21,
+   "entities": 144
+  },
+  {
+   "p": 86,
+   "q": 198,
+   "r": 14,
+   "pairs": 94,
+   "ho_pairs": 44,
+   "ho_conf": 0.4090909090909091,
+   "hits": 18,
+   "entities": 95
+  },
+  {
+   "p": 5,
+   "q": 178,
+   "r": 4,
+   "pairs": 2558,
+   "ho_pairs": 1001,
+   "ho_conf": 0.4075924075924076,
+   "hits": 408,
+   "entities": 737
+  },
+  {
+   "p": 74,
+   "q": 48,
+   "r": 28,
+   "pairs": 132,
+   "ho_pairs": 54,
+   "ho_conf": 0.4074074074074074,
+   "hits": 22,
+   "entities": 135
+  },
+  {
+   "p": 86,
+   "q": 16,
+   "r": 28,
+   "pairs": 158,
+   "ho_pairs": 55,
+   "ho_conf": 0.4,
+   "hits": 22,
+   "entities": 160
+  },
+  {
+   "p": 127,
+   "q": 205,
+   "r": 133,
+   "pairs": 169,
+   "ho_pairs": 63,
+   "ho_conf": 0.3968253968253968,
+   "hits": 25,
+   "entities": 173
+  }
+ ],
+ "verdict": "DOES NOT SURVIVE \u2014 real 0.441 vs null 0.335; G15's effect was the excluded degeneracy",
+ "conditions": {
+  "data": "real:FB15k-237",
+  "concurrency": "single-process",
+  "swept": {
+   "null_seed": [
+    0,
+    1,
+    2
+   ]
+  }
+ },
+ "cites": [
+  "G15_analogy_realkg",
+  "S52_realkg"
+ ]
+}
