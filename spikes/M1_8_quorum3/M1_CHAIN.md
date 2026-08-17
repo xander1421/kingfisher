@@ -114,6 +114,33 @@ The `isa` axis first reported **2**, because macOS says `arm64` and Android says
 *a key that flatters itself* — committed inside the fix for it, and caught only
 by reading the vector. Now normalised.
 
+### The `manifest` axis, added after measuring that features change fuel
+`analysis/FEATURE_EQUIVALENCE.md` showed a Cargo feature moving one program
+from fuel 107 to fuel 580. Two binaries built from the same manifest share every
+feature-induced fault, so they are **one** domain on that axis whatever their
+digests say. Adding it immediately caught the binary axis overstating:
+
+```
+binary    3 domain(s)     <- three distinct digests
+manifest  1 domain(s)  <-- binding
+host      2 domain(s)
+os        2 domain(s)
+isa       2 domain(s)
+operator  1 domain(s)  <-- binding
+```
+
+`binary=3` reads as three independent builds. For a feature-class fault it is
+one. **Third time a domain key has flattered itself** — after `host|bin` hiding
+that the two host workers shared everything, and `arm64` vs `arm64-v8a` counting
+one ISA as two.
+
+The test for this was also flattering itself: `test_adjudicate.py` set a legacy
+`domain` field on the envelope, which the adjudicator stopped reading when
+domains moved coordinator-side. Every axis resolved to `{None}`, collapsed to
+one domain, and the assertions passed for the wrong reason. Rewritten against
+the real path — **36 assertions**, now including that a shared manifest alone
+caps the count at 1.
+
 ### Fault classes NO key separates
 Some faults have no separating axis at any quorum size, and a domain count that
 omits them reads as stronger than it is:

@@ -32,7 +32,7 @@ MIN_DOMAINS = 3  # independent failure domains required among AGREEING workers
 
 # Axes the domain key can separate. Each is only itself: `binary` differing does
 # not imply `host` does.
-DOMAIN_AXES = ('binary', 'host', 'os', 'isa', 'operator')
+DOMAIN_AXES = ('binary', 'manifest', 'host', 'os', 'isa', 'operator')
 
 # worker_id -> coordinator-OBSERVED domain vector. Never worker-declared.
 OBSERVED = {}
@@ -97,8 +97,21 @@ def observed_domains(wid, binary, via):
     isa = 'aarch64' if isa.lower().startswith(('arm64', 'aarch64')) else \
           ('x86_64' if isa.lower() in ('x86_64', 'amd64') else isa.lower())
 
+    # A Cargo FEATURE changes fuel_used (analysis/FEATURE_EQUIVALENCE.md: 107 vs
+    # 580 on one program). Two binaries from the same manifest share every
+    # feature-induced fault, so they are ONE domain on that axis however
+    # different their digests are.
+    try:
+        sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
+        from provenance import manifest_state
+        src = os.path.join(HERE, '..', 'S15_android_device', 'fuelrun')
+        man = manifest_state(src)['combined_sha256'] if os.path.isdir(src) else 'unknown'
+    except Exception:
+        man = 'unknown'
+
     return {
         'binary': f'bin:{bin_sha}',
+        'manifest': f'man:{man}',
         'host': host,
         'os': os_id,
         'isa': isa,

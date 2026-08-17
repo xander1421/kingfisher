@@ -96,7 +96,14 @@ import redo as R  # noqa: E402
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 MIN_PAIRS = 30
-MAX_PAIRS = 40_000       # per-rule body cap; reported when it bites
+MAX_PAIRS = 40_000       # a rule whose body matches more than this is
+                         # EXCLUDED, not truncated. v1 truncated and scored
+                         # anyway, which is invalid twice over: the confidence
+                         # came from an arbitrary iteration-order subset rather
+                         # than a random sample, and clamping n let a genuinely
+                         # broad rule dodge the per-assertion rent. 150 of ~2000
+                         # evaluations in v1's full arm, 525 in no_death.
+                         # This is a stated exclusion criterion, not a silent cap.
 SEED = 0xC0FFEE
 
 POP_SEED = 60            # enumerated rules the population starts from
@@ -158,8 +165,14 @@ def body_pairs(idx, body, cap=MAX_PAIRS):
     return reach, capped
 
 
-def score(idx, body, r, exclude, target, cap=MAX_PAIRS):
+def score(idx, body, r, exclude, target, cap=MAX_PAIRS, stats=None):
     bp, capped = body_pairs(idx, body, cap)
+    if capped:
+        # Reject rather than truncate. A truncated walk yields a confidence
+        # measured on whatever the iteration order happened to reach.
+        if stats is not None:
+            stats["rejected_capped"] = stats.get("rejected_capped", 0) + 1
+        return None
     if len(bp) < MIN_PAIRS:
         return None
     cand = [ac for ac in bp if r not in exclude.get(ac, ())]
@@ -439,7 +452,7 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
     tbl = build_bias(idx)   # (follows, precedes)
     ev = {}                       # previous round's evaluations; drives rehead
     unsolved = []                 # previous round's open problems; drives abduction
-    hist, capped_any = [], 0
+    hist, stats = [], {"rejected_capped": 0}
     dev_all = {(r, a, c) for (a, c), rs in dev_pairs.items() for r in rs}
 
     for rnd in range(ROUNDS):
@@ -463,9 +476,7 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
         # ---- evaluate on the real graph against the problem space (dev)
         ev = {}
         for r in pop:
-            s = score(idx, r["body"], r["head"], p_tr, dev_pairs)
-            if s and s["capped"]:
-                capped_any += 1
+            s = score(idx, r["body"], r["head"], p_tr, dev_pairs, stats=stats)
             ev[r["id"]] = s
 
         # ---- adversary: co-evolving, chosen to be the hardest recent null
@@ -547,7 +558,7 @@ def run(arm, train, dev_pairs, test_pairs, npred, planted, log=True):
                   f"  A15 {'yes' if found else '-'}")
         if not pop:
             break
-    return hist, capped_any
+    return hist, stats["rejected_capped"]
 
 
 def main():
@@ -600,18 +611,28 @@ def main():
     else:
         dt = {k: (v["hist"][-1]["test"]["solved"] - v["hist"][0]["test"]["solved"])
               for k, v in out.items() if v["hist"]}
+        # v1 ranked arms on raw coverage delta and concluded that no_death
+        # "beat" full -- a comparison between a 548-rule population and a
+        # 94-rule one, which is G15's retracted headline in new clothes. An arm
+        # now wins only by getting more correct at no more predictions.
+        f = out["full"]["hist"][-1]["test"]
+        dominators = [k for k, v in out.items()
+                      if k != "full" and v["hist"]
+                      and v["hist"][-1]["test"]["solved"] > f["solved"]
+                      and v["hist"][-1]["test"]["predicted"] <= f["predicted"]]
         best = max(dt, key=dt.get)
-        if dt["full"] <= 0:
+        if dominators:
+            v = (f"AN ABLATION DOMINATES — {dominators} get more correct at no "
+                 f"more predictions than the full system")
+        elif dt["full"] <= 0:
             v = (f"SELECTION DOES NOT GENERALISE — full arm solved "
                  f"{dt['full']:+d} more test triples. Dev is the only thing "
                  f"that improved.")
-        elif best != "full":
-            v = (f"AN ABLATION BEATS THE FULL SYSTEM — {best} gained "
-                 f"{dt[best]:+d} test triples vs full {dt['full']:+d}; the "
-                 f"mechanism it removes is costing, not paying")
         else:
-            v = (f"FULL SYSTEM WINS — {dt['full']:+d} test triples, ahead of "
-                 f"every ablation")
+            v = (f"FULL SYSTEM NOT DOMINATED — {dt['full']:+d} test triples at "
+                 f"precision {f['precision']:.4f}; no ablation gets more "
+                 f"correct without asserting more. Raw coverage deltas: "
+                 f"{ {k: dt[k] for k in dt} }")
     print(f"\nVERDICT: {v}")
 
     json.dump({"arms": out, "verdict": v, "planted": list(planted),

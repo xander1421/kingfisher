@@ -72,27 +72,64 @@ assert adj([crash, crash, crash])[1] == ('CRASH', None, None)
 # nearly free. REDUCED_QUORUM cannot see this: dispatched=3, returned=3, and the
 # domain count is 1.
 q3.MIN_DOMAINS = 3
-same = [E(domain='hostA|bin1'), E(domain='hostA|bin1'), E(domain='hostA|bin1')]
+
+def W(wid, **axes):
+    """Register a worker's COORDINATOR-OBSERVED domain vector and return an
+    envelope for it. The adjudicator reads OBSERVED, never the envelope -- a
+    test that sets a `domain` field on the envelope exercises a path the code
+    does not take, and will pass on {None} collapsing to one domain."""
+    base = dict(binary='b1', manifest='m1', host='h1', os='o1', isa='i1',
+                operator='UNATTESTED')
+    base.update(axes)
+    q3.OBSERVED[wid] = base
+    return E(domain=wid) | {'worker': wid}
+
+q3.OBSERVED.clear()
+same = [W('a'), W('b'), W('c')]                       # identical on every axis
 v, k, n, disp, ret, dom = adj(same)
 assert v == 'INSUFFICIENT_DOMAINS', v
 assert (disp, ret, dom) == (3, 3, 1), (disp, ret, dom)
 assert v != 'UNANIMOUS', 'three seats in one domain must not read as unanimous'
 
-# the real M1 setup: 2 host workers on one binary + 1 phone = 2 domains
-mixed = [E(domain='hostA|bin1'), E(domain='hostA|bin1'), E(domain='phone|bin2')]
-assert adj(mixed)[0] == 'INSUFFICIENT_DOMAINS'
-assert adj(mixed)[5] == 2
+# the real M1 setup: 2 host workers on one binary + 1 phone.
+# host/os/isa give 2 domains; operator and manifest give 1, and the WEAKEST
+# axis binds -- which is the whole reason the count is a vector.
+q3.OBSERVED.clear()
+mixed = [W('a'), W('b'), W('p', binary='b2', host='h2', os='o2')]
+v2, _, _, _, _, dom2 = adj(mixed)
+assert v2 == 'INSUFFICIENT_DOMAINS', v2
+assert dom2 == 1, f'operator/manifest are shared, so the weakest axis is 1, got {dom2}'
+pc = mixed[0]['_per_class']
+assert pc['host'] == 2 and pc['os'] == 2 and pc['binary'] == 2, pc
+assert pc['operator'] == 1 and pc['manifest'] == 1, pc
 
-# three genuinely independent domains agreeing IS unanimous
-v, k, n, disp, ret, dom = adj(D(3))
-assert v == 'UNANIMOUS' and dom == 3, (v, dom)
+# three genuinely independent domains on EVERY axis
+q3.OBSERVED.clear()
+indep = [W(f'w{i}', binary=f'b{i}', manifest=f'm{i}', host=f'h{i}',
+           os=f'o{i}', isa=f'i{i}', operator=f'op{i}') for i in range(3)]
+v3, _, _, _, _, dom3 = adj(indep)
+assert v3 == 'UNANIMOUS' and dom3 == 3, (v3, dom3)
 
+# a shared MANIFEST alone caps it: same feature set means the same
+# feature-induced fault, whatever the digests say
+q3.OBSERVED.clear()
+shared_man = [W(f'w{i}', binary=f'b{i}', host=f'h{i}', os=f'o{i}',
+                isa=f'i{i}', operator=f'op{i}') for i in range(3)]
+assert adj(shared_man)[0] == 'INSUFFICIENT_DOMAINS'
+assert adj(shared_man)[5] == 1, 'one manifest is one domain on that axis'
+
+q3.OBSERVED.clear()
 # domains are counted among AGREEING workers only -- a dissenter in a third
 # domain does not lend independence to the majority
 q3.MIN_DOMAINS = 2
-split = [E(domain='a'), E(domain='a'), E(h='zz', domain='b')]
+q3.OBSERVED.clear()
+a1, a2 = W('x', host='h1'), W('y', host='h1')
+dis = W('z', host='h9', binary='b9', manifest='m9', os='o9', isa='i9', operator='op9')
+dis['sorted_hash'] = 'zz'                      # disagrees
+split = [a1, a2, dis]
 assert adj(split)[0] == 'INSUFFICIENT_DOMAINS', adj(split)[0]
 assert adj(split)[5] == 1, 'the dissenter must not be counted as a domain'
 q3.MIN_DOMAINS = 1
+q3.OBSERVED.clear()
 
-print('adjudicate: 33 assertions pass')
+print('adjudicate: 36 assertions pass')

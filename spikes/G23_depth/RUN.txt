@@ -29,3 +29,13 @@ NULLS  20 degree-preserving shuffles per depth. Each depth is compared to
        draw 17/20   depth2 0.3306   depth3 0.2789
        draw 18/20   depth2 0.3271   depth3 0.3144
        draw 19/20   depth2 0.3101   depth3 0.2971
+       draw 20/20   depth2 0.3148   depth3 0.2973
+
+               real  null mean  null sd      gap  gap/sd  >=real
+depth 2      0.4405     0.3249   0.0104  +0.1157    11.1    0/20
+depth 3      0.3914     0.2966   0.0204  +0.0949     4.7    0/20
+
+G22 for comparison: materialisation reached 0.0956 against its own
+shuffled-edge control at 0.1222 — a gap of -0.0266.
+
+VERDICT: DEPTH PAYS LESS THAN WIDTH — depth-3 gap +0.0949 is below depth-2 +0.1157; deeper search finds weaker structure

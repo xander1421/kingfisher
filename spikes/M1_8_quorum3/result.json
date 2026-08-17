@@ -1,7 +1,7 @@
 {
- "gate": "device quiet: cpu_busy 0.2% (limit 15%), runnable 1, thermal 35100m, battery status=5 level=100",
+ "gate": "device quiet: cpu_busy 0.5% (limit 15%), runnable 1, thermal 42800m, battery status=5 level=100 charging=true powered=1",
  "fuel": 2000000,
- "bytes_pushed": 2002,
+ "bytes_pushed": 0,
  "normalisation": "canon_alpha",
  "sessions": 1,
  "chunk": 16,
@@ -13,7 +13,7 @@
   "phone"
  ],
  "tally": {
-  "INSUFFICIENT_DOMAINS": 1
+  "INSUFFICIENT_DOMAINS": 6
  },
  "rows": [
   {
@@ -35,23 +35,23 @@
      "arch": "aarch64",
      "os": "macos",
      "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:97d24cce709f",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
      "domains": {
-      "binary": "bin:97d24cce709f",
+      "binary": "bin:f52d98196ad0",
       "host": "host:Victorias-MacBook-Pro.local",
       "os": "darwin-25.4.0",
       "isa": "aarch64",
       "operator": "operator:self"
      },
-     "bin_sha256": "97d24cce709f",
+     "bin_sha256": "f52d98196ad0",
      "host_id": "host:Victorias-MacBook-Pro.local",
      "worker": "host-a",
      "job_id": "j0000",
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.6,
-     "observed_ms": 52.1,
+     "wall_ms": 13.7,
+     "observed_ms": 48.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -60,6 +60,7 @@
      },
      "_per_class": {
       "binary": 3,
+      "manifest": 1,
       "host": 2,
       "os": 2,
       "isa": 2,
@@ -75,23 +76,23 @@
      "arch": "x86_64",
      "os": "macos",
      "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:320f9769dd60",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
      "domains": {
-      "binary": "bin:320f9769dd60",
+      "binary": "bin:989da5cd3be7",
       "host": "host:Victorias-MacBook-Pro.local",
       "os": "darwin-25.4.0",
       "isa": "aarch64",
       "operator": "operator:self"
      },
-     "bin_sha256": "320f9769dd60",
+     "bin_sha256": "989da5cd3be7",
      "host_id": "host:Victorias-MacBook-Pro.local",
      "worker": "host-x86",
      "job_id": "j0000",
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.1,
-     "observed_ms": 62.4,
+     "wall_ms": 1300.4,
+     "observed_ms": 1337.6,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -104,6 +105,7 @@
      },
      "_per_class": {
       "binary": 3,
+      "manifest": 1,
       "host": 2,
       "os": 2,
       "isa": 2,
@@ -119,23 +121,23 @@
      "arch": "aarch64",
      "os": "android",
      "results_text": "",
-     "domain": "adb:R5CY93675MK|bin:409cae613518",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
      "domains": {
-      "binary": "bin:409cae613518",
+      "binary": "bin:c90624244472",
       "host": "adb:R5CY93675MK",
       "os": "android-16",
       "isa": "aarch64",
       "operator": "operator:self"
      },
-     "bin_sha256": "409cae613518",
+     "bin_sha256": "c90624244472",
      "host_id": "adb:R5CY93675MK",
      "worker": "phone",
      "job_id": "j0000",
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
-     "bytes_pushed": 2002,
-     "wall_ms": 140.9,
-     "observed_ms": 185.2,
+     "bytes_pushed": 0,
+     "wall_ms": 96.2,
+     "observed_ms": 141.1,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -144,6 +146,7 @@
      },
      "_per_class": {
       "binary": 3,
+      "manifest": 1,
       "host": 2,
       "os": 2,
       "isa": 2,
@@ -156,6 +159,757 @@
    "domains": 1,
    "domains_per_class": {
     "binary": 3,
+    "manifest": 1,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 1
+   }
+  },
+  {
+   "program": "integration_tests__das__test.metta",
+   "verdict": "INSUFFICIENT_DOMAINS",
+   "agree": 3,
+   "key": [
+    "OK",
+    "580",
+    "2a2b9159f3f12fed5208047a231c5814bd889dd0532a217a09e89d06ce6b7d38"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "580",
+     "raw_hash": "491f2bb0014923597b9be59ddffa9897a8259b237737ca8995877119de478702",
+     "sorted_hash": "2a2b9159f3f12fed5208047a231c5814bd889dd0532a217a09e89d06ce6b7d38",
+     "n_results": "3",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t()\n1\t()\n2\t(Error (das-service-status! pattern_matching_query) ServiceNotAvailable: pattern_matching_query)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0001",
+     "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 5017.7,
+     "observed_ms": 5065.9,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "580",
+     "raw_hash": "491f2bb0014923597b9be59ddffa9897a8259b237737ca8995877119de478702",
+     "sorted_hash": "2a2b9159f3f12fed5208047a231c5814bd889dd0532a217a09e89d06ce6b7d38",
+     "n_results": "3",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "0\t()\n1\t()\n2\t(Error (das-service-status! pattern_matching_query) ServiceNotAvailable: pattern_matching_query)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0001",
+     "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 5031.7,
+     "observed_ms": 6369.4,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "580",
+     "raw_hash": "491f2bb0014923597b9be59ddffa9897a8259b237737ca8995877119de478702",
+     "sorted_hash": "2a2b9159f3f12fed5208047a231c5814bd889dd0532a217a09e89d06ce6b7d38",
+     "n_results": "3",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "0\t()\n1\t()\n2\t(Error (das-service-status! pattern_matching_query) ServiceNotAvailable: pattern_matching_query)",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0001",
+     "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 5115.0,
+     "observed_ms": 5256.3,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    }
+   ],
+   "dispatched": 3,
+   "returned": 3,
+   "domains": 1,
+   "domains_per_class": {
+    "binary": 3,
+    "manifest": 1,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 1
+   }
+  },
+  {
+   "program": "lib__src__metta__runner__builtin_mods__catalog.metta",
+   "verdict": "INSUFFICIENT_DOMAINS",
+   "agree": 3,
+   "key": [
+    "OK",
+    "4",
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "4",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0002",
+     "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 12.4,
+     "observed_ms": 5078.7,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "4",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0002",
+     "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 23.5,
+     "observed_ms": 6393.3,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "4",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0002",
+     "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 99.3,
+     "observed_ms": 5355.9,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    }
+   ],
+   "dispatched": 3,
+   "returned": 3,
+   "domains": 1,
+   "domains_per_class": {
+    "binary": 3,
+    "manifest": 1,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 1
+   }
+  },
+  {
+   "program": "lib__src__metta__runner__builtin_mods__das.metta",
+   "verdict": "INSUFFICIENT_DOMAINS",
+   "agree": 3,
+   "key": [
+    "OK",
+    "11",
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "11",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0003",
+     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 12.2,
+     "observed_ms": 5091.1,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "11",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0003",
+     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 23.2,
+     "observed_ms": 6416.7,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "11",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0003",
+     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 105.5,
+     "observed_ms": 5461.7,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    }
+   ],
+   "dispatched": 3,
+   "returned": 3,
+   "domains": 1,
+   "domains_per_class": {
+    "binary": 3,
+    "manifest": 1,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 1
+   }
+  },
+  {
+   "program": "lib__src__metta__runner__builtin_mods__fileio.metta",
+   "verdict": "INSUFFICIENT_DOMAINS",
+   "agree": 3,
+   "key": [
+    "OK",
+    "7",
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "7",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0004",
+     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 11.7,
+     "observed_ms": 5103.0,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "7",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0004",
+     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 24.1,
+     "observed_ms": 6441.2,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "7",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0004",
+     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 104.9,
+     "observed_ms": 5566.9,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    }
+   ],
+   "dispatched": 3,
+   "returned": 3,
+   "domains": 1,
+   "domains_per_class": {
+    "binary": 3,
+    "manifest": 1,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 1
+   }
+  },
+  {
+   "program": "lib__src__metta__runner__builtin_mods__json.metta",
+   "verdict": "INSUFFICIENT_DOMAINS",
+   "agree": 3,
+   "key": [
+    "OK",
+    "12",
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "12",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0005",
+     "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 11.5,
+     "observed_ms": 5114.9,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "12",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0005",
+     "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 23.8,
+     "observed_ms": 6465.3,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "12",
+     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "n_results": "0",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0005",
+     "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 102.2,
+     "observed_ms": 5669.4,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
+     "_per_class": {
+      "binary": 3,
+      "manifest": 1,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 1
+     }
+    }
+   ],
+   "dispatched": 3,
+   "returned": 3,
+   "domains": 1,
+   "domains_per_class": {
+    "binary": 3,
+    "manifest": 1,
     "host": 2,
     "os": 2,
     "isa": 2,
