@@ -141,3 +141,65 @@ harness, the same move A10 made for the quiet gate.
 `cpuset: 0-1,4-5`, and cites `S56_mork_amortise` and `S72_c3_cpuset` — so
 `claimcheck.py` reports both findings above as inheritance diffs without anyone
 needing to notice them. This is the first spike to opt in.
+
+---
+
+# N1c — cache padding: predicted effect, measured none. And the control came free.
+
+**Verdict: negative result. Padding the barrier atomics to 128 bytes changes nothing measurable at this granularity, so the workspace's multi-threaded figures do NOT carry a hidden false-sharing term. Noise floor is ~6%, established by a control I got for free.**
+
+`pf.c:33` was `static atomic_int gen, left, stop;` — three adjacent atomics,
+almost certainly one cacheline, crossed on every barrier. The prediction: pad
+them and if the barrier cost drops, every multi-threaded figure here carries an
+unaccounted term.
+
+Padded after `crossbeam-utils/src/cache_padded.rs:94` (Apache-2.0, licence read
+from `LICENSE-APACHE` on disk), which uses **`repr(align(128))` on aarch64** —
+128 not 64, because ARM prefetches pairs of 64-byte lines.
+
+| threads | unpadded µs | padded µs | unpadded cyc/bundle | padded |
+|---|---|---|---|---|
+| 1 | 71.1 | 71.2 | 15.56 | 16.48 |
+| 2 | 35.9 | 35.7 | 7.85 | 8.28 |
+| 3 | **23.9** | **23.9** | 5.23 | 5.53 |
+
+**Identical to three significant figures, and scaling is 2.98× both ways.**
+
+## Why there is no effect, and where there would be
+Each barrier crossing here covers ~4,167 bundles per thread at ~5 cycles each —
+about **20,000 cycles of work per crossing**. A cacheline invalidation costs
+tens of cycles. The barrier term is amortised into nothing.
+
+False sharing would matter in the opposite regime: a fine-grained barrier with
+little work between crossings. **S51's `mc.c` is the candidate**, not this one,
+and it has not been tested.
+
+## The free control
+Padding **cannot** affect single-threaded performance — there is no other core
+to share with. So the T=1 delta is pure measurement noise: 15.56 vs 16.48
+cycles/bundle = **5.9%**.
+
+That is the resolution of this experiment, and it bounds the claim honestly:
+**no false-sharing effect larger than ~6% exists here.** A smaller one would be
+invisible. I did not design that control; it fell out of measuring T=1 in both
+variants, and it is worth keeping as a pattern — *include a configuration the
+treatment cannot affect, and its spread is your noise floor.*
+
+## Adopted from crossbeam, and deferred
+- **`Backoff` (`crossbeam-utils/src/backoff.rs`)** — `SPIN_LIMIT 6`,
+  `YIELD_LIMIT 10`, `spin()` → `snooze()` → park, with `is_completed()` telling
+  you when spinning stopped being profitable. **This is the escalation the
+  LEDGER's "the barrier must block" describes in prose and the code never
+  implemented** — three occurrences: S51 T=8, S53 T=1, N1 T=4 (337×).
+  N1's fix was a construction-time refusal (`T>=NCPUS`), which prevents the
+  collapse but does not let T=4 *work*. Backoff would.
+- **`loom`** — deferred to the tooling list, not the elder list. It is the
+  highest-value item here and not a queue: an exhaustive interleaving model
+  checker is **a null that fires by construction**, which is precisely the
+  property W1's four dead controls, S53's folded clock, B1's flat recall metric
+  and Q1's non-monotone curve all lacked. It is the right instrument for the DAS
+  concurrency patch, which was validated by a hand-written Python model swept
+  over a GAP parameter — sampling where enumeration is available.
+  **Limit: Rust-only, so it does not apply to the DAS C++ patch.**
+- **Skipped:** `bbqueue`, `ringbuf`. SPSC solutions to a problem not measured
+  here — M1.7 transport does not exist and no buffer has been profiled. YAGNI.

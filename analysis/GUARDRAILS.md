@@ -451,3 +451,32 @@ whatever is inconvenient. State the replacement's grade when invoking it.
 exist at all?* — applies to architecture, not only to code, and it has now paid
 three times running. The tell is a grade-D or grade-E claim sitting on the
 critical path: that is a design smell before it is an evidence problem.
+
+---
+
+### A14. A spin barrier must escalate, and the rule needs to be code, not prose.
+
+`LEDGER` has carried *"4 background cores − 1 coordinator = 3 workers, **or the
+barrier must block**"* through three occurrences of the same collapse — S51 at
+T=8, S53 at T=1, N1 at T=4 (**337× slower**). The prose was correct every time
+and prevented nothing.
+
+The production form is `crossbeam-utils/src/backoff.rs` (Apache-2.0):
+`SPIN_LIMIT = 6`, `YIELD_LIMIT = 10`, `spin()` → `snooze()` → park, with
+`is_completed()` reporting when spinning has stopped paying. That is the
+escalation our sentence describes.
+
+Until a harness adopts it, the minimum is a **construction-time refusal** —
+`if (T >= ncpus_in_cpuset) refuse;` — which `N1/pf.c` now does. Same move as
+A10: refuse rather than remind.
+
+### A15. Include a configuration the treatment cannot affect. Its spread is your noise floor.
+
+N1c padded barrier atomics to 128 bytes and measured no effect. The claim
+"no effect" is only as good as the resolution, and the resolution came free:
+**padding cannot change single-threaded performance**, so the T=1 delta between
+the two builds — 15.56 vs 16.48 cycles/bundle, **5.9%** — is pure noise.
+
+The honest claim is therefore *no false-sharing effect larger than ~6%*, not
+*no effect*. A control the treatment cannot reach costs one extra row and turns
+a null result into a bounded one.
