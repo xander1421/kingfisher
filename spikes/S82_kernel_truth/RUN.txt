@@ -1,0 +1,16 @@
+S82 — NEON prefilter kernel vs an independent scalar reference
+kernel copied verbatim from S50 remeasure.c:44-58 (= S45 prefilter.c:105-117)
+
+SHIPPED CONFIGURATION
+  D=1024   words=16   rows=100000  Qnnz=507    max u8 lane  35/255  mismatch 0/100000
+
+D SWEEP — D is a design parameter and nothing guards it
+  D=1024   words=16   rows=2000    Qnnz=486    max u8 lane  31/255  mismatch 0/2000
+  D=2048   words=32   rows=2000    Qnnz=1011   max u8 lane  49/255  mismatch 0/2000
+  D=4096   words=64   rows=2000    Qnnz=2077   max u8 lane  90/255  mismatch 0/2000
+  D=8192   words=128  rows=2000    Qnnz=4070   max u8 lane 162/255  mismatch 0/2000
+  D=16384  words=256  rows=2000    Qnnz=8259   max u8 lane 308/255  mismatch 2000/2000   FIRST row 0: neon 12078, scalar -210
+  D=32768  words=512  rows=2000    Qnnz=16273  max u8 lane 580/255  mismatch 2000/2000   FIRST row 0: neon 22462, scalar -66
+
+VERDICT: at the shipped D=1024 the kernel is correct on every row (100000/100000),
+         not merely repeatable. It breaks at D=16384 and above.
