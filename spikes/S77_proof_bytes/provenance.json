@@ -1,17 +1,15 @@
 {
  "spike": "S77_proof_bytes",
- "recorded_utc": "2026-08-17T11:39:19Z",
+ "recorded_utc": "2026-08-17T11:39:37Z",
  "note": "S77 reviews S75 and S76 on their own committed key files. It retracts their proof-size corrections and keeps their depth measurements, which reproduce. Counts and digests only, no timings, so valid while quiet.sh refuses.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes",
-   "head": "f29d9cfcedd38c4df4c236603a8d7a16b989da42",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S77_proof_bytes/measure.json"
-   ],
-   "diff_sha256": "58773e9551f7757b665f2caf6560b61f4b0a1febc506c2336879bba2d14edf86",
-   "diff_bytes": 3026
+   "head": "bf1548505bc3a89f1070f31e1b28141ce7ce4684",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -29,15 +27,15 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/measure.json",
    "sha256": "976b540ef819bf4b84ed31e31886a5c79026d15c3af7689456c15075d12b7b17",
    "bytes": 7468,
-   "mtime": 1786966759,
-   "compared_ts": 1786966759,
-   "compared_clock": "mtime"
+   "mtime": 1786966777,
+   "compared_ts": 1786966777,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/probe_out.txt",
    "sha256": "850aaaf3f52a011b2d219ce23fe74a52c7f23a9eee9bf5b6faac110dddf99fbb",
    "bytes": 757,
-   "mtime": 1786966759,
+   "mtime": 1786966777,
    "compared_ts": 1786965215,
    "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
@@ -216,10 +214,8 @@
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes at f29d9cfc: 1 modified. The build is NOT f29d9cfc."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if the sibling count along a pathmap path scaled with node depth, then depth was a valid proxy for proof size, S75 and S76's multiplications would stand, and nothing here is retracted",
  "carried_from_previous_record": [
   "falsifier",

@@ -1,0 +1,169 @@
+{
+ "verdict": "PARTIAL \u2014 selection dominates 18/20 random draws. The dominance is real but not robust to which 568 the coin picks, so it is weaker than G27 states.",
+ "selected": {
+  "preds": 809066,
+  "correct": 6875
+ },
+ "nodeath_pop": 2031,
+ "draws": [
+  {
+   "seed": 9000,
+   "preds": 834147,
+   "correct": 4569,
+   "prec": 0.005477451816046812
+  },
+  {
+   "seed": 9001,
+   "preds": 1158237,
+   "correct": 5116,
+   "prec": 0.004417057994175631
+  },
+  {
+   "seed": 9002,
+   "preds": 1023204,
+   "correct": 4580,
+   "prec": 0.004476135746146418
+  },
+  {
+   "seed": 9003,
+   "preds": 905165,
+   "correct": 4929,
+   "prec": 0.005445416029121762
+  },
+  {
+   "seed": 9004,
+   "preds": 902588,
+   "correct": 3844,
+   "prec": 0.004258864509610143
+  },
+  {
+   "seed": 9005,
+   "preds": 896005,
+   "correct": 4136,
+   "prec": 0.004616045669388006
+  },
+  {
+   "seed": 9006,
+   "preds": 985777,
+   "correct": 5250,
+   "prec": 0.005325748115445989
+  },
+  {
+   "seed": 9007,
+   "preds": 1077858,
+   "correct": 5731,
+   "prec": 0.005317026918202583
+  },
+  {
+   "seed": 9008,
+   "preds": 889600,
+   "correct": 4819,
+   "prec": 0.005417041366906475
+  },
+  {
+   "seed": 9009,
+   "preds": 1064448,
+   "correct": 4734,
+   "prec": 0.004447375541125541
+  },
+  {
+   "seed": 9010,
+   "preds": 980042,
+   "correct": 5069,
+   "prec": 0.005172227312707007
+  },
+  {
+   "seed": 9011,
+   "preds": 945533,
+   "correct": 4887,
+   "prec": 0.005168513420472897
+  },
+  {
+   "seed": 9012,
+   "preds": 1026287,
+   "correct": 5202,
+   "prec": 0.0050687575697636236
+  },
+  {
+   "seed": 9013,
+   "preds": 1086704,
+   "correct": 4214,
+   "prec": 0.0038777808860554486
+  },
+  {
+   "seed": 9014,
+   "preds": 836072,
+   "correct": 4601,
+   "prec": 0.005503114564295898
+  },
+  {
+   "seed": 9015,
+   "preds": 880551,
+   "correct": 5030,
+   "prec": 0.005712332391877358
+  },
+  {
+   "seed": 9016,
+   "preds": 1108873,
+   "correct": 5045,
+   "prec": 0.00454966438897872
+  },
+  {
+   "seed": 9017,
+   "preds": 955541,
+   "correct": 4902,
+   "prec": 0.005130078144213592
+  },
+  {
+   "seed": 9018,
+   "preds": 797303,
+   "correct": 4471,
+   "prec": 0.005607654806265623
+  },
+  {
+   "seed": 9019,
+   "preds": 804795,
+   "correct": 3950,
+   "prec": 0.004908082182419125
+  }
+ ],
+ "conditions": {
+  "data": "real:FB15k-237+planted",
+  "split": "70/15/15",
+  "split_seed": "0xC0FFEE",
+  "run_seed": 1234,
+  "budget": 2400,
+  "draw_seeds": [
+   9000,
+   9001,
+   9002,
+   9003,
+   9004,
+   9005,
+   9006,
+   9007,
+   9008,
+   9009,
+   9010,
+   9011,
+   9012,
+   9013,
+   9014,
+   9015,
+   9016,
+   9017,
+   9018,
+   9019
+  ],
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ]
+  ]
+ },
+ "cites": [
+  "G27_budget",
+  "G25_carrying_capacity"
+ ]
+}

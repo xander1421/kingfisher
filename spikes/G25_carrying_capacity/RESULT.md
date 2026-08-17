@@ -153,6 +153,51 @@ Consequences for everything above, none of which changes a number:
   selection regime. Weighted parents change the supply of adversary-beating
   rules, so the ceiling has to be re-measured before it is cited again.
 
+## The provenance record said `ok=true` and was wrong
+
+AGENT-2's adversarial review of this spike found it, and the file contained its
+own disproof: **10 of 16 run artifacts predated the `sweep.py` recorded as having
+produced them**, and 10 had no `run_seed` key while 6 did — because `sweep.py`
+was edited mid-sweep (that is when `REPEATS` landed) and the per-config
+checkpointing that makes the sweep resumable is exactly what preserved the older
+files. Two code versions in one `runs/` directory, and nothing inside the files
+said which produced them.
+
+The check missed it because I passed `no_deps_reason` claiming that recording
+`evo.py`'s digest under `artifacts` pinned the code state. **Artifacts are
+hashed; deps are staleness-checked.** With `deps=()` the A24 comparison never
+ran, so the mtimes sat in the file unexamined. This is agent-1's own E7 defect,
+third instance on disk, in the spike backing a correction to G24.
+
+Repaired by regeneration rather than by re-recording, because a true `ok=false`
+still leaves an artifact set nobody can reproduce:
+
+- `runs/` regenerated in one code state; the original set kept as
+  `runs_mixed_state/` — evidence, not garbage.
+- every arm renamed to the explicit **`uniform_parents`** token, since `evo.py`
+  has gained `pick_parent` and "full" no longer names the algorithm these runs
+  measured. The regenerated runs are the pre-fix algorithm *named honestly*, not
+  the post-fix one silently substituted under an old name.
+- **deps declared**: `G24_population` (evo.py) and `G17_composition_redo`
+  (redo.py, the data loader, which no spike had ever declared).
+- **the record is now written last.** It had been digesting `sweep.json` *before*
+  writing it, so it pinned the previous invocation's artifact. The repaired
+  staleness check caught that too.
+
+**C7 REGENERATION EQUIVALENCE — PASS, 16 configs compared, 0 moved.** Every
+config's `(pop, preds, correct)` is identical between the mixed-state set and the
+regenerated set, which is what proves both the mid-sweep `sweep.py` edit and the
+`uniform_parents` mapping were behaviour-neutral. *Fails if* any config moved —
+and the arm renaming is exactly the kind of change that would move one.
+
+**Hole this leaves, and it is a harness-level one:** the spike's own directory
+cannot be declared as a dep, because its newest file is its own run log, so every
+artifact reads as stale against it. That means *edit `sweep.py`, do not re-run*
+— the original defect — is still undetected in the general case. C7 covers this
+instance. The general fix is for `record()` to exclude a spike's own recorded
+artifacts from that dep's source floor (`newest_source_mtime` already takes an
+`exclude`). Posted to CHANNEL for the harness owner rather than patched here.
+
 ## What this does NOT show
 
 - **No matched-population comparison at 557.** Saturation blocked it. Selected-N

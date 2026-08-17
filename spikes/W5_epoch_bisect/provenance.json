@@ -1,0 +1,104 @@
+{
+ "spike": "W5_epoch_bisect",
+ "recorded_utc": "2026-08-17T11:22:33Z",
+ "note": "",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "epoch_bisect.py",
+   "sha256": "a08a08038e522e060dff69fc039b76220a8eb4d9ac162a76a26e4b6b5b9f51ab",
+   "bytes": 20726,
+   "mtime": 1786965737
+  },
+  {
+   "path": "result.json",
+   "sha256": "a94ecaabb158cb6c280cd842a62aa16409a4ee84198eb20011f8bc273a5a56d9",
+   "bytes": 3333,
+   "mtime": 1786965753
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_chain_binds_all_three",
+   "must_fire_because": "an omitted input leaves two different histories with one chain root -- the link would not bind that input",
+   "can_fail_because": "an omitted input leaves two different histories with one chain root -- the link would not bind that input",
+   "null_must_contain": null,
+   "fired": null,
+   "detail": null,
+   "constant_observations": null,
+   "observations": null
+  },
+  {
+   "name": "C_state_root_cannot_separate_histories",
+   "must_fire_because": "the two groupings give different STATE roots, in which case S73 already bound history and this spike is unnecessary; or equal CHAIN roots, in which case the chain adds nothing",
+   "can_fail_because": "the two groupings give different STATE roots, in which case S73 already bound history and this spike is unnecessary; or equal CHAIN roots, in which case the chain adds nothing",
+   "null_must_contain": null,
+   "fired": null,
+   "detail": null,
+   "constant_observations": null,
+   "observations": null
+  },
+  {
+   "name": "C_forged_sequence_rejected",
+   "must_fire_because": "the chain accepts a sequence whose declared additions were never the ones applied -- then a prover can present a real state root reached by a route it invented",
+   "can_fail_because": "the chain accepts a sequence whose declared additions were never the ones applied -- then a prover can present a real state root reached by a route it invented",
+   "null_must_contain": null,
+   "fired": null,
+   "detail": null,
+   "constant_observations": null,
+   "observations": null
+  },
+  {
+   "name": "C_referee_does_not_reexecute",
+   "must_fire_because": "the referee verifies more than one epoch, or takes more than ceil(log2 N) rounds -- either way it is doing work proportional to the run and has saved nothing",
+   "can_fail_because": "the referee verifies more than one epoch, or takes more than ceil(log2 N) rounds -- either way it is doing work proportional to the run and has saved nothing",
+   "null_must_contain": null,
+   "fired": null,
+   "detail": null,
+   "constant_observations": null,
+   "observations": null
+  },
+  {
+   "name": "C_localises_every_epoch",
+   "must_fire_because": "any planted epoch, including 0 and N-1, is not the epoch the referee returns",
+   "can_fail_because": "any planted epoch, including 0 and N-1, is not the epoch the referee returns",
+   "null_must_contain": null,
+   "fired": null,
+   "detail": null,
+   "constant_observations": null,
+   "observations": null
+  }
+ ],
+ "no_deps_reason": null,
+ "problems": [
+  "NO DEPS DECLARED and no no_deps_reason given -- staleness (A24) and dirty-tree checks are both silently skipped when deps is empty. Name the corpus/source tree, or state why there is none.",
+  "CONTROL C_chain_binds_all_three never observed",
+  "CONTROL C_chain_binds_all_three declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
+  "CONTROL C_state_root_cannot_separate_histories never observed",
+  "CONTROL C_state_root_cannot_separate_histories declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
+  "CONTROL C_forged_sequence_rejected never observed",
+  "CONTROL C_forged_sequence_rejected declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
+  "CONTROL C_referee_does_not_reexecute never observed",
+  "CONTROL C_referee_does_not_reexecute declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
+  "CONTROL C_localises_every_epoch never observed",
+  "CONTROL C_localises_every_epoch declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode"
+ ],
+ "ok": false,
+ "falsifier": "if the referee must execute more than one epoch, or rounds exceed ceil(log2 N), bisection saves nothing over re-execution"
+}

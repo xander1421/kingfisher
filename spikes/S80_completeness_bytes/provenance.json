@@ -1,18 +1,15 @@
 {
  "spike": "S80_completeness_bytes",
- "recorded_utc": "2026-08-17T11:38:40Z",
+ "recorded_utc": "2026-08-17T11:39:02Z",
  "note": "S80 separates the auth path from the answer set BEFORE measuring, because a single total would let the answer size decide a verdict about branching (A18). Counts and digests only, no timings.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes",
-   "head": "2024b6dbc395e4c77b8aa6f3c0aa1ae734103971",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S80_completeness_bytes/completeness.json",
-    "spikes/S80_completeness_bytes/completeness.py"
-   ],
-   "diff_sha256": "2ad3a7802b2a6768a76c2e8d6a22015177ef829ed75948d2dccc7dba113584e4",
-   "diff_bytes": 7659
+   "head": "f29d9cfcedd38c4df4c236603a8d7a16b989da42",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -27,9 +24,9 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes/completeness.json",
    "sha256": "09d3e8171dc60ed35090befc2e96b8cff8c37f46a5cd92c7115fb14c996f000f",
    "bytes": 7772,
-   "mtime": 1786966720,
-   "compared_ts": 1786966720,
-   "compared_clock": "mtime"
+   "mtime": 1786966742,
+   "compared_ts": 1786966742,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -215,14 +212,12 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes": {
-   "newest": 1786966720,
-   "from": "spikes/S80_completeness_bytes/completeness.py"
+   "newest": 1786966742,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes at 2024b6db: 2 modified. The build is NOT 2024b6db."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if the completeness AUTH PATH orders the three key sets differently from membership, then \"proof size is set by branching\" is a claim about point queries only and S77/S79 overreached",
  "carried_from_previous_record": [
   "falsifier",

@@ -1,0 +1,306 @@
+{
+ "name": "uniform_parents_s777",
+ "arm": "uniform_parents",
+ "seed": 777,
+ "hist": [
+  {
+   "round": 0,
+   "pop": 93,
+   "dev": {
+    "solved": 1339,
+    "predicted": 22821,
+    "precision": 0.05867402830726086,
+    "top12": 0.2989411084477891
+   },
+   "test": {
+    "solved": 1300,
+    "predicted": 22821,
+    "precision": 0.05696507602646685,
+    "top12": 0.27859517274172035
+   },
+   "unsolved": 39763,
+   "a15": false,
+   "mean_body": 2.032258064516129
+  },
+  {
+   "round": 1,
+   "pop": 128,
+   "dev": {
+    "solved": 3097,
+    "predicted": 171919,
+    "precision": 0.018014297430766813,
+    "top12": 0.2989411084477891
+   },
+   "test": {
+    "solved": 3167,
+    "predicted": 171919,
+    "precision": 0.018421465922905556,
+    "top12": 0.27859517274172035
+   },
+   "unsolved": 38005,
+   "a15": false,
+   "mean_body": 2.0546875
+  },
+  {
+   "round": 2,
+   "pop": 157,
+   "dev": {
+    "solved": 3611,
+    "predicted": 155586,
+    "precision": 0.02320902909002095,
+    "top12": 0.2989411084477891
+   },
+   "test": {
+    "solved": 3670,
+    "predicted": 155586,
+    "precision": 0.023588240587199362,
+    "top12": 0.2837093664606211
+   },
+   "unsolved": 37491,
+   "a15": false,
+   "mean_body": 2.0573248407643314
+  },
+  {
+   "round": 3,
+   "pop": 163,
+   "dev": {
+    "solved": 3697,
+    "predicted": 158405,
+    "precision": 0.02333890975663647,
+    "top12": 0.29897053405984186
+   },
+   "test": {
+    "solved": 3783,
+    "predicted": 158405,
+    "precision": 0.023881821912187115,
+    "top12": 0.2972908177317721
+   },
+   "unsolved": 37405,
+   "a15": false,
+   "mean_body": 2.079754601226994
+  },
+  {
+   "round": 4,
+   "pop": 156,
+   "dev": {
+    "solved": 3910,
+    "predicted": 183326,
+    "precision": 0.02132812585230682,
+    "top12": 0.29897053405984186
+   },
+   "test": {
+    "solved": 3979,
+    "predicted": 183326,
+    "precision": 0.021704504543818115,
+    "top12": 0.2896345055055674
+   },
+   "unsolved": 37127,
+   "a15": false,
+   "mean_body": 2.0833333333333335
+  },
+  {
+   "round": 5,
+   "pop": 152,
+   "dev": {
+    "solved": 4003,
+    "predicted": 172924,
+    "precision": 0.02314889778168444,
+    "top12": 0.30472576074530106
+   },
+   "test": {
+    "solved": 4049,
+    "predicted": 172924,
+    "precision": 0.02341491059656265,
+    "top12": 0.29082241822448784
+   },
+   "unsolved": 36529,
+   "a15": false,
+   "mean_body": 2.0526315789473686
+  },
+  {
+   "round": 6,
+   "pop": 148,
+   "dev": {
+    "solved": 4029,
+    "predicted": 179473,
+    "precision": 0.02244905918996172,
+    "top12": 0.29964182789158406
+   },
+   "test": {
+    "solved": 4069,
+    "predicted": 179473,
+    "precision": 0.022671933939924113,
+    "top12": 0.28984067406898484
+   },
+   "unsolved": 37022,
+   "a15": false,
+   "mean_body": 2.074324324324324
+  },
+  {
+   "round": 7,
+   "pop": 147,
+   "dev": {
+    "solved": 4071,
+    "predicted": 156516,
+    "precision": 0.026010120371080272,
+    "top12": 0.29711687385953783
+   },
+   "test": {
+    "solved": 4088,
+    "predicted": 156516,
+    "precision": 0.02611873546474482,
+    "top12": 0.2779096334862865
+   },
+   "unsolved": 36748,
+   "a15": false,
+   "mean_body": 2.0816326530612246
+  },
+  {
+   "round": 8,
+   "pop": 134,
+   "dev": {
+    "solved": 4643,
+    "predicted": 131259,
+    "precision": 0.03537281253095026,
+    "top12": 0.3476239786055168
+   },
+   "test": {
+    "solved": 4055,
+    "predicted": 131259,
+    "precision": 0.03089311970988656,
+    "top12": 0.271523529548856
+   },
+   "unsolved": 35959,
+   "a15": true,
+   "mean_body": 2.082089552238806
+  },
+  {
+   "round": 9,
+   "pop": 135,
+   "dev": {
+    "solved": 4615,
+    "predicted": 174203,
+    "precision": 0.026492081077823,
+    "top12": 0.3581070391854766
+   },
+   "test": {
+    "solved": 4047,
+    "predicted": 174203,
+    "precision": 0.02323151725286017,
+    "top12": 0.2727205199729326
+   },
+   "unsolved": 36042,
+   "a15": true,
+   "mean_body": 2.096296296296296
+  },
+  {
+   "round": 10,
+   "pop": 129,
+   "dev": {
+    "solved": 4571,
+    "predicted": 186894,
+    "precision": 0.0244577139983092,
+    "top12": 0.3480747539390905
+   },
+   "test": {
+    "solved": 4006,
+    "predicted": 186894,
+    "precision": 0.021434609992830162,
+    "top12": 0.26378079325474213
+   },
+   "unsolved": 36297,
+   "a15": true,
+   "mean_body": 2.10077519379845
+  },
+  {
+   "round": 11,
+   "pop": 129,
+   "dev": {
+    "solved": 4937,
+    "predicted": 141326,
+    "precision": 0.03493341635650907,
+    "top12": 0.3439782331759031
+   },
+   "test": {
+    "solved": 4352,
+    "predicted": 141326,
+    "precision": 0.030794050634702745,
+    "top12": 0.26378079325474213
+   },
+   "unsolved": 36002,
+   "a15": true,
+   "mean_body": 2.0775193798449614
+  },
+  {
+   "round": 12,
+   "pop": 127,
+   "dev": {
+    "solved": 4700,
+    "predicted": 197640,
+    "precision": 0.0237806112123052,
+    "top12": 0.33858615763638444
+   },
+   "test": {
+    "solved": 4135,
+    "predicted": 197640,
+    "precision": 0.020921878162315322,
+    "top12": 0.26525323491416924
+   },
+   "unsolved": 35811,
+   "a15": true,
+   "mean_body": 2.0708661417322833
+  },
+  {
+   "round": 13,
+   "pop": 128,
+   "dev": {
+    "solved": 4969,
+    "predicted": 184747,
+    "precision": 0.02689624188755433,
+    "top12": 0.34203173069826526
+   },
+   "test": {
+    "solved": 4420,
+    "predicted": 184747,
+    "precision": 0.023924610413159617,
+    "top12": 0.2626156146338
+   },
+   "unsolved": 35894,
+   "a15": true,
+   "mean_body": 2.0546875
+  },
+  {
+   "round": 14,
+   "pop": 134,
+   "dev": {
+    "solved": 5280,
+    "predicted": 227142,
+    "precision": 0.023245370737248066,
+    "top12": 0.33119688942310493
+   },
+   "test": {
+    "solved": 4719,
+    "predicted": 227142,
+    "precision": 0.02077555009641546,
+    "top12": 0.26070966293926484
+   },
+   "unsolved": 35635,
+   "a15": true,
+   "mean_body": 2.082089552238806
+  }
+ ],
+ "capped_evals": 266,
+ "final_pop": 134,
+ "params": {
+  "run_seed": 777,
+  "rounds": 15,
+  "offspring": 40,
+  "pop_seed": 60,
+  "wage_pool": 120.0,
+  "rent": 0.5,
+  "rent_pred": 0.05,
+  "max_pop": 200,
+  "max_pairs": 40000,
+  "adv_tries": 2
+ }
+}

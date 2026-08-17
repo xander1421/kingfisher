@@ -1,17 +1,15 @@
 {
  "spike": "S78_physical_nodes",
- "recorded_utc": "2026-08-17T11:39:04Z",
+ "recorded_utc": "2026-08-17T11:39:38Z",
  "note": "S78 is GRADE D: arithmetic over inputs measured in S77, plus one E input read from pathmap source. Published as a threshold, never as a measured byte count.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes",
-   "head": "f29d9cfcedd38c4df4c236603a8d7a16b989da42",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S78_physical_nodes/threshold.json"
-   ],
-   "diff_sha256": "3b97620edf42c04294683693749472a3b78a612f918ccd913deffa5cfebace0c",
-   "diff_bytes": 2369
+   "head": "bf1548505bc3a89f1070f31e1b28141ce7ce4684",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -26,9 +24,9 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes/threshold.json",
    "sha256": "2fa0bdb678bb5c02d1e08f0667b97a0402c7e28abcf8406d5b264cabac80518b",
    "bytes": 5200,
-   "mtime": 1786966744,
-   "compared_ts": 1786966744,
-   "compared_clock": "mtime"
+   "mtime": 1786966778,
+   "compared_ts": 1786966777,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -138,10 +136,8 @@
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes at f29d9cfc: 1 modified. The build is NOT f29d9cfc."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "a physical-node commitment that charges a digest per node rather than per sibling, or a framing cost above the computed threshold, would reorder the key sets and make S77 a statement about the logical view only",
  "carried_from_previous_record": [
   "falsifier",

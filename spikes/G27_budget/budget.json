@@ -2,18 +2,18 @@
  "rows": {
   "nd_r15_o160": {
    "name": "nd_r15_o160",
-   "arm": "no_death",
+   "arm": "no_death+uniform_parents",
    "wage": 120.0,
    "max_pop": 200,
-   "pop": 2025,
-   "preds": 2642060,
-   "correct": 8578,
-   "prec": 0.003246709007365465,
-   "top12": 0.33218125960061445,
-   "delta": 7206,
-   "cov_per_rule": 4.2360493827160495,
+   "pop": 2031,
+   "preds": 2718691,
+   "correct": 8454,
+   "prec": 0.0031095847229420334,
+   "top12": 0.31907018320358943,
+   "delta": 7152,
+   "cov_per_rule": 4.16248153618907,
    "a15": true,
-   "capped": 2544,
+   "capped": 2787,
    "rounds": 15,
    "offspring": 160,
    "budget": 2400,
@@ -23,7 +23,7 @@
   },
   "nd_r15_o40": {
    "name": "nd_r15_o40",
-   "arm": "no_death",
+   "arm": "no_death+uniform_parents",
    "wage": 120.0,
    "max_pop": 200,
    "pop": 557,
@@ -44,18 +44,18 @@
   },
   "nd_r30_o40": {
    "name": "nd_r30_o40",
-   "arm": "no_death",
+   "arm": "no_death+uniform_parents",
    "wage": 120.0,
    "max_pop": 200,
-   "pop": 1024,
-   "preds": 1654343,
-   "correct": 8090,
-   "prec": 0.004890158812289834,
-   "top12": 0.29195071181328525,
-   "delta": 6769,
-   "cov_per_rule": 7.900390625,
+   "pop": 1061,
+   "preds": 1658198,
+   "correct": 7514,
+   "prec": 0.00453142507710177,
+   "top12": 0.3135115901654994,
+   "delta": 6212,
+   "cov_per_rule": 7.081998114985862,
    "a15": true,
-   "capped": 2678,
+   "capped": 2722,
    "rounds": 30,
    "offspring": 40,
    "budget": 1200,
@@ -65,7 +65,7 @@
   },
   "sel_r15_o160": {
    "name": "sel_r15_o160",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 1200.0,
    "max_pop": 4000,
    "pop": 568,
@@ -86,7 +86,7 @@
   },
   "sel_r15_o40": {
    "name": "sel_r15_o40",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 1200.0,
    "max_pop": 4000,
    "pop": 229,
@@ -107,7 +107,7 @@
   },
   "sel_r30_o40": {
    "name": "sel_r30_o40",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 1200.0,
    "max_pop": 4000,
    "pop": 258,
@@ -128,7 +128,7 @@
   },
   "sel_r45_o160": {
    "name": "sel_r45_o160",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 1200.0,
    "max_pop": 4000,
    "pop": 684,
@@ -149,7 +149,7 @@
   },
   "sel_r45_o40": {
    "name": "sel_r45_o40",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 1200.0,
    "max_pop": 4000,
    "pop": 296,
@@ -169,7 +169,7 @@
    "seed": 1234
   }
  },
- "verdict": "BUDGET-MATCHED: selected dominates in 0/3 budgets, no_death in 0/3, rest trades. POPULATION-MATCHED: selected dominates in 2/2, no_death in 0/2, and it survives seed repetition (3/3 seeds). THE MATCHINGS DISAGREE \u2014 budget-matched winner none, all trades, population-matched winner selected. Which arm 'wins' is a choice of what to hold fixed, not a property of the algorithms, and G24 reported the budget-matched view while G25 was asking the population-matched question.",
+ "verdict": "BUDGET-MATCHED: selected dominates in 0/3 budgets, no_death in 0/3, rest trades. POPULATION-MATCHED: selected dominates in 2/2, no_death in 0/2, and it survives seed repetition (3/3 seeds) \u2014 carried by the PREDICTION axis (0.54-0.83x of no_death's assertions, same direction every seed), not by the coverage axis, whose ranges separate by only 32 triples against a 1338-triple seed band; paired sign test floor p=0.125. THE MATCHINGS DISAGREE \u2014 budget-matched winner none, all trades, population-matched winner selected. Which arm 'wins' is a choice of what to hold fixed, not a property of the algorithms, and G24 reported the budget-matched view while G25 was asking the population-matched question.",
  "conditions": {
   "data": "real:FB15k-237+planted",
   "split": "70/15/15",
@@ -192,8 +192,8 @@
     160
    ],
    "arm": [
-    "full",
-    "no_death"
+    "no_death+uniform_parents",
+    "uniform_parents"
    ]
   }
  },

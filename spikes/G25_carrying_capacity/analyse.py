@@ -25,11 +25,13 @@ RUNS = os.path.join(HERE, "runs")
 MATCH_TOL = 0.25          # |pop - target| / target considered "matched"
 
 
-def load():
+def load(d_dir=None):
+    """Default RUNS; a directory argument lets C7 read the mixed-state set."""
+    d_dir = RUNS if d_dir is None else d_dir
     out = {}
-    for f in sorted(os.listdir(RUNS)):
+    for f in sorted(os.listdir(d_dir)):
         if f.endswith(".json"):
-            d = json.load(open(os.path.join(RUNS, f)))
+            d = json.load(open(os.path.join(d_dir, f)))
             if d["hist"]:
                 out[d["name"]] = d
     return out
@@ -304,7 +306,10 @@ def main():
         c = P.Control("C1_repro", "the arm-set refactor and the monkeypatched "
                       "globals must not change evo.py's behaviour",
                       null_must_contain="any deviation from G24's published "
-                      "full arm 110/4144/0.0355")
+                      "full arm 110/4144/0.0355",
+                      can_fail_because="the arms were renamed to "
+                      "uniform_parents and evo.py gained pick_parent since these "
+                      "numbers were published; either could move 4144")
         c.observe(r["pop"] == 110 and r["correct"] == 4144,
                   {"pop": r["pop"], "correct": r["correct"], "prec": r["prec"],
                    "g24": g24}, "line-identical to G24 RUN.txt full arm")
@@ -315,7 +320,10 @@ def main():
                       "WAGE_POOL; if MAX_POP were the binding constraint the "
                       "sweep would be aimed at the wrong knob",
                       null_must_contain="a population above 200 once the cap "
-                      "is lifted to 2000")
+                      "is lifted to 2000",
+                      can_fail_because="MAX_POP=200 sits above the observed 110 "
+                      "but below no_death's 557, so a rent setting that let the "
+                      "population past 200 would fire it")
         c.observe(a["pop"] == b["pop"],
                   {"pop_cap200": a["pop"], "pop_cap2000": b["pop"],
                    "correct_cap200": a["correct"],
@@ -326,7 +334,10 @@ def main():
                   "to abduction-on arms because the plant is known unreachable "
                   "by blind mutation)",
                   null_must_contain="a ranked abduction-on arm that misses the "
-                  "plant -- e.g. a capacity setting large enough to swamp it")
+                  "plant -- e.g. a capacity setting large enough to swamp it",
+                  can_fail_because="the two no_abduct arms in this same sweep DO "
+                  "miss the plant, so the observation is attainable and the gate "
+                  "is not vacuous")
     c.observe(not bad, {n: rows[n]["a15"] for n in rows},
               f"ranked misses {bad}; exempt (abduction off) {exempt}")
     ctl.append(c)
@@ -337,7 +348,10 @@ def main():
                       "size, without problem-directed proposal",
                       null_must_contain="coverage near no_death's 6361 at pop "
                       "~531, which is what 'coverage rises with population "
-                      "size almost mechanically' predicts")
+                      "size almost mechanically' predicts",
+                      can_fail_because="pop 531 vs 557 is a genuine population "
+                      "match, so the volume hypothesis had every chance to be "
+                      "confirmed here; 6361-ish coverage would have confirmed it")
         c.observe(nn["correct"] < 0.5 * nd["correct"],
                   {"nodeath_noabduct": [nn["pop"], nn["preds"], nn["correct"]],
                    "nodeath": [nd["pop"], nd["preds"], nd["correct"]],
@@ -387,9 +401,18 @@ def main():
               f"{len(old_runs)} mixed-state runs compared, {len(moved)} moved"
               + ("" if not moved else f": {moved}"))
 
+    json.dump({"rows": rows, "verdict": v,
+               "conditions": {"data": "real:FB15k-237+planted",
+                              "split": "70/15/15", "split_seed": "0xC0FFEE",
+                              "run_seed": 1234, "platforms": [["macos", "aarch64"]],
+                              "swept": {"wage_pool": sorted({r["wage"] for r in rows.values()}),
+                                        "arm": sorted({r["arm"] for r in rows.values()})}},
+               "cites": ["G24_population"]},
+              open(os.path.join(HERE, "sweep.json"), "w"), indent=1)
+    # RECORD LAST. Digesting sweep.json before writing it pinned the PREVIOUS
+    # invocation's artifact -- the staleness check caught that, correctly.
     ok, _ = P.record(HERE, deps=[os.path.join(HERE, "..", "G24_population"),
-                                 os.path.join(HERE, "..", "G17_composition_redo"),
-                                 HERE],
+                                 os.path.join(HERE, "..", "G17_composition_redo")],
                      artifacts=[os.path.join(HERE, "sweep.json"),
                                       os.path.join(HERE, "sweep.py"),
                                       os.path.join(HERE, "analyse.py"),
@@ -400,14 +423,6 @@ def main():
                      note="G25: is no_death's +5059 a tradeoff or a rent "
                           "calibration artefact")
     print(f"provenance.json ok={ok}")
-    json.dump({"rows": rows, "verdict": v,
-               "conditions": {"data": "real:FB15k-237+planted",
-                              "split": "70/15/15", "split_seed": "0xC0FFEE",
-                              "run_seed": 1234, "platforms": [["macos", "aarch64"]],
-                              "swept": {"wage_pool": sorted({r["wage"] for r in rows.values()}),
-                                        "arm": sorted({r["arm"] for r in rows.values()})}},
-               "cites": ["G24_population"]},
-              open(os.path.join(HERE, "sweep.json"), "w"), indent=1)
     return 0
 
 

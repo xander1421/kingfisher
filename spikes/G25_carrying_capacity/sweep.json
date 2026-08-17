@@ -2,7 +2,7 @@
  "rows": {
   "full_base": {
    "name": "full_base",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 120.0,
    "max_pop": 200,
    "pop": 110,
@@ -19,7 +19,7 @@
   },
   "full_cap2000": {
    "name": "full_cap2000",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 120.0,
    "max_pop": 2000,
    "pop": 110,
@@ -36,7 +36,7 @@
   },
   "nodeath": {
    "name": "nodeath",
-   "arm": "no_death",
+   "arm": "no_death+uniform_parents",
    "wage": 120.0,
    "max_pop": 200,
    "pop": 557,
@@ -53,7 +53,7 @@
   },
   "nodeath_noabduct": {
    "name": "nodeath_noabduct",
-   "arm": "no_death+no_abduct",
+   "arm": "no_death+no_abduct+uniform_parents",
    "wage": 120.0,
    "max_pop": 200,
    "pop": 531,
@@ -70,7 +70,7 @@
   },
   "wage1200": {
    "name": "wage1200",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 1200.0,
    "max_pop": 2000,
    "pop": 229,
@@ -87,7 +87,7 @@
   },
   "wage2400": {
    "name": "wage2400",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 2400.0,
    "max_pop": 4000,
    "pop": 228,
@@ -104,7 +104,7 @@
   },
   "wage300": {
    "name": "wage300",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 300.0,
    "max_pop": 2000,
    "pop": 153,
@@ -121,7 +121,7 @@
   },
   "wage4800": {
    "name": "wage4800",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 4800.0,
    "max_pop": 4000,
    "pop": 239,
@@ -138,7 +138,7 @@
   },
   "wage600": {
    "name": "wage600",
-   "arm": "full",
+   "arm": "uniform_parents",
    "wage": 600.0,
    "max_pop": 2000,
    "pop": 171,
@@ -155,7 +155,7 @@
   },
   "wage600_noabduct": {
    "name": "wage600_noabduct",
-   "arm": "no_abduct",
+   "arm": "no_abduct+uniform_parents",
    "wage": 600.0,
    "max_pop": 2000,
    "pop": 184,
@@ -193,10 +193,10 @@
     4800.0
    ],
    "arm": [
-    "full",
-    "no_abduct",
-    "no_death",
-    "no_death+no_abduct"
+    "no_abduct+uniform_parents",
+    "no_death+no_abduct+uniform_parents",
+    "no_death+uniform_parents",
+    "uniform_parents"
    ]
   }
  },

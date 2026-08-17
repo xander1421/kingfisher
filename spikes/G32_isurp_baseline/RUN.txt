@@ -1,0 +1,35 @@
+corpus 272115 triples, train 190480, preds 237
+60 rules: 30 by support + 30 by confidence within [30, 40000], 0 overlapping
+
+  [support] (134, 42)=>21   n  39077  conf 0.0002  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>97   n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>8    n  39077  conf 0.0013  closed 0.0002  head-shuf 0.0002+-0.0001  whole-shuf 0.0002
+  [support] (134, 42)=>77   n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>123  n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>3    n  39077  conf 0.0008  closed 0.0001  head-shuf 0.0001+-0.0001  whole-shuf 0.0001
+  [support] (134, 42)=>119  n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>192  n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>45   n  39077  conf 0.0001  closed 0.0001  head-shuf 0.0001+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>164  n  39077  conf 0.0000  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>196  n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>138  n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] (134, 42)=>175  n  39077  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] ( 75, 42)=>92   n  36815  conf 0.0004  closed 0.0004  head-shuf 0.0004+-0.0001  whole-shuf 0.0004
+  [support] (  9, 42)=>92   n  36797  conf 0.0005  closed 0.0004  head-shuf 0.0004+-0.0001  whole-shuf 0.0006
+  [support] (193, 15)=>106  n  35805  conf 0.0003  closed 0.0003  head-shuf 0.0003+-0.0001  whole-shuf 0.0001
+  [support] (193, 15)=>13   n  35805  conf 0.0000  closed 0.0001  head-shuf 0.0001+-0.0000  whole-shuf 0.0013
+  [support] ( 30, 47)=>12   n  33392  conf 0.0181  closed 0.0020  head-shuf 0.0020+-0.0002  whole-shuf 0.0013
+  [support] ( 30, 47)=>183  n  33392  conf 0.0003  closed 0.0002  head-shuf 0.0002+-0.0001  whole-shuf 0.0000
+  [support] ( 30, 47)=>86   n  33392  conf 0.0005  closed 0.0003  head-shuf 0.0004+-0.0001  whole-shuf 0.0001
+  [support] ( 30, 47)=>84   n  33392  conf 0.0025  closed 0.0005  head-shuf 0.0005+-0.0001  whole-shuf 0.0002
+  [support] ( 30, 47)=>153  n  33392  conf 0.0001  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] ( 30, 47)=>1    n  33392  conf 0.0023  closed 0.0003  head-shuf 0.0003+-0.0001  whole-shuf 0.0001
+  [support] ( 30, 47)=>155  n  33392  conf 0.0002  closed 0.0000  head-shuf 0.0000+-0.0000  whole-shuf 0.0000
+  [support] ( 30, 47)=>109  n  33392  conf 0.0022  closed 0.0004  head-shuf 0.0004+-0.0001  whole-shuf 0.0002
+  [support] ( 30, 47)=>136  n  33392  conf 0.0006  closed 0.0001  head-shuf 0.0001+-0.0001  whole-shuf 0.0001
+  [support] ( 30, 47)=>116  n  33392  conf 0.0010  closed 0.0002  head-shuf 0.0002+-0.0001  whole-shuf 0.0002
+  [support] ( 30, 47)=>74   n  33392  conf 0.0005  closed 0.0002  head-shuf 0.0002+-0.0001  whole-shuf 0.0000
+  [support] ( 30, 47)=>201  n  33392  conf 0.0003  closed 0.0001  head-shuf 0.0001+-0.0000  whole-shuf 0.0000
+  [support] ( 30, 47)=>186  n  33392  conf 0.0003  closed 0.0001  head-shuf 0.0001+-0.0001  whole-shuf 0.0000
+  [conf   ] (106,206)=>34   n     31  conf 0.7097  closed 0.4381  head-shuf 0.6858+-0.0259  whole-shuf 0.5296
+  [conf   ] (218,219)=>139  n     32  conf 0.6875  closed 0.4292  head-shuf 0.6469+-0.0364  whole-shuf 0.5876

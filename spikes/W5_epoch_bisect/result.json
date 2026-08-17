@@ -1,0 +1,178 @@
+{
+ "seed": 20260817,
+ "controls": {
+  "C_chain_binds_all_three": {
+   "fires": true,
+   "detail": {
+    "drop_root_prev": true,
+    "drop_delta": true,
+    "drop_root_next": true
+   },
+   "fails_when": "an omitted input leaves two different histories with one chain root -- the link would not bind that input"
+  },
+  "C_state_root_cannot_separate_histories": {
+   "fires": true,
+   "state_roots_equal": true,
+   "chain_roots_differ": true,
+   "fails_when": "the two groupings give different STATE roots, in which case S73 already bound history and this spike is unnecessary; or equal CHAIN roots, in which case the chain adds nothing"
+  },
+  "C_forged_sequence_rejected": {
+   "fires": true,
+   "rejected_at_epoch": 0,
+   "fails_when": "the chain accepts a sequence whose declared additions were never the ones applied -- then a prover can present a real state root reached by a route it invented"
+  },
+  "C_referee_does_not_reexecute": {
+   "fires": true,
+   "steps_verified": 1,
+   "rounds": 6,
+   "ceil_log2": 6,
+   "fails_when": "the referee verifies more than one epoch, or takes more than ceil(log2 N) rounds -- either way it is doing work proportional to the run and has saved nothing"
+  },
+  "C_localises_every_epoch": {
+   "fires": true,
+   "missed": [],
+   "n": 16,
+   "fails_when": "any planted epoch, including 0 and N-1, is not the epoch the referee returns"
+  }
+ },
+ "sweep": [
+  {
+   "n_epochs": 8,
+   "n_atoms": 64,
+   "honest_chain_accepts": true,
+   "liar_at": 0,
+   "localised_to": 0,
+   "caught": true,
+   "rounds": 3,
+   "steps_verified": 1,
+   "ceil_log2": 3
+  },
+  {
+   "n_epochs": 16,
+   "n_atoms": 128,
+   "honest_chain_accepts": true,
+   "liar_at": 1,
+   "localised_to": 1,
+   "caught": true,
+   "rounds": 4,
+   "steps_verified": 1,
+   "ceil_log2": 4
+  },
+  {
+   "n_epochs": 32,
+   "n_atoms": 256,
+   "honest_chain_accepts": true,
+   "liar_at": 2,
+   "localised_to": 2,
+   "caught": true,
+   "rounds": 5,
+   "steps_verified": 1,
+   "ceil_log2": 5
+  },
+  {
+   "n_epochs": 64,
+   "n_atoms": 512,
+   "honest_chain_accepts": true,
+   "liar_at": 4,
+   "localised_to": 4,
+   "caught": true,
+   "rounds": 6,
+   "steps_verified": 1,
+   "ceil_log2": 6
+  },
+  {
+   "n_epochs": 128,
+   "n_atoms": 1024,
+   "honest_chain_accepts": true,
+   "liar_at": 8,
+   "localised_to": 8,
+   "caught": true,
+   "rounds": 7,
+   "steps_verified": 1,
+   "ceil_log2": 7
+  }
+ ],
+ "localisation": [
+  {
+   "planted": 0,
+   "found": 0,
+   "rounds": 4
+  },
+  {
+   "planted": 1,
+   "found": 1,
+   "rounds": 4
+  },
+  {
+   "planted": 2,
+   "found": 2,
+   "rounds": 4
+  },
+  {
+   "planted": 3,
+   "found": 3,
+   "rounds": 4
+  },
+  {
+   "planted": 4,
+   "found": 4,
+   "rounds": 4
+  },
+  {
+   "planted": 5,
+   "found": 5,
+   "rounds": 4
+  },
+  {
+   "planted": 6,
+   "found": 6,
+   "rounds": 4
+  },
+  {
+   "planted": 7,
+   "found": 7,
+   "rounds": 4
+  },
+  {
+   "planted": 8,
+   "found": 8,
+   "rounds": 4
+  },
+  {
+   "planted": 9,
+   "found": 9,
+   "rounds": 4
+  },
+  {
+   "planted": 10,
+   "found": 10,
+   "rounds": 4
+  },
+  {
+   "planted": 11,
+   "found": 11,
+   "rounds": 4
+  },
+  {
+   "planted": 12,
+   "found": 12,
+   "rounds": 4
+  },
+  {
+   "planted": 13,
+   "found": 13,
+   "rounds": 4
+  },
+  {
+   "planted": 14,
+   "found": 14,
+   "rounds": 4
+  },
+  {
+   "planted": 15,
+   "found": 15,
+   "rounds": 4
+  }
+ ],
+ "all_controls_fire": true
+}

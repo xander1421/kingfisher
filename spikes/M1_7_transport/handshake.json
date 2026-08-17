@@ -1,16 +1,16 @@
 {
  "plain": {
-  "connect": 6.388999999999999,
+  "connect": 6.535,
   "appconnect": 0.0,
-  "starttransfer": 12.745,
-  "total": 12.804
+  "starttransfer": 14.104000000000001,
+  "total": 14.158999999999999
  },
  "tls": {
-  "connect": 5.901,
-  "appconnect": 14.856,
-  "starttransfer": 20.227999999999998,
-  "total": 20.285
+  "connect": 7.014,
+  "appconnect": 16.059,
+  "starttransfer": 23.283,
+  "total": 23.334
  },
- "tcp_ms": 6.388999999999999,
- "tls_extra_ms": 8.955
+ "tcp_ms": 6.535,
+ "tls_extra_ms": 9.045000000000002
 }

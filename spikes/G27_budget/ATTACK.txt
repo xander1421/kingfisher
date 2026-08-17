@@ -1,0 +1,33 @@
+split  train 191730  dev 41367  test 40818
+A15 planted 238,239=>240  1250 train edges, 550 dev conclusions
+
+re-running nd_r15_o160 to recover its final population (budget 2400)
+population 2031, published metrics 2718691/8454
+recomputed whole-population point 2718691/8454
+  draw  0 seed 9000:  4569 correct /   834147 preds  prec 0.0055
+  draw  1 seed 9001:  5116 correct /  1158237 preds  prec 0.0044
+  draw  2 seed 9002:  4580 correct /  1023204 preds  prec 0.0045
+  draw  3 seed 9003:  4929 correct /   905165 preds  prec 0.0054
+  draw  4 seed 9004:  3844 correct /   902588 preds  prec 0.0043
+  draw  5 seed 9005:  4136 correct /   896005 preds  prec 0.0046
+  draw  6 seed 9006:  5250 correct /   985777 preds  prec 0.0053
+  draw  7 seed 9007:  5731 correct /  1077858 preds  prec 0.0053
+  draw  8 seed 9008:  4819 correct /   889600 preds  prec 0.0054
+  draw  9 seed 9009:  4734 correct /  1064448 preds  prec 0.0044
+  draw 10 seed 9010:  5069 correct /   980042 preds  prec 0.0052
+  draw 11 seed 9011:  4887 correct /   945533 preds  prec 0.0052
+  draw 12 seed 9012:  5202 correct /  1026287 preds  prec 0.0051
+  draw 13 seed 9013:  4214 correct /  1086704 preds  prec 0.0039
+  draw 14 seed 9014:  4601 correct /   836072 preds  prec 0.0055
+  draw 15 seed 9015:  5030 correct /   880551 preds  prec 0.0057
+  draw 16 seed 9016:  5045 correct /  1108873 preds  prec 0.0045
+  draw 17 seed 9017:  4902 correct /   955541 preds  prec 0.0051
+  draw 18 seed 9018:  4471 correct /   797303 preds  prec 0.0056
+  draw 19 seed 9019:  3950 correct /   804795 preds  prec 0.0049
+
+selected 568: 6875 correct / 809066 preds
+random 568 of no_death's 2031, 20 draws: correct 3844-5731, preds 797303-1158237
+selected DOMINATES 18/20 draws (more correct in 20, no more predictions in 18)
+
+VERDICT: PARTIAL — selection dominates 18/20 random draws. The dominance is real but not robust to which 568 the coin picks, so it is weaker than G27 states.
+provenance ok=False

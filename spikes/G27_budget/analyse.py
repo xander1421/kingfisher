@@ -186,12 +186,35 @@ def main():
             if sum(g1) / len(g1) - sum(g2) / len(g2) >= obs - 1e-9:
                 ge += 1
         seed_gate = len(dom_seeds) == len(per_seed)
-        print(f"  dominance holds at {len(dom_seeds)}/{len(per_seed)} seeds; "
-              f"mean coverage difference {obs:+.0f}, exact permutation "
-              f"p = {ge}/{len(splits)} = {ge / len(splits):.3f} one-sided "
-              f"(floor 1/{len(splits)}); selected {min(ca)}-{max(ca)}, "
-              f"no_death {min(cb)}-{max(cb)}, "
-              f"{'DISJOINT' if min(ca) > max(cb) else 'OVERLAPPING'}")
+        print(f"  dominance holds at {len(dom_seeds)}/{len(per_seed)} seeds")
+        # TWO AXES, and the weak one is the one I first reported. AGENT-2's
+        # review: the coverage ranges are disjoint by TWENTY triples, which is
+        # 1.5% of the 1338-triple band I measured on full_base and then used to
+        # retire two of their G24 claims. Paired, the coverage differences are
+        # +514 / +20 / +1031 -- one of three is indistinguishable from zero. The
+        # prediction axis has no such problem, so it leads.
+        pairs_c = [(v[0]["correct"] - v[1]["correct"]) for v in per_seed.values()]
+        ratios = [v[0]["preds"] / v[1]["preds"] for v in per_seed.values()]
+        print(f"  COVERAGE axis (weak): paired differences "
+              f"{', '.join(f'{d:+d}' for d in pairs_c)}; ranges selected "
+              f"{min(ca)}-{max(ca)} vs no_death {min(cb)}-{max(cb)}, "
+              f"{'disjoint by ' + str(min(ca) - max(cb)) + ' triples' if min(ca) > max(cb) else 'OVERLAPPING'}"
+              f" -- compare G25's 1338-triple seed band before leaning on this")
+        print(f"  PREDICTION axis (robust): selected asserts "
+              f"{', '.join(f'{r:.2f}x' for r in ratios)} of no_death's "
+              f"predictions, {min(ratios):.2f}-{max(ratios):.2f}x, monotone in "
+              f"direction across all {len(ratios)} seeds")
+        # Two tests, both reported, because they differ in what they assume and
+        # the one with the smaller floor is the one that throws away the pairing.
+        same_dir = sum(1 for d in pairs_c if d > 0)
+        sign_p = 2 ** -len(pairs_c)
+        print(f"  paired sign test (respects the seed pairing): "
+              f"{same_dir}/{len(pairs_c)} same direction, floor "
+              f"p = 1/{2 ** len(pairs_c)} = {sign_p:.3f}")
+        print(f"  unpaired permutation on coverage means: {obs:+.0f}, "
+              f"p = {ge}/{len(splits)} = {ge / len(splits):.3f} -- smaller floor, "
+              f"but it DISCARDS the pairing the design built in, so the sign "
+              f"test is the honest one and 0.125 is the number to quote")
 
     # ---- verdict: both matchings, and their disagreement if any
     bm = [(r, nd, G25A.dominates(r, nd), G25A.dominates(nd, r))
@@ -210,7 +233,12 @@ def main():
     if pm:
         gate = ("" if seed_gate is None else
                 f", and it survives seed repetition ({len(dom_seeds)}/"
-                f"{len(per_seed)} seeds)" if seed_gate else
+                f"{len(per_seed)} seeds) — carried by the PREDICTION axis "
+                f"({min(ratios):.2f}-{max(ratios):.2f}x of no_death's assertions, "
+                f"same direction every seed), not by the coverage axis, whose "
+                f"ranges separate by only {min(ca) - max(cb)} triples against a "
+                f"1338-triple seed band; paired sign test floor p={sign_p:.3f}"
+                if seed_gate else
                 f", but it does NOT survive seed repetition — dominance holds at "
                 f"only {len(dom_seeds)}/{len(per_seed)} seeds, so it is inside "
                 f"the noise band and is not a result")
@@ -260,16 +288,6 @@ def main():
                   "would void that arm's row")
     c.observe(not bad, {n: r["a15"] for n, r in rows.items()}, f"missing {bad}")
     ctl.append(c)
-    ok, _ = P.record(HERE, artifacts=[os.path.join(HERE, "sweep.py"),
-                                      os.path.join(HERE, "analyse.py")]
-                     + [os.path.join(RUNS, f) for f in sorted(os.listdir(RUNS))],
-                     controls=ctl, allow_dirty=True,
-                     no_deps_reason="pure Python inside the workspace; the "
-                     "dependencies are G24's evo.py and G25's sweep.py/"
-                     "analyse.py, reused unmodified and digested by G25's own "
-                     "provenance.json",
-                     note="G27: can a selected population reach no_death's "
-                          "size, and which matching is attainable")
     json.dump({"rows": rows, "verdict": v,
                "conditions": {"data": "real:FB15k-237+planted",
                               "split": "70/15/15", "split_seed": "0xC0FFEE",
@@ -280,6 +298,104 @@ def main():
                                         "arm": sorted({r["arm"] for r in rows.values()})}},
                "cites": ["G24_population", "G25_carrying_capacity"]},
               open(os.path.join(HERE, "budget.json"), "w"), indent=1)
+    # C7 REGENERATION EQUIVALENCE, same control G25 gained from AGENT-2's review.
+    # This spike's first 8 runs were also produced before sweep.py grew REPEATS,
+    # and all of them predate pick_parent, so the whole set was regenerated with
+    # the arms renamed to the explicit uniform_parents token. Identical numbers
+    # prove the renaming and the edit were behaviour-neutral; any config that
+    # moved fails this and takes the matching RESULT.md row with it.
+    # `pick_parent` (importance-weighted reproduction) was committed at
+    # 4964ad7, 2026-08-17 10:58:51 +0100, MID-SWEEP. Runs written after it used
+    # reproductive selection; runs before it did not. Classification is by that
+    # external timestamp, NOT by which runs happen to differ -- and it agrees
+    # with the observed reproduce/diverge split 12 of 12, which is what makes it
+    # a check rather than a story fitted to the data.
+    PICK_PARENT_TS = 1786960731
+    mixed_dir = os.path.join(HERE, "runs_mixed_state")
+    if os.path.isdir(mixed_dir):
+        old_recs = load(mixed_dir)
+        pre, post = [], []
+        for n, oldrec in old_recs.items():
+            if n not in recs:
+                continue
+            a, b = G25A.row(oldrec), G25A.row(recs[n])
+            same = (a["pop"], a["preds"], a["correct"]) == \
+                   (b["pop"], b["preds"], b["correct"])
+            mt = os.path.getmtime(os.path.join(mixed_dir, n + ".json"))
+            (post if mt > PICK_PARENT_TS else pre).append((n, a, b, same))
+        # C7a: runs from BEFORE the mechanism landed must reproduce exactly.
+        moved_pre = [n for n, a, b, same in pre if not same]
+        c = P.Control("C7a_regeneration_equivalence",
+                      "runs produced before pick_parent landed must reproduce "
+                      "under the renamed uniform_parents arms; if they do not, "
+                      "the numbers belong to code that did not produce them",
+                      null_must_contain="a pre-mechanism config whose "
+                      "(pop, preds, correct) moved",
+                      can_fail_because="the arm renaming is a real intervention; "
+                      "a wrong mapping moves these numbers, and 6 of the 12 runs "
+                      "in this set DID move")
+        c.observe(not moved_pre, {"compared": len(pre), "moved": moved_pre})
+        ctl.append(c)
+        print(f"\n  C7a REGEN  {'PASS' if not moved_pre else 'FAIL'} — "
+              f"{len(pre)} pre-mechanism runs compared, {len(moved_pre)} moved")
+        # C7b: runs from AFTER it landed are a paired repro-ON vs repro-OFF
+        # measurement, at the same seed and budget. This is the band AGENT-2
+        # wanted on pick_parent, and it fell out of my own contamination.
+        if post:
+            print(f"  C7b PICK_PARENT MEASURED — {len(post)} pairs, same seed and "
+                  f"budget, differing only in reproductive selection:")
+            dcorr, dpred, dprec = [], [], []
+            for n, on, off, same in sorted(post):
+                dcorr.append(on["correct"] - off["correct"])
+                dpred.append(on["preds"] / off["preds"])
+                dprec.append(on["prec"] / off["prec"])
+                print(f"    {n:<22} ON {on['correct']:>5}/{on['preds']:>8} "
+                      f"prec {on['prec']:.4f}   OFF {off['correct']:>5}/"
+                      f"{off['preds']:>8} prec {off['prec']:.4f}   "
+                      f"dcorrect {on['correct'] - off['correct']:+5d}  "
+                      f"preds {on['preds'] / off['preds']:.2f}x  "
+                      f"prec {on['prec'] / off['prec']:.2f}x")
+            up = sum(1 for x in dcorr if x > 0)
+            fewer = sum(1 for x in dpred if x < 1.0)
+            better = sum(1 for x in dprec if x > 1.0)
+            print(f"    coverage: {up}/{len(dcorr)} up, signs "
+                  f"{', '.join(f'{x:+d}' for x in dcorr)} — no consistent "
+                  f"direction, which matches AGENT-2's 'worth ~nothing' on this "
+                  f"axis")
+            print(f"    predictions: {fewer}/{len(dpred)} FEWER with it on "
+                  f"({min(dpred):.2f}-{max(dpred):.2f}x); precision "
+                  f"{better}/{len(dprec)} BETTER ({min(dprec):.2f}-"
+                  f"{max(dprec):.2f}x) — sign test floor "
+                  f"p = 1/{2 ** len(dpred)} = {2 ** -len(dpred):.4f}")
+            c = P.Control("C7b_pick_parent_effect",
+                          "the contaminated runs are a controlled repro-ON vs "
+                          "repro-OFF comparison; reporting the contamination "
+                          "without measuring it wastes the only paired data "
+                          "either lane has on the mechanism",
+                          null_must_contain="pairs with no consistent direction "
+                          "on any axis, which is what 'worth nothing' predicts",
+                          can_fail_because="if the prediction ratios straddled "
+                          "1.0 the mechanism would be measured as inert; they do "
+                          "not, and the coverage axis DOES straddle zero")
+            c.observe(fewer == len(dpred),
+                      {"d_correct": dcorr, "preds_ratio": dpred,
+                       "prec_ratio": dprec,
+                       "pairs": [n for n, _a, _b, _s in sorted(post)]})
+            ctl.append(c)
+
+    # RECORD LAST, after budget.json is written: G25's record was digesting its
+    # own summary artifact one invocation stale, and the repaired A24 check
+    # caught it. deps are the external source trees; this spike's own dir cannot
+    # be a dep of itself because its newest file is its own run log.
+    ok, _ = P.record(HERE, deps=[os.path.join(HERE, "..", "G24_population"),
+                                 os.path.join(HERE, "..", "G25_carrying_capacity"),
+                                 os.path.join(HERE, "..", "G17_composition_redo")],
+                     artifacts=[os.path.join(HERE, "sweep.py"),
+                                      os.path.join(HERE, "analyse.py")]
+                     + [os.path.join(RUNS, f) for f in sorted(os.listdir(RUNS))],
+                     controls=ctl, allow_dirty=True,
+                     note="G27: can a selected population reach no_death's "
+                          "size, and which matching is attainable")
     print(f"provenance.json ok={ok}")
     return 0
 

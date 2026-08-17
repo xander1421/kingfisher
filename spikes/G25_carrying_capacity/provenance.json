@@ -1,129 +1,197 @@
 {
  "spike": "G25_carrying_capacity",
- "recorded_utc": "2026-08-17T09:41:13Z",
+ "recorded_utc": "2026-08-17T10:49:12Z",
  "note": "G25: is no_death's +5059 a tradeoff or a rent calibration artefact",
- "repos": [],
- "manifests": {},
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G24_population",
+   "head": "63264d3d9c902ed814f0309151904dedaac7acb4",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G17_composition_redo",
+   "head": "63264d3d9c902ed814f0309151904dedaac7acb4",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G24_population": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/sweep.json",
-   "sha256": "3b4489e2d0aa049bc22b5ff76631d67cbc3c000b0b0a1aa10b7c6f1e4d491eae",
-   "bytes": 4913,
-   "mtime": 1786959673
+   "sha256": "3f9e525ba160e30c4d02cfe6c50dd2f0b8354c31989fe248ee380bb7a820b614",
+   "bytes": 5097,
+   "mtime": 1786963752,
+   "compared_ts": 1786963752,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/sweep.py",
-   "sha256": "b811ecb85f40aa3e66732ad14c96cac3f4a5a218d033ced41a9c031d82e572ca",
-   "bytes": 7756,
-   "mtime": 1786959216
+   "sha256": "f700f65a98323e5ee6f540b5e5b987ed4dfe1b812156e27120a4d175a54e620a",
+   "bytes": 7787,
+   "mtime": 1786961567,
+   "compared_ts": 1786961573,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/analyse.py",
-   "sha256": "7c0f9a95e2db6055c8e4f92e61c6fa774265a6af6f4d57dc2f69d5bc0727e9d6",
-   "bytes": 19335,
-   "mtime": 1786959669
+   "sha256": "427199686f2f38a2e3672aa0b0a4d6a454ab9ae4e4ecd22c9371c17ab2006d93",
+   "bytes": 23311,
+   "mtime": 1786963752,
+   "compared_ts": 1786963752,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G24_population/evo.py",
-   "sha256": "f99f5f86950706ba266a48cd0a61389cdaffdee9ea7c53d939ee46d853866450",
-   "bytes": 30074,
-   "mtime": 1786959194
+   "sha256": "10ac8ef4b8c2fbc79da623bc79bf006b0c79de0b156ac43b81f300447bc3641f",
+   "bytes": 32535,
+   "mtime": 1786961555,
+   "compared_ts": 1786961573,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/full_base.json",
-   "sha256": "6590899c7c0202ed0e412753402bd44a825ac6d6fd758f60ad10336d7820bc29",
-   "bytes": 5994,
-   "mtime": 1786958711
+   "sha256": "66419596b567497385f87ff50c5b0006e10b8c01c846277b9d5c4084f1ae6ed5",
+   "bytes": 6025,
+   "mtime": 1786961614,
+   "compared_ts": 1786961749,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/full_base_s31337.json",
-   "sha256": "cd5ec322f22298dfb7072aa92c1094d774b9622cce3c31259c81084ba49f7fb6",
-   "bytes": 6002,
-   "mtime": 1786959312
+   "sha256": "1891fc766c293e8d3206fc8a4afdb50e20dff60b423fbf309124e2c7b23907e5",
+   "bytes": 6013,
+   "mtime": 1786962869,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/full_base_s777.json",
-   "sha256": "8ff29c7b9b99a14820982d78ccdda22558387a4ccca56575ae6b8a7315cef619",
-   "bytes": 6012,
-   "mtime": 1786959269
+   "sha256": "801a347536c4c033a237cede8c19a33502be93cb833b7c882cd3d75a69e09b14",
+   "bytes": 6023,
+   "mtime": 1786962826,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/full_cap2000.json",
-   "sha256": "eb3939dd93815e2c0b6dca344ca5bddb02b29d2d2f25e6b7087e723a0adb8091",
-   "bytes": 5998,
-   "mtime": 1786958801
+   "sha256": "09734396d12769eb5872221fe3f46f3d7c266460caff605b2b7746aa6af8b7e7",
+   "bytes": 6029,
+   "mtime": 1786962453,
+   "compared_ts": 1786962638,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/nodeath.json",
-   "sha256": "3de9d217aee4a329d80ce84ead5bd94839be047882eb95bf316845a9f0458761",
-   "bytes": 5987,
-   "mtime": 1786959041
+   "sha256": "0aa1e147f1920454e440ee02df67a57298e0dd8931f12f4aea3cfd2ba15ec8a9",
+   "bytes": 6023,
+   "mtime": 1786962782,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/nodeath_noabduct.json",
-   "sha256": "13006628dacfa66e672e8f502f66cb4e7bebac7489fcc51188b63fcec2d7163e",
-   "bytes": 6061,
-   "mtime": 1786958758
+   "sha256": "a03e5fcd86aef7f53af20ec32bf54f984724158cc13d17acbc4edf454fb893f1",
+   "bytes": 6097,
+   "mtime": 1786962411,
+   "compared_ts": 1786962638,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/nodeath_s31337.json",
-   "sha256": "4419ff64dbcce9ff6d12a7ae0189d32f2f689aa6553331917601dbccdc1a096d",
-   "bytes": 6022,
-   "mtime": 1786959534
+   "sha256": "a07acfcf5cced729a5425498392ecd07b74e3b27070d87cda24d0d87cf0d53ac",
+   "bytes": 6038,
+   "mtime": 1786963086,
+   "compared_ts": 1786963086,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/nodeath_s777.json",
-   "sha256": "a7ace9f755a3a01e437d3dabe415a9d6ad0b41e8ad2ff6da5af5d1b7f5deafc2",
-   "bytes": 6021,
-   "mtime": 1786959469
+   "sha256": "9fb44d20cba0e15735bfe43902cd52859866e2742b137c23a8f9e1269b79d3c7",
+   "bytes": 6037,
+   "mtime": 1786963022,
+   "compared_ts": 1786963022,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage1200.json",
-   "sha256": "a016b88fcc1b12cf40899a9215d68e3b5c12d3caa64b82fa971c79b9476f0b84",
-   "bytes": 6000,
-   "mtime": 1786958947
+   "sha256": "16e398d9c5c8d35f3ce5dae4bb56edd416b30febe608501d5196a1170263392a",
+   "bytes": 6031,
+   "mtime": 1786962593,
+   "compared_ts": 1786962638,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage1200_s31337.json",
-   "sha256": "e799dfbee467c0567ab43dee4783f214797823c7f8099804d681cc44cc40f4e6",
-   "bytes": 6041,
-   "mtime": 1786959406
+   "sha256": "2c15ed51f8c31f03da818fac603b9a88f3e1c43952ab5cb8a7c90ac97f00917e",
+   "bytes": 6052,
+   "mtime": 1786962961,
+   "compared_ts": 1786962961,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage1200_s777.json",
-   "sha256": "a9864bf62a6898864e519b63ace56d0f5346a3ee41fe54a05d8011581860f844",
-   "bytes": 6024,
-   "mtime": 1786959360
+   "sha256": "4af3b8316ebe0f7c41f8cfe430470b45025ab16049dad5159b2d90a88106c9b8",
+   "bytes": 6035,
+   "mtime": 1786962915,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage2400.json",
-   "sha256": "bd5d983aa6dbe3267d6818b0558a85bcb36a850027a1cc368dc615169a5d6b31",
-   "bytes": 5999,
-   "mtime": 1786959123
+   "sha256": "87d4011f30753c137ec177bbf2bd59c1a3fb710ef953b97ae256cc9acb8f1798",
+   "bytes": 6030,
+   "mtime": 1786962638,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage300.json",
-   "sha256": "4a6a3bd1a3869fa76bfff35cd9c0ace022e3da8a0b07f1b2bf66e8fbaca9a88f",
-   "bytes": 6010,
-   "mtime": 1786958901
+   "sha256": "e22562efaaaafc4484370564bbd20bdabde6340f0ed1374c158bbfcc9df2a762",
+   "bytes": 6041,
+   "mtime": 1786962546,
+   "compared_ts": 1786962638,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage4800.json",
-   "sha256": "8ed8497f5a141860b834a77615dc18d862ad55f1f7c1f212da57e1b9f1130dc6",
-   "bytes": 6007,
-   "mtime": 1786959169
+   "sha256": "a68d81d531ad7f7950d5fd88c78122f83b0cc059382824ceb79ded60eae9d1ca",
+   "bytes": 6038,
+   "mtime": 1786962686,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage600.json",
-   "sha256": "00866b0e797f3f928eebc6ae72b748f98340405fec4d3940fe5aecf21c13ae3e",
-   "bytes": 6016,
-   "mtime": 1786958853
+   "sha256": "20cdcc0bd3a5062712aa8edba245404195469a5f2665b1064bdeb9dd97f30569",
+   "bytes": 6047,
+   "mtime": 1786962500,
+   "compared_ts": 1786962638,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/runs/wage600_noabduct.json",
-   "sha256": "2c02ee0bc382457f21b8cd870e63bd51de73bbfca88879d58aff8fd1c3e9825d",
-   "bytes": 6017,
-   "mtime": 1786958983
+   "sha256": "1800788824d24265f738941918469fc97094aae3b08f7df82c38d55cd730997a",
+   "bytes": 6053,
+   "mtime": 1786962723,
+   "compared_ts": 1786962931,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -145,9 +213,11 @@
   {
    "name": "C1_repro",
    "must_fire_because": "the arm-set refactor and the monkeypatched globals must not change evo.py's behaviour",
+   "can_fail_because": "the arms were renamed to uniform_parents and evo.py gained pick_parent since these numbers were published; either could move 4144",
    "null_must_contain": "any deviation from G24's published full arm 110/4144/0.0355",
    "fired": true,
    "detail": "line-identical to G24 RUN.txt full arm",
+   "constant_observations": false,
    "observations": {
     "pop": 110,
     "correct": 4144,
@@ -162,9 +232,11 @@
   {
    "name": "C2_cap_not_binding",
    "must_fire_because": "the capacity sweep turns WAGE_POOL; if MAX_POP were the binding constraint the sweep would be aimed at the wrong knob",
+   "can_fail_because": "MAX_POP=200 sits above the observed 110 but below no_death's 557, so a rent setting that let the population past 200 would fire it",
    "null_must_contain": "a population above 200 once the cap is lifted to 2000",
    "fired": true,
    "detail": "",
+   "constant_observations": false,
    "observations": {
     "pop_cap200": 110,
     "pop_cap2000": 110,
@@ -175,9 +247,11 @@
   {
    "name": "C3_a15_plant",
    "must_fire_because": "a ranked arm that never discovers the planted rule has an unproven instrument (G24's gate, scoped to abduction-on arms because the plant is known unreachable by blind mutation)",
+   "can_fail_because": "the two no_abduct arms in this same sweep DO miss the plant, so the observation is attainable and the gate is not vacuous",
    "null_must_contain": "a ranked abduction-on arm that misses the plant -- e.g. a capacity setting large enough to swamp it",
    "fired": true,
    "detail": "ranked misses []; exempt (abduction off) ['nodeath_noabduct', 'wage600_noabduct']",
+   "constant_observations": false,
    "observations": {
     "full_base": true,
     "full_cap2000": true,
@@ -194,9 +268,11 @@
   {
    "name": "C4_volume_null",
    "must_fire_because": "tests whether no_death's coverage is population volume: an unselected population of the same size, without problem-directed proposal",
+   "can_fail_because": "pop 531 vs 557 is a genuine population match, so the volume hypothesis had every chance to be confirmed here; 6361-ish coverage would have confirmed it",
    "null_must_contain": "coverage near no_death's 6361 at pop ~531, which is what 'coverage rises with population size almost mechanically' predicts",
    "fired": true,
    "detail": "volume hypothesis REFUTED: 1514 vs 6361 at matched pop",
+   "constant_observations": false,
    "observations": {
     "nodeath_noabduct": [
      531,
@@ -214,9 +290,32 @@
      1359
     ]
    }
+  },
+  {
+   "name": "C7_regeneration_equivalence",
+   "must_fire_because": "the original runs came from two sweep.py versions and a pre-pick_parent evo.py; if the regenerated set differs, every number in RESULT.md is attributed to code that did not produce it",
+   "can_fail_because": "pick_parent changed parent selection and the arms were renamed to uniform_parents to compensate; if that mapping is wrong the numbers move",
+   "null_must_contain": "any config whose (pop, preds, correct) moved between the mixed-state set and the regenerated set",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "compared": 16,
+    "moved": []
+   }
   }
  ],
- "no_deps_reason": "pure Python inside the workspace: no external repo, no built binary, no device. The only dependency is G24's evo.py, whose digest is recorded under artifacts so A24 pins the code state that produced these runs.",
+ "no_deps_reason": "",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G24_population": {
+   "newest": 1786960731,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  }
+ },
  "problems": [],
  "ok": true
 }

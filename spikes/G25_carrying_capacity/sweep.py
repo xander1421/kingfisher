@@ -61,6 +61,7 @@ Each config checkpoints to runs/<name>.json, so this is resumable and the
 decisive configs are ordered first.
 """
 
+import hashlib
 import json
 import os
 import sys
@@ -116,12 +117,20 @@ def one(name, arm, wage, rent, rent_pred, max_pop, data, seed=evo.RUN_SEED):
     evo.RUN_SEED = seed
     print(f"CONFIG {name}  arm={arm} wage={wage} rent={rent}/{rent_pred} "
           f"max_pop={max_pop} seed={seed}", flush=True)
+    # WHICH CODE PRODUCED THIS RUN, recorded inside the run. AGENT-2's proposal
+    # after they committed pick_parent into evo.py mid-sweep: six of G27's runs
+    # used reproductive selection and six did not, under identical arm names, and
+    # nothing in the record said so. Hashing the ARTIFACT cannot catch that -- the
+    # artifact hashes correctly and is still a mix of two algorithms. The missing
+    # field is the source digest at execution time.
+    src = hashlib.sha256(open(evo.__file__, "rb").read()).hexdigest()[:16]
     hist, capped, pop = evo.run(arm, train, p_dev, p_test, npred, planted)
     rec = {"name": name, "arm": arm,
            "params": {"wage_pool": wage, "rent": rent, "rent_pred": rent_pred,
                       "max_pop": max_pop, "run_seed": seed, "rounds": evo.ROUNDS,
                       "offspring": evo.OFFSPRING, "pop_seed": evo.POP_SEED,
                       "min_pairs": evo.MIN_PAIRS, "max_pairs": evo.MAX_PAIRS,
+                      "evo_sha256_16": src,
                       "adv_tries": evo.ADV_TRIES},
            "hist": hist, "capped_evals": capped, "final_pop": len(pop)}
     json.dump(rec, open(os.path.join(RUNS, name + ".json"), "w"), indent=1)

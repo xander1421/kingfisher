@@ -7,30 +7,30 @@
    "0\t(B $y C)"
   ],
   "counts": [
-   17,
+   14,
    12,
-   1
+   4
   ]
  },
  "subtraction": {
   "distinct": 3,
   "samples": [
+   "0\t(A B)",
    "0\t(B)",
-   "0\t(A $x B $y)",
-   "0\t(A B)"
+   "0\t(A $x B $y)"
   ],
   "counts": [
-   18,
-   9,
-   3
+   16,
+   13,
+   1
   ]
  },
  "new_space": {
   "distinct": 30,
   "samples": [
-   "0\tGroundingSpace-0x74add8298",
-   "0\tGroundingSpace-0x7d0df0018",
-   "0\tGroundingSpace-0xb331b0018"
+   "0\tGroundingSpace-0x928cd08d8",
+   "0\tGroundingSpace-0xae30ec8d8",
+   "0\tGroundingSpace-0x103880de8"
   ],
   "counts": [
    1,
@@ -68,9 +68,9 @@
  "random_err": {
   "distinct": 30,
   "samples": [
-   "0\t()\n1\t(Error (random-int RandomGenerator-0x8f7214018 5 0) RangeIsEmpty)",
-   "0\t()\n1\t(Error (random-int RandomGenerator-0x7c93d4018 5 0) RangeIsEmpty)",
-   "0\t()\n1\t(Error (random-int RandomGenerator-0xa1c810018 5 0) RangeIsEmpty)"
+   "0\t()\n1\t(Error (random-int RandomGenerator-0x8c2f04018 5 0) RangeIsEmpty)",
+   "0\t()\n1\t(Error (random-int RandomGenerator-0x99b218018 5 0) RangeIsEmpty)",
+   "0\t()\n1\t(Error (random-int RandomGenerator-0x8a0e98018 5 0) RangeIsEmpty)"
   ],
   "counts": [
    1,

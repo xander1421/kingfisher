@@ -1,0 +1,146 @@
+{
+ "spike": "M1_11_repro_audit",
+ "recorded_utc": "2026-08-17T11:44:50Z",
+ "note": "REFUTED: 3 of 13 named a document or a prebuilt binary and could re-derive nothing; a 4th (run_lan) could not run because the phone had left the host subnet. All 3 repointed, 0 remain. harness is NOT a dep: audit.py imports nothing from it.",
+ "repos": [
+  {
+   "path": ".",
+   "head": "0d0eb9b899c063a9959343ea69979b9a79b5ac49",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/out",
+   "head": "0d0eb9b899c063a9959343ea69979b9a79b5ac49",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  ".": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/out": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "audit.json",
+   "sha256": "e54c58247562f8d6ee8e3e1addf2ff704ca355abad27ce563407398d2494ac82",
+   "bytes": 3273,
+   "mtime": 1786967030,
+   "compared_ts": 1786967054,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "audit-separates-outcomes",
+   "must_fire_because": "a reproducer can pass, be broken, refuse on a safety gate, need an environment that moved, or not be runnable at all",
+   "can_fail_because": "if every annotation returned the same status the audit would distinguish nothing and certify refuses",
+   "null_must_contain": "more than one status across the annotations",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "PASS",
+    "PASS",
+    "NEEDS-DEVICE",
+    "NEEDS-DEVICE",
+    "PASS",
+    "PASS",
+    "NEEDS-DEVICE",
+    "NEEDS-DEVICE",
+    "NEEDS-DEVICE",
+    "NEEDS-DEVICE",
+    "PASS",
+    "NEEDS-DEVICE",
+    "NEEDS-DEVICE"
+   ]
+  },
+  {
+   "name": "parser-found-the-annotations",
+   "must_fire_because": "a regex matching nothing would report \"every reproducer passes\" over an empty set",
+   "can_fail_because": "the earlier regex DID match its own prose and invented a 12th annotation that was GONE",
+   "null_must_contain": "at least 10 annotations parsed from the LEDGER",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "spikes/harness/bansurface.py",
+    "spikes/M1_8_quorum3/test_adjudicate.py",
+    "spikes/M1_8_quorum3/q3.py",
+    "spikes/M1_3b_process_reuse/soak_check.py",
+    "spikes/M1_3_worker/test_preflight.py",
+    "spikes/harness/units.py",
+    "spikes/sweep.py",
+    "spikes/M1_7_transport/run.py",
+    "spikes/M1_10_patchlive/probe.py",
+    "spikes/M1_9_mutation/mutate.py",
+    "spikes/M1_8_quorum3/classify.py",
+    "spikes/M1_7_transport/handshake.py",
+    "spikes/M1_7_transport/latency_floor.py"
+   ]
+  },
+  {
+   "name": "soakrun-control-live",
+   "must_fire_because": "canon==1 across positions is vacuous unless the raw hash actually drifts in a reused process",
+   "can_fail_because": "soak_check.py reports CONTROL DEAD and fails if raw comes back constant, rather than passing the claim",
+   "null_must_contain": "raw distinct must exceed 1 where canon is 1",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "raw:31",
+    "canon:1",
+    "alpha:1"
+   ]
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  ".": {
+   "newest": 1786967054,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/out": {
+   "newest": 0,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "all A-grade claims with a named reproducer still run and still produce their claimed result",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
