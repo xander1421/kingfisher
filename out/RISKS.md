@@ -183,3 +183,83 @@ Optimistic settlement with **proof only on challenge**:
 That is Acurast's throughput with our trust model, and it needs no TEE, no vendor attestation and no revocation list. It is also the natural completion of the rung-1 optimistic bisection already in `PORT_PLAN` — bisection finds *which* step is wrong; a succinct proof removes the need to re-execute in order to check it.
 
 **This is now the recommended direction for M3.5**, superseding `pay_per_verified_result`. Gating unknown: prover cost and who bears it.
+
+## R-NEW addendum 2 — the dispute path is replaced, not repaired
+
+**S68 gated a design that was carrying a server tier we cannot staff. The right response is deletion.**
+
+The chain S68 broke:
+```
+optimistic -> challenge -> bisect to step k -> prove one step (zkVM)
+                                ^ needs a reproducible state commitment.  S68: none exists.
+```
+
+The substitution, which needs nothing that is not already measured:
+```
+optimistic -> challenge -> majority of a quorum >= 3 on the final result hash + fuel count
+                                ^ needs byte-identical results.  S57: 66/67, 360,847 steps.
+```
+
+`GUARDRAILS` C5, taken verbatim from BOINC's `sample_bitwise_validator.cpp:17-18`:
+*"requires a **majority** of results to be bitwise identical"* — not two agreeing,
+a majority of a quorum.
+
+### What this deletes from the critical path
+- the interpreter-state commitment (S68, RED, four contaminants, one unidentified)
+- the bisection protocol
+- the zkVM stack and the Groth16 **trusted setup**
+- **the prover tier** — a server role at 10⁵–10⁶× native that appears in no
+  schema and no economic model in this workspace
+
+### The cost is 3× execution, which is the resource in surplus
+| | |
+|---|---|
+| settlement ceiling | ~17 jobs/s, PoV-bound — **scarce** |
+| per-device supply | ~2.9 jobs/s, S54-capped — **abundant** |
+
+And **replication never reaches the chain under batching.** Per-job posting at 3×
+would give 5.7 jobs/s; batched, the quorum comparison happens off-chain between
+replicas and only the batch root is posted — **3× device-seconds, 0× additional
+PoV.** Spending the abundant resource to delete the scarce one's hardest
+dependency is the trade the measurements point at.
+
+### The echo attack is solved structurally, not cryptographically
+`PORT_PLAN` M3.4 calls a commit/reveal worker-bound seal *"the highest-value
+single fix identified by this recon"* (`:86`). **Quorum size supersedes it:** a
+majority of three cannot be carried by two colluders. Acurast enforces the
+structural half in production and in the public domain —
+`match_checker.rs:163,360` rejects a match where one source appears twice.
+
+Free, measured, and it retires a cryptographic component that **S49's own seal
+already failed once**, having bound a value the verdict never read.
+
+### What attestation is still for — and the differentiator, stated precisely
+Quorum-majority requires replicas to be **independent**, so device-group
+exclusion by operator, attestation root and network origin is still needed. But
+attestation now carries **independence, not correctness** — strictly weaker than
+Acurast, where the TEE carries correctness.
+
+> A compromised TEE in Acurast's model produces a *trusted wrong answer*. Here it
+> produces *one wrong answer that loses a 2-of-3 vote*. The trust-free property
+> **survives a broken attestation root** rather than depending on one.
+
+That is the differentiator stated more precisely than "we don't need TEEs."
+
+### Kept, off the critical path
+The 256-byte constant-size seal remains the only quantity in this workspace whose
+cost does not grow with the work proved. It is the escape hatch if disputes ever
+become common enough that 3× replication is expensive — which optimistic
+settlement makes unlikely by construction.
+
+### The caveat that matters
+This rests on S57, which is grade **B with a known hole**: its corpus contains
+**zero transcendental evaluations**, so it cannot catch an S59-class divergence.
+Majority-of-quorum degrades gracefully there — a divergent minority loses the
+vote — but it degrades **silently**: three devices with three different libms
+could split 1-1-1, producing no majority at all, which reads as a *failed job*
+rather than as *detected nondeterminism*.
+
+**The static ban list is what prevents that, and it is enforcement at admission,
+not at adjudication.** A job containing `sin/cos/tan/asin/acos/atan-math`,
+`flip`, `&rng` or `reset-random-generator` must be rejected before scheduling.
+That check is now load-bearing on settlement, not merely on tidiness.

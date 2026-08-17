@@ -146,8 +146,11 @@ merged. The weaker framing was in this document until it was checked.
 
 It gates checkpoint hashing and bisection.
 
-**1. Cost the two dispute-path numbers** — one-step risc0 proving, checkpoint
-cadence. Days.
+**1. ~~Cost the two dispute-path numbers~~ — DESCOPED.** S68 showed no state
+commitment exists; the dispute path is now majority-of-quorum on the result hash
+(`RISKS.md` R-NEW addendum 2), which deletes bisection, the zkVM stack, the
+trusted setup and the prover tier. Replaced by: **enforce the static ban list at
+admission**, which is now load-bearing on settlement.
 
 **2. Port attention** to the spec above, with the N-thread==1-thread oracle.
 
