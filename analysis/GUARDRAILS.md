@@ -590,3 +590,22 @@ Note what the error did *not* do: the reviewer's qualitative conclusion (transfe
 dominates compute; pre-stage rather than fetch during a job) held at 3.4–14x just
 as it did at 22–120x. **A wrong magnitude does not imply a wrong direction** —
 correct the number without discarding the finding.
+
+**A18, second instance — it caught its author one spike later.** M1.5b
+established that ~47 of a 63.2 ms transfer intercept was three `adb`
+invocations in the rig, and A18 was written to say: *attribute the intercept
+before publishing it.* M1.3 then measured preflight at 35.1 ms over
+`adb`+`dumpsys`, and published *"per-job preflight is not viable"* — the
+harness cost, read as the system's, exactly as prohibited. Its own
+decomposition already showed the whole 35.1 ms was 16.2 adb + 18.9 dumpsys.
+The native floor is **8.4 µs**, 4,180x cheaper.
+
+Two tells were available before any new measurement, and both were ignored:
+
+1. **The decomposition already attributed itself.** When every term of a cost
+   names a component of the rig, the total is the rig.
+2. **The conclusion contradicted the specification being implemented.**
+   `SCHEDULER_SPEC` marks the per-job checks *Residue: yes* — required. A
+   measurement that says a spec is impossible is far more likely to be
+   measuring the wrong thing than to have found a broken spec. **Treat
+   contradiction-with-spec as an instrument alarm, not a finding.**

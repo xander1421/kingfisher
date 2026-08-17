@@ -6,32 +6,62 @@ S6's `SCHEDULER_SPEC.md` maps BOINC's rules onto Android WorkManager and marks
 three as **residue** — constraints the OS cannot express, which must run inside
 `doWork()`. This builds that residue as a tested policy object, and measures it.
 
-## The measurement that changed the design
+## CORRECTED — "per-job preflight is not viable" was an artifact
 
-Preflight reads thermal status, battery state and free space. All three are
-`dumpsys`/`df` calls over adb:
+This section first claimed that batched preflight costs 35.1 ms = 0.51x a warm
+job, so preflight must be amortised across a work session. **That measured the
+harness, not the mechanism**, and A18 — written by this author one spike
+earlier, saying exactly this — was not applied to it.
+
+What was actually measured, over adb:
 
 ```
 dumpsys thermalservice   21.1 ms
 dumpsys battery          21.2 ms
 df /data                 21.1 ms
-naive, 3 separate calls  63.4 ms   = 0.92x a warm job
-batched, 1 call          35.1 ms   = 0.51x a warm job
-pure adb round trip      16.2 ms   -> dumpsys itself costs 18.9 ms
+naive, 3 separate calls  63.4 ms
+batched, 1 call          35.1 ms   = 16.2 adb round trip + 18.9 dumpsys text dump
 ```
 
-Batching (M1.5b's lesson, applied) saves **45%**. It is still not enough:
-**even batched, preflight costs half a job.** Per-job preflight is not viable.
+Neither term is the on-device cost. `SCHEDULER_SPEC:19-20` specifies
+`BatteryManager.EXTRA_LEVEL/EXTRA_SCALE` and
+`PowerManager.getCurrentThermalStatus()` — **in-process binder calls** — plus
+`addThermalStatusListener`, which means thermal is *pushed by the OS, not
+polled at all*.
 
-So preflight gates a **work session**, not a job — which is what WorkManager
-does anyway, and is an argument *for* the platform model rather than against it.
-Overhead amortises as `35.1/N` ms per job:
+Measured floor for a native on-device path (`tprobe.c`, 2,000 iterations,
+open+read+close on `/sys/class/thermal/thermal_zone0/temp`):
 
-| jobs per session | preflight overhead |
-|---|---|
-| 1 | 51% |
-| 16 (default) | 3.2% |
-| 67 | 0.76% |
+| path | cost | vs a 68.8 ms job |
+|---|---|---|
+| adb + dumpsys (measured) | **35,100 µs** | 0.51x |
+| native sysfs read (measured) | **8.4 µs** | 0.0001x |
+| `getCurrentThermalStatus()` binder | **unmeasured** | between the two, far nearer the floor |
+
+**4,180x apart.** Even if the binder call costs 100x a sysfs read, per-job
+preflight is ~0.01x a job.
+
+### What this changes
+- **Per-job preflight IS viable, and S6 requires it.** Rows 2 and 3 of the
+  rule table are both marked *Residue: yes* — the 90% charge floor and thermal
+  status must be re-checked inside `doWork()`, because WorkManager's
+  `BatteryNotLow` fires near 15%, nowhere near BOINC's 90%. A result
+  contradicting the spec being implemented should have stopped the write-up.
+- **Session gating in `q3.py` stays, as a harness accommodation.** Over adb the
+  reads genuinely cost half a job, so the host harness batches them. That is a
+  property of driving a phone over USB, not a design conclusion.
+- **The WorkManager conclusion was right for the wrong reason.** Declarative
+  constraints are OS-evaluated per session because that is what they *are*, not
+  because polling is expensive. Resting it on 35 ms invited a reversal the
+  moment the real number appeared — which took one command.
+
+### Limits of the correction
+- 8.4 µs is a **floor**, not the answer. `getCurrentThermalStatus()` is a
+  different signal (system-wide, vendor-calibrated, SoC + skin temperature) and
+  a binder round trip, not a file read.
+- **Battery sysfs could not be measured at all**: `/sys/class/power_supply/
+  battery/{capacity,status}` is permission-denied to the shell user.
+- The honest number needs a JNI or Kotlin harness on-device, which is M1.1.
 
 ## Runs — 67 programs, 3 workers, warm cache
 
