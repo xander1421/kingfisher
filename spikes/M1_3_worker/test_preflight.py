@@ -30,6 +30,15 @@ assert su['powered'] is False
 assert decide(su, Policy())[0] is False, \
     'a phone at 100% with no power source must be refused (status=5 is FULL, not plugged)'
 
+# a frozen battery service must REFUSE, not silently report pinned values
+FROZEN = REAL.replace('Current Battery Service state:',
+                      'Current Battery Service state:\n  (UPDATES STOPPED -- use \'reset\' to restart)')
+sf = parse_probe(FROZEN)
+assert sf['battery_overridden'] is True
+assert decide(sf, Policy())[1].startswith('battery_service_overridden'), \
+    'a pinned battery service must refuse: every field it reports is stale'
+assert parse_probe(REAL)['battery_overridden'] is False
+
 p = Policy()
 def st(**kw):
     base = dict(thermal=0, level=100, scale=100, status=5,
@@ -65,4 +74,4 @@ assert [b.on_refusal() for _ in range(5)] == [300, 600, 1200, 2400, 3600]
 assert b.on_refusal() == 3600                  # capped
 b.on_success()
 assert b.on_refusal() == 300                   # reset
-print('preflight: 27 assertions pass')
+print('preflight: 30 assertions pass')

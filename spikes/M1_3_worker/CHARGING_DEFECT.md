@@ -1,4 +1,26 @@
-# The charging gate accepted an unplugged phone, all session
+# Two gate defects, one of which I misdiagnosed
+
+> **CORRECTION, same day.** This document first claimed *"the phone was not
+> charging, all session"*. **That was wrong.** The battery service was pinned in
+> a test override — `dumpsys battery` was printing
+> `(UPDATES STOPPED -- use 'reset' to restart)` and reporting frozen values.
+> After `dumpsys battery reset`: `USB powered: true`,
+> `deviceidle get charging: true`. The phone was charging.
+>
+> I read a frozen instrument, concluded the world was broken, and wrote a report
+> about it. The heading below is preserved because the sequence matters more
+> than the tidy version.
+>
+> **What survives**: defect 1 is real and the fix is right — `status in {2,5}`
+> genuinely cannot distinguish plugged-and-full from unplugged-and-full, and it
+> was never demonstrated by this incident. **What is withdrawn**: every claim
+> about the session's device runs being unpowered. They were fine. On-device
+> timings are NOT unknown-condition and need no re-measurement.
+>
+> **The bigger defect is defect 2, which this incident did demonstrate**: no
+> gate detected that the battery service was overridden at all.
+
+# Defect 1 — `BATTERY_STATUS_FULL` is not a charging test
 
 **`BATTERY_STATUS_FULL` means the battery is full. It does not mean the device
 is plugged in.** An unplugged phone at 100% reports `status: 5`, and both
@@ -48,20 +70,48 @@ that nothing could detect, because a passing gate produces no evidence.
 
 Same family as the dead controls: the failure mode is silence.
 
-## What it invalidates, stated precisely
-Every device run this session passed a gate that should have refused. What that
-does and does not touch:
+## What it invalidates — WITHDRAWN
+This section originally said every device run was unpowered and all on-device
+timings were unknown-condition. **Both withdrawn.** The phone was charging; the
+instrument was frozen. Timings stand, §10 was honoured.
 
-- **Not invalidated: the determinism results.** Byte-identity across host, phone
-  and x86-64 does not depend on the power source. 66/66 agreement stands.
-- **Weakened: every timing number taken on device.** A phone on battery runs a
-  different DVFS policy than one on external power. M1.5b's transfer curve,
-  M1.1's 98.5 µs preflight and the phone job medians were all measured
-  unplugged and are now *unknown-condition*, not wrong.
-- **Falsified: the claim that device work honoured the charging constraint.**
-  MISSION_LOOP §10 requires device jobs to honour charging+idle+UNMETERED. They
-  did not honour charging, and the gate that existed to enforce it reported
-  success.
+The defect in the rule is still real: `status in {2,5}` cannot separate
+plugged-and-full from unplugged-and-full, so it is *incapable* of being right in
+the direction that matters. It just had not fired.
+
+# Defect 2 — no gate detected that the battery service was OVERRIDDEN
+
+`dumpsys battery set` / `unplug` pins the service and prints one line:
+
+```
+Current Battery Service state:
+  (UPDATES STOPPED -- use 'reset' to restart)
+  AC powered: false      <- fiction
+  USB powered: false     <- fiction
+  status: 5              <- fiction
+```
+
+Every field after that banner is a stale override, and both `quiet.sh` and
+`preflight.py` parsed them as current state. There was no error, no warning, and
+no way to tell from the values themselves — a pinned `false` looks exactly like
+a measured `false`.
+
+**This is the defect that actually fired**, and it is worse than defect 1
+because it makes *every* battery reading untrustworthy rather than one rule
+wrong. It also means a device could be put into a pinned state and the gate
+would never notice.
+
+Fixed: both gates now grep for `UPDATES STOPPED` and refuse with
+`battery-service-OVERRIDDEN(run: adb shell dumpsys battery reset)`.
+`test_preflight.py` is at **30 assertions** including a frozen-service fixture.
+
+## The pattern, stated plainly
+An instrument in a test-override state reports confident, well-formed, wrong
+values. That is the same failure as the dead controls, the self-flattering
+domain key and the stale binary — and this time it produced not a bad number but
+an entire false narrative, complete with a mechanism, a §10 violation and a
+request to the human. **The tell was one line of banner text I was not
+parsing.**
 
 ## Fix
 Ask the platform the question the platform asks. `dumpsys deviceidle get

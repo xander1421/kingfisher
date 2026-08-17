@@ -40,6 +40,9 @@ class Policy:
         self.backoff_cap_s = backoff_cap_s
 
 
+OVERRIDDEN = re.compile(r'UPDATES STOPPED')
+
+
 def parse_probe(text: str) -> dict:
     """First occurrence of each key wins.
 
@@ -49,6 +52,10 @@ def parse_probe(text: str) -> dict:
     empty-capture failure in a new place, so it is guarded here by construction.
     """
     out = {}
+    # A frozen battery service prints "(UPDATES STOPPED)" and then reports
+    # pinned values with no other signal. Reading those as current state is how
+    # a charging phone was diagnosed as unplugged for an entire session.
+    out['battery_overridden'] = bool(OVERRIDDEN.search(text))
     m = re.search(r'^\s*Thermal Status:\s*(\d+)', text, re.M)
     out['thermal'] = int(m.group(1)) if m else None
     for key in ('level', 'scale', 'status', 'temperature'):
@@ -69,6 +76,8 @@ def parse_probe(text: str) -> dict:
 def decide(s: dict, p: Policy):
     """Return (ok, reason). Missing signals REFUSE -- an unreadable sensor is
     not a passing sensor (A15: a control that cannot fail proves nothing)."""
+    if s.get('battery_overridden'):
+        return False, 'battery_service_overridden:run `dumpsys battery reset`'
     for k in ('thermal', 'level', 'scale', 'status', 'free_kb', 'powered'):
         if s.get(k) is None:
             return False, f'unreadable:{k}'

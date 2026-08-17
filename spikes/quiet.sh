@@ -57,6 +57,14 @@ if [ "${1:-}" = "--device" ] || [ "${2:-}" = "--device" ]; then
   # thermal: millidegrees. Above 45C the governor is already throttling.
   [ -n "$DT" ] && [ "$DT" -gt 45000 ] 2>/dev/null && DFAIL="$DFAIL thermal(${DT}m)"
   # S6: the deployable configuration is charge-time. Not charging = wrong config.
+  # A frozen battery service reports STALE values with no error. `dumpsys
+  # battery set/unplug` pins the state and prints "(UPDATES STOPPED)"; every
+  # field after that is fiction. This went undetected long enough to produce a
+  # whole defect report about a phone that was actually charging.
+  BOVR=$(adb shell 'dumpsys battery | grep -c "UPDATES STOPPED"' 2>/dev/null | tr -d '\r')
+  if [ "${BOVR:-0}" -gt 0 ] 2>/dev/null; then
+    DFAIL="$DFAIL battery-service-OVERRIDDEN(run: adb shell dumpsys battery reset)"
+  fi
   DCHG=$(adb shell 'dumpsys deviceidle get charging' 2>/dev/null | tr -d '\r' | tr -d ' ')
   DPWR=$(adb shell 'dumpsys battery | grep -cE "^  (AC|USB|Wireless|Dock) powered: true"' 2>/dev/null | tr -d '\r')
   BAT="$BAT charging=$DCHG powered=$DPWR"

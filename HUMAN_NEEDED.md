@@ -53,7 +53,11 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
   never had. Interim position: refuse. Real fix: an attestation root (Acurast's
   hardware-attested key is the reference implementation, `reports/REPORT_Acurast_compute.md`).
 
-- **The phone is not actually charging — please connect a power source.**
+- ~~**The phone is not actually charging — please connect a power source.**~~
+  **WITHDRAWN — my error.** The battery service was pinned in a test override
+  (`dumpsys battery` printing `UPDATES STOPPED`); `dumpsys battery reset` shows
+  `USB powered: true`. The phone was charging the whole time. Original text kept
+  below for the record.
   `AC/USB/Wireless powered` are all false and `Max charging current: 0`, though
   adb works, so the cable is data-only or charge management is holding it off at
   100%. Consequences: (a) WorkManager will not run the fleet worker at all —
