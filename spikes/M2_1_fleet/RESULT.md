@@ -92,3 +92,61 @@ policy must not be able to manufacture it.
 - **66 shards, all the same size (~2.6 KiB).** Transfer percentages would change
   with the B1 shard sizes (6.41–34.83 MB), where M1.5b showed transfer is
   `63 ms + 37.9 MB/s` rather than a flat rate.
+
+---
+
+# 5. Residency feedback — locality manufactures the conditions for its own capture
+
+`prefill` was a stand-in for history. Real residency comes only from what a
+device has previously run, which makes locality a **feedback loop**: holding a
+shard wins you jobs on it, which keeps you holding it.
+
+**This section is SIMULATED**, and that is a change from sections 1–4. Twelve
+rounds x 198 jobs is 2,376 job-slots; executing them would take hours and the
+question is about the routing dynamic, which sections 1–4 already showed matches
+real execution. No prefill: residency starts empty and grows only from dispatch.
+
+zipf 1.4, fleet 16, 198 jobs/round, `maxSkew=1`:
+
+| | fetches rd0 -> rd11 | imbalance | **coverage** (holders per shard) |
+|---|---|---|---|
+| random | 181 -> 23 | ~1.6x | 2.74 -> **11.20** |
+| locality_pure | 96 -> **0** | **10–19x, no decay** | 1.45 -> **2.91** |
+| locality_capped | 127 -> 3 | **1.06–1.15x** | 1.92 -> **3.98** |
+
+## The imbalance locks in
+Pure locality reaches **zero transfer by round 7** — perfect locality — and its
+imbalance never decays, because nothing ever makes a non-holder resident. This
+is S61's warning as a dynamic rather than a snapshot: the policy is a
+ratchet, and one round of skewed demand fixes the assignment permanently.
+
+## The finding I did not expect: coverage is an OUTPUT, not an input
+Pure locality drives coverage to **2.91 holders per shard and stalls there**,
+while random reaches 11.20. Locality does not merely *perform badly at* low
+coverage — **it creates low coverage**.
+
+That closes a loop with Q1. Q1 measured **72% quorum capture at an honest pool
+of 3**, and treated pool size as a property of the fleet. It is not: it is a
+consequence of the routing policy. **Pure locality routing drives the honest
+pool for each shard to ~3, which is precisely Q1's worst measured case.**
+
+So the S69/S70 root cause — verification eligibility coupled to shard residency
+— is not just a coupling to be broken. Under locality routing the coupling
+*tightens over time on its own*.
+
+## The cap fixes the dynamic, not just the snapshot
+`maxSkew=1` holds imbalance at 1.06–1.15x across all twelve rounds **and** keeps
+coverage climbing (3.98 and rising), while still converging to near-zero
+transfer (3 fetches in round 11 against random's 23). It buys out of the ratchet
+as well as the imbalance.
+
+**Design consequence:** a locality policy needs a spread floor as a
+*safety* property, not a performance tuning knob. Uncapped locality is not a
+scheduler that occasionally imbalances — it is a scheduler that walks itself
+into the fleet configuration its own verification model is weakest against.
+
+## What would falsify this
+Coverage stalling at ~3 is `k=3` plus a ratchet: exactly the quorum size, which
+is suspicious in a way worth stating. If coverage stalls at `k` for k=5 and k=7
+too, the mechanism is "locality pins holders at exactly quorum size" and the
+Q1 connection is a coincidence of both being 3. **Not yet run.**
