@@ -1,0 +1,3 @@
+split  train 217692  test 54423
+
+DEPTH 2   3527 rules   top-12 conf 0.4405

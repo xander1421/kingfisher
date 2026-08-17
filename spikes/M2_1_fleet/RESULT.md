@@ -224,3 +224,57 @@ needs re-tuning per fleet size.
 Every run above is 12 rounds. Nothing shows the ratchet is stable at 100+
 rounds, or what happens when devices join and leave — churn is the obvious
 escape hatch from a ratchet and it is entirely unmodelled.
+
+
+---
+
+# 6. `maxSkew` is not a tuning knob — it is the transfer/redundancy dial, and redundancy is a security parameter
+
+§3 found a "knee at maxSkew=1" and called it the operating point. That was a
+**single round with prefill**, measuring transfer against imbalance and never
+looking at redundancy. In steady state with residency accumulating, the picture
+is different and §3's recommendation is withdrawn.
+
+Steady state, 12 rounds, zipf 1.4, 198 jobs/round:
+
+| fleet 198 (3 jobs/device/round) | imbalance | hot-shard coverage | total fetches |
+|---|---|---|---|
+| random | 8.00x | **159.5** | 2734 |
+| cap maxSkew=0 | **1.00x** | 59.1 | 1054 (−61%) |
+| cap maxSkew=1 | 6.00x | 23.9 | 453 (−83%) |
+| cap maxSkew=2 | 6.00x | 21.0 | 405 |
+| cap maxSkew=4 | 8.00x | 19.8 | 370 |
+| pure locality | 79.00x | **3.0** | 198 (−93%) |
+
+The same monotone frontier appears at fleet 16 and 64.
+
+## The two axes I had been treating separately are one axis
+Imbalance and hot-shard coverage move **together**, because both are spread:
+more devices holding a hot shard means both more redundancy and more places to
+send its jobs. `maxSkew` controls spread, so it controls both, and it trades
+them against transfer.
+
+## Which makes it a security parameter, not a performance one
+Hot-shard coverage **is** the honest pool per shard, which is the input to Q1's
+capture arithmetic. So the row you pick determines how hard the shard is to
+capture:
+
+- `maxSkew=0` — pool 59.1, imbalance 1.00x, and **still saves 61% of transfer
+  against random**.
+- `maxSkew=1` — pool 23.9, saves 83%. Cheaper, and 2.5x easier to capture.
+- pure locality — pool **3.0** = the quorum, saves 93%, and capture is free.
+
+**There is no "best" maxSkew.** You choose the honest pool your threat model
+needs and pay the transfer that implies. §3's knee optimised the wrong pair.
+
+## Relative maxSkew does not help
+Scaling the cap as a fraction of the running mean (0.02–0.25) is worse than
+absolute `maxSkew=0` at every fleet size tested — e.g. fleet 198: rel=0.02
+gives 6.00x / 34.6 against absolute-0's 1.00x / 59.1. The cap wants to be tight
+in absolute terms, not proportional to load.
+
+## Correction to record
+§3's "0 -> 1 buys 40 percentage points of transfer for 0.03x of imbalance" is
+true **for one round from a prefilled start** and false in steady state, where
+0 -> 1 also costs **60% of the honest pool**. The single-round measurement could
+not see that, because redundancy is a property that accumulates.
