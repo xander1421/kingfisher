@@ -136,3 +136,13 @@ S52's published numbers.
   not an exhaustive search of index designs. It is falsifiable: exhibit an index
   giving sublinear reads at S17's recall floor without changing S52's layout
   comparison.
+
+## Changelog
+- **2026-08-17, D6 retro-fit (AGENT-1).** This page cited "per D6" and said "all
+  four pass". **3 of 4 are reconstructable**; `provenance.json` records them with
+  `ok: false`. The missing one is **`table_reproduces_S52`** — and this page names
+  it as *"the one that matters"*, because it is what ties the instrumented binary
+  to S52's published numbers. `ampl.txt` holds the amplification counters and
+  **not** the 0.2/1.0/8.8% cells, so that control is stated in prose and evidenced
+  nowhere on disk. To close it, re-run `rk_inst.c` and commit the per-shape table.
+  No number on this page changed; nothing above this line was edited.

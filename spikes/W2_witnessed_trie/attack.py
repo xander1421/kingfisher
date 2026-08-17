@@ -269,7 +269,7 @@ def attack_a1(ak):
 # plainly rather than quoting the original 6/6.
 def attack_a5():
     spikes = os.path.join(HERE, '..')
-    cite, have = [], []
+    cite, have, partial = [], [], []
     for d in sorted(os.listdir(spikes)):
         rp = os.path.join(spikes, d, 'RESULT.md')
         if not os.path.isfile(rp):
@@ -278,17 +278,32 @@ def attack_a5():
         if 'D6' not in txt:
             continue
         cite.append(d)
-        if os.path.isfile(os.path.join(spikes, d, 'provenance.json')):
-            have.append(d)
+        # FILE PRESENCE IS NOT COMPLIANCE. The first version of this probe only
+        # tested that provenance.json existed, and after the retro-fit it scored
+        # W4/N1/S72 as passing while their records say ok:false. Read the verdict.
+        pj = os.path.join(spikes, d, 'provenance.json')
+        if os.path.isfile(pj):
+            try:
+                doc = json.load(open(pj))
+            except Exception:
+                continue
+            if doc.get('ok'):
+                have.append(d)
+            else:
+                partial.append((d, doc.get('d6_retrofit', {}).get('status'),
+                                doc.get('d6_retrofit', {}).get('prose_only')))
     # And the inverse population, which the original F2 never counted: spikes
     # that HAVE a provenance record and do not cite D6 at all.
     silent = [d for d in sorted(os.listdir(spikes))
               if os.path.isfile(os.path.join(spikes, d, 'provenance.json'))
               and d not in cite]
     finding('A5-D6-F2-remeasured', 'HONEST-DEBT',
-            f'{len(cite)} RESULT.md cite D6, {len(have)} have a provenance.json -- '
-            f'still failing {len(cite) - len(have)}/{len(cite)}. Debt: '
-            f'{[d for d in cite if d not in have]}. My own two spikes this session '
+            f'{len(cite)} RESULT.md cite D6, {len(have)} are ok:true -- '
+            f'still failing {len(cite) - len(have)}/{len(cite)}. '
+            f'PARTIAL (record present, ok:false, controls that exist only in '
+            f'prose): {partial}. Debt with no record at all: '
+            f'{[d for d in cite if d not in have and d not in [x[0] for x in partial]]}. '
+            f'My own two spikes this session '
             f'are in the OTHER population: {silent} carry a provenance record and '
             f'never mention D6, so F2 as written scores neither of them. F2 counts '
             f'citation without compliance and is blind to compliance without '

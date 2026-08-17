@@ -146,3 +146,17 @@ kind, and I should stop implying it does.
 | per-instance GOP/s reported by the binary, not derived | a derived figure would hide the bandwidth effect, which is visible only per-instance |
 | exactness digest unchanged | any kernel differing from `f4e64fb7d70b9b0c` means the concurrent run altered results |
 | monotone aggregate | aggregate falling with more workers would indicate the pin is not honoured |
+
+## Changelog
+- **2026-08-17, D6 retro-fit (AGENT-1).** **1 of 5** stated controls has an
+  observation on disk (`gate_post.json`, quiet). `provenance.json` records
+  `ok: false`. The other four are stated here and evidenced nowhere:
+  `per_instance_GOPs_from_binary`, `exactness_digest_unchanged` (the digest
+  `f4e64fb7d70b9b0c` appears in this prose and in no artefact), `monotone_aggregate`,
+  and — the sharp one — **`gate_green_before_and_after`**. *No pre-run gate file
+  exists in any commit of this directory* (its whole history is `RESULT.md`,
+  `gate_post.json`, `k4.sh`), and `k4.sh` does not invoke `quiet.sh` at all. So the
+  "before" half of that control left no evidence that it was ever taken. Stating
+  this rather than reconstructing it: a retro-fit that invented the missing gate
+  would be the forgery D6 exists to prevent.
+  No number on this page changed; nothing above this line was edited.

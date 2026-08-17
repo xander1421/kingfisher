@@ -1,0 +1,166 @@
+{
+ "spike": "B1_bundling_real",
+ "recorded_utc": "2026-08-17T10:03:22Z",
+ "note": "D6 retro-fit. 4 of 4 controls have observations ON DISK and are recorded here. No value was retyped from prose; see harness/retrofit_d6.py.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real",
+   "head": "57eac13f266137c95724ce83211f4d1dd06be0bb",
+   "clean": false,
+   "dirty_files": [
+    "ISSION_LOOP.md",
+    "spikes/G25_carrying_capacity/RESULT.md",
+    "spikes/G27_budget/RUN.txt",
+    "spikes/harness/provenance.py",
+    "spikes/B1_bundling_real/provenance.json",
+    "spikes/G27_budget/runs/nd_r30_o40.json",
+    "spikes/N1_prefilter_cost/provenance.json",
+    "spikes/Q1_quorum_sim/provenance.json",
+    "spikes/S72_c3_cpuset/provenance.json",
+    "spikes/W4_prefilter_readset/provenance.json",
+    "spikes/harness/retrofit_d6.json",
+    "spikes/harness/retrofit_d6.py"
+   ],
+   "diff_sha256": "fb3c22e8002c4d7700b5230b5860dce792cc059c3fc8b1fc92e7bcc206ffc7fe",
+   "diff_bytes": 16210
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real/bundling.json",
+   "sha256": "d604e5b9432126c2082b5d8af95ec02a2935e21fa676c10502d9a0abdd6deed0",
+   "bytes": 2215,
+   "mtime": 1786933710,
+   "compared_ts": 1786933710,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real/bundling.py",
+   "sha256": "19bb0a0dfb433cedd55a58cc877b3ee9f801353c1cc503f048ca36a3c595386c",
+   "bytes": 5375,
+   "mtime": 1786933436,
+   "compared_ts": 1786933710,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "B1_store_matches_S11_scaled",
+   "must_fire_because": "B=1 store != 34.83 MB -- a different encoding than S11 measured",
+   "can_fail_because": "store_mb for B=1 reads anything but 34.83",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "store_mb": 34.83072,
+    "bundles": 272115
+   }
+  },
+  {
+   "name": "B64_median_matches_S52",
+   "must_fire_because": "B=64 median fraction checked != ~0.2% -- a different query or clustering",
+   "can_fail_because": "store_frac_checked_median for B=64 departs from S52 0.2%",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "B64_median_frac": 0.0016666666666666668,
+    "B64_p90_frac": 0.011666666666666667
+   }
+  },
+  {
+   "name": "curve_monotone_in_B",
+   "must_fire_because": "non-monotone compression means the metric is not measuring compression cost",
+   "can_fail_because": "the compression_vs_B1 series stops rising with B",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "compression_vs_B1": [
+     [
+      1,
+      1.0
+     ],
+     [
+      4,
+      3.9999853003865997
+     ],
+     [
+      8,
+      7.999853006026753
+     ],
+     [
+      16,
+      15.999235653809972
+     ],
+     [
+      32,
+      31.998471307619944
+     ],
+     [
+      64,
+      63.99694261523989
+     ],
+     [
+      128,
+      127.99388523047978
+     ]
+    ]
+   }
+  },
+  {
+   "name": "B1_checks_zero_pct_of_store",
+   "must_fire_because": "if B=1 required checking anything, the scoring is broken",
+   "can_fail_because": "store_frac_checked_median for B=1 reads nonzero",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "B1_median_frac": 0.0,
+    "B1_p90_frac": 0.0
+   }
+  }
+ ],
+ "no_deps_reason": "",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real": {
+   "newest": 1786933710,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "d6_retrofit": {
+  "status": "COMPLIANT",
+  "controls_on_disk": 4,
+  "controls_stated": 4,
+  "prose_only": [],
+  "ok_covers_only_the_extractable_subset": true
+ }
+}

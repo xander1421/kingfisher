@@ -162,9 +162,19 @@ def main():
         parts.append("POPULATION-MATCHED: not attainable — no_death's population "
                      "is its budget, so the two matchings cannot both hold and "
                      "G25's intended comparison does not exist in this design")
-    if sel_wins_b and nd_wins_p:
-        parts.append("THE MATCHINGS DISAGREE: which arm 'wins' is a choice of "
-                     "what to hold fixed, not a property of the algorithms")
+    # The matchings disagree whenever one of them produces a winner and the other
+    # does not, or they name opposite winners. G25 wanted the population-matched
+    # answer and G24 reported the budget-matched one, so a disagreement here is
+    # the reason both spikes could be honest and still conflict.
+    b_winner = ("selected" if sel_wins_b else "no_death" if nd_wins_b else None)
+    p_winner = ("selected" if sel_wins_p else "no_death" if nd_wins_p else None)
+    if b_winner != p_winner:
+        parts.append(f"THE MATCHINGS DISAGREE — budget-matched winner "
+                     f"{b_winner or 'none, all trades'}, population-matched "
+                     f"winner {p_winner or 'none, all trades'}. Which arm 'wins' "
+                     f"is a choice of what to hold fixed, not a property of the "
+                     f"algorithms, and G24 reported the budget-matched view while "
+                     f"G25 was asking the population-matched question")
     v = ". ".join(parts) + "."
     print(f"\nVERDICT: {v}")
 
@@ -175,14 +185,20 @@ def main():
                       "adversary-beating rules; if the selected population does "
                       "not track the proposal budget that reason is wrong",
                       null_must_contain="a selected population pinned near 239 "
-                      "while the budget rises several-fold")
+                      "while the budget rises several-fold",
+                      can_fail_because="the budget rises 12x here; a population "
+                      "that stayed under 1.5x would fire it negative and would "
+                      "mean G25's stated reason for saturation is wrong")
         c.observe(sel[-1]["pop"] / sel[0]["pop"] >= 1.5,
                   {r["name"]: [r["budget"], r["pop"], r["correct"], r["preds"]]
                    for r in sel})
         ctl.append(c)
     c = P.Control("C6_a15_plant", "an arm that never finds the planted rule has "
                   "an unproven instrument; every arm here runs abduction",
-                  null_must_contain="a budget large enough to swamp the plant")
+                  null_must_contain="a budget large enough to swamp the plant",
+                  can_fail_because="G24's no_abduct arms miss the plant, so the "
+                  "observation is attainable: any arm here failing to find it "
+                  "would void that arm's row")
     c.observe(not bad, {n: r["a15"] for n, r in rows.items()}, f"missing {bad}")
     ctl.append(c)
     ok, _ = P.record(HERE, artifacts=[os.path.join(HERE, "sweep.py"),

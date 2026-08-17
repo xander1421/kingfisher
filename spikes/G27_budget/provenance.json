@@ -1,0 +1,149 @@
+{
+ "spike": "G27_budget",
+ "recorded_utc": "2026-08-17T10:05:55Z",
+ "note": "G27: can a selected population reach no_death's size, and which matching is attainable",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/sweep.py",
+   "sha256": "2945db385b590d836e765279ee53d35b60a40836b2e7a4d4e9ea811ca2fddd87",
+   "bytes": 5725,
+   "mtime": 1786960691
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/analyse.py",
+   "sha256": "5fe1aea56b194a6d764c64aea9e1fb09b8f211cac290e6443867518ea16c9560",
+   "bytes": 11865,
+   "mtime": 1786961152
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r15_o160.json",
+   "sha256": "816bb20aebac6335c7ef62884a3be72dfdcf935a74bceee7c96f84367f59dc29",
+   "bytes": 6084,
+   "mtime": 1786961020
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r15_o40.json",
+   "sha256": "e9e065c02c57be0e51376f9b0e604c53cecfe2dc454afbd8f9683018c304f80e",
+   "bytes": 6010,
+   "mtime": 1786960649
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r30_o40.json",
+   "sha256": "b7ce6481c2d699332448232e36c6efd0709d8d0697ca796d9d153f21760522ae",
+   "bytes": 11778,
+   "mtime": 1786960870
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r15_o160.json",
+   "sha256": "822bc3ddd894cba624d8b1dcc0c9527ffef8fb7db440c46b4431a60f9623913b",
+   "bytes": 6040,
+   "mtime": 1786960053
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r15_o40.json",
+   "sha256": "6661d2c2f00cbeff4bf0bfc7677aeb24cd624f04a7f32f9f242d15e5fc97fbcd",
+   "bytes": 6023,
+   "mtime": 1786959969
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r30_o40.json",
+   "sha256": "3e570507b8d17bde1e75717964def1f1d7d627e65151a44b8b5894d1c037ff97",
+   "bytes": 11749,
+   "mtime": 1786960262
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r45_o160.json",
+   "sha256": "fb2ac843e2711a92dcede7f9308a134d4a5527a5b47d63828f9a5f50a95230ec",
+   "bytes": 17480,
+   "mtime": 1786960582
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r45_o40.json",
+   "sha256": "7e3346d6e400f80d82c39fb45fa14df0237bbf7536a8836971a370d6e08c4b1c",
+   "bytes": 17463,
+   "mtime": 1786960179
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C5_supply_is_the_ceiling",
+   "must_fire_because": "G25 attributed saturation to the supply of adversary-beating rules; if the selected population does not track the proposal budget that reason is wrong",
+   "can_fail_because": "the budget rises 12x here; a population that stayed under 1.5x would fire it negative and would mean G25's stated reason for saturation is wrong",
+   "null_must_contain": "a selected population pinned near 239 while the budget rises several-fold",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "sel_r15_o40": [
+     600,
+     229,
+     5934,
+     286436
+    ],
+    "sel_r30_o40": [
+     1200,
+     258,
+     6205,
+     242660
+    ],
+    "sel_r45_o40": [
+     1800,
+     296,
+     5923,
+     251201
+    ],
+    "sel_r15_o160": [
+     2400,
+     568,
+     6875,
+     809066
+    ],
+    "sel_r45_o160": [
+     7200,
+     684,
+     7427,
+     710014
+    ]
+   }
+  },
+  {
+   "name": "C6_a15_plant",
+   "must_fire_because": "an arm that never finds the planted rule has an unproven instrument; every arm here runs abduction",
+   "can_fail_because": "G24's no_abduct arms miss the plant, so the observation is attainable: any arm here failing to find it would void that arm's row",
+   "null_must_contain": "a budget large enough to swamp the plant",
+   "fired": true,
+   "detail": "missing []",
+   "constant_observations": false,
+   "observations": {
+    "nd_r15_o160": true,
+    "nd_r15_o40": true,
+    "nd_r30_o40": true,
+    "sel_r15_o160": true,
+    "sel_r15_o40": true,
+    "sel_r30_o40": true,
+    "sel_r45_o160": true,
+    "sel_r45_o40": true
+   }
+  }
+ ],
+ "no_deps_reason": "pure Python inside the workspace; the dependencies are G24's evo.py and G25's sweep.py/analyse.py, reused unmodified and digested by G25's own provenance.json",
+ "problems": [],
+ "ok": true
+}

@@ -208,3 +208,43 @@ CONFIG nd_r30_o40  arm=no_death wage=120.0 rent=0.5/0.05 max_pop=200 seed=1234
    r6  pop  286  dev solved   5386  test solved   4859  test prec 0.0104  test top12 0.2880  body 2.21  A15 yes
    r7  pop  318  dev solved   5800  test solved   5274  test prec 0.0098  test top12 0.2880  body 2.19  A15 yes
    r8  pop  349  dev solved   6109  test solved   5589  test prec 0.0094  test top12 0.2899  body 2.19  A15 yes
+   r9  pop  383  dev solved   6187  test solved   5664  test prec 0.0087  test top12 0.2899  body 2.20  A15 yes
+   r10 pop  414  dev solved   6326  test solved   5805  test prec 0.0082  test top12 0.2899  body 2.20  A15 yes
+   r11 pop  448  dev solved   6423  test solved   5898  test prec 0.0074  test top12 0.2899  body 2.20  A15 yes
+   r12 pop  478  dev solved   6991  test solved   6444  test prec 0.0070  test top12 0.2899  body 2.21  A15 yes
+   r13 pop  514  dev solved   7229  test solved   6661  test prec 0.0069  test top12 0.2899  body 2.21  A15 yes
+   r14 pop  542  dev solved   7305  test solved   6752  test prec 0.0070  test top12 0.2899  body 2.22  A15 yes
+   r15 pop  576  dev solved   7342  test solved   6814  test prec 0.0065  test top12 0.2899  body 2.22  A15 yes
+   r16 pop  606  dev solved   7487  test solved   6933  test prec 0.0064  test top12 0.2899  body 2.22  A15 yes
+   r17 pop  635  dev solved   7739  test solved   7212  test prec 0.0066  test top12 0.2919  body 2.22  A15 yes
+   r18 pop  665  dev solved   7907  test solved   7369  test prec 0.0063  test top12 0.2919  body 2.22  A15 yes
+   r19 pop  698  dev solved   8056  test solved   7514  test prec 0.0062  test top12 0.2919  body 2.22  A15 yes
+   r20 pop  730  dev solved   8092  test solved   7539  test prec 0.0059  test top12 0.2920  body 2.22  A15 yes
+   r21 pop  766  dev solved   8133  test solved   7585  test prec 0.0057  test top12 0.2920  body 2.22  A15 yes
+   r22 pop  800  dev solved   8166  test solved   7612  test prec 0.0055  test top12 0.2920  body 2.22  A15 yes
+   r23 pop  830  dev solved   8219  test solved   7650  test prec 0.0054  test top12 0.2920  body 2.22  A15 yes
+   r24 pop  862  dev solved   8256  test solved   7678  test prec 0.0054  test top12 0.2920  body 2.23  A15 yes
+   r25 pop  895  dev solved   8346  test solved   7746  test prec 0.0054  test top12 0.2920  body 2.23  A15 yes
+   r26 pop  926  dev solved   8507  test solved   7892  test prec 0.0052  test top12 0.2920  body 2.23  A15 yes
+   r27 pop  961  dev solved   8554  test solved   7948  test prec 0.0050  test top12 0.2920  body 2.23  A15 yes
+   r28 pop  993  dev solved   8620  test solved   8006  test prec 0.0050  test top12 0.2920  body 2.23  A15 yes
+   r29 pop 1024  dev solved   8683  test solved   8090  test prec 0.0049  test top12 0.2920  body 2.23  A15 yes
+
+BUDGET rounds=15 offspring=160 = 2400 proposals
+CONFIG nd_r15_o160  arm=no_death wage=120.0 rent=0.5/0.05 max_pop=200 seed=1234
+   r0  pop  179  dev solved   1421  test solved   1372  test prec 0.0124  test top12 0.3011  body 2.14  A15 -
+   r1  pop  315  dev solved   4382  test solved   4352  test prec 0.0126  test top12 0.3231  body 2.15  A15 -
+   r2  pop  449  dev solved   5717  test solved   5178  test prec 0.0092  test top12 0.3231  body 2.17  A15 yes
+   r3  pop  572  dev solved   6707  test solved   6121  test prec 0.0084  test top12 0.3248  body 2.18  A15 yes
+   r4  pop  693  dev solved   7455  test solved   6813  test prec 0.0067  test top12 0.3248  body 2.19  A15 yes
+   r5  pop  829  dev solved   7881  test solved   7225  test prec 0.0062  test top12 0.3248  body 2.20  A15 yes
+   r6  pop  954  dev solved   8200  test solved   7534  test prec 0.0055  test top12 0.3266  body 2.21  A15 yes
+   r7  pop 1093  dev solved   8434  test solved   7755  test prec 0.0049  test top12 0.3266  body 2.21  A15 yes
+   r8  pop 1223  dev solved   8561  test solved   7900  test prec 0.0046  test top12 0.3266  body 2.21  A15 yes
+   r9  pop 1353  dev solved   8686  test solved   8001  test prec 0.0044  test top12 0.3322  body 2.21  A15 yes
+   r10 pop 1489  dev solved   8790  test solved   8085  test prec 0.0041  test top12 0.3322  body 2.22  A15 yes
+   r11 pop 1624  dev solved   8873  test solved   8152  test prec 0.0038  test top12 0.3322  body 2.22  A15 yes
+   r12 pop 1758  dev solved   9027  test solved   8291  test prec 0.0036  test top12 0.3322  body 2.22  A15 yes
+   r13 pop 1894  dev solved   9272  test solved   8521  test prec 0.0034  test top12 0.3322  body 2.22  A15 yes
+   r14 pop 2025  dev solved   9323  test solved   8578  test prec 0.0032  test top12 0.3322  body 2.22  A15 yes
+

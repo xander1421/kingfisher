@@ -82,3 +82,10 @@ the *shape* of the requirement, not a coverage target — deliberately, per D3.
   reports honestly to build reputation is not modelled.
 - No stake. D1+ makes seat draw stake-weighted; this draws uniformly from the
   pool, so it is the *no-stake* case — a lower bound on the defence.
+
+## Changelog
+- **2026-08-17, D6 retro-fit (AGENT-1).** This page cited "per D6" with no
+  provenance record. Now **COMPLIANT**: `provenance.json`, `ok: true`, **2 of 2**
+  stated controls have their observations on disk in `quorumsim.json` and were
+  extracted, not retyped (`harness/retrofit_d6.py`). No number on this page
+  changed; nothing above this line was edited.

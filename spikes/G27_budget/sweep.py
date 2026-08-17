@@ -89,10 +89,26 @@ CONFIGS = [
 ]
 
 
+# The population-matched dominance is the whole result, and at the reference seed
+# it is 6875 vs 6361 = 514 correct apart -- INSIDE the 1338-triple seed band G25
+# measured and that I used to retire two of G24's arm claims. Applying that rule
+# to someone else's spike and not to my own is the exact failure G24's RESULT.md
+# names: writing the caveat is not the same as obeying it. So the closest-matched
+# pair (pop 568 vs 557) gets three seeds. sel_r45_o160 does not -- 7200 proposals
+# at pop 684 is the most expensive cell here and it is not the headline.
+REPEATS = [(base, s) for base in ("sel_r15_o160", "nd_r15_o40")
+           for s in (777, 31337)]
+
+
 def main():
     os.makedirs(RUNS, exist_ok=True)
-    want = sys.argv[1:] or [c[0] for c in CONFIGS]
-    todo = [c for c in CONFIGS if c[0] in want
+    byname = {c[0]: c for c in CONFIGS}
+    jobs = list(CONFIGS)
+    for base, s in REPEATS:
+        c = byname[base]
+        jobs.append((f"{base}_s{s}",) + c[1:])
+    want = sys.argv[1:] or [j[0] for j in jobs]
+    todo = [c for c in jobs if c[0] in want
             and not os.path.exists(os.path.join(RUNS, c[0] + ".json"))]
     if not todo:
         return 0
@@ -100,9 +116,11 @@ def main():
     G25.RUNS = RUNS          # checkpoint into THIS spike's runs/
     for name, arm, wage, rent, rp, mp, rounds, offspring in todo:
         evo.ROUNDS, evo.OFFSPRING = rounds, offspring
+        base, _, tail = name.rpartition("_s")
+        seed = int(tail) if base and tail.isdigit() else 1234
         print(f"BUDGET rounds={rounds} offspring={offspring} "
               f"= {rounds * offspring} proposals", flush=True)
-        G25.one(name, arm, wage, rent, rp, mp, data=data, seed=evo.RUN_SEED)
+        G25.one(name, arm, wage, rent, rp, mp, data=data, seed=seed)
         print(flush=True)
     return 0
 

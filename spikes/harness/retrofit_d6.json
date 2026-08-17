@@ -1,0 +1,58 @@
+{
+ "targets": [
+  {
+   "spike": "Q1_quorum_sim",
+   "status": "COMPLIANT",
+   "extracted": 2,
+   "prose_only": [],
+   "ok": true,
+   "problems": []
+  },
+  {
+   "spike": "B1_bundling_real",
+   "status": "COMPLIANT",
+   "extracted": 4,
+   "prose_only": [],
+   "ok": true,
+   "problems": []
+  },
+  {
+   "spike": "W4_prefilter_readset",
+   "status": "PARTIAL",
+   "extracted": 3,
+   "prose_only": [
+    "table_reproduces_S52"
+   ],
+   "ok": true,
+   "problems": []
+  },
+  {
+   "spike": "N1_prefilter_cost",
+   "status": "PARTIAL",
+   "extracted": 2,
+   "prose_only": [
+    "perfect_scaling_at_T2_T3",
+    "T4_collapse_reproduces"
+   ],
+   "ok": false,
+   "problems": [
+    "STALE ARTIFACT gate_pre.json predates N1_prefilter_cost source by 0.4h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+    "STALE ARTIFACT gate_post.json predates N1_prefilter_cost source by 0.4h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+    "STALE ARTIFACT conditions.json predates N1_prefilter_cost source by 0.3h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here."
+   ]
+  },
+  {
+   "spike": "S72_c3_cpuset",
+   "status": "PARTIAL",
+   "extracted": 1,
+   "prose_only": [
+    "gate_green_before_and_after",
+    "per_instance_GOPs_from_binary",
+    "exactness_digest_unchanged",
+    "monotone_aggregate"
+   ],
+   "ok": true,
+   "problems": []
+  }
+ ]
+}

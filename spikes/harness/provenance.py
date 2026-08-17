@@ -35,7 +35,7 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def newest_source_mtime(path):
+def newest_source_mtime(path, exclude=()):
     """Newest mtime among tracked source files, and the HEAD commit time.
 
     Used to answer: could this artifact have been built from this tree? An
@@ -45,7 +45,13 @@ def newest_source_mtime(path):
     # monorepo's HEAD time, so a commit by ANY agent to ANY unrelated spike
     # raised the staleness floor for every artifact in the tree -- a false
     # positive that fired the moment two agents ran concurrently.
-    head_ts = _run(['git', 'log', '-1', '--format=%ct', '--', '.'], cwd=path)
+    # `.md` is EXCLUDED from the floor on both halves: a write-up is not a build
+    # input, and a documentation correction must not mark an artifact stale. Checked
+    # rather than assumed convenient -- for B1, W4 and S72 the only later commits
+    # touched RESULT.md alone, while N1's touched pfx.c/pf_pad.c, and N1 is still
+    # flagged. Suppressing md keeps the real signal and drops the false one.
+    head_ts = _run(['git', 'log', '-1', '--format=%ct', '--', '.',
+                    ':(exclude)*.md'], cwd=path)
     head_ts = int(head_ts) if head_ts.isdigit() else 0
     newest, newest_file = head_ts, '<HEAD commit>'
     # only the dirty ones can be newer than HEAD, and scanning every tracked
@@ -63,16 +69,44 @@ def newest_source_mtime(path):
     # instead, which is correct whether or not the line was stripped.
     root = _run(['git', 'rev-parse', '--show-toplevel'], cwd=path) or path
     dirty = [l.split(None, 1)[-1]
-             for l in _run(['git', 'status', '--porcelain', '--', '.'],
-                           cwd=path).splitlines() if l.split(None, 1)]
+             for l in _run(['git', 'status', '--porcelain', '--', '.',
+                            ':(exclude)*.md'], cwd=path).splitlines()
+             if l.split(None, 1)]
+    # An artifact is not its own source, and `record` writes provenance.json INTO
+    # spike_dir -- so when spike_dir is also a dep, the tool's own output became
+    # the newest "source" and every historical artifact read as stale. Exclude
+    # the declared artifacts and the record itself.
+    excl = {os.path.realpath(x) for x in exclude}
     for f in dirty:
         fp = os.path.join(root, f)
-        if not os.path.exists(fp):
+        if not os.path.exists(fp) or os.path.realpath(fp) in excl:
             continue
         m = int(os.path.getmtime(fp))
         if m > newest:
             newest, newest_file = m, f
     return newest, newest_file
+
+
+def artifact_time(path):
+    """When this artifact last changed, on the SAME clock as the staleness floor.
+
+    E1 compared an artifact's **mtime** against its dep tree's **commit time**.
+    A file is always written before it is committed, so every committed artifact
+    inside its own dep tree read as stale by the commit latency -- Q1's
+    `quorumsim.py` by 43 seconds, and all five D6 retro-fit targets. Mixing an
+    mtime with a commit timestamp is the bug; the two clocks are not comparable.
+
+    Tracked and clean -> its last-commit time, comparable with the HEAD floor.
+    Dirty or untracked -> its mtime, comparable with the dirty-file floor.
+    """
+    d = os.path.dirname(os.path.abspath(path)) or '.'
+    base = os.path.basename(path)
+    dirty = _run(['git', 'status', '--porcelain', '--', base], cwd=d)
+    if not dirty:
+        ts = _run(['git', 'log', '-1', '--format=%ct', '--', base], cwd=d)
+        if ts.isdigit():
+            return int(ts), 'last-commit'
+    return int(os.path.getmtime(path)), 'mtime'
 
 
 def manifest_state(path):
@@ -240,18 +274,22 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
     # recorded the correct sha256 of the wrong binary and nobody noticed,
     # because an accurate hash of a stale artifact looks exactly like an
     # accurate hash of a fresh one.
+    _excl = [a['path'] for a in prov['artifacts']] + \
+            [os.path.join(spike_dir, 'provenance.json')]
     for d in deps:
-        src_ts, src_file = newest_source_mtime(d)
+        src_ts, src_file = newest_source_mtime(d, exclude=_excl)
         prov.setdefault('source_mtimes', {})[d] = {
             'newest': src_ts, 'from': src_file}
         for a in prov['artifacts']:
-            if a['mtime'] < src_ts:
-                age = (src_ts - a['mtime']) / 3600.0
+            a_ts, a_clock = artifact_time(a['path'])
+            a['compared_ts'], a['compared_clock'] = a_ts, a_clock
+            if a_ts < src_ts:
+                age = (src_ts - a_ts) / 3600.0
                 problems.append(
                     f"STALE ARTIFACT {os.path.basename(a['path'])} predates "
                     f"{os.path.basename(d)} source by {age:.1f}h "
-                    f"(newest source: {src_file}). It cannot have been built "
-                    f"from the tree recorded here.")
+                    f"(newest source: {src_file}; artifact clock: {a_clock}). "
+                    f"It cannot have been built from the tree recorded here.")
 
     for r in prov['repos']:
         if not r['clean'] and not allow_dirty:

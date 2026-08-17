@@ -1,0 +1,126 @@
+{
+ "spike": "W4_prefilter_readset",
+ "recorded_utc": "2026-08-17T10:03:22Z",
+ "note": "D6 retro-fit. 3 of 4 controls have observations ON DISK and are recorded here. PROSE_ONLY (stated in RESULT.md, absent from every artefact, NOT reconstructed): ['table_reproduces_S52']. No value was retyped from prose; see harness/retrofit_d6.py.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset",
+   "head": "57eac13f266137c95724ce83211f4d1dd06be0bb",
+   "clean": false,
+   "dirty_files": [
+    "ISSION_LOOP.md",
+    "spikes/G25_carrying_capacity/RESULT.md",
+    "spikes/G27_budget/RUN.txt",
+    "spikes/harness/provenance.py",
+    "spikes/B1_bundling_real/provenance.json",
+    "spikes/G27_budget/runs/nd_r30_o40.json",
+    "spikes/N1_prefilter_cost/provenance.json",
+    "spikes/Q1_quorum_sim/provenance.json",
+    "spikes/S72_c3_cpuset/provenance.json",
+    "spikes/W4_prefilter_readset/provenance.json",
+    "spikes/harness/retrofit_d6.json",
+    "spikes/harness/retrofit_d6.py"
+   ],
+   "diff_sha256": "fb3c22e8002c4d7700b5230b5860dce792cc059c3fc8b1fc92e7bcc206ffc7fe",
+   "diff_bytes": 16210
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset/ampl.txt",
+   "sha256": "4296d58b431e5a1b7034d3a122659a609d3b3e82fbd7ab79e6a635c70b075ec4",
+   "bytes": 198,
+   "mtime": 1786930227,
+   "compared_ts": 1786930227,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset/rk_inst.c",
+   "sha256": "7158d24334c8c347db02e98c01e729cee04cf7fb233d1b728fcb81bd58ab4868",
+   "bytes": 9709,
+   "mtime": 1786930227,
+   "compared_ts": 1786930227,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "counters_are_nonzero",
+   "must_fire_because": "zero score-pass reads would mean the counter is not on the hot path",
+   "can_fail_because": "score-pass bundle reads reads 0",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "score_pass_reads": 6122880,
+    "bundles_in_index": 4252
+   }
+  },
+  {
+   "name": "cutoff_reads_exceed_score_reads",
+   "must_fire_because": "if equal, the cutoff loop is not scanning and the 78x claim is wrong",
+   "can_fail_because": "cutoff-pass reads equal or fall below score-pass reads",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "score_pass": 6122880,
+    "cutoff_pass": 475067456
+   }
+  },
+  {
+   "name": "amplification_is_bounded",
+   "must_fire_because": "an unbounded ratio would put the counter inside score_row",
+   "can_fail_because": "the total/score-pass ratio is unbounded or absent",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "ratio": 78.59
+   }
+  }
+ ],
+ "no_deps_reason": "",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset": {
+   "newest": 1786930227,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": false,
+ "d6_retrofit": {
+  "status": "PARTIAL",
+  "controls_on_disk": 3,
+  "controls_stated": 4,
+  "prose_only": [
+   "table_reproduces_S52"
+  ],
+  "ok_covers_only_the_extractable_subset": true
+ }
+}

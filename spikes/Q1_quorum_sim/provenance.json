@@ -1,0 +1,115 @@
+{
+ "spike": "Q1_quorum_sim",
+ "recorded_utc": "2026-08-17T10:03:21Z",
+ "note": "D6 retro-fit. 2 of 2 controls have observations ON DISK and are recorded here. No value was retyped from prose; see harness/retrofit_d6.py.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/Q1_quorum_sim",
+   "head": "57eac13f266137c95724ce83211f4d1dd06be0bb",
+   "clean": false,
+   "dirty_files": [
+    "ISSION_LOOP.md",
+    "spikes/G25_carrying_capacity/RESULT.md",
+    "spikes/G27_budget/RUN.txt",
+    "spikes/harness/provenance.py",
+    "spikes/B1_bundling_real/provenance.json",
+    "spikes/G27_budget/runs/nd_r30_o40.json",
+    "spikes/N1_prefilter_cost/provenance.json",
+    "spikes/Q1_quorum_sim/provenance.json",
+    "spikes/S72_c3_cpuset/provenance.json",
+    "spikes/W4_prefilter_readset/provenance.json",
+    "spikes/harness/retrofit_d6.json",
+    "spikes/harness/retrofit_d6.py"
+   ],
+   "diff_sha256": "fb3c22e8002c4d7700b5230b5860dce792cc059c3fc8b1fc92e7bcc206ffc7fe",
+   "diff_bytes": 16210
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/Q1_quorum_sim": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/Q1_quorum_sim/quorumsim.json",
+   "sha256": "96ced4613459fcb9d5d33559c1bffebbaf3a23539979cbb8fa261f54a5c634d6",
+   "bytes": 1744,
+   "mtime": 1786932278,
+   "compared_ts": 1786932278,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/Q1_quorum_sim/quorumsim.py",
+   "sha256": "7d75c30fe039931f98a1612713a176fd58bac938a2ac18c3be46768a77a2bc28",
+   "bytes": 8036,
+   "mtime": 1786932235,
+   "compared_ts": 1786932278,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "all_honest_always_agrees",
+   "must_fire_because": "any wrong verdict or any failed majority in an honest fleet",
+   "can_fail_because": "the recorded values would read otherwise: {'wrong_accepted': 0.0, 'no_majority': 0.0, 'pass': True}",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "wrong_accepted": 0.0,
+    "no_majority": 0.0,
+    "pass": true
+   }
+  },
+  {
+   "name": "one_operator_captures_rare_shard",
+   "must_fire_because": "an operator owning most of a 3-device pool does NOT get wrong results accepted",
+   "can_fail_because": "the recorded values would read otherwise: {'adv_in_pool': 6, 'pool': 9, 'wrong_accepted': 0.744, 'pass': True}",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "adv_in_pool": 6,
+    "pool": 9,
+    "wrong_accepted": 0.744,
+    "pass": true
+   }
+  }
+ ],
+ "no_deps_reason": "",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/Q1_quorum_sim": {
+   "newest": 1786932278,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "d6_retrofit": {
+  "status": "COMPLIANT",
+  "controls_on_disk": 2,
+  "controls_stated": 2,
+  "prose_only": [],
+  "ok_covers_only_the_extractable_subset": true
+ }
+}

@@ -1,23 +1,23 @@
 [
  {
   "kib": 4,
-  "fresh_ms": 544.3,
-  "reuse_ms": 483.2,
-  "saved_pct": 11.2,
-  "per_req_saved_ms": 3.1
+  "fresh_ms": 595.2,
+  "reuse_ms": 463.6,
+  "saved_pct": 22.1,
+  "per_req_saved_ms": 6.6
  },
  {
   "kib": 64,
-  "fresh_ms": 967.0,
-  "reuse_ms": 953.1,
-  "saved_pct": 1.4,
-  "per_req_saved_ms": 0.7
+  "fresh_ms": 2071.4,
+  "reuse_ms": 3483.5,
+  "saved_pct": -68.2,
+  "per_req_saved_ms": -70.6
  },
  {
   "kib": 1024,
-  "fresh_ms": 2658.0,
-  "reuse_ms": 2579.6,
-  "saved_pct": 2.9,
-  "per_req_saved_ms": 3.9
+  "fresh_ms": 7483.3,
+  "reuse_ms": 5537.7,
+  "saved_pct": 26.0,
+  "per_req_saved_ms": 97.3
  }
 ]

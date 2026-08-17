@@ -1,0 +1,188 @@
+{
+ "rows": {
+  "nd_r15_o160": {
+   "name": "nd_r15_o160",
+   "arm": "no_death",
+   "wage": 120.0,
+   "max_pop": 200,
+   "pop": 2025,
+   "preds": 2642060,
+   "correct": 8578,
+   "prec": 0.003246709007365465,
+   "top12": 0.33218125960061445,
+   "delta": 7206,
+   "cov_per_rule": 4.2360493827160495,
+   "a15": true,
+   "capped": 2544,
+   "rounds": 15,
+   "offspring": 160,
+   "budget": 2400,
+   "sel": false
+  },
+  "nd_r15_o40": {
+   "name": "nd_r15_o40",
+   "arm": "no_death",
+   "wage": 120.0,
+   "max_pop": 200,
+   "pop": 557,
+   "preds": 969298,
+   "correct": 6361,
+   "prec": 0.006562481300900239,
+   "top12": 0.2971764182223239,
+   "delta": 5059,
+   "cov_per_rule": 11.420107719928186,
+   "a15": true,
+   "capped": 548,
+   "rounds": 15,
+   "offspring": 40,
+   "budget": 600,
+   "sel": false
+  },
+  "nd_r30_o40": {
+   "name": "nd_r30_o40",
+   "arm": "no_death",
+   "wage": 120.0,
+   "max_pop": 200,
+   "pop": 1024,
+   "preds": 1654343,
+   "correct": 8090,
+   "prec": 0.004890158812289834,
+   "top12": 0.29195071181328525,
+   "delta": 6769,
+   "cov_per_rule": 7.900390625,
+   "a15": true,
+   "capped": 2678,
+   "rounds": 30,
+   "offspring": 40,
+   "budget": 1200,
+   "sel": false
+  },
+  "sel_r15_o160": {
+   "name": "sel_r15_o160",
+   "arm": "full",
+   "wage": 1200.0,
+   "max_pop": 4000,
+   "pop": 568,
+   "preds": 809066,
+   "correct": 6875,
+   "prec": 0.0084974526182042,
+   "top12": 0.29882970137207426,
+   "delta": 5573,
+   "cov_per_rule": 12.10387323943662,
+   "a15": true,
+   "capped": 1215,
+   "rounds": 15,
+   "offspring": 160,
+   "budget": 2400,
+   "sel": true
+  },
+  "sel_r15_o40": {
+   "name": "sel_r15_o40",
+   "arm": "full",
+   "wage": 1200.0,
+   "max_pop": 4000,
+   "pop": 229,
+   "preds": 286436,
+   "correct": 5934,
+   "prec": 0.020716669692357106,
+   "top12": 0.28879035433944406,
+   "delta": 4632,
+   "cov_per_rule": 25.912663755458514,
+   "a15": true,
+   "capped": 265,
+   "rounds": 15,
+   "offspring": 40,
+   "budget": 600,
+   "sel": true
+  },
+  "sel_r30_o40": {
+   "name": "sel_r30_o40",
+   "arm": "full",
+   "wage": 1200.0,
+   "max_pop": 4000,
+   "pop": 258,
+   "preds": 242660,
+   "correct": 6205,
+   "prec": 0.025570757438391163,
+   "top12": 0.2877155349791756,
+   "delta": 4903,
+   "cov_per_rule": 24.050387596899224,
+   "a15": true,
+   "capped": 594,
+   "rounds": 30,
+   "offspring": 40,
+   "budget": 1200,
+   "sel": true
+  },
+  "sel_r45_o160": {
+   "name": "sel_r45_o160",
+   "arm": "full",
+   "wage": 1200.0,
+   "max_pop": 4000,
+   "pop": 684,
+   "preds": 710014,
+   "correct": 7427,
+   "prec": 0.010460357119718766,
+   "top12": 0.2853070939023405,
+   "delta": 6125,
+   "cov_per_rule": 10.858187134502923,
+   "a15": true,
+   "capped": 4542,
+   "rounds": 45,
+   "offspring": 160,
+   "budget": 7200,
+   "sel": true
+  },
+  "sel_r45_o40": {
+   "name": "sel_r45_o40",
+   "arm": "full",
+   "wage": 1200.0,
+   "max_pop": 4000,
+   "pop": 296,
+   "preds": 251201,
+   "correct": 5923,
+   "prec": 0.023578727791688726,
+   "top12": 0.27896911888522363,
+   "delta": 4621,
+   "cov_per_rule": 20.010135135135137,
+   "a15": true,
+   "capped": 939,
+   "rounds": 45,
+   "offspring": 40,
+   "budget": 1800,
+   "sel": true
+  }
+ },
+ "verdict": "BUDGET-MATCHED: selected dominates in 0/3 budgets, no_death in 0/3, rest trades. POPULATION-MATCHED: selected dominates in 2/2, no_death in 0/2. THE MATCHINGS DISAGREE \u2014 budget-matched winner none, all trades, population-matched winner selected. Which arm 'wins' is a choice of what to hold fixed, not a property of the algorithms, and G24 reported the budget-matched view while G25 was asking the population-matched question.",
+ "conditions": {
+  "data": "real:FB15k-237+planted",
+  "split": "70/15/15",
+  "split_seed": "0xC0FFEE",
+  "run_seed": 1234,
+  "platforms": [
+   [
+    "macos",
+    "aarch64"
+   ]
+  ],
+  "swept": {
+   "rounds": [
+    15,
+    30,
+    45
+   ],
+   "offspring": [
+    40,
+    160
+   ],
+   "arm": [
+    "full",
+    "no_death"
+   ]
+  }
+ },
+ "cites": [
+  "G24_population",
+  "G25_carrying_capacity"
+ ]
+}

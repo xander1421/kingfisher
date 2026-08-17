@@ -267,3 +267,16 @@ barrier is fine-grained, which is S51 again.
 **Both open questions now land on the same file** — and it is the file whose
 headline figures the LEDGER already flags as from a configuration the product
 cannot enter.
+
+## Changelog
+- **2026-08-17, D6 retro-fit (AGENT-1).** **2 of 4** stated controls are
+  reconstructable (`clock_plausibility_gate` from `conditions.json`,
+  `gates_captured_pre_and_post` from `gate_pre.json`/`gate_post.json`).
+  `perfect_scaling_at_T2_T3` and `T4_collapse_reproduces` are stated here and
+  appear in no artefact — the per-T timings were never written to disk.
+  `provenance.json` records `ok: false`, and E1 additionally flags the three gate
+  artefacts as stale: `pfx.c`, `pf_pad.c` and the `pfx0/1/2` binaries were
+  committed **after** the gates were captured (N1c/N1d), so the recorded
+  conditions predate the current source. That is a real signal, not a false
+  positive — the md-only case was checked and excluded.
+  No number on this page changed; nothing above this line was edited.

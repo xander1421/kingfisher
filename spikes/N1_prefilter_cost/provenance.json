@@ -1,0 +1,128 @@
+{
+ "spike": "N1_prefilter_cost",
+ "recorded_utc": "2026-08-17T10:03:22Z",
+ "note": "D6 retro-fit. 2 of 4 controls have observations ON DISK and are recorded here. PROSE_ONLY (stated in RESULT.md, absent from every artefact, NOT reconstructed): ['perfect_scaling_at_T2_T3', 'T4_collapse_reproduces']. No value was retyped from prose; see harness/retrofit_d6.py.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/N1_prefilter_cost",
+   "head": "57eac13f266137c95724ce83211f4d1dd06be0bb",
+   "clean": false,
+   "dirty_files": [
+    "ISSION_LOOP.md",
+    "spikes/G25_carrying_capacity/RESULT.md",
+    "spikes/G27_budget/RUN.txt",
+    "spikes/harness/provenance.py",
+    "spikes/B1_bundling_real/provenance.json",
+    "spikes/G27_budget/runs/nd_r30_o40.json",
+    "spikes/N1_prefilter_cost/provenance.json",
+    "spikes/Q1_quorum_sim/provenance.json",
+    "spikes/S72_c3_cpuset/provenance.json",
+    "spikes/W4_prefilter_readset/provenance.json",
+    "spikes/harness/retrofit_d6.json",
+    "spikes/harness/retrofit_d6.py"
+   ],
+   "diff_sha256": "fb3c22e8002c4d7700b5230b5860dce792cc059c3fc8b1fc92e7bcc206ffc7fe",
+   "diff_bytes": 16210
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/N1_prefilter_cost": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/N1_prefilter_cost/gate_pre.json",
+   "sha256": "88dfba2b3590abb0b6391997e96aedbd67d428e43e0e87508bffce1288b6a990",
+   "bytes": 154,
+   "mtime": 1786934598,
+   "compared_ts": 1786934671,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/N1_prefilter_cost/gate_post.json",
+   "sha256": "f5871d02acc86863d8338960e626b2789b1d600315933a5c30b896ebf0ac9935",
+   "bytes": 154,
+   "mtime": 1786934616,
+   "compared_ts": 1786934671,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/N1_prefilter_cost/conditions.json",
+   "sha256": "482187195b5ab810a11b14210d9086ec8b4e5ed07f06f2cd9caf3329f235b797",
+   "bytes": 367,
+   "mtime": 1786935094,
+   "compared_ts": 1786935094,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "clock_plausibility_gate",
+   "must_fire_because": "a clock outside 500-5000 MHz aborts; S53 folded 769,190,472 MHz",
+   "can_fail_because": "the recorded clock falls outside 500-5000 MHz",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "clock_mhz": 2729
+   }
+  },
+  {
+   "name": "gates_captured_pre_and_post",
+   "must_fire_because": "non-quiet either side invalidates the scaling curve",
+   "can_fail_because": "either gate records quiet=false",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "pre_quiet": true,
+    "post_quiet": true,
+    "pre_thermal_m": 34300,
+    "post_thermal_m": 38600
+   }
+  }
+ ],
+ "no_deps_reason": "",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/N1_prefilter_cost": {
+   "newest": 1786936187,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [
+  "STALE ARTIFACT gate_pre.json predates N1_prefilter_cost source by 0.4h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "STALE ARTIFACT gate_post.json predates N1_prefilter_cost source by 0.4h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
+  "STALE ARTIFACT conditions.json predates N1_prefilter_cost source by 0.3h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here."
+ ],
+ "ok": false,
+ "d6_retrofit": {
+  "status": "PARTIAL",
+  "controls_on_disk": 2,
+  "controls_stated": 4,
+  "prose_only": [
+   "perfect_scaling_at_T2_T3",
+   "T4_collapse_reproduces"
+  ],
+  "ok_covers_only_the_extractable_subset": true
+ }
+}

@@ -126,6 +126,33 @@ hoarding.
 Observations are persisted in `provenance.json` (`ok=true`), not just in this
 prose.
 
+## Changelog
+
+**2026-08-17, same day, after the run — the G-series AGENT-2 took the finding one
+level further and it dates this spike.** I found that `imp` was read by exactly
+one statement and concluded "this arm has no selection". The better decomposition
+is that there are **two** selections and only one was missing: **survival**
+selection (the death filter) and **reproductive** selection (which rules get to
+be parents). `rng.choice(pop)` was uniform, so reproductive selection never
+existed in *any* arm — including `full`. `evo.py` now has `pick_parent()`,
+weighting parent choice by accumulated importance with a 0.05 drift floor, and an
+arm list including `uniform_parents` and `no_death+uniform_parents`.
+
+Consequences for everything above, none of which changes a number:
+
+- **Every run here predates `pick_parent`.** In the new arm vocabulary this
+  spike's `full` is **`full+uniform_parents`**, and its `no_death` is
+  `no_death+uniform_parents`. The verdict is unchanged in substance — the
+  attribution of coverage to abduction and to `WAGE_POOL` does not depend on how
+  parents are chosen — but "selected" here means *survival-selected only*.
+- **`provenance.json` now pins an `evo.py` that no longer matches the code that
+  produced these runs.** That is A24 working, not a defect. Deliberately **not**
+  re-recorded: re-digesting the patched `evo.py` against the old runs would be
+  the actual violation. The digest plus this paragraph is the honest state.
+- The saturation ceiling at pop ~239 is a fact about the *uniform-parents*
+  selection regime. Weighted parents change the supply of adversary-beating
+  rules, so the ceiling has to be re-measured before it is cited again.
+
 ## What this does NOT show
 
 - **No matched-population comparison at 557.** Saturation blocked it. Selected-N

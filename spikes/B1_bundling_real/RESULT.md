@@ -213,3 +213,11 @@ and worth a line if S11's construction is ever revisited.
 ## What is unaffected
 The NPU descope. It never depended on this, and B=32 still closes the residency
 link with 2× headroom under the most pessimistic encoding.
+
+## Changelog
+- **2026-08-17, D6 retro-fit (AGENT-1).** This page cited "per D6" with no
+  provenance record. Now **COMPLIANT**: `provenance.json`, `ok: true`, **4 of 4**
+  stated controls extracted from `bundling.json` — B=1 store 34.83 MB, B=64
+  median fraction, the monotone `compression_vs_B1` series, and B=1 checking 0%.
+  Extracted, not retyped (`harness/retrofit_d6.py`). No number on this page
+  changed; nothing above this line was edited.
