@@ -63,3 +63,7 @@ spikes/G21_null_rust/nulls.txt
 # recipe are committed, the 50 KB binary is not (CLAUDE.md §2.2)
 spikes/W4_prefilter_readset/rk_inst
 spikes/W4_prefilter_readset/triples.bin
+
+# MCP config may carry API keys — never commit
+.mcp.json
+**/.mcp.json

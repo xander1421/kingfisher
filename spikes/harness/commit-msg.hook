@@ -1,0 +1,54 @@
+#!/bin/sh
+# GATE, not advice. MISSION_LOOP §13.1.
+#
+# THIS IS A commit-msg HOOK, NOT pre-commit. It was installed as pre-commit
+# first and could never have worked: `man githooks` says pre-commit "takes no
+# parameters, and is invoked before obtaining the proposed commit log message",
+# while commit-msg "takes a single parameter, the name of the file that holds
+# the proposed commit log message". So $1 was empty, `cat "$1"` failed, and the
+# hook refused EVERY commit.
+#
+# It failed CLOSED, which is the right direction and the only reason it was
+# caught in one try. Had it failed OPEN it would have passed every commit while
+# reading an empty message -- a gate that checks nothing while looking installed,
+# which is the empty-input floor moved into the enforcement layer.
+#
+# A check that REPORTS but does not GATE is prose with extra steps. Measured:
+# the Atom/Claude-Session/Reviewed-By rule shipped in a9fa546 and the next THREE
+# commits carried none of the three trailers, because githygiene.py had to be
+# run by hand and nobody ran it. That is the same failure that let every prose
+# rule in this repo regress on 2026-08-17.
+#
+# Checks trailers ONLY -- fast and predictable. Run
+# `python3 spikes/harness/githygiene.py` for the full audit.
+#
+# ESCAPE HATCH: `git commit --no-verify`. Deliberate, because a gate that cannot
+# be bypassed stops other lanes' in-flight work, and this hook is shared: every
+# lane in this working tree gets it at once.
+
+msg=$(cat "$1")
+missing=""
+for t in "Atom" "Claude-Session" "Reviewed-By"; do
+  echo "$msg" | grep -q "^$t:" || missing="$missing $t"
+done
+
+if [ -n "$missing" ]; then
+  echo "commit-msg REFUSED — missing trailer(s):$missing"
+  echo
+  echo "  Atom: <your callsign>            who made it (self-declared, A22)"
+  echo "  Claude-Session: <session url>    assigned, separates same-callsign lanes"
+  echo "  Reviewed-By: <atom|unreviewed>   who attacked it; 'unreviewed' is legal"
+  echo
+  echo "Bypass: git commit --no-verify"
+  exit 1
+fi
+
+atom=$(echo "$msg" | sed -n 's/^Atom:[[:space:]]*//p' | head -1)
+rev=$(echo "$msg" | sed -n 's/^Reviewed-By:[[:space:]]*//p' | head -1)
+if [ "$(echo "$atom" | tr 'A-Z' 'a-z')" = "$(echo "$rev" | tr 'A-Z' 'a-z')" ]; then
+  echo "commit-msg REFUSED — self-review: Atom '$atom' reviewed by '$rev'."
+  echo "A22: the reviewed party supplied the review. Use another atom, or"
+  echo "'Reviewed-By: unreviewed' which is legal and gets recorded as such."
+  exit 1
+fi
+exit 0

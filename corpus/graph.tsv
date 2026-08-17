@@ -1,0 +1,6 @@
+a9fa546f52ca	atom	the callsign (§14.1). SELF-DECLARED, so it carries CHANNEL's
+a9fa546f52ca	claude_session	assigned rather than typed, and distinct per session. This is
+a9fa546f52ca	reviewed_by	who attacked it. Must NOT equal Atom; the checker rejects
+a9fa546f52ca	atom	AGENT-2
+a9fa546f52ca	claude_session	https://claude.ai/code/session_0172F3nCcHb3rc9HaBm8hmCZ
+a9fa546f52ca	reviewed_by	unreviewed

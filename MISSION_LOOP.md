@@ -77,7 +77,9 @@ Lives in WORK_QUEUE.md. Rebuild from that file; it is authoritative.
 
 **Terminal signals are FILES, not prose.** A legal exit requires writing
 exactly one of `LOOP-DONE`, `LOOP-HALT`, `LOOP-IDLE` into
-`.loop_signal.$CALLSIGN` — or bare `.loop_signal`, still accepted. **Saying a
+`.loop_signal.$CALLSIGN`. **Bare `.loop_signal` is no longer accepted** — it let
+either lane consume the other's exit and die in its place, reproduced by a
+reviewer, and this paragraph was what pointed lanes into it (v5). **Saying a
 marker word in a message does nothing** — v1 grepped the transcript and would
 fire on a mere mention; v2 does not read the transcript at all.
 
@@ -87,9 +89,9 @@ reads `.loop_signal.last`. **Corrected 2026-08-17 per §12.4** — this paragrap
 said the hook "consumes it to `.loop_signal.last`", which no process read, and
 that dead end is exactly why the launcher fell back to grepping its own log for
 the marker words and killed lanes on the hook's own refusal text (§12.2).
-Enforced by `spikes/harness/test_loop_gate.sh`, 15 checks.
+Enforced by `spikes/harness/test_loop_gate.sh`, 27 checks.
 
-- **STOP file exists** → finish the current write, `echo LOOP-HALT > .loop_signal`.
+- **STOP file exists** → finish the current write, `echo LOOP-HALT > .loop_signal.$CALLSIGN`.
 - **LOOP-DONE** → M1-DEMO (§8) passes AND D1–D6 exist as written specs AND
   HUMAN_NEEDED.md holds a current digest. Write the signal, then a 15-line
   closing summary.
@@ -188,7 +190,11 @@ dated 2026-08-17; none is a precaution.
   project dir was `spikes/S51_multicore` — and re-entry silently depended on
   the agent remembering `ScheduleWakeup` every turn. One missed call ended a
   lane permanently with no log, no alarm, and no supervisor. `run_loop.sh`
-  existed the whole time and had never been run.*
+  existed the whole time and had never been run.* **CORRECTED 2026-08-17: the
+  reviewer who reported that withdrew it (`STOP:18`); `run_loop.sh` had run. The
+  claim survived here and in `prompts/ATTACKER-1.md` for hours after withdrawal,
+  which is LEDGER standing rule 12 — a retraction must reach every file carrying
+  the claim — and it is ATOM-3's own class 1 shipping in the mission contract.*
 - **12.9 · Ownership and propagation.** The architect lane owns class-H rows by
   default; either rower may fix one. Whoever fixes it **posts the defect class
   to `livechat.log`**, because 12.2 only works if the other lane knows what to
@@ -269,7 +275,64 @@ The obligations:
   existing blobs by hash. `git rm --cached` going forward is safe and
   reversible; `filter-repo` is a human decision.
 
-### 13.1 · Spike naming, because two agents collide
+### 13.1 · Every commit names its atom, its session, and its reviewer
+**Required trailers. `.git/hooks/pre-commit` REFUSES a commit without them.**
+
+```
+Atom: AGENT-2
+Claude-Session: https://claude.ai/code/session_xxxxxxxx
+Reviewed-By: ATOM-3          # or 'unreviewed', which is legal and recorded
+```
+
+Because **commit authorship cannot distinguish atoms at all** — every commit in
+this repo carries one human's git identity, and the `Co-Authored-By` trailer is
+byte-identical across every session. Two lanes independently mis-attributed the
+300-file sweep `e990f11` to the wrong atom from that evidence, and a third
+lane's uncommitted work was swept into it.
+
+- `Atom:` is **self-declared** and inherits CHANNEL's A22 weakness: it records
+  attribution, it does not verify it.
+- `Claude-Session:` is **assigned, not typed**, and is the only field that
+  separates two lanes signing the SAME callsign — which happened on 2026-08-17.
+- `Reviewed-By:` **must not equal `Atom`**; the hook refuses self-review. On
+  2026-08-17 not one atom's own suite caught its own defect — every finding came
+  from another lane. `Reviewed-By: unreviewed` is legal and explicit, so
+  `git log --grep='Reviewed-By: unreviewed'` enumerates what nobody checked.
+  Silence that reads as success is the failure that ran through that whole day.
+
+**A GATE, not a report.** This rule first shipped with `githygiene.py` reporting
+it and nothing enforcing it; the next **three** commits carried none of the three
+trailers. A check that reports but does not gate is prose with extra steps.
+Bypass is `git commit --no-verify`, deliberately, because the hook is shared by
+every lane in this working tree.
+
+### 13.2 · Citations: what authority says the old code was wrong
+A commit that fixes a defect carries `Cites:` lines, and
+`spikes/harness/cite.py` **verifies each one resolves**. An unverifiable
+citation is worse than none, because it looks like evidence.
+
+```
+Cites: man:git-diff "Deleted (D)"
+Cites: file:analysis/GUARDRAILS.md "A15"
+Cites: url:https://docs.python.org/... corpus/refs/python-default-args.txt
+```
+
+Most defects here were "I believed X about the tool": `--name-only` was assumed
+to omit deletions (`man git-diff` says otherwise), a monkeypatched global was
+assumed to reach a default argument (Python binds those at definition time), a
+Cargo feature was assumed not to change `fuel_used` (107 vs 580).
+
+Third-party documents are stored as **excerpts with provenance**, never
+wholesale — §7, the same reason `elders/` is gitignored. `corpus/CITATIONS.md`
+indexes them. **Prefer current docs over recollection**: the `context7` MCP
+server serves up-to-date library documentation, and training-data memory of an
+API is not a citation.
+
+`cite.py` also emits `corpus/graph.tsv` — atom, reviewer, citation and
+correction as triples — so the G-series miner can run on this repo's own history
+instead of only on a downloaded benchmark.
+
+### 13.3 · Spike naming, because two agents collide
 Claim a spike number in `CHANNEL.md` **before** creating the directory.
 2026-08-17 both agents independently created `G25_*`; resolved by renaming the
 later one to `G26_abstain`. A claim line is cheaper than a rename.

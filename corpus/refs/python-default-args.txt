@@ -1,0 +1,20 @@
+CITATION EXCERPT — not a copy of the source document.
+source:    https://docs.python.org/3/tutorial/controlflow.html  section 4.9.1
+retrieved: 2026-08-17
+licence:   Python docs are PSF-licensed. This is a two-sentence excerpt kept for
+           verification, not redistribution (mission §7). The full document is
+           NOT stored here; fetch the URL for it.
+why:       spikes/G24_population/evo.py declared `def score(..., cap=MAX_PAIRS)`.
+           A sweep harness monkeypatches `evo.MAX_PAIRS` and would silently have
+           NO effect on that default, so a MAX_PAIRS sweep would report "no
+           effect" while never applying the intervention — the empty-input floor.
+
+VERBATIM:
+"The default values are evaluated at the point of function definition in the
+defining scope"
+
+"Important warning: The default value is evaluated only once."
+
+MEASURED HERE, agreeing with the above:
+    evo.MAX_PAIRS = 999
+    inspect.signature(evo.score).parameters['cap'].default  ->  still 40000
