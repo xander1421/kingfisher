@@ -53,6 +53,41 @@ rules"** — it needs an ambiguous aliasing where the result depends on which
 variable represents the class. That is a characterisable class, which matters
 because it can be admitted or banned rather than only fixed.
 
+## The class, characterised — and it is statically bannable
+
+Twelve more programs, stock `3f76dc4`, 40 reps each, positive control live
+(`!(new-space)` 40/40 distinct):
+
+| group | program | shape | result |
+|---|---|---|---|
+| A1 | `(pair $z $z)` / `(pair $x $y)` | 2 pattern vars onto 1 | **DIVERGES** 2 |
+| A2 | `(tri $z $z $z)` / `(tri $x $y $w)` | 3 onto 1 | **DIVERGES 3** |
+| A3 | A1 projecting only `$x` | 2 onto 1 | **DIVERGES** 2 |
+| A4 | `(o (i $z $z))` nested | 2 onto 1, nested | **DIVERGES** 2 |
+| B1 | `(pair $z $w)` | distinct data vars | STABLE |
+| B2 | `(pair A A)` | ground, repeated symbol | STABLE |
+| B3 | `(pair $z $z)` / `(pair $x $x)` | repeat in the PATTERN | STABLE |
+| C1/C2 | `(= (f $x) (g $x $x))` | aliasing made by a RULE | STABLE |
+| D1 | `(pair $z A)` | one data variable | STABLE |
+| D2 | `(pair $z $w)` | two distinct data variables | STABLE |
+| D3 | `(tri $z $z A)` | **repeated** data variable | **DIVERGES** 2 |
+| D4 | `(one $z)` `(two $z)` | same name, different atoms | STABLE |
+
+**The number of distinct outcomes equals the number of aliased variables** —
+A2 gives exactly 3. Whichever variable's `id` lands first in the bucket becomes
+the representative.
+
+The D group separates two candidate ban rules that both fit A/B/C:
+
+- ~~"shard data must be ground"~~ — refuted by D1 and D2, which carry variables
+  and are stable.
+- **"no atom may contain the same variable more than once"** — fits every row.
+
+That is a **per-atom, purely syntactic** check on shard data. It needs no
+inter-atom analysis (D4), no knowledge of the query (B3 has the repeat in the
+pattern and is stable), and no rule analysis (C1/C2). Cheap enough to enforce at
+shard admission, and far weaker than requiring ground data.
+
 ## Consequence for M1.3 / WorkManager
 `PORT_PLAN` M1.3 requires a fresh process per job on two derivations. This
 measures the second one and it holds:
@@ -66,6 +101,16 @@ So `Worker` running in a reused app process is **not** equivalent to a forked
 job, and the difference is observable in output, not merely in timing. Options
 narrow to: run each job in a process that exits afterwards, ban the aliasing
 class at admission, or fix `NEXT_VARIABLE_ID` upstream.
+
+## Provenance
+`provenance.json`, written before the write-up by `spikes/harness/provenance.py`:
+`elders/hyperon-experimental` at `3f76dc4…ada83`, **tree verified clean** (our 3
+patches held in `stash@{0}` for the duration), `libhyperonc.so`
+`82d34485a478a344…`, 6,775,648 B, device `SM-S938B` / `BP4A.251205.006` /
+`arm64-v8a`, positive control declared in advance and observed to fire 40/40.
+
+The earlier M1.1 run had none of this and shipped a patched build under a stock
+commit hash. See A19.
 
 ## Limits
 - One device, 40 reps, five programs. Divergence was 2-valued here; nothing
