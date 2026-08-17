@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  net.kingfisher.fleet — bring the fleet up at login and keep it up.
+
+  WHY launchd AND NOT A WATCHDOG SCRIPT. macOS already ships the supervisor, so
+  writing one would be a second implementation of a solved problem. More to the
+  point: any watchdog this repo launched would itself be a child of whatever
+  launched it, which is the exact defect H6 records — three lanes dead with
+  .heartbeat.* 35 minutes stale because the supervisor inherited the lifetime of
+  the session that started it. launchd is the one process that does not.
+
+  WHY StartInterval AND NOT KeepAlive. bringup.sh EXITS once the fleet is up;
+  KeepAlive would treat that success as a crash and respawn it in a tight loop.
+  StartInterval re-runs it every 5 minutes instead, and because bringup.sh is
+  idempotent — it refuses to relaunch a callsign that is already held (H8) — a
+  re-run is a no-op when everything is healthy and a repair when a lane has died.
+  That is the H6 alarm and the H6 heal in one mechanism, with no new code.
+
+  WHAT IT DOES NOT DO. It does not decide whether the fleet SHOULD run. `touch
+  STOP` still outranks it: bringup.sh refuses to launch into a halted fleet and
+  exits 1, and launchd will keep politely re-checking and keep being refused. To
+  stop the fleet permanently, unload this agent — otherwise removing STOP is the
+  only thing standing between a reboot and four running lanes.
+
+  INSTALL — this is a human action, deliberately. §10 forbids writing outside the
+  workspace, and ~/Library/LaunchAgents is outside it, so this file is tracked here
+  and installed by you:
+
+    cp spikes/harness/net.kingfisher.fleet.plist ~/Library/LaunchAgents/
+    launchctl load  ~/Library/LaunchAgents/net.kingfisher.fleet.plist
+    launchctl start net.kingfisher.fleet          # or just wait 5 minutes
+
+  VERIFY:
+    launchctl list | grep kingfisher              # pid or last exit status
+    tail -20 /Users/victorianikolenko/kingfisher/bringup.launchd.log
+
+  UNINSTALL:
+    launchctl unload ~/Library/LaunchAgents/net.kingfisher.fleet.plist
+    rm ~/Library/LaunchAgents/net.kingfisher.fleet.plist
+
+  The absolute paths below are pinned on purpose. loop_gate.sh pins ROOT for the
+  same reason: CLAUDE_PROJECT_DIR was unset and a $(pwd) fallback resolved to the
+  wrong directory, leaving the hook inert for a whole session. launchd starts with
+  an even emptier environment than a hook does, so nothing here may be relative.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>net.kingfisher.fleet</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>/Users/victorianikolenko/kingfisher/spikes/harness/bringup.sh</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/victorianikolenko/kingfisher</string>
+
+  <!-- Run at login, then re-check every 5 minutes. Idempotent, so a healthy
+       fleet makes this a no-op and a dead lane makes it a repair. -->
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>300</integer>
+
+  <!-- Explicitly NOT KeepAlive: bringup.sh exiting 0 is success, not a crash. -->
+  <key>KeepAlive</key>
+  <false/>
+
+  <!-- claude is a Homebrew node binary; launchd's PATH does not include
+       /opt/homebrew/bin, and run_loop.sh exits 1 with "claude CLI not found"
+       without it. That failure is silent from the operator's side, which is why
+       the log below is not optional. -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/victorianikolenko/kingfisher/bringup.launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/victorianikolenko/kingfisher/bringup.launchd.log</string>
+
+  <!-- Nice: four lanes plus another project's containers already put this machine
+       at loadavg 18 against quiet.sh's limit of 3.5. Bring-up should never be the
+       thing that pushes a measurement out of validity. -->
+  <key>Nice</key>
+  <integer>5</integer>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>
