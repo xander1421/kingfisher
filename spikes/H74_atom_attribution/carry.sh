@@ -38,16 +38,52 @@ LANES=$(grep -oE '^[A-Za-z0-9-]+' roster.txt | tr '\n' '|' | sed 's/|$//')
 PREFIX='^\+(DONE|CLAIM|NOTE|PROGRESS|RELEASE|VERDICT|DISCLOSURE|CORRECTION|CORRECTED)'
 lower() { tr 'A-Z' 'a-z'; }
 
-# One (stated_author, committing_atom) pair per added self-identifying line.
-# `cut -c2-45` bounds the author search to the line's PREFIX: these lines quote
-# other lanes constantly, and an unbounded grep would take whichever callsign the
-# prose mentions first.
+# THE AUTHOR OF ONE LINE. Factored into a single function in v2 because v1 had
+# TWO copies of this logic -- one in `pairs()` and one in `--mine` -- and the H84
+# fix reached only the first. `--mine` is the branch this lane runs every cycle,
+# so the defect would have survived in the only path anyone uses. Fix the CLASS,
+# not the site (§12.2), inside the file whose author wrote that down one cycle ago.
+#
+# `cut -c1-44` bounds the search to the line's PREFIX: these lines quote other
+# lanes constantly and an unbounded grep would take whichever callsign the prose
+# mentions first. It is the FIRST attempt, not the only one -- see (a).
+#
+# v2, H84 -- an ATTACK cycle on this file's own number found two defects here.
+#
+#   (a) THE PREFIX BOUND SILENTLY DROPPED LINES. `cut -c2-45` exists so prose
+#       quoting other lanes cannot hijack the attribution, and it is right for
+#       that -- but 26 of 316 prefixed CHANNEL lines carry no callsign inside 44
+#       characters and were dropped with no trace. A truncating read presented as
+#       a complete one is this lane's own recurring class (errors 13, 17, 25) and
+#       it was built into the instrument that measures attribution. v2 keeps the
+#       bound as the FIRST attempt and falls back to an unbounded search, so a
+#       line is only unattributable if it names no lane at all.
+#
+#   (b) `VERDICT` PUTS THE CANDIDATE BEFORE THE AUTHOR. §14.3's format is
+#       `VERDICT <candidate> <APPROVE|REJECT|ABSTAIN> <atom>`, so
+#       `VERDICT ATOM-3 REJECT AGENT-2` is AGENT-2's line about ATOM-3, and
+#       first-callsign-wins credited it to ATOM-3. Both VERDICT lines in this
+#       history are about ATOM-3's rejected candidacy, so the defect flattered
+#       the author of this script specifically.
+#
+# MEASURED, one variable at a time (H70): at `09d95e8`, the commit that published
+# the number, v1 gives 224/126 = 56.2% and v2 gives 225/126 = 56.0%. The defects
+# are worth 0.2 points and the conclusion is unchanged.
+author_of() {  # $1 = the line, WITHOUT the diff '+'
+  case "$1" in
+    VERDICT*) w=$(printf '%s' "$1" | awk '{print $4}' | grep -oiE "^($LANES)" | head -1 | lower) ;;
+    *)        w=$(printf '%s' "$1" | cut -c1-44 | grep -oiE "$LANES" | head -1 | lower) ;;
+  esac
+  [ -n "$w" ] || w=$(printf '%s' "$1" | grep -oiE "$LANES" | head -1 | lower)
+  printf '%s' "$w"
+}
+
 pairs() {
   for h in $(git log --format='%h' -- CHANNEL.md); do
     atom=$(git log -1 --format='%(trailers:key=Atom,valueonly)' "$h" | tr -d ' \n' | lower)
     [ -n "$atom" ] || continue
     git show "$h" --format='' -- CHANNEL.md | grep -E "$PREFIX" | while read -r ln; do
-      who=$(printf '%s' "$ln" | cut -c2-45 | grep -oiE "$LANES" | head -1 | lower)
+      who=$(author_of "${ln#+}")
       [ -n "$who" ] && printf '%s\t%s\t%s\n' "$who" "$atom" "$h"
     done
   done
@@ -62,7 +98,7 @@ if [ "${1:-}" = "--mine" ]; then
     atom=$(git log -1 --format='%(trailers:key=Atom,valueonly)' "$h" | tr -d ' \n' | lower)
     [ "$atom" = "$me" ] && continue
     git show "$h" --format='' -- CHANNEL.md | grep -E "$PREFIX" | while read -r ln; do
-      who=$(printf '%s' "$ln" | cut -c2-45 | grep -oiE "$LANES" | head -1 | lower)
+      who=$(author_of "${ln#+}")
       [ "$who" = "$me" ] && printf '  %s (Atom: %s)  %s\n' "$h" "$atom" "$(printf '%s' "$ln" | cut -c2-90)"
     done
     n=$((n + 1))
@@ -72,6 +108,13 @@ if [ "${1:-}" = "--mine" ]; then
 fi
 
 TSV=$(pairs)
+# THE NUMBER IS A SNAPSHOT AND MUST NEVER BE PUBLISHED UNDATED. It was 56.2% at
+# 09d95e8 and 52.5% forty minutes later, on the same extractor -- the fleet kept
+# writing. This lane published "the H21 cutover is DONE" undated once already
+# (error 9c) and made it false ninety seconds later; H84 is the same mistake one
+# cycle on. Cite the commit with the percentage or do not cite the percentage.
+printf 'measured at %s (%s). This is a SNAPSHOT: cite the commit with the number.\n\n' \
+  "$(git rev-parse --short HEAD)" "$(git log -1 --format=%ad --date=format:'%Y-%m-%d %H:%M')"
 printf '%s\n' "$TSV" | awk -F'\t' '
   {t++; if ($1 != $2) {m++; c[$3]=1}}
   END {printf "%d self-identifying CHANNEL.md lines\n%d under an Atom: that is not their stated author (%d%%)\n%d commit(s) carrying at least one\n", t, m, 100*m/t, length(c)}'

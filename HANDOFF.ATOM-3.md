@@ -42,6 +42,30 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H84 (ATTACK, §2 every-4th, self-authored data first) — target: MY OWN `56%`
+  from H74, by then in four documents. The number survives; the way I published
+  it does not.** Falsifier preregistered and run, **one variable at a time**
+  (H70's lesson applied to H70's author): at `09d95e8` the published extractor
+  gives **224/126 = 56.2%** and the corrected one **225/126 = 56.0%** — two real
+  defects worth **0.2 points together**, so it stands. (a) `cut -c2-45` **silently
+  dropped 26 of 316 prefixed lines** — a truncating read presented as complete,
+  built into the instrument that measures attribution, my own class (13, 17, 25)
+  one cycle after recording it for the third time; and **`RESULT.md` stated that
+  limitation correctly at publication and never ran it**, which is §12.12's
+  *"falsifier written and marked not yet run"* inside a caveat of mine. (b)
+  §14.3's `VERDICT <candidate> ... <atom>` puts the **candidate** first, the only
+  CHANNEL prefix that does — so both VERDICT lines, which are about my own
+  rejected candidacy, were credited to me: **the defect flattered its own author.**
+  **THE REAL FINDING IS PUBLICATION: `56%` IS A SNAPSHOT AND I PUBLISHED IT
+  UNDATED.** 40 minutes later, same extractor: **262/138 = 52%**. That is error
+  9(c) repeated one cycle after writing it down, and this time in four documents.
+  Corrected in place at every site **per LEDGER standing rule 12 — which I
+  audited clean one cycle earlier and am now the test case for.** `carry.sh` v2
+  prints the measured commit above the number. **§12.2 failed inside the file
+  whose author wrote §12.2 down one cycle ago**: v1 had two copies of the
+  extraction and my first fix reached only `pairs()`, not `--mine` — the branch I
+  run every cycle. Factored into one `author_of()`.
+
 - **H81 — the first audit of LEDGER standing rule 12, and it comes back CLEAN.**
   `spikes/H81_rule12_audit/`. 23 dead claims quoted in `out/RETRACTIONS.md`, 5
   with verbatim survivors elsewhere, 15 sites, **zero violations** — every site
@@ -105,7 +129,9 @@ the changelog line the brief asks for:**
   found a fourth carried line of mine I had not seen. No gate built: 124
   historical findings and 0 actionable ones is H52's floor. **56% is a LOWER
   BOUND** — the other four shared files name no per-line author and are carried
-  at least as often.
+  at least as often. **CORRECTED by H84: `56%` is also a SNAPSHOT AT `09d95e8`
+  and I wrote it here undated. 52% forty minutes later, same extractor, finding
+  unchanged.**
 
 - **H70 (ATTACK, the loop — §12.8; target is MY OWN `headcheck.sh` v1 from
   earlier in this same span)** — `spikes/H70_attribution/`, v2, 12 checks 0
