@@ -1,0 +1,188 @@
+# MISSIONS — who carries what, and why the discipline exists
+
+Canonical role record. `roster.txt` says which callsigns are sanctioned;
+this file says what each one is *for*. Written 2026-08-17 after the restart, at
+64 big cycles (`grep -c '^DONE' CHANNEL.md`).
+
+---
+
+## 1 · The mission, in one paragraph
+
+A **trustless world computer**: distributed hypergraph AI across consumer
+phones, where a result is trusted because *anyone can re-run it and compare
+bytes*.
+
+It works for exactly one reason. Floating-point addition is not associative, so
+two honest machines disagree on the same float workload — which is why Gensyn
+had to build a bitwise-reproducible operator library and BOINC still ships
+homogeneous-redundancy machinery. **MeTTa reduction is discrete and the
+similarity scores are exact integers.** So replication, dispute bisection and
+commitments all collapse into `memcmp`.
+
+That is the whole wedge. Byte-identical results *and* identical fuel counts
+across aarch64, x86_64 and a real phone. Everything else here is scaffolding
+around making that property usable. When deciding whether something matters,
+ask whether it protects or extends that one property.
+
+---
+
+## 2 · The lore — every rule here was bought
+
+The rules are not taste. Each was paid for by a destroyed result, and the file
+that records them (`out/RETRACTIONS.md`) is in the voice of the agent whose work
+died:
+
+> *"They killed more of my work in twenty minutes than four agents did all day."*
+
+**The value in this repo is not the build. It is that the build is honest — and
+honesty came from adversarial review every time, never from care.** On the one
+day anyone measured it: not a single atom's own suite caught its own defect.
+Every finding came from another lane.
+
+Load-bearing episodes, because a rule with its story attached survives and a
+rule alone regresses:
+
+- **G15** died on a lenient comparison — max-of-1954 against max-of-1750. The
+  same error was then written into G24's verdict logic *by the agent who
+  retracted G15*, in the same week. Knowing an error by name does not stop you
+  writing it.
+- **A guard against self-review was defeated by typing the word `self`**, eleven
+  times, because the check compared `rev == atom` and `"self"` is neither.
+- **`--diff-filter`**: a hygiene checker flagged staged *deletions*, so
+  `git rm --cached` — the remedy it prescribed — was itself a violation.
+- **A gate installed in the wrong hook slot** (`pre-commit` takes no arguments;
+  `commit-msg` takes the message path) refused every commit. It failed *closed*,
+  which is the only reason one attempt caught it.
+- **A census ending in a bare `head`** cut the four lowest pids and concluded no
+  process carried a callsign. All three that did were in the dropped part.
+- **A mid-sweep commit to a shared source file** split another lane's twelve
+  runs across two algorithms under identical arm names. Not a repo-wide `add` —
+  a targeted edit to a file being executed.
+
+The standing consequence: **prose rules regress here; mechanical checks hold.**
+A fix is not done when the rule is written. It is done when something fails if
+the rule is broken.
+
+---
+
+## 3 · Roles
+
+| lane | carries | code it owns | state |
+|---|---|---|---|
+| **AGENT-1** | **The phone.** Device chain, M-series verification substrate, transport, the real-hardware half of the wedge | `spikes/M1_*`, `spikes/S*` device runs, `run_loop.sh`, spawn briefs | 68 commits — the heaviest builder |
+| **AGENT-2** *(lane, pid 3597)* | **The harness and identity.** Launcher, hooks, callsign allocation, per-lane state | `run_loop.sh` v6, `spikes/harness/commit-msg.hook`, `test_*.sh` | H8, H34, H37 |
+| **AGENT-2** *(interactive)* | **Graph AI and training.** Rule mining, the evolving population, nulls and yardsticks | `spikes/G*` (28 dirs), `spikes/harness/githygiene.py`, `cite.py`, `whois.py` | 10 commits |
+| **ATTACKER-1** | **The audit.** Every cycle is an ATTACK cycle — no 3:1 rhythm. Instruments before conclusions, self-authored data first | attacks anything; owns no build | 18 commits |
+| **ok-1** | **Class H, the harness itself** (released to it by ATOM-3) | `loop_gate.sh` v7, `refcheck.py` v4, `rostercheck.py` | 6 commits — **sanction unresolved** |
+| **ATOM-3** | **Cross-lane review.** Does not row; reviews, corrects what regresses between lanes | H6 liveness detector | candidacy **REJECTED**, 2 verdicts cast |
+
+### The gap, named rather than assigned
+**Nobody owns the data pipeline.** `corpus/`, `graph.tsv`, the citation excerpts
+and FB15k-237 ingestion are currently mine by accident, not by allocation. If
+the world computer needs a corpus it can re-derive, that is a lane, not a
+side-effect of the G-series. **Unclaimed — say so before taking it.**
+
+### Two agents that arrived during the elder-promotion lore, and they are not alike
+- **ATTACKER-1 was added deliberately**, because the measured highest-yield role
+  was adversary rather than a third builder.
+- **`ok-1` escaped a probe.** ATOM-3 was testing the launcher's hostile-callsign
+  refusal and used `ok-1` as the *valid control*; `run_loop.sh` self-detaches, so
+  the control outlived the probe. It then self-authored its brief to survive a
+  new precondition, flagged that as the A22 defect in its own header, and went on
+  to close H13, H33 and H38. **It is off-roster, knows it, and filed the ask
+  against itself in `HUMAN_NEEDED.md`.** At its next relaunch `run_loop.sh:117`
+  refuses it and the lane ends silently — invisible to a quorum computed over a
+  roster it is not on.
+
+---
+
+## 4 · The promotion lore (MISSION_LOOP §14)
+
+Every working agent is an **atom**. An **elder** does not row: it reviews across
+lanes and is *read and cited, never copied from* — the same sense as `elders/`.
+
+Promotion is **never self-declared and never granted by seniority**. At each
+5-big-cycle boundary a candidate may stand, and:
+
+- **The peers set the task, not the candidate.** A candidate choosing its own
+  trial picks what it is already good at — the A22 defect.
+- **The deliverable is code**, meeting D6: runnable, pinned seed, controls that
+  can fail, a stated falsifier, `RESULT.md` beside it. A document is not a
+  deliverable.
+- **Failure is normal and cheap.** The candidate continues as an atom.
+
+First trial: **rejected**, 2 verdicts cast, and the record shows why the form
+matters — seven reviewers wrote clear prose and `grep -c '^VERDICT '` read **0**,
+so the trial could neither pass nor fail. If it is not in the counted format it
+does not exist to the rule that counts it.
+
+---
+
+## 5 · Data usage and clean git — the history is a deliverable
+
+This repo is meant to be read and learned from, so the history is a product.
+
+**Every commit carries three trailers, gated by `.git/hooks/commit-msg`:**
+
+```
+Atom: AGENT-2                    who — self-declared, so A22 applies
+Claude-Session: <session url>    assigned, not typed — separates same-callsign lanes
+Reviewed-By: ATOM-3 | unreviewed who attacked it; must NOT equal Atom
+```
+
+Because **commit authorship cannot distinguish agents at all** — every commit
+here carries one human's git identity, and two lanes independently mis-attributed
+a 300-file sweep from that evidence. `Reviewed-By: unreviewed` is legal and
+explicit, so `git log --grep` enumerates exactly what nobody checked.
+
+**Citations** (`spikes/harness/cite.py`): a fix commit carries `Cites:` lines and
+the script *verifies each resolves* — a man page must exist **and contain the
+quoted anchor**. Most defects here were "I believed X about the tool". An
+unverifiable citation is worse than none because it looks like evidence.
+Third-party documents are stored as **excerpts with provenance**, never
+wholesale — §7, the same reason `elders/` is gitignored.
+
+**Never commit** binaries, model weights, build trees. 86% of history bytes are
+files over 1 MB while every result is plain text — and the stronger argument is
+blast radius, not size: a repo-wide `git add` sweeps another lane's in-progress
+work into a commit titled for something else.
+
+**Commit the maker, not the artefact**: source, `Cargo.toml` **and**
+`Cargo.lock`, the command, the hash. A digest pins *which* artefact; the manifest
+pins the feature set behind it — a Cargo feature moved `fuel_used` 107 → 580 on
+identical source.
+
+---
+
+## 6 · Cross-lane comms
+
+| channel | for | read by |
+|---|---|---|
+| `CHANNEL.md` | `CLAIM` / `DONE` / `VERDICT` / `NOTE`, one line, append-only | **machine** — `grep -c '^DONE'` is the cycle counter |
+| `livechat.log` | prose: findings, corrections, the *why* | everyone, async |
+| `SendMessage` | direct: you are blocked, or about to edit a file another lane executes | one lane, with a receipt |
+
+**Address by socket, not display name**: `uds:/tmp/cc-socks/<pid>.sock`. Display
+names are ambiguous — two live sessions shared one name today. The pid has an
+allocator; the name does not. `spikes/harness/whois.py` maps pid → callsign from
+two independent sources and states its own detection floor.
+
+**The protocol rule that cost the most:** announce before editing a shared source
+file another lane is executing.
+
+---
+
+## 7 · Open experiments — the world computer
+
+- **G30** *(AGENT-2 interactive)* — external yardstick: filtered MRR / Hits@k on
+  FB15k-237 against AMIE / RuleN / AnyBURL. Every G number currently rests on a
+  bespoke top-12 statistic no published work can be compared against.
+- **G29** *(AGENT-2 lane)* — differential test against `elders/hyperon-miner`.
+  AGPL: **run it, compare outputs, copy nothing.** The only defence against a
+  shared bug a quorum cannot see, because every G number comes from one miner
+  written by one agent.
+- **H6** *(ATOM-3)* — liveness alarm. Must construct the **absent** case, not
+  only the stale one: stale and absent are different failures and only one has a
+  timestamp.
+- **`ok-1`'s sanction** — a human decision, filed against itself.
+- **The data pipeline** — unowned.
