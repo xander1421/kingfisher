@@ -151,7 +151,11 @@ def main():
     # population simply cannot be grown to no_death's size, and that is an
     # answer rather than a failed run: the ceiling is the supply of rules that
     # beat the adversary, not the size of the wage pool.
-    wr = sorted((r for n, r in rows.items() if r["arm"] == "full"),
+    # "full" and "uniform_parents" are the same algorithm here: the arms were
+    # renamed when evo.py gained pick_parent, so the dial must match both or the
+    # whole section silently empties.
+    wr = sorted((r for n, r in rows.items()
+                 if r["arm"] in ("full", "uniform_parents")),
                 key=lambda r: r["wage"])
     print("\nCAPACITY DIAL (WAGE_POOL -> population)")
     for i, r in enumerate(wr):
@@ -340,18 +344,59 @@ def main():
                    "g24_no_abduct_with_death": [134, 40414, 1359]},
                   "volume hypothesis REFUTED: 1514 vs 6361 at matched pop")
         ctl.append(c)
-    ok, _ = P.record(HERE, artifacts=[os.path.join(HERE, "sweep.json"),
+    # DEPS DECLARED. The previous record passed `no_deps_reason` claiming that
+    # evo.py's digest under `artifacts` pinned the code state -- AGENT-2's review
+    # showed that is false: artifacts are HASHED, deps are staleness-CHECKED, and
+    # with deps=() the A24 comparison never ran. It reported ok=true over 10 run
+    # files that predated the sweep.py recorded as having produced them, and the
+    # mtimes sat in the file unexamined. A false ok=true is worse than a true
+    # ok=false. This is agent-1's own E7 defect, third instance, in the spike
+    # backing the correction to G24.
+    # C7 REGENERATION. runs_mixed_state/ holds the original run set, which was
+    # produced across TWO versions of sweep.py (10 of 16 files have no run_seed
+    # key) and against evo.py BEFORE pick_parent existed. runs/ is regenerated in
+    # one code state, with the arms renamed to the explicit `uniform_parents`
+    # token so the current evo.py runs the algorithm the old numbers measured.
+    # Identical numbers prove both edits were behaviour-neutral. This is a
+    # control, not a cleanup: it fails on any config that moved.
+    mixed_dir = os.path.join(HERE, "runs_mixed_state")
+    if os.path.isdir(mixed_dir):
+        old_runs, moved = load(mixed_dir), []
+        for n, oldrec in old_runs.items():
+            if n not in runs:
+                continue
+            a, b = row(oldrec), row(runs[n])
+            if (a["pop"], a["preds"], a["correct"]) != \
+               (b["pop"], b["preds"], b["correct"]):
+                moved.append({"config": n,
+                              "mixed": [a["pop"], a["preds"], a["correct"]],
+                              "regen": [b["pop"], b["preds"], b["correct"]]})
+        c = P.Control("C7_regeneration_equivalence",
+                      "the original runs came from two sweep.py versions and a "
+                      "pre-pick_parent evo.py; if the regenerated set differs, "
+                      "every number in RESULT.md is attributed to code that did "
+                      "not produce it",
+                      null_must_contain="any config whose (pop, preds, correct) "
+                      "moved between the mixed-state set and the regenerated set",
+                      can_fail_because="pick_parent changed parent selection and "
+                      "the arms were renamed to uniform_parents to compensate; if "
+                      "that mapping is wrong the numbers move")
+        c.observe(not moved, {"compared": len(old_runs), "moved": moved})
+        ctl.append(c)
+        print(f"  C7 REGEN   {'PASS' if not moved else 'FAIL'} — "
+              f"{len(old_runs)} mixed-state runs compared, {len(moved)} moved"
+              + ("" if not moved else f": {moved}"))
+
+    ok, _ = P.record(HERE, deps=[os.path.join(HERE, "..", "G24_population"),
+                                 os.path.join(HERE, "..", "G17_composition_redo"),
+                                 HERE],
+                     artifacts=[os.path.join(HERE, "sweep.json"),
                                       os.path.join(HERE, "sweep.py"),
                                       os.path.join(HERE, "analyse.py"),
                                       os.path.join(HERE, "..", "G24_population",
                                                    "evo.py")]
                      + [os.path.join(RUNS, f) for f in sorted(os.listdir(RUNS))],
                      controls=ctl, allow_dirty=True,
-                     no_deps_reason="pure Python inside the workspace: no "
-                     "external repo, no built binary, no device. The only "
-                     "dependency is G24's evo.py, whose digest is recorded "
-                     "under artifacts so A24 pins the code state that produced "
-                     "these runs.",
                      note="G25: is no_death's +5059 a tradeoff or a rent "
                           "calibration artefact")
     print(f"provenance.json ok={ok}")
