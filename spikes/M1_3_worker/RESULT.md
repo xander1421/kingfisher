@@ -36,10 +36,12 @@ open+read+close on `/sys/class/thermal/thermal_zone0/temp`):
 |---|---|---|
 | adb + dumpsys (measured) | **35,100 µs** | 0.51x |
 | native sysfs read (measured) | **8.4 µs** | 0.0001x |
-| `getCurrentThermalStatus()` binder | **unmeasured** | between the two, far nearer the floor |
+| **`getCurrentThermalStatus()` + battery + StatFs — MEASURED in M1.1** | **98.5 µs** | **0.0014x** |
 
-**4,180x apart.** Even if the binder call costs 100x a sysfs read, per-job
-preflight is ~0.01x a job.
+**Settled by M1.1**: the real spec path is **98.47 µs**, 356x cheaper than the
+published 35.1 ms and **0.14% of a job**. Per-job preflight is trivially viable.
+Following SCHEDULER_SPEC:19 literally (sticky `ACTION_BATTERY_CHANGED` rather
+than `getIntProperty`) gives ~38.9 µs, another 2.5x better.
 
 ### What this changes
 - **Per-job preflight IS viable, and S6 requires it.** Rows 2 and 3 of the
@@ -61,7 +63,8 @@ preflight is ~0.01x a job.
   a binder round trip, not a file read.
 - **Battery sysfs could not be measured at all**: `/sys/class/power_supply/
   battery/{capacity,status}` is permission-denied to the shell user.
-- The honest number needs a JNI or Kotlin harness on-device, which is M1.1.
+- ~~The honest number needs a JNI or Kotlin harness on-device, which is M1.1.~~
+  **Done — see `spikes/M1_1_android/RESULT.md`.**
 
 ## Runs — 67 programs, 3 workers, warm cache
 

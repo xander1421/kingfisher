@@ -19,3 +19,5 @@ spikes/S14_mork_server/mork-server/
 
 # cross-arch space dumps (48 MB+) — regenerate with crossrun.py
 spikes/S16_mork_android/crossrun/
+spikes/M1_1_android/app/build/
+spikes/M1_1_android/.gradle/

@@ -1,0 +1,63 @@
+{
+ "queries": {
+  "q_red": "(, (cites $x $y) (verdict $y RED))",
+  "q_invalid": "(, (cites $x $y) (verdict $y INVALID))",
+  "q_green": "(, (cites $x $y) (verdict $y GREEN))",
+  "q_amber": "(, (cites $x $y) (verdict $y AMBER))",
+  "q_2hop_red": "(, (cites $x $z) (cites $z $y) (verdict $y RED))",
+  "q_yellow": "(, (cites $x $y) (verdict $y YELLOW))"
+ },
+ "clusters": [
+  [
+   "q_2hop_red",
+   "q_green",
+   "q_red"
+  ],
+  [
+   "q_invalid"
+  ],
+  [
+   "q_yellow"
+  ]
+ ],
+ "results": {
+  "global_1": {
+   "contexts": 1,
+   "mean_preserved": 0.47953523015782673,
+   "status": "OK"
+  },
+  "declared_N": {
+   "contexts": 5,
+   "mean_preserved": 0.8550292739177558,
+   "status": "OK"
+  },
+  "discovered_k": {
+   "contexts": 3,
+   "mean_preserved": 0.7888375557392221,
+   "status": "OK"
+  },
+  "random_k": {
+   "contexts": 3,
+   "mean_preserved": 0.7680331127685092,
+   "status": "OK"
+  }
+ },
+ "jaccard_min": 0.55,
+ "verdict": "DISCOVERY WORKS \u2014 3 discovered contexts beat 3 arbitrary (79% vs 77%) and 1 global (48%)",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "scheme": [
+    "global_1",
+    "declared_N",
+    "discovered_k",
+    "random_k"
+   ]
+  }
+ },
+ "cites": [
+  "G7_query_attention",
+  "G8_per_context"
+ ]
+}
