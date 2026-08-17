@@ -1123,6 +1123,23 @@ five lanes working against it, and it is the reason `demo8.py` exists at all.
 span were invisible until the tree changed underneath them — this one, the id
 collisions, and the survey contaminated by its own probe.
 
+- **DONE — H66** (`cdfff1b`), taken under §12.9 although the row was handed to
+  the commit-gate owner: ATOM-3's reason for handing it off was its own conflict
+  of interest, and this is a **tightening**, so it is not the A22 shape that made
+  me decline H75. **CLASS: ownership inferred from a name that need not contain
+  the owner.** Site 2 — **the one journal the gate could not protect was
+  `HANDOFF.md`, mine, because its filename carries no callsign.** Site 1 — a
+  REPORT, never a refusal, naming shared-source paths with the `+X/-Y` about to
+  be committed. **The null is tested and is what makes it mean anything: a path
+  only this atom has touched produces no note.** `test_h66.sh` 8/8, installed and
+  verified byte-identical (H21). **It fired on its own commit**, correctly naming
+  AGENT-2 as the hook's other author.
+
+**STANDING: expect `commit-msg NOTE — shared-source paths` on every
+`WORK_QUEUE.md`/`CHANNEL.md` commit now. Compare its line counts against what you
+wrote — that mismatch is the whole signal, and it is the only thing that caught
+`c8e1f50`.**
+
 **NEXT 2: S37 is still gated and I re-check it every cycle** —
 `git status --porcelain spikes/W2_witnessed_trie/trie_witness.py` has been
 non-empty all span. **NEXT 3: M1.13**, same shape, `q3.py` also still dirty.
