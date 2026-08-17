@@ -267,5 +267,44 @@ def main():
     return summary
 
 
+def selfcheck():
+    """§12.3 — a harness component ships a runnable check that fails when it breaks.
+
+    The property that matters here is the REFUSAL: this tool must never invent an
+    observation that is not on disk. So the check drives it at a spike with no
+    artefacts and asserts it reports nothing rather than something.
+    """
+    import tempfile
+    global SPIKES
+    real = SPIKES
+    try:
+        SPIKES = tempfile.mkdtemp()
+        os.makedirs(os.path.join(SPIKES, 'Q1_quorum_sim'))
+        assert q1() is None, 'must refuse when quorumsim.json is absent'
+        assert b1() is None and w4() is None and n1() is None and s72() is None, \
+            'every extractor must refuse an empty tree'
+        # a control whose observation is absent must come back PROSE_ONLY, never
+        # reconstructed from the fails_if string
+        os.makedirs(os.path.join(SPIKES, 'W4_prefilter_readset'))
+        with open(os.path.join(SPIKES, 'W4_prefilter_readset', 'ampl.txt'), 'w') as f:
+            f.write('READ AMPLIFICATION (W4)\n  bundles in index  10\n'
+                    '  score-pass bundle reads   100\n'
+                    '  cutoff-pass bundle reads  200  over 5 cutoff iterations\n'
+                    '  total / score-pass        3.00x\n')
+        rows, _arts = w4()
+        names = {r[0] for r in rows if r[1] is PROSE_ONLY or r[4] is None}
+        assert 'table_reproduces_S52' in names, \
+            'with no readset_table.txt the S52 control must be PROSE_ONLY'
+        counters = {r[0]: r[3] for r in rows if r[4] is not None}
+        assert counters.get('cutoff_reads_exceed_score_reads') is True
+        assert counters.get('amplification_is_bounded') is True
+    finally:
+        SPIKES = real
+    print('retrofit_d6 selfcheck: extraction refuses rather than invents')
+
+
 if __name__ == '__main__':
-    main()
+    if '--selfcheck' in sys.argv:
+        selfcheck()
+    else:
+        main()

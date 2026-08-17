@@ -1,30 +1,27 @@
 {
  "spike": "W4_prefilter_readset",
- "recorded_utc": "2026-08-17T10:08:47Z",
+ "recorded_utc": "2026-08-17T10:11:19Z",
  "note": "D6 retro-fit. 4 of 4 controls have observations ON DISK and are recorded here. No value was retyped from prose; see harness/retrofit_d6.py.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset",
-   "head": "a166c5538d39556e94bcdfbe876ee26be8e64e63",
+   "head": "89c23015db59b915717d0d6a5b04d95a2caf7c77",
    "clean": false,
    "dirty_files": [
     "ISSION_LOOP.md",
+    "livechat.log",
     "out/LEDGER.md",
     "spikes/B1_bundling_real/provenance.json",
     "spikes/G27_budget/RUN.txt",
     "spikes/G27_budget/analyse.py",
-    "spikes/N1_prefilter_cost/provenance.json",
     "spikes/Q1_quorum_sim/provenance.json",
-    "spikes/S72_c3_cpuset/provenance.json",
-    "spikes/W4_prefilter_readset/provenance.json",
     "spikes/harness/provenance.py",
-    "spikes/harness/retrofit_d6.json",
-    "spikes/harness/retrofit_d6.py",
-    "spikes/G27_budget/runs/sel_r15_o160_s777.json",
-    "spikes/W4_prefilter_readset/readset_table.txt"
+    "spikes/G27_budget/runs/nd_r15_o40_s777.json",
+    "spikes/G27_budget/runs/sel_r15_o160_s31337.json",
+    "spikes/G27_budget/runs/sel_r15_o160_s777.json"
    ],
-   "diff_sha256": "9ade3a3f1c18991417184b393de4fffc75f57f7218f2368e01be0268c7bda794",
-   "diff_bytes": 42910
+   "diff_sha256": "5159432458bd6c598237b8d546cd4407b458566c00dd3e6ea1c66003524c3c3e",
+   "diff_bytes": 35899
   }
  ],
  "manifests": {
@@ -56,8 +53,8 @@
    "sha256": "d681365e349e7f0f61c662e33c342af0718dc4568b45b36d0667645ce294e692",
    "bytes": 1964,
    "mtime": 1786961285,
-   "compared_ts": 1786961285,
-   "compared_clock": "mtime"
+   "compared_ts": 1786961394,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -152,5 +149,8 @@
   "controls_stated": 4,
   "prose_only": [],
   "ok_covers_only_the_extractable_subset": true
- }
+ },
+ "carried_from_previous_record": [
+  "d6_retrofit"
+ ]
 }

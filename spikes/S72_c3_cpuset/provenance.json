@@ -1,30 +1,29 @@
 {
  "spike": "S72_c3_cpuset",
- "recorded_utc": "2026-08-17T10:08:48Z",
+ "recorded_utc": "2026-08-17T10:11:20Z",
  "note": "D6 retro-fit. 1 of 5 controls have observations ON DISK and are recorded here. PROSE_ONLY (stated in RESULT.md, absent from every artefact, NOT reconstructed): ['gate_green_before_and_after', 'per_instance_GOPs_from_binary', 'exactness_digest_unchanged', 'monotone_aggregate']. No value was retyped from prose; see harness/retrofit_d6.py.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S72_c3_cpuset",
-   "head": "a166c5538d39556e94bcdfbe876ee26be8e64e63",
+   "head": "89c23015db59b915717d0d6a5b04d95a2caf7c77",
    "clean": false,
    "dirty_files": [
     "ISSION_LOOP.md",
+    "livechat.log",
     "out/LEDGER.md",
     "spikes/B1_bundling_real/provenance.json",
     "spikes/G27_budget/RUN.txt",
     "spikes/G27_budget/analyse.py",
     "spikes/N1_prefilter_cost/provenance.json",
     "spikes/Q1_quorum_sim/provenance.json",
-    "spikes/S72_c3_cpuset/provenance.json",
     "spikes/W4_prefilter_readset/provenance.json",
     "spikes/harness/provenance.py",
-    "spikes/harness/retrofit_d6.json",
-    "spikes/harness/retrofit_d6.py",
-    "spikes/G27_budget/runs/sel_r15_o160_s777.json",
-    "spikes/W4_prefilter_readset/readset_table.txt"
+    "spikes/G27_budget/runs/nd_r15_o40_s777.json",
+    "spikes/G27_budget/runs/sel_r15_o160_s31337.json",
+    "spikes/G27_budget/runs/sel_r15_o160_s777.json"
    ],
-   "diff_sha256": "b2953966cdd84a8ffaed16813a42c12c52d4af7c0a02b0cf32319973c6de1634",
-   "diff_bytes": 41169
+   "diff_sha256": "7d2fb30b533179c0d449ab43fcf93f852dc7c752c150d8cb459e8e210535cf6a",
+   "diff_bytes": 40322
   }
  ],
  "manifests": {
@@ -104,5 +103,8 @@
    "monotone_aggregate"
   ],
   "ok_covers_only_the_extractable_subset": true
- }
+ },
+ "carried_from_previous_record": [
+  "d6_retrofit"
+ ]
 }

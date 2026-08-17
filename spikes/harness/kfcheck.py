@@ -24,6 +24,7 @@ from provenance import record, Control          # noqa: F401  (re-exported)
 
 def certify(spike_dir, deps=(), artifacts=(), controls=(),
             measurements=(), captures=(), instrument_texts=(),
+            counters=None, expect_nonzero=(),
             falsifier=None, allow_dirty=False, no_deps_reason=None, note=''):
     """(ok, problems). Refuses rather than warns.
 
@@ -63,6 +64,18 @@ def certify(spike_dir, deps=(), artifacts=(), controls=(),
                 m['intercept'], m.get('components', {}))
             if not good:
                 problems.append(f'INTERCEPT {nm}: {why}')
+
+    # A refusal counter that nothing asserts on is not a control. The
+    # coordinator counted **12,855** unauthorised requests over one 300 s run
+    # while the driver reported "0/3 envelopes" -- the number naming the cause
+    # was printed and nobody read it. Any counter whose non-zero value means
+    # something went wrong must be declared expected or it is a failure.
+    for name, val in (counters or {}).items():
+        if val and name not in expect_nonzero:
+            problems.append(
+                f'COUNTER {name}={val} is non-zero and was not declared '
+                f'expected. A refusal counter nothing asserts on is not a '
+                f'control -- pass it in `expect_nonzero` if the run intends it.')
 
     if not falsifier:
         problems.append(
@@ -114,10 +127,19 @@ def demo():
          'components': {'guess': 5.0}}])
     assert not ok and any('unexplained' in p for p in probs), probs
 
+    # a non-zero refusal counter is a failure unless declared
+    ok, probs = certify(**base, counters={'unauthorised': 12855})
+    assert not ok and any('COUNTER unauthorised' in p for p in probs), probs
+    ok, probs = certify(**base, counters={'unauthorised': 1},
+                        expect_nonzero=('unauthorised',))
+    assert ok, probs
+    ok, probs = certify(**base, counters={'unauthorised': 0})
+    assert ok, probs
+
     # no falsifier declared
     ok, probs = certify(spike_dir=d, controls=[c], no_deps_reason=NR)
     assert not ok and any('NO FALSIFIER' in p for p in probs), probs
-    print('kfcheck: 6 families exercised, all refusals fire')
+    print('kfcheck: 6 families + counters exercised, all refusals fire')
 
 
 if __name__ == '__main__':

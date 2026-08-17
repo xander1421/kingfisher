@@ -338,7 +338,27 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         problems.append(f"missing artifacts: {prov['missing_artifacts']}")
     prov['problems'] = problems
     prov['ok'] = not problems
-    with open(os.path.join(spike_dir, 'provenance.json'), 'w') as f:
+
+    # provenance.json has THREE writers -- record(), kfcheck.certify() (which
+    # rewrites it after calling record), and retrofit_d6.py (which patches its
+    # d6_retrofit block in). Last-writer-wins silently erased whichever ran
+    # first. Carry forward top-level keys this function does not author, so the
+    # file is additive instead of clobbering, and NAME what was carried so a
+    # stale block cannot masquerade as fresh. `certify` inherits this because its
+    # own dict is the one returned here.
+    dest = os.path.join(spike_dir, 'provenance.json')
+    if os.path.exists(dest):
+        try:
+            with open(dest) as f:
+                old = json.load(f)
+            carried = [k for k in old if k not in prov]
+            for k in carried:
+                prov[k] = old[k]
+            if carried:
+                prov['carried_from_previous_record'] = carried
+        except (ValueError, OSError):
+            pass
+    with open(dest, 'w') as f:
         json.dump(prov, f, indent=1)
     return prov['ok'], prov
 
@@ -471,6 +491,25 @@ def demo():
     assert not ok and any('STALE ARTIFACT' in x for x in p['problems']), \
         ('the dirty-file staleness floor did not fire -- the A24 loop is dead',
          p['problems'])
+
+    # provenance.json has three writers; a re-record must not silently erase a
+    # key another writer added. FAILS IF the foreign key is gone after re-record.
+    c2 = ctl()
+    c2.observe(True, ['a', 'b'], '2 distinct')
+    record(d, controls=[c2], no_deps_reason=NR)
+    pj = os.path.join(d, 'provenance.json')
+    with open(pj) as f:
+        doc = json.load(f)
+    doc['foreign_block'] = {'written_by': 'another writer'}
+    with open(pj, 'w') as f:
+        json.dump(doc, f)
+    record(d, controls=[c2], no_deps_reason=NR)
+    with open(pj) as f:
+        doc2 = json.load(f)
+    assert doc2.get('foreign_block') == {'written_by': 'another writer'}, \
+        'a re-record erased another writer\'s block'
+    assert 'foreign_block' in doc2.get('carried_from_previous_record', []), \
+        'a carried key must be named, or a stale block masquerades as fresh'
 
     print('provenance: all assertions pass')
 
