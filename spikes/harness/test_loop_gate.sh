@@ -52,7 +52,7 @@ cd "$T"
 # already-detached path, while a human running the same file exercised the other
 # one. Two different tests behind one name, decided by who typed the command.
 # Unset here rather than per-invocation so no future check can forget it; the
-# defect in the launcher itself is H31 and is fixed there too.
+# defect in the launcher itself is H34 and is fixed there too.
 unset KF_DETACHED KF_LOCK_OWNER
 
 mkdir -p prompts

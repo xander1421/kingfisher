@@ -75,3 +75,8 @@ spikes/S75_pathmap_check/keys_*.bin
 spikes/S77_proof_bytes/pmproof/target/
 spikes/S82_kernel_truth/check
 bringup.log
+
+# per-lane launcher lock (run_loop.sh v6, H8): runtime state, one pid per
+# callsign. Same category as .heartbeat.* and detach_*.log — regenerated at
+# every launch and meaningless in another clone.
+.loop_lock.*
