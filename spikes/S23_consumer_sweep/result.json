@@ -1,0 +1,176 @@
+{
+ "atom": "ATTACKER-1",
+ "s20_cross_check": {
+  "absence": 82.17800000000011,
+  "completeness": 566.9333333333333
+ },
+ "s80_ordering_same_direction_on_witness_bytes": true,
+ "spike": "S23",
+ "spikes": {
+  "S79": {
+   "F1_term_is_zero": false,
+   "F2_ranking_unchanged": true,
+   "ranking_steps": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "ranking_witness": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "sets": {
+    "atoms_interned": {
+     "delta_bytes": 53.570000000000164,
+     "delta_pct": 2.776208663926916,
+     "model_absence_auth_bytes_mean": 1855.68,
+     "pairing_exact": true,
+     "proofs": 200,
+     "published_mean": 1929.61,
+     "residual_vs_model_steps": 73.92999999999984,
+     "residual_vs_model_witness": 127.5,
+     "steps_bytes_mean": 1929.61,
+     "verified": 200,
+     "witness_bytes_mean": 1983.18
+    },
+    "atoms_original": {
+     "delta_bytes": 80.16500000000019,
+     "delta_pct": 5.045473140951015,
+     "model_absence_auth_bytes_mean": 1513.28,
+     "pairing_exact": true,
+     "proofs": 200,
+     "published_mean": 1588.85,
+     "residual_vs_model_steps": 75.56999999999994,
+     "residual_vs_model_witness": 155.73500000000013,
+     "steps_bytes_mean": 1588.85,
+     "verified": 200,
+     "witness_bytes_mean": 1669.015
+    },
+    "triples": {
+     "delta_bytes": 100.91000000000031,
+     "delta_pct": 4.404242318435768,
+     "model_absence_auth_bytes_mean": 2299.04,
+     "pairing_exact": true,
+     "proofs": 200,
+     "published_mean": 2291.2,
+     "residual_vs_model_steps": -7.8400000000001455,
+     "residual_vs_model_witness": 93.07000000000016,
+     "steps_bytes_mean": 2291.2,
+     "verified": 200,
+     "witness_bytes_mean": 2392.11
+    }
+   }
+  },
+  "S80": {
+   "F1_term_is_zero": false,
+   "F2_ranking_unchanged": false,
+   "ranking_steps": [
+    "triples",
+    "atoms_original",
+    "atoms_interned"
+   ],
+   "ranking_witness": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "sets": {
+    "atoms_interned": {
+     "completeness_dearer_than_membership": true,
+     "delta_bytes": 144.5,
+     "delta_pct": 7.621509006039188,
+     "mean_answer_keys": 12.041666666666666,
+     "membership_witness_bytes_same_sample": 1960.9583333333333,
+     "pairing_exact": true,
+     "proofs": 120,
+     "published_mean": 1895.95,
+     "steps_bytes_mean": 1895.95,
+     "verified": 120,
+     "witness_bytes_mean": 2040.45
+    },
+    "atoms_original": {
+     "completeness_dearer_than_membership": true,
+     "delta_bytes": 140.10000000000014,
+     "delta_pct": 8.82431673481386,
+     "mean_answer_keys": 11.675,
+     "membership_witness_bytes_same_sample": 1689.9833333333333,
+     "pairing_exact": true,
+     "proofs": 120,
+     "published_mean": 1587.6583333333333,
+     "steps_bytes_mean": 1587.6583333333333,
+     "verified": 120,
+     "witness_bytes_mean": 1727.7583333333334
+    },
+    "triples": {
+     "completeness_dearer_than_membership": true,
+     "delta_bytes": 1201.3,
+     "delta_pct": 81.88541631164583,
+     "mean_answer_keys": 100.10833333333333,
+     "membership_witness_bytes_same_sample": 2379.6666666666665,
+     "pairing_exact": true,
+     "proofs": 120,
+     "published_mean": 1467.05,
+     "steps_bytes_mean": 1467.05,
+     "verified": 120,
+     "witness_bytes_mean": 2668.35
+    }
+   }
+  },
+  "S84": {
+   "F1_term_is_zero": false,
+   "F2_ranking_unchanged": true,
+   "ranking_steps": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "ranking_witness": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "sets": {
+    "atoms_interned": {
+     "delta_bytes": 45.19999999999982,
+     "delta_pct": 2.3593790100525807,
+     "pairing_exact": true,
+     "proofs": 120,
+     "published_hash_bytes": 2224.583,
+     "published_proof_bytes": 1915.758,
+     "ratio_on_steps_bytes": 1.1612023089203143,
+     "ratio_on_witness_bytes": 1.1344366487474238,
+     "steps_bytes_mean": 1915.7583333333334,
+     "verified": 120,
+     "witness_bytes_mean": 1960.9583333333333
+    },
+    "atoms_original": {
+     "delta_bytes": 87.5,
+     "delta_pct": 5.460275197869972,
+     "pairing_exact": true,
+     "proofs": 120,
+     "published_hash_bytes": 1959.383,
+     "published_proof_bytes": 1602.483,
+     "ratio_on_steps_bytes": 1.2227166169174926,
+     "ratio_on_witness_bytes": 1.1594096588723755,
+     "steps_bytes_mean": 1602.4833333333333,
+     "verified": 120,
+     "witness_bytes_mean": 1689.9833333333333
+    },
+    "triples": {
+     "delta_bytes": 5.533333333333303,
+     "delta_pct": 0.23306750533527898,
+     "pairing_exact": true,
+     "proofs": 120,
+     "published_hash_bytes": 2528.617,
+     "published_proof_bytes": 2374.133,
+     "ratio_on_steps_bytes": 1.0650694990452658,
+     "ratio_on_witness_bytes": 1.0625929401877015,
+     "steps_bytes_mean": 2374.133333333333,
+     "verified": 120,
+     "witness_bytes_mean": 2379.6666666666665
+    }
+   }
+  }
+ }
+}

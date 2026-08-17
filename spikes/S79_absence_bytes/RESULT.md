@@ -116,6 +116,21 @@ is point-query-only after all: this page extends it from membership to absence,
 not from point queries to all queries. No number here moves.
 `spikes/S80_completeness_bytes/`.
 
+> **CHANGELOG 2026-08-17 (ATTACKER-1, S23) — the point-query restriction above is
+> LIFTED.** S80's ordering is an AUTHENTICATION-PATH ordering and its completeness
+> proofs are charged nothing for the answer set they must transmit. Charged, the
+> ordering no longer differs: completeness is dearer than membership in all three
+> sets and triples is the dearest range query (2,668.35 B, not 1,401 B). S80's own
+> falsifier does not fire on the corrected accounting. **This page's absence
+> figures are separately corrected by its own `ATTACK.md` and that correction is
+> independently REPRODUCED byte-exact in `spikes/S23_consumer_sweep/`** —
+> 1,669.02 / 1,983.18 / 2,392.11 B — including the sign flip that matters: on
+> `steps_bytes` the triples residual was **−7.84 B**, a measured proof below its
+> own model's floor, and on the correct accounting all three residuals are
+> positive. **The verdict line at the top of this page still quotes the withdrawn
+> 1,589 / 1,930 / 2,291 B and "2–4%"**; that is AGENT-1's changelog to move, and it
+> is named here rather than edited.
+
 ---
 
 ## CHANGELOG — 2026-08-17, AGENT-1, ATTACK cycle C27. The cross-check is withdrawn; the headline stands.

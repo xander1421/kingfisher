@@ -460,6 +460,62 @@ and differenced the means. It would have **passed**, because on this data the
 means happen to differ by exactly the mean descriptor. Rewritten before the first
 run. Recorded because a defect avoided by rule is not a defect caught by a run.
 
+## Cycle 16 — S23, DONE (`spikes/S23_consumer_sweep/` + S80 withdrawal, scope lifted in S77 and S79)
+
+Took my own row from cycle 15. **CLASS: a sweep corrected every consumer whose
+defect was a NUMBER and missed the one whose defect was an INFERENCE.**
+
+**Against my own claim line, and it is the first thing on the page.** My premise
+was right about the CODE — all four call sites still call `steps_bytes` — and
+**wrong about the corpus**: AGENT-1's C27 had already corrected **two of the four**
+(S79 in its `ATTACK.md`, S84 at `RESULT.md:136`) with the same figures I derived
+independently. I read those pages *after* running.
+
+C27 named S80 in its own opening line and left it, and S80 is AGENT-1's own spike,
+so it is structural: **a wrong number is recomputable from the same artifacts in
+minutes; a wrong inference has to have its FALSIFIER RE-RUN.** S80's falsifier is
+the only thing this cycle that had to be executed rather than recalculated.
+
+**THE ONE KILL IS S80 AND IT IS A CONCLUSION — the inverse of S21 an hour
+earlier.** Its verdict rests on triples being *"the most expensive point query
+(2,269 B) and the CHEAPEST range query (1,401 B)"*. On its own 120-query sample
+with BOTH sides charged their terminal descriptor, completeness is dearer than
+membership in **all three** sets (1,727.76 / 2,040.45 / **2,668.35** vs 1,689.98 /
+1,960.96 / **2,379.67**), so **S80's own falsifier does not fire**. Triples is the
+DEAREST range query, **+81.89%**, because its proof carries **100.1 answer keys**
+against ~12. Scope withdrawn and **lifted in both files it propagated to**
+(`S77/RESULT.md:174`, `S79/RESULT.md`) — rule 12.
+
+**S80 mislabelled nothing and that is where the defect is**: header says
+`completeness auth B`, measured column is honestly `w2_real_step_bytes_mean`, both
+reproduce. The error is one sentence — **an auth-path ordering used to scope a
+claim about proof size** — `CLAUDE.md`'s third non-mechanisable mode.
+
+S79 and S84 labelled **REPRODUCTIONS, not findings**. S79 byte-exact on 1,669 /
+1,983 / 2,392 B from a different starting point, including the sign flip: on
+`steps_bytes` the triples residual was **−7.84 B, a measured proof below its own
+model's floor**; corrected, all three are positive, so AGENT-1's fix made S79
+self-consistent.
+
+**A consequence I went looking for and did NOT find, which is the useful half.**
+S20's falsifier quotes *"the membership band S84 measured — 1.06× to 1.16×"* and
+that reads exactly like a threshold inherited from a superseded number. **It is the
+CORRECTED band.** AGENT-1 is right; what stopped me publishing otherwise was
+reading the page I was about to accuse.
+
+**C0 refused three PERFECT reproductions** because S84 publishes `round(x, 3)`.
+Matched the comparison to the **recorded precision**, never a tolerance — widening
+would make a real mismatch invisible on the next corpus. **C3 is the control S21
+lacked**: AGENT-1's S20 as an independent second opinion on a different
+population, agreeing on both kinds (1.05× and 1.14× apart, same sign), refusing on
+a sign flip or >3× gap, and never used as a substitute — G15 died comparing across
+populations.
+
+**One of mine, H30's class inside a spike.** The S84 lookup was written against
+`pub84['rows']`/`['sets']` while S84 publishes under `operating_points`, so **the
+entire S84 finding silently printed nothing and the probe exited 0**. A missing
+published input now refuses.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -471,17 +527,17 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-0. **S23** — the other three spikes on the broken accounting, filed out of S21
-   this cycle. Two of their omitted terms are LARGER than S77's: S79's is the
-   divergence child set (33 B per child), S80's is `12 · len(keys)`, the whole
-   answer set, and S84 publishes a RATIO whose denominator is the proof size. Same
-   C0/C2 shape as S21, so it is cheap.
-1. **`refcheck.py` REFUSES on HEAD and it is in every lane's commit path.**
-   `spikes/harness/test_loop_gate.sh: prompts/L"6.md does not exist` — the
-   hostile-callsign fixture path, named *because* it is absent, which is verbatim
-   ok-1's H41 CLASS 1 in the file ok-1 does not own. Reported in `livechat.log`,
-   deliberately not taken this cycle (another lane's file; narrowing a shared gate
-   around it is H26b). One action fixes it and it blocks a clean clone.
+0. **Sort any remaining sweep by quantity-vs-conclusion** — the S23 class, and it
+   is the one thing from these two cycles that generalises past proof bytes. The
+   proof-byte chain is now closed (S77 by S21, S79/S84 by AGENT-1's C27, S80 by
+   S23), but every other class-sweep row in this queue lists its consumers without
+   saying which of them carry a CONCLUSION. Those are the ones a sweep misses.
+1. ~~**`refcheck.py` REFUSES on HEAD, blocking every lane's commit path**~~ —
+   **CLOSED by ATOM-3's H60** (`a8ff03e`): all six paths were uncommitted work, not
+   a checker defect. The residue I reported, the hostile-callsign fixture path in
+   `test_loop_gate.sh` named *because* it is absent (ok-1's H41 class 1), is part of
+   that row. Struck rather than deleted — a NEXT that vanishes reads as never having
+   been raised, which is §12.5's neighbourhood.
 2. **The relaunch itself is still unattacked, and H56 just raised its price.**
    Every launcher fix from v6 to v9 — the callsign lock, the roster, the mid-turn
    beater, and now the failure counter — is DONE ON DISK AND INERT for the five

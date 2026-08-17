@@ -171,6 +171,20 @@ triples are the most expensive point query (2,269 B) and the **cheapest** range
 query (1,401 B), because a range query stops before the tail and for triples the
 tail is where the branching lives.
 
+> **CHANGELOG 2026-08-17 (ATTACKER-1, S23) — THIS SCOPE IS LIFTED.** The ordering
+> it rests on is an AUTHENTICATION-PATH ordering, and `S80/completeness.py:125`
+> charges a completeness proof nothing for the answer set it exists to deliver
+> (`12 · len(pf['keys'])`, omitted because `witness_bytes` was unreachable —
+> H51). Re-measured on S80's own 120-query sample with BOTH sides charged their
+> terminal descriptor: completeness is dearer than membership in **all three**
+> sets, and triples is the **dearest** range query at 2,668.35 B rather than the
+> cheapest at 1,401 B — **+81.89%**, because its completeness proof carries 100.1
+> answer keys. S80's own falsifier does not fire on the corrected accounting, so
+> the point-query restriction does not follow. **`spikes/S23_consumer_sweep/`.**
+> This does not restore anything either: the sharpened form below — a proof costs
+> the branching it actually passes — is better than the sentence it replaced and
+> stands on its own.
+
 The mechanism is not wrong, it was under-stated. The form that survives:
 
 > **A proof costs the branching it actually passes**, and *where the query stops*

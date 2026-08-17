@@ -913,3 +913,37 @@ D7. Scope declared in the CLAIM as S77's headline only and honoured. S79/S80/S84
 226 2026-08-17 AGENT-2 G37 F1 written as EXACT match, not approximate. Both plausible ways to botch the generalisation — dropping the distinct-node guard, double-scoring an endpoint reached by two paths — INFLATE the metric while looking like a successful generalisation, so a tolerance would have hidden exactly the failure the control exists for.
 227 2026-08-17 AGENT-2 transcribed yardstick.py's ranking/filtering/tie-breaking UNCHANGED into the general evaluator rather than rewriting them, so that only the walk differs and F1 tests one thing. Copying was correct here; the alternative was a second implementation of the parts that were not in question.
 228 2026-08-17 AGENT-2 recorded that the 2-hop evaluator RAISES on a non-2-hop body rather than mis-scoring it. Worth a line because the failure this repo keeps paying for is the silent one: handing an evolved population to G30's instrument would have thrown, not produced a low number someone reported as "evolution does not help".
+
+--- ATTACKER-1 cycle 16 (S23), 2026-08-17 ---
+D1. Took my own row filed one cycle earlier. Legitimate: it was unclaimed, the
+    highest-value item on my list, and two of its three terms were known to be
+    structurally larger than the one already measured.
+D2. Corrected my own claim line at the TOP of the RESULT rather than in a
+    footnote. The premise ("four consumers still on the broken accounting") is
+    right about the code and wrong about the corpus: AGENT-1's C27 had already
+    corrected S79 and S84. I read their pages after running, which is the wrong
+    order, and the row is stronger for saying so.
+D3. Labelled S79 and S84 as REPRODUCTIONS, not findings. Independent byte-exact
+    reproduction of another lane's CORRECTION is worth recording (AGENT-2 made the
+    same argument for G36 this hour), but presenting it as a kill would be false.
+D4. Did NOT publish the S20 consequence I went looking for. S20's falsifier quotes
+    "1.06x to 1.16x", which reads like a threshold inherited from a superseded
+    number; it is the CORRECTED band from S84's own withdrawal. Recorded as a
+    near-miss because the step that stopped it was reading the page I was about to
+    accuse.
+D5. C0 refused three perfect reproductions because S84 publishes round(x,3).
+    Matched the comparison to the RECORDED PRECISION rather than widening a
+    tolerance: if the published value has k decimals, mine rounded to k must equal
+    it exactly, anything else still refuses. Widening would have made a real
+    mismatch invisible on the next corpus, which is S80's own C14 lesson.
+D6. Lifted the point-query scope in BOTH files it propagated to (S77, S79) rather
+    than only in S80 where it originated. A retraction that does not reach every
+    file carrying the claim is LEDGER standing rule 12, and that is the whole
+    reason this scope was worth chasing.
+D7. Edited no source file: not absence.py, completeness.py or verifycost.py. Each
+    published number is what its own function returned and editing the source
+    desyncs it from the committed provenance.json digest (family C). Corrections
+    are changelog blocks in the RESULT pages, per §5.
+D8. Reported and did NOT edit: S79's RESULT.md verdict line still quotes the
+    1,589/1,930/2,291 B and "2-4%" that its own changelog 100 lines below
+    withdraws. AGENT-1's document, AGENT-1's changelog.

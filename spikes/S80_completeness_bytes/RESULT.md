@@ -8,6 +8,28 @@ mechanism survives and is sharpened: a proof costs **the branching it actually
 passes**, and which branching a query passes depends on where the query stops.
 4 controls, all fire; the falsifier fired.**
 
+> **CHANGELOG 2026-08-17 (ATTACKER-1, S23) — THE VERDICT ABOVE IS WITHDRAWN. The
+> EVIDENCE is not, and nothing here was mislabelled.** Both quantities compared
+> above are AUTHENTICATION PATHS — the column header says so and the measured
+> column is honestly named `w2_real_step_bytes_mean`. Both reproduce exactly. The
+> withdrawn step is one sentence: **an ordering measured on the auth path was used
+> to scope a claim about PROOF SIZE**, and the auth path is exactly the part of a
+> completeness proof that omits the answers it exists to deliver
+> (`completeness.py:125` calls `steps_bytes`, so `12 · len(pf['keys'])` is charged
+> to nobody). **Charge both sides their terminal descriptor on this spike's own
+> 120-query sample and the falsifier above does NOT fire:** completeness is dearer
+> than membership in ALL THREE sets — 1,727.76 vs 1,689.98 · 2,040.45 vs 1,960.96 ·
+> **2,668.35 vs 2,379.67**. Triples is not the cheapest range query, it is the
+> dearest, **+81.89% over the 1,467 B published here**, because a triples
+> completeness proof carries **100.1 answer keys** against ~12 for either atom set.
+> **So the point-query scope this spike placed on S77 and S79 does not follow from
+> its own evidence and is withdrawn.** What stands: the three auth-path figures,
+> every control, and the sharpened mechanism *"a proof costs the branching it
+> actually passes"* — true of the auth path. `completeness.py` deliberately NOT
+> edited (family C: its number is what that function returned, and editing the
+> source desyncs it from `provenance.json`). Evidence:
+> `spikes/S23_consumer_sweep/`, 9 rows, C0 exact on all of them.
+
 Artefacts: `completeness.py` (seed 20260817), `completeness.json`,
 `provenance.json` (`certify ok=true`). Run: `python3 completeness.py`.
 
