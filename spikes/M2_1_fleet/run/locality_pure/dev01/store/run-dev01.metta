@@ -1,50 +1,41 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Example from OpenCog Classic wiki on PLN Backward Chaining
-; No explicit backward chaining is needed
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; facts
-(= (croaks Fritz) T)
-(= (eat_flies Fritz) T)
-; Rules
-(= (And T T) T)
-(= (frog $x)
-   (And (croaks $x)
-        (eat_flies $x)))
-(= (green $x)
-   (frog $x))
+(@doc get-value
+  (@desc "Function takes space and key as input, checks if space contains key-value pairs in form of (key value) and returns value tied to the input key")
+  (@params (
+    (@param "Space")
+    (@param "Key")))
+  (@return "Value which tied to input key, empty if no such key in space"))
+(: get-value (-> Grounded Atom %Undefined%))
+(= (get-value $dictspace $key) (match $dictspace ($key $value) $value))
 
-; Conclusion from facts and rules
-!(assertEqual
-  (green Fritz)
-  T)
+(@doc get-keys
+  (@desc "Function takes space and returns all keys from (<key> <value>) tuples in space")
+  (@params (
+    (@param "Space")))
+  (@return "All keys in the input space"))
+(: get-keys (-> Grounded Atom))
+(= (get-keys $dictspace)
+   (function
+     (chain (unify $dictspace ($key $value) $key Empty) $t (return $t)) ))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; This is not just functional programming,
-; because we can do inference
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(= (ift T $then) $then)
-!(assertEqual
-  (ift (green $x) $x)
-  Fritz)
+(@doc dict-space
+  (@desc "Function takes key-value pairs in form of expression as input, creates space and adds key-value pairs into it")
+  (@params (
+    (@param "Expression")))
+  (@return "Space"))
+(: dict-space (-> Expression Grounded))
+(= (dict-space $expr)
+   (let* (($dictspace (new-space))
+          ($res (add-reducts $dictspace $expr)))
+        $dictspace))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; One can call a function with a variable as an argument
-; and retrieve the variable binding but constructing
-; an expression with it
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-!(assertEqual
-  ($x (green $x))
-  (Fritz T))
+(@doc json-encode
+  (@desc "Function takes atom as an input and encodes it to json-string. Atom could be a string, number, expression, space and combination of those")
+  (@params (
+    (@param "Input atom")))
+  (@return "Json string"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; We can also use expressions with `=` in `match`
-; NOTE: `=` is not an ordinary symbol, and declarative reasoning over expressions
-; with it may work differently from that over purely symbolic expressions
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-!(assertEqualToResult
-  (match &self (= ($p Fritz) T) $p)
-  (croaks eat_flies))
+(@doc json-decode
+  (@desc "Function takes json string as an input and decodes it to the metta objects (list to expression, dictionary to space which will contain key-value pairs in form of (key value), string to string, number to number)")
+  (@params (
+    (@param "Json string")))
+  (@return "Metta object"))

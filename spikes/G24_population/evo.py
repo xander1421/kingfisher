@@ -149,9 +149,17 @@ class Idx:
             self.out_adj[s].append((p, o))
 
 
-def body_pairs(idx, body, cap=MAX_PAIRS):
+def body_pairs(idx, body, cap=None):
+    # cap resolved in the BODY, not bound as a default argument. AGENT-2 caught
+    # this as a live trap for a sweeping harness: `cap=MAX_PAIRS` binds at
+    # function-definition time, so `evo.MAX_PAIRS = 999` leaves the default at
+    # 40000 and a swept config would silently do nothing while reporting NO
+    # EFFECT -- a false negative wearing the shape of a finding. MAX_PAIRS is the
+    # most likely next knob, since its rejection rule is what doubled precision
+    # in v2.
     """Endpoint pairs the body matches. Guards mirror redo.py: no step returns
     to the node it came from and no endpoint pair is a self-loop."""
+    cap = MAX_PAIRS if cap is None else cap
     reach = {(a, b) for a, b in idx.by_pred.get(body[0], ()) if a != b}
     capped = False
     for q in body[1:]:
@@ -169,7 +177,8 @@ def body_pairs(idx, body, cap=MAX_PAIRS):
     return reach, capped
 
 
-def score(idx, body, r, exclude, target, cap=MAX_PAIRS, stats=None):
+def score(idx, body, r, exclude, target, cap=None, stats=None):
+    cap = MAX_PAIRS if cap is None else cap   # see body_pairs
     bp, capped = body_pairs(idx, body, cap)
     if capped:
         # Reject rather than truncate. A truncated walk yields a confidence

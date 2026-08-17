@@ -1,60 +1,41 @@
-(: concat-help (-> String Expression Atom String))
-(= (concat-help $text $expr $func)
-  (if (noreduce-eq $expr ())
-    $text
-    (let $head (car-atom $expr)
-      (let $tail (cdr-atom $expr)
-      (let $cur-text ($func $head)
-      (let $next-text (format-args "{}{}" ($text $cur-text))
-      (concat-help $next-text $tail $func) ))))))
+(@doc get-value
+  (@desc "Function takes space and key as input, checks if space contains key-value pairs in form of (key value) and returns value tied to the input key")
+  (@params (
+    (@param "Space")
+    (@param "Key")))
+  (@return "Value which tied to input key, empty if no such key in space"))
+(: get-value (-> Grounded Atom %Undefined%))
+(= (get-value $dictspace $key) (match $dictspace ($key $value) $value))
 
-(: help-md! (-> SpaceType Atom String))
-(= (help-md! $space $atom)
-  (case (get-doc $space $atom) (
-    ((@doc-formal (@item $item) (@kind function) (@type $type) (@desc $descr)
-                 (@params $params)
-                 (@return (@type $ret-type) (@desc $ret-desc)))
-      (let $h (format-args "## {}\n**Type**<br>\n`{}`<br>\n**Description**<br>\n{}<br>\n" ($item $type $descr))
-      (let $ph (format-args "**Parameters**<br>\n" ())
-      (let $ps (concat-help "" $params help-param-md!)
-      (let $r (format-args "**Returns**<br>\n`{}` {}\n" ($ret-type $ret-desc))
-      (format-args "{}{}{}{}" ($h $ph $ps $r) ))))))
-    ((@doc-formal (@item $item) (@kind function) (@type $type) (@desc $descr))
-      (format-args "## {}\n**Type**<br>\n`{}`<br>\n**Description**<br>\n{}" ($item $type $descr)))
-    ((@doc-formal (@item $item) (@kind atom) (@type $type) (@desc $descr))
-      (let $text (format-args "## {}\n**Type**<br>\n`{}`<br>\n**Description**<br>\n{}" ($item $type $descr)) $text))
-    ($other (Error $other "Cannot match @doc-formal structure")) )))
+(@doc get-keys
+  (@desc "Function takes space and returns all keys from (<key> <value>) tuples in space")
+  (@params (
+    (@param "Space")))
+  (@return "All keys in the input space"))
+(: get-keys (-> Grounded Atom))
+(= (get-keys $dictspace)
+   (function
+     (chain (unify $dictspace ($key $value) $key Empty) $t (return $t)) ))
 
-(: help-param-md! (-> Atom String))
-(= (help-param-md! $param)
-  (let (@param (@type $type) (@desc $desc)) $param
-    (format-args "`{}` - {}<br>\n" ($type $desc)) ))
+(@doc dict-space
+  (@desc "Function takes key-value pairs in form of expression as input, creates space and adds key-value pairs into it")
+  (@params (
+    (@param "Expression")))
+  (@return "Space"))
+(: dict-space (-> Expression Grounded))
+(= (dict-space $expr)
+   (let* (($dictspace (new-space))
+          ($res (add-reducts $dictspace $expr)))
+        $dictspace))
 
-(: help-md-space! (-> SpaceType String))
-(= (help-md-space! $space) 
-    (unify $space (@doc $name (@desc $desc) $params $ret)
-      (help-md! $space $name)
-      Empty ))
-(= (help-md-space! $space)
-    (unify $space (@doc $name (@desc $desc))
-      (help-md! $space $name)
-      Empty ))
+(@doc json-encode
+  (@desc "Function takes atom as an input and encodes it to json-string. Atom could be a string, number, expression, space and combination of those")
+  (@params (
+    (@param "Input atom")))
+  (@return "Json string"))
 
-!(import! &self fileio)
-
-(= (document-module $title $mod)
-  (let $_ (import! &self $mod)
-  (let $helps (collapse (help-md-space! (module-space-no-deps (mod-space! $mod))))
-  (let $sorted (sort-strings $helps)
-  (let $text (foldl-atom $sorted "" $r $i (format-args "{}{}" ($r $i)))
-  (let $md (format-args "# {}\n{}" ($title $text))
-  (let $path (format-args "./docs/generated/{}.md" ($mod))
-  (let $file (file-open! $path "wct")
-    (file-write! $file $md) ))))))))
-
-!(document-module "Standard library" corelib)
-!(document-module "Random" random)
-!(document-module "File Input/Output" fileio)
-!(document-module "JSON" json)
-!(document-module "Module catalog" catalog)
-!(document-module "DAS" das)
+(@doc json-decode
+  (@desc "Function takes json string as an input and decodes it to the metta objects (list to expression, dictionary to space which will contain key-value pairs in form of (key value), string to string, number to number)")
+  (@params (
+    (@param "Json string")))
+  (@return "Metta object"))

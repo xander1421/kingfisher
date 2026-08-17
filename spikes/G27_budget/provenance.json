@@ -1,21 +1,21 @@
 {
  "spike": "G27_budget",
- "recorded_utc": "2026-08-17T10:05:55Z",
+ "recorded_utc": "2026-08-17T10:11:29Z",
  "note": "G27: can a selected population reach no_death's size, and which matching is attainable",
  "repos": [],
  "manifests": {},
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/sweep.py",
-   "sha256": "2945db385b590d836e765279ee53d35b60a40836b2e7a4d4e9ea811ca2fddd87",
-   "bytes": 5725,
-   "mtime": 1786960691
+   "sha256": "3bcd1550d5f5435576056a3110e1cb24a9fe8c3dda4052a2fabc72d8e1700851",
+   "bytes": 6646,
+   "mtime": 1786961183
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/analyse.py",
-   "sha256": "5fe1aea56b194a6d764c64aea9e1fb09b8f211cac290e6443867518ea16c9560",
-   "bytes": 11865,
-   "mtime": 1786961152
+   "sha256": "3740510e1fb3d891d2f4475063a67a7253b0522bdd7e8ff564d79702184e2ae4",
+   "bytes": 14987,
+   "mtime": 1786961244
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r15_o160.json",
@@ -30,6 +30,18 @@
    "mtime": 1786960649
   },
   {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r15_o40_s31337.json",
+   "sha256": "3fc36b0f5c797a4335fb465de56155126c6f3df90cdeb5cc280285e0ba5e17bf",
+   "bytes": 6041,
+   "mtime": 1786961483
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r15_o40_s777.json",
+   "sha256": "ca08ec472f2dd552c51f5ec2c101058415bad49c24ffe4892088a3fe2d3802ee",
+   "bytes": 6031,
+   "mtime": 1786961421
+  },
+  {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/nd_r30_o40.json",
    "sha256": "b7ce6481c2d699332448232e36c6efd0709d8d0697ca796d9d153f21760522ae",
    "bytes": 11778,
@@ -40,6 +52,18 @@
    "sha256": "822bc3ddd894cba624d8b1dcc0c9527ffef8fb7db440c46b4431a60f9623913b",
    "bytes": 6040,
    "mtime": 1786960053
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r15_o160_s31337.json",
+   "sha256": "5e74e061284a23979550f4a623ca599e8dfe4bea86f86954b8c5d2767b5992f6",
+   "bytes": 6055,
+   "mtime": 1786961359
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r15_o160_s777.json",
+   "sha256": "203c6f1a1a685e1d4201b677dba60b2574f8336dd2e325cede0931d6ee33644f",
+   "bytes": 6046,
+   "mtime": 1786961273
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G27_budget/runs/sel_r15_o40.json",

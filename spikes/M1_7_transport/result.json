@@ -1,13 +1,41 @@
 {
- "envelopes": [],
+ "envelopes": [
+  {
+   "job_id": "j0000",
+   "worker": "phone",
+   "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
+   "status": "OK",
+   "fuel_used": "58",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "job_id": "j0001",
+   "worker": "phone",
+   "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
+   "status": "OK",
+   "fuel_used": "4",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "job_id": "j0002",
+   "worker": "phone",
+   "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
+   "status": "OK",
+   "fuel_used": "11",
+   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+ ],
  "stats": {
-  "polls": 0,
-  "jobs_out": 0,
-  "shard_bytes": 0,
-  "results": 0,
+  "polls": 4,
+  "jobs_out": 3,
+  "shard_bytes": 5281,
+  "results": 3,
   "misses": 0,
-  "unauthorised": 12788
+  "unauthorised": 0
  },
- "agree": 0,
- "wall_s": 300.1
+ "agree": 3,
+ "wall_s": 0.6
 }

@@ -48,14 +48,18 @@ def main():
     if not recs:
         print("no runs yet")
         return 1
-    rows = {}
+    allrows = {}
     for n, rec in recs.items():
         r = G25A.row(rec)
         r["rounds"] = rec["params"]["rounds"]
         r["offspring"] = rec["params"]["offspring"]
         r["budget"] = r["rounds"] * r["offspring"]
         r["sel"] = "no_death" not in r["arm"]
-        rows[n] = r
+        r["base"], r["seed"] = G25A.split_name(n)
+        allrows[n] = r
+    # Repeats exist to test the headline, not to widen the grid: the matchings
+    # below are read at the reference seed and then gated on the seed test.
+    rows = {r["base"]: r for r in allrows.values() if r["seed"] == 1234}
 
     print(f"{'config':<16}{'rounds':>7}{'offs':>6}{'budget':>8}{'pop':>6}"
           f"{'preds':>10}{'correct':>9}{'prec':>9}{'cov/rule':>10}{'A15':>5}")
@@ -140,6 +144,55 @@ def main():
               f"(selected attempted {r['budget'] / nd['budget']:.1f}x the "
               f"proposals — the stated confound)")
 
+    # ---- the headline pair under repeated seeds. 6875 vs 6361 is 514 correct
+    # apart and G25 measured a 1338-triple seed band, so at one seed this
+    # dominance is not distinguishable from variance. Per-seed dominance is the
+    # test that matters: a dominance holding at every seed is a different claim
+    # from one holding on average.
+    HEAD = ("sel_r15_o160", "nd_r15_o40")
+    seeds = sorted({r["seed"] for r in allrows.values()
+                    if r["base"] in HEAD})
+    per_seed, dom_seeds = {}, []
+    print("\nHEADLINE PAIR UNDER REPEATED SEEDS "
+          f"({HEAD[0]} vs {HEAD[1]}, correct/preds/pop)")
+    for s in seeds:
+        a = next((r for r in allrows.values()
+                  if r["base"] == HEAD[0] and r["seed"] == s), None)
+        b = next((r for r in allrows.values()
+                  if r["base"] == HEAD[1] and r["seed"] == s), None)
+        if not (a and b):
+            continue
+        d = G25A.dominates(a, b)
+        nd_d = G25A.dominates(b, a)
+        per_seed[s] = (a, b, d)
+        if d:
+            dom_seeds.append(s)
+        tag = ("SELECTED DOMINATES" if d else
+               "no_death dominates" if nd_d else "trade")
+        print(f"  seed {s:<6} selected {a['correct']:>5}/{a['preds']:>8}/"
+              f"{a['pop']:<4} prec {a['prec']:.4f}   no_death {b['correct']:>5}/"
+              f"{b['preds']:>8}/{b['pop']:<4} prec {b['prec']:.4f}   {tag}")
+    seed_gate = None
+    if len(per_seed) >= 3:
+        ca = [v[0]["correct"] for v in per_seed.values()]
+        cb = [v[1]["correct"] for v in per_seed.values()]
+        obs = sum(ca) / len(ca) - sum(cb) / len(cb)
+        pool = ca + cb
+        splits = list(itertools.combinations(range(len(pool)), len(ca)))
+        ge = 0
+        for c in splits:
+            g1 = [pool[i] for i in c]
+            g2 = [pool[i] for i in range(len(pool)) if i not in c]
+            if sum(g1) / len(g1) - sum(g2) / len(g2) >= obs - 1e-9:
+                ge += 1
+        seed_gate = len(dom_seeds) == len(per_seed)
+        print(f"  dominance holds at {len(dom_seeds)}/{len(per_seed)} seeds; "
+              f"mean coverage difference {obs:+.0f}, exact permutation "
+              f"p = {ge}/{len(splits)} = {ge / len(splits):.3f} one-sided "
+              f"(floor 1/{len(splits)}); selected {min(ca)}-{max(ca)}, "
+              f"no_death {min(cb)}-{max(cb)}, "
+              f"{'DISJOINT' if min(ca) > max(cb) else 'OVERLAPPING'}")
+
     # ---- verdict: both matchings, and their disagreement if any
     bm = [(r, nd, G25A.dominates(r, nd), G25A.dominates(nd, r))
           for r, nd in pairs]
@@ -155,9 +208,15 @@ def main():
                      f"{len(sel_wins_b)}/{len(bm)} budgets, no_death in "
                      f"{len(nd_wins_b)}/{len(bm)}, rest trades")
     if pm:
+        gate = ("" if seed_gate is None else
+                f", and it survives seed repetition ({len(dom_seeds)}/"
+                f"{len(per_seed)} seeds)" if seed_gate else
+                f", but it does NOT survive seed repetition — dominance holds at "
+                f"only {len(dom_seeds)}/{len(per_seed)} seeds, so it is inside "
+                f"the noise band and is not a result")
         parts.append(f"POPULATION-MATCHED: selected dominates in "
                      f"{len(sel_wins_p)}/{len(pm)}, no_death in "
-                     f"{len(nd_wins_p)}/{len(pm)}")
+                     f"{len(nd_wins_p)}/{len(pm)}{gate}")
     else:
         parts.append("POPULATION-MATCHED: not attainable — no_death's population "
                      "is its budget, so the two matchings cannot both hold and "

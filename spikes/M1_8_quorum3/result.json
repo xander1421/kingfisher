@@ -1,5 +1,5 @@
 {
- "gate": "device quiet: cpu_busy 1.8% (limit 15%), runnable 1, thermal 33600m, battery status=5 level=100 charging=true powered=1",
+ "gate": "device quiet: cpu_busy 1.4% (limit 15%), runnable 1, thermal 38600m, battery status=5 level=100 charging=true powered=1",
  "fuel": 2000000,
  "bytes_pushed": 0,
  "normalisation": "canon_alpha",
@@ -21,7 +21,7 @@
   "phone"
  ],
  "tally": {
-  "INSUFFICIENT_DOMAINS": 4
+  "INSUFFICIENT_DOMAINS": 2
  },
  "rows": [
   {
@@ -58,8 +58,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.7,
-     "observed_ms": 59.2,
+     "wall_ms": 11.9,
+     "observed_ms": 47.0,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -99,8 +99,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.9,
-     "observed_ms": 59.5,
+     "wall_ms": 11.4,
+     "observed_ms": 47.2,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -140,8 +140,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 834.4,
-     "observed_ms": 884.9,
+     "wall_ms": 537.6,
+     "observed_ms": 577.3,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -185,8 +185,8 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 79.2,
-     "observed_ms": 133.6,
+     "wall_ms": 81.2,
+     "observed_ms": 120.9,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -249,8 +249,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
-     "observed_ms": 69.9,
+     "wall_ms": 11.2,
+     "observed_ms": 58.3,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -290,8 +290,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9,
-     "observed_ms": 70.4,
+     "wall_ms": 11.5,
+     "observed_ms": 58.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",
@@ -331,8 +331,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 21.6,
-     "observed_ms": 906.6,
+     "wall_ms": 21.5,
+     "observed_ms": 598.8,
      "domain_mismatch": {
       "isa": {
        "declared": "aarch64",
@@ -376,390 +376,8 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 86.8,
-     "observed_ms": 220.5,
-     "domain_mismatch": {
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    }
-   ],
-   "dispatched": 4,
-   "returned": 4,
-   "domains": 1,
-   "domains_per_class": {
-    "binary": 4,
-    "manifest": 2,
-    "host": 2,
-    "os": 2,
-    "isa": 2,
-    "operator": 1
-   }
-  },
-  {
-   "program": "lib__src__metta__runner__builtin_mods__das.metta",
-   "verdict": "INSUFFICIENT_DOMAINS",
-   "agree": 4,
-   "key": [
-    "OK",
-    "11",
-    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-   ],
-   "envelopes": [
-    {
-     "status": "OK",
-     "fuel_used": "11",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "aarch64",
-     "os": "macos",
-     "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
-     "domains": {
-      "binary": "bin:f52d98196ad0",
-      "host": "host:Victorias-MacBook-Pro.local",
-      "os": "darwin-25.4.0",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "f52d98196ad0",
-     "host_id": "host:Victorias-MacBook-Pro.local",
-     "worker": "host-a",
-     "job_id": "j0002",
-     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 11.1,
-     "observed_ms": 81.0,
-     "domain_mismatch": {
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    },
-    {
-     "status": "OK",
-     "fuel_used": "11",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "aarch64",
-     "os": "macos",
-     "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:a867fbfa5f53",
-     "domains": {
-      "binary": "bin:a867fbfa5f53",
-      "host": "host:Victorias-MacBook-Pro.local",
-      "os": "darwin-25.4.0",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "a867fbfa5f53",
-     "host_id": "host:Victorias-MacBook-Pro.local",
-     "worker": "host-min",
-     "job_id": "j0002",
-     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 10.0,
-     "observed_ms": 80.4,
-     "domain_mismatch": {
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    },
-    {
-     "status": "OK",
-     "fuel_used": "11",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "x86_64",
-     "os": "macos",
-     "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
-     "domains": {
-      "binary": "bin:989da5cd3be7",
-      "host": "host:Victorias-MacBook-Pro.local",
-      "os": "darwin-25.4.0",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "989da5cd3be7",
-     "host_id": "host:Victorias-MacBook-Pro.local",
-     "worker": "host-x86",
-     "job_id": "j0002",
-     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 22.5,
-     "observed_ms": 929.1,
-     "domain_mismatch": {
-      "isa": {
-       "declared": "aarch64",
-       "observed": "x86_64"
-      },
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    },
-    {
-     "status": "OK",
-     "fuel_used": "11",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "aarch64",
-     "os": "android",
-     "results_text": "",
-     "domain": "adb:R5CY93675MK|bin:c90624244472",
-     "domains": {
-      "binary": "bin:c90624244472",
-      "host": "adb:R5CY93675MK",
-      "os": "android-16",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "c90624244472",
-     "host_id": "adb:R5CY93675MK",
-     "worker": "phone",
-     "job_id": "j0002",
-     "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 81.4,
-     "observed_ms": 301.9,
-     "domain_mismatch": {
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    }
-   ],
-   "dispatched": 4,
-   "returned": 4,
-   "domains": 1,
-   "domains_per_class": {
-    "binary": 4,
-    "manifest": 2,
-    "host": 2,
-    "os": 2,
-    "isa": 2,
-    "operator": 1
-   }
-  },
-  {
-   "program": "lib__src__metta__runner__builtin_mods__fileio.metta",
-   "verdict": "INSUFFICIENT_DOMAINS",
-   "agree": 4,
-   "key": [
-    "OK",
-    "7",
-    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-   ],
-   "envelopes": [
-    {
-     "status": "OK",
-     "fuel_used": "7",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "aarch64",
-     "os": "macos",
-     "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
-     "domains": {
-      "binary": "bin:f52d98196ad0",
-      "host": "host:Victorias-MacBook-Pro.local",
-      "os": "darwin-25.4.0",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "f52d98196ad0",
-     "host_id": "host:Victorias-MacBook-Pro.local",
-     "worker": "host-a",
-     "job_id": "j0003",
-     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 10.8,
-     "observed_ms": 91.9,
-     "domain_mismatch": {
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    },
-    {
-     "status": "OK",
-     "fuel_used": "7",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "aarch64",
-     "os": "macos",
-     "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:a867fbfa5f53",
-     "domains": {
-      "binary": "bin:a867fbfa5f53",
-      "host": "host:Victorias-MacBook-Pro.local",
-      "os": "darwin-25.4.0",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "a867fbfa5f53",
-     "host_id": "host:Victorias-MacBook-Pro.local",
-     "worker": "host-min",
-     "job_id": "j0003",
-     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 10.2,
-     "observed_ms": 90.7,
-     "domain_mismatch": {
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    },
-    {
-     "status": "OK",
-     "fuel_used": "7",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "x86_64",
-     "os": "macos",
-     "results_text": "",
-     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
-     "domains": {
-      "binary": "bin:989da5cd3be7",
-      "host": "host:Victorias-MacBook-Pro.local",
-      "os": "darwin-25.4.0",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "989da5cd3be7",
-     "host_id": "host:Victorias-MacBook-Pro.local",
-     "worker": "host-x86",
-     "job_id": "j0003",
-     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 24.0,
-     "observed_ms": 953.2,
-     "domain_mismatch": {
-      "isa": {
-       "declared": "aarch64",
-       "observed": "x86_64"
-      },
-      "operator": {
-       "declared": "operator:self",
-       "observed": "UNATTESTED"
-      }
-     },
-     "_per_class": {
-      "binary": 4,
-      "manifest": 2,
-      "host": 2,
-      "os": 2,
-      "isa": 2,
-      "operator": 1
-     }
-    },
-    {
-     "status": "OK",
-     "fuel_used": "7",
-     "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "n_results": "0",
-     "arch": "aarch64",
-     "os": "android",
-     "results_text": "",
-     "domain": "adb:R5CY93675MK|bin:c90624244472",
-     "domains": {
-      "binary": "bin:c90624244472",
-      "host": "adb:R5CY93675MK",
-      "os": "android-16",
-      "isa": "aarch64",
-      "operator": "operator:self"
-     },
-     "bin_sha256": "c90624244472",
-     "host_id": "adb:R5CY93675MK",
-     "worker": "phone",
-     "job_id": "j0003",
-     "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
-     "fuel_limit": 2000000,
-     "bytes_pushed": 0,
-     "wall_ms": 80.2,
-     "observed_ms": 382.3,
+     "wall_ms": 83.7,
+     "observed_ms": 204.7,
      "domain_mismatch": {
       "operator": {
        "declared": "operator:self",

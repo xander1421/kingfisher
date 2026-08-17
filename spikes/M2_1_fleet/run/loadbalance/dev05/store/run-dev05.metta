@@ -1,23 +1,39 @@
-!(import! &self agents)
-; NOTE: atm, events are not imported into agents automatically
-!(import! &self agents:events)
+(@doc random-int
+  (@desc "Returns random int number from range defined by two numbers (second and third argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Range start")
+    (@param "Range end")))
+  (@return "Random int number from defined range"))
 
-!(bind! &events (basic-event-bus))
-!(bind! &agent1
-   (event-agent test_4_agent1.metta &events))
-!(bind! &agent2
-   (event-agent test_4_agent2.metta &events))
+(@doc random-float
+  (@desc "Returns random float number from range defined by two numbers (second and third argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Range start")
+    (@param "Range end")))
+  (@return "Random float number from defined range"))
 
-!(&agent1 .start)
-!(&agent2 .start)
+(@doc set-random-seed
+  (@desc "Sets a new seed (second argument) for random number generator (first argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Seed")))
+  (@return "Unit atom"))
 
-!(publish-event &events "command" Start)
+(@doc new-random-generator
+  (@desc "Creates new random number generator instance using seed as input (first argument)")
+  (@params (
+    (@param "Seed")))
+  (@return "Instance of random number generator"))
 
-; Add sleep time if assert doesn't work
-!((py-atom time.sleep) 0.05)
+(@doc reset-random-generator
+  (@desc "Resets instance of random number generator (first argument) to its default behavior (StdRng::from_os_rng())")
+  (@params (
+    (@param "Random number generator instance")))
+  (@return "Random number generator instance with default behavior"))
 
-!(assertEqual (get-state (&agent1 (success?)))
-  True)
-
-!(&agent1 .stop)
-!(&agent2 .stop)
+(@doc flip
+  (@desc "Random boolean value")
+  (@params ())
+  (@return "Returns uniformly distributed random boolean value"))

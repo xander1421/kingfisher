@@ -17,7 +17,9 @@
    "rounds": 15,
    "offspring": 160,
    "budget": 2400,
-   "sel": false
+   "sel": false,
+   "base": "nd_r15_o160",
+   "seed": 1234
   },
   "nd_r15_o40": {
    "name": "nd_r15_o40",
@@ -36,7 +38,9 @@
    "rounds": 15,
    "offspring": 40,
    "budget": 600,
-   "sel": false
+   "sel": false,
+   "base": "nd_r15_o40",
+   "seed": 1234
   },
   "nd_r30_o40": {
    "name": "nd_r30_o40",
@@ -55,7 +59,9 @@
    "rounds": 30,
    "offspring": 40,
    "budget": 1200,
-   "sel": false
+   "sel": false,
+   "base": "nd_r30_o40",
+   "seed": 1234
   },
   "sel_r15_o160": {
    "name": "sel_r15_o160",
@@ -74,7 +80,9 @@
    "rounds": 15,
    "offspring": 160,
    "budget": 2400,
-   "sel": true
+   "sel": true,
+   "base": "sel_r15_o160",
+   "seed": 1234
   },
   "sel_r15_o40": {
    "name": "sel_r15_o40",
@@ -93,7 +101,9 @@
    "rounds": 15,
    "offspring": 40,
    "budget": 600,
-   "sel": true
+   "sel": true,
+   "base": "sel_r15_o40",
+   "seed": 1234
   },
   "sel_r30_o40": {
    "name": "sel_r30_o40",
@@ -112,7 +122,9 @@
    "rounds": 30,
    "offspring": 40,
    "budget": 1200,
-   "sel": true
+   "sel": true,
+   "base": "sel_r30_o40",
+   "seed": 1234
   },
   "sel_r45_o160": {
    "name": "sel_r45_o160",
@@ -131,7 +143,9 @@
    "rounds": 45,
    "offspring": 160,
    "budget": 7200,
-   "sel": true
+   "sel": true,
+   "base": "sel_r45_o160",
+   "seed": 1234
   },
   "sel_r45_o40": {
    "name": "sel_r45_o40",
@@ -150,10 +164,12 @@
    "rounds": 45,
    "offspring": 40,
    "budget": 1800,
-   "sel": true
+   "sel": true,
+   "base": "sel_r45_o40",
+   "seed": 1234
   }
  },
- "verdict": "BUDGET-MATCHED: selected dominates in 0/3 budgets, no_death in 0/3, rest trades. POPULATION-MATCHED: selected dominates in 2/2, no_death in 0/2. THE MATCHINGS DISAGREE \u2014 budget-matched winner none, all trades, population-matched winner selected. Which arm 'wins' is a choice of what to hold fixed, not a property of the algorithms, and G24 reported the budget-matched view while G25 was asking the population-matched question.",
+ "verdict": "BUDGET-MATCHED: selected dominates in 0/3 budgets, no_death in 0/3, rest trades. POPULATION-MATCHED: selected dominates in 2/2, no_death in 0/2, and it survives seed repetition (3/3 seeds). THE MATCHINGS DISAGREE \u2014 budget-matched winner none, all trades, population-matched winner selected. Which arm 'wins' is a choice of what to hold fixed, not a property of the algorithms, and G24 reported the budget-matched view while G25 was asking the population-matched question.",
  "conditions": {
   "data": "real:FB15k-237+planted",
   "split": "70/15/15",

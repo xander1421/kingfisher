@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Drive M1.7 end to end: queue jobs, let the phone dial in, collect envelopes."""
-import json, os, subprocess, sys, time
+import json, os, secrets, subprocess, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'M1_5_shardstore'))
 sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
+# the coordinator requires a bearer token on every endpoint; without this the
+# agent sends an empty one and every request is a 401. This driver was broken
+# by the auth change and nobody noticed until a regression sweep ran it.
+os.environ.setdefault('KF_TOKEN', secrets.token_urlsafe(16))
 from shardstore import cid_of
 import bansurface, server
 
@@ -41,7 +45,8 @@ sh('adb', 'shell', f'rm -rf {DEV}/shards; mkdir -p {DEV}/shards')   # cold cache
 
 t0 = time.time()
 proc = subprocess.Popen(['adb', 'shell',
-                         f'KF_PORT={PORT} KF_MAXIDLE=2 sh {DEV}/agent.sh'],
+                         f'KF_PORT={PORT} KF_TOKEN={os.environ["KF_TOKEN"]} '
+                         f'KF_MAXIDLE=2 sh {DEV}/agent.sh'],
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 while len(server.RESULTS) < len(progs) and time.time() - t0 < 300:
     time.sleep(0.2)

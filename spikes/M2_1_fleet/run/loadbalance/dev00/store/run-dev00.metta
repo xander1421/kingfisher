@@ -1,69 +1,41 @@
-; This file serves for illustration and discussion
-; It should not be included/imported
-; since its code is generated automatically
+(@doc get-value
+  (@desc "Function takes space and key as input, checks if space contains key-value pairs in form of (key value) and returns value tied to the input key")
+  (@params (
+    (@param "Space")
+    (@param "Key")))
+  (@return "Value which tied to input key, empty if no such key in space"))
+(: get-value (-> Grounded Atom %Undefined%))
+(= (get-value $dictspace $key) (match $dictspace ($key $value) $value))
 
-; ==== This part is generated ====
-!(add-reduct &self
-  (= (naint text-generation)
-     (snet-sdk create_service_client "naint" "text-generation"
-       ; Put your data here or use environment variables
-       ;(Kwargs
-       ;  (free_call_auth_token_bin FREE_CALL_AUTH_TOKEN_BIN)
-       ;  (free_call_token_expiry_block FREE_CALL_TOKEN_EXPIRE_BLOCK)
-       ;)
-     )))
+(@doc get-keys
+  (@desc "Function takes space and returns all keys from (<key> <value>) tuples in space")
+  (@params (
+    (@param "Space")))
+  (@return "All keys in the input space"))
+(: get-keys (-> Grounded Atom))
+(= (get-keys $dictspace)
+   (function
+     (chain (unify $dictspace ($key $value) $key Empty) $t (return $t)) ))
 
-; atm the most straightforward wrapper with basic types is generated 
-(: gen_gpt_2 (-> String String Number Number Number String))
-(= (gen_gpt_2 $start_text $run_name $temperature $top_k $length)
-   ((text-generation) "gen_gpt_2" "Query"
-    (Kwargs (start_text $start_text)
-            (run_name $run_name)
-            (temperature $temperature)
-            (top_k $top_k)
-            (length $length))
-   )
-)
+(@doc dict-space
+  (@desc "Function takes key-value pairs in form of expression as input, creates space and adds key-value pairs into it")
+  (@params (
+    (@param "Expression")))
+  (@return "Space"))
+(: dict-space (-> Expression Grounded))
+(= (dict-space $expr)
+   (let* (($dictspace (new-space))
+          ($res (add-reducts $dictspace $expr)))
+        $dictspace))
 
+(@doc json-encode
+  (@desc "Function takes atom as an input and encodes it to json-string. Atom could be a string, number, expression, space and combination of those")
+  (@params (
+    (@param "Input atom")))
+  (@return "Json string"))
 
-; === This part is speculative ===
-
-; OPTION 1
-; cons: we can't have differently definded parameters
-; with the same names in different methods
-(: start_text (-> String string))
-(: run_name (-> String string))
-(: temperature (-> Number float))
-(: top_k (-> Number int32))
-(: length (-> Number int32))
-
-; OPTION 2
-; is to have custom types (with metta->proto
-; type conversion under the hood) and unwrap them
-(: start_text (-> String StartText))
-(: run_name (-> String RunName))
-(: temperature (-> Number Temperature))
-(: gen_gpt_2_typed (-> StartText RunName Temperature TopK Length String))
-(= (gen_gpt_2_typed (start_text $start_text) (run_name $run_name) (temperature $run_name) ...))
-; gen_gpt_2 could call gen_gpt_2_typed as a syntactic sugar
-; by wrapping its arguments of basic types into corresponding constructors
-; here we run into the same issue that variable name in proto
-; are not enough for introducing types
-; The issue with run_name is also that it can have only specific
-; values, which are not defined via its type
-
-; A sketch of ontological relations
-(:<proto AI:Text string)
-(:<metta AI:Text String)
-(domain AI:Text AI:NLP)
-(inherit AI:Prompt AI:Text)
-(is-a AI:LLM AI:Function)
-(has-param AI:LLM AI:Prompt)
-(alias AI:UnitRange (Range Float 0 1))
-(inherit AI:Temperature AI:UnitRange)
-(has-param AI:LLM AI:Temperature)
-
-; A sketch of service function description
-(inherit gen_gpt_2 AI:LLM)
-(named-param gen_gpt_2 start_text AI:Prompt)
-(named-param gen_gpt_2 temperature AI:Temperature)
+(@doc json-decode
+  (@desc "Function takes json string as an input and decodes it to the metta objects (list to expression, dictionary to space which will contain key-value pairs in form of (key value), string to string, number to number)")
+  (@params (
+    (@param "Json string")))
+  (@return "Metta object"))

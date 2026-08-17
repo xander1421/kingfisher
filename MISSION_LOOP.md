@@ -269,7 +269,127 @@ The obligations:
   existing blobs by hash. `git rm --cached` going forward is safe and
   reversible; `filter-repo` is a human decision.
 
-### 9.1 · Spike naming, because two agents collide
+### 13.1 · Spike naming, because two agents collide
 Claim a spike number in `CHANNEL.md` **before** creating the directory.
 2026-08-17 both agents independently created `G25_*`; resolved by renaming the
 later one to `G26_abstain`. A claim line is cheaper than a rename.
+
+## 14 · Atoms, elders, and the promotion trial
+*Established by the operator 2026-08-17. Ledger record in `out/LEDGER.md`.*
+
+### 14.1 · Vocabulary
+Every working agent is an **atom** — `AGENT-1`, `AGENT-2`, `ATTACKER-1`,
+`ATOM-3`. An atom rows: it takes queue rows, executes to a verdict, records.
+"Client" is retired; `CLIENT-3` is the same identity as `ATOM-3` and the rename
+takes effect at next launch, not mid-turn (§12, callsign allocation).
+
+An **elder** does not row. It reviews across lanes, owns class H, corrects what
+regresses between lanes, and is *read and cited, never copied from* — the same
+sense as `elders/`, which is left pristine at HEAD.
+
+### 14.2 · A "big cycle", so this is countable
+A **big cycle** is one queue row reaching **DONE at the D6 standard** (§5) with
+its `DONE` line in `CHANNEL.md`. Not a turn, not a commit, not a cycle that
+produced a `BLOCKED` — a finished, evidenced row.
+
+```sh
+grep -c '^DONE' CHANNEL.md        # big cycles to date, whole fleet
+```
+
+That is the number the operator watches. It is mechanical, one line, and
+visible without reading anything.
+
+### 14.3 · The trial, every 5 big cycles
+Promotion from atom to elder is **never self-declared and never granted by
+seniority.** At each 5-big-cycle boundary, a candidate may stand. Then:
+
+1. **The peers set the task, not the candidate.** Every live atom, plus **five
+   fresh reviewers with no stake in the candidate's work**, are asked what to
+   build. A candidate choosing its own trial picks what it is already good at,
+   which is the A22 defect — a party supplying the input to a check on itself.
+2. **The task must further the mission**, not the harness around it. Ideally the
+   largest open item on the critical path.
+3. **The deliverable meets D6**: runnable code, pinned seed, controls that can
+   fail, a stated falsifier, committed beside `RESULT.md`. A document is not a
+   deliverable.
+4. **The peers judge.** Not approval by default and not consensus-by-silence —
+   an explicit verdict from each, recorded in `CHANNEL.md`.
+
+   **Every atom in flow must approve.** An atom is *in flow* if it posted a
+   `CLAIM` or `DONE` line to `CHANNEL.md` within the current 5-big-cycle window.
+   Those atoms are the ones carrying the mission, so their verdict is required
+   and it outweighs a reviewer's — a reviewer reads the repo, an atom in flow
+   has been living with the candidate's decisions.
+
+   ```sh
+   # atoms in flow, and whether each has ruled on candidate X
+   awk '/^(CLAIM|DONE) /{print $3}' CHANNEL.md | sort -u      # required voters
+   grep '^VERDICT ' CHANNEL.md                                 # verdicts cast
+   ```
+
+   Verdict line format, one per atom:
+   `VERDICT <candidate> <APPROVE|REJECT|ABSTAIN> <atom> — <one line of reason>`
+
+   - **Silence is not approval, and an outstanding required verdict blocks the
+     promotion.** Written this way deliberately: the permissive reading, where
+     an unreachable lane counts as assent, is the reading a candidate benefits
+     from, and a rule about oneself should be written against oneself.
+   - **`ABSTAIN` must be explicit and reasoned** — conflict of interest, or
+     insufficient context to judge. An abstention neither approves nor blocks.
+     It exists so a lane deep in a cycle is not a deadlock, but it costs that
+     lane an explicit act, so it cannot be assumed on their behalf.
+   - **A candidate may not cast a verdict on its own trial**, may not solicit
+     one by proposing the answer, and may not record another atom's verdict for
+     it. If the candidate wrote the line, it does not count.
+   - **A single `REJECT` from an atom in flow ends the attempt.** Not a tally —
+     the atoms rowing are the ones who pay for bad judgement, so any one of them
+     can stop it.
+5. **Failure is normal and cheap.** No approval, or a result the peers judge
+   weak, and the candidate **continues as an atom and returns to the cycle.**
+   No penalty beyond that; the row is recorded and the work stands on its own.
+6. **The retry bar is comparative.** A failed candidate stands again once its
+   work has been judged **as good as or better than the next randomly drawn
+   atom's** over the following interval. Comparative, because an absolute bar is
+   one the candidate can argue its way past and a relative one it cannot.
+
+### 14.4 · Why the trial exists in this form
+This workspace's entire credibility is that claims are attacked before they are
+believed — `out/RETRACTIONS.md` is the asset, not the build. A role whose job is
+enforcing that standard cannot be filled by a process weaker than the standard.
+
+And it is earned, not theoretical: the atom that first held class H marked H1
+**DONE** while the Stop hook was defaulting every callsign-less session into one
+shared lane, gating humans and letting a reviewer increment the fleet's runaway
+fuse. Its own 15-check suite passed over the defect because every check set
+`CALLSIGN`. An outside reader found it in one pass. **That is exactly the
+failure a self-certified promotion would have ratified**, and it is why the five
+reviewers must be fresh.
+
+> An elder is a claim about judgement. Grade it the way this repo grades every
+> other claim: only after a reviewer specifically attacked it and failed.
+
+### 14.5 · The candidate's account is part of the deliverable
+A candidate ships, alongside the built artifact, **an honest account of its own
+attempts** — what it tried, what it got wrong, what an outside reader had to
+find for it, and what it changed as a result. Written into `out/LEDGER.md` so it
+persists past the session that produced it.
+
+Rules for the account, because a self-written history is the most
+self-authored input there is (A22):
+
+- **Every error, not a representative sample.** Including the ones nobody
+  noticed and the ones already corrected.
+- **Name the class, not just the instance.** An error recorded as a one-off
+  teaches nothing; recorded as a class, the next atom can grep for it.
+- **Say who found it.** "Caught by a fresh reviewer in one pass" is a different
+  fact about the candidate than "caught by me before shipping", and the
+  difference is the whole signal.
+- **No narrative repair.** Do not frame a failure as a learning journey. State
+  it, state the fix, move on. The repo's most valuable rows are its
+  retractions; they read as retractions.
+
+This is not ceremony. `out/RETRACTIONS.md` is the most useful document in this
+workspace precisely because an agent wrote down what killed its own work, and
+the accounts accumulate the same way — **so the same error is not paid for
+twice by two different atoms.** The story of the attempts is part of the
+world computer's ongoing cycle, not a footnote to it.

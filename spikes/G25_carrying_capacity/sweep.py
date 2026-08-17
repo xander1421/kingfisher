@@ -75,28 +75,28 @@ RUNS = os.path.join(HERE, "runs")
 # Ordered decisive-first: a run that dies halfway still answers the question.
 CONFIGS = [
     # C1: must reproduce G24 exactly.
-    ("full_base",         "full",              120.0, 0.5, 0.05,  200),
+    ("full_base",         "uniform_parents",   120.0, 0.5, 0.05,  200),
     # C4 / the missing 2x2 cell: unselected AND unguided.
-    ("nodeath_noabduct",  "no_death+no_abduct", 120.0, 0.5, 0.05,  200),
+    ("nodeath_noabduct",  "no_death+no_abduct+uniform_parents", 120.0, 0.5, 0.05,  200),
     # C2: does the cap bind, or the rent?
-    ("full_cap2000",      "full",              120.0, 0.5, 0.05, 2000),
+    ("full_cap2000",      "uniform_parents",   120.0, 0.5, 0.05, 2000),
     # the capacity sweep: selection intact, carrying capacity raised ~5x so a
     # SELECTED population reaches no_death's size and can be compared to it.
-    ("wage600",           "full",              600.0, 0.5, 0.05, 2000),
-    ("wage300",           "full",              300.0, 0.5, 0.05, 2000),
-    ("wage1200",          "full",             1200.0, 0.5, 0.05, 2000),
+    ("wage600",           "uniform_parents",   600.0, 0.5, 0.05, 2000),
+    ("wage300",           "uniform_parents",   300.0, 0.5, 0.05, 2000),
+    ("wage1200",          "uniform_parents",  1200.0, 0.5, 0.05, 2000),
     # the dial turned out SUBLINEAR: 10x the pool bought 2.1x the population,
     # because a rule only draws a wage if its confidence exceeds the adversary's
     # and the supply of such rules is finite. These two say whether that is
     # saturation or just a slow climb -- it decides whether a selected
     # population can be grown to no_death's 557 at all.
-    ("wage2400",          "full",             2400.0, 0.5, 0.05, 4000),
-    ("wage4800",          "full",             4800.0, 0.5, 0.05, 4000),
+    ("wage2400",          "uniform_parents",  2400.0, 0.5, 0.05, 4000),
+    ("wage4800",          "uniform_parents",  4800.0, 0.5, 0.05, 4000),
     # is the capacity gain (if any) abduction-driven at the larger capacity too?
-    ("wage600_noabduct",  "no_abduct",         600.0, 0.5, 0.05, 2000),
+    ("wage600_noabduct",  "no_abduct+uniform_parents", 600.0, 0.5, 0.05, 2000),
     # no_death re-run under this harness rather than cited from G24's json, so
     # every row on the plane comes from one process and one code state.
-    ("nodeath",           "no_death",          120.0, 0.5, 0.05,  200),
+    ("nodeath",           "no_death+uniform_parents", 120.0, 0.5, 0.05,  200),
 ]
 
 

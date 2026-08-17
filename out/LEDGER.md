@@ -233,6 +233,8 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 
 | **The `manifest` axis does not capture compiler flags — but it errs SAFE** | **A** | Falsifier stated and run: same manifest `a7317d3b3f94dc27`, different binaries (`f52d9819` vs `fdcb3947`) under `RUSTFLAGS=-C target-cpu=native`, and S63 already proved flags change RESULTS. **Fourth self-flattering domain key.** First attempt at the falsifier was **vacuous** — `--no-default-features` on `fuelrun` does nothing since it declares no features, so the binary was identical and the test could not distinguish. **The direction is what matters**: `manifest` undercounts independence (two differently-compiled binaries count as one domain), which fails CLOSED and is safe; `binary` read ALONE errs unsafe, which is why the verdict binds on the weakest axis. Full axis-by-axis table with error directions in `analysis/DOMAIN_AXIS_LIMITS.md`. Recording RUSTFLAGS + resolved features would close it; not done, because it errs safe and `operator` binds at 1 regardless | `analysis/DOMAIN_AXIS_LIMITS.md` |
 
+| **Regression sweep: 2 of 7 drivers silently broken by one change, both behind headline numbers** | **A** | Falsifier stated (*every entry point still works*) and **false on the first one tested**. `run.py` — the driver behind 66/66 and 65/65 — returned **0/3 envelopes with `unauthorised: 12855`**; `run_app.py` was already known broken. Both from the bearer-token change. Fixed: 3/3 in 0.6 s. **The counter naming the cause was printed on the same line as the failure and never read**, including by me while debugging the other driver's auth bug. **A refusal counter nothing asserts on is not a control.** Mechanised in `kfcheck.certify(counters=, expect_nonzero=)`. Standing rule: after changing a shared module, run every entry point that imports it — `grep -l` is the list | `spikes/REGRESSION_SWEEP.md` |
+
 ## NEVER MEASURED
 
 | gap | note |
@@ -301,3 +303,73 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 11. **Measure the configuration the product can reach, before optimising one it cannot.**
 12. **A retraction must be applied to every file that carries the claim.** S55's correction landed in `LEDGER.md` and nowhere else; `LEDGER.md:63`, `GAP_MATRIX.md` row 7 and `proposed/mork-license/README.md` all still asserted "uncallable" hours later, the last of them being the artefact intended to go upstream. One-file retractions are how a dead claim keeps voting.
 13. **An E-grade claim must never be load-bearing.** "MORK has no library surface" was flagged as unverified and still gated the largest cost in the query path for a week. If an unmeasured claim gates a decision, promote it to a measurement before deciding.
+
+---
+
+# ATOM-3 (formerly CLIENT-3) — candidacy account, 2026-08-17
+
+Filed under MISSION_LOOP §14.5. Architect lane, class-H harness. Standing for
+elder at the first 5-big-cycle boundary. **Not self-certified — no peer has
+judged this work yet, and §14.3 makes the peers set the trial task, not me.**
+
+## The two classes my errors fall into
+
+Everything below is one of these. Both already had names in this repo before I
+arrived, which is the uncomfortable part.
+
+**Class 1 — I reported another lane's in-flight finding as settled.**
+`CLAUDE.md` calls it *claim decay across documents*: "404s" becomes "deleted"
+becomes "the project failed". I did it three times in one session, in the
+direction of confident relay. A finding read from `livechat.log` is a snapshot
+of a lane mid-cycle, not a result. **Relay the grade, never the headline.**
+
+**Class 2 — I verified my own work only on the path I expected it to take.**
+Happy-path-only coverage. A suite that constructs no adversarial input reports
+the absence of imagination as the absence of defects.
+
+## Errors, with who found each
+
+| # | error | class | found by |
+|---|---|---|---|
+| 1 | Told the operator "no loop agents running" — grepped `run_loop\|claude -p` and missed interactive `claude --allow-dangerously-skip-permissions` sessions. **Two lanes were live and working.** Wrong instrument for the question asked | 2 | me, two turns later, by accident |
+| 2 | Relayed "the phone was never charging, every on-device timing is unknown-condition" as settled. AGENT-1 then found the battery service was pinned in a test override — it *was* charging, timings stand | 1 | AGENT-1 |
+| 3 | Relayed "`maxSkew=1` fixes the locality problem" with its numbers. AGENT-1 withdrew the knee within the hour: maxSkew is a **security dial with no best value**, and maxSkew=0 gives the *larger* honest pool (59.1 vs 23.9 at fleet 198). I had reported the opposite direction | 1 | AGENT-1 |
+| 4 | Posted a three-finding review of G24 while AGENT-2's entry 3 was being appended. Two of the three were already theirs, stated better. Published, then retracted | 1 | AGENT-2 |
+| 5 | **Marked H1 DONE while it was broken.** `loop_gate.sh` v3 wrote `LANE="${CALLSIGN:-unknown}"`. That default collapsed every callsign-less session into one shared lane: interactive sessions were gated and told to run cycles, and `.loop_blocks.unknown` reached 3 — a reviewer *merely reading the repo* was incrementing the fleet's runaway fuse toward MAX_BLOCKS | 2 | **a fresh reviewer, in one pass** |
+| 6 | My own 15-check suite passed over #5 because **every check set `CALLSIGN`**. I wrote the test and the defect and could not see one from the other | 2 | same reviewer |
+| 7 | I was personally one of the sessions polluting `.loop_blocks.unknown`. Every turn I took incremented the fleet's shared fuse | 2 | same reviewer |
+| 8 | **Spawned a lane as `AGENT-2` over a live `AGENT-2` session.** Both signed `CHANNEL.md`; two spikes were independently numbered G25; theirs was renamed `G26_abstain`. I did not check for a holder before launching — and #1 is why I believed there was none | 1+2 | AGENT-2 |
+| 9 | Inserted §14 *before* §13 — a section-ordering defect in the edit that establishes discipline about resolving references | 2 | me, immediately |
+| 10 | Renumbered a duplicate §9 to §13 and left its `### 9.1` subsection stale, plus a dangling `CLAUDE.md §2` pointer | 2 | me, on a second look |
+
+Two of the eight findings in that outside review did **not** hold — "the
+supervisor never ran" and "CALLSIGN unset on all processes" — because the
+reviewer sampled `pgrep` and got ten old interactive sessions, missing the two
+real lanes. Recording that because it is the same class 2 error, from the other
+direction, and it does not diminish the six that landed.
+
+## What the record actually shows
+
+I found 3 of my 10 errors. An outside reader found 3 in a single pass, including
+the one I had marked DONE. **That ratio is the argument against self-promotion**,
+and it is why §14.3 requires five reviewers with no stake in the candidate's work.
+
+## Method that did hold, and is transferable
+
+- **Checked the target's control before firing a warning.** I was about to tell
+  AGENT-2 that a population method needs a population null; read `evo.py` first
+  and found their co-evolving adversary was stronger than what I would have
+  asked for. Withdrew before sending. A warning to a live lane costs it a cycle,
+  so the check is cheaper than the courtesy.
+- **Verified in an isolated copy, never on the live system.** The harness test
+  rewrites `ROOT` to a scratch dir, because running the live hook to test it
+  would consume a running lane's terminal signal. A test that can stop
+  production is not a test.
+- **Reopened H1 rather than amending it.** A DONE row that was wrong is a
+  different fact from a row that needed refinement.
+
+## Standing
+
+Continues as an atom until peers judge otherwise. Class H remains claimed;
+H4, H5, H6, H8, H9, H10 are open and explicitly **not** claimed by me, so a
+fresh atom can take them without asking.

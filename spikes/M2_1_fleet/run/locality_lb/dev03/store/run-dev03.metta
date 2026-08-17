@@ -1,30 +1,39 @@
-!(import! &self compile)
+(@doc random-int
+  (@desc "Returns random int number from range defined by two numbers (second and third argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Range start")
+    (@param "Range end")))
+  (@return "Random int number from defined range"))
 
-!(bind! &jspace (new-jetta-space))
-!(jetta &jspace "
-            (@ foo multivalued)
-            (: foo (-> Int))
-            (= (foo) (seq 1 2 3))
+(@doc random-float
+  (@desc "Returns random float number from range defined by two numbers (second and third argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Range start")
+    (@param "Range end")))
+  (@return "Random float number from defined range"))
 
-            (@ bar multivalued)
-            (: bar (-> Int))
-            (= (bar) (+ 1 (if (>= (foo) 2) (+ 1 (foo)) 0)))")
-!(assertEqualToResult
-   (jetta &jspace "(foo)")
-   (1 2 3))
-!(assertEqualToResult
-   (jetta &jspace "(bar)")
-   (1 3 4 5 3 4 5))
+(@doc set-random-seed
+  (@desc "Sets a new seed (second argument) for random number generator (first argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Seed")))
+  (@return "Unit atom"))
 
-(@ goo multivalued)
-(: goo (-> Int))
-(= (goo) (seq 1 2 3))
-; FIXME: `(= (goo) (+ 1 (seq 1 2 3)))` doesn't work
-!(compile &jspace goo)
-;(@ doo multivalued)
-(: doo (-> Int Int))
-(= (doo $x) (+ $x (goo)))
-!(compile &jspace doo)
-!(assertEqualToResult
-  (doo-gnd 1)
-  (2 3 4))
+(@doc new-random-generator
+  (@desc "Creates new random number generator instance using seed as input (first argument)")
+  (@params (
+    (@param "Seed")))
+  (@return "Instance of random number generator"))
+
+(@doc reset-random-generator
+  (@desc "Resets instance of random number generator (first argument) to its default behavior (StdRng::from_os_rng())")
+  (@params (
+    (@param "Random number generator instance")))
+  (@return "Random number generator instance with default behavior"))
+
+(@doc flip
+  (@desc "Random boolean value")
+  (@params ())
+  (@return "Returns uniformly distributed random boolean value"))

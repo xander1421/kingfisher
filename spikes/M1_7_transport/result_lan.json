@@ -1,7 +1,7 @@
 {
  "lan_ip": "192.168.1.25",
  "tls": true,
- "spki_sha256": "1P74+TNkmPdy3RsPwg2P1iDNY7j9nemszQHS/0eo2C8=",
+ "spki_sha256": "MU9LLCNVuE6jAwLMjjbMAii8NvaytTuN9Gc3xl6CNV8=",
  "envelopes": [
   {
    "job_id": "j0000",
@@ -15,15 +15,6 @@
   {
    "job_id": "j0001",
    "worker": "phone",
-   "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
-   "status": "OK",
-   "fuel_used": "580",
-   "sorted_hash": "2a2b9159f3f12fed5208047a231c5814bd889dd0532a217a09e89d06ce6b7d38",
-   "raw_hash": "491f2bb0014923597b9be59ddffa9897a8259b237737ca8995877119de478702"
-  },
-  {
-   "job_id": "j0002",
-   "worker": "phone",
    "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
    "status": "OK",
    "fuel_used": "4",
@@ -31,7 +22,7 @@
    "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   {
-   "job_id": "j0003",
+   "job_id": "j0002",
    "worker": "phone",
    "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
    "status": "OK",
@@ -40,157 +31,22 @@
    "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   {
-   "job_id": "j0004",
+   "job_id": "j0003",
    "worker": "phone",
    "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
    "status": "OK",
    "fuel_used": "7",
    "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0005",
-   "worker": "phone",
-   "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
-   "status": "OK",
-   "fuel_used": "12",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0006",
-   "worker": "phone",
-   "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
-   "status": "OK",
-   "fuel_used": "7",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0007",
-   "worker": "phone",
-   "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
-   "status": "OK",
-   "fuel_used": "7",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0008",
-   "worker": "phone",
-   "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
-   "status": "OK",
-   "fuel_used": "3",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0009",
-   "worker": "phone",
-   "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
-   "status": "OK",
-   "fuel_used": "1",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0010",
-   "worker": "phone",
-   "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
-   "status": "OK",
-   "fuel_used": "302",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0011",
-   "worker": "phone",
-   "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
-   "status": "OK",
-   "fuel_used": "48584",
-   "sorted_hash": "698293cdfccfa2f21f12db895077ac187e7b470378d960c6b21a657b782d6165",
-   "raw_hash": "3887fb43d49c87dc3b302ee7880b05ff82aeae53dd81d227c00d060adc4b8e6b"
-  },
-  {
-   "job_id": "j0012",
-   "worker": "phone",
-   "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
-   "status": "OK",
-   "fuel_used": "3",
-   "sorted_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-   "raw_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  },
-  {
-   "job_id": "j0013",
-   "worker": "phone",
-   "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
-   "status": "OK",
-   "fuel_used": "107",
-   "sorted_hash": "a310b987024f5bdc109754bc44f9dccadfd6dee76c10bb5b64fbaabe8c81a5be",
-   "raw_hash": "90a77c06d5abab6758732f52124fe6adf04b40e489d824bfd69e9ebd1336142b"
-  },
-  {
-   "job_id": "j0014",
-   "worker": "phone",
-   "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
-   "status": "OK",
-   "fuel_used": "891",
-   "sorted_hash": "958bf80640166deaad6c2941a300b2d12f7217cdfca33be5c912b7f92edfafa9",
-   "raw_hash": "2231c623e54672a23ba78021fb961b3edc5118d989eeb44d55a27b7c148f5b97"
-  },
-  {
-   "job_id": "j0015",
-   "worker": "phone",
-   "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
-   "status": "OK",
-   "fuel_used": "891",
-   "sorted_hash": "958bf80640166deaad6c2941a300b2d12f7217cdfca33be5c912b7f92edfafa9",
-   "raw_hash": "2231c623e54672a23ba78021fb961b3edc5118d989eeb44d55a27b7c148f5b97"
-  },
-  {
-   "job_id": "j0016",
-   "worker": "phone",
-   "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
-   "status": "OK",
-   "fuel_used": "107",
-   "sorted_hash": "a310b987024f5bdc109754bc44f9dccadfd6dee76c10bb5b64fbaabe8c81a5be",
-   "raw_hash": "90a77c06d5abab6758732f52124fe6adf04b40e489d824bfd69e9ebd1336142b"
-  },
-  {
-   "job_id": "j0017",
-   "worker": "phone",
-   "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
-   "status": "OK",
-   "fuel_used": "587",
-   "sorted_hash": "19d61b53f1be62d378a89c0f9a5435bd36ae93f1b25d5a7f726ef44b4d295775",
-   "raw_hash": "7ac34aba33a2c06d91ee39eb0ad19f0b77d1d2a377a34dd87565c91abe848015"
-  },
-  {
-   "job_id": "j0018",
-   "worker": "phone",
-   "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
-   "status": "OK",
-   "fuel_used": "107",
-   "sorted_hash": "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3",
-   "raw_hash": "5d0c07f0d906bdae40aa2c6fdbc107ac3d7795d33a761f6089f87d40339a061b"
-  },
-  {
-   "job_id": "j0019",
-   "worker": "phone",
-   "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
-   "status": "OK",
-   "fuel_used": "107",
-   "sorted_hash": "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3",
-   "raw_hash": "5d0c07f0d906bdae40aa2c6fdbc107ac3d7795d33a761f6089f87d40339a061b"
   }
  ],
  "stats": {
-  "polls": 21,
-  "jobs_out": 20,
-  "shard_bytes": 83375,
-  "results": 20,
+  "polls": 5,
+  "jobs_out": 4,
+  "shard_bytes": 7200,
+  "results": 4,
   "misses": 0,
   "unauthorised": 1
  },
- "wall_s": 10.8
+ "wall_s": 1.2
 }

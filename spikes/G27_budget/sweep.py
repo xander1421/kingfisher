@@ -70,22 +70,22 @@ RUNS = os.path.join(HERE, "runs")
 # selected, and the no_death point it would be compared against.
 CONFIGS = [
     # C1' the repro cell: identical to G25's wage1200 under the same seed.
-    ("sel_r15_o40",    "full",     1200.0, 0.5, 0.05, 4000, 15,  40),
+    ("sel_r15_o40",    "uniform_parents",     1200.0, 0.5, 0.05, 4000, 15,  40),
     # more proposals per round -- 4x the supply at the same number of rounds
-    ("sel_r15_o160",   "full",     1200.0, 0.5, 0.05, 4000, 15, 160),
+    ("sel_r15_o160",   "uniform_parents",     1200.0, 0.5, 0.05, 4000, 15, 160),
     # more rounds -- same supply per round, more chances to accumulate survivors
-    ("sel_r45_o40",    "full",     1200.0, 0.5, 0.05, 4000, 45,  40),
-    ("sel_r30_o40",    "full",     1200.0, 0.5, 0.05, 4000, 30,  40),
+    ("sel_r45_o40",    "uniform_parents",     1200.0, 0.5, 0.05, 4000, 45,  40),
+    ("sel_r30_o40",    "uniform_parents",     1200.0, 0.5, 0.05, 4000, 30,  40),
     # both, if either alone falls short of 557
-    ("sel_r45_o160",   "full",     1200.0, 0.5, 0.05, 4000, 45, 160),
+    ("sel_r45_o160",   "uniform_parents",     1200.0, 0.5, 0.05, 4000, 45, 160),
     # no_death on the same budgets, for the budget-matched comparison. Its
     # population is its budget, so these are also the population reference
     # points. r45_o160 is deliberately absent: pop would be ~7000 and the body
     # walks are superlinear in population, which buys nothing the cheaper cells
     # do not already show.
-    ("nd_r15_o40",     "no_death",  120.0, 0.5, 0.05,  200, 15,  40),
-    ("nd_r30_o40",     "no_death",  120.0, 0.5, 0.05,  200, 30,  40),
-    ("nd_r15_o160",    "no_death",  120.0, 0.5, 0.05,  200, 15, 160),
+    ("nd_r15_o40",     "no_death+uniform_parents",  120.0, 0.5, 0.05,  200, 15,  40),
+    ("nd_r30_o40",     "no_death+uniform_parents",  120.0, 0.5, 0.05,  200, 30,  40),
+    ("nd_r15_o160",    "no_death+uniform_parents",  120.0, 0.5, 0.05,  200, 15, 160),
 ]
 
 

@@ -1,34 +1,39 @@
-!(import! &self snet_io)
+(@doc random-int
+  (@desc "Returns random int number from range defined by two numbers (second and third argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Range start")
+    (@param "Range end")))
+  (@return "Random int number from defined range"))
 
-; Only etherium endpoint is needed for retrieving metadata
-; It should be either provided via init parameters or
-; in the environment variable (ETH_RPC_ENDPOINT).
-; In the latter case, it is not necessary to call `init`
-; explicitly.
-; !(snet-sdk init (eth_rpc_endpoint "YOUR ETH ENDPOINT"))
+(@doc random-float
+  (@desc "Returns random float number from range defined by two numbers (second and third argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Range start")
+    (@param "Range end")))
+  (@return "Random float number from defined range"))
 
-!(snet-sdk organization_list)
+(@doc set-random-seed
+  (@desc "Sets a new seed (second argument) for random number generator (first argument)")
+  (@params (
+    (@param "Random number generator instance")
+    (@param "Seed")))
+  (@return "Unit atom"))
 
-; Both positional and named arguments can be passed to snet-sdk
-!(snet-sdk service_list (org_id "snet"))
-!(snet-sdk service_list "naint")
+(@doc new-random-generator
+  (@desc "Creates new random number generator instance using seed as input (first argument)")
+  (@params (
+    (@param "Seed")))
+  (@return "Instance of random number generator"))
 
-; We can create a service client and get its details without
-; using a secret key, opening a channel, or using free calls
-!(let $service
-   (snet-sdk create_service_client "naint" "question-answering-long-seq")
-   ((py-dot $service get_service_messages)))
+(@doc reset-random-generator
+  (@desc "Resets instance of random number generator (first argument) to its default behavior (StdRng::from_os_rng())")
+  (@params (
+    (@param "Random number generator instance")))
+  (@return "Random number generator instance with default behavior"))
 
-(bind! &image-generation
-  (snet-sdk create_service_client "naint" "image-generation"))
-((py-dot &image-generation get_service_messages))
-; turn service description in textual metta code
-((py-dot &image-generation generate_callers_text))
-
-; add all info to space at once
-!(add-reduct &self
-  (snet-sdk create_service_space naint punctuation-restoration))
-; (naint punctuation-restoration) returns a service caller now
-!((py-dot (naint punctuation-restoration) get_service_messages))
-; we can also get a list of all service methods as typed metta functions
-!(naint punctuation-restoration methods)
+(@doc flip
+  (@desc "Random boolean value")
+  (@params ())
+  (@return "Returns uniformly distributed random boolean value"))
