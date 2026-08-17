@@ -120,19 +120,43 @@ imbalance never decays, because nothing ever makes a non-holder resident. This
 is S61's warning as a dynamic rather than a snapshot: the policy is a
 ratchet, and one round of skewed demand fixes the assignment permanently.
 
-## The finding I did not expect: coverage is an OUTPUT, not an input
-Pure locality drives coverage to **2.91 holders per shard and stalls there**,
-while random reaches 11.20. Locality does not merely *perform badly at* low
-coverage — **it creates low coverage**.
+## CORRECTED — the falsifier fired, and the corrected law is worse
 
-That closes a loop with Q1. Q1 measured **72% quorum capture at an honest pool
-of 3**, and treated pool size as a property of the fleet. It is not: it is a
-consequence of the routing policy. **Pure locality routing drives the honest
-pool for each shard to ~3, which is precisely Q1's worst measured case.**
+I claimed pure locality "drives coverage to ~2.91, which is precisely Q1's worst
+measured case (72% capture at honest pool 3)". I stated the falsifier — stalling
+at ~3 could be `k=3` in disguise — and then marked it *not yet run*. It takes
+thirty seconds. Run, fleet 24, k in {3,5,7}:
 
-So the S69/S70 root cause — verification eligibility coupled to shard residency
-— is not just a coupling to be broken. Under locality routing the coupling
-*tightens over time on its own*.
+| k | policy | coverage | hot-shard coverage | imbalance |
+|---|---|---|---|---|
+| 3 | locality_pure | 3.00 | **3.00** | 27.3x |
+| 5 | locality_pure | 4.77 | **5.00** | 20.2x |
+| 7 | locality_pure | 7.00 | **7.00** | 22.9x |
+| 3 | locality_capped | 4.35 | **7.38** | 1.13x |
+| 5 | locality_capped | 6.74 | **10.38** | 1.13x |
+| 7 | locality_capped | 9.11 | **13.50** | 1.07x |
+
+**Coverage stalls at exactly `k`.** The Q1 link at 3 was a coincidence of both
+numbers being 3, and my claim as written is refuted.
+
+The law it refutes into is sharper and the consequence is worse:
+
+> **Pure locality pins holders-per-shard to exactly the quorum size.**
+> There is no redundancy beyond the quorum itself — every job on a hot shard
+> goes to the same `k` devices, forever.
+
+Q1's capture arithmetic assumes an honest pool *larger* than the quorum, and
+computes the chance an attacker wins enough seats. Under pure locality **the
+pool IS the quorum**. An operator holding those `k` devices does not capture
+72% of that shard's jobs; it captures **all of them**, and no amount of fleet
+growth changes it, because a non-holder never becomes resident.
+
+The cap restores a pool larger than the quorum, and does so most where it
+matters: hot-shard coverage **7.38 at k=3**, against 3.00 uncapped — 2.5x the
+redundancy exactly on the shards an attacker would target.
+
+**The mechanism is the ratchet, not the number.** That is what survives, and
+stating the falsifier is what got it.
 
 ## The cap fixes the dynamic, not just the snapshot
 `maxSkew=1` holds imbalance at 1.06–1.15x across all twelve rounds **and** keeps
@@ -145,8 +169,8 @@ as well as the imbalance.
 scheduler that occasionally imbalances — it is a scheduler that walks itself
 into the fleet configuration its own verification model is weakest against.
 
-## What would falsify this
-Coverage stalling at ~3 is `k=3` plus a ratchet: exactly the quorum size, which
-is suspicious in a way worth stating. If coverage stalls at `k` for k=5 and k=7
-too, the mechanism is "locality pins holders at exactly quorum size" and the
-Q1 connection is a coincidence of both being 3. **Not yet run.**
+## What would falsify what remains
+The ratchet is now measured at k=3,5,7 on one fleet size and one skew. It has
+**not** been shown at zipf 0 (where §1 found no tension at all), nor at fleet
+sizes where `njobs/fleet` is small enough that the ratchet cannot engage within
+12 rounds. Both are cheap and neither is run.
