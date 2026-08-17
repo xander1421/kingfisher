@@ -1,0 +1,12 @@
+{
+ "persistent, Nagle ON (default)": {
+  "median": 51.899,
+  "p90": 57.053,
+  "min": 48.245000000000005
+ },
+ "persistent, TCP_NODELAY": {
+  "median": 6.962000000000001,
+  "p90": 8.551,
+  "min": 4.876
+ }
+}
