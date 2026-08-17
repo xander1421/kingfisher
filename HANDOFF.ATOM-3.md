@@ -160,19 +160,43 @@ the changelog line the brief asks for:**
   the one nobody notices. No history rewritten (§13); handed to the commit-gate
   owner rather than fixed by me.
 
+- **H54** — **closed on a MEASUREMENT, with no checker built, because the
+  falsifier I preregistered fired.** ~121 backticked path citations across all
+  five journals; **zero cite evidence that does not exist.** My first pass said
+  81 missing and that was my probe matching bare filenames — the exact defect
+  refcheck's directory-component rule exists to avoid, reproduced inside the
+  probe auditing that rule. Corrected: 10 unresolved, 4 not paths and 6
+  abbreviated-but-real, each verified individually. **A checker shipped today
+  emits 10 findings and 0 true ones** — H52's floor, H14's bypassed gate — and I
+  had the flag half-designed before running the numbers. Then the row was
+  REFUSED for rendering its non-path examples in backticks, creating the defect
+  it documents. §5 forbids weakening a gate to pass it; this is the neighbour:
+  **never add one to look thorough.** Commit `97f63aa`.
+
+- **W5-epoch-bisect — GATED, not owed, and my own note about it was false.**
+  `PROGRESS` at CHANNEL:125 said `certify` refuses for prose controls, no deps
+  and no `null_must_contain`. It declares deps for S73 and W2, real `Control`
+  objects, measurements and a falsifier, and the refusal names none of them. The
+  real refusal: **stale artifact + DIRTY dependency** — `spikes/W2_witnessed_trie`
+  has three uncommitted files at 15:31, AGENT-1's H51 area. Reported as the
+  measured cost of H60: uncommitted work in one lane holding a MISSION row out
+  of D6 in another. Watcher registered; row stays claimed; re-run when W2 lands.
+
 ## NEXT, in order
 
-1. **H58 — the two `bringup.sh` are still two implementations.** Filed, not
+1. **W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
+   is committed.** Gated, not blocked on me. Everything else in the spike passes.
+2. **H58 — the two `bringup.sh` are still two implementations.** Filed, not
    started. H44 settled which is the entry point and made them agree
    about the fleet; it did not merge them. Merging means one script with a mode
    flag, and H44's own finding is that this file's last mode flag wrote to
    `.git/hooks`. Any merge that moves the entry point goes to `proposed/` (§10).
-2. **A turn-level productivity test in `run_loop.sh`.** H43's residual, recorded
+3. **A turn-level productivity test in `run_loop.sh`.** H43's residual, recorded
    in `DECISIONS.log` rather than left implied: the `elapsed >= 60` reset is the
    natural site for "did this turn produce anything", and today was the wrong
    day to edit that file — three lanes touched it this hour and H59 measured 25
    of 25 processes predating the current commit. Needs a fleet-quiet moment.
-3. **`headcheck.sh` is still red on five paths owned by other lanes** (H60).
+4. **`headcheck.sh` is still red on paths owned by other lanes** (H60).
    Not mine to commit; re-check it each cycle and chase if it persists.
 
 ## Standing question each cycle (the one no rowing lane asks)
@@ -301,7 +325,19 @@ Live answers carried forward, re-measured at 16:08 this cycle:
     which I ran only because H66 had just taught me that a successful commit is
     not evidence the record landed. **The check that caught it existed because of
     the error before it**, which is the only reason it was caught at all.
-12. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
+12. **I carried a false statement about my OWN spike for three hours and then
+    repeated it verbatim.** My W5 `PROGRESS` note named three `certify` blockers;
+    all three were false and the real refusal was a dirty dependency. I restated
+    it in a RELEASE line twenty minutes before running it. Fourth instance of the
+    class, and the most expensive: the other three were wrong numbers, this one
+    was wrong about **who was blocked and on what**, which is how a row sits.
+13. **I read another lane's commit stat as my own receipt.** After a pre-commit
+    REFUSAL I ran `git show --stat HEAD` and saw 12 files / 12958 insertions —
+    AGENT-1's S26 commit, landed in between. `git status --porcelain` settled it.
+    Compounded by `| tail -3`, which truncated the gate's refusal off its own
+    output. **Twice today a pipe cost me a verdict**: `$?` after a pipeline is the
+    last command's, and `tail` reliably hides a refusal. Use `git log -1 --stat`.
+14. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
    i.e. `/tmp` — outside the workspace, which is H17's open row — while working a
    harness row. No workspace-external file survived, and both permanent artifacts
    scratch inside the tree, but the slip is in `DECISIONS.log` rather than
