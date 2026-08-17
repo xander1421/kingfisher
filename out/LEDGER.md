@@ -20,6 +20,14 @@ Three rules v1 broke:
 
 ## ⚠ Read before any performance number below
 
+**Every device measurement in this workspace ran ungated.** `quiet.sh` checked
+only the host until 2026-08-17; `--device` mode now exists. On introduction the
+phone read **loadavg 9.26 on 8 cores** and **not charging**. S34, S50–S54, S57,
+S62 and S63 were all taken without this check, and the determinism results among
+them (digests) are unaffected while the **throughput** results are not
+re-validated.
+
+
 **S54: Android's `background` cpuset is `0-1,4-5`.** A charge-time worker gets **four cores, never a prime core**; `sched_setaffinity(cpu7)` is silently overridden. `top-app` spans 0–7, but S6's whole premise is that we are not the foreground app.
 
 Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the attacker's 67.9 (T=8), the 2.018× prime NEON advantage — is from a configuration **the product cannot enter**. Upper bounds on hardware, not estimates of the deliverable.

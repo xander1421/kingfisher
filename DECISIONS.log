@@ -95,3 +95,5 @@
 76 | 2026-08-17 | S69 closes C4: rare-shard attack costs 50% of the POOL (a 3-device pool costs 2 devices). Minimum breadth is weak and linear. One replica drawn fleet-wide collapses it - forces 2-of-2 not 2-of-3, so P ~ f^2; with R>=25 an adversary needs ~72% of the pool for even odds. Costs ~33% more shard traffic against a locality gain that plateaus at 3x. Seal stays superseded.
 
 77 | 2026-08-17 | S70 closes S69 soft spot: shard-pool tail measured with Zipf a=0.8 fitted to FB15k-237. 94% of shards below R=25 at coverage 10, min pool 0 (availability failure). Enforcing R=25 costs 236MB/device at coverage 10 and ~0 at coverage 100. Constraint: N*C/S >= 4R. Reconciles with S61 - coverage ~100 is both the locality plateau and the Sybil floor.
+
+78 | 2026-08-17 | Found a hole in my own gate: quiet.sh checked only the host, so every device measurement (S34, S50-S54, S57, S62, S63) ran ungated - including ones written after A10. Added --device mode: refuses on device loadavg > cores/4, thermal > 45C, or not charging (S6 deployable config). On introduction the phone read loadavg 9.26 on 8 cores, not charging.

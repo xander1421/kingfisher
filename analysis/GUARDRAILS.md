@@ -324,6 +324,16 @@ is recorded in the output.
 **Not "declare contention" — refuse.** Every spike that produces a timing number
 calls it first and embeds the `--json` capture in its results.
 
+**`--device` mode, added 2026-08-17 after finding the hole.** The gate checked
+only the host, so **every device measurement in this workspace ran ungated** —
+S34, S50–S54, S57, S62, S63, including the ones written *after* A10. `sh
+spikes/quiet.sh --device` refuses on device loadavg > cores/4, thermal > 45 °C,
+**or the phone not charging** (S6's deployable configuration is charge-time; a
+discharging phone is the wrong configuration, not merely a noisy one).
+
+Checked on introduction: device loadavg **9.26 on 8 cores** and `AC powered:
+false`. Every device number taken today was taken under that.
+
 **Scope, added after S65:** A10 gates **timing**. Counts, digests and
 determinism comparisons do not move with load, and a spike measuring only those
 may proceed on a busy machine — provided it says so and still records the
