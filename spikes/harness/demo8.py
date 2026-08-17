@@ -311,10 +311,23 @@ def selfcheck():
     ck('a spike carrying BOTH a run and its attack record is not stale',
        stale_code('spikes/S36_witnessed_job') == [],
        'pairing against the oldest record flags every attacked spike')
-    ck('an uncommitted code file IS stale',
-       'attack.py' in stale_code('spikes/H77_demo8') or
-       not os.path.isdir(os.path.join(ROOT, 'spikes/H77_demo8')),
-       str(stale_code('spikes/H77_demo8')))
+    # SYNTHETIC, and the first version was not -- it asserted that
+    # `spikes/H77_demo8/attack.py` is stale, which was true only while that spike
+    # sat uncommitted. The case went RED the moment the spike landed, i.e. a
+    # check whose subject was a transient state of the tree rather than the rule.
+    # Caught by running the gates after committing, which is the only place it
+    # could have been caught. Built in a temp dir inside the workspace (§10).
+    import shutil
+    import tempfile
+    td = tempfile.mkdtemp(prefix='demo8sc_', dir=ROOT)
+    try:
+        rel = os.path.relpath(td, ROOT)
+        open(os.path.join(td, 'provenance.json'), 'w').write('{"ok": true}')
+        open(os.path.join(td, 'runner.py'), 'w').write('# untracked code\n')
+        ck('an UNTRACKED code file IS stale',
+           'runner.py' in stale_code(rel), str(stale_code(rel)))
+    finally:
+        shutil.rmtree(td, ignore_errors=True)
 
     # 6 · A mapping key that matches no item must be caught, because that is what
     #     happens when §8 is edited and the TSV is not.

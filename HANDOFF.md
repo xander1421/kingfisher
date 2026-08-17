@@ -1107,6 +1107,22 @@ five lanes working against it, and it is the reason `demo8.py` exists at all.
   CLAUDE.md says no tool will catch. Two files in one directory, both about
   admission, and I named the one I had read.
 
+- **CORRECTED three decayed claims in my own run-book, one span after shipping
+  it** — a quoted `CLAIMED 2 · UNPROVEN 5` that had moved, the ConceptNet row
+  that H83 had already superseded, and the ban-surface row naming the wrong file
+  **which I had fixed in the TSV and not here**. A retraction reaching one file
+  and not the other is LEDGER standing rule 12, and I committed the same error
+  twice in consecutive cycles. The page now tells the reader to RUN `demo8.py`
+  rather than trusting any count quoted in prose.
+- **`demo8.py --selfcheck` went RED, and only running the gates AFTER committing
+  found it.** I had asserted `spikes/H77_demo8/attack.py` is stale — true only
+  while that spike was uncommitted. **A check whose subject was a transient state
+  of the tree rather than the rule.** Rebuilt synthetically in a temp dir.
+
+**STANDING: run the gates AFTER the commit, not only before.** Three defects this
+span were invisible until the tree changed underneath them — this one, the id
+collisions, and the survey contaminated by its own probe.
+
 **NEXT 2: S37 is still gated and I re-check it every cycle** —
 `git status --porcelain spikes/W2_witnessed_trie/trie_witness.py` has been
 non-empty all span. **NEXT 3: M1.13**, same shape, `q3.py` also still dirty.

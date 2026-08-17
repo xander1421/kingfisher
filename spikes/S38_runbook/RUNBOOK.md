@@ -5,7 +5,10 @@
 
 > **Read this first.** This is not a demo script and it does not claim M1-DEMO
 > passes. `python3 spikes/harness/demo8.py` is the authority on that and today it
-> says **CLAIMED 2 · UNPROVEN 5 · BROKEN 0** of seven. This page tells a stranger
+> reports the current state of all seven. **Run it — do not trust a count quoted
+> here.** A number copied into prose is stale by construction, and this sentence
+> carried `CLAIMED 2 · UNPROVEN 5` for one span after the real figures moved.
+> This page tells a stranger
 > which parts they can run themselves, what each one should print, and — the part
 > a run-book usually omits — **which parts they cannot run and why.**
 
@@ -94,8 +97,8 @@ A run-book that lists only what works is a sales page. These are §8 items that
 | §8 item | why you cannot reproduce it |
 |---|---|
 | 3 physical devices + 1 coordinator, real transport | the recorded chain ran **3 hosts and 1 phone**, not 3 devices. You would need the hardware, and the phone leg needs the device charging, idle and on an unmetered network — the gate **refuses**, it does not warn |
-| Real corpus (ConceptNet slice) via content-addressed shards | 64 CIDs exist and are committed; that the corpus *is* the named slice is asserted by no spike I can cite you |
-| Jobs admitted under the versioned ban surface, build-enforced | `spikes/harness/admission.py` is recorded **REFUTED as a gate** and kept as a linter, so "build-enforced" is not established |
+| Real corpus (ConceptNet slice) via content-addressed shards | **the item names a corpus this project has never used.** `ConceptNet` appears in **zero** files here outside §8 itself; the corpus actually used is **FB15k-237** (`spikes/S52_realkg/`, 272,115 Freebase triples, named in 21 files). Whether §8 is stale wording or a leg is genuinely missing is a human call — H83, `HUMAN_NEEDED.md` — and no agent may edit the acceptance item to match what was built |
+| Jobs admitted under the versioned ban surface, build-enforced | **the surface is sound; the enforcement point is the gap.** `spikes/harness/bansurface.py` enumerates the nondeterministic op surface **from the shipped build** with a source citation, and M1.8b measured why it is a safety control — quorum-of-3 accepts a genuinely nondeterministic job **21.5%** of the time. But `bansurface.admit()` runs at **RUNTIME** (`M2_1_fleet/fleet.py`, `sweep.py`, `M1_7_transport/run.py`), and runtime admission is not build enforcement. *(Do not confuse it with `admission.py`, which IS refuted as a gate — a different file, and this row named it for one cycle.)* |
 | Quorum-3 with stake-weighted seat draw | the recorded run is **quorum-4**, and `specs/D3_economics.md` deliberately publishes no stake floor, so the draw does not exist to be run |
 
 `spikes/M1_8_quorum3/` holds the recorded run and its `RESULT.md`. **Do not
@@ -130,14 +133,22 @@ decaying into prose that mentions files nobody can run. The falsifier stated
 before it was written: *if the checker passes while a listed command cannot
 actually be run, it is testing spelling rather than followability.*
 
-**Two gaps in that, stated rather than left for a reader to trip over:**
+**The gaps in that, stated rather than left for a reader to trip out of:**
 
 1. **Only fenced ` ```sh ` blocks are checked.** §5's commands are inline, in
    prose, because they are conditional remedies rather than steps — so they are
    **not** executed or path-checked by `check_runbook.py`. Their paths were
    resolved by hand at the time of writing: `spikes/harness/commit_scoped.sh` is
    tracked in git, so a fresh clone has it.
-2. **The commands run in THIS tree, not in a clean checkout.** A command
+2. **Running this check DIRTIES YOUR TREE.** The `# CHECK: run` commands re-run
+   real spikes, and a spike that runs re-writes its `provenance.json`
+   (`recorded_utc`, `head`, the mtime block). So `git status` will show modified
+   provenance records afterwards, and `certify` will report `DIRTY TREE` to
+   anyone depending on those directories until you commit or restore them.
+   Found one cycle after this page shipped, by running the gates after
+   committing. `git checkout -- <the provenance files>` restores them; the
+   contents differ only in timestamp and HEAD.
+3. **The commands run in THIS tree, not in a clean checkout.** A command
    depending on state this workspace happens to hold would pass here and fail for
    you. A clean-clone harness would close that and **is not built** — that is the
    honest scope, not a plan being implied.
