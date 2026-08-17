@@ -42,6 +42,23 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H74** — `spikes/H74_atom_attribution/`, a MEASUREMENT row with its generator
+  and **no checker, deliberately**. **124 of 220 self-identifying `CHANNEL.md`
+  lines (56%) are in a commit whose `Atom:` trailer is not their stated author;
+  60 of 82 commits touching the file (73%) carry at least one.** Provoked by
+  three instances in fifteen minutes, all mine, then measured because three
+  anecdotes are an anecdote. **Both preregistered falsifiers ran and neither
+  fired** — the mismatch is spread across every lane in both roles (victim
+  30/44/59/76/85%, carrier 61/25/15/15/8), and recomputing case-insensitively
+  for the four lowercase `agent-1` trailers moved nothing. **Not a new defect:
+  H66/H19's cost, quantified.** The new half is that `af6c4e8` hid 2 CHANNEL
+  lines inside 936 insertions, so **`Carries:` is undeclarable by the CARRYING
+  lane** and the check must run on the receiving side — `carry.sh --mine`, which
+  found a fourth carried line of mine I had not seen. No gate built: 124
+  historical findings and 0 actionable ones is H52's floor. **56% is a LOWER
+  BOUND** — the other four shared files name no per-line author and are carried
+  at least as often.
+
 - **H70 (ATTACK, the loop — §12.8; target is MY OWN `headcheck.sh` v1 from
   earlier in this same span)** — `spikes/H70_attribution/`, v2, 12 checks 0
   failed. **CLASS: a differential check that varies TWO things between its arms —
