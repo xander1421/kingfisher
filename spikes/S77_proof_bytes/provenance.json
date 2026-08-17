@@ -1,15 +1,17 @@
 {
  "spike": "S77_proof_bytes",
- "recorded_utc": "2026-08-17T11:18:05Z",
- "note": "ATTACK cycle on S77, by its own author, one cycle after it retracted two spikes on a single self-authored measurement (A22).",
+ "recorded_utc": "2026-08-17T11:39:19Z",
+ "note": "S77 reviews S75 and S76 on their own committed key files. It retracts their proof-size corrections and keeps their depth measurements, which reproduce. Counts and digests only, no timings, so valid while quiet.sh refuses.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes",
-   "head": "319413750d3bd52d9e24f0651cf149e55da50e93",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "f29d9cfcedd38c4df4c236603a8d7a16b989da42",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S77_proof_bytes/measure.json"
+   ],
+   "diff_sha256": "58773e9551f7757b665f2caf6560b61f4b0a1febc506c2336879bba2d14edf86",
+   "diff_bytes": 3026
   }
  ],
  "manifests": {
@@ -24,12 +26,20 @@
  },
  "artifacts": [
   {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/attack.json",
-   "sha256": "e3075d117d4a9ab606ec5966bd57bddd7becf305ff366390ed2a62c718fd5f7c",
-   "bytes": 4691,
-   "mtime": 1786965485,
-   "compared_ts": 1786965485,
-   "compared_clock": "last-commit"
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/measure.json",
+   "sha256": "976b540ef819bf4b84ed31e31886a5c79026d15c3af7689456c15075d12b7b17",
+   "bytes": 7468,
+   "mtime": 1786966759,
+   "compared_ts": 1786966759,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/probe_out.txt",
+   "sha256": "850aaaf3f52a011b2d219ce23fe74a52c7f23a9eee9bf5b6faac110dddf99fbb",
+   "bytes": 757,
+   "mtime": 1786966759,
+   "compared_ts": 1786965215,
+   "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
  ],
  "missing_artifacts": [],
@@ -49,87 +59,168 @@
  },
  "controls": [
   {
-   "name": "A1_independent_recount_agrees",
-   "must_fire_because": "S77's sibling counts come from one self-authored Rust walk; this recomputes them from the key sets alone, with no pathmap, no zipper and no trie code of this project in the path",
-   "can_fail_because": "any set differs by more than 1% between the pathmap walk and the independent recount",
-   "null_must_contain": "the same three key files S77 measured, so a disagreement is expressible and would land on the exact numbers the retraction rests on",
+   "name": "C_probe_reads_the_zipper_correctly",
+   "must_fire_because": "a misread of child_count would produce a confident sibling count about nothing, and it is the only quantity this spike measures",
+   "can_fail_because": "the two-key self-check reports any sibling count other than 1",
+   "null_must_contain": "a hand-decidable trie: keys \"aa\" and \"ab\" branch exactly once, so the path to \"aa\" has exactly 1 sibling and any other answer is a misreading",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
-    "atoms_original": {
-     "pathmap": 45.658,
-     "independent": 45.65810593900481,
-     "rel_diff": 2.3202725658430468e-06
+    "observed": {
+     "siblings": 1,
+     "steps": 2
     },
-    "atoms_interned": {
-     "pathmap": 56.356,
-     "independent": 56.35553772070626,
-     "rel_diff": 8.202840757728373e-06
-    },
-    "triples": {
-     "pathmap": 70.194,
-     "independent": 70.1943359375,
-     "rel_diff": 4.78584351935187e-06
-    }
+    "expected_siblings": 1
    }
   },
   {
-   "name": "A2_prefix_key_exposure_is_known",
-   "must_fire_because": "a key that is a proper prefix of another makes a position both a terminal and a branch; C4 found a real soundness bug of that shape in this project, so whether the corpus contains the case has to be a recorded fact rather than an assumption",
-   "can_fail_because": "any set contains a key that is a proper prefix of another, which would put S77 on an untested and historically buggy path",
-   "null_must_contain": "three key sets totalling 6,588 keys, any pair of which could be prefix-related; the encodings are claimed prefix-free but nothing had checked",
+   "name": "C_same_key_files_as_S75_S76",
+   "must_fire_because": "this is a review of two specific spikes, so it has to run on their committed key files rather than on re-derived ones",
+   "can_fail_because": "any key count differs from the count in the reviewed spike's compare.json",
+   "null_must_contain": "the key counts S75 and S76 recorded (1,246 atoms, 4,096 triples), which this spike does not compute and cannot adjust",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
-    "atoms_original": 0,
-    "atoms_interned": 0,
-    "triples": 0
+    "atoms_original": 1246,
+    "atoms_interned": 1246,
+    "triples": 4096
    }
   },
   {
-   "name": "A3_finding_survives_dropping_the_root_charge",
-   "must_fire_because": "S77's inversion is the whole retraction; if it depends on charging a proof for the root node, whose digest the verifier already holds, then the retraction is an artefact of the accounting",
-   "can_fail_because": "dropping the root charge makes the sibling ordering agree with the depth ordering, which would restore depth as a valid proxy",
-   "null_must_contain": "a root charge of (root children - 1) per key, which is free to be large enough to reorder the sets -- 256 children at the root would swamp every other position on a short key",
+   "name": "C_depth_and_siblings_disagree",
+   "must_fire_because": "S75 and S76 both converted depth into proof size by multiplication; that is only valid if the two quantities order the key sets the same way",
+   "can_fail_because": "depth and sibling count rank the three key sets in the same order, which would make depth a valid proxy and retract nothing",
+   "null_must_contain": "three key sets spanning 12 to 1,155 byte keys and 10.3 to 139.1 node depth, which is ample room for the two orderings to AGREE and for this control to come out negative",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
-    "with_root": [
-     "atoms_original",
-     "atoms_interned",
-     "triples"
-    ],
-    "without_root": [
-     "atoms_original",
-     "atoms_interned",
-     "triples"
-    ],
-    "by_depth": [
+    "by_depth_ascending": [
      "triples",
      "atoms_interned",
      "atoms_original"
     ],
-    "excluding_root": {
-     "atoms_original": 44.65810593900481,
-     "atoms_interned": 55.35553772070626,
-     "triples": 70.1943359375
+    "by_siblings_ascending": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "depths": {
+     "triples": 10.260126582278481,
+     "atoms_interned": 61.253237059379096,
+     "atoms_original": 139.0532147578416
+    },
+    "siblings": {
+     "atoms_original": 45.658,
+     "atoms_interned": 56.356,
+     "triples": 70.194
+    }
+   }
+  },
+  {
+   "name": "C_real_prover_agrees_with_the_sibling_walk",
+   "must_fire_because": "sibling count times 32 B is arithmetic; a prover that exists and a verifier that accepts are the check on it",
+   "can_fail_because": "W2 real proof bytes rank the three key sets differently from the pathmap sibling walk",
+   "null_must_contain": "W2's own proof sizes on the same keys, produced by a prover written before this spike and free to rank the sets any way at all",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "by_w2_real_bytes": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_pathmap_siblings": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "w2_mean_bytes": {
+     "atoms_original": 1568.4423076923076,
+     "atoms_interned": 1917.3413461538462,
+     "triples": 2350.082926829268
+    },
+    "pathmap_auth_bytes": {
+     "atoms_original": 1461.056,
+     "atoms_interned": 1803.392,
+     "triples": 2246.208
+    }
+   }
+  },
+  {
+   "name": "C_every_sampled_proof_verifies",
+   "must_fire_because": "a proof whose verifier rejects is not a proof and its size is a number about nothing -- W1 shipped four controls with no verification function at all",
+   "can_fail_because": "any sampled membership proof fails verify_membership against the root hash",
+   "null_must_contain": "a verifier that returns False, which W2 has and W1 did not",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "mean_bytes": 1568.4423076923076,
+     "max_bytes": 2543,
+     "verified": 208,
+     "sampled": 208
+    },
+    "atoms_interned": {
+     "mean_bytes": 1917.3413461538462,
+     "max_bytes": 3841,
+     "verified": 208,
+     "sampled": 208
+    },
+    "triples": {
+     "mean_bytes": 2350.082926829268,
+     "max_bytes": 3403,
+     "verified": 205,
+     "sampled": 205
+    }
+   }
+  },
+  {
+   "name": "C_long_keys_add_nodes_not_branches",
+   "must_fire_because": "the reason depth fails as a proxy: the extra nodes a 1,155-byte key contributes are single-child and carry no digests",
+   "can_fail_because": "the longest-key set does not have the fewest siblings per node on its path",
+   "null_must_contain": "the original atom keys, whose 139.1 mean depth gives them ample room to ALSO carry the most siblings if long runs were branchy",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "siblings_per_node_on_path": {
+     "atoms_original": 0.3283491149738069,
+     "atoms_interned": 0.9200493346232185,
+     "triples": 6.841436061933256
+    },
+    "mean_key_bytes": {
+     "atoms_original": 106.605,
+     "atoms_interned": 52.525,
+     "triples": 12.0
     }
    }
   }
  ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes": {
-   "newest": 1786965480,
+   "newest": 1786965485,
    "from": "<HEAD commit>"
   }
  },
- "problems": [],
- "ok": true,
- "falsifier": "an independent recount of siblings from the key sets alone disagreeing with S77's pathmap walk, or the inversion disappearing once the root charge is removed, would make S77 wrong and its retraction of S75/S76 unfounded",
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes at f29d9cfc: 1 modified. The build is NOT f29d9cfc."
+ ],
+ "ok": false,
+ "falsifier": "if the sibling count along a pathmap path scaled with node depth, then depth was a valid proxy for proof size, S75 and S76's multiplications would stand, and nothing here is retracted",
  "carried_from_previous_record": [
   "falsifier",
   "carried_from_previous_record"

@@ -1,15 +1,17 @@
 {
  "spike": "S79_absence_bytes",
- "recorded_utc": "2026-08-17T11:25:53Z",
+ "recorded_utc": "2026-08-17T11:39:04Z",
  "note": "S79 uses the Python sibling recount that C14 validated against the pathmap walk at 0.00%, so no new unvalidated instrument sits under the number. Counts and digests only, no timings.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes",
-   "head": "a12fd3fc5da7116bd996364665234e7879276cec",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "f29d9cfcedd38c4df4c236603a8d7a16b989da42",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S79_absence_bytes/absence.json"
+   ],
+   "diff_sha256": "c7a88c9e7fdf51a5b75446c4a1d0ba03ddea8c1cec1a05452b25f73588f4f088",
+   "diff_bytes": 2728
   }
  ],
  "manifests": {
@@ -22,11 +24,11 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/absence.json",
-   "sha256": "8cbce8e01b4ab8d330fbf4c041d2ade6b9d8bb82448483ebf22815b1038502b1",
-   "bytes": 6033,
-   "mtime": 1786965953,
-   "compared_ts": 1786965952,
-   "compared_clock": "last-commit"
+   "sha256": "a9dff604c1b7ff2a70916d381681b363943c5b7fc36485a64be38a97f73494fd",
+   "bytes": 6143,
+   "mtime": 1786966744,
+   "compared_ts": 1786966744,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -52,6 +54,7 @@
    "null_must_contain": "W2's prove_membership, which is free to find any probe present, and verify_non_membership, which is free to return False",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "atoms_original": {
@@ -81,6 +84,7 @@
    "null_must_contain": "a divergence depth free to come out at 0 or 1, which is exactly what a random-byte probe would give on these key sets",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "atoms_original": 95.5,
@@ -95,6 +99,7 @@
    "null_must_contain": "three key sets whose absence proofs are built independently of the membership measurement and are free to rank in any of six orders",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "by_membership": [
@@ -126,6 +131,7 @@
    "null_must_contain": "W2's prove_non_membership, written before this spike and free to rank the sets any way",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "by_w2_real": [
@@ -152,6 +158,7 @@
    "null_must_contain": "membership digest counts measured in S77, which this spike does not recompute and cannot adjust",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "atoms_original": 1.0357440098120811,
@@ -160,6 +167,8 @@
    }
   }
  ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes": {
@@ -167,10 +176,13 @@
    "from": "<HEAD commit>"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes at f29d9cfc: 1 modified. The build is NOT f29d9cfc."
+ ],
+ "ok": false,
  "falsifier": "if non-membership proof cost does not track branching the way membership does -- i.e. if the absence ordering differs from the membership ordering -- then S77's \"proof size is set by branching, not key length\" is membership-only and overreached",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

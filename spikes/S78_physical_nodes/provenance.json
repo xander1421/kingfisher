@@ -1,15 +1,17 @@
 {
  "spike": "S78_physical_nodes",
- "recorded_utc": "2026-08-17T11:22:30Z",
+ "recorded_utc": "2026-08-17T11:39:04Z",
  "note": "S78 is GRADE D: arithmetic over inputs measured in S77, plus one E input read from pathmap source. Published as a threshold, never as a measured byte count.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes",
-   "head": "07b575f464bc334af27eee0c8ef8444e119c29bb",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "f29d9cfcedd38c4df4c236603a8d7a16b989da42",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S78_physical_nodes/threshold.json"
+   ],
+   "diff_sha256": "3b97620edf42c04294683693749472a3b78a612f918ccd913deffa5cfebace0c",
+   "diff_bytes": 2369
   }
  ],
  "manifests": {
@@ -22,11 +24,11 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes/threshold.json",
-   "sha256": "5d4c556350c82539ee06947e2b99354f147e597a1de9bedc9be036fb6bee3a43",
-   "bytes": 5112,
-   "mtime": 1786965750,
-   "compared_ts": 1786965750,
-   "compared_clock": "last-commit"
+   "sha256": "2fa0bdb678bb5c02d1e08f0667b97a0402c7e28abcf8406d5b264cabac80518b",
+   "bytes": 5200,
+   "mtime": 1786966744,
+   "compared_ts": 1786966744,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -52,6 +54,7 @@
    "null_must_contain": "merkleization.rs, which is equally free to hash a fixed child array, a 256-slot map, or every node on the path -- any of which would charge a digest per node and flip this",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "file": "elders/PathMap/src/merkleization.rs",
@@ -67,6 +70,7 @@
    "null_must_contain": "S77's measure.json, whose values this spike reads and cannot adjust",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "atoms_interned": {
@@ -93,6 +97,7 @@
    "null_must_contain": "a computed F free to land anywhere: below 1 B (even a length field flips the ordering, so S77 needs qualifying) or above 32 B (a full digest per node would not flip it, so the caveat was never a risk)",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "flip_threshold": 6.096227764410209,
@@ -115,6 +120,7 @@
    "null_must_contain": "the atom trie's 139.1 physical nodes per path against the triples' 10.3 -- a 13x gap with ample room to overturn a 785 B sibling gap",
    "fired": true,
    "detail": "",
+   "kind": "control",
    "constant_observations": false,
    "observations": {
     "flip_threshold": 6.096227764410209,
@@ -123,6 +129,8 @@
    }
   }
  ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes": {
@@ -130,10 +138,13 @@
    "from": "<HEAD commit>"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes at f29d9cfc: 1 modified. The build is NOT f29d9cfc."
+ ],
+ "ok": false,
  "falsifier": "a physical-node commitment that charges a digest per node rather than per sibling, or a framing cost above the computed threshold, would reorder the key sets and make S77 a statement about the logical view only",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }
