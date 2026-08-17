@@ -1,0 +1,158 @@
+{
+ "host-a": {
+  "intersection": {
+   "distinct": 1,
+   "samples": [
+    "0\t(A $x B $y C)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "subtraction": {
+   "distinct": 1,
+   "samples": [
+    "0\t(B)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "new_space": {
+   "distinct": 1,
+   "samples": [
+    "0\tGroundingSpace"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "random_err": {
+   "distinct": 1,
+   "samples": [
+    "0\t()\n1\t(Error (random-int RandomGenerator 5 0) RangeIsEmpty)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "_sha256": "f52d98196ad0"
+ },
+ "host-min": {
+  "intersection": {
+   "distinct": 1,
+   "samples": [
+    "0\t(A $x B $y C)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "subtraction": {
+   "distinct": 1,
+   "samples": [
+    "0\t(B)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "new_space": {
+   "distinct": 1,
+   "samples": [
+    "0\tGroundingSpace"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "random_err": {
+   "distinct": 1,
+   "samples": [
+    "0\t()\n1\t(Error (random-int RandomGenerator 5 0) RangeIsEmpty)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "_sha256": "a867fbfa5f53"
+ },
+ "host-x86": {
+  "intersection": {
+   "distinct": 1,
+   "samples": [
+    "0\t(A $x B $y C)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "subtraction": {
+   "distinct": 1,
+   "samples": [
+    "0\t(B)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "new_space": {
+   "distinct": 1,
+   "samples": [
+    "0\tGroundingSpace"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "random_err": {
+   "distinct": 1,
+   "samples": [
+    "0\t()\n1\t(Error (random-int RandomGenerator 5 0) RangeIsEmpty)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "_sha256": "989da5cd3be7"
+ },
+ "phone": {
+  "intersection": {
+   "distinct": 1,
+   "samples": [
+    "0\t(A $x B $y C)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "subtraction": {
+   "distinct": 1,
+   "samples": [
+    "0\t(B)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "new_space": {
+   "distinct": 1,
+   "samples": [
+    "0\tGroundingSpace"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "random_err": {
+   "distinct": 1,
+   "samples": [
+    "0\t()\n1\t(Error (random-int RandomGenerator 5 0) RangeIsEmpty)"
+   ],
+   "counts": [
+    30
+   ]
+  },
+  "_sha256": "c90624244472"
+ }
+}
