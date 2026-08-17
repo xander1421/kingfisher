@@ -1,0 +1,32 @@
+READ SET BY QUERY SHAPE AND CLUSTERING (W4)
+
+Recovered 2026-08-17. This is rk_inst's STDOUT. The original run saved only
+stderr (`2>ampl.txt`), so the per-shape table -- the observation behind the
+control W4's RESULT.md calls "the one that matters" -- was printed and thrown
+away by the redirect. Same binary, same corpus, nothing re-measured that was
+not already being measured.
+
+  build : cc -O3 -march=native -o rk_inst rk_inst.c
+  cc    : Apple clang version 21.0.0 (clang-2100.1.1.101)
+  run   : ln -sf ../S52_realkg/triples.bin triples.bin && ./rk_inst > readset_table.txt 2> /dev/null
+  corpus: ../S52_realkg/triples.bin  sha256 6a8af96e14ba0b6c255cfab8516ca39bb2b9225709fd4527f52273e927ee948e
+
+LOAD SENSITIVITY -- read this before citing anything below.
+  `%store chk` is a COUNT fraction. Load-insensitive, valid while quiet.sh
+      refuses, and it is the only column the D6 control uses.
+  `median us` and `exact-check ns/row` are TIMINGS taken while quiet.sh REFUSED
+      (11 containers). They are NOT valid and must not be cited from this file.
+
+The stderr half of this same run reproduces the committed ampl.txt byte for
+byte (4252 / 6122880 / 475067456 / 78.59x), which is the strongest available
+answer to "is the instrumented binary the measured engine".
+
+S52 real KG: FB15k-237  272115 triples, 237 preds, 14505 entities  B=64
+120 queries sampled per cell, median reported. exact-check 0.31 ns/row
+
+cluster key                   (p s ?o)                  (p ?s o)                  (?p s o)
+                 median us  %store chk     median us  %store chk     median us  %store chk
+(pred,subj)            8.3        0.2%           9.1        1.0%          15.4        8.8%
+(pred,obj)             9.4        0.9%           9.1        0.2%          19.9       12.9%
+(subj,obj)             9.0        0.0%          50.0       49.2%           8.1        0.0%
+RANDOM                43.4       41.4%          57.8       57.2%          12.6        5.2%

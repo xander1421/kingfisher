@@ -100,7 +100,7 @@ exercises one of two mechanisms cannot detect the other one being broken.**
 | | falsifier | status |
 |---|---|---|
 | **F1** | Ship a spike whose controls cannot fail but whose `null_must_contain` strings are plausible. `record` must return `ok=false`. | **KNOWN-FAILING** (H1). It returns `ok=true`. W1 is the historical instance. Human review is the only defence. |
-| **F2** | Any `RESULT.md` citing D6 with no `provenance.json` beside it means the citation is decorative — **and** any spike with a provenance record that never cites D6 means the standard is met without being claimed. | **2/5 CLOSED, 3/5 STANDING.** Retro-fit 2026-08-17 (`harness/retrofit_d6.py`): Q1 **2/2** and B1 **4/4** are now COMPLIANT; W4 **3/4**, N1 **2/4**, S72 **1/5** record `ok: false` because the remaining controls exist only in prose. On the second direction, 6 spikes comply silently. Runnable: `harness/retrofit_d6.py`, and `W2_witnessed_trie/attack.py` A5. |
+| **F2** | Any `RESULT.md` citing D6 with no `provenance.json` beside it means the citation is decorative — **and** any spike with a provenance record that never cites D6 means the standard is met without being claimed. | **3/5 CLOSED, 2/5 STANDING.** Retro-fit 2026-08-17 (`harness/retrofit_d6.py`): Q1 **2/2**, B1 **4/4** and W4 **4/4** COMPLIANT; N1 **2/4** and S72 **1/5** record `ok: false`. Both remaining need timings under a gate that is refusing, so neither is closable today. On the second direction, 6 spikes comply silently. Runnable: `harness/retrofit_d6.py`, and `W2_witnessed_trie/attack.py` A5. |
 | **F3** | Patch a dep source without committing; re-record without rebuilding. E1 must fire. | **PASSES** since 2026-08-17. Asserted in `provenance.demo()`. Would have failed every prior day of this project. |
 | **F4** | Record with `deps=()` and a stale artifact. The configuration must be refused. | **PASSES** via E7 — it refuses the *configuration*, which is not the same as detecting the staleness. Weaker than F3. |
 | **F5** | Put a number in a `RESULT.md` that appears in no artefact. It must be caught. | **KNOWN-FAILING** (H5). Not enforced anywhere. |
@@ -162,3 +162,22 @@ tested; it has been written to pass.**
   convenient: for B1, W4 and S72 the only later commits touched `RESULT.md` alone,
   while N1's touched `pfx.c`/`pf_pad.c` — **and N1 is still flagged.** The
   suppression keeps the real signal and drops the false one.
+- **2026-08-17, same cycle — W4 closed to 4/4, and the reason it was open is the
+  most reusable finding here.** Its missing observation was **not missing from the
+  instrument**: `rk_inst` prints the per-shape table to stdout and the
+  amplification block to stderr, and the original run redirected only stderr. The
+  number was printed and discarded by the shell. Rebuilding the committed source
+  recovered it — `(pred,subj)` = 0.2/1.0/8.8%, matching S52 — and the stderr half
+  of that run reproduces the committed `ampl.txt` byte for byte. **So R4 has two
+  distinct failure modes and they need different remedies: an observation never
+  taken (S72's pre-run gate), and an observation taken and dropped by a redirect
+  (W4's table). The second is recoverable; the first is not.**
+- **2026-08-17, same cycle — E1 bug 6, and it is bug 5 again on the other half.**
+  The artifact/self exclusions were applied only to the *dirty* loop, so the
+  *commit* side stayed self-referential: once `provenance.json` was committed it
+  became the newest tracked non-md file in its spike dir and poisoned that dir's
+  floor permanently — every historical artifact read as stale one cycle after the
+  same bug was fixed elsewhere. Both halves now share one exclusion list.
+  **Six bugs in one check across three cycles, every one of them while its own
+  self-test passed.** That is the strongest argument in this document for H1: a
+  passing control set is not evidence of a working check.

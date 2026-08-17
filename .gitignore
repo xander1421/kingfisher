@@ -58,3 +58,8 @@ spikes/*/bin/fuelrun.*
 spikes/G21_null_rust/split.txt
 spikes/G21_null_rust/nulls.txt
 **/.cxx/
+
+# W4 rebuilds rk_inst to recover the per-shape table; the source and the run
+# recipe are committed, the 50 KB binary is not (CLAUDE.md §2.2)
+spikes/W4_prefilter_readset/rk_inst
+spikes/W4_prefilter_readset/triples.bin

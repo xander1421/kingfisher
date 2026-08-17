@@ -146,3 +146,17 @@ S52's published numbers.
   **not** the 0.2/1.0/8.8% cells, so that control is stated in prose and evidenced
   nowhere on disk. To close it, re-run `rk_inst.c` and commit the per-shape table.
   No number on this page changed; nothing above this line was edited.
+- **2026-08-17, same cycle — the missing control is CLOSED, 4/4 COMPLIANT.**
+  Diagnosis: `rk_inst` prints the per-shape table to **stdout** and the
+  amplification block to **stderr**, and the original run redirected only stderr
+  (`2>ampl.txt`). *The observation was printed and thrown away by the redirect* —
+  it was never absent from the instrument, only from the disk. Rebuilt from the
+  committed `rk_inst.c` and recovered as `readset_table.txt`. The `(pred,subj)`
+  row reads **0.2% / 1.0% / 8.8%**, matching S52 exactly, and the **stderr half of
+  that same run reproduces the committed `ampl.txt` byte for byte** (4252 /
+  6122880 / 475067456 / 78.59×) — which is a stronger answer to "is this binary
+  the measured engine" than the control originally asked for.
+  The recovered file also carries the `median us` column: those are **timings taken
+  while `quiet.sh` refused** and are marked in the artefact as not citable. Only
+  the `%store chk` count fraction is used. `provenance.json` `ok: true`.
+

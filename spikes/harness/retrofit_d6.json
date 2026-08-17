@@ -18,11 +18,9 @@
   },
   {
    "spike": "W4_prefilter_readset",
-   "status": "PARTIAL",
-   "extracted": 3,
-   "prose_only": [
-    "table_reproduces_S52"
-   ],
+   "status": "COMPLIANT",
+   "extracted": 4,
+   "prose_only": [],
    "ok": true,
    "problems": []
   },

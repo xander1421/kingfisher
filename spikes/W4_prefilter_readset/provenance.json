@@ -1,28 +1,30 @@
 {
  "spike": "W4_prefilter_readset",
- "recorded_utc": "2026-08-17T10:03:22Z",
- "note": "D6 retro-fit. 3 of 4 controls have observations ON DISK and are recorded here. PROSE_ONLY (stated in RESULT.md, absent from every artefact, NOT reconstructed): ['table_reproduces_S52']. No value was retyped from prose; see harness/retrofit_d6.py.",
+ "recorded_utc": "2026-08-17T10:08:47Z",
+ "note": "D6 retro-fit. 4 of 4 controls have observations ON DISK and are recorded here. No value was retyped from prose; see harness/retrofit_d6.py.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset",
-   "head": "57eac13f266137c95724ce83211f4d1dd06be0bb",
+   "head": "a166c5538d39556e94bcdfbe876ee26be8e64e63",
    "clean": false,
    "dirty_files": [
     "ISSION_LOOP.md",
-    "spikes/G25_carrying_capacity/RESULT.md",
-    "spikes/G27_budget/RUN.txt",
-    "spikes/harness/provenance.py",
+    "out/LEDGER.md",
     "spikes/B1_bundling_real/provenance.json",
-    "spikes/G27_budget/runs/nd_r30_o40.json",
+    "spikes/G27_budget/RUN.txt",
+    "spikes/G27_budget/analyse.py",
     "spikes/N1_prefilter_cost/provenance.json",
     "spikes/Q1_quorum_sim/provenance.json",
     "spikes/S72_c3_cpuset/provenance.json",
     "spikes/W4_prefilter_readset/provenance.json",
+    "spikes/harness/provenance.py",
     "spikes/harness/retrofit_d6.json",
-    "spikes/harness/retrofit_d6.py"
+    "spikes/harness/retrofit_d6.py",
+    "spikes/G27_budget/runs/sel_r15_o160_s777.json",
+    "spikes/W4_prefilter_readset/readset_table.txt"
    ],
-   "diff_sha256": "fb3c22e8002c4d7700b5230b5860dce792cc059c3fc8b1fc92e7bcc206ffc7fe",
-   "diff_bytes": 16210
+   "diff_sha256": "9ade3a3f1c18991417184b393de4fffc75f57f7218f2368e01be0268c7bda794",
+   "diff_bytes": 42910
   }
  ],
  "manifests": {
@@ -48,6 +50,14 @@
    "mtime": 1786930227,
    "compared_ts": 1786930227,
    "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset/readset_table.txt",
+   "sha256": "d681365e349e7f0f61c662e33c342af0718dc4568b45b36d0667645ce294e692",
+   "bytes": 1964,
+   "mtime": 1786961285,
+   "compared_ts": 1786961285,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -66,6 +76,28 @@
   "abi": "arm64-v8a"
  },
  "controls": [
+  {
+   "name": "table_reproduces_S52",
+   "must_fire_because": "any cell differs from S52 0.2/1.0/8.8% for (pred,subj) -- the instrumented binary would not be the measured engine",
+   "can_fail_because": "the (pred,subj) row reads anything but 0.2/1.0/8.8",
+   "null_must_contain": "the stated failing input",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "pred_subj_pct_store_checked": [
+     0.2,
+     1.0,
+     8.8
+    ],
+    "s52_published": [
+     0.2,
+     1.0,
+     8.8
+    ],
+    "note": "count fraction, load-insensitive; the median-us column of the same table is NOT valid (quiet.sh refused) and is not used"
+   }
+  },
   {
    "name": "counters_are_nonzero",
    "must_fire_because": "zero score-pass reads would mean the counter is not on the hot path",
@@ -108,19 +140,17 @@
  "no_deps_reason": "",
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/W4_prefilter_readset": {
-   "newest": 1786930227,
+   "newest": 0,
    "from": "<HEAD commit>"
   }
  },
  "problems": [],
- "ok": false,
+ "ok": true,
  "d6_retrofit": {
-  "status": "PARTIAL",
-  "controls_on_disk": 3,
+  "status": "COMPLIANT",
+  "controls_on_disk": 4,
   "controls_stated": 4,
-  "prose_only": [
-   "table_reproduces_S52"
-  ],
+  "prose_only": [],
   "ok_covers_only_the_extractable_subset": true
  }
 }

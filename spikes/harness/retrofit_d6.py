@@ -100,9 +100,26 @@ def w4():
     ratio = re.search(r'total / score-pass\s+([\d.]+)x', t)
     ratio = float(ratio.group(1)) if ratio else None
     sc, cu = n.get('score-pass bundle reads'), n.get('cutoff-pass bundle reads')
+    # CLOSED 2026-08-17: the table was rk_inst's STDOUT and the original run
+    # redirected only stderr, so the observation was printed and discarded.
+    # Recovered by rebuilding the same source; the stderr half of that run
+    # reproduces the committed ampl.txt byte for byte.
+    tbl = read_text('W4_prefilter_readset', 'readset_table.txt')
+    row = re.search(r'\(pred,subj\)\s+[\d.]+\s+([\d.]+)%\s+[\d.]+\s+([\d.]+)%'
+                    r'\s+[\d.]+\s+([\d.]+)%', tbl or '')
+    cells = [float(x) for x in row.groups()] if row else None
     out = [
-        ('table_reproduces_S52', PROSE_ONLY,
-         'any cell differs from S52 0.2/1.0/8.8% for (pred,subj)', None, None),
+        ('table_reproduces_S52',
+         'any cell differs from S52 0.2/1.0/8.8% for (pred,subj) -- the '
+         'instrumented binary would not be the measured engine'
+         if cells else PROSE_ONLY,
+         'the (pred,subj) row reads anything but 0.2/1.0/8.8',
+         cells == [0.2, 1.0, 8.8],
+         {'pred_subj_pct_store_checked': cells,
+          's52_published': [0.2, 1.0, 8.8],
+          'note': 'count fraction, load-insensitive; the median-us column of the '
+                  'same table is NOT valid (quiet.sh refused) and is not used'}
+         if cells else None),
         ('counters_are_nonzero',
          'zero score-pass reads would mean the counter is not on the hot path',
          'score-pass bundle reads reads 0',
@@ -116,7 +133,7 @@ def w4():
          'the total/score-pass ratio is unbounded or absent',
          bool(ratio and 1.0 < ratio < 1e6), {'ratio': ratio}),
     ]
-    return out, ('ampl.txt', 'rk_inst.c')
+    return out, ('ampl.txt', 'rk_inst.c', 'readset_table.txt')
 
 
 # ---------------------------------------------------------------- N1

@@ -50,8 +50,21 @@ def newest_source_mtime(path, exclude=()):
     # rather than assumed convenient -- for B1, W4 and S72 the only later commits
     # touched RESULT.md alone, while N1's touched pfx.c/pf_pad.c, and N1 is still
     # flagged. Suppressing md keeps the real signal and drops the false one.
-    head_ts = _run(['git', 'log', '-1', '--format=%ct', '--', '.',
-                    ':(exclude)*.md'], cwd=path)
+    # The exclusions must apply to BOTH halves of the floor. Fixing only the
+    # dirty loop left the commit side self-referential: once `provenance.json`
+    # was committed it became the newest tracked non-md file in the spike dir and
+    # poisoned that dir's floor permanently -- every historical artifact read as
+    # stale again, one cycle after the same bug was fixed on the other half.
+    excl_spec = [':(exclude)*.md', ':(exclude)provenance.json']
+    for x in exclude:
+        try:
+            rel = os.path.relpath(os.path.realpath(x), os.path.realpath(path))
+        except ValueError:
+            continue
+        if not rel.startswith('..'):
+            excl_spec.append(f':(exclude){rel}')
+    head_ts = _run(['git', 'log', '-1', '--format=%ct', '--', '.'] + excl_spec,
+                   cwd=path)
     head_ts = int(head_ts) if head_ts.isdigit() else 0
     newest, newest_file = head_ts, '<HEAD commit>'
     # only the dirty ones can be newer than HEAD, and scanning every tracked
@@ -69,8 +82,8 @@ def newest_source_mtime(path, exclude=()):
     # instead, which is correct whether or not the line was stripped.
     root = _run(['git', 'rev-parse', '--show-toplevel'], cwd=path) or path
     dirty = [l.split(None, 1)[-1]
-             for l in _run(['git', 'status', '--porcelain', '--', '.',
-                            ':(exclude)*.md'], cwd=path).splitlines()
+             for l in _run(['git', 'status', '--porcelain', '--', '.']
+                           + excl_spec, cwd=path).splitlines()
              if l.split(None, 1)]
     # An artifact is not its own source, and `record` writes provenance.json INTO
     # spike_dir -- so when spike_dir is also a dep, the tool's own output became

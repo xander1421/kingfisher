@@ -1,28 +1,30 @@
 {
  "spike": "B1_bundling_real",
- "recorded_utc": "2026-08-17T10:03:22Z",
+ "recorded_utc": "2026-08-17T10:08:46Z",
  "note": "D6 retro-fit. 4 of 4 controls have observations ON DISK and are recorded here. No value was retyped from prose; see harness/retrofit_d6.py.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real",
-   "head": "57eac13f266137c95724ce83211f4d1dd06be0bb",
+   "head": "a166c5538d39556e94bcdfbe876ee26be8e64e63",
    "clean": false,
    "dirty_files": [
     "ISSION_LOOP.md",
-    "spikes/G25_carrying_capacity/RESULT.md",
-    "spikes/G27_budget/RUN.txt",
-    "spikes/harness/provenance.py",
+    "out/LEDGER.md",
     "spikes/B1_bundling_real/provenance.json",
-    "spikes/G27_budget/runs/nd_r30_o40.json",
+    "spikes/G27_budget/RUN.txt",
+    "spikes/G27_budget/analyse.py",
     "spikes/N1_prefilter_cost/provenance.json",
     "spikes/Q1_quorum_sim/provenance.json",
     "spikes/S72_c3_cpuset/provenance.json",
     "spikes/W4_prefilter_readset/provenance.json",
+    "spikes/harness/provenance.py",
     "spikes/harness/retrofit_d6.json",
-    "spikes/harness/retrofit_d6.py"
+    "spikes/harness/retrofit_d6.py",
+    "spikes/G27_budget/runs/sel_r15_o160_s777.json",
+    "spikes/W4_prefilter_readset/readset_table.txt"
    ],
-   "diff_sha256": "fb3c22e8002c4d7700b5230b5860dce792cc059c3fc8b1fc92e7bcc206ffc7fe",
-   "diff_bytes": 16210
+   "diff_sha256": "5ff9e3c8f42f2e8a56b588d38baa3634ed96617240f0b57834caee4b364a46e3",
+   "diff_bytes": 43440
   }
  ],
  "manifests": {
@@ -150,7 +152,7 @@
  "no_deps_reason": "",
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/B1_bundling_real": {
-   "newest": 1786933710,
+   "newest": 0,
    "from": "<HEAD commit>"
   }
  },
