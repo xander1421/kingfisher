@@ -22,7 +22,7 @@ REPRO = re.compile(r'repro:\s*`([^\s`]*/[^`]*)`')
 
 def audit(ledger_path, root, grade='**A**'):
     rows = [l for l in open(ledger_path) if f'| {grade} |' in l]
-    have, missing, broken = [], [], []
+    have, missing, broken, inert = [], [], [], []
     for l in rows:
         claim = l.split('|')[1].strip()
         if claim == grade:
@@ -32,23 +32,37 @@ def audit(ledger_path, root, grade='**A**'):
             missing.append(claim[:60])
             continue
         cmd = m.group(1)
-        path = os.path.join(root, cmd.split()[0])
-        (have if os.path.exists(path) else broken).append((claim[:50], cmd))
-    return have, missing, broken
+        rel = cmd.split()[0]
+        path = os.path.join(root, rel)
+        if not os.path.exists(path):
+            broken.append((claim[:50], cmd))
+        elif not rel.endswith(('.py', '.sh')):
+            # EXISTENCE IS NOT RUNNABILITY. A `.md` cannot re-derive a number and
+            # a prebuilt binary is an artifact, not a reproducer -- yet both
+            # scored as "has a repro" because the path resolved. Three A-grade
+            # claims were annotated this way, one of them by the same agent that
+            # wrote this check, one cycle after writing it.
+            inert.append((claim[:50], cmd))
+        else:
+            have.append((claim[:50], cmd))
+    return have, missing, broken, inert
 
 
 def main():
     root = os.path.expanduser('~/kingfisher')
     ledger = os.path.join(root, 'out/LEDGER.md')
-    have, missing, broken = audit(ledger, root)
-    n = len(have) + len(missing) + len(broken)
+    have, missing, broken, inert = audit(ledger, root)
+    n = len(have) + len(missing) + len(broken) + len(inert)
     print(f'A-grade claims: {n}')
-    print(f'  with a repro: that EXISTS   {len(have)}')
-    print(f'  with a repro: that is GONE  {len(broken)}')
+    print(f'  with a RUNNABLE repro       {len(have)}')
+    print(f'  with a repro that is GONE   {len(broken)}')
+    print(f'  with a NON-RUNNABLE repro   {len(inert)}   (.md or a binary)')
     print(f'  with NO repro:              {len(missing)}')
     for c, cmd in broken:
         print(f'  BROKEN  {c}  -> {cmd}')
-    return 1 if broken else 0
+    for c, cmd in inert:
+        print(f'  INERT   {c}  -> {cmd}')
+    return 1 if (broken or inert) else 0
 
 
 def demo():
