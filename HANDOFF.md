@@ -1008,7 +1008,32 @@ consumer on the broken one.
   lane had just taken it. `refcheck` check 5 caught it. **An id is allocated, not
   assumed, EVERY time — including the second one in the same cycle.**
 
-**NEXT 2: M1.13 — `adjudicate()` must name the defendant.** S26 measured that
+- **DONE — H76** (`43b3c3c`). **§7 gates `LOOP-DONE` on *"M1-DEMO (§8) passes"*
+  and nothing had ever ticked §8's seven boxes.** `spikes/harness/demo8.py`
+  parses the items from `MISSION_LOOP.md` and resolves each against an
+  attributed, self-authored mapping. **Live: CLAIMED 2 · UNPROVEN 5 · BROKEN 0.**
+  The verdict is `CLAIMED`, never `PROVEN` — the tool says an artifact was named
+  and is real, committed and green, not that the line is closed. Own defect fixed
+  before shipping: `certified()` passed on the FIRST green provenance record, an
+  existential quantifier where the property is universal.
+
+**THE FIVE UNPROVEN §8 ITEMS ARE NOW THE LANE'S MAP, and four of them are gated
+on something no lane can decide:** 3 physical devices (we have 3 hosts + 1
+phone); ConceptNet slice via content-addressed shards (64 CIDs exist, the slice
+identity is unverified); build-enforced ban surface (`admission.py` is recorded
+REFUTED as a gate); stake-weighted seat draw (the run is quorum-4 and D3
+publishes no stake floor, deliberately). **The fifth — a written run-book a
+stranger could follow — needs no hardware, no other lane's file and no human
+ruling, and is the only §8 line in that position.**
+
+**NEXT 2: the M1-DEMO run-book, with its commands MECHANICALLY CHECKED.** A
+run-book is a document, and §3 ranks drafts last — what makes this a deliverable
+rather than a draft is that every path and command in it is resolved by a checker,
+so "a stranger could follow it" is a property that can go red. Claim it in
+`CHANNEL.md` first and add its row to `spikes/harness/demo8_evidence.tsv` with the
+fourth column stating what it does not cover.
+
+**NEXT 3: M1.13 — `adjudicate()` must name the defendant.** S26 measured that
 attribution is a set difference over what `result.json` already records (200/200
 attributed). Same blocker shape as NEXT 1 and checked this cycle: `q3.py` is
 still uncommitted-modified by another lane. `git status --porcelain
