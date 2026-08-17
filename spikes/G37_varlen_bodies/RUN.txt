@@ -1,0 +1,20 @@
+==============================================================================
+G37 — filtered-MRR evaluation for rule bodies of any length
+==============================================================================
+
+loaded: 190,480 train / 40,818 test, 3,198 2-hop rules mined
+
+1. F1 — generalised walk on the SAME 2-hop rules (must equal G30 exactly)
+metric      G30 published   yardstick.py    G37 general  match
+mrr                0.0631       0.063112       0.063112  OK
+hits1              0.0311       0.031065       0.031065  OK
+hits3              0.0662       0.066221       0.066221  OK
+hits10             0.1229       0.122948       0.122948  OK
+
+2. C2/C3 — planted rules the 2-hop walk structurally cannot see
+  length-1 planted rule: general MRR=1.0000   2-hop walk -> ValueError: not enough values to unpack (expected 2, got 1)
+  length-3 planted rule: general MRR=1.0000   2-hop walk -> ValueError: too many values to unpack (expected 2, got 3)
+
+F1 (instrument drift): did not fire
+F2 (generalisation load-bearing): True
+D6 Provenance Certified: ok=True

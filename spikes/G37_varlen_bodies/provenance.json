@@ -1,0 +1,157 @@
+{
+ "spike": "G37_varlen_bodies",
+ "recorded_utc": "2026-08-17T15:32:01Z",
+ "note": "G37: filtered-MRR evaluation for variable-length rule bodies",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick",
+   "head": "e1356fb5b2b914f373f43e26442a7611861b1dd1",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "e1356fb5b2b914f373f43e26442a7611861b1dd1",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G37_varlen_bodies/varlen.py",
+   "sha256": "7c17167f3cb6914c640e51b2ef0994414fe25a91ee32f78e4f184d191903fab5",
+   "bytes": 14770,
+   "mtime": 1786980653,
+   "compared_ts": 1786980653,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G37_varlen_bodies/varlen.json",
+   "sha256": "6ecee47b0cd2a237af944ed2e801e2fee707958697d8a7895d40d5d78f801774",
+   "bytes": 873,
+   "mtime": 1786980721,
+   "compared_ts": 1786980721,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_general_walk_reproduces_the_specialised_one",
+   "must_fire_because": "a generalisation that changes the numbers is a different instrument",
+   "can_fail_because": "dropping the distinct-node guard, or scoring an endpoint reached by two paths twice, would both raise MRR while looking like a successful generalisation",
+   "null_must_contain": "any metric differing from yardstick.py on identical 2-hop rules",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "g30_published": {
+     "mrr": 0.0631,
+     "hits1": 0.0311,
+     "hits3": 0.0662,
+     "hits10": 0.1229
+    },
+    "g37": {
+     "mrr": 0.0631122756859102,
+     "hits1": 0.031064726346219804,
+     "hits3": 0.06622078494781714,
+     "hits10": 0.12294820912342594
+    }
+   }
+  },
+  {
+   "name": "C2_planted_len3_found_by_general_missed_by_twohop",
+   "must_fire_because": "the generalisation must buy something structural, not just parse",
+   "can_fail_because": "if the 2-hop walk also solved it, the extra length would be decorative",
+   "null_must_contain": "the 2-hop walk scoring a length-3 rule as well as the general walk",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "general_mrr": 1.0,
+    "twohop_mrr": null,
+    "twohop_error": "ValueError: too many values to unpack (expected 2, got 3)"
+   }
+  },
+  {
+   "name": "C3_planted_len1_found_by_general_missed_by_twohop",
+   "must_fire_because": "length-1 is the class G34 measured as carrying most of the lift",
+   "can_fail_because": "a body of length 1 would unpack under the 2-hop destructure only if the guard were absent",
+   "null_must_contain": "the 2-hop walk scoring a length-1 rule",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "general_mrr": 1.0,
+    "twohop_mrr": null,
+    "twohop_error": "ValueError: not enough values to unpack (expected 2, got 1)"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_instrument_drift",
+   "must_fire_because": null,
+   "can_fail_because": "any of MRR/Hits@1/Hits@3/Hits@10 differs from yardstick.py on the same 2-hop rules, or from G30's published row at 4 dp",
+   "null_must_contain": "an exact match on all four metrics",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "match": true
+   },
+   "refutes": "WITHDRAW the evaluator if it does not reproduce G30 exactly",
+   "fires_when": "any of MRR/Hits@1/Hits@3/Hits@10 differs from yardstick.py on the same 2-hop rules, or from G30's published row at 4 dp",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick": {
+   "newest": 1786979491,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "The generalised walk differs from yardstick.py on identical 2-hop rules, or finds nothing the 2-hop walk misses"
+}

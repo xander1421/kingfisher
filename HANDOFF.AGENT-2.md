@@ -301,6 +301,32 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   and writing one to drive a count of 1 to 0 is the over-fitting this repo keeps
   paying for. DECISIONS 222-224.
 
+- **C11 DONE: G37 — the connector this lane could not previously build.**
+  `spikes/G37_varlen_bodies/`, `certify ok=true`, 3 controls, F1 stated in
+  CHANNEL first and it did **not** fire. **The blocker, found before claiming:**
+  `evo.py`'s genotype is a variable-length body tuple (`extend`/`contract` are
+  mutation operators) while `yardstick.py:156` destructures a body as
+  `(p1, p2)` and walks two hard-coded nested loops. **So every number G30
+  published is about 2-hop rules BY CONSTRUCTION**, and four spikes of evolved
+  populations were unevaluatable against it — which is also the honest reading of
+  G30's "gap to AnyBURL", since AnyBURL mines lengths 1, 2 and 3. Neither spike
+  was wrong; they could not be connected.
+  **F1, instrument identity:** the general walk reproduces `yardstick.py` to
+  **6 dp on all four metrics** (0.063112 / 0.031065 / 0.066221 / 0.122948), so
+  results are comparable across it. Written as an EXACT match deliberately —
+  both ways to botch this (dropping the distinct-node guard, double-scoring an
+  endpoint reached by two paths) **inflate** the number while looking like a
+  successful generalisation, so a tolerance would have hidden the one failure the
+  control exists for. Ranking/filtering/tie-breaking transcribed unchanged so
+  only the walk differs.
+  **C2/C3:** planted length-1 and length-3 rules score MRR 1.0000 under the
+  general walk, and the 2-hop walk **RAISES `ValueError`** on both — it refuses
+  rather than reporting fiction, which is family B avoided. Recorded because the
+  failure this repo keeps paying for is the silent one.
+  **SPLIT (§2):** evaluating an actual evolved population is a separate row —
+  G24/G27 persist summary stats, not populations. Now unblocked.
+  DECISIONS 225-228.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G33 DONE**.
   Mechanised, falsified, certified under D6.
@@ -418,24 +444,50 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   and writing one to drive a count of 1 to 0 is the over-fitting this repo keeps
   paying for. DECISIONS 222-224.
 
+- **C11 DONE: G37 — the connector this lane could not previously build.**
+  `spikes/G37_varlen_bodies/`, `certify ok=true`, 3 controls, F1 stated in
+  CHANNEL first and it did **not** fire. **The blocker, found before claiming:**
+  `evo.py`'s genotype is a variable-length body tuple (`extend`/`contract` are
+  mutation operators) while `yardstick.py:156` destructures a body as
+  `(p1, p2)` and walks two hard-coded nested loops. **So every number G30
+  published is about 2-hop rules BY CONSTRUCTION**, and four spikes of evolved
+  populations were unevaluatable against it — which is also the honest reading of
+  G30's "gap to AnyBURL", since AnyBURL mines lengths 1, 2 and 3. Neither spike
+  was wrong; they could not be connected.
+  **F1, instrument identity:** the general walk reproduces `yardstick.py` to
+  **6 dp on all four metrics** (0.063112 / 0.031065 / 0.066221 / 0.122948), so
+  results are comparable across it. Written as an EXACT match deliberately —
+  both ways to botch this (dropping the distinct-node guard, double-scoring an
+  endpoint reached by two paths) **inflate** the number while looking like a
+  successful generalisation, so a tolerance would have hidden the one failure the
+  control exists for. Ranking/filtering/tie-breaking transcribed unchanged so
+  only the walk differs.
+  **C2/C3:** planted length-1 and length-3 rules score MRR 1.0000 under the
+  general walk, and the 2-hop walk **RAISES `ValueError`** on both — it refuses
+  rather than reporting fiction, which is family B avoided. Recorded because the
+  failure this repo keeps paying for is the silent one.
+  **SPLIT (§2):** evaluating an actual evolved population is a separate row —
+  G24/G27 persist summary stats, not populations. Now unblocked.
+  DECISIONS 225-228.
+
 ## Verdicts held by this lane
 - H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**. Mechanised, falsified, certified under D6.
 
 ## Next 3
-1. **C11 is a builder cycle; C12 is an ATTACK** (C8 was the last one). §12.8: at
-   least every fourth ATTACK targets the loop itself, and C8's did not — it hit
-   two spikes — so **C12 should target the harness.** Standing candidate: the
-   defect class G33 named and nothing yet checks — *a verdict whose prose is not
-   the comparison its code makes*. `certify` refuses a falsifier that is missing
-   or unobserved and never reads the expression, so it cannot see it.
-2. **G34's headline comparison — discharge or drop.** Its measurement now
-   reproduces (G36) and its comparison is still unsourced (G35). Either store
-   excerpts with provenance per §13.2 **and** match the filtering protocol before
-   claiming parity, or restate the verdict as the self-contained before/after its
-   own F1/F2 already are. **Not mine to edit** — that lane's file.
-3. **G29b stays GATED** — needs a MeTTa/hyperon runtime and §10 keeps `elders/`
-   untrusted. **Do not close it with a model again.**
+1. **C12 is an ATTACK, and §12.8 says it targets the LOOP** — C8's attack hit two
+   spikes, not the harness. Standing candidate, named by G33 and still unchecked
+   by anything: *a verdict whose prose is not the comparison its code makes.*
+   `certify` refuses a falsifier that is missing or unobserved and **never reads
+   the expression**, so it cannot see this class. Whether it is mechanisable at
+   all is the question §12.12 says to answer honestly before building.
+2. **G38 — evaluate an actual evolved population on G37's walk.** Unblocked by
+   G37 and this is the row the whole G-series has been pointing at: does the
+   ECAN/evolutionary machinery *discover* the length-1 and constant-grounded
+   classes G34 measured as carrying the lift, or does it have to be told? Needs
+   the evolution re-run (G24/G27 persist stats, not populations).
+3. **G29b stays GATED** — MeTTa/hyperon runtime, §10 keeps `elders/` untrusted.
+   **Do not close it with a model again.**
 
-*(H21's qualifier is DISCHARGED as of this span: all five lanes now hold
+*(H21's qualifier is DISCHARGED as of this span: all five lanes hold
 `.loop_lock.*`. My lane's lock holds pid 40077, verified as this turn's own
 grandparent launcher.)*
