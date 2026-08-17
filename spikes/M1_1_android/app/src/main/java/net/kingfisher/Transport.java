@@ -32,20 +32,29 @@ public final class Transport {
         return o.toByteArray();
     }
 
-    /** @return job JSON, or null on 204 (no work) — not an error. */
+    /** Distinct from null: the poll FAILED, which is not the same as no work. */
+    public static final String ERROR = "\u0000ERR";
+
+    /** @return job JSON, null on 204 (no work), or ERROR on a transport fault.
+     *  Conflating the last two made the worker exit after two instant network
+     *  errors, reporting "exited on idle" in 15.8 ms. */
     public String pollJob(String worker, int timeoutMs) {
         HttpURLConnection c = null;
         try {
             c = (HttpURLConnection) new URL(base + "/job?worker=" + worker).openConnection();
             c.setConnectTimeout(5000);
+            // do not reuse pooled sockets across long-polls
+            c.setRequestProperty("Connection", "close");
             c.setReadTimeout(timeoutMs);
             int code = c.getResponseCode();
-            if (code == 204) return null;
-            if (code != 200) { Log.i(TAG, "poll HTTP " + code); return null; }
-            return new String(readAll(c.getInputStream()), "UTF-8");
+            if (code != 200) { Log.i(TAG, "poll HTTP " + code); return ERROR; }
+            String b = new String(readAll(c.getInputStream()), "UTF-8").trim();
+            // empty body == no work. The server does not use 204: okhttp throws
+            // "unexpected end of stream" on one.
+            return b.isEmpty() ? null : b;
         } catch (Exception e) {
             Log.i(TAG, "poll failed: " + e);
-            return null;
+            return ERROR;
         } finally { if (c != null) c.disconnect(); }
     }
 
@@ -60,6 +69,8 @@ public final class Transport {
         try {
             c = (HttpURLConnection) new URL(base + "/shard/" + cid).openConnection();
             c.setConnectTimeout(5000);
+            // do not reuse pooled sockets across long-polls
+            c.setRequestProperty("Connection", "close");
             c.setReadTimeout(60000);
             if (c.getResponseCode() != 200) {
                 Log.i(TAG, "shard " + cid.substring(0, 12) + " HTTP " + c.getResponseCode());
@@ -80,6 +91,8 @@ public final class Transport {
             c.setRequestMethod("POST");
             c.setDoOutput(true);
             c.setConnectTimeout(5000);
+            // do not reuse pooled sockets across long-polls
+            c.setRequestProperty("Connection", "close");
             c.setReadTimeout(30000);
             c.setRequestProperty("Content-Type", "application/json");
             byte[] b = json.getBytes("UTF-8");

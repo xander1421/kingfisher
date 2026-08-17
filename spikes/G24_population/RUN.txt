@@ -36,3 +36,79 @@ ARM no_variation
    r14 pop   32  dev solved   1165  test solved   1127  test prec 0.2205  test top12 0.2644  body 2.00  A15 -
 
 ARM no_abduct
+   r0  pop   94  dev solved   1344  test solved   1302  test prec 0.0356  test top12 0.2786  body 2.04  A15 -
+   r1  pop  124  dev solved   1344  test solved   1302  test prec 0.0147  test top12 0.2786  body 2.11  A15 -
+   r2  pop  151  dev solved   1387  test solved   1348  test prec 0.0159  test top12 0.2810  body 2.13  A15 -
+   r3  pop  155  dev solved   1390  test solved   1348  test prec 0.0122  test top12 0.2991  body 2.11  A15 -
+   r4  pop  136  dev solved   1411  test solved   1348  test prec 0.0125  test top12 0.2910  body 2.12  A15 -
+   r5  pop  136  dev solved   1418  test solved   1355  test prec 0.0101  test top12 0.2910  body 2.12  A15 -
+   r6  pop  124  dev solved   1382  test solved   1329  test prec 0.0181  test top12 0.2989  body 2.11  A15 -
+   r7  pop  128  dev solved   1311  test solved   1269  test prec 0.0141  test top12 0.2804  body 2.10  A15 -
+   r8  pop  126  dev solved   1307  test solved   1270  test prec 0.0282  test top12 0.2794  body 2.10  A15 -
+   r9  pop  128  dev solved   1308  test solved   1275  test prec 0.0380  test top12 0.2869  body 2.12  A15 -
+   r10 pop  133  dev solved   1280  test solved   1248  test prec 0.0149  test top12 0.2828  body 2.17  A15 -
+   r11 pop  138  dev solved   1265  test solved   1234  test prec 0.0182  test top12 0.2835  body 2.17  A15 -
+   r12 pop  132  dev solved   1262  test solved   1227  test prec 0.0185  test top12 0.2843  body 2.15  A15 -
+   r13 pop  132  dev solved   1236  test solved   1200  test prec 0.0236  test top12 0.2761  body 2.14  A15 -
+   r14 pop  134  dev solved   1407  test solved   1359  test prec 0.0336  test top12 0.2805  body 2.13  A15 -
+
+ARM no_death
+   r0  pop   94  dev solved   1344  test solved   1302  test prec 0.0356  test top12 0.2786  body 2.04  A15 -
+   r1  pop  128  dev solved   3166  test solved   2606  test prec 0.0211  test top12 0.2789  body 2.08  A15 yes
+   r2  pop  160  dev solved   3636  test solved   3080  test prec 0.0094  test top12 0.2789  body 2.13  A15 yes
+   r3  pop  192  dev solved   4653  test solved   4060  test prec 0.0114  test top12 0.2833  body 2.14  A15 yes
+   r4  pop  228  dev solved   5258  test solved   4738  test prec 0.0113  test top12 0.2847  body 2.14  A15 yes
+   r5  pop  257  dev solved   5442  test solved   4904  test prec 0.0112  test top12 0.2888  body 2.14  A15 yes
+   r6  pop  291  dev solved   5868  test solved   5298  test prec 0.0103  test top12 0.2888  body 2.15  A15 yes
+   r7  pop  326  dev solved   5979  test solved   5413  test prec 0.0091  test top12 0.2935  body 2.17  A15 yes
+   r8  pop  357  dev solved   6147  test solved   5567  test prec 0.0079  test top12 0.2935  body 2.18  A15 yes
+   r9  pop  388  dev solved   6431  test solved   5844  test prec 0.0079  test top12 0.2935  body 2.19  A15 yes
+   r10 pop  423  dev solved   6487  test solved   5894  test prec 0.0075  test top12 0.2935  body 2.19  A15 yes
+   r11 pop  457  dev solved   6590  test solved   6010  test prec 0.0072  test top12 0.2935  body 2.18  A15 yes
+   r12 pop  492  dev solved   6743  test solved   6163  test prec 0.0070  test top12 0.2972  body 2.18  A15 yes
+   r13 pop  525  dev solved   6834  test solved   6257  test prec 0.0069  test top12 0.2972  body 2.18  A15 yes
+   r14 pop  557  dev solved   6970  test solved   6361  test prec 0.0066  test top12 0.2972  body 2.18  A15 yes
+
+ARM static_adv
+   r0  pop   94  dev solved   1344  test solved   1302  test prec 0.0356  test top12 0.2786  body 2.04  A15 -
+   r1  pop  126  dev solved   3215  test solved   2658  test prec 0.0407  test top12 0.2786  body 2.08  A15 yes
+   r2  pop  154  dev solved   4047  test solved   3515  test prec 0.0357  test top12 0.2830  body 2.07  A15 yes
+   r3  pop  164  dev solved   4354  test solved   3840  test prec 0.0222  test top12 0.2830  body 2.09  A15 yes
+   r4  pop  143  dev solved   4640  test solved   4144  test prec 0.0168  test top12 0.2797  body 2.08  A15 yes
+   r5  pop  131  dev solved   4587  test solved   4112  test prec 0.0213  test top12 0.2708  body 2.08  A15 yes
+   r6  pop  122  dev solved   4400  test solved   3851  test prec 0.0220  test top12 0.2572  body 2.11  A15 yes
+   r7  pop  118  dev solved   4355  test solved   3747  test prec 0.0217  test top12 0.2508  body 2.10  A15 yes
+   r8  pop  117  dev solved   4284  test solved   3730  test prec 0.0217  test top12 0.2452  body 2.13  A15 yes
+   r9  pop  112  dev solved   4354  test solved   3820  test prec 0.0243  test top12 0.2378  body 2.11  A15 yes
+   r10 pop  111  dev solved   4442  test solved   3934  test prec 0.0260  test top12 0.2378  body 2.13  A15 yes
+   r11 pop  107  dev solved   4468  test solved   3954  test prec 0.0254  test top12 0.2203  body 2.14  A15 yes
+   r12 pop  113  dev solved   4437  test solved   3934  test prec 0.0283  test top12 0.2398  body 2.12  A15 yes
+   r13 pop  113  dev solved   4144  test solved   3572  test prec 0.0226  test top12 0.2379  body 2.14  A15 yes
+   r14 pop  109  dev solved   3245  test solved   2745  test prec 0.0159  test top12 0.2379  body 2.14  A15 yes
+
+ARM no_waves
+   r0  pop   94  dev solved   1344  test solved   1302  test prec 0.0356  test top12 0.2786  body 2.04  A15 -
+   r1  pop  129  dev solved   2075  test solved   1992  test prec 0.0252  test top12 0.2786  body 2.07  A15 -
+   r2  pop  156  dev solved   3999  test solved   3414  test prec 0.0264  test top12 0.2830  body 2.06  A15 yes
+   r3  pop  162  dev solved   4401  test solved   3818  test prec 0.0316  test top12 0.2847  body 2.04  A15 yes
+   r4  pop  143  dev solved   4939  test solved   4391  test prec 0.0244  test top12 0.2764  body 2.06  A15 yes
+   r5  pop  131  dev solved   4875  test solved   4372  test prec 0.0214  test top12 0.2737  body 2.07  A15 yes
+   r6  pop  116  dev solved   4527  test solved   4044  test prec 0.0244  test top12 0.2635  body 2.09  A15 yes
+   r7  pop  122  dev solved   4701  test solved   4201  test prec 0.0177  test top12 0.2599  body 2.07  A15 yes
+   r8  pop  125  dev solved   4429  test solved   3950  test prec 0.0216  test top12 0.2707  body 2.06  A15 yes
+   r9  pop  123  dev solved   4440  test solved   3931  test prec 0.0192  test top12 0.2670  body 2.07  A15 yes
+   r10 pop  115  dev solved   3752  test solved   3211  test prec 0.0191  test top12 0.2670  body 2.07  A15 yes
+   r11 pop  119  dev solved   3761  test solved   3206  test prec 0.0239  test top12 0.2670  body 2.08  A15 yes
+   r12 pop  115  dev solved   4204  test solved   3640  test prec 0.0148  test top12 0.2555  body 2.13  A15 yes
+   r13 pop  108  dev solved   4396  test solved   3882  test prec 0.0228  test top12 0.2555  body 2.12  A15 yes
+   r14 pop  107  dev solved   4163  test solved   3651  test prec 0.0163  test top12 0.2594  body 2.11  A15 yes
+
+arm            testSolved0 testSolvedN   delta   prec0   precN  popN  A15
+full                  1302        4144   +2842  0.0356  0.0355   110  yes
+no_variation          1300        1127    -173  0.2123  0.2205    32   NO
+no_abduct             1302        1359     +57  0.0356  0.0336   134   NO
+no_death              1302        6361   +5059  0.0356  0.0066   557  yes
+static_adv            1302        2745   +1443  0.0356  0.0159   109  yes
+no_waves              1302        3651   +2349  0.0356  0.0163   107  yes
+
+VERDICT: FULL SYSTEM NOT DOMINATED — +2842 test triples at precision 0.0355; no ablation gets more correct without asserting more. Raw coverage deltas: {'full': 2842, 'no_variation': -173, 'no_abduct': 57, 'no_death': 5059, 'static_adv': 1443, 'no_waves': 2349}

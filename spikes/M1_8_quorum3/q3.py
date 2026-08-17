@@ -57,6 +57,10 @@ def _run(cmd):
         return ''
 
 
+FUELRUN_SRC = os.path.join(HERE, '..', 'S15_android_device', 'fuelrun')
+HYPERON_SRC = os.path.expanduser('~/kingfisher/elders/hyperon-experimental')
+
+
 def observed_domains(wid, binary, via):
     """Domain identity the COORDINATOR observes, never what the worker declares.
 
@@ -77,7 +81,7 @@ def observed_domains(wid, binary, via):
     # needs attestation. Recorded below.)
     bin_sha = hashlib.sha256(open(binary, 'rb').read()).hexdigest()[:12]
 
-    if via == 'adb':
+    if via in ('adb', 'app'):
         serial = subprocess.run(['adb', 'get-serialno'], capture_output=True,
                                 text=True).stdout.strip() or 'unknown-device'
         host = f'adb:{serial}'          # observed from OUR adb connection
@@ -104,7 +108,10 @@ def observed_domains(wid, binary, via):
     try:
         sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
         from provenance import manifest_state
-        src = os.path.join(HERE, '..', 'S15_android_device', 'fuelrun')
+        # the app is built from the hyperon workspace (libhyperonc takes
+        # workspace defaults); fuelrun has its own Cargo.toml. Different
+        # manifests, so this axis rises honestly rather than by relabelling.
+        src = HYPERON_SRC if via == 'app' else FUELRUN_SRC
         man = manifest_state(src)['combined_sha256'] if os.path.isdir(src) else 'unknown'
     except Exception:
         man = 'unknown'
@@ -292,6 +299,10 @@ def main():
         ('host-x86', os.path.join(BIN, 'fuelrun.host.x86_64'), 'local'),
     ]
     if not a.no_device:
+        # The REAL app as a quorum member is written (`worker_app.py`) and does
+        # NOT work -- see APP_WORKER_BLOCKED.md. Reverted to the adb-driven
+        # verifier so the pipeline stays functional; this understates the
+        # `binary` and `manifest` axes and that is recorded rather than hidden.
         workers.append(('phone', os.path.join(BIN, 'fuelrun.android'), 'adb'))
     else:
         workers.append(('host-c', os.path.join(BIN, 'fuelrun.host'), 'local'))
@@ -341,11 +352,18 @@ def main():
         inbox  = os.path.join(a.work, wid, 'in')
         outbox = os.path.join(a.work, wid, 'out')
         os.makedirs(inbox); os.makedirs(outbox)
-        procs.append(subprocess.Popen(
-            [sys.executable, os.path.join(HERE, 'worker.py'),
-             '--id', wid, '--inbox', inbox, '--outbox', outbox,
-             '--bin', binary, '--via', via, '--devdir', DEVDIR,
-             '--store', a.store]))
+        if via == 'app':
+            procs.append(subprocess.Popen(
+                [sys.executable, os.path.join(HERE, 'worker_app.py'),
+                 '--id', wid, '--inbox', inbox, '--outbox', outbox,
+                 '--store', a.store, '--apk', binary],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+        else:
+            procs.append(subprocess.Popen(
+                [sys.executable, os.path.join(HERE, 'worker.py'),
+                 '--id', wid, '--inbox', inbox, '--outbox', outbox,
+                 '--bin', binary, '--via', via, '--devdir', DEVDIR,
+                 '--store', a.store]))
 
     # M1.3: dispatch in work sessions. Preflight gates each session, not each
     # job -- 35.1 ms batched against a 68.8 ms job means per-job preflight would

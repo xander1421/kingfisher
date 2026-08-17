@@ -81,7 +81,7 @@ public class MettaWorker extends Worker {
         java.io.File cache = new java.io.File(dir, "shards");
         cache.mkdirs();
 
-        int done = 0, idle = 0;
+        int done = 0, idle = 0, errs = 0;
         long t0 = System.nanoTime();
         while (idle < 2 && !isStopped()) {
             String refuse2 = preflight();          // per job, per SCHEDULER_SPEC
@@ -90,8 +90,16 @@ public class MettaWorker extends Worker {
                 return Result.retry();
             }
             String job = net.pollJob("android", 25000);
+            if (Transport.ERROR.equals(job)) {
+                // a transport fault is NOT an empty queue. Back off and retry;
+                // only a real 204 counts toward idle.
+                errs++;
+                if (errs > 8) { Log.i(TAG, "giving up after " + errs + " transport errors"); break; }
+                try { Thread.sleep(1000L * Math.min(errs, 5)); } catch (InterruptedException ie) { break; }
+                continue;
+            }
             if (job == null) { idle++; continue; }
-            idle = 0;
+            idle = 0; errs = 0;
             String cid = field(job, "shard_cid"), jid = field(job, "job_id");
             String fuel = field(job, "fuel");
             if (cid == null || jid == null) continue;

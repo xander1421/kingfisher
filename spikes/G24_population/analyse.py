@@ -88,11 +88,22 @@ def main():
             print(f"   {r['arm']:<14}{verdict}")
 
     best_prec = max(live, key=lambda r: r["prec"])
-    print(f"\nHighest precision: {best_prec['arm']} at {best_prec['prec']:.4f}")
-    print(f"Every arm's precision is BELOW 0.02. The population buys coverage "
-          f"with\nbreadth. Coverage without precision is not truth, and no "
-          f"coverage number\nhere should be quoted without its precision "
-          f"beside it.")
+    print(f"\nHighest precision among arms that found A15: {best_prec['arm']} "
+          f"at {best_prec['prec']:.4f}")
+    # This line used to READ "Every arm's precision is BELOW 0.02" as a literal.
+    # It was true when written and false one run later, which is the same defect
+    # as G21's hand-typed 0.441 gate and agent-1's self-declared ISA: a value
+    # transcribed from one run's output into a claim about every run.
+    seed = next((r for r in rows if r["arm"] == "no_variation"), None)
+    if seed:
+        ratio = seed["prec"] / best_prec["prec"] if best_prec["prec"] else 0
+        print(f"The un-evolved enumerated seed (no_variation) sits at "
+              f"{seed['prec']:.4f} — {ratio:.1f}x the\nbest evolved arm — on "
+              f"{seed['preds']} predictions against {best_prec['preds']}. It is "
+              f"far more\nprecise and finds nothing new: it never recovers A15 "
+              f"and its coverage DECLINES.")
+    print(f"\nCoverage without precision is not truth. No coverage number here "
+          f"should be\nquoted without its precision beside it.")
     return 0
 
 

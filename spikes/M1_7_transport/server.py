@@ -11,7 +11,7 @@ Nothing is exposed on any network interface: this is a real dial-out transport
 with zero external surface, which is what MISSION_LOOP §10 requires.
 
 Endpoints, all device-initiated:
-  GET  /job?worker=W     long-poll; returns one job or 204 after `timeout`
+  GET  /job?worker=W     long-poll; one job, or an EMPTY 200 after `timeout`
   GET  /shard/<cid>      fetch shard bytes by CID; 404 if unknown
   POST /result           submit an envelope
   GET  /stats            for the harness, not the device
@@ -38,8 +38,19 @@ class H(BaseHTTPRequestHandler):
 
     def _send(self, code, body=b'', ctype='application/octet-stream'):
         self.send_response(code)
+        # RFC 9110: a 204 MUST NOT carry a body, and Android's HttpURLConnection
+        # (okhttp) throws "unexpected end of stream" when one arrives with
+        # Content-Length. curl tolerates it, which is why this only showed up
+        # once the real app polled -- the shell agent never noticed.
         self.send_header('Content-Type', ctype)
         self.send_header('Content-Length', str(len(body)))
+        # No keep-alive. `BaseHTTPRequestHandler` under HTTP/1.1 advertises
+        # persistent connections but drops them between long-polls, so okhttp
+        # reuses a pooled socket the server has already closed and reports
+        # "unexpected end of stream" -- instantly, and only on the SECOND poll.
+        # That is why a run whose first poll had work appeared to succeed.
+        self.send_header('Connection', 'close')
+        self.close_connection = True
         self.end_headers()
         if body:
             self.wfile.write(body)
@@ -52,7 +63,12 @@ class H(BaseHTTPRequestHandler):
             try:
                 job = JOBS.get(timeout=float(os.environ.get('KF_POLL', '20')))
             except queue.Empty:
-                return self._send(204)
+                # 200 with an EMPTY body, not 204. Android's HttpURLConnection
+                # (okhttp) throws "unexpected end of stream" on a 204 whether or
+                # not it carries Content-Length; curl accepts both, which is why
+                # the shell agent never saw it and the real app failed instantly.
+                # An empty 200 is unambiguous to both clients.
+                return self._send(200, b'')
             with LOCK:
                 STATS['jobs_out'] += 1
             return self._send(200, json.dumps(job).encode(), 'application/json')

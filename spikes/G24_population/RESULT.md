@@ -1,72 +1,93 @@
-# G24 — the rule population evolves, and every ablation removes something that pays
+# G24 — the rule population evolves; every mechanism it removes costs it
 
-**Verdict: the full system improves coverage AND precision on held-out data, at
-constant population size, and each of the five ablations is worse.** G22 failed
-because it satisfied none of Lewontin's three conditions. Built explicitly, they
-work.
+**Verdict: the full system triples held-out coverage at constant precision, and
+no ablation gets more correct answers without asserting more.** G22 failed
+because it satisfied none of Lewontin's three conditions for evolution. Built
+explicitly — variation, heredity, differential fitness — they work.
 
-The full arm, over 15 rounds, on a test set no operator ever reads:
+Full arm, 15 rounds, on a test set no operator ever reads:
 
 ```
-r0    pop  94    correct 1302    predictions 116954    precision 0.0111
-r14   pop  94    correct 5158    predictions 317011    precision 0.0163
+r0    pop  94    correct 1302    predictions  36543    precision 0.0356
+r14   pop 110    correct 4144    predictions 116752    precision 0.0355
 ```
 
-**+296% coverage and +47% precision at the same population size.** Both axes,
-not one traded for the other, and the population is where it started — so this
-is selection improving the rules, not accumulating more of them.
+**+218% coverage at flat precision**, population roughly unchanged. The
+population is answering three times as many held-out questions without getting
+worse at the ones it answers.
 
 ## Arms
 
 ```
-arm              pop     preds  correct     prec  cov/rule   top12  A15
-full              94    317011     5158   0.0163      54.9  0.2598  yes
-no_variation      32      5112     1127   0.2205      35.2  0.2644  NO
-no_abduct        130     84417     1374   0.0163      10.6  0.2685  NO
-no_death         548   2606799     7778   0.0030      14.2  0.3065  yes
-static_adv       103    298191     4607   0.0154      44.7  0.2312  yes
-no_waves         110    368111     4539   0.0123      41.3  0.2504  yes
+arm              pop     preds  correct     prec  cov/rule   A15
+full             110    116752     4144   0.0355      37.7   yes
+no_variation      32      5112     1127   0.2205      35.2   NO
+no_abduct        134     40414     1359   0.0336      10.1   NO
+no_death         557    969298     6361   0.0066      11.4   yes
+static_adv       109    172330     2745   0.0159      25.2   yes
+no_waves         107    224369     3651   0.0163      34.1   yes
 ```
 
-- **no_abduct** — never finds A15; coverage moves +72 against full's +3856.
-  **Problem-directed proposal is the load-bearing operator.** Without it the
-  other six operators mutate blind and the population drifts.
+On the (predictions, correct) plane, where an arm wins only by getting more
+correct at **no more** predictions:
+
+```
+no_death     trade: +2217 correct for +852546 predictions
+static_adv   DOMINATED by full
+no_waves     DOMINATED by full
+```
+
+- **no_abduct** — never finds A15; coverage moves **+57** against full's +2842.
+  **Problem-directed proposal is the load-bearing operator.** Without it the six
+  blind mutation operators drift.
 - **no_variation** — never finds A15, and coverage *declines* (1300 → 1127) as
-  rules die without replacement. This is G22's shape, and it degrades.
-- **no_death** — population explodes 94 → 548, precision collapses 0.0111 →
-  0.0030. Removing the carrying capacity converts accuracy into volume.
-- **no_waves** — **dominated**: more predictions (368k vs 317k) for fewer
-  correct (4539 vs 5158). Activation-directed wages pay.
-- **static_adv** — cheaper but no better. A fixed null is the weakest ablation
-  here, which is itself informative: co-evolution earns least of the five.
+  rules die unreplaced. This is G22's shape, and it degrades.
+- **no_death** — population explodes 94 → 557; precision collapses to 0.0066,
+  **5.4× worse than full**. Removing carrying capacity converts accuracy into
+  volume.
+- **static_adv** and **no_waves** — both strictly dominated. A co-evolving
+  adversary and activation-directed wages each pay for themselves.
 
-## The verdict printed by `evo.py` is WRONG, and the correction is the point
+## The v1 → v2 correction, which changed a headline of mine
 
-`evo.py` ranked arms on raw coverage and concluded:
+**v1 scored rules whose body walk had been truncated at `MAX_PAIRS`.** That is
+invalid twice over: the confidence came from an arbitrary iteration-order subset
+rather than a random sample, and clamping `n` let a genuinely broad rule dodge
+the per-assertion rent. It hit 150 of ~2000 evaluations in v1's full arm.
+
+v2 **excludes** over-broad rules instead of truncating them — a stated exclusion
+criterion, not a silent cap (`rejected_capped`: full 273, no_death 548).
+
+```
+                 v1        v2
+precision     0.0163    0.0355     more than doubled
+coverage        5158      4144     -20%
+```
+
+**And it overturned a claim I published in v1's RESULT.md.** v1 reported
+"+296% coverage AND +47% precision". That precision gain was measured from an
+invalid baseline. The valid measurement is **precision flat, coverage +218%** —
+still a real result, and a weaker one than I wrote.
+
+v2 also sharpened one arm: `static_adv` was "cheaper but no better" in v1 and is
+**strictly dominated** in v2. The invalid scoring had been masking the value of
+the co-evolving adversary.
+
+## The verdict logic was wrong in v1 and is fixed
+
+v1's `evo.py` ranked arms on raw coverage and printed:
 
 > AN ABLATION BEATS THE FULL SYSTEM — no_death gained +6476 test triples vs
-> full +3856; the mechanism it removes is costing, not paying
+> full +3856
 
-**That is a comparison across differently-sized populations** — `no_death` runs
-548 rules against full's 94. More rules assert more things, so more things are
-correct, almost mechanically. It is precisely the error that produced G15's
-retracted headline (a maximum over 1954 items compared against a maximum over
-1750), reappearing in code I wrote *after* retracting G15.
+**That compares a 548-rule population against a 94-rule one.** More rules assert
+more things, so more things are correct, near-mechanically. It is G15's
+retracted headline in new clothes — a maximum over 1954 items compared against a
+maximum over 1750 — written into code I authored *after* retracting G15, in the
+same week, with that error listed in my own correction notes.
 
-`analyse.py` compares on the (predictions, correct) plane instead, where an arm
-wins only by getting more correct at no more predictions:
-
-```
-no_death    trade: +2620 correct for +2289788 predictions
-no_waves    DOMINATED by full
-static_adv  cheaper but no better
-```
-
-`no_death`'s "+6476" costs **2.29 million extra assertions** for 2,620 more
-correct answers. Not a win. A trade at 5.4× worse precision.
-
-The wrong verdict is left in `evo.py` unchanged, with this correction beside it,
-because the failure is more useful than a silently patched file.
+`evo.py` now ranks on dominance; `analyse.py` reports the plane. Knowing an
+error by name did not stop me writing it.
 
 ## What each evolutionary part became in code
 
@@ -75,7 +96,7 @@ because the failure is more useful than a silently patched file.
 | genotype | `{"body": (p,q[,s]), "head": r}` — the rule evolves, not the graph |
 | variation | `mutate()`: swap / extend / contract / rehead / recombine / duplicate |
 | mutational bias | `build_bias()` → `follows` + `precedes`, both directions |
-| heredity | population persists; offspring carry parent's body with one edit |
+| heredity | population persists; offspring carry a parent's body with one edit |
 | fitness | `conf − adversary_conf`, novelty-weighted (frequency-dependent) |
 | **death** | fixed `WAGE_POOL` shared out; rent per body predicate **and** per 1000 assertions; `imp <= 0` removes |
 | problem space | `dev_all − solved_now` |
@@ -85,48 +106,37 @@ because the failure is more useful than a silently patched file.
 
 **ECAN was in the wrong place for the whole G-series.** G5/G19 used rent as
 memory management, to stop the atomspace growing. It is the *carrying capacity*:
-with unlimited room, fitness differences do nothing, which `no_death`
-demonstrates directly.
+with unlimited room fitness differences do nothing, which `no_death` shows
+directly.
 
 ## Three failures on the way, each a real property
 
 1. **A15 was inside the seed population** — reported found at round 0, before a
-   single mutation. A positive control that starts inside what it tests is not
-   one. Banned from the seed.
-2. **The fitness landscape is flat.** A rule clears `MIN_PAIRS` support or
-   scores nothing — no partial credit, so no slope, so uniform mutation over 237
+   single mutation. A control that starts inside what it tests is not one.
+2. **The fitness landscape is flat.** A rule clears `MIN_PAIRS` or scores
+   nothing — no partial credit, no slope, so uniform mutation over 237
    predicates has nothing to climb. Fixed with bidirectional structure-biased
    proposals.
-3. **Fitness charged nothing for breadth.** Rules evolved to assert everything;
-   coverage rose while precision fell 0.021 → 0.011. Added rent per 1000
-   assertions.
+3. **Fitness charged nothing for breadth.** Rules evolved to assert everything.
+   Fixed with rent per 1000 assertions — and only made effective in v2, once
+   truncation stopped hiding true breadth.
 
 ## What this does NOT show
 
-- **Absolute precision is 1.6% and that is bad.** The enumerated seed
-  (`no_variation`) is **13× more precise** at 0.2205 — few, narrow, accurate
-  rules. Evolution buys 4.6× more correct answers by making 62× more
-  predictions. Whether that exchange rate is worth it depends on the use, and
-  for knowledge-graph completion it probably is not. **The population has not
-  found truth; it has found recall.**
-- **A validity gap: capped rules are still scored.** `MAX_PAIRS=40000` truncates
-  a body walk, and the resulting confidence is computed on an arbitrary
-  iteration-order subset, not a random sample. It also lets a genuinely broad
-  rule dodge the per-assertion rent, since `n` is clamped. This hit **150 of
-  ~2000 evaluations (~7%) in the full arm and 525 in `no_death`** — enough to
-  matter, and the likely reason the breadth penalty underperforms. Capped rules
-  should be rejected outright, not scored. Not fixed in this run.
-- **A15 fired only after tuning.** Every change was principled and each is
-  documented in the source, but a control that passes after the system was
-  adjusted is weaker than one that passes first try.
-- **`top12` barely moves** (0.2598 for full vs 0.2685 for no_abduct). The
-  individual-rule statistic G17 used does not capture what a population does;
-  coverage and precision do. Reporting only `top12` would have shown nothing
-  happening.
-- One dataset, one split, one seed per arm. No repeats, so none of the
-  between-arm differences have an error bar. `no_waves` vs `full` (4539 vs 5158)
-  is well outside plausible noise; `static_adv` vs `full` (4607 vs 5158) is
-  closer and should not be leaned on.
+- **The un-evolved seed is still 6.2× more precise.** `no_variation` sits at
+  0.2205 on 5,112 predictions; full is 0.0355 on 116,752. Evolution buys 3.7×
+  more correct answers by making 23× more predictions. For knowledge-graph
+  completion that exchange rate is probably not worth it. **The population has
+  found recall, not truth.** 3.5% precision is not a working brain.
+- **A15 fired only after tuning.** Every change was principled and documented in
+  source, but a control that passes after the system was adjusted is weaker than
+  one passing first try.
+- **`top12` barely separates the arms** (0.2458–0.2972). G17's individual-rule
+  statistic does not capture population behaviour; coverage and precision do.
+- **One seed per arm, no repeats**, so between-arm differences have no error
+  bar. `no_abduct` (+57 vs +2842) and `no_death` (5.4× precision) are far
+  outside plausible noise. `static_adv` vs `no_waves` should not be leaned on.
+- Single dataset, single split, single machine.
 
 ## Reproduce
 
@@ -135,3 +145,4 @@ cd spikes/G24_population
 python3 evo.py          # ~25 min, six arms
 python3 analyse.py      # the fair comparison
 ```
+`RUN_v1.txt` / `evo_v1.json` retain the invalid-scoring run for comparison.
