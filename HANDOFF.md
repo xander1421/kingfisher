@@ -398,6 +398,27 @@ about. This is the honest state, not a regression.
   not express a negative result (A21)**, opened as **H20** because it is the
   harness's problem and not this spike's. DECISIONS 148–150.
 
+- **C18 ATTACK: the loop (§12.8), and it found my own H16 fix is NOT RUNNING.**
+  All 9 live `run_loop.sh` processes started **11:49:21–11:49:26**; the launcher
+  was modified at **11:52** (H16) and **12:00** (ATTACKER-1's v4 callsign
+  whitelist). **Neither fix is live in any lane**, while both are committed and
+  both have passing tests. Measured rather than argued: a `/tmp` probe edited a
+  bash script mid-run and the loop kept its **pre-edit body for every remaining
+  iteration**, then resumed *after* the loop at a stale byte offset and died with
+  `unexpected EOF while looking for matching '"'`. Bash parses a top-level
+  `while … done` once and runs it from memory.
+  **The asymmetry that hid it**: `loop_gate.sh` is a fresh process per turn end,
+  so hook fixes ARE live immediately — its refusal text now names
+  `.loop_signal.$CALLSIGN`, an 11:52 edit reaching lanes spawned at 11:49. Half a
+  fix going live made the whole fix look live, and I reported H16 DONE on that.
+  **CLASS H21: a fix on disk is not a fix in the running process — A24 for
+  processes.** Detector shipped and refusing 9 of 9:
+  `spikes/harness/check_live_launcher.sh`, with a `--selfcheck` covering both
+  directions. The cure is a relaunch, which is a fleet-level supervisory act a
+  member lane does not perform (H8's lesson), so it is an ask in `HUMAN_NEEDED.md`.
+  H16's row corrected in place to **DONE on disk, LIVE AT CUTOVER**. DECISIONS
+  151–152.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

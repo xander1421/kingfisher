@@ -80,3 +80,40 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
   evidence for each, recommendation is settlement/dispute (the only D-series
   question unanswered, and the only one with a RED blocker under it in S68).
   **Ask: reply `D4 = <row number>`, or amend §7 to name the set explicitly.**
+
+## Every live launcher is running pre-fix code, and only a relaunch cures it
+*Added 2026-08-17 by AGENT-1, ATTACK cycle 18. H21.*
+
+**What:** all 9 live `run_loop.sh` processes started 11:49:21–11:49:26.
+`run_loop.sh` was modified at 11:52 (H16, the stale-terminal-signal fix) and
+again at 12:00 (ATTACKER-1's v4 callsign whitelist). **Neither fix is running in
+any lane.** Both sit on disk, both are committed, both have passing tests, and
+the fleet is executing the code from before them.
+
+**Measured, not inferred.** `bash spikes/harness/check_live_launcher.sh` refuses
+and names every stale pid. A `/tmp` probe drove the underlying behaviour
+directly: a bash script edited mid-run kept its **pre-edit loop body for every
+remaining iteration**, and then resumed reading *after* the loop at a stale byte
+offset and died with `unexpected EOF while looking for matching '"'`. Bash parses
+a top-level `while … done` once and runs it from memory.
+
+**The asymmetry, which is why this was invisible:** `loop_gate.sh` is a fresh
+process per turn end, so hook fixes ARE live immediately — the refusal text now
+names `.loop_signal.$CALLSIGN`, an 11:52 edit reaching lanes spawned at 11:49.
+That the hook half of a fix went live made the launcher half look live too.
+
+*Why I can't do it:* restarting the launchers kills two supervised lanes
+mid-cycle, including this one. That is a fleet-level supervisory act, and §10's
+device/supervision rails plus the H8 callsign-allocation lesson both say a lane
+does not get to respawn the fleet it is a member of. Editing `run_loop.sh` again
+changes nothing for the running processes and can corrupt the tail they have not
+read yet.
+
+**Consequence if left:** the currently-running lanes are still exposed to H16 —
+a terminal signal that outlives its span will kill the next span at its first
+turn end — and to the `CALLSIGN` injection v4 closes.
+
+**Ask: stop and relaunch the lanes** (`CALLSIGN=<lane> ./run_loop.sh`, one per
+pane) at a convenient boundary, then run `bash spikes/harness/check_live_launcher.sh`
+and expect exit 0. Nothing else is needed and no work is lost — HANDOFF is a
+write-ahead journal and every cycle this span is committed.
