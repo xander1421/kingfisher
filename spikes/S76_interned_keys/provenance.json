@@ -1,0 +1,224 @@
+{
+ "spike": "S76_interned_keys",
+ "recorded_utc": "2026-08-17T11:03:24Z",
+ "note": "S76: probe binary is S75/pmprobe unmodified, run from S76/probe_cwd so it reads this spike key files. Counts and digests only, no timings, so the result is valid while quiet.sh refuses.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys",
+   "head": "f9f39940b3ac41b983205186b5976ff76c7fa0bd",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S76_interned_keys/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/../S57_hyperon_corpus",
+   "head": "f9f39940b3ac41b983205186b5976ff76c7fa0bd",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/../S57_hyperon_corpus": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/intern.py",
+   "sha256": "89fd2925a0232965efda159dd77052e30ef4c68fa1e8c153d94d36b9eab16856",
+   "bytes": 20693,
+   "mtime": 1786964600,
+   "compared_ts": 1786964600,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/compare.json",
+   "sha256": "acbb73afe457eeed7cf85f2bbfd1e6e3f3bfede08b4dba5e5c5362f06e828548",
+   "bytes": 9517,
+   "mtime": 1786964604,
+   "compared_ts": 1786964604,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/probe_out.txt",
+   "sha256": "b4729f52e552a3fc7731026113ad6706821d2add53e2c2384c1f9962bce9e91f",
+   "bytes": 17704,
+   "mtime": 1786964604,
+   "compared_ts": 1786964604,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_interning_is_injective",
+   "must_fire_because": "a shorter encoding that collides or drops information would produce exactly the depth improvement this spike claims, so soundness has to be established before the measurement is read",
+   "can_fail_because": "any atom fails to round-trip, or two distinct atoms encode to one key (fewer keys than atoms)",
+   "null_must_contain": "a collision, which this encoding can express: 1713 symbols share a 4-byte id space and the arity field is fixed-width, so distinct atoms CAN be driven to one key",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms": 1246,
+    "distinct_keys": 1246,
+    "round_trip_ok": 1246,
+    "round_trip_failed": 0
+   }
+  },
+  {
+   "name": "C_original_replay_reproduces_S75",
+   "must_fire_because": "the strongest available check that the instrument did not move: S75's own encoding, replayed through the same binary in this session, must land on the number S75 committed",
+   "can_fail_because": "the replayed mean depth or node count differs from S75/compare.json by any amount",
+   "null_must_contain": "S75's committed 139.05 mean pathmap depth and 83,210 nodes, recorded before this spike existed and not adjustable by it",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "replay_mean": 139.0532147578416,
+    "S75_mean": 139.0532147578416,
+    "replay_nodes": 83210,
+    "S75_nodes": 83210,
+    "replay_keys": 1246,
+    "S75_keys": 1246
+   }
+  },
+  {
+   "name": "C_triples_arm_reproduces_S75",
+   "must_fire_because": "the second half of the same instrument check, on the key set this spike does not touch at all",
+   "can_fail_because": "any triple-arm number differs from the value committed in S75/compare.json",
+   "null_must_contain": "S75's committed triple numbers (10.26 pathmap mean depth, 3,160 nodes), independent of anything this spike varies",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "pm_mean": 10.260126582278481,
+    "S75_pm_mean": 10.260126582278481,
+    "pm_nodes": 3160,
+    "S75_pm_nodes": 3160,
+    "py_mean": 4.206909862960819,
+    "S75_py_mean": 4.206909862960819
+   }
+  },
+  {
+   "name": "C_key_length_actually_fell",
+   "must_fire_because": "the mechanism claimed is key length, so key length must be observed falling before any depth result is attributed to it",
+   "can_fail_because": "interned keys are not shorter than the original encoding on both max and mean",
+   "null_must_contain": "the original encoding measured in THIS run, which is free to come out shorter than the interned one -- 4-byte ids are longer than any symbol of 1 character",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "max_before": 1155,
+    "max_after": 619,
+    "mean_before": 106.6051364365971,
+    "mean_after": 52.52487961476726
+   }
+  },
+  {
+   "name": "C_interning_brings_ratio_under_threshold",
+   "must_fire_because": "this spike's declared falsifier: if it does not fire, key length is not the cause of S75's 18.4x and S75's mechanism claim is wrong",
+   "can_fail_because": "the interned mean depth ratio reads at or above 10.0x",
+   "null_must_contain": "the same instrument that produced 18.39x, so the scale can contain both outcomes and the threshold is reachable from either side",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "ratio_before": 18.38687374921624,
+    "ratio_after": 7.856393448920363,
+    "threshold": 10.0,
+    "triples_reference": 2.4388748312894477
+   }
+  },
+  {
+   "name": "C_ratio_moves_with_id_width",
+   "must_fire_because": "one threshold crossing is one point (A18); if key length is the variable then narrowing the id must move the ratio in the same direction, and if it does not, something else is doing the work",
+   "can_fail_because": "the depth ratio does not decrease monotonically as mean key bytes decrease across the four variants",
+   "null_must_contain": "four encodings over ONE atom set, so a flat ratio across differing key lengths is an expressible outcome",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "points_key_bytes_to_ratio": [
+     [
+      36.63081861958266,
+      5.504416850363006
+     ],
+     [
+      44.57784911717496,
+      6.660789572746095
+     ],
+     [
+      52.52487961476726,
+      7.856393448920363
+     ],
+     [
+      106.6051364365971,
+      18.38687374921624
+     ]
+    ],
+    "affine": false,
+    "affine_verdict": "adjacent slopes span 0.1455..0.1947 (34% > 25%): NOT affine. Report the measured points, not a rate."
+   }
+  },
+  {
+   "name": "C_symbol_ids_are_canonical",
+   "must_fire_because": "an id assignment depending on read order makes two honest parties commit to different keys for the same atom set",
+   "can_fail_because": "rebuilding the table from the shuffled order yields any different id",
+   "null_must_contain": "a shuffled atom order, which under a first-appearance assignment WOULD produce a different table -- the shuffle is a real perturbation, not a no-op",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "symbols": 1713,
+    "identical_after_shuffle": true,
+    "shuffle_changed_order": true,
+    "first_differing": null
+   }
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys": {
+   "newest": 1786964600,
+   "from": "spikes/S76_interned_keys/"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/../S57_hyperon_corpus": {
+   "newest": 1786923851,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S76_interned_keys at f9f39940: 1 modified. The build is NOT f9f39940."
+ ],
+ "ok": false,
+ "falsifier": "if interning symbols to fixed-width ids does not bring the pathmap/python mean node-depth ratio for atom keys under 10x, the cause of S75's 18.4x is not key length and S75's mechanism claim is wrong",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

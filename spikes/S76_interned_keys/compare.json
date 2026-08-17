@@ -1,0 +1,293 @@
+{
+ "all_controls_fire": true,
+ "controls": {
+  "C_interning_brings_ratio_under_threshold": {
+   "can_fail_because": "the interned mean depth ratio reads at or above 10.0x",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "this spike's declared falsifier: if it does not fire, key length is not the cause of S75's 18.4x and S75's mechanism claim is wrong",
+   "name": "C_interning_brings_ratio_under_threshold",
+   "null_must_contain": "the same instrument that produced 18.39x, so the scale can contain both outcomes and the threshold is reachable from either side",
+   "observations": {
+    "ratio_after": 7.856393448920363,
+    "ratio_before": 18.38687374921624,
+    "threshold": 10.0,
+    "triples_reference": 2.4388748312894477
+   }
+  },
+  "C_interning_is_injective": {
+   "can_fail_because": "any atom fails to round-trip, or two distinct atoms encode to one key (fewer keys than atoms)",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a shorter encoding that collides or drops information would produce exactly the depth improvement this spike claims, so soundness has to be established before the measurement is read",
+   "name": "C_interning_is_injective",
+   "null_must_contain": "a collision, which this encoding can express: 1713 symbols share a 4-byte id space and the arity field is fixed-width, so distinct atoms CAN be driven to one key",
+   "observations": {
+    "atoms": 1246,
+    "distinct_keys": 1246,
+    "round_trip_failed": 0,
+    "round_trip_ok": 1246
+   }
+  },
+  "C_key_length_actually_fell": {
+   "can_fail_because": "interned keys are not shorter than the original encoding on both max and mean",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the mechanism claimed is key length, so key length must be observed falling before any depth result is attributed to it",
+   "name": "C_key_length_actually_fell",
+   "null_must_contain": "the original encoding measured in THIS run, which is free to come out shorter than the interned one -- 4-byte ids are longer than any symbol of 1 character",
+   "observations": {
+    "max_after": 619,
+    "max_before": 1155,
+    "mean_after": 52.52487961476726,
+    "mean_before": 106.6051364365971
+   }
+  },
+  "C_original_replay_reproduces_S75": {
+   "can_fail_because": "the replayed mean depth or node count differs from S75/compare.json by any amount",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the strongest available check that the instrument did not move: S75's own encoding, replayed through the same binary in this session, must land on the number S75 committed",
+   "name": "C_original_replay_reproduces_S75",
+   "null_must_contain": "S75's committed 139.05 mean pathmap depth and 83,210 nodes, recorded before this spike existed and not adjustable by it",
+   "observations": {
+    "S75_keys": 1246,
+    "S75_mean": 139.0532147578416,
+    "S75_nodes": 83210,
+    "replay_keys": 1246,
+    "replay_mean": 139.0532147578416,
+    "replay_nodes": 83210
+   }
+  },
+  "C_ratio_moves_with_id_width": {
+   "can_fail_because": "the depth ratio does not decrease monotonically as mean key bytes decrease across the four variants",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "one threshold crossing is one point (A18); if key length is the variable then narrowing the id must move the ratio in the same direction, and if it does not, something else is doing the work",
+   "name": "C_ratio_moves_with_id_width",
+   "null_must_contain": "four encodings over ONE atom set, so a flat ratio across differing key lengths is an expressible outcome",
+   "observations": {
+    "affine": false,
+    "affine_verdict": "adjacent slopes span 0.1455..0.1947 (34% > 25%): NOT affine. Report the measured points, not a rate.",
+    "points_key_bytes_to_ratio": [
+     [
+      36.63081861958266,
+      5.504416850363006
+     ],
+     [
+      44.57784911717496,
+      6.660789572746095
+     ],
+     [
+      52.52487961476726,
+      7.856393448920363
+     ],
+     [
+      106.6051364365971,
+      18.38687374921624
+     ]
+    ]
+   }
+  },
+  "C_symbol_ids_are_canonical": {
+   "can_fail_because": "rebuilding the table from the shuffled order yields any different id",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "an id assignment depending on read order makes two honest parties commit to different keys for the same atom set",
+   "name": "C_symbol_ids_are_canonical",
+   "null_must_contain": "a shuffled atom order, which under a first-appearance assignment WOULD produce a different table -- the shuffle is a real perturbation, not a no-op",
+   "observations": {
+    "first_differing": null,
+    "identical_after_shuffle": true,
+    "shuffle_changed_order": true,
+    "symbols": 1713
+   }
+  },
+  "C_triples_arm_reproduces_S75": {
+   "can_fail_because": "any triple-arm number differs from the value committed in S75/compare.json",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the second half of the same instrument check, on the key set this spike does not touch at all",
+   "name": "C_triples_arm_reproduces_S75",
+   "null_must_contain": "S75's committed triple numbers (10.26 pathmap mean depth, 3,160 nodes), independent of anything this spike varies",
+   "observations": {
+    "S75_pm_mean": 10.260126582278481,
+    "S75_pm_nodes": 3160,
+    "S75_py_mean": 4.206909862960819,
+    "pm_mean": 10.260126582278481,
+    "pm_nodes": 3160,
+    "py_mean": 4.206909862960819
+   }
+  }
+ },
+ "headline_id_bytes": 4,
+ "probe": "S75/pmprobe, unmodified, run from S76/probe_cwd",
+ "relation": {
+  "affine": false,
+  "affine_verdict": "adjacent slopes span 0.1455..0.1947 (34% > 25%): NOT affine. Report the measured points, not a rate.",
+  "points_mean_key_bytes_to_depth_ratio": [
+   [
+    36.63081861958266,
+    5.504416850363006
+   ],
+   [
+    44.57784911717496,
+    6.660789572746095
+   ],
+   [
+    52.52487961476726,
+    7.856393448920363
+   ],
+   [
+    106.6051364365971,
+    18.38687374921624
+   ]
+  ],
+  "quotable_as_a_rate": false
+ },
+ "seed": 20260817,
+ "symbol_table": {
+  "bytes_utf8": 41465,
+  "bytes_with_lengths": 44891,
+  "symbols": 1713
+ },
+ "threshold_carried_from_S75": 10.0,
+ "triples": {
+  "depth_ratio_max": 2.2,
+  "depth_ratio_mean": 2.4388748312894477,
+  "key_bytes_max": 12,
+  "key_bytes_mean": 12.0,
+  "keys": 4096,
+  "node_ratio": 0.6099208646979347,
+  "pathmap": {
+   "child_items": 7255,
+   "cloned": 2264,
+   "keys": 4096,
+   "max_node_depth": 11,
+   "mean_node_depth": 10.260126582278481,
+   "merkle_hash": "0xd79dc03c60a8f282a831c3583b6c440e",
+   "merkleize_stable": true,
+   "nodes": 3160,
+   "replaced": 2138,
+   "reused": 1565
+  },
+  "python": {
+   "max_node_depth": 5,
+   "mean_node_depth": 4.206909862960819,
+   "nodes": 5181
+  }
+ },
+ "variants": {
+  "id2": {
+   "depth_ratio_max": 29.266666666666666,
+   "depth_ratio_mean": 5.504416850363006,
+   "id_bytes": 2,
+   "key_bytes_max": 447,
+   "key_bytes_mean": 36.63081861958266,
+   "keys": 1246,
+   "node_ratio": 13.097457627118644,
+   "pathmap": {
+    "child_items": 22882,
+    "cloned": 1703,
+    "keys": 1246,
+    "max_node_depth": 439,
+    "mean_node_depth": 42.91579239266072,
+    "merkle_hash": "0x4a26bc365107dea4ac3e493eea66737f",
+    "merkleize_stable": true,
+    "nodes": 21637,
+    "replaced": 253,
+    "reused": 144
+   },
+   "python": {
+    "max_node_depth": 15,
+    "mean_node_depth": 7.796610169491525,
+    "nodes": 1652
+   }
+  },
+  "id3": {
+   "depth_ratio_max": 35.0,
+   "depth_ratio_mean": 6.660789572746095,
+   "id_bytes": 3,
+   "key_bytes_max": 533,
+   "key_bytes_mean": 44.57784911717496,
+   "keys": 1246,
+   "node_ratio": 16.5,
+   "pathmap": {
+    "child_items": 28503,
+    "cloned": 1909,
+    "keys": 1246,
+    "max_node_depth": 525,
+    "mean_node_depth": 51.931579719715316,
+    "merkle_hash": "0x9d19a72b7caaefb828f77f1b71185176",
+    "merkleize_stable": true,
+    "nodes": 27258,
+    "replaced": 283,
+    "reused": 157
+   },
+   "python": {
+    "max_node_depth": 15,
+    "mean_node_depth": 7.796610169491525,
+    "nodes": 1652
+   }
+  },
+  "id4": {
+   "depth_ratio_max": 40.733333333333334,
+   "depth_ratio_mean": 7.856393448920363,
+   "id_bytes": 4,
+   "key_bytes_max": 619,
+   "key_bytes_mean": 52.52487961476726,
+   "keys": 1246,
+   "node_ratio": 19.86864406779661,
+   "pathmap": {
+    "child_items": 34068,
+    "cloned": 2004,
+    "keys": 1246,
+    "max_node_depth": 611,
+    "mean_node_depth": 61.253237059379096,
+    "merkle_hash": "0x81d1f09ca72a51c231bfdedcc2da70db",
+    "merkleize_stable": true,
+    "nodes": 32823,
+    "replaced": 259,
+    "reused": 152
+   },
+   "python": {
+    "max_node_depth": 15,
+    "mean_node_depth": 7.796610169491525,
+    "nodes": 1652
+   }
+  },
+  "original": {
+   "depth_ratio_max": 76.53333333333333,
+   "depth_ratio_mean": 18.38687374921624,
+   "id_bytes": null,
+   "key_bytes_max": 1155,
+   "key_bytes_mean": 106.6051364365971,
+   "keys": 1246,
+   "node_ratio": 44.929805615550755,
+   "pathmap": {
+    "child_items": 84455,
+    "cloned": 3846,
+    "keys": 1246,
+    "max_node_depth": 1148,
+    "mean_node_depth": 139.0532147578416,
+    "merkle_hash": "0xcdff8af0a38b239c89b10da07ad72621",
+    "merkleize_stable": true,
+    "nodes": 83210,
+    "replaced": 324,
+    "reused": 61
+   },
+   "python": {
+    "max_node_depth": 15,
+    "mean_node_depth": 7.5626349892008635,
+    "nodes": 1852
+   }
+  }
+ }
+}
