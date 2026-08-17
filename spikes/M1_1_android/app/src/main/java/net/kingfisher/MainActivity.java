@@ -9,6 +9,14 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.StatFs;
 import android.util.Log;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import java.util.concurrent.TimeUnit;
 
 /**
  * M1.1 -- the honest preflight number.
@@ -87,6 +95,54 @@ public class MainActivity extends Activity {
         } catch (Throwable e) {
             Log.i(TAG, "METTA FAILED: " + e);
         }
+        // ---- M1.3: the five declarative constraints, enqueued for real
+        Constraints spec = new Constraints.Builder()
+                .setRequiresCharging(true)                              // rule 1
+                .setRequiresDeviceIdle(true)                            // rule 5
+                .setRequiredNetworkType(NetworkType.UNMETERED)          // rule 6
+                .setRequiresBatteryNotLow(true)                         // rule 2 (partial)
+                .setRequiresStorageNotLow(true)
+                .build();
+        Data in = new Data.Builder().putString("program",
+                "!(+ 1 2)\n!(intersection-atom (A B C) (B C D))\n").build();
+
+        WorkManager wm = WorkManager.getInstance(this);
+        wm.enqueueUniqueWork("kf-spec", ExistingWorkPolicy.REPLACE,
+                new OneTimeWorkRequest.Builder(MettaWorker.class)
+                        .setConstraints(spec).setInputData(in)
+                        // NO setBackoffCriteria here. SCHEDULER_SPEC 2 specifies
+                        // rule 4 (EXPONENTIAL, 5 min) and rule 5 (requiresDeviceIdle)
+                        // in the same builder; WorkManager throws
+                        // "Cannot set backoff criteria on an idle mode job".
+                        // The spec as written does not build. Rules 4 and 5 are
+                        // mutually exclusive and one must be dropped.
+                        .addTag("kf-spec").build());
+        Log.i(TAG, "enqueued kf-spec: 5 constraints, NO backoff (rules 4+5 are exclusive)");
+
+        // A second request WITHOUT requiresDeviceIdle, so the worker body is
+        // actually observed. S6 warns idle can starve on a phone that is never
+        // idle-while-charging; without this the run would prove nothing.
+        wm.enqueueUniqueWork("kf-now", ExistingWorkPolicy.REPLACE,
+                new OneTimeWorkRequest.Builder(MettaWorker.class)
+                        .setConstraints(new Constraints.Builder()
+                                .setRequiresCharging(true)
+                                .setRequiredNetworkType(NetworkType.UNMETERED).build())
+                        .setInputData(in)
+                        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, TimeUnit.MINUTES)
+                        .addTag("kf-now").build());
+        Log.i(TAG, "enqueued kf-now without idle constraint");
+
+        // positive control: an unsatisfiable floor must produce Result.retry()
+        wm.enqueueUniqueWork("kf-refuse", ExistingWorkPolicy.REPLACE,
+                new OneTimeWorkRequest.Builder(MettaWorker.class)
+                        .setConstraints(new Constraints.Builder()
+                                .setRequiresCharging(true).build())
+                        .setInputData(new Data.Builder()
+                                .putString("program", "!(+ 1 2)\n")
+                                .putInt("battery_floor_pct", 101).build())
+                        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, TimeUnit.MINUTES)
+                        .addTag("kf-refuse").build());
+        Log.i(TAG, "enqueued kf-refuse with an unsatisfiable 101% floor");
         Log.i(TAG, "DONE");
     }
 }

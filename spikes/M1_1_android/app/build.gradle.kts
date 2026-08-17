@@ -17,3 +17,5 @@ android {
     defaultConfig { externalNativeBuild { cmake { arguments += "-DANDROID_STL=none" } } }
     packaging { jniLibs { useLegacyPackaging = false } }   // 16 KB alignment path
 }
+
+dependencies { implementation("androidx.work:work-runtime:2.9.1") }

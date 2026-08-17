@@ -30,6 +30,21 @@ Our device agent should **not** be a daemon. It should be a `CoroutineWorker` th
 | 13 | GUI keepalive (30 s) or the client exits | **deleted** | Pure consequence of BOINC's two-process design. We have one process; the constraint system is the supervisor. |
 | 14 | `hr_class` homogeneous redundancy | **deleted** | Only needed for float reproducibility. MeTTa reduction is discrete and deterministic — any two devices are comparable. See `reports/REPORT_BOINC.md` §4.1. |
 
+## CORRECTION 2026-08-17 — rules 4 and 5 cannot both be applied
+
+The constraint set below **throws at runtime**:
+
+```
+java.lang.IllegalArgumentException: Cannot set backoff criteria on an idle mode job
+```
+
+`setRequiresDeviceIdle(true)` (rule 5) and
+`setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, MINUTES)` (rule 4) are
+mutually exclusive in WorkManager. Each BOINC rule was mapped correctly in
+isolation; the composition was never built. Verified on device in
+`spikes/M1_3_worker/WORKER_RESULT.md`. Also confirmed there: rule 5 starves on
+a charging bench phone, exactly as section 4 warns.
+
 ## 2. The resulting constraint set
 
 ```kotlin
