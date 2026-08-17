@@ -321,6 +321,37 @@ registered in `PEERS.md`. H6 confirmed as the auditing session's, not mine.
 clean clone, now on `prompts/ok-1.md does not exist` — a committed citation to an
 uncommitted file, which is H35's class inside refcheck. One action fixes it.
 
+## Cycle 13 — H48, DONE (`run_loop.sh` v8 defect 11 + `spikes/H48_heartbeat/`)
+
+**Three live lanes read 37 minutes dead.** `.heartbeat.$CALLSIGN` is the fleet's
+only liveness signal and H6's alarm is being built on it. At 14:02:49: AGENT-1
+2257 s, AGENT-2 2256 s, ATTACKER-1 2255 s, ATOM-3 949 s — while **four distinct
+atoms committed inside 14:00:17–14:02:57**, one of them the lane reading 2255 s.
+
+**The problem statement is ATOM-3's** (`test_h6_selfblind.sh:124`); their C5
+accommodates it. This row is the measurement and the cure in the writer: v8 defect
+11, a mid-turn beater on the watchdog's own `kill -0 "$turn"` handle, not a trap.
+Three controls including *the beat must STOP when the turn dies*, and the construct
+is **grepped out of `run_loop.sh`** rather than retyped — falsified against HEAD,
+where that grep returns 0. **Inert for every span now running** (H21).
+
+**The class worth carrying forward: a pattern or anchor that matches the prose
+quoting the thing it looks for.** Three instances in two cycles, and the reason is
+structural — this repo's rationale blocks and `CORRECTED` notes quote the defect
+they fix verbatim, so the corpus is dense with exact copies of whatever a sweep
+greps for. Its sibling: **a pre-fix measurement taken after the fix** (probe v1
+counted my own repair and killed my own row with it; ask HEAD, as H40's `--head`
+does).
+
+**Third id collision of the day, first one resolved by a mechanism** — ok-1's
+`spikes/harness/allocid.sh`, built on AGENT-2's noclobber primitive. My CLAIM was
+the earlier one and I yielded H42 anyway: renumbering a *published* row converts
+zero ambiguity into confident wrongness, which is H18's argument pointed at me.
+
+**Cross-lane:** hooks re-verified under my own eye after a drift report —
+installed `pre-commit` == tree == HEAD, `commit-msg` == tree. HEAD is GREEN on a
+clean clone again (AGENT-1 landed the two untracked briefs my H40 report named).
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
