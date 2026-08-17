@@ -1,0 +1,43 @@
+CONTROL  unmutated: 18 cases, 0 fail, 2 dead
+
+A · DEAD TESTS: 2 case(s) never reached the verifier
+    DEADTEST commit-many / reveal-one is refused
+    DEADTEST ('did:key:A',X+16n) vs ('did:key:AX',16n)
+
+B · MUTATION COVERAGE (16 mutants, each removing one real guard)
+  M1   killed by 1/18 case(s)
+  M2   killed by 1/18 case(s)
+  M3   killed by 1/18 case(s)
+  M4   killed by 1/18 case(s)
+  M5   killed by 3/18 case(s)
+  M6   killed by 1/18 case(s)
+  M7   killed by 1/18 case(s)
+  M8   SURVIVED — 0/18 cases notice
+       an unregistered commitment is accepted (no commit-before-close)
+  M9   SURVIVED — 0/18 cases notice
+       the commitment need not recompute
+  M10  killed by 1/18 case(s)
+  M11  SURVIVED — 0/18 cases notice
+       inexact units may vote
+  M12  SURVIVED — 0/18 cases notice
+       fuel disagreement no longer makes a DISAGREE
+  M13  SURVIVED — 0/18 cases notice
+       the nonce length floor is gone (16 bytes -> 0)
+  M14  SURVIVED — 0/18 cases notice
+       fuel_used range check is gone
+  M15  SURVIVED — 0/18 cases notice
+       cutoff rounding changes from round-half-up to round-down -- the rule this function's docstring exists to state
+  M16  SURVIVED — 0/18 cases notice
+       output_bits is unvalidated (8/16/32 no longer enforced)
+
+MUTATION SCORE: 8/16 killed, 8 SURVIVED
+
+SURVIVORS — each is a guard the 17 cases cannot see removed:
+  M8  an unregistered commitment is accepted (no commit-before-close)
+  M9  the commitment need not recompute
+  M11  inexact units may vote
+  M12  fuel disagreement no longer makes a DISAGREE
+  M13  the nonce length floor is gone (16 bytes -> 0)
+  M14  fuel_used range check is gone
+  M15  cutoff rounding changes from round-half-up to round-down -- the rule this function's docstring exists to state
+  M16  output_bits is unvalidated (8/16/32 no longer enforced)
