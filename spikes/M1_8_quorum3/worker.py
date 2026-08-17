@@ -8,7 +8,7 @@ A fresh fuelrun process per job is required, not an optimisation --
 PORT_PLAN M1.3 gives two independent derivations (S60/A8 atomspace pollution,
 and process-global NEXT_VARIABLE_ID).
 """
-import argparse, json, os, subprocess, sys, time
+import argparse, hashlib, json, os, platform, subprocess, sys, time
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_5_shardstore'))
 from shardstore import ShardStore, cid_of
@@ -67,6 +67,20 @@ def main():
     a = ap.parse_args()
     store = ShardStore(a.store)
     os.makedirs(a.outbox, exist_ok=True)
+
+    # FAILURE DOMAIN. Two workers running the same binary on the same host share
+    # every failure mode -- same libm, same clock, same page tables, same panic
+    # at 1024 results -- so their agreement is nearly free. Quorum arithmetic has
+    # to run on domains, not on seats. The key is whatever independence is being
+    # claimed over; here: which binary, and which machine executes it.
+    bin_sha = hashlib.sha256(open(a.bin, 'rb').read()).hexdigest()[:12]
+    if a.via == 'adb':
+        serial = subprocess.run(['adb', 'get-serialno'], capture_output=True,
+                                text=True).stdout.strip() or 'device'
+        host_id = f'adb:{serial}'
+    else:
+        host_id = f'host:{platform.node()}'
+    domain = f'{host_id}|bin:{bin_sha}'
     idle = 0
     while idle < 60:
         jobs = sorted(f for f in os.listdir(a.inbox) if f.endswith('.job'))
@@ -117,7 +131,8 @@ def main():
                 env = {'status': 'TIMEOUT'}
             except FileNotFoundError as e:
                 env = {'status': 'SHARD_MISSING', 'detail': str(e)}
-            env.update(worker=a.id, job_id=job['job_id'],
+            env.update(domain=domain, bin_sha256=bin_sha, host_id=host_id,
+                       worker=a.id, job_id=job['job_id'],
                        shard_cid=job['shard_cid'], fuel_limit=job['fuel'],
                        bytes_pushed=pushed,
                        wall_ms=round((time.time()-t0)*1000, 1))

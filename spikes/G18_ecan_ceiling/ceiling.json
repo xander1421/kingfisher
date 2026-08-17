@@ -1,0 +1,92 @@
+{
+ "sizes": [
+  200,
+  800,
+  1000,
+  1023,
+  1024,
+  1200,
+  3000
+ ],
+ "rows": [
+  {
+   "n": 200,
+   "plain": "OK",
+   "plain_rent": 10000,
+   "chunked": "OK",
+   "chunked_rent": 10000,
+   "agree": "YES"
+  },
+  {
+   "n": 800,
+   "plain": "OK",
+   "plain_rent": 40000,
+   "chunked": "OK",
+   "chunked_rent": 40000,
+   "agree": "YES"
+  },
+  {
+   "n": 1000,
+   "plain": "OK",
+   "plain_rent": 50000,
+   "chunked": "OK",
+   "chunked_rent": 50000,
+   "agree": "YES"
+  },
+  {
+   "n": 1023,
+   "plain": "PANIC@179",
+   "plain_rent": null,
+   "chunked": "PANIC@179",
+   "chunked_rent": null,
+   "agree": "-"
+  },
+  {
+   "n": 1024,
+   "plain": "PANIC@179",
+   "plain_rent": null,
+   "chunked": "PANIC@179",
+   "chunked_rent": null,
+   "agree": "-"
+  },
+  {
+   "n": 1200,
+   "plain": "PANIC@179",
+   "plain_rent": null,
+   "chunked": "PANIC@179",
+   "chunked_rent": null,
+   "agree": "-"
+  },
+  {
+   "n": 3000,
+   "plain": "PANIC@179",
+   "plain_rent": null,
+   "chunked": "PANIC@179",
+   "chunked_rent": null,
+   "agree": "-"
+  }
+ ],
+ "chunk": 500,
+ "first_panic": 1023,
+ "control_fired": true,
+ "verdict": "CHUNKING DOES NOT ESCAPE \u2014 the chunked path panics too",
+ "conditions": {
+  "data": "synthetic-uniform",
+  "concurrency": "single-process",
+  "swept": {
+   "n_nodes": [
+    200,
+    800,
+    1000,
+    1023,
+    1024,
+    1200,
+    3000
+   ]
+  }
+ },
+ "cites": [
+  "G5_ecan_metta",
+  "G16_rules_in_metta"
+ ]
+}

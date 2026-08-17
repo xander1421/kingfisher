@@ -25,6 +25,7 @@ BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin')
 DEVDIR = '/data/local/tmp/m18'
 
 ALPHA = False   # set by --alpha; opt-in per job class, never the default
+MIN_DOMAINS = 3  # independent failure domains required among AGREEING workers
 
 
 def key(e):
@@ -87,12 +88,26 @@ def adjudicate(envs):
     # no stake, no Sybils, no collusion. Q1's 72% capture figure assumed quorum
     # SIZE was fixed; it is not. So a short quorum is never a clean verdict.
     if returned < dispatched:
-        return 'REDUCED_QUORUM', k, n, dispatched, returned
+        return 'REDUCED_QUORUM', k, n, dispatched, returned, 0
     if n >= 2:
         if k[0] in FAILED_STATUS:
-            return 'AGREED_FAILURE', k, n, dispatched, returned
-        return ('UNANIMOUS' if n == dispatched else 'MAJORITY'), k, n, dispatched, returned
-    return 'NO_QUORUM', None, n, dispatched, returned
+            return 'AGREED_FAILURE', k, n, dispatched, returned, 0
+
+        # INDEPENDENCE. REDUCED_QUORUM catches workers that died; it does not
+        # catch workers that were never independent. Two workers sharing a
+        # binary and a host share every failure mode, so their agreement is
+        # nearly free -- dispatched=3, returned=3, and the failure-domain count
+        # is 2. Capture arithmetic (Q1) runs on domains, not seats. Same shape
+        # as k8s podtopologyspread: topologyKey names what you claim
+        # independence over, maxSkew bounds concentration within it.
+        agreeing = {e.get('domain') for e, kk in zip(envs, ks)
+                    if kk == k and e is not None}
+        domains = len(agreeing)
+        if domains < MIN_DOMAINS:
+            return 'INSUFFICIENT_DOMAINS', k, n, dispatched, returned, domains
+        return ('UNANIMOUS' if n == dispatched else 'MAJORITY'), \
+            k, n, dispatched, returned, domains
+    return 'NO_QUORUM', None, n, dispatched, returned, 0
 
 def stage_device(android_bin):
     subprocess.run(['adb', 'shell', f'mkdir -p {DEVDIR}/corpus'], check=True)
@@ -115,6 +130,10 @@ def main():
     ap.add_argument('--store', default=os.path.join(HERE, 'run', 'store'))
     ap.add_argument('--cap-mb', type=int, default=64)
     ap.add_argument('--keep-device-cache', action='store_true')
+    ap.add_argument('--min-domains', type=int, default=3,
+                    help='independent failure domains required among AGREEING '
+                         'workers. Two workers sharing a binary and a host are '
+                         'one domain, and their agreement is nearly free.')
     ap.add_argument('--alpha', action='store_true',
                     help='alpha-canonicalise results before comparing. Fixes '
                          'mechanism 1 (which variable represents an aliased '
@@ -125,8 +144,9 @@ def main():
                          '(M1.3: batched preflight is 0.51x a job, so per-job is '
                          'not viable -- amortise it)')
     a = ap.parse_args()
-    global ALPHA
+    global ALPHA, MIN_DOMAINS
     ALPHA = a.alpha
+    MIN_DOMAINS = a.min_domains
 
     progs = sorted(f for f in os.listdir(a.corpus) if f.endswith('.metta'))
     if a.limit: progs = progs[:a.limit]
@@ -234,22 +254,32 @@ def main():
             while not os.path.exists(fp) and time.time() - t0 < 1800:
                 time.sleep(0.02)
             envs.append(json.load(open(fp)) if os.path.exists(fp) else None)
-        v, k, n, disp, ret = adjudicate(envs)
-        rows.append((p, v, n, k, envs, disp, ret))
+        v, k, n, disp, ret, dom = adjudicate(envs)
+        rows.append((p, v, n, k, envs, disp, ret, dom))
 
     for pr in procs: pr.terminate()
 
     # report
     tally = Counter(r[1] for r in rows)
     print(f'\n{"program":56} {"verdict":14} {"agree":5} fuel')
-    for p, v, n, k, envs, disp, ret in rows:
+    for p, v, n, k, envs, disp, ret, dom in rows:
         flag = '' if v == 'UNANIMOUS' else '   <<<'
         fuel = (k[1] if k and k[1] is not None else '-')
         # agreed/returned(dispatched) -- a shrunken quorum must be visible
         shape = f'{n}/{ret}' + (f'({disp})' if ret != disp else '')
-        print(f'{p[:52]:52} {v:14} {shape:>9} {str(fuel):>9}{flag}')
+        print(f'{p[:44]:44} {v:20} {shape:>7} {dom}dom {str(fuel):>9}{flag}')
     print('\n' + '  '.join(f'{kk}={vv}' for kk, vv in sorted(tally.items())))
     accepted = tally['UNANIMOUS'] + tally['MAJORITY']
+    insuf = tally['INSUFFICIENT_DOMAINS']
+    if insuf:
+        doms = sorted({e['domain'] for _,_,_,_,es,_,_,_ in rows
+                       for e in es if e and e.get('domain')})
+        print(f'\n!! INSUFFICIENT_DOMAINS on {insuf} job(s): agreement came from '
+              f'fewer than {MIN_DOMAINS} independent failure domains.')
+        for d in doms:
+            print(f'     domain: {d}')
+        print('   Workers sharing a binary and a host share every failure mode; '
+              'their agreement is nearly free.')
     short = tally['REDUCED_QUORUM']
     if short:
         print(f'\n!! REDUCED_QUORUM on {short} job(s): fewer workers returned '
@@ -260,12 +290,12 @@ def main():
           + (f'   |  AGREED_FAILURE {failed} (deterministic, but no result -- '
              f'NOT accepted)' if failed else ''))
 
-    pushed = sum(e.get('bytes_pushed', 0) for _, _, _, _, es, _, _ in rows
+    pushed = sum(e.get('bytes_pushed', 0) for _, _, _, _, es, _, _, _ in rows
                  for e in es if e)
     if ALPHA:
-        refused = sum(1 for _, _, _, _, es, _, _ in rows for e in es
+        refused = sum(1 for _, _, _, _, es, _, _, _ in rows for e in es
                       if e and e.get('alpha_refused'))
-        nonground = sum(1 for _, _, _, _, es, _, _ in rows for e in es
+        nonground = sum(1 for _, _, _, _, es, _, _, _ in rows for e in es
                         if e and e.get('results_text') is not None
                         and not is_ground(e['results_text']))
         print(f'alpha: {nonground} envelope(s) non-ground -> {refused} fell back '
@@ -282,8 +312,8 @@ def main():
                'tally': dict(tally),
                'rows': [{'program': p, 'verdict': v, 'agree': n,
                          'key': k, 'envelopes': e,
-                         'dispatched': d, 'returned': r}
-                        for p, v, n, k, e, d, r in rows]},
+                         'dispatched': d, 'returned': r, 'domains': dm}
+                        for p, v, n, k, e, d, r, dm in rows]},
               open(os.path.join(HERE, 'result.json'), 'w'), indent=1)
     print('-> result.json')
 

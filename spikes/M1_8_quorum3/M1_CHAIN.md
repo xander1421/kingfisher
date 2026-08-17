@@ -1,8 +1,9 @@
 # M1 — the whole chain, one run, with provenance
 
-**66/66 UNANIMOUS with a real phone in the quorum.** First full-system run in
-which every link is measured and every gate has a control proving it could have
-refused.
+**CORRECTED. The headline was 66/66 UNANIMOUS; under a failure-domain check it
+is INSUFFICIENT_DOMAINS.** The chain runs end to end and every link is measured
+— but the quorum that validated it had **2 independent failure domains, not 3**,
+and the writeup counted seats.
 
 ```
 admission gate  ->  CID shard store  ->  session preflight
@@ -57,6 +58,37 @@ that returns UNANIMOUS unconditionally.
 | canon / canon_alpha | strips process history; alpha opt-in | E1 40 distinct -> 1, heap-address control unchanged at 40/40 |
 | quorum-3 | dispatched vs returned recorded | a short quorum is **craftable**, so it is `REDUCED_QUORUM` and never payable |
 
+## The correction — seats are not domains
+
+`REDUCED_QUORUM` catches workers that **died**. It cannot catch workers that
+were **never independent**: dispatched 3, returned 3, check passes — and the
+failure-domain count is 2.
+
+Two of the three workers ran the same binary on the same host. They share libm,
+clock, page tables, scheduler, and the same 1024-result panic. Their agreement
+is nearly free, so the run reads as three checks and is two.
+
+```
+host-only, 3 workers, 1 binary, 1 host:
+  INSUFFICIENT_DOMAINS   3/3  1dom   accepted 0/4
+  domain: host:Victorias-MacBook-Pro.local|bin:78d874f97674
+```
+
+The real M1 setup (2 host + 1 phone) is `3/3 2dom` — still short of 3.
+
+**Q1's capture arithmetic runs on domains, not seats**, so this compounds with
+the 72% figure rather than sitting beside it. `adjudicate` now counts distinct
+domains **among the agreeing workers only** — a dissenter in a third domain
+lends no independence to the majority — and returns `INSUFFICIENT_DOMAINS`
+below `--min-domains` (default 3).
+
+The domain key is `host_id|bin:<sha256[:12]>`, i.e. what independence is being
+claimed over. Same shape as k8s `podtopologyspread`: `topologyKey` names the
+axis, `maxSkew` bounds concentration within it.
+
+Honest consequence: **this project has never run a 3-domain quorum.** It has one
+phone. That was listed as a hardware gap; it is a validity gap.
+
 ## Still open
 - **Process-per-job.** WorkManager reuses the app process; M1.1c measured that
   job N differs from job 1. Three options recorded, none implemented.
@@ -64,7 +96,7 @@ that returns UNANIMOUS unconditionally.
   `FUEL_EXHAUSTED` nor `DEADLINE_EXCEEDED`. In `HUMAN_NEEDED`.
 - **Device-side cache integrity.** The host re-hashes on `get`; the phone trusts
   its own cache file.
-- **Two of three workers are the same binary on one host.** This exercises the
-  pipeline, not Sybil resistance. Q1's 72% capture stands, and M1.8c shows
-  quorum size is attacker-influenceable on top of it.
+- **Only 2 failure domains exist.** Now detected and refused rather than
+  described. Closing it needs a second physical device — the standing
+  `HUMAN_NEEDED` item, reclassified from convenience to correctness.
 - **No network transport.** Filesystem and adb only.
