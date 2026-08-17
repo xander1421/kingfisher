@@ -1,0 +1,249 @@
+{
+ "spike": "H73_gate_scope",
+ "recorded_utc": "2026-08-17T16:18:48Z",
+ "note": "",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H73_gate_scope/gate_scope.json",
+   "sha256": "ad775ddaef593b6ad75ada9e7a84b81d07f41f0b1e1bf1ebb2cac474758af05f",
+   "bytes": 1039,
+   "mtime": 1786983528
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_baseline_is_green",
+   "must_fire_because": "a null that cannot be clean cannot contain the effect (A20)",
+   "can_fail_because": "any citation unresolved before lane B edits",
+   "null_must_contain": "the synthetic harness must resolve cleanly BEFORE lane B edits it, or every refusal below is about the stubs rather than about the edit",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "baseline_refcheck_green": true,
+    "lane_b_edit_makes_refcheck_refuse": true,
+    "offending_files": [
+     "spikes/harness/lane_b.md"
+    ],
+    "lane_a_commit_refused": true,
+    "lane_a_carried_paths": [
+     "spikes/harness/lane_a.md"
+    ],
+    "offending_in_lane_a_commit": [],
+    "scoped_gate_would_accept": true,
+    "violation_present_in_HEAD": false,
+    "head_baseline_would_still_refuse": true,
+    "h27_case_offending": [
+     "spikes/harness/lane_a.md",
+     "spikes/harness/lane_b.md"
+    ],
+    "h27_case_scoped_gate_refuses": true,
+    "h27_case_current_gate_refuses": true,
+    "falsifier_fired": true,
+    "pinned_instruments_HEAD_blobs": {
+     "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563",
+     "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
+     "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
+     "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
+     "spikes/harness/commit-msg.hook": "03d4193610b449006eef321e84714d5ded7e5959"
+    }
+   }
+  },
+  {
+   "name": "C_lane_b_edit_is_what_refuses",
+   "must_fire_because": "lane B's uncommitted edit must be what turns refcheck red",
+   "can_fail_because": "refcheck staying green after the edit",
+   "null_must_contain": "lane B's uncommitted edit must be what turns refcheck red -- this is the null: if it were red anyway, nothing is being demonstrated",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "baseline_refcheck_green": true,
+    "lane_b_edit_makes_refcheck_refuse": true,
+    "offending_files": [
+     "spikes/harness/lane_b.md"
+    ],
+    "lane_a_commit_refused": true,
+    "lane_a_carried_paths": [
+     "spikes/harness/lane_a.md"
+    ],
+    "offending_in_lane_a_commit": [],
+    "scoped_gate_would_accept": true,
+    "violation_present_in_HEAD": false,
+    "head_baseline_would_still_refuse": true,
+    "h27_case_offending": [
+     "spikes/harness/lane_a.md",
+     "spikes/harness/lane_b.md"
+    ],
+    "h27_case_scoped_gate_refuses": true,
+    "h27_case_current_gate_refuses": true,
+    "falsifier_fired": true,
+    "pinned_instruments_HEAD_blobs": {
+     "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563",
+     "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
+     "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
+     "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
+     "spikes/harness/commit-msg.hook": "03d4193610b449006eef321e84714d5ded7e5959"
+    }
+   }
+  },
+  {
+   "name": "C_lane_a_commit_carries_none_of_it",
+   "must_fire_because": "the offending file must not be among lane A's committed paths",
+   "can_fail_because": "the offending path appearing in the commit",
+   "null_must_contain": "the offending file must NOT be among the paths lane A commits, or the gate is judging lane A's commit exactly as its header claims",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "baseline_refcheck_green": true,
+    "lane_b_edit_makes_refcheck_refuse": true,
+    "offending_files": [
+     "spikes/harness/lane_b.md"
+    ],
+    "lane_a_commit_refused": true,
+    "lane_a_carried_paths": [
+     "spikes/harness/lane_a.md"
+    ],
+    "offending_in_lane_a_commit": [],
+    "scoped_gate_would_accept": true,
+    "violation_present_in_HEAD": false,
+    "head_baseline_would_still_refuse": true,
+    "h27_case_offending": [
+     "spikes/harness/lane_a.md",
+     "spikes/harness/lane_b.md"
+    ],
+    "h27_case_scoped_gate_refuses": true,
+    "h27_case_current_gate_refuses": true,
+    "falsifier_fired": true,
+    "pinned_instruments_HEAD_blobs": {
+     "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563",
+     "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
+     "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
+     "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
+     "spikes/harness/commit-msg.hook": "03d4193610b449006eef321e84714d5ded7e5959"
+    }
+   }
+  },
+  {
+   "name": "C_scoping_still_catches_the_H27_CASE",
+   "must_fire_because": "the proposed narrowing must still refuse the case the header protects, or it is a weakening (\u00a710) rather than a narrowing",
+   "can_fail_because": "either gate accepting a commit of the file carrying the citation",
+   "null_must_contain": "a lane committing the file that CARRIES the dangling citation must be refused under BOTH gates, or the proposed scoping is a weakening (\u00a710) rather than a narrowing",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "baseline_refcheck_green": true,
+    "lane_b_edit_makes_refcheck_refuse": true,
+    "offending_files": [
+     "spikes/harness/lane_b.md"
+    ],
+    "lane_a_commit_refused": true,
+    "lane_a_carried_paths": [
+     "spikes/harness/lane_a.md"
+    ],
+    "offending_in_lane_a_commit": [],
+    "scoped_gate_would_accept": true,
+    "violation_present_in_HEAD": false,
+    "head_baseline_would_still_refuse": true,
+    "h27_case_offending": [
+     "spikes/harness/lane_a.md",
+     "spikes/harness/lane_b.md"
+    ],
+    "h27_case_scoped_gate_refuses": true,
+    "h27_case_current_gate_refuses": true,
+    "falsifier_fired": true,
+    "pinned_instruments_HEAD_blobs": {
+     "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563",
+     "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
+     "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
+     "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
+     "spikes/harness/commit-msg.hook": "03d4193610b449006eef321e84714d5ded7e5959"
+    }
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_refusal_is_reachable_from_the_commit",
+   "must_fire_because": null,
+   "can_fail_because": "lane A is refused while carrying none of the offending paths, and the scoped verdict is ACCEPT",
+   "null_must_contain": "a commit whose own paths carry the dangling citation, which both gates refuse \u2014 measured here as the H27 case",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "baseline_refcheck_green": true,
+    "lane_b_edit_makes_refcheck_refuse": true,
+    "offending_files": [
+     "spikes/harness/lane_b.md"
+    ],
+    "lane_a_commit_refused": true,
+    "lane_a_carried_paths": [
+     "spikes/harness/lane_a.md"
+    ],
+    "offending_in_lane_a_commit": [],
+    "scoped_gate_would_accept": true,
+    "violation_present_in_HEAD": false,
+    "head_baseline_would_still_refuse": true,
+    "h27_case_offending": [
+     "spikes/harness/lane_a.md",
+     "spikes/harness/lane_b.md"
+    ],
+    "h27_case_scoped_gate_refuses": true,
+    "h27_case_current_gate_refuses": true,
+    "falsifier_fired": true,
+    "pinned_instruments_HEAD_blobs": {
+     "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563",
+     "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
+     "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
+     "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
+     "spikes/harness/commit-msg.hook": "03d4193610b449006eef321e84714d5ded7e5959"
+    }
+   },
+   "refutes": "this attack: if scoping the checkers to the paths the commit carries would still refuse lane A, the gate is judging lane A's commit and its header stands",
+   "fires_when": "lane A is refused while carrying none of the offending paths, and the scoped verdict is ACCEPT",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F_refusal_is_reachable_from_the_commit"
+ ],
+ "no_deps_reason": "the instruments are BYTE-PINNED to HEAD blobs inside the probe (recorded in gate_scope.json) rather than read from spikes/harness, which carries two other lanes' in-flight edits -- one of them to refcheck.py, the module this probe runs. A dep-directory staleness check would be judging their work rather than this run's inputs.",
+ "problems": [],
+ "ok": true,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1786983464,
+   "from": "spikes/harness/commit_scoped.sh"
+  }
+ },
+ "falsifier": "a path-scoped gate also refusing lane A, which would put the refusal inside lane A's own commit and leave the hook's \"any lane can clear\" reading intact",
+ "carried_from_previous_record": [
+  "source_mtimes",
+  "falsifier"
+ ]
+}

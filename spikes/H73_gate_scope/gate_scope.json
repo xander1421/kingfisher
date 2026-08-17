@@ -1,0 +1,29 @@
+{
+  "baseline_refcheck_green": true,
+  "falsifier_fired": true,
+  "h27_case_current_gate_refuses": true,
+  "h27_case_offending": [
+    "spikes/harness/lane_a.md",
+    "spikes/harness/lane_b.md"
+  ],
+  "h27_case_scoped_gate_refuses": true,
+  "head_baseline_would_still_refuse": true,
+  "lane_a_carried_paths": [
+    "spikes/harness/lane_a.md"
+  ],
+  "lane_a_commit_refused": true,
+  "lane_b_edit_makes_refcheck_refuse": true,
+  "offending_files": [
+    "spikes/harness/lane_b.md"
+  ],
+  "offending_in_lane_a_commit": [],
+  "pinned_instruments_HEAD_blobs": {
+    "spikes/harness/commit-msg.hook": "03d4193610b449006eef321e84714d5ded7e5959",
+    "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
+    "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
+    "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
+    "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563"
+  },
+  "scoped_gate_would_accept": true,
+  "violation_present_in_HEAD": false
+}
