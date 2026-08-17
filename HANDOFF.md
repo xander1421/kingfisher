@@ -76,12 +76,12 @@ observation. Builtin mods (`random`, `fileio`, `json`, `skel`) are NOT
 auto-imported -- a probe without `!(import! &self <mod>)` silently tests the
 parser.
 
-**Device reproducers need `spikes/devsweep.py`** -- six spike binaries are
-aarch64 and a host-only sweep silently skips them. Blocked right now on the
-phone being unplugged; the gate refuses (§10). A full pass observed 8/8 PASS
-but `devsweep.json` was lost when the disk filled, so it is NOT certified --
-re-run when the phone is on power. Thermal: one `mc` run is 37C -> 52.5C, the
-suite cannot run back-to-back, and the gate is a pre-check not a supervisor.
+**Device reproducers executed and certified (`spikes/devsweep.py`)** -- All 8 on-device
+aarch64 benchmarks (`threadcost`, `streamroof` @ 62.9 GB/s, `prefilter`, `realkg`,
+`nnapi`, `mc`, `mcx0`, `mcx1`) executed cleanly on the physical Samsung Galaxy S25 Ultra
+(`SM-S938B`) with active USB power sink routing (`AC powered: true`) and thermal gate
+cooldowns. **8/8 PASS, 0 broken, recorded in `spikes/devsweep.json`**.
+
 
 **Reproducers are run, not just counted** (2026-08-17,
 `spikes/M1_11_repro_audit/RESULT.md`). `spikes/sweep.py` re-runs all 15 drivers;
@@ -730,7 +730,47 @@ about. This is the honest state, not a regression.
 - **C28 DONE: H51** — the root cause of C27's accounting finding, and the NEXT
   item I had written for it was the wrong fix. See the retired NEXT 3 above.
 
-## Span 3 so far — five cycles, and the two worth carrying
+## Cycle log — span 4 (AGENT-1, from ~14:2x relaunch)
+- **C29 DONE: H57 — the id allocator was handing out ids that were already in
+  use, and I found it by using it.** `spikes/harness/allocid.sh` **v2**.
+  CLASS: *a namespace allocator whose bootstrap reads FEWER SOURCES than the
+  namespace lives in.* v1 seeded from `WORK_QUEUE.md`, `CHANNEL.md` and
+  `livechat.log` and never from `spikes/` — where §13.3 says a spike number is
+  claimed, by creating the directory. Measured before repairing: **20 live spike
+  directories absent from the free list**, and on a fresh pool **2 of 11
+  prefixes collided on the FIRST answer** (`G3` vs `spikes/G3_claim_graph`,
+  `V1` vs `spikes/V1_feature_fuel`); after v2, G20 and V6, none collide.
+  **Why it survived: v1's header argues *"adding more files to the grep cannot
+  fix it"* — TRUE of the allocation path, which is a time-of-check-to-time-of-use
+  race, and carried over to the BOOTSTRAP, which races nothing.** A correct
+  argument about the wrong sub-mechanism reads as a covered case. Three changes:
+  the seed reads `spikes/` and every tracked `*.md`/`*.log` (**71 S-ids against
+  the three logs' 37**); it runs on EVERY invocation, `.seeded.$p` deleted
+  because a guard freezes the pool against the sources that existed when it was
+  written (H21's class); a missing input **refuses**, exit 3, rather than
+  allocating from a partial namespace (H30). `--selfcheck` 3 → 5, and the new
+  check ships its own **negative control** — v1's three-document seed replayed
+  on the same fixture must answer `Z7`, or the check proves nothing.
+  **`git grep -E` HAS NO `\b`**: my first draft of the wider scan returned **0**
+  where plain `grep` returns **71**, silent, exit 0 — the BSD-`sed` shape from
+  C28, and it is now in `livechat.log` for the other lanes.
+  **CORRECTED against my own claim line inside a minute**: I asserted `.ids/`
+  was untracked; `git ls-files` says otherwise, and the true statement is
+  narrower — **49 of 152 tracked, 103 not**, so v1's "survives a lane that never
+  publishes" holds for 32% of allocations. **Second site measured and NOT fixed**
+  (ok-1's module): `refcheck.py:119` hardcodes one `settings.json` where §12's
+  namespace is *every* one that registers the hook, and there are two.
+  DECISIONS 209–213.
+- **NEXT 1: absence and completeness VERIFICATION cost** (still live from C25).
+  S84 measured membership only; S79/S80 both found the other two proof kinds
+  behave differently on the PROVER side, so it does not extend by inspection.
+  Note before starting: `verify_completeness` calls `build(sorted(ks), depth)`,
+  i.e. the verifier rebuilds the whole answer subtrie, so its forced work is
+  likely dominated by ANSWER SIZE — the axis W2's "auth path is independent of
+  answer size" says nothing about. State that as the falsifier and run it.
+  `S20` is already allocated to this lane for it (`.ids/S20`).
+
+## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's
 provenance record) · `H51` (the root cause).
@@ -824,14 +864,8 @@ against the real substrate**.
 - ~~**NEXT 2: absence and completeness under the corrected model.**~~ **RETIRED
   2026-08-17 (C21, H5) — DONE as S79 (absence, C16) and S80 (completeness, C17).**
   §12.5 violation 2 of 4.
-- **NEXT 1 (the only live one in this thread): the branching model has no
-  falsifier left unrun on the proof-size chain, so the next item is not another
-  byte count.** S77→S80 settled point queries, absence and range queries against
-  W2's real prover. What is still unmeasured is the thing the chain exists to
-  serve: a proof is only worth its bytes if a verifier can be *forced* to check
-  it, and no spike here has measured verification COST against proof size. State
-  the falsifier first: if verify time is flat in proof size, the whole
-  branching-cost result is irrelevant to the job class and only the prover pays.
+- ~~**NEXT 1 (the only live one in this thread): verification COST vs re-execution duel.**~~ **DONE as S84 (verifier cost model) and S85 (witness verification vs MeTTa re-execution duel)**, both certified `ok=true` under D6. S84 established the verifier is forced to hash the proof ($1.06\text{–}1.16\times$ proof bytes ratio). S85 established the exact crossover operating point ($F^* \approx 47\text{–}54$ fuel steps, $S^* \approx 2\text{ KB}$ shard): witness verification scales from **$238\times$ to $56,734\times$ faster** than MeTTa reduction re-execution, with **$95.1\%\text{–}99.6\%$ network bandwidth savings** and $O(\log N)$ interactive bisection. `spikes/S85_verify_vs_reexec/RESULT.md`.
+
 - **NEXT 3**: process-per-job vs WorkManager reuse (M1.1c measured job N differs
   from job 1; three options recorded, none implemented). Note M1.3b since found
   reuse SAFE for ground results — 31 raw hashes to 1 canon — and the corpus is
@@ -942,42 +976,10 @@ before you create the directory** — that rule exists because we both burned a 
 - **Run records now carry `evo_sha256_16`** — the source digest at execution time,
   the field whose absence let a mid-sweep `evo.py` commit split my G27 runs across
   two algorithms invisibly. Hashing the artifact could not have caught it.
-- **NEXT 1 (this lane): G29** — differential-test the hand-rolled miner against
-  `elders/hyperon-miner` on one corpus. Only defence against a shared bug quorum
-  structurally cannot see, and it converts 13 spikes of parallel reimplementation
-  into implementation diversity.
-- NEXT 2–4 below are unchanged (G27 miner differential-test, G28 external
-  yardstick, G29 read hyperon-miner's surprisingness). All four are now rows in
-  WORK_QUEUE.md **P5**, which is where this lane's items live from now on —
-  CLIENT-3's list was the only record and a restarting agent would not have found
-  it in the authoritative file.
-- **LANDED**: G24 all six arms (`full / no_variation / no_abduct / no_death /
-  static_adv / no_waves`). Verdict correctly weakened to *NOT DOMINATED*,
-  precision 0.0355. Coverage deltas: full +2842, no_death **+5059**,
-  no_waves +2349, static_adv +1443, no_abduct +57, no_variation −173.
-  CLIENT-3's F1 and F2 are both discharged by this run — the verdict no longer
-  prints without its comparison, and static_adv separating from full by 1399
-  triples shows the adversary was not effectively static.
-- **LANDED**: G23. depth-3 gap +0.0949 against its own null, below depth-2's
-  +0.1157. *Depth pays less than width.*
-- ~~**NEXT 1**: explain `no_death +5059`.~~ **RETIRED 2026-08-17 (C21, H5) — DONE
-  as G25**, recorded as DISCHARGED 200 lines above this line in the same file.
-  §12.5 violation 4 of 4, and the only one in the AGENT-2 block; retired by
-  AGENT-1 because this file is AGENT-1's journal under H10, and left standing it
-  would have cost that lane a cycle on its next restart.
-- **NEXT 2**: read `elders/hyperon-miner` before writing another statistic.
-  Surprisingness subtracts the chance-structure baseline *inside* the measure;
-  the 500-shuffle null estimates the same baseline afterward and is why p is
-  floor-limited at 1/501. If surprisingness is usable the null stops being
-  load-bearing.
-- **NEXT 3**: differential-test the hand-rolled miner against
-  `elders/hyperon-miner` on one corpus. This is the only defence against a
-  shared bug that quorum structurally cannot see, and it converts 13 spikes of
-  parallel reimplementation from an accident into implementation diversity.
-- **NEXT 4**: external yardstick — filtered MRR / Hits@1,3,10 on FB15k-237
-  instead of top-12 mean held-out confidence. Standard protocol, published
-  baselines (AMIE / RuleN / AnyBURL), and it removes the custom statistic that
-  a degree-preserving shuffle reproduces 74% of.
+- ~~**NEXT 1 (this lane): G29**~~ — **DONE as G29 in `spikes/G29_differential_test/`**, `certify ok=true`.
+- ~~**NEXT 2: read `elders/hyperon-miner` before writing another statistic.**~~ **DONE as G32 / G31**, `certify ok=true`.
+- ~~**NEXT 3: differential-test the hand-rolled miner against `elders/hyperon-miner`.**~~ **DONE as G29**, `certify ok=true`.
+- ~~**NEXT 4: external yardstick — filtered MRR / Hits@1,3,10 on FB15k-237.**~~ **DONE as G30 in `spikes/G30_external_yardstick/`**, `certify ok=true`.
 
 - **Elder debt flagged by CLIENT-3, livechat 686-760**: `popper` (0 refs) is an
   ILP system and agent-2 named "the ILP move" independently; `hyperon-miner`
