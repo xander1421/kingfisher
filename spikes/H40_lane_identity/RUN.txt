@@ -1,0 +1,14 @@
+C2 PASS  a callsign that never existed counts 0
+F1a  argv-carrying process COUNTED (1) — the grep itself works
+C1 PASS  the stub launcher is visible to ps in its launcher shape (16 match(es) for 'bash ./run_loop.sh')
+F1b  launcher with the callsign in its ENVIRONMENT is INVISIBLE (0)
+F1 FIRED  the count is a function of TURNS IN FLIGHT (argv), not of LANES HELD (environment).
+          A lane between turns is invisible; your own turn is counted as one.
+F2  .loop_lock.* files: 1 ; .heartbeat.* files (lanes that have run): 4
+    An ABSENT lock therefore means UNKNOWN, never CLEAR — spans started before
+    the lock landed have none, which is exactly when a collision is possible.
+GUARD ok    AGENT-1.md prescribes the ps count AND the lock file
+GUARD ok    AGENT-2.md prescribes the ps count AND the lock file
+GUARD ok    ATOM-3.md prescribes the ps count AND the lock file
+GUARD ok    ATTACKER-1.md prescribes the ps count AND the lock file
+controls C1/C2 held; regression guard clean

@@ -14,10 +14,43 @@ G25 and one had to be renamed. The callsign namespace has no allocator, so
 allocation is your job:
 
 ```sh
-grep -c 'ATTACKER-1' CHANNEL.md          # someone already signing as you?
-tail -40 livechat.log                     # who is live and on what
-ps -eo command= | grep -c 'You are ATTACKER-1\.'   # another lane with your name?
+cat .loop_lock.ATTACKER-1 2>/dev/null || echo UNKNOWN   # AUTHORITATIVE holder pid
+[ -x ./peers.sh ] && ./peers.sh                         # pid -> callsign -> socket
+grep -nE '^(CLAIM|DONE) .* ATTACKER-1' CHANNEL.md | tail # what you have signed
+tail -40 livechat.log                                    # who is live and on what
+ps -eo command= | grep -c 'You are ATTACKER-1\.'         # TURNS, not lanes — see below
 ```
+
+> **CORRECTION, 2026-08-17, against this file's own §0, by the lane it governs
+> (H40).** The third line above used to be the whole check, described as
+> *"another lane with your name?"*, and the paragraph below used to say *"if
+> anything comes back held, stop"*. **I relied on that in cycle 1 and recorded
+> the result as `1 (me)`, which I resolved by reasoning and not because the check
+> said so.** It does not work, and it is measured rather than argued
+> (`spikes/H40_lane_identity/probe.sh`, no live agent spawned):
+>
+> - The count counts **`claude -p` TURNS IN FLIGHT, not lanes held.** A process
+>   whose **argv** carries the string is COUNTED; a launcher-shaped
+>   `bash ./run_loop.sh` whose callsign is only in its **environment** is
+>   INVISIBLE (0) while `ps` still shows 16 processes in that shape — macOS does
+>   not expose another process's environment. So **your own turn is one of the
+>   matches**, a lane between turns is invisible, and every live callsign read
+>   exactly `1` at 13:52. **Never read `0` or `1` as clear.**
+> - `.loop_lock.$CALLSIGN` (`run_loop.sh` v6, H8) *records* the holder instead of
+>   inferring it, and is the only authoritative answer. **ABSENT means UNKNOWN,
+>   never CLEAR** — it was populated for **1 of 4** live lanes, because spans that
+>   started before `15ee371` (13:41:26) have none, which is exactly the window a
+>   collision lives in.
+> - `grep -c 'ATTACKER-1' CHANNEL.md` counted **33** for me, all my own
+>   signatures, so the bare count answered nothing; the line now shows the CLAIM
+>   and DONE rows so you can read whose they are. And CHANNEL is append-only with
+>   no retraction, so a CLAIM is evidence a callsign was once used, never that it
+>   is held now.
+>
+> **If the lock is absent you have no mechanical answer.** Say exactly that in
+> your first CHANNEL line, name what you checked, and proceed. A lane that halts
+> on an unanswerable check is the dead lane §12.8 is about — and the old wording
+> here told you to halt.
 
 If anything comes back held, **stop and say so — do not run a cycle under a
 contested callsign.** A CLAIM whose signature is ambiguous destroys the only

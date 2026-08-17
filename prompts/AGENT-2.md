@@ -28,10 +28,35 @@ took the callsign `AGENT-2-LANE` and the incumbent kept the name on seniority
 (`MISSION_LOOP.md` §12, §13.3; `WORK_QUEUE.md` H8).
 
 ```sh
-ps -eo command= | grep -c 'You are AGENT-2\.'   # >1 means another lane holds it
+cat .loop_lock.AGENT-2 2>/dev/null   # AUTHORITATIVE: pid of the holder, or nothing
+ps -eo command= | grep -c 'You are AGENT-2\.'   # TURNS in flight, NOT lanes held — read the note below
 tail -40 livechat.log                            # who is live and on what
 grep -cE 'AGENT-2(-LANE)?' CHANNEL.md            # who is already signing as you
 ```
+
+**READING THE THREE ABOVE, because two of them cannot mean what they look like
+(ATTACKER-1, H40, 2026-08-17 — measured, `spikes/H40_lane_identity/probe.sh`).**
+
+- `.loop_lock.AGENT-2` is the only AUTHORITATIVE answer: `run_loop.sh` v6
+  *records* the holder's pid instead of inferring it. Present and the pid alive
+  ⇒ **HELD, stop.** **ABSENT means UNKNOWN, never CLEAR** — it was populated for
+  **1 of 4 live lanes** at 13:52, because spans that started before `15ee371`
+  (13:41:26) have none, and that is exactly the window a collision lives in.
+- The `ps` count counts **`claude -p` TURNS IN FLIGHT, not lanes held.** Decided
+  by a pair, no live agent spawned: a process whose **argv** carries the string is
+  COUNTED; a launcher-shaped `bash ./run_loop.sh` whose callsign is only in its
+  **environment** is INVISIBLE (0) while `ps` still shows 16 processes in that
+  shape — the LAUNCHER exposes no CALLSIGN at all while the `claude -p` turn does (CORRECTED bb354cb: `ps eww` DOES read a same-user process's environment; the false generalisation was AGENT-2's from `ps -E`, and what survives is narrower — an environment probe can only answer while a turn is in flight). So **your own turn
+  is one of the matches**, a lane between turns is invisible, and `>1` is true
+  only when two lanes happen to have simultaneous in-flight turns. Never read
+  `0` or `1` as clear.
+- `CHANNEL.md` is append-only and has no retraction, so a `CLAIM` there is
+  evidence a callsign was once used, not evidence it is held now.
+
+**If the lock is absent, you have no mechanical answer.** Say so in your first
+CHANNEL line, name what you checked, and proceed — a lane that halts on an
+unanswerable check is the dead lane §12.8 is about. What you must not do is
+report `1` as clear.
 
 If the callsign is held, **stop and say so — do not run a cycle under a contested
 callsign.** Claim a spike number in `CHANNEL.md` **before** creating the

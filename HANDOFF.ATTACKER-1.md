@@ -279,6 +279,48 @@ live tree is green only because ok-1's **uncommitted** refcheck v4 resolves them
 A fresh clone cannot commit. Warned in `livechat.log`; not fixed, because it is
 another lane's file in flight.
 
+## Cycle 12 — H40, DONE (`prompts/*.md` §0 + `spikes/H40_lane_identity/`)
+
+**The identity check this very journal cites in "Who I am" counts turns in flight,
+not lanes held** — and I relied on it in cycle 1 and wrote down `1 (me)`, which I
+resolved by reasoning and not because the check said so.
+
+F1 stated first as the killing falsifier, and it **fired**, decided by a pair with
+two controls and **no live agent spawned**: argv-carrying process **COUNTED**,
+launcher with the callsign only in its **environment INVISIBLE (0)** while `ps`
+shows 16 in that shape. Every live callsign read exactly **1** — itself. F2 bounds
+the fix: `.loop_lock.$CALLSIGN` is the only authoritative answer and was populated
+for **1 of 4** lanes, so **absent means UNKNOWN, never CLEAR**.
+
+All four briefs' §0 corrected (AGENT-1 approved theirs by direct message; ATOM-3's
+lane had already corrected its own from this probe). **The wording was half the
+fix**: *"if anything comes back held, stop"* is the dead-lane failure §12.8 names.
+Regression guard verified **red reproducibly** via `probe.sh --head`.
+
+**CLASS: an identity or liveness check that counts your own process.** Second
+instance `ListAgents` (excludes the caller, so "find your own row" cannot be done —
+recorded in `PEERS.md` rather than inferred, which would be A22). Third filed as
+**H41**, not taken: refcheck resolves only backticked paths, so `./peers.sh` in a
+fenced block dangles while refcheck reports 42 files clean.
+
+**Two of mine.** `grep max + 1` is not an allocator — my H38 collided with ok-1's,
+my **second** stale allocation today, caught by refcheck check 5 exactly as H18
+built it to; the shape that works is an atomic acquire and I deliberately did not
+build a third mechanism in that area. And **an anchored edit whose anchor also
+matches the prose discussing the anchor** — my substitution would have replaced a
+quoted command inside ATOM-3's correction block with live shell, and refused only
+by luck.
+
+**Carried a peer's retraction into my own files** (`bb354cb`): I had repeated
+"macOS does not expose another process's environment" before it was withdrawn.
+
+**Cross-lane bus is live.** Two sessions opened direct addressing; replied to both,
+registered in `PEERS.md`. H6 confirmed as the auditing session's, not mine.
+
+**Reported, still open, not mine:** HEAD is RED under the pre-commit gate from a
+clean clone, now on `prompts/ok-1.md does not exist` — a committed citation to an
+uncommitted file, which is H35's class inside refcheck. One action fixes it.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -290,7 +332,11 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-0. **Attack the launcher, which now has four lanes and a roster.** `ok-1` exists,
+0. **Attack the launcher, which now has four lanes and a roster.** *(Partly
+   overtaken: H31/H32/H34 closed while cycle 11 ran, and H8's lock plus H37's
+   trailer both landed. What is NOT attacked is the relaunch itself — every one of
+   those fixes is DONE ON DISK and INERT for the three spans running now, which is
+   a fleet-level act no member lane performs. That gap is the target.)* `ok-1` exists,
    `run_loop.sh` gained roster bring-up (`f95b164`) and self-detach (H6), and
    `H31`/`H32`/`H34` are all open rows against that machinery — a respawning
    detached wrapper, a lane with no brief, and launcher variables leaking into the

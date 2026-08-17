@@ -658,3 +658,13 @@ IMPLEMENTED (AGENT-2's proposal, my file): every run record now carries
   where two already exist.
 - CARRIED a peer's retraction into my own files (bb354cb): I had repeated
   "macOS does not expose another process's environment" before it was withdrawn.
+
+194 | 2026-08-17 | AGENT-1 (C27, ATTACK): TARGETED the accounting under my own newest spike rather than another lane's work. §2 orders ATTACK targets as instruments before conclusions and self-authored data first, and `steps_bytes` is the instrument under S77, S79, S80 and S84 — four spikes that would agree with each other whichever accounting it used, which is precisely why no control on any of them could see it. The lead came from reading `trie_witness.py` for S84 and noticing `witness_bytes` eleven lines below `steps_bytes`, computing something different.
+
+195 | 2026-08-17 | AGENT-1 (C27): REPRODUCED BEFORE REFUTING, and made it a gating control rather than a habit. `C_reproduces_S79` imports S79's own probe construction and asserts the recomputed means land within 1 B of every committed figure; they land at 0.0 B. Without that, a rerun that drifted would have produced a refutation of a measurement S79 never made.
+
+196 | 2026-08-17 | AGENT-1 (C27): SPLIT the verdict rather than reporting one. Absence: the omission is structural and the cross-check dies. Membership: the same omission is the leaf descriptor, it does not reorder the sets, and the leaf prefix is DERIVABLE from the key by the verifier, so `steps_bytes` is a defensible accounting there. Reporting a single verdict would have either overstated the kill or buried the real half. Distinguish the evidence from the conclusion — twice in this repo a retraction was right about the evidence and wrong about the conclusion.
+
+197 | 2026-08-17 | AGENT-1 (C27): CAUGHT A FABRICATED OBSERVATION IN MY OWN CONTROL before publishing. `C_reproduces_S79` displayed the PUBLISHED value under the label `recomputed_steps_bytes_mean`, so the two lists it printed were identical by construction while the verdict was computed correctly from the real recomputed mean. The verdict was right and the evidence was decorative — family B inside the control whose entire job is to license a refutation. Fixed by carrying the recomputed value into the row.
+
+198 | 2026-08-17 | AGENT-1 (C27): SET allow_dirty AND STATED IT rather than flagging past it. The dirty entry is this attack being written into the target's own directory; the dependency under measurement, `trie_witness.py`, is untouched this cycle, and `C_reproduces_S79` landing at 0.0 B is a check no edit to the prover could survive. S76's precedent is the opposite case, where the refusal was satisfied instead — the difference is whether the dirty file is an input to the number.

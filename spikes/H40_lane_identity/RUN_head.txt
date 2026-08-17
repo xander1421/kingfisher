@@ -1,0 +1,5 @@
+GUARD SUBJECT  HEAD:prompts/ (3 briefs)
+GUARD FAIL  AGENT-1.md prescribes the ps count with no .loop_lock check — it counts turns, not lanes
+GUARD FAIL  AGENT-2.md prescribes the ps count with no .loop_lock check — it counts turns, not lanes
+GUARD FAIL  ATTACKER-1.md prescribes the ps count with no .loop_lock check — it counts turns, not lanes
+PROBE REFUSES: a control or the regression guard failed
