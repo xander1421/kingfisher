@@ -26,13 +26,20 @@ at session start, so this takes effect on the next restart.** Until then use
 To stop legally: write exactly `LOOP-DONE` / `LOOP-HALT` / `LOOP-IDLE` into
 `.loop_signal`. Human kill switch: `touch STOP`.
 
-## State of the M1 chain — complete, correctly refusing, verified 2026-08-17 10:2x
+## State of the M1 chain — complete, correctly refusing, verified 2026-08-17 12:xx
 ```
-admission REFUSED 2 (flip, fileio) -> 65 CIDs -> 5 preflight sessions
-  -> host-arm64 + host-x86_64 + phone -> canon_alpha -> quorum-3
-65/65 agreed 3/3 byte-identically.  Verdict INSUFFICIENT_DOMAINS x65, accepted 0/65.
-binary 3 | manifest 1 (binding) | host 2 | os 2 | isa 2 | operator 1 (binding)
+admission REFUSED 3 (flip, fileio, feature-gated-module) -> 64 CIDs -> 4 sessions
+  -> host-a + host-min + host-x86 + phone -> canon_alpha -> quorum-4
+INSUFFICIENT_DOMAINS 50 | NO_RESULTS 14 | accepted 0/64
+binary 4 | manifest 2 | host 2 | os 2 | isa 2 | operator 1 (binding)
 ```
+**The 64 is a DISPATCH count, not an evidence count** (2026-08-17,
+`spikes/M1_8_quorum3/CORPUS_COMPOSITION.md`). Only **26 of 64 execute MeTTa**:
+14 emit no output, 24 die at their first `import!`. On those 38 a divergent
+host would have agreed anyway, so they are not evidence of determinism. The
+14 empties now correctly adjudicate NO_RESULTS rather than agreement — the
+old `64/64` came from a `result.json` that predated the `check_nonempty`
+wiring by 7 minutes. Real base: 26 executed, 22 non-error, 15 distinct hashes.
 Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
 (no attestation root) and `manifest` (all binaries from one Cargo.toml, which
 FEATURE_EQUIVALENCE showed is a real fault class, not a formality).

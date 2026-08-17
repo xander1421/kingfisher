@@ -1,21 +1,19 @@
 {
  "spike": "M1_8_quorum3",
- "recorded_utc": "2026-08-17T10:47:38Z",
+ "recorded_utc": "2026-08-17T10:48:58Z",
  "note": "REFUTED: 14 empty / 24 import-failure / 4 error-only / 22 evaluated",
  "repos": [
   {
    "path": ".",
-   "head": "73b0de5ad802f13bbb4dab1620ddfce369e1cee1",
-   "clean": false,
-   "dirty_files": [
-    "spikes/M1_8_quorum3/provenance.json"
-   ],
-   "diff_sha256": "af2f68cbdc598bc9cdb0c18321557fe9024628053ae18d54f8aa40e36a95964d",
-   "diff_bytes": 2274
+   "head": "63264d3d9c902ed814f0309151904dedaac7acb4",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
-   "head": "73b0de5ad802f13bbb4dab1620ddfce369e1cee1",
+   "head": "63264d3d9c902ed814f0309151904dedaac7acb4",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -37,10 +35,10 @@
  "artifacts": [
   {
    "path": "result.json",
-   "sha256": "4126a0b04b115c5219a4f18ec36162487e01d2a9ab4cd62bb051f7365db06866",
-   "bytes": 348694,
-   "mtime": 1786963279,
-   "compared_ts": 1786963426,
+   "sha256": "3884ce5ed88620fd0cba79c23d38b1670b237454c91207574501419d9a312bb1",
+   "bytes": 348679,
+   "mtime": 1786963724,
+   "compared_ts": 1786963738,
    "compared_clock": "last-commit"
   }
  ],
@@ -214,19 +212,16 @@
  "no_deps_reason": null,
  "source_mtimes": {
   ".": {
-   "newest": 1786963426,
+   "newest": 1786963738,
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/harness": {
-   "newest": 1786963646,
+   "newest": 1786963712,
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "STALE ARTIFACT result.json predates harness source by 0.1h (newest source: <HEAD commit>; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "DIRTY TREE . at 73b0de5a: 1 modified. The build is NOT 73b0de5a."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "the corpus has full discriminating power: all 64 programs evaluate, so 64/64 agreement is evidence of cross-architecture evaluation determinism",
  "carried_from_previous_record": [
   "falsifier",

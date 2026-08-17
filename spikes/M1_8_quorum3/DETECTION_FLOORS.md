@@ -17,6 +17,7 @@ when it may only be a bound.
 | **shard store integrity** | a corrupt or substituted blob | **exact host-side** (`get` re-hashes before serving). **Absent device-side** — the phone trusts its own cache file, so device-side corruption is caught only by quorum |
 | **preflight** | thermal/charge/space at dispatch | **per session, not per job**, in this harness. On-device the real cost is 98.5 µs so per-job is viable; the session granularity is an adb accommodation |
 | **provenance** (A24) | an artifact predating its source | **exact** on mtime. **Blind** to an artifact built from a *different* tree with a *newer* mtime — it proves "could not have come from here", never "did come from here" |
+| **corpus discriminating power** | nothing on its own | **38 of 64 programs cannot exhibit an evaluation divergence** — 14 emit no output, 24 die at their first `import!` before MeTTa runs. Agreement on those is agreement that nothing happened. Real evidence base is **26 executed / 22 non-error, 15 distinct hashes**. Found by asking what the INPUT can exercise, not what the check can miss (`CORPUS_COMPOSITION.md`) |
 
 ## The general shape
 Three of these are exact because the coordinator already holds the reference
