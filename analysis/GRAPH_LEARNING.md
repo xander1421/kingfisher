@@ -16,6 +16,27 @@
 > is withdrawn as a measured result. G14's zero remains real; G15's positive
 > does not. The series therefore stands at **no demonstrated discovery, six
 > framings.**
+>
+> **2026-08-17 later: G17 partially restores it, and G18 caps every result in
+> this file.**
+>
+> **G17** rebuilt G15 to the reviewer's specification — pair-level denominators,
+> near-inverse bodies rejected (357 rules), `r == p or q` rejected (1331),
+> self-loops dropped, no path cap, and the null *in the code*. A signal survives:
+> real 0.441 against a degree-preserving null of 0.329 (n=24, sd 0.012, 0/24
+> exceed real). That is **1.34×, not G15's 4–7×**, and the p is floor-limited —
+> 24 draws was chosen as the smallest n where p<0.05 is reachable, which is
+> legitimate only because it is stated. The positive control the reviewer found
+> unused in the data (the tautology `81,q=>q` at conf 1.000) fires clean at zero.
+>
+> **G18 is the one that changes how every row below should be read.** The
+> `match` primitive aborts the process at ≥1022 results — not `collapse`, which
+> G16 blamed. **Every G-series program folds with a bare `collapse` over the
+> whole space, so every result in this document was measured at 60 nodes and
+> stops working above 1021.** Worse, conjunction order decides the outcome:
+> `(, (bucket b0 $c) (imp 0 $c $v))` returns while
+> `(, (imp 0 $c $v) (bucket b0 $c))` — same denotation — aborts. The
+> architecture scales; these programs do not, as written. G19 is the rewrite.
 
 Thirteen spikes testing one question: **can a self-modifying knowledge graph, run
 on Hyperon across two devices, learn?**
@@ -99,7 +120,7 @@ with DAS letting the caller pass any string.
 | **Label validity** | G13 audited the *parse* (5% verdict, 4.8% citation error, survivable). It says nothing about whether the labels are right. G4 found they partly encode *whether a claim was attacked*, not whether it was wrong — unmeasured and larger than 5% |
 | **On-device orchestration** | G11 verified the ECAN *epoch* cross-device. Query and prune ran host-side. Closing it needs M1.1/M1.3 |
 | **Iteration with moving stimulus** | G12 proved iteration is inert with a *fixed* query set. It would become load-bearing under a shifting query mix, arriving atoms, or importance feeding back into what gets queried. None tested |
-| **Scale** | 60 nodes, 460 atoms, 5 query classes, one graph. Every result |
+| **Scale** | 60 nodes, 460 atoms, 5 query classes, one graph. Every result — and G18 shows this was not merely a budget choice: the programs **cannot** exceed 1021 nodes as written |
 | **Capability** | Nothing measures whether the graph *reasons* well. The whole series measures retention and determinism |
 
 ## Standing rules this series produced
