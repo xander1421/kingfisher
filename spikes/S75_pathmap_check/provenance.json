@@ -1,24 +1,15 @@
 {
  "spike": "S75_pathmap_check",
- "recorded_utc": "2026-08-17T10:27:03Z",
+ "recorded_utc": "2026-08-17T10:52:55Z",
  "note": "S75 runs W2/S74 declared falsifier against elders/PathMap 0.3.0. Fires on variable-length atom keys, does not on fixed-length triple keys. pathmap merkleize is dedup, not a commitment.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/../S57_hyperon_corpus",
-   "head": "ce3f30b6eb6937006b7ed530d9bc3047dbb7bd28",
-   "clean": false,
-   "dirty_files": [
-    "spikes/G25_carrying_capacity/RUN_regen.txt",
-    "spikes/S75_pathmap_check/pmprobe/src/main.rs",
-    "spikes/G25_carrying_capacity/runs/nodeath_noabduct.json",
-    "spikes/S75_pathmap_check/compare.json",
-    "spikes/S75_pathmap_check/compare.py",
-    "spikes/S75_pathmap_check/keys_tiny.bin",
-    "spikes/S75_pathmap_check/probe_out.txt",
-    "spikes/S75_pathmap_check/provenance.json"
-   ],
-   "diff_sha256": "4daabf986121e9a992894ae544deb8d68982e14613737d8edd9aa234f235aec9",
-   "diff_bytes": 4273
+   "head": "a724e0894d03c70da1b655b392a0f987bb4fb87a",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -34,32 +25,32 @@
    "sha256": "5097b92f1fefe9feb890166b3963f5c5c97b32efc3b86590db2d83aed3ae878e",
    "bytes": 16849,
    "mtime": 1786962422,
-   "compared_ts": 1786962422,
-   "compared_clock": "mtime"
+   "compared_ts": 1786962564,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/compare.json",
    "sha256": "d34fe3f7da74e0cc343eef4b6aaa48724734da1c554cb8eb415d9a0afd567a29",
    "bytes": 4648,
-   "mtime": 1786962423,
-   "compared_ts": 1786962423,
-   "compared_clock": "mtime"
+   "mtime": 1786963975,
+   "compared_ts": 1786962564,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/probe_out.txt",
    "sha256": "972bf67898d6e8b5a247da481b268cca28bb66c4d1dd48c452a7aad975661f7e",
    "bytes": 33267,
-   "mtime": 1786962423,
-   "compared_ts": 1786962423,
-   "compared_clock": "mtime"
+   "mtime": 1786963975,
+   "compared_ts": 1786962564,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S75_pathmap_check/pmprobe/src/main.rs",
    "sha256": "404dac1d8566052dec37cc9336d2fe948810fbfdef5340c2bfc5fca207ba7183",
    "bytes": 2376,
    "mtime": 1786962386,
-   "compared_ts": 1786962386,
-   "compared_clock": "mtime"
+   "compared_ts": 1786962564,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -200,6 +191,7 @@
  "ok": true,
  "falsifier": "Show that authentication path length does NOT scale with node depth on pathmap -- e.g. a proof scheme over it whose size is independent of the number of nodes on the path. That would restore S73/S74 proof sizes on variable-length keys.",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

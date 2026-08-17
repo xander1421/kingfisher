@@ -24,12 +24,12 @@
   {
    "id": "A5-D6-F2-remeasured",
    "verdict": "HONEST-DEBT",
-   "text": "6 RESULT.md cite D6, 3 are ok:true -- still failing 3/6. PARTIAL (record present, ok:false, controls that exist only in prose): [('N1_prefilter_cost', 'PARTIAL', ['perfect_scaling_at_T2_T3', 'T4_collapse_reproduces']), ('S72_c3_cpuset', 'PARTIAL', ['gate_green_before_and_after', 'per_instance_GOPs_from_binary', 'exactness_digest_unchanged', 'monotone_aggregate'])]. Debt with no record at all: ['W1_witnessed_reexec']. My own two spikes this session are in the OTHER population: ['G25_carrying_capacity', 'G27_budget', 'M1_1_android', 'M1_8_quorum3', 'M2_1_fleet', 'S73_epoch_commitment', 'W2_witnessed_trie'] carry a provenance record and never mention D6, so F2 as written scores neither of them. F2 counts citation without compliance and is blind to compliance without citation; the falsifier needs both directions."
+   "text": "6 RESULT.md cite D6, 3 are ok:true -- still failing 3/6. PARTIAL (record present, ok:false, controls that exist only in prose): [('N1_prefilter_cost', 'PARTIAL', ['perfect_scaling_at_T2_T3', 'T4_collapse_reproduces']), ('S72_c3_cpuset', 'PARTIAL', ['gate_green_before_and_after', 'per_instance_GOPs_from_binary', 'exactness_digest_unchanged', 'monotone_aggregate'])]. Debt with no record at all: ['W1_witnessed_reexec']. My own two spikes this session are in the OTHER population: ['G25_carrying_capacity', 'G27_budget', 'M1_1_android', 'M1_7_transport', 'M1_8_quorum3', 'M2_1_fleet', 'S73_epoch_commitment', 'S74_epoch_chain', 'S75_pathmap_check', 'W2_witnessed_trie'] carry a provenance record and never mention D6, so F2 as written scores neither of them. F2 counts citation without compliance and is blind to compliance without citation; the falsifier needs both directions."
   },
   {
    "id": "A6-provenance-floor",
    "verdict": "SURVIVES",
-   "text": "a dep subdir with no commits of its own and an UNTRACKED source still raises the floor (ts=1786961356, from='dep/'), and a year-2020 artifact is caught."
+   "text": "a dep subdir with no commits of its own and an UNTRACKED source still raises the floor (ts=1786963976, from='dep/'), and a year-2020 artifact is caught."
   }
  ]
 }

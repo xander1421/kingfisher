@@ -1,19 +1,15 @@
 {
  "spike": "S74_epoch_chain",
- "recorded_utc": "2026-08-17T10:20:21Z",
+ "recorded_utc": "2026-08-17T10:52:54Z",
  "note": "S74 epoch-chain commitment: binds sequence, explicitly does NOT bind state (that is S73 fold-forward). 32 B per epoch.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/../S57_hyperon_corpus",
-   "head": "c79a6adf1e22076f5c82cf397ef654b76cba5aa5",
-   "clean": false,
-   "dirty_files": [
-    "HANNEL.md",
-    "out/LEDGER.md",
-    "spikes/S74_epoch_chain/"
-   ],
-   "diff_sha256": "91275b8ad6d059096c3a438b88b2c5566e7d4c0eec6d0a432b4540aad1dec810",
-   "diff_bytes": 8642
+   "head": "a724e0894d03c70da1b655b392a0f987bb4fb87a",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -29,16 +25,16 @@
    "sha256": "0c36dd59f4c032739cc27509dbf96fbadf3c38afcaf92622f2e40e8623b4618b",
    "bytes": 16415,
    "mtime": 1786962021,
-   "compared_ts": 1786962021,
-   "compared_clock": "mtime"
+   "compared_ts": 1786962091,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/chain.json",
    "sha256": "fcc8109a514a67e347f68d9775cd536f4b502bfc0d26b00cb0619e0506e493e8",
    "bytes": 3717,
-   "mtime": 1786962021,
-   "compared_ts": 1786962021,
-   "compared_clock": "mtime"
+   "mtime": 1786963974,
+   "compared_ts": 1786962091,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -189,6 +185,7 @@
  "ok": true,
  "falsifier": "Exhibit two epoch SEQUENCES that differ in grouping, order, count or delta content and share a chain head. Or show a sequence the chain rejects that is in fact honest.",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }
