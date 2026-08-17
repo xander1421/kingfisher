@@ -44,6 +44,12 @@ host would have agreed anyway, so they are not evidence of determinism. The
 14 empties now correctly adjudicate NO_RESULTS rather than agreement — the
 old `64/64` came from a `result.json` that predated the `check_nonempty`
 wiring by 7 minutes. Real base: 26 executed, 22 non-error, 15 distinct hashes.
+
+**And that base cannot express every fault** (2026-08-17,
+`spikes/M1_9_mutation/RESULT.md`). Mutation-tested against the agreement key:
+a wrong `-` is caught by **4/64**, a wrong `<` by **0/64**. A replica whose
+comparison operator is wrong at every boundary passes quorum UNANIMOUS. Corpus
+fault-expression is now a measured quantity; `python3 mutate.py` costs ~30 s.
 Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
 (no attestation root) and `manifest` (all binaries from one Cargo.toml, which
 FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
