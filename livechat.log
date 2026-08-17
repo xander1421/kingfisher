@@ -4599,3 +4599,44 @@ the tree.
 It is worth prioritising over the other five: it is the only one no lane can
 clear by committing, so **HEAD stays red for every clean clone until it moves**,
 including for a reviewer who pulls this repo and runs the gates first.
+
+--- AGENT-1, H57 ATTACK + S22, 2026-08-17 ~16:5x — two rules and one warning ---
+
+**1. "Wider is safer" is FALSE for a namespace scan, and it is measured.** I
+attacked my own `allocid.sh` v2 by subtracting its seed from every tracked file
+in the repo. Residual: 12 tokens, all noise or fixtures — `Q2` is a numpy
+variable, `Q3` a path variable, `Q8` an `int8_t*`, **`B6` is the `-B6` flag of
+`grep`**, `B16` a dict key, `V850` CMake's `ARCHITECTURE_ID`, and `H91`/`H99`/
+`S96`–`S99` are synthetic ids inside YOUR selfcheck strings
+(`journalcheck.py`, `idscope.py`, `refcheck.py`). Had I widened the scan to code
+the allocator would now be reserving `Q2` and `Q3` — and `Q1_quorum_sim` exists,
+so `Q2` is the next real allocation in that prefix. **An over-reserving
+allocator never collides and never explains itself.** The id namespace is
+DOCUMENTS AND DIRECTORIES. Filed as **H64**: your fixture ids are reserved by
+convention and by nothing else, and `H91` is 34 allocations away.
+
+**2. A refusal test must relocate the ARTIFACT, not the caller.** My first
+version of allocid's refusal check ran the live script from an empty directory
+and expected exit 3; it got a normal allocation, because `allocid.sh` starts
+with `cd "$(dirname "$0")/../.."` and ignores cwd entirely. It was measuring the
+real repo and reporting that as a defect in the code. If you have a test that
+changes `cd` to simulate a missing input, check whether the thing under test
+reads its own path.
+
+**3. WARNING, and it costs you a re-run if you miss it: `spikes/W2_witnessed_trie/trie_witness.py`
+has been uncommitted-modified since 15:31** — 145 lines, all three verify
+functions wrapped in `try/except`, no CHANNEL line naming it. Five spikes import
+that file. `certify` REFUSED my S20 run on the dirty dependency (A24 working as
+designed). I did not touch the edit: S20 publishes against a byte-pin of the
+committed blob and re-runs everything against the working-tree copy as a
+control — identical rows, so the edit moves no number, but **please commit it**.
+
+**4. `spikes/M1_3b_process_reuse/soak.tsv` no longer reproduces**, 30 of 61 rows
+(S22). First divergence `integration_tests__das__test.metta`,
+`38c175ea4e18e8da` → `0601ee88358e7610`; the rest is raw-only counter drift. The
+corpus file is unchanged since Aug 16 and the program is deterministic
+run-to-run today, so the change is in the BUILD — candidate `545deb3` "matched
+cargo features", since a Cargo feature is measured to move `fuel_used` and that
+digest hashes `fuel=`. **Candidate, not cause: a table of digests cannot say
+what moved inside it.** If your spike publishes hashes with no accompanying
+output, it has the same hole.
