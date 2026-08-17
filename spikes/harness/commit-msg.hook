@@ -1,6 +1,21 @@
 #!/bin/sh
-# commit-msg.hook v6 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
+# commit-msg.hook v7 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
 # presence, and refuses a commit carrying another lane's per-lane files.
+#
+# ==== v7, 2026-08-17, AGENT-1 (H66). TWO SITES, ONE DEFECT (§12.7) ==========
+# DEFECT REMOVED: **ownership inferred from a name that need not contain the
+# owner.** Site 2: `HANDOFF.md` does not match `HANDOFF.*.md`, so the one
+# journal whose filename carries no callsign was the one journal this gate could
+# not protect. Site 1: shared SOURCES -- `spikes/harness/`, `run_loop.sh`,
+# `WORK_QUEUE.md`, `CHANNEL.md` -- carry no callsign either and fall through
+# `*) continue`, and `git commit --only` commits their WORKING-TREE content, so
+# a co-lane's write between your check and your commit lands under your Atom.
+# Live instance in the row: `c8e1f50` carried 78 lines of another lane's
+# in-flight work, and the only thing that caught it was a commit stat reading
+# 112 insertions where ~30 were written.
+# Site 1 REPORTS and does not refuse, deliberately -- see the block for why.
+# Check that fails when this breaks (§12.3): sh spikes/harness/test_h66.sh
+# ===========================================================================
 #
 # v5 (AGENT-1, C22 ATTACK, H22) ASSIGNS Claude-Session from the live launcher's
 # start time. v4 checked that trailer's presence and never its value, so 47 of 85
@@ -158,6 +173,13 @@ for f in $(git diff --cached --name-only 2>/dev/null); do
   owner=""
   case "$f" in
     HANDOFF.*.md)    owner=${f#HANDOFF.}; owner=${owner%.md} ;;
+    # H66 site 2, measured by ATOM-3 and not eyeballed: `HANDOFF.md` does NOT
+    # match `HANDOFF.*.md`, so it fell through `*) continue` and this check
+    # inferred no owner for it. **The one journal the gate could not protect was
+    # the one whose filename carries no callsign.** The owner is not guessed --
+    # the file's own first line reads "# HANDOFF — write-ahead checkpoint
+    # (agent-1 lane)", and WORK_QUEUE H10 is one journal per lane.
+    HANDOFF.md)      owner=AGENT-1 ;;
     loop_*.log)      owner=${f#loop_};    owner=${owner%.log} ;;
     .loop_signal.*)  owner=${f#.loop_signal.} ;;
     .loop_exit.*)    owner=${f#.loop_exit.} ;;
@@ -173,6 +195,47 @@ for f in $(git diff --cached --name-only 2>/dev/null); do
   echo "$msg" | grep -qi "^Carries:.*$owner" && continue
   foreign="$foreign $f"
 done
+# ---------------------------------------------------------------- H66 site 1
+# REPORT, NEVER REFUSE. `git commit --only <path>` commits the WORKING-TREE
+# CONTENT of the paths you name, so a co-lane's write to one of those paths
+# between your check and your commit is faithfully committed as yours. H19's
+# rule is complete for the SHARED INDEX and silently incomplete for a SHARED
+# FILE, and the ownership check above is blind to it by construction: it infers
+# ownership from per-lane FILENAMES, which is true of per-lane STATE and false
+# of the sources three lanes edit at once.
+#
+# WHY IT REPORTS. The row that filed this says so and it is right: a lane
+# legitimately picking up another's file mid-cycle is normal here, so an
+# always-red gate is bypassed as thoroughly as a flaky one (H14, H52). It is
+# also H73's test -- the committer can clear a refusal about their OWN paths and
+# cannot clear one about a race, so this reports.
+#
+# WHAT IT CAN AND CANNOT SEE, stated because the difference matters: it CANNOT
+# know which lines you typed. It shows the per-path line counts you are about to
+# commit for files another atom has touched recently -- which is exactly the
+# signal that caught the live instance, where the stat read `112 insertions` for
+# ~30 lines written. Magnitude surprise, made visible instead of buried.
+#
+# EVERY FAILURE IN THIS BLOCK IS SWALLOWED. It runs after the refusals above and
+# changes no exit code; a defect here must not be able to stop a lane committing.
+{
+  _shared=""
+  for f in $(git diff --cached --name-only 2>/dev/null); do
+    _prev=$(git log -3 --format='%B' -- "$f" 2>/dev/null \
+            | sed -n 's/^Atom: *//p' | sort -u | grep -v "^$atom$" | tr '\n' ' ')
+    [ -z "$_prev" ] && continue
+    _n=$(git diff --cached --numstat -- "$f" 2>/dev/null | awk '{print "+"$1" -"$2}')
+    _shared="$_shared
+    $f  ($_n)  recently also committed by: $_prev"
+  done
+  if [ -n "$_shared" ]; then
+    echo "commit-msg NOTE — shared-source paths in this commit (H66, report only):$_shared"
+    echo "    --only commits the WORKING TREE of these paths, so a co-lane's write"
+    echo "    between your check and your commit lands under your Atom. Compare the"
+    echo "    line counts above against what you wrote; that mismatch is the signal."
+  fi
+} 2>/dev/null || true
+
 if [ -n "$foreign" ]; then
   echo "commit-msg REFUSED — Atom '$atom' is committing another lane's files:"
   for f in $foreign; do echo "    $f"; done
