@@ -1,0 +1,55 @@
+{
+ "sub-is-add": {
+  "desc": "arithmetic: (- a b) computes a + b",
+  "by_class": {
+   "empty": [
+    0,
+    14
+   ],
+   "error-only": [
+    0,
+    4
+   ],
+   "evaluated": [
+    4,
+    22
+   ],
+   "import-failure": [
+    0,
+    24
+   ]
+  },
+  "detectors": [
+   "python__tests__scripts__c1_grounded_basic.metta",
+   "python__tests__scripts__d2_higherfunc.metta",
+   "python__tests__scripts__d3_deptypes.metta",
+   "python__tests__scripts__d4_type_prop.metta"
+  ],
+  "total": 4,
+  "n": 64
+ },
+ "less-is-lesseq": {
+  "desc": "comparison: (< a a) becomes True -- an off-by-one at every boundary",
+  "by_class": {
+   "empty": [
+    0,
+    14
+   ],
+   "error-only": [
+    0,
+    4
+   ],
+   "evaluated": [
+    0,
+    22
+   ],
+   "import-failure": [
+    0,
+    24
+   ]
+  },
+  "detectors": [],
+  "total": 0,
+  "n": 64
+ }
+}

@@ -1,0 +1,121 @@
+{
+ "spike": "M1_9_mutation",
+ "recorded_utc": "2026-08-17T11:01:27Z",
+ "note": "REFUTED. sub-is-add 4/64; less-is-lesseq 0/64 with a live probe.",
+ "repos": [
+  {
+   "path": ".",
+   "head": "b5590a23222c1c5ce069b1df0bedd408197cb08d",
+   "clean": false,
+   "dirty_files": [
+    "spikes/M1_9_mutation/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "b5590a23222c1c5ce069b1df0bedd408197cb08d",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/install_hooks.sh"
+   ],
+   "diff_sha256": "033bd505d2c9e862191c5db104a0b674d3d08f166511e54932081e022de10142",
+   "diff_bytes": 2662
+  }
+ ],
+ "manifests": {
+  ".": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "mutation.json",
+   "sha256": "4d4c59678b1ea8a633c4f0e220c276dd4ab31dc97e8affa08b29a2edf17a70c2",
+   "bytes": 812,
+   "mtime": 1786964461,
+   "compared_ts": 1786964461,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "baseline.json",
+   "sha256": "5b5b1f5e511b0ac3c26229d9932ed5d05b21d9fb20d1e55fd33ef9d3c5f85015",
+   "bytes": 11818,
+   "mtime": 1786964452,
+   "compared_ts": 1786964452,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "mutant-is-live",
+   "must_fire_because": "0/64 is what a dead mutant, a failed rebuild or a missed anchor also produce",
+   "can_fail_because": "an inert or unbuilt mutation returns an identical probe, and the run is then reported VOID rather than as a detection rate",
+   "null_must_contain": "probe output differs before vs after for every mutation",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": [
+    "sub 2->8",
+    "less False->True"
+   ]
+  },
+  {
+   "name": "noise-floor-measured",
+   "must_fire_because": "a program whose result varies run-to-run scores as a detector by chance",
+   "can_fail_because": "if many programs were nondeterministic the floor would swamp the signal and no detection rate would be reportable",
+   "null_must_contain": "count of programs varying across 4 identical unmutated sweeps",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": [
+    "test_gnd_conv:3-distinct-keys",
+    "all-63-others:stable"
+   ]
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  ".": {
+   "newest": 1786964460,
+   "from": "spikes/M1_9_mutation/"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1786964479,
+   "from": "spikes/harness/test_loop_gate.sh"
+  }
+ },
+ "problems": [
+  "STALE ARTIFACT baseline.json predates . source by 0.0h (newest source: spikes/M1_9_mutation/; artifact clock: mtime). It cannot have been built from the tree recorded here.",
+  "STALE ARTIFACT mutation.json predates harness source by 0.0h (newest source: spikes/harness/test_loop_gate.sh; artifact clock: mtime). It cannot have been built from the tree recorded here.",
+  "STALE ARTIFACT baseline.json predates harness source by 0.0h (newest source: spikes/harness/test_loop_gate.sh; artifact clock: mtime). It cannot have been built from the tree recorded here.",
+  "DIRTY TREE . at b5590a23: 1 modified. The build is NOT b5590a23.",
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/harness at b5590a23: 2 modified. The build is NOT b5590a23."
+ ],
+ "ok": false,
+ "falsifier": "the corpus detects these mutations broadly -- a wrong evaluator changes many agreement keys"
+}
