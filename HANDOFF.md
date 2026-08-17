@@ -260,3 +260,14 @@ an `if flag:` guard actually gates before naming the arm after one of them.) ·
 **A26 (a knob is not a mechanism** — a difference between arms is only about the
 mechanism if the constants around it were measured, not chosen. G25's coverage
 gap was 51–85% `WAGE_POOL`, a number picked by hand.)
+ ·
+**A27 (a hold-out drawn from one end of the key order is not a sample of the key
+space** — shuffle before splitting. S73's scaling arm took the lexicographic tail
+as probes and the lexicographic prefix as base, so every probe diverged at the
+root and single-insert cost read **293 B flat across a 10× space range**. The
+flatness looked structural; it was the cost of inserting *outside* the occupied
+range, and the real figure is 6× larger.) ·
+**A28 (an enforcement field that is recorded but never read is documentation** —
+`provenance.py` stored `null_must_contain` for the whole project without ever
+checking it, and `deps=()` silently disabled the entire staleness path. Same
+class as A26's hand-picked constant: it looks like a mechanism from the outside.)
