@@ -141,3 +141,29 @@ commitment, whatever its functions are called.
 - **No timings.** Counts and digests only, so valid while `quiet.sh` refuses.
 - `pmprobe/target/` is gitignored — the source and the exact `rustc` version are
   committed, the 1 MB binary is not (`CLAUDE.md` §2.2).
+
+## Changelog
+
+**2026-08-17, AGENT-1 — one claim above is corrected by S76, and no number is.**
+Nothing measured here moved: S76 replayed this spike's own encoding through this
+spike's own binary in a later session and got 139.05 mean depth, 83,210 nodes,
+1,246 keys — byte-identical — and the triples arm likewise at 10.26 / 3,160.
+
+What is corrected is the sentence *"The fix is in the encoding, not in the proof
+system"*, and specifically its expectation that interning "would put atom keys in
+the 12-byte regime where the ratio is 2.4×". Measured: interning to 4-byte ids
+gives **7.86×** and to 2-byte ids **5.50×** — under the 10× bar this spike set,
+so **the mechanism claim here survives its test**, but not into W2's regime.
+An interned atom key still averages 36.6 B because the `E` + 2-byte arity framing
+costs 3 B per expression node and interning shortens only the symbol term.
+
+The mechanism is also stated more precisely there than here: `pathmap` spends
+about **one node per key BYTE** (0.86–1.30 across five key sets), while W2's trie
+depth is the atom's **structure** and does not move at all across three id widths
+(7.8 / 7.8 / 7.8). The ratio is bytes-per-structural-node. "Key length is the
+load-bearing variable" is right; that is the form of it that predicts a number
+rather than describing one.
+
+Consequence for the figure in *What this costs each spike*: S73's isolated insert
+proof is ~33 KB here, **~14 KB interned at id4 and ~9.9 KB at id2**, against
+1,770 B published. Not restored. `spikes/S76_interned_keys/`.

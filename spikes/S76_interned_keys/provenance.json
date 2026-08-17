@@ -1,21 +1,19 @@
 {
  "spike": "S76_interned_keys",
- "recorded_utc": "2026-08-17T11:03:24Z",
+ "recorded_utc": "2026-08-17T11:05:26Z",
  "note": "S76: probe binary is S75/pmprobe unmodified, run from S76/probe_cwd so it reads this spike key files. Counts and digests only, no timings, so the result is valid while quiet.sh refuses.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys",
-   "head": "f9f39940b3ac41b983205186b5976ff76c7fa0bd",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S76_interned_keys/"
-   ],
+   "head": "0123bbbdb0b41fb2df0435f7f5f53dad99689811",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/../S57_hyperon_corpus",
-   "head": "f9f39940b3ac41b983205186b5976ff76c7fa0bd",
+   "head": "0123bbbdb0b41fb2df0435f7f5f53dad99689811",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -40,24 +38,24 @@
    "sha256": "89fd2925a0232965efda159dd77052e30ef4c68fa1e8c153d94d36b9eab16856",
    "bytes": 20693,
    "mtime": 1786964600,
-   "compared_ts": 1786964600,
-   "compared_clock": "mtime"
+   "compared_ts": 1786964721,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/compare.json",
    "sha256": "acbb73afe457eeed7cf85f2bbfd1e6e3f3bfede08b4dba5e5c5362f06e828548",
    "bytes": 9517,
-   "mtime": 1786964604,
-   "compared_ts": 1786964604,
-   "compared_clock": "mtime"
+   "mtime": 1786964726,
+   "compared_ts": 1786964721,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/probe_out.txt",
    "sha256": "b4729f52e552a3fc7731026113ad6706821d2add53e2c2384c1f9962bce9e91f",
    "bytes": 17704,
-   "mtime": 1786964604,
-   "compared_ts": 1786964604,
-   "compared_clock": "mtime"
+   "mtime": 1786964726,
+   "compared_ts": 1786964721,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -205,20 +203,19 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys": {
-   "newest": 1786964600,
-   "from": "spikes/S76_interned_keys/"
+   "newest": 1786964721,
+   "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/S76_interned_keys/../S57_hyperon_corpus": {
    "newest": 1786923851,
    "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S76_interned_keys at f9f39940: 1 modified. The build is NOT f9f39940."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if interning symbols to fixed-width ids does not bring the pathmap/python mean node-depth ratio for atom keys under 10x, the cause of S75's 18.4x is not key length and S75's mechanism claim is wrong",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }
