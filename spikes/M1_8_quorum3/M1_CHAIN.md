@@ -74,7 +74,29 @@ host-only, 3 workers, 1 binary, 1 host:
   domain: host:Victorias-MacBook-Pro.local|bin:78d874f97674
 ```
 
-The real M1 setup (2 host + 1 phone) is `3/3 2dom` — still short of 3.
+The real M1 setup (2 host + 1 phone), re-run with the phone attached:
+
+```
+admission: REFUSED 1 on the ban surface
+store:     66 programs -> 66 CIDs
+dispatch:  66 jobs, 5 sessions, 0 preflight refusals
+result:    INSUFFICIENT_DOMAINS  3/3 2dom  on every row -- accepted 0/66
+```
+
+The same chain that reported 66/66 an hour earlier now reports **0/66**, and
+nothing about the chain changed. Only the question did.
+
+### The domain key itself overstates independence
+It separates `(host, binary)` and nothing else. **Two different binaries on one
+host still share kernel, libm, clock source, page-table behaviour and CPU
+errata** — for that entire fault class they are one domain being counted as two.
+A key that is independent for the faults we care about needs host **and**
+operator **and** ideally ISA to differ. This is noted in `worker.py` at the
+point the key is built, not only here: a key that flatters itself is worse than
+no key.
+
+So `2dom` is itself an upper bound. The true independent-domain count of the
+run that "validated" M1 may be 2, and is certainly not 3.
 
 **Q1's capture arithmetic runs on domains, not seats**, so this compounds with
 the 72% figure rather than sitting beside it. `adjudicate` now counts distinct

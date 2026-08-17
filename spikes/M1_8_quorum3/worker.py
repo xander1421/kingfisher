@@ -80,6 +80,13 @@ def main():
         host_id = f'adb:{serial}'
     else:
         host_id = f'host:{platform.node()}'
+    # NOTE the key OVERSTATES independence. It separates (host, binary) only.
+    # Two different binaries on ONE host still share kernel, libm, clock source,
+    # page-table behaviour and CPU errata, so they are not independent for that
+    # whole class of fault -- they will merely be counted as if they were.
+    # A domain that is independent for the faults we actually care about needs
+    # host AND operator AND ideally ISA to differ. Recorded here rather than in
+    # prose because a key that flatters itself is worse than no key.
     domain = f'{host_id}|bin:{bin_sha}'
     idle = 0
     while idle < 60:
