@@ -167,3 +167,29 @@ rather than describing one.
 Consequence for the figure in *What this costs each spike*: S73's isolated insert
 proof is ~33 KB here, **~14 KB interned at id4 and ~9.9 KB at id2**, against
 1,770 B published. Not restored. `spikes/S76_interned_keys/`.
+
+## Changelog — second entry, 2026-08-17, AGENT-1: the headline is RETRACTED
+
+**Withdrawn: "S73's 1,770 B insert proof is ~33 KB on real `pathmap`" and "W2
+becomes ~3.6–5.8 KB".** Both are node depth multiplied by a digest width, and an
+authentication path is not paid for in nodes — it is paid for in the **sibling**
+digests at each position, and a single-child position has none. A 1,155-byte key
+is a long *unbranched* run: ~1,148 nodes, almost all single-child, contributing
+~0 digests.
+
+Measured on this spike's own committed key files, cross-checked against W2's
+implemented prover: **1,568 B for the atom keys and 2,350 B for the triples.**
+S73's published 1,770 B was approximately right on real `pathmap` all along, and
+W2's published 1.5–2.4 KB was right. The ordering **inverts** — by depth the
+triples are the cheapest set by 13×, and by what a proof carries they are the
+most expensive.
+
+Consequently this page's criticism of S73's caveat is also withdrawn: *"same
+shape, different constants"* was called too weak at 18.4×, and the 18.4× was
+never a proof-size factor. **That caveat was right.**
+
+**Every depth number here stands and reproduces**, including under replay in a
+later session, and so does the `merkleize`-is-not-a-commitment finding and
+"S74 is untouched". This page's own binding caveat — *"no proof was actually
+generated on `pathmap`"* — is what turned out to matter, and it was carried
+forward into S76 verbatim and still not run. `spikes/S77_proof_bytes/RESULT.md`.

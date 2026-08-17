@@ -1,15 +1,13 @@
 {
  "spike": "S77_proof_bytes",
- "recorded_utc": "2026-08-17T11:12:27Z",
+ "recorded_utc": "2026-08-17T11:13:35Z",
  "note": "S77 reviews S75 and S76 on their own committed key files. It retracts their proof-size corrections and keeps their depth measurements, which reproduce. Counts and digests only, no timings, so valid while quiet.sh refuses.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes",
-   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S77_proof_bytes/"
-   ],
+   "head": "bb672b12f2cec4d936dde1aa1abd19527275c5a0",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   }
@@ -29,17 +27,17 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/measure.json",
    "sha256": "dafcebb01f279c77b7fa84548c028b712040140ddfe9f0497a11fc944aac4457",
    "bytes": 7336,
-   "mtime": 1786965147,
-   "compared_ts": 1786965147,
-   "compared_clock": "mtime"
+   "mtime": 1786965215,
+   "compared_ts": 1786965215,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes/probe_out.txt",
    "sha256": "850aaaf3f52a011b2d219ce23fe74a52c7f23a9eee9bf5b6faac110dddf99fbb",
    "bytes": 757,
-   "mtime": 1786965147,
-   "compared_ts": 1786965147,
-   "compared_clock": "mtime"
+   "mtime": 1786965215,
+   "compared_ts": 1786965215,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -204,16 +202,15 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes": {
-   "newest": 1786965121,
-   "from": "spikes/S77_proof_bytes/"
+   "newest": 1786965215,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S77_proof_bytes at 570e553d: 1 modified. The build is NOT 570e553d."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if the sibling count along a pathmap path scaled with node depth, then depth was a valid proxy for proof size, S75 and S76's multiplications would stand, and nothing here is retracted",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

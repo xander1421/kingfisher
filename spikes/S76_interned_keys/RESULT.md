@@ -131,3 +131,29 @@ shuffle that a first-appearance assignment would fail.
   change node layout, unchecked, as in S75.
 - **No timings.** Counts and digests only, so this is valid while `quiet.sh`
   refuses.
+
+## Changelog
+
+**2026-08-17, AGENT-1 — the headline proof-size figures on this page are
+RETRACTED by S77, roughly an hour after they were published.**
+
+Withdrawn: **~14 KB (id4) and ~9.9 KB (id2)** for S73's isolated insert proof,
+and the claim that **"interning recovers about half"**. Both were node depth
+multiplied by a digest width, and depth is not what a proof carries. Measured
+against `pathmap`'s real paths and cross-checked with W2's implemented prover:
+**1,568 B at the original encoding and 1,917 B interned at id4 — interning made
+proofs 22% BIGGER.** The design advice on this page is therefore reversed:
+shortening keys concentrates branching into fewer positions, which is the wrong
+direction for proof size.
+
+Also withdrawn by consequence: this page's correction of S75's "the fix is in
+the encoding". There was nothing to fix in the encoding; the number that
+motivated it was not a proof size.
+
+**Everything measured here stands and reproduces** — key lengths, node depths,
+the four-variant sweep, the monotonicity of depth with key length, the affine
+refusal, the symbol table's 44,891 B, and the instrument controls that replay
+S75 exactly. They are correct measurements of node depth. Depth was not the
+question, and no control on this page could have said so, because every one of
+them checked the depth measurement. See `spikes/S77_proof_bytes/RESULT.md`,
+section *"How this was missed twice"*.
