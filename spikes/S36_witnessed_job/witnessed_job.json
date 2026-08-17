@@ -1,0 +1,67 @@
+{
+  "cost_cited_from_S24": {
+    "answers": 97.583,
+    "rebuild_hash_bytes": 205184,
+    "shard_bytes": 49152,
+    "verify_hash_bytes": 6074.017,
+    "verify_per_rebuild": 0.0296,
+    "witness_bytes": 2636.35
+  },
+  "falsifier_fired": false,
+  "jobs": 40,
+  "prefix_len": 8,
+  "seed": 20260817,
+  "skipped_small_answers": 3,
+  "tamper_classes": {
+    "add": {
+      "n": 37,
+      "rejected": 37
+    },
+    "alter": {
+      "n": 37,
+      "rejected": 37
+    },
+    "omit": {
+      "n": 37,
+      "rejected": 37
+    }
+  },
+  "worlds": {
+    "honest_pair": {
+      "replication": {
+        "correct": 37,
+        "n": 37,
+        "rate": 1.0
+      },
+      "witnessed": {
+        "correct": 37,
+        "n": 37,
+        "rate": 1.0
+      }
+    },
+    "one_liar_honest_peer": {
+      "replication": {
+        "correct": 37,
+        "n": 37,
+        "rate": 1.0
+      },
+      "witnessed": {
+        "correct": 37,
+        "n": 37,
+        "rate": 1.0
+      }
+    },
+    "two_non_independent_liars": {
+      "replication": {
+        "correct": 0,
+        "n": 37,
+        "rate": 0.0
+      },
+      "witnessed": {
+        "correct": 37,
+        "n": 37,
+        "rate": 1.0
+      }
+    }
+  }
+}

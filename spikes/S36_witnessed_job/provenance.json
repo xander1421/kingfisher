@@ -1,0 +1,204 @@
+{
+ "spike": "S36_witnessed_job",
+ "recorded_utc": "2026-08-17T16:00:29Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds",
+   "head": "29fa8864b77cef7ebb2b7a59f867fd1efe767dbb",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S24_range_crossover",
+   "head": "29fa8864b77cef7ebb2b7a59f867fd1efe767dbb",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S24_range_crossover": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/witnessed_job.json",
+   "sha256": "3da634cab1425618f07d62e54984c2394bededc72b4b06973b3803d3adbf7f44",
+   "bytes": 1190,
+   "mtime": 1786982429,
+   "compared_ts": 1786982429,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_honest_jobs_accepted_by_both",
+   "must_fire_because": "both routes must ACCEPT the honest job, or the comparison is between a verifier and a broken verifier rather than between two ways of deciding the same question",
+   "can_fail_because": "any honest job is rejected by either route",
+   "null_must_contain": "a verifier that rejects everything would score perfectly on the cheat worlds and fail here",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "replication": {
+     "n": 37,
+     "correct": 37,
+     "rate": 1.0
+    },
+    "witnessed": {
+     "n": 37,
+     "correct": 37,
+     "rate": 1.0
+    }
+   }
+  },
+  {
+   "name": "C_replication_works_when_independent",
+   "must_fire_because": "replication must CATCH the liar when the peer is honest -- otherwise world 3 proves nothing, because the baseline would be broken rather than blind",
+   "can_fail_because": "the honest-peer world is not caught at 100%",
+   "null_must_contain": "a replication check that cannot see a differing answer at all",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "replication": {
+     "n": 37,
+     "correct": 37,
+     "rate": 1.0
+    },
+    "witnessed": {
+     "n": 37,
+     "correct": 37,
+     "rate": 1.0
+    }
+   }
+  },
+  {
+   "name": "C_all_three_tampers_rejected",
+   "must_fire_because": "the single verifier must reject an OMITTED, an ADDED and an ALTERED answer -- one tamper class rejected could be an accident of encoding",
+   "can_fail_because": "any tamper class has rejected < n",
+   "null_must_contain": "a verifier that only checks the answer count, which would accept the altered key",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "omit": {
+     "n": 37,
+     "rejected": 37
+    },
+    "add": {
+     "n": 37,
+     "rejected": 37
+    },
+    "alter": {
+     "n": 37,
+     "rejected": 37
+    }
+   }
+  },
+  {
+   "name": "C_jobs_have_real_answers",
+   "must_fire_because": "a job whose answer is one or two keys makes omission trivial and the demonstration vacuous; jobs below three answers are skipped and the count is reported",
+   "can_fail_because": "fewer than 10 jobs survived the filter",
+   "null_must_contain": "a query set that returns single keys, which is what a long prefix would give",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "jobs": 40,
+    "skipped": 3,
+    "answers_at_this_prefix": 97.583
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_witnessing_buys_nothing",
+   "must_fire_because": null,
+   "can_fail_because": "the witnessed verifier fails to reject the non-independent liars, or replication catches them",
+   "null_must_contain": "two identical wrong answers, which is exactly what replication reads as agreement",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "two_non_independent_liars": {
+     "replication": {
+      "n": 37,
+      "correct": 0,
+      "rate": 0.0
+     },
+     "witnessed": {
+      "n": 37,
+      "correct": 37,
+      "rate": 1.0
+     }
+    },
+    "one_liar_honest_peer": {
+     "replication": {
+      "n": 37,
+      "correct": 37,
+      "rate": 1.0
+     },
+     "witnessed": {
+      "n": 37,
+      "correct": 37,
+      "rate": 1.0
+     }
+    }
+   },
+   "refutes": "the witnessed route for this job class: if one verifier cannot reject what a 2-of-2 replication check catches, quorum alone is the honest recommendation",
+   "fires_when": "the witnessed verifier fails to reject the non-independent liars, or replication catches them",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds": {
+   "newest": 1786981983,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S24_range_crossover": {
+   "newest": 1786981020,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "a single witnessed verifier failing to reject a cheat that 2-of-2 replication catches, which would make the witnessed route redundant for this job class",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
