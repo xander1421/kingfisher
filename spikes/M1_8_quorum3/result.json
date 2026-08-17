@@ -1,7 +1,10 @@
 {
- "gate": "device quiet: cpu_busy 0.5% (limit 15%), runnable 1, thermal 38600m, battery status=5 level=100",
+ "gate": "device quiet: cpu_busy 3.2% (limit 15%), runnable 1, thermal 36300m, battery status=5 level=100",
  "fuel": 2000000,
  "bytes_pushed": 0,
+ "sessions": 5,
+ "chunk": 16,
+ "refusals": [],
  "workers": [
   "host-a",
   "host-b",
@@ -35,7 +38,7 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.6
+     "wall_ms": 9.3
     },
     {
      "status": "OK",
@@ -50,7 +53,7 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.3
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -65,7 +68,7 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.9
+     "wall_ms": 62.5
     }
    ]
   },
@@ -92,7 +95,7 @@
      "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 9.8
     },
     {
      "status": "OK",
@@ -107,7 +110,7 @@
      "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.8
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -122,7 +125,7 @@
      "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.9
+     "wall_ms": 65.2
     }
    ]
   },
@@ -149,7 +152,7 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 10.3
     },
     {
      "status": "OK",
@@ -179,7 +182,7 @@
      "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.5
+     "wall_ms": 62.6
     }
    ]
   },
@@ -206,7 +209,7 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.0
+     "wall_ms": 8.4
     },
     {
      "status": "OK",
@@ -221,7 +224,7 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.4
+     "wall_ms": 9.2
     },
     {
      "status": "OK",
@@ -236,7 +239,7 @@
      "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.4
+     "wall_ms": 63.9
     }
    ]
   },
@@ -263,7 +266,7 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 9.3
     },
     {
      "status": "OK",
@@ -278,7 +281,7 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.4
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -293,7 +296,7 @@
      "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.1
+     "wall_ms": 63.5
     }
    ]
   },
@@ -320,7 +323,7 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.5
+     "wall_ms": 9.6
     },
     {
      "status": "OK",
@@ -335,7 +338,7 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.2
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -350,7 +353,7 @@
      "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.2
+     "wall_ms": 66.3
     }
    ]
   },
@@ -377,7 +380,7 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.9
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -392,7 +395,7 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.4
+     "wall_ms": 11.2
     },
     {
      "status": "OK",
@@ -407,7 +410,7 @@
      "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.1
+     "wall_ms": 67.3
     }
    ]
   },
@@ -434,7 +437,7 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -449,7 +452,7 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.4
+     "wall_ms": 9.0
     },
     {
      "status": "OK",
@@ -464,7 +467,7 @@
      "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 71.0
+     "wall_ms": 67.7
     }
    ]
   },
@@ -491,7 +494,7 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -506,7 +509,7 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.6
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -521,7 +524,7 @@
      "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.8
+     "wall_ms": 65.9
     }
    ]
   },
@@ -548,7 +551,7 @@
      "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -563,7 +566,7 @@
      "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.6
+     "wall_ms": 8.8
     },
     {
      "status": "OK",
@@ -578,7 +581,7 @@
      "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.1
+     "wall_ms": 74.4
     }
    ]
   },
@@ -605,7 +608,7 @@
      "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.4
+     "wall_ms": 11.9
     },
     {
      "status": "OK",
@@ -635,7 +638,7 @@
      "shard_cid": "bafkreihn52rhk2q7gilaokxbtmx3s5oeg4jy57t5vj6r3jsgync3hxvd2m",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 86.2
+     "wall_ms": 73.7
     }
    ]
   },
@@ -662,7 +665,7 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.8
+     "wall_ms": 63.6
     },
     {
      "status": "OK",
@@ -677,7 +680,7 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.9
+     "wall_ms": 62.2
     },
     {
      "status": "OK",
@@ -692,7 +695,7 @@
      "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 185.5
+     "wall_ms": 183.1
     }
    ]
   },
@@ -719,7 +722,7 @@
      "shard_cid": "bafkreiecmbxqkqoirppl6uigzm6flwnhvya3sd4hbgyfbdhsle5oxfm6ny",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 4794.0
+     "wall_ms": 4468.3
     },
     {
      "status": "FUEL_EXHAUSTED",
@@ -734,7 +737,7 @@
      "shard_cid": "bafkreiecmbxqkqoirppl6uigzm6flwnhvya3sd4hbgyfbdhsle5oxfm6ny",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 4793.7
+     "wall_ms": 4468.4
     },
     {
      "status": "FUEL_EXHAUSTED",
@@ -749,7 +752,7 @@
      "shard_cid": "bafkreiecmbxqkqoirppl6uigzm6flwnhvya3sd4hbgyfbdhsle5oxfm6ny",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10916.4
+     "wall_ms": 10158.9
     }
    ]
   },
@@ -776,7 +779,7 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -791,7 +794,7 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.8
+     "wall_ms": 10.4
     },
     {
      "status": "OK",
@@ -806,7 +809,7 @@
      "shard_cid": "bafkreifvjt5fdilwv6ghe5m636uzzvr5cainjh35ulw2xcpyedfyfadio4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 71.4
+     "wall_ms": 108.1
     }
    ]
   },
@@ -833,7 +836,7 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -848,7 +851,7 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.4
+     "wall_ms": 8.8
     },
     {
      "status": "OK",
@@ -863,7 +866,7 @@
      "shard_cid": "bafkreihxagae5gzxpaukmqilh6wy73nivp6oczpnmdehvkb7kijohh6ere",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 72.6
+     "wall_ms": 78.8
     }
    ]
   },
@@ -890,7 +893,7 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.6
+     "wall_ms": 10.8
     },
     {
      "status": "OK",
@@ -905,7 +908,7 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -920,7 +923,7 @@
      "shard_cid": "bafkreige23cfkoxx2s6kueqabet4wchplcuqunkia4bgggc7wshhgo3bbm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 81.0
+     "wall_ms": 78.0
     }
    ]
   },
@@ -947,7 +950,7 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.3
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -962,7 +965,7 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.9
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
@@ -977,7 +980,7 @@
      "shard_cid": "bafkreidy7wy32twelzjq5ooqxm53xxak3hkb65t6rosupnipwzllona74e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 78.9
+     "wall_ms": 71.9
     }
    ]
   },
@@ -1019,7 +1022,7 @@
      "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.7
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -1034,7 +1037,7 @@
      "shard_cid": "bafkreide54ybc6qke4aujgzbsqnqa43mbwypn7ljmlv7l5ecwe7sncixn4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 74.1
+     "wall_ms": 67.4
     }
    ]
   },
@@ -1061,7 +1064,7 @@
      "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.4
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -1076,7 +1079,7 @@
      "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7
+     "wall_ms": 9.6
     },
     {
      "status": "OK",
@@ -1091,7 +1094,7 @@
      "shard_cid": "bafkreih2sje6ijenwyfuojcxjz7fftjinwz2gd4bw4252pbcvg6kgurohq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 71.0
+     "wall_ms": 68.8
     }
    ]
   },
@@ -1118,7 +1121,7 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.8
+     "wall_ms": 8.4
     },
     {
      "status": "OK",
@@ -1133,7 +1136,7 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.2
+     "wall_ms": 8.8
     },
     {
      "status": "OK",
@@ -1148,7 +1151,7 @@
      "shard_cid": "bafkreihzmikrseev4dpihxjuazd43kmt6mgjnsanvkquhq5pzanowwwin4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 64.2
+     "wall_ms": 62.9
     }
    ]
   },
@@ -1175,7 +1178,7 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.0
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1190,7 +1193,7 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0
+     "wall_ms": 9.2
     },
     {
      "status": "OK",
@@ -1205,7 +1208,7 @@
      "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.2
+     "wall_ms": 62.1
     }
    ]
   },
@@ -1232,7 +1235,7 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.3
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -1247,7 +1250,7 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.7
+     "wall_ms": 9.8
     },
     {
      "status": "OK",
@@ -1262,7 +1265,7 @@
      "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 62.2
+     "wall_ms": 60.2
     }
    ]
   },
@@ -1289,7 +1292,7 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.5
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1304,7 +1307,7 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.0
+     "wall_ms": 8.8
     },
     {
      "status": "OK",
@@ -1319,7 +1322,7 @@
      "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.1
+     "wall_ms": 60.2
     }
    ]
   },
@@ -1346,7 +1349,7 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1361,7 +1364,7 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.2
+     "wall_ms": 8.6
     },
     {
      "status": "OK",
@@ -1376,7 +1379,7 @@
      "shard_cid": "bafkreieoddpslhdx3fgrumy6nnnpjsxhtf6yoaaonjdzyzm5njtb7mytua",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 64.1
+     "wall_ms": 61.7
     }
    ]
   },
@@ -1403,7 +1406,7 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.3
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -1418,7 +1421,7 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9
+     "wall_ms": 8.4
     },
     {
      "status": "OK",
@@ -1433,7 +1436,7 @@
      "shard_cid": "bafkreihw3dub2njs4jqcg5j4427blla3ehxknz5eomjaoqci36io43bvra",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.4
+     "wall_ms": 64.4
     }
    ]
   },
@@ -1460,7 +1463,7 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1475,7 +1478,7 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -1490,7 +1493,7 @@
      "shard_cid": "bafkreigbzpmfsrdg7uq3yrha4fzeq5qct4jcacpgsyesh37eonhn43mrqq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 64.4
+     "wall_ms": 63.0
     }
    ]
   },
@@ -1517,7 +1520,7 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.8
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1532,7 +1535,7 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.2
+     "wall_ms": 8.6
     },
     {
      "status": "OK",
@@ -1547,7 +1550,7 @@
      "shard_cid": "bafkreiexpgdjlezux456ytdgjndrpu3r2pitx3t3it6qz7kxcf2otai6z4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 64.5
+     "wall_ms": 64.2
     }
    ]
   },
@@ -1574,7 +1577,7 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.0
+     "wall_ms": 9.0
     },
     {
      "status": "OK",
@@ -1589,7 +1592,7 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.7
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1604,7 +1607,7 @@
      "shard_cid": "bafkreibd2wckwqli6qng5m624vc3l6g6zyaplslnm5azzzt2gpwh3wvnwm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.9
+     "wall_ms": 64.2
     }
    ]
   },
@@ -1631,7 +1634,7 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0
+     "wall_ms": 9.4
     },
     {
      "status": "OK",
@@ -1646,7 +1649,7 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.5
+     "wall_ms": 9.0
     },
     {
      "status": "OK",
@@ -1661,7 +1664,7 @@
      "shard_cid": "bafkreiclnggruij47gmcuwwmdnz66osbgnredzinkm7wjkzc5mxesz675y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.1
+     "wall_ms": 64.1
     }
    ]
   },
@@ -1688,7 +1691,7 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 9.2
     },
     {
      "status": "OK",
@@ -1703,7 +1706,7 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.5
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -1718,7 +1721,7 @@
      "shard_cid": "bafkreihb3j3kq5waekqjvms66wmbjqxohha36zh7iaouey4wuccng246sa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.0
+     "wall_ms": 64.2
     }
    ]
   },
@@ -1745,7 +1748,7 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.6
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1760,7 +1763,7 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9
+     "wall_ms": 8.5
     },
     {
      "status": "OK",
@@ -1775,7 +1778,7 @@
      "shard_cid": "bafkreicr4hnkmxtcrvdbog4vbcbdjnnjyefqitqlglvpweosgqwh7kj3yi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 64.2
+     "wall_ms": 65.8
     }
    ]
   },
@@ -1802,7 +1805,7 @@
      "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.4
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1817,7 +1820,7 @@
      "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.6
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -1832,7 +1835,7 @@
      "shard_cid": "bafkreier6rqeetskgdc7nqmfuac4msomvkr7cagwk3ktrb5bunfmepus4y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.2
+     "wall_ms": 65.0
     }
    ]
   },
@@ -1859,7 +1862,7 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.2
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -1874,7 +1877,7 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.1
+     "wall_ms": 8.6
     },
     {
      "status": "OK",
@@ -1889,7 +1892,7 @@
      "shard_cid": "bafkreibytdbdwkv5ktzppml4prbkb7w3lvezngdoyxb34ipgjqvwhphrtm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.4
+     "wall_ms": 65.3
     }
    ]
   },
@@ -1916,7 +1919,7 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.2
+     "wall_ms": 9.5
     },
     {
      "status": "OK",
@@ -1931,7 +1934,7 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.5
+     "wall_ms": 9.0
     },
     {
      "status": "OK",
@@ -1946,7 +1949,7 @@
      "shard_cid": "bafkreiezkmljwardpnhxg34fc5654dfyvve7drp5uk3dx64jgwweb4lxem",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.5
+     "wall_ms": 65.2
     }
    ]
   },
@@ -1973,7 +1976,7 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -1988,7 +1991,7 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.4
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -2003,7 +2006,7 @@
      "shard_cid": "bafkreicg3nqcnnzsxzymmlrfpovv4kaggc6ye5fp2q44r7kdxqcxvoiy3e",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 70.7
+     "wall_ms": 64.0
     }
    ]
   },
@@ -2045,7 +2048,7 @@
      "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.4
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -2060,7 +2063,7 @@
      "shard_cid": "bafkreifkifbpmsyadwvinamhiwy7turhoydjrobxaiglryc5soxbzjsipe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.2
+     "wall_ms": 65.1
     }
    ]
   },
@@ -2073,8 +2076,8 @@
     {
      "status": "OK",
      "fuel_used": "1012",
-     "raw_hash": "88d2a4e474fa028e83630efd270206a20dc8ce1193990c4a9861a9f4cd50120d",
-     "sorted_hash": "2f4d62ff46ba642799a3d582d4c044d89d994e058a9f4b351aeec0ce468f1a93",
+     "raw_hash": "8b4bf4a6ed493f1c690ee40645d391fcffdb1ba56231756d0e84e3f3d0256aac",
+     "sorted_hash": "72e21aa1b946bd22db4cce275ab990d91169bc118c1f4e9d3ea8e68bcfddd484",
      "n_results": "5",
      "arch": "aarch64",
      "os": "macos",
@@ -2083,7 +2086,7 @@
      "shard_cid": "bafkreidnqrjrx3qamajwuigpwghdj33joiccup7ivf66yr3g3m72muoua4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.0
+     "wall_ms": 9.9
     },
     {
      "status": "OK",
@@ -2098,13 +2101,13 @@
      "shard_cid": "bafkreidnqrjrx3qamajwuigpwghdj33joiccup7ivf66yr3g3m72muoua4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.9
+     "wall_ms": 10.2
     },
     {
      "status": "OK",
      "fuel_used": "1012",
-     "raw_hash": "d59cf828736f8bad9a34a03d30a46627850bde95f1b5de640b30d0d7f548cebd",
-     "sorted_hash": "4b47bab3325782927cb4e6d37881e177944d3a6a0d50d9629a8864e160b661f6",
+     "raw_hash": "cd065a243d29a7653fd16e7d92cf5c5b7e404ed8559a8ca6d11eb516d373a872",
+     "sorted_hash": "bbf844cdeeae89857e21c57ab6b8eeecb892b8af98dd84baaf758c5f08a3e4a0",
      "n_results": "5",
      "arch": "aarch64",
      "os": "android",
@@ -2113,7 +2116,7 @@
      "shard_cid": "bafkreidnqrjrx3qamajwuigpwghdj33joiccup7ivf66yr3g3m72muoua4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.2
+     "wall_ms": 66.4
     }
    ]
   },
@@ -2140,7 +2143,7 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.5
+     "wall_ms": 9.1
     },
     {
      "status": "OK",
@@ -2155,7 +2158,7 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.2
+     "wall_ms": 10.1
     },
     {
      "status": "OK",
@@ -2170,7 +2173,7 @@
      "shard_cid": "bafkreiggasipiigsvnzuds4oom2rb52drmuejsbcszaqdzir2kjgw5jtgm",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.8
+     "wall_ms": 63.8
     }
    ]
   },
@@ -2212,7 +2215,7 @@
      "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 19.7
+     "wall_ms": 19.3
     },
     {
      "status": "OK",
@@ -2227,7 +2230,7 @@
      "shard_cid": "bafkreickunjqonw6tzu5sz2fn3cdk2gyeu47tuji3jds4sd3akfqip56y4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 91.0
+     "wall_ms": 88.0
     }
    ]
   },
@@ -2254,7 +2257,7 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.4
+     "wall_ms": 11.0
     },
     {
      "status": "OK",
@@ -2269,7 +2272,7 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9
+     "wall_ms": 10.5
     },
     {
      "status": "OK",
@@ -2284,7 +2287,7 @@
      "shard_cid": "bafkreigyn4pgimghbqyhbztx57zvhshr7pnp2ouzmr2dfdnofc554usybe",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 74.2
+     "wall_ms": 74.0
     }
    ]
   },
@@ -2311,7 +2314,7 @@
      "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 16.5
+     "wall_ms": 14.3
     },
     {
      "status": "OK",
@@ -2341,7 +2344,7 @@
      "shard_cid": "bafkreibylvhnsuewbvoid2giyo5i5hlxdlzkaaqce6wbfvzkustknfxecy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 79.6
+     "wall_ms": 79.1
     }
    ]
   },
@@ -2368,7 +2371,7 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.0
+     "wall_ms": 14.4
     },
     {
      "status": "OK",
@@ -2383,7 +2386,7 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.6
+     "wall_ms": 14.0
     },
     {
      "status": "OK",
@@ -2398,7 +2401,7 @@
      "shard_cid": "bafkreigda5xfmiqtovx4w4ujhofthl554duz42oqo2pdbddpzbz7s2hyle",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 80.9
+     "wall_ms": 96.5
     }
    ]
   },
@@ -2425,7 +2428,7 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 18.7
+     "wall_ms": 18.6
     },
     {
      "status": "OK",
@@ -2440,7 +2443,7 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 19.6
+     "wall_ms": 20.9
     },
     {
      "status": "OK",
@@ -2455,7 +2458,7 @@
      "shard_cid": "bafkreihxcgji3vqc2le7jh7g5yd57qlv6vi6qihrukmgnmgt4zby7wmr3y",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 86.6
+     "wall_ms": 90.6
     }
    ]
   },
@@ -2482,7 +2485,7 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.4
+     "wall_ms": 21.0
     },
     {
      "status": "OK",
@@ -2497,7 +2500,7 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.2
+     "wall_ms": 20.7
     },
     {
      "status": "OK",
@@ -2512,7 +2515,7 @@
      "shard_cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 95.9
+     "wall_ms": 99.2
     }
    ]
   },
@@ -2539,7 +2542,7 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.2
+     "wall_ms": 13.9
     },
     {
      "status": "OK",
@@ -2554,7 +2557,7 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 14.8
+     "wall_ms": 13.8
     },
     {
      "status": "OK",
@@ -2569,7 +2572,7 @@
      "shard_cid": "bafkreib6a77guvhjs4uinhtxtbscwnlhrigrgb6n6pzax3psywnymtyacy",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 81.0
+     "wall_ms": 82.4
     }
    ]
   },
@@ -2596,7 +2599,7 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 29.4
+     "wall_ms": 27.2
     },
     {
      "status": "OK",
@@ -2611,7 +2614,7 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 28.9
+     "wall_ms": 26.7
     },
     {
      "status": "OK",
@@ -2626,7 +2629,7 @@
      "shard_cid": "bafkreifxenguzkba3nrsxalaklorhopxnlpsgun6e3prxpin5zeygbr5wu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 109.1
+     "wall_ms": 109.0
     }
    ]
   },
@@ -2653,7 +2656,7 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 43.9
+     "wall_ms": 43.5
     },
     {
      "status": "OK",
@@ -2668,7 +2671,7 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 42.3
+     "wall_ms": 40.9
     },
     {
      "status": "OK",
@@ -2683,7 +2686,7 @@
      "shard_cid": "bafkreidmbjlz7fk2iwcu3niuzpgdki3gxbon4u3ktlv6f2xac3hg4hho4a",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 138.9
+     "wall_ms": 142.2
     }
    ]
   },
@@ -2710,7 +2713,7 @@
      "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 54.0
+     "wall_ms": 50.1
     },
     {
      "status": "OK",
@@ -2725,7 +2728,7 @@
      "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 54.3
+     "wall_ms": 52.5
     },
     {
      "status": "OK",
@@ -2740,7 +2743,7 @@
      "shard_cid": "bafkreihrshzc672gkxobckpdtxirin4xeqsloaen7e53o6p3w33bafqg2u",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 157.5
+     "wall_ms": 164.1
     }
    ]
   },
@@ -2767,7 +2770,7 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.3
+     "wall_ms": 9.7
     },
     {
      "status": "OK",
@@ -2782,7 +2785,7 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.8
+     "wall_ms": 9.0
     },
     {
      "status": "OK",
@@ -2797,7 +2800,7 @@
      "shard_cid": "bafkreib4z6afypgsvyswnq6uvwfewnlqg2ymdzhoh55zw5xbmwbetxjhf4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 78.3
+     "wall_ms": 88.3
     }
    ]
   },
@@ -2824,7 +2827,7 @@
      "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.9
+     "wall_ms": 9.2
     },
     {
      "status": "OK",
@@ -2839,7 +2842,7 @@
      "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.4
+     "wall_ms": 8.6
     },
     {
      "status": "OK",
@@ -2854,7 +2857,7 @@
      "shard_cid": "bafkreiaeco4vqa34vscbzggfb4qax4vcn2f7okaqqwxrf6c4jc6tzzfv3i",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.5
+     "wall_ms": 73.5
     }
    ]
   },
@@ -2881,7 +2884,7 @@
      "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 50.1
+     "wall_ms": 44.1
     },
     {
      "status": "OK",
@@ -2896,7 +2899,7 @@
      "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 47.5
+     "wall_ms": 45.4
     },
     {
      "status": "OK",
@@ -2911,7 +2914,7 @@
      "shard_cid": "bafkreih3du4ofbmr4u53af7icd4d5it223pznuj7u4i5w67dyh4agy3bj4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 144.7
+     "wall_ms": 149.5
     }
    ]
   },
@@ -2938,7 +2941,7 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 22.9
+     "wall_ms": 21.2
     },
     {
      "status": "OK",
@@ -2953,7 +2956,7 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 24.5
+     "wall_ms": 20.7
     },
     {
      "status": "OK",
@@ -2968,7 +2971,7 @@
      "shard_cid": "bafkreigpigm33hn7k22kkh7egmd432t27prgh3ji6l63sthsmknquyvwli",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 98.9
+     "wall_ms": 111.3
     }
    ]
   },
@@ -2995,7 +2998,7 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 47.9
+     "wall_ms": 45.4
     },
     {
      "status": "OK",
@@ -3010,7 +3013,7 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 48.3
+     "wall_ms": 44.1
     },
     {
      "status": "OK",
@@ -3025,7 +3028,7 @@
      "shard_cid": "bafkreigsahfo7mquf3fr7vmyqqhilct36fml7vptkkwz36kgck4ughhuvu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 148.0
+     "wall_ms": 161.8
     }
    ]
   },
@@ -3052,7 +3055,7 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 20.8
+     "wall_ms": 18.5
     },
     {
      "status": "OK",
@@ -3067,7 +3070,7 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 21.2
+     "wall_ms": 18.9
     },
     {
      "status": "OK",
@@ -3082,7 +3085,7 @@
      "shard_cid": "bafkreifpo6aywmq2sx7qiiz7yg6duxff45ogf4ewmu2z6qdpwospqbxhai",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 89.1
+     "wall_ms": 106.2
     }
    ]
   },
@@ -3109,7 +3112,7 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 32.0
+     "wall_ms": 33.3
     },
     {
      "status": "OK",
@@ -3124,7 +3127,7 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 33.0
+     "wall_ms": 31.5
     },
     {
      "status": "OK",
@@ -3139,7 +3142,7 @@
      "shard_cid": "bafkreiauflfr33v5kgrojel32dg2xbldqctdcgpuy4n7imshgugyegilqi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 113.1
+     "wall_ms": 122.2
     }
    ]
   },
@@ -3166,7 +3169,7 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.9
+     "wall_ms": 14.8
     },
     {
      "status": "OK",
@@ -3181,7 +3184,7 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 15.2
+     "wall_ms": 16.0
     },
     {
      "status": "OK",
@@ -3196,7 +3199,7 @@
      "shard_cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 82.2
+     "wall_ms": 88.1
     }
    ]
   },
@@ -3223,7 +3226,7 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.2
+     "wall_ms": 12.0
     },
     {
      "status": "OK",
@@ -3238,7 +3241,7 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 13.5
+     "wall_ms": 12.4
     },
     {
      "status": "OK",
@@ -3253,7 +3256,7 @@
      "shard_cid": "bafkreiad3fkxx5b2q2pqdcdjnjo57hgdalxoeci6wa4eopohduw3vmixu4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 74.4
+     "wall_ms": 77.7
     }
    ]
   },
@@ -3280,7 +3283,7 @@
      "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 32.8
+     "wall_ms": 31.6
     },
     {
      "status": "OK",
@@ -3310,7 +3313,7 @@
      "shard_cid": "bafkreiamecgeh4ngazzgpqlthriwat5ui3odqfjwg52r3ozhvpobwbmve4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 116.1
+     "wall_ms": 117.8
     }
    ]
   },
@@ -3337,7 +3340,7 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 19.6
+     "wall_ms": 19.8
     },
     {
      "status": "OK",
@@ -3352,7 +3355,7 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 19.9
+     "wall_ms": 19.1
     },
     {
      "status": "OK",
@@ -3367,7 +3370,7 @@
      "shard_cid": "bafkreifxftszzuvopm4rpv6y7dvrcmku7q624df3wzuvxizemmqh3jcf64",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 86.5
+     "wall_ms": 85.2
     }
    ]
   },
@@ -3394,7 +3397,7 @@
      "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.2
+     "wall_ms": 11.4
     },
     {
      "status": "OK",
@@ -3409,7 +3412,7 @@
      "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 11.8
+     "wall_ms": 12.0
     },
     {
      "status": "OK",
@@ -3424,7 +3427,7 @@
      "shard_cid": "bafkreifppkhqivz24ig2urs5wztdrocsb244yigiaercy6ogdkeyudibe4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 73.2
+     "wall_ms": 75.3
     }
    ]
   },
@@ -3451,7 +3454,7 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.9
+     "wall_ms": 9.0
     },
     {
      "status": "OK",
@@ -3466,7 +3469,7 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.1
+     "wall_ms": 8.9
     },
     {
      "status": "OK",
@@ -3481,7 +3484,7 @@
      "shard_cid": "bafkreibwb6nei5envlm7mida42yul3xqzwapmvkmlh6p2akg44rpjzmxbu",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.1
+     "wall_ms": 66.7
     }
    ]
   },
@@ -3508,7 +3511,7 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.4
+     "wall_ms": 8.8
     },
     {
      "status": "OK",
@@ -3523,7 +3526,7 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.9
+     "wall_ms": 8.5
     },
     {
      "status": "OK",
@@ -3538,7 +3541,7 @@
      "shard_cid": "bafkreicyjoja5nxz4oqovqr2cnupflhiscjsbqtkhuhz4vpcz7lz6pawmi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.3
+     "wall_ms": 66.1
     }
    ]
   },
@@ -3565,7 +3568,7 @@
      "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -3595,7 +3598,7 @@
      "shard_cid": "bafkreihn72uqfthkrgbfzr2kkma2yhxyyeiybthqtaevnrvfpvc7gtyrbi",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 63.8
+     "wall_ms": 64.3
     }
    ]
   },
@@ -3622,7 +3625,7 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.0
+     "wall_ms": 11.4
     },
     {
      "status": "OK",
@@ -3637,7 +3640,7 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 12.7
+     "wall_ms": 11.2
     },
     {
      "status": "OK",
@@ -3652,7 +3655,7 @@
      "shard_cid": "bafkreibilthojamb32wrzukgqtsuuhmrwftlt6l47h5swejlurttptd3oq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 72.8
+     "wall_ms": 72.9
     }
    ]
   },
@@ -3679,7 +3682,7 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.6
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -3694,7 +3697,7 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.0
+     "wall_ms": 8.4
     },
     {
      "status": "OK",
@@ -3709,7 +3712,7 @@
      "shard_cid": "bafkreiepyq42c4ym6o4pv6g754r27hgcq2jf4cwt35hxobhiwuc6sggcb4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 67.1
+     "wall_ms": 76.7
     }
    ]
   },
@@ -3736,7 +3739,7 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.1
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -3751,7 +3754,7 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7
+     "wall_ms": 8.7
     },
     {
      "status": "OK",
@@ -3766,7 +3769,7 @@
      "shard_cid": "bafkreicjaknxsbyy2k6r7gt4yik4kpoq7u5grwyszc6vzbl7ttb57b7spa",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 66.6
+     "wall_ms": 68.2
     }
    ]
   },
@@ -3793,7 +3796,7 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.2
+     "wall_ms": 8.8
     },
     {
      "status": "OK",
@@ -3808,7 +3811,7 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.5
+     "wall_ms": 8.5
     },
     {
      "status": "OK",
@@ -3823,7 +3826,7 @@
      "shard_cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 65.5
+     "wall_ms": 68.6
     }
    ]
   }

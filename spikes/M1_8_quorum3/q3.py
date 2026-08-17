@@ -12,6 +12,9 @@ from collections import Counter
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_5_shardstore'))
 from shardstore import ShardStore
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                '..', 'M1_3_worker'))
+import preflight
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIN  = os.path.join(HERE, '..', 'S30_speed_duel', 'bin')
@@ -53,6 +56,10 @@ def main():
     ap.add_argument('--store', default=os.path.join(HERE, 'run', 'store'))
     ap.add_argument('--cap-mb', type=int, default=64)
     ap.add_argument('--keep-device-cache', action='store_true')
+    ap.add_argument('--chunk', type=int, default=16,
+                    help='jobs per work session; preflight runs once per session '
+                         '(M1.3: batched preflight is 0.51x a job, so per-job is '
+                         'not viable -- amortise it)')
     a = ap.parse_args()
 
     progs = sorted(f for f in os.listdir(a.corpus) if f.endswith('.metta'))
@@ -104,15 +111,36 @@ def main():
              '--bin', binary, '--via', via, '--devdir', DEVDIR,
              '--store', a.store]))
 
-    # dispatch: same (program, fuel) to all three. Paths differ per transport.
-    for i, p in enumerate(progs):
-        jid = f'j{i:04d}'
-        for wid, _, via in workers:
-            job = {'job_id': jid, 'shard_cid': cids[i], 'fuel': a.fuel, 'name': p}
-            d = os.path.join(a.work, wid, 'in')
-            tmp = os.path.join(d, jid + '.tmp')
-            with open(tmp, 'w') as f: json.dump(job, f)
-            os.rename(tmp, os.path.join(d, jid + '.job'))
+    # M1.3: dispatch in work sessions. Preflight gates each session, not each
+    # job -- 35.1 ms batched against a 68.8 ms job means per-job preflight would
+    # cost 51%. A refusal stops dispatch; jobs already sent still drain.
+    pol = preflight.Policy()
+    sessions, dispatched, refusals = 0, 0, []
+    for start in range(0, len(progs), a.chunk):
+        if not a.no_device:
+            sig = preflight.probe()
+            ok, why = preflight.decide(sig, pol)
+            sessions += 1
+            if not ok:
+                delay = preflight.Backoff(pol).on_refusal()
+                refusals.append({'after_jobs': dispatched, 'reason': why,
+                                 'backoff_s': delay})
+                print(f'  preflight REFUSED after {dispatched} jobs: {why} '
+                      f'(would back off {delay}s)')
+                break
+        for i in range(start, min(start + a.chunk, len(progs))):
+            jid = f'j{i:04d}'
+            for wid, _, via in workers:
+                job = {'job_id': jid, 'shard_cid': cids[i], 'fuel': a.fuel,
+                       'name': progs[i]}
+                d = os.path.join(a.work, wid, 'in')
+                tmp = os.path.join(d, jid + '.tmp')
+                with open(tmp, 'w') as f: json.dump(job, f)
+                os.rename(tmp, os.path.join(d, jid + '.job'))
+            dispatched += 1
+    progs = progs[:dispatched]
+    print(f'dispatched {dispatched} jobs in {sessions} work session(s), '
+          f'{len(refusals)} refusal(s)')
 
     # collect
     rows, t0 = [], time.time()
@@ -145,6 +173,7 @@ def main():
           f'({uniq} distinct shards)')
 
     json.dump({'gate': gate, 'fuel': a.fuel, 'bytes_pushed': pushed,
+               'sessions': sessions, 'chunk': a.chunk, 'refusals': refusals,
                'workers': [w[0] for w in workers],
                'tally': dict(tally),
                'rows': [{'program': p, 'verdict': v, 'agree': n,
