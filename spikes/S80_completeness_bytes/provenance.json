@@ -1,0 +1,186 @@
+{
+ "spike": "S80_completeness_bytes",
+ "recorded_utc": "2026-08-17T11:28:40Z",
+ "note": "S80 separates the auth path from the answer set BEFORE measuring, because a single total would let the answer size decide a verdict about branching (A18). Counts and digests only, no timings.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes",
+   "head": "da2d3d3a533d76485f7e40c2a852c66ba765cca6",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S80_completeness_bytes/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes/completeness.json",
+   "sha256": "a7b1a3708361ebcb3062e48d80d2072935c9504eaabdfce8633b56d5c764f697",
+   "bytes": 6437,
+   "mtime": 1786966120,
+   "compared_ts": 1786966120,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_completeness_proofs_verify",
+   "must_fire_because": "a completeness proof that its own verifier rejects is a number about nothing, and this is the proof kind whose verifier is the anti-omission check -- W2 drives it to False with C_omit / C_add / C_tamper",
+   "can_fail_because": "any completeness proof fails verification, or any query fails to cover",
+   "null_must_contain": "W2's verify_completeness, which returns False on an omitted, added or tampered key and is free to reject every proof here",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "proofs": 120,
+     "verified": 120,
+     "covers": 120
+    },
+    "atoms_interned": {
+     "proofs": 120,
+     "verified": 120,
+     "covers": 120
+    },
+    "triples": {
+     "proofs": 120,
+     "verified": 120,
+     "covers": 120
+    }
+   }
+  },
+  {
+   "name": "C_auth_path_comparison_is_decisive",
+   "must_fire_because": "the falsifier here is an ORDERING, so what has to be checked is that the ordering was decidable at all: three sets, real verified proofs, and values far enough apart that the ranking is not noise",
+   "can_fail_because": "fewer than three sets produced proofs, or the largest and smallest auth-path means are within 5% of each other, making the ranking noise",
+   "null_must_contain": "auth-path values free to tie or to sit within rounding of each other, in which case no ordering claim could be made in either direction",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "auth_bytes": {
+     "atoms_original": 1478.6666666666667,
+     "atoms_interned": 1785.0666666666666,
+     "triples": 1400.5333333333333
+    },
+    "membership_bytes_same_sample": {
+     "atoms_original": 1489.8666666666666,
+     "atoms_interned": 1802.4,
+     "triples": 2269.3333333333335
+    },
+    "spread_max_over_min": 1.2745620715917745,
+    "by_membership": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_auth_path": [
+     "triples",
+     "atoms_original",
+     "atoms_interned"
+    ],
+    "VERDICT_auth_path_tracks_branching": false
+   }
+  },
+  {
+   "name": "C_answer_size_is_a_separate_axis",
+   "must_fire_because": "if the answer set ordered the sets the same way the auth path does, a single total would be safe to publish and the separation this spike insists on would be decoration",
+   "can_fail_because": "the answer-size ordering matches the auth-path ordering, making the two axes indistinguishable on this corpus",
+   "null_must_contain": "answer sizes free to correlate with the auth path -- nothing in the construction forces the two orderings apart, and on a different corpus they could coincide",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "by_answer_keys": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_auth_path": [
+     "triples",
+     "atoms_original",
+     "atoms_interned"
+    ],
+    "mean_answer_keys": {
+     "atoms_original": 11.675,
+     "atoms_interned": 12.041666666666666,
+     "triples": 100.10833333333333
+    },
+    "max_answer_keys": {
+     "atoms_original": 1234,
+     "atoms_interned": 1234,
+     "triples": 394
+    }
+   }
+  },
+  {
+   "name": "C_queries_are_scale_matched",
+   "must_fire_because": "a query taken at a fixed BYTE depth sits near the root of a 1,155-byte atom key and near the leaf of a 12-byte triple key, which compares two regimes and calls it a comparison",
+   "can_fail_because": "mean query length is not close to FRACTION of mean key length for every set",
+   "null_must_contain": "the key lengths themselves, which differ by 90x across these sets and would produce wildly unmatched query depths under a fixed-byte rule",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_original": {
+     "mean_query_bytes": 80.53333333333333,
+     "sample_mean_key_bytes": 107.89166666666667,
+     "ratio": 0.7464277438788909,
+     "corpus_mean_key_bytes": 106.605
+    },
+    "atoms_interned": {
+     "mean_query_bytes": 42.71666666666667,
+     "sample_mean_key_bytes": 57.44166666666667,
+     "ratio": 0.743652981285362,
+     "corpus_mean_key_bytes": 52.525
+    },
+    "triples": {
+     "mean_query_bytes": 9.0,
+     "sample_mean_key_bytes": 12.0,
+     "ratio": 0.75,
+     "corpus_mean_key_bytes": 12.0
+    }
+   }
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes": {
+   "newest": 1786966043,
+   "from": "spikes/S80_completeness_bytes/"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes at da2d3d3a: 1 modified. The build is NOT da2d3d3a."
+ ],
+ "ok": false,
+ "falsifier": "if the completeness AUTH PATH orders the three key sets differently from membership, then \"proof size is set by branching\" is a claim about point queries only and S77/S79 overreached",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

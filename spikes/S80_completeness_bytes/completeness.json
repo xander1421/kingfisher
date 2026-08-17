@@ -1,0 +1,186 @@
+{
+ "all_controls_fire": true,
+ "controls": {
+  "C_answer_size_is_a_separate_axis": {
+   "can_fail_because": "the answer-size ordering matches the auth-path ordering, making the two axes indistinguishable on this corpus",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "if the answer set ordered the sets the same way the auth path does, a single total would be safe to publish and the separation this spike insists on would be decoration",
+   "name": "C_answer_size_is_a_separate_axis",
+   "null_must_contain": "answer sizes free to correlate with the auth path -- nothing in the construction forces the two orderings apart, and on a different corpus they could coincide",
+   "observations": {
+    "by_answer_keys": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "by_auth_path": [
+     "triples",
+     "atoms_original",
+     "atoms_interned"
+    ],
+    "max_answer_keys": {
+     "atoms_interned": 1234,
+     "atoms_original": 1234,
+     "triples": 394
+    },
+    "mean_answer_keys": {
+     "atoms_interned": 12.041666666666666,
+     "atoms_original": 11.675,
+     "triples": 100.10833333333333
+    }
+   }
+  },
+  "C_auth_path_comparison_is_decisive": {
+   "can_fail_because": "fewer than three sets produced proofs, or the largest and smallest auth-path means are within 5% of each other, making the ranking noise",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the falsifier here is an ORDERING, so what has to be checked is that the ordering was decidable at all: three sets, real verified proofs, and values far enough apart that the ranking is not noise",
+   "name": "C_auth_path_comparison_is_decisive",
+   "null_must_contain": "auth-path values free to tie or to sit within rounding of each other, in which case no ordering claim could be made in either direction",
+   "observations": {
+    "VERDICT_auth_path_tracks_branching": false,
+    "auth_bytes": {
+     "atoms_interned": 1785.0666666666666,
+     "atoms_original": 1478.6666666666667,
+     "triples": 1400.5333333333333
+    },
+    "by_auth_path": [
+     "triples",
+     "atoms_original",
+     "atoms_interned"
+    ],
+    "by_membership": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "membership_bytes_same_sample": {
+     "atoms_interned": 1802.4,
+     "atoms_original": 1489.8666666666666,
+     "triples": 2269.3333333333335
+    },
+    "spread_max_over_min": 1.2745620715917745
+   }
+  },
+  "C_completeness_proofs_verify": {
+   "can_fail_because": "any completeness proof fails verification, or any query fails to cover",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a completeness proof that its own verifier rejects is a number about nothing, and this is the proof kind whose verifier is the anti-omission check -- W2 drives it to False with C_omit / C_add / C_tamper",
+   "name": "C_completeness_proofs_verify",
+   "null_must_contain": "W2's verify_completeness, which returns False on an omitted, added or tampered key and is free to reject every proof here",
+   "observations": {
+    "atoms_interned": {
+     "covers": 120,
+     "proofs": 120,
+     "verified": 120
+    },
+    "atoms_original": {
+     "covers": 120,
+     "proofs": 120,
+     "verified": 120
+    },
+    "triples": {
+     "covers": 120,
+     "proofs": 120,
+     "verified": 120
+    }
+   }
+  },
+  "C_queries_are_scale_matched": {
+   "can_fail_because": "mean query length is not close to FRACTION of mean key length for every set",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a query taken at a fixed BYTE depth sits near the root of a 1,155-byte atom key and near the leaf of a 12-byte triple key, which compares two regimes and calls it a comparison",
+   "name": "C_queries_are_scale_matched",
+   "null_must_contain": "the key lengths themselves, which differ by 90x across these sets and would produce wildly unmatched query depths under a fixed-byte rule",
+   "observations": {
+    "atoms_interned": {
+     "corpus_mean_key_bytes": 52.525,
+     "mean_query_bytes": 42.71666666666667,
+     "ratio": 0.743652981285362,
+     "sample_mean_key_bytes": 57.44166666666667
+    },
+    "atoms_original": {
+     "corpus_mean_key_bytes": 106.605,
+     "mean_query_bytes": 80.53333333333333,
+     "ratio": 0.7464277438788909,
+     "sample_mean_key_bytes": 107.89166666666667
+    },
+    "triples": {
+     "corpus_mean_key_bytes": 12.0,
+     "mean_query_bytes": 9.0,
+     "ratio": 0.75,
+     "sample_mean_key_bytes": 12.0
+    }
+   }
+  }
+ },
+ "digest_bytes": 32,
+ "queries_per_set": 120,
+ "query_prefix_fraction": 0.75,
+ "seed": 20260817,
+ "sets": {
+  "atoms_interned": {
+   "auth_path_bytes_mean": 1785.0666666666666,
+   "covers": 120,
+   "max_answer_keys": 1234,
+   "mean_answer_keys": 12.041666666666666,
+   "mean_query_bytes": 42.71666666666667,
+   "membership_auth_bytes_corpus": 1803.392,
+   "membership_auth_bytes_same_sample": 1802.4,
+   "proofs": 120,
+   "queries": 120,
+   "sample_mean_key_bytes": 57.44166666666667,
+   "verified": 120,
+   "w2_real_step_bytes_mean": 1895.95
+  },
+  "atoms_original": {
+   "auth_path_bytes_mean": 1478.6666666666667,
+   "covers": 120,
+   "max_answer_keys": 1234,
+   "mean_answer_keys": 11.675,
+   "mean_query_bytes": 80.53333333333333,
+   "membership_auth_bytes_corpus": 1461.056,
+   "membership_auth_bytes_same_sample": 1489.8666666666666,
+   "proofs": 120,
+   "queries": 120,
+   "sample_mean_key_bytes": 107.89166666666667,
+   "verified": 120,
+   "w2_real_step_bytes_mean": 1587.6583333333333
+  },
+  "triples": {
+   "auth_path_bytes_mean": 1400.5333333333333,
+   "covers": 120,
+   "max_answer_keys": 394,
+   "mean_answer_keys": 100.10833333333333,
+   "mean_query_bytes": 9.0,
+   "membership_auth_bytes_corpus": 2246.208,
+   "membership_auth_bytes_same_sample": 2269.3333333333335,
+   "proofs": 120,
+   "queries": 120,
+   "sample_mean_key_bytes": 12.0,
+   "verified": 120,
+   "w2_real_step_bytes_mean": 1467.05
+  }
+ },
+ "verdict": {
+  "auth_path_tracks_branching": false,
+  "by_auth_path": [
+   "triples",
+   "atoms_original",
+   "atoms_interned"
+  ],
+  "by_membership": [
+   "atoms_original",
+   "atoms_interned",
+   "triples"
+  ],
+  "finding": "the completeness auth path orders the key sets DIFFERENTLY from membership, so \"proof size is set by branching\" is a POINT-QUERY claim and S77/S79 must carry that scope"
+ }
+}
