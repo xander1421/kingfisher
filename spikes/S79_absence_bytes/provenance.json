@@ -1,15 +1,13 @@
 {
  "spike": "S79_absence_bytes",
- "recorded_utc": "2026-08-17T11:25:05Z",
+ "recorded_utc": "2026-08-17T11:25:53Z",
  "note": "S79 uses the Python sibling recount that C14 validated against the pathmap walk at 0.00%, so no new unvalidated instrument sits under the number. Counts and digests only, no timings.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes",
-   "head": "226fd5995774171615a8f2ea11df6667822ea1f7",
-   "clean": false,
-   "dirty_files": [
-    "spikes/S79_absence_bytes/"
-   ],
+   "head": "a12fd3fc5da7116bd996364665234e7879276cec",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   }
@@ -26,9 +24,9 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes/absence.json",
    "sha256": "8cbce8e01b4ab8d330fbf4c041d2ade6b9d8bb82448483ebf22815b1038502b1",
    "bytes": 6033,
-   "mtime": 1786965905,
-   "compared_ts": 1786965905,
-   "compared_clock": "mtime"
+   "mtime": 1786965953,
+   "compared_ts": 1786965952,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -165,13 +163,14 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes": {
-   "newest": 1786965905,
-   "from": "spikes/S79_absence_bytes/"
+   "newest": 1786965952,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S79_absence_bytes at 226fd599: 1 modified. The build is NOT 226fd599."
- ],
- "ok": false,
- "falsifier": "if non-membership proof cost does not track branching the way membership does -- i.e. if the absence ordering differs from the membership ordering -- then S77's \"proof size is set by branching, not key length\" is membership-only and overreached"
+ "problems": [],
+ "ok": true,
+ "falsifier": "if non-membership proof cost does not track branching the way membership does -- i.e. if the absence ordering differs from the membership ordering -- then S77's \"proof size is set by branching, not key length\" is membership-only and overreached",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }

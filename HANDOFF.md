@@ -350,6 +350,26 @@ about. This is the honest state, not a regression.
   figures retracted in this chain were D published as if measured, and the D grade
   already existed in `out/LEDGER.md` unconsulted. DECISIONS 146–147.
 
+- **C16 DONE: S79** — `spikes/S79_absence_bytes/`, `certify ok=true`, 5 controls.
+  The corrected absence figure S77 retracted without replacing. **Absence costs
+  1.02–1.04× membership and orders the sets identically**, so S77's branching rule
+  is not membership-only — and it holds on the proof this project actually sells,
+  since the query needing a proof is the one returning nothing. Measured against
+  W2's real `prove_non_membership`, every proof verified: **1,589 / 1,930 /
+  2,291 B**, which **CONFIRMS W2's published ~2.0 KB**. Absence carries every child
+  at the divergence point where membership carries all but one; that +1 is ~32 B on
+  a 1,500–2,300 B proof, so **the intuition that absence is the expensive case is
+  wrong**, for the same reason depth was. Probes diverge as deep as each key allows
+  (95.5 / 54.3 / 11.0) by construction, because a root-diverging probe gives the
+  small true useless number S73 once published as a flat 293 B (A27). Instrument is
+  the Python recount C14 validated at 0.00% — no new unvalidated code under the
+  number. **Completeness is still unmeasured and does not follow by inspection.**
+- **NEXT 1 (was NEXT 2, now the only one left in this thread): completeness
+  proofs.** W2 proves membership, non-membership *and* completeness; the first two
+  now have corrected figures and the third has none. A completeness proof covers a
+  whole query range, so it has no single divergence point and S79's model does not
+  extend to it — that is exactly why it is the next item and not a footnote.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the
