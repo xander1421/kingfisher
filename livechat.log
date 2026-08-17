@@ -2726,3 +2726,57 @@ of step with the artifact whose digest is published — family C, the thing
 
 The check fails 2000/2000 at D=16384, which is why the D=1024 pass means
 anything: `cc -O2 -Wall -Wextra -Werror -o check check.c && ./check`.
+
+## [atom-1 | 2026-08-17T16:__Z] Ran the reproducers. 3 of 13 could re-derive nothing.
+
+`reprocheck` answered "does this claim NAME a reproducer, and does that path
+EXIST". Nobody had ever run them. **Existence is not runnability.**
+
+```
+NOT-RUNNABLE  spikes/M1_8_quorum3/CORPUS_COMPOSITION.md     a document
+NOT-RUNNABLE  spikes/REGRESSION_SWEEP.md                    a document
+NOT-RUNNABLE  .../fuelrun/target/release/soakrun            a prebuilt binary
+```
+
+All three scored as "has a repro". The first is **mine, from one cycle earlier,
+written in the cycle I was auditing reproducibility** — the real reproducer
+(`classify.py`) was sitting beside it. A sweep whose only reproducer is its own
+writeup cannot catch the next regression, which is the thing it describes.
+
+Fixed: repointed at `classify.py`, a new `spikes/sweep.py`, and a new
+`soak_check.py`. **`reprocheck` now refuses a `.md` or non-script annotation** —
+0 remain, 15 runnable, 28 still unannotated (unchanged, not guessed at).
+
+**Two outcomes that are NOT failures, and I nearly logged one as a stale claim.**
+
+- `q3.py --alpha` exited 2. The **thermal gate refused** — the phone was at
+  46.7 °C from my own 120 adb probe runs the cycle before. It passes at 42 °C.
+  Scoring a working safety gate as a stale claim is the mirror of an inert
+  check: both misreport, one optimistically, one pessimistically.
+- `run_lan.py` could not run: the phone had joined a **VPN** (`tun1`, src
+  `10.184.0.5`) and left the host subnet `192.168.1.25`. Driver intact,
+  environment moved. `FAIL` blames the code; folding it into `DECLINED` hides
+  that a headline path is unreproducible. It is its own category, `PRECONDITION`,
+  and it is loud. **Resolved in-cycle** once the phone came back on-subnet:
+  64/64 over WiFi, all three TLS controls firing (401 / wrong-pin refused /
+  cleartext refused).
+
+**`spikes/sweep.py` is new and yours to use** — it re-runs all 15 drivers with
+those three outcome categories, `--quick` to skip device-dependent ones. This is
+the thing REGRESSION_SWEEP.md described but could not do.
+
+`soak_check.py` is the pattern I'd push: it rebuilds the process-reuse claim
+around its own control. `canon == 1` across 31 positions is vacuous on its own —
+a program returning `()` gives that however broken reuse is. So it also asserts
+**raw = 31 distinct**, proving the counter really does leak in a reused process,
+and reports `CONTROL DEAD` rather than a pass if raw ever comes back constant.
+
+Two self-inflicted ones worth naming:
+- my `demo()` asserted "at least one `.md` annotation exists" — a self-test
+  pinned to the defect it described, which started failing the moment I fixed
+  the last one. It now tests the classifier, not the LEDGER's contents.
+- `audit.py` nested `sweep.py`, so a "quick" audit ran all 15 drivers. Both are
+  now in its SLOW set; if sweep ever lists audit they would recurse.
+
+Not a dep, stated: `audit.py` imports nothing from `harness/`, so I did not
+declare it — your untracked `refcheck.py` was making that subtree read dirty.
