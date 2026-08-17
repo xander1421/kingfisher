@@ -1,0 +1,138 @@
+{
+ "all_controls_fire": true,
+ "attacks": {
+  "A2_prefix_keys": {
+   "atoms_interned": 0,
+   "atoms_original": 0,
+   "triples": 0
+  },
+  "A3_root_charge": {
+   "excluding_root": {
+    "atoms_interned": 55.35553772070626,
+    "atoms_original": 44.65810593900481,
+    "triples": 70.1943359375
+   },
+   "order_by_depth": [
+    "triples",
+    "atoms_interned",
+    "atoms_original"
+   ],
+   "order_with_root": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ],
+   "order_without_root": [
+    "atoms_original",
+    "atoms_interned",
+    "triples"
+   ]
+  }
+ },
+ "controls": {
+  "A1_independent_recount_agrees": {
+   "can_fail_because": "any set differs by more than 1% between the pathmap walk and the independent recount",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "S77's sibling counts come from one self-authored Rust walk; this recomputes them from the key sets alone, with no pathmap, no zipper and no trie code of this project in the path",
+   "name": "A1_independent_recount_agrees",
+   "null_must_contain": "the same three key files S77 measured, so a disagreement is expressible and would land on the exact numbers the retraction rests on",
+   "observations": {
+    "atoms_interned": {
+     "independent": 56.35553772070626,
+     "pathmap": 56.356,
+     "rel_diff": 8.202840757728373e-06
+    },
+    "atoms_original": {
+     "independent": 45.65810593900481,
+     "pathmap": 45.658,
+     "rel_diff": 2.3202725658430468e-06
+    },
+    "triples": {
+     "independent": 70.1943359375,
+     "pathmap": 70.194,
+     "rel_diff": 4.78584351935187e-06
+    }
+   }
+  },
+  "A2_prefix_key_exposure_is_known": {
+   "can_fail_because": "any set contains a key that is a proper prefix of another, which would put S77 on an untested and historically buggy path",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a key that is a proper prefix of another makes a position both a terminal and a branch; C4 found a real soundness bug of that shape in this project, so whether the corpus contains the case has to be a recorded fact rather than an assumption",
+   "name": "A2_prefix_key_exposure_is_known",
+   "null_must_contain": "three key sets totalling 6,588 keys, any pair of which could be prefix-related; the encodings are claimed prefix-free but nothing had checked",
+   "observations": {
+    "atoms_interned": 0,
+    "atoms_original": 0,
+    "triples": 0
+   }
+  },
+  "A3_finding_survives_dropping_the_root_charge": {
+   "can_fail_because": "dropping the root charge makes the sibling ordering agree with the depth ordering, which would restore depth as a valid proxy",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "S77's inversion is the whole retraction; if it depends on charging a proof for the root node, whose digest the verifier already holds, then the retraction is an artefact of the accounting",
+   "name": "A3_finding_survives_dropping_the_root_charge",
+   "null_must_contain": "the triples set, whose root is the widest of the three, so removing the root charge moves it DOWN the ordering -- the direction that would undo the inversion",
+   "observations": {
+    "by_depth": [
+     "triples",
+     "atoms_interned",
+     "atoms_original"
+    ],
+    "excluding_root": {
+     "atoms_interned": 55.35553772070626,
+     "atoms_original": 44.65810593900481,
+     "triples": 70.1943359375
+    },
+    "with_root": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ],
+    "without_root": [
+     "atoms_original",
+     "atoms_interned",
+     "triples"
+    ]
+   }
+  }
+ },
+ "sets": {
+  "atoms_interned": {
+   "independent_max_siblings": 114,
+   "independent_mean_siblings": 56.35553772070626,
+   "mean_siblings_excluding_root": 55.35553772070626,
+   "pathmap_max_siblings": 114,
+   "pathmap_mean_siblings": 56.356,
+   "relative_difference": 8.202840757728373e-06,
+   "root_charge_per_key": 1,
+   "root_children": 2
+  },
+  "atoms_original": {
+   "independent_max_siblings": 75,
+   "independent_mean_siblings": 45.65810593900481,
+   "mean_siblings_excluding_root": 44.65810593900481,
+   "pathmap_max_siblings": 75,
+   "pathmap_mean_siblings": 45.658,
+   "relative_difference": 2.3202725658430468e-06,
+   "root_charge_per_key": 1,
+   "root_children": 2
+  },
+  "triples": {
+   "independent_max_siblings": 102,
+   "independent_mean_siblings": 70.1943359375,
+   "mean_siblings_excluding_root": 70.1943359375,
+   "pathmap_max_siblings": 102,
+   "pathmap_mean_siblings": 70.194,
+   "relative_difference": 4.78584351935187e-06,
+   "root_charge_per_key": 0,
+   "root_children": 1
+  }
+ },
+ "verdict": "S77 SURVIVES"
+}
