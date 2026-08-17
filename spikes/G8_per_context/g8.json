@@ -1,0 +1,248 @@
+{
+ "contexts": {
+  "ctxRED": "(, (cites $x $y) (verdict $y RED))",
+  "ctxINVALID": "(, (cites $x $y) (verdict $y INVALID))"
+ },
+ "grid": {
+  "prune_by_ctxRED": {
+   "ctxRED": 0.9302325581395349,
+   "ctxINVALID": 0.0
+  },
+  "prune_by_ctxINVALID": {
+   "ctxRED": 0.4186046511627907,
+   "ctxINVALID": 1.0
+  },
+  "keep_low_ctxINVALID": {
+   "ctxRED": 0.5348837209302325,
+   "ctxINVALID": 0.0
+  },
+  "arbitrary": {
+   "ctxRED": 0.5348837209302325,
+   "ctxINVALID": 0.0
+  }
+ },
+ "conservation": [
+  "True",
+  "True"
+ ],
+ "baselines": {
+  "ctxRED": [
+   [
+    "B1",
+    "S18"
+   ],
+   [
+    "M1",
+    "S60"
+   ],
+   [
+    "N1",
+    "S18"
+   ],
+   [
+    "Q1",
+    "S32"
+   ],
+   [
+    "S11",
+    "S13"
+   ],
+   [
+    "S15",
+    "S9"
+   ],
+   [
+    "S17",
+    "S13"
+   ],
+   [
+    "S18",
+    "S9"
+   ],
+   [
+    "S30",
+    "S9"
+   ],
+   [
+    "S32",
+    "S33"
+   ],
+   [
+    "S32",
+    "S54"
+   ],
+   [
+    "S33",
+    "S18"
+   ],
+   [
+    "S33",
+    "S32"
+   ],
+   [
+    "S34",
+    "S18"
+   ],
+   [
+    "S34",
+    "S32"
+   ],
+   [
+    "S34",
+    "S33"
+   ],
+   [
+    "S34",
+    "S9"
+   ],
+   [
+    "S35",
+    "S32"
+   ],
+   [
+    "S43",
+    "S13"
+   ],
+   [
+    "S43",
+    "S18"
+   ],
+   [
+    "S44",
+    "S18"
+   ],
+   [
+    "S45",
+    "S18"
+   ],
+   [
+    "S45",
+    "S32"
+   ],
+   [
+    "S45",
+    "S33"
+   ],
+   [
+    "S46",
+    "S18"
+   ],
+   [
+    "S47",
+    "S13"
+   ],
+   [
+    "S47",
+    "S46"
+   ],
+   [
+    "S48",
+    "S13"
+   ],
+   [
+    "S48",
+    "S46"
+   ],
+   [
+    "S50",
+    "S32"
+   ],
+   [
+    "S50",
+    "S46"
+   ],
+   [
+    "S51",
+    "S32"
+   ],
+   [
+    "S53",
+    "S46"
+   ],
+   [
+    "S55",
+    "S54"
+   ],
+   [
+    "S63",
+    "S59"
+   ],
+   [
+    "S63",
+    "S60"
+   ],
+   [
+    "S64",
+    "S46"
+   ],
+   [
+    "S65",
+    "S60"
+   ],
+   [
+    "S71",
+    "S32"
+   ],
+   [
+    "S71",
+    "S54"
+   ],
+   [
+    "S72",
+    "S18"
+   ],
+   [
+    "S72",
+    "S32"
+   ],
+   [
+    "S72",
+    "S54"
+   ]
+  ],
+  "ctxINVALID": [
+   [
+    "B1",
+    "W1"
+   ],
+   [
+    "N1",
+    "W1"
+   ],
+   [
+    "Q1",
+    "W1"
+   ],
+   [
+    "S62",
+    "S63"
+   ],
+   [
+    "S63",
+    "S62"
+   ],
+   [
+    "W4",
+    "W1"
+   ]
+  ]
+ },
+ "verdict": "DIAGONAL \u2014 each context preserves its own query and not the other's",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "arm": [
+    "prune_by_ctxRED",
+    "prune_by_ctxINVALID",
+    "keep_low_ctxINVALID",
+    "arbitrary"
+   ]
+  }
+ },
+ "cites": [
+  "G5_ecan_metta",
+  "G6_forgetting",
+  "G7_query_attention"
+ ]
+}
