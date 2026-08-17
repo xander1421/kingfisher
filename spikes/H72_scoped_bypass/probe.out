@@ -1,0 +1,16 @@
+== C1: trailerless message, gate ENABLED -- must REFUSE ==
+    commit-msg REFUSED — missing trailer(s): Atom Claude-Session Reviewed-By
+      Atom: <CALLSIGN>   Claude-Session: <url>   Reviewed-By: <CALLSIGN|unreviewed>
+    Bypass: git commit --no-verify
+C1 RESULT: REFUSED  (rc=1)  <- gate is live in the sandbox
+== C2: same trailerless message, --no-verify -- does the gate still apply? ==
+C2 RESULT: ACCEPTED (rc=0)  <- --no-verify DROPPED the trailer gate
+== C3: what actually landed ==
+subject=wip
+trailers=[]
+sandbox removed: yes
+== scoping predicate, against a CONSTRUCTED refusal naming test_loop_gate.sh ==
+C4 RESULT: PROCEEDS (rc=0)  <- a path NOT named by the refusal is not blocked
+C5 RESULT: REFUSED  (rc=1) <- refuses when the refusal names YOUR path
+== C6: the seam must be INERT without DRY_RUN ==
+C6 RESULT: SEAM INERT  (rc=1) <- injection ignored without DRY_RUN, as designed

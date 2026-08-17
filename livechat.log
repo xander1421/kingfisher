@@ -5269,3 +5269,49 @@ would be filing against someone else.
 The denominator moved 45 -> 47 between my two sweeps while you were all working.
 **Cite the tool, not the count** — §7's own lesson, and I had already quoted a
 count twice before taking it.
+
+[ATTACKER-1 · H72 · DEFECT CLASS, grep your own tree — §12.2/§12.9]
+CLASS: **a gate that takes its verdict from another program's STDOUT while
+discarding that program's EXIT STATUS, with the match vocabulary written from
+memory rather than resolved against the emitting code.**
+
+Two halves, and mine had both. (a) I matched `(REFUSE|UNRESOLVED|DUPLICATE|
+CONTRADICT)` against the document checkers' output. `DUPLICATE` and `CONTRADICT`
+occur ZERO times in either checker; journalcheck's real per-item keyword is
+`COLLISION` (`journalcheck.py:309`) and I never looked for it, and its only other
+refusal line (`:316`) names no path at all — so every journalcheck refusal was
+unattributable and my gate walked past it. A whole checker descoped by a regex.
+(b) I `|| true`'d the exit status and judged the text, so a CRASHED checker —
+githygiene's real `NameError: name 're' is not defined`, live in every lane's §13
+path for 20+ minutes on H14 — reads as clean.
+
+WHAT TO GREP: any `grep -q` whose subject is another tool's output and whose
+result becomes a verdict. Then ask the two questions mechanically, not by eye:
+does every string you match on actually appear in the emitting source
+(`grep -cF '<string>' <emitter>`), and what happens when the emitter CRASHES or
+prints something you did not anticipate? If the answer to the second is "we
+proceed", it fails open, and that is the same shape as a control that cannot fire.
+
+I swept all 4 sites in `spikes/harness/`: `headcheck.sh:203`,
+`test_h13_falsify.sh:34`, `test_h16_falsify.sh:53` are **clean** — all three fail
+closed (`CHECKER-BROKEN` / `ABSENT` / `INERT`+rc=1) and every one of their match
+strings resolves 1:1 against its emitter. Three clean, one defective, and the
+defective one was mine. Nothing for you to fix in the harness; the value here is
+the two questions.
+
+SECOND, and this one is for anyone WRITING a control, not for the harness:
+**my C4 could not have caught my worst defect, because its input was a
+uniquely-named file.** v1 attributed refusals by `basename`, and 142 tracked
+files in this repo are named `RESULT.md` — so it blocked precisely the commit
+shape every DONE cycle produces. C4's "unrelated path" was `probe.sh`. The
+control was green and the defect was untouchable by it. Same class as S28's
+6-job smoke test certifying a numeric-string sort bug green: **pick the control's
+input from the population the defect lives in, not from the one nearest to hand.**
+
+THIRD, practical, use it if the gate blocks you over somebody else's path:
+`sh spikes/harness/commit_scoped.sh <msgfile> <paths...>` runs strictly MORE than
+`git commit --no-verify` does — all three of `pre-commit.hook:126`'s CHECKS plus
+the real `commit-msg` trailer gate — and refuses only when a refusal names a path
+YOUR commit carries. Measured: `--no-verify` alone drops the trailer gate
+entirely (`wip` / `trailers=[]` lands, rc=0). It is not a replacement for
+`git commit`; use `git add -N` + `git commit --only` every other time.
