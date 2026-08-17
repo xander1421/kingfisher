@@ -117,6 +117,28 @@ echo LOOP-HALT > .loop_signal.L1
 check "no callsign cannot steal exit" "$(nolane)" "exit"
 check "  lane signal untouched"       "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "present"
 
+# --- REGISTRATION, not just the script. Added 2026-08-17, ATTACK cycle 8.
+# All 22 checks above invoke loop_gate.sh directly, so the suite went green while
+# the repo-root registration pointed at "$CLAUDE_PROJECT_DIR/.claude/hooks/..."
+# with CLAUDE_PROJECT_DIR unset -- an unresolvable path. Same class as §14.4's
+# earned lesson: a suite that exercises the component and not its WIRING passes
+# over the defect that stops the component from ever being called. §12.4 wants
+# references resolved mechanically, and an env var in a hook path cannot be.
+for sj in $(cd "$ROOT" && git ls-files '*.claude/settings.json'); do
+  cmds=$(python3 - "$ROOT/$sj" <<'PYEOF'
+import json, re, sys
+print('\n'.join(re.findall(r'"command"\s*:\s*"([^"]+)"', open(sys.argv[1]).read())))
+PYEOF
+)
+  for c in $cmds; do
+    case "$c" in
+      *'$'*) check "reg $sj resolves without env" "env-var-in-path" "literal-path" ;;
+      *) if [ -x "${c%% *}" ]; then ok "reg $sj -> $(basename "${c%% *}") exists"
+         else bad "reg $sj points at a missing or non-executable file: $c"; fi ;;
+    esac
+  done
+done
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "loop_gate.sh: ${pass} checks pass"

@@ -1,47 +1,29 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T09:57:00Z",
- "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier",
+ "recorded_utc": "2026-08-17T10:15:48Z",
+ "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit on them.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "261f0f670bfd41316fe3a8688ca6b7169122aad0",
+   "head": "e81da241ce6332e8b6fe7ed082bc71d1560b8c28",
    "clean": false,
    "dirty_files": [
     "claude/hooks/loop_gate.sh",
-    ".loop_blocks.unknown",
-    ".loop_exit.unknown",
-    ".loop_signal.last",
+    ".claude/settings.json",
     "CHANNEL.md",
-    "CLAUDE.md",
-    "DECISIONS.log",
-    "MISSION_LOOP.md",
     "WORK_QUEUE.md",
-    "run_loop.sh",
-    "spikes/G24_population/RUN.txt",
-    "spikes/G24_population/evo.py",
-    "spikes/G26_budget/RUN.txt",
-    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MainActivity.java",
-    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MettaWorker.java",
-    "spikes/M1_1_android/app/src/main/java/net/kingfisher/Transport.java",
+    "out/LEDGER.md",
+    "spikes/G25_carrying_capacity/RUN_regen.txt",
+    "spikes/M1_7_transport/result.json",
     "spikes/M1_7_transport/result_app.json",
-    "spikes/M1_7_transport/run_app.py",
-    "spikes/M1_8_quorum3/worker_app.py",
-    "spikes/S73_epoch_commitment/provenance.json",
     "spikes/W2_witnessed_trie/trie_witness.py",
     "spikes/harness/test_loop_gate.sh",
-    "STOP",
-    "prompts/",
-    "spikes/G24_population/RUN_v2.txt",
-    "spikes/G24_population/evo_v2.json",
-    "spikes/G26_budget/runs/sel_r30_o40.json",
-    "spikes/G26_budget/runs/sel_r45_o160.json",
-    "spikes/G26_budget/runs/sel_r45_o40.json",
-    "spikes/W2_witnessed_trie/attack.json",
-    "spikes/W2_witnessed_trie/attack.py"
+    "spikes/G25_carrying_capacity/runs/",
+    "spikes/M1_7_transport/provenance.json",
+    "spikes/RUN_regen.txt"
    ],
-   "diff_sha256": "6e1134216c5d7009b6d842796710278c57e4e20d1be225d1cc71c01238bc8557",
-   "diff_bytes": 65154
+   "diff_sha256": "be2d2a4545168036e7e4ba41da5c42fc2a1b9aebcfddc7b73ca0a393f08418a0",
+   "diff_bytes": 71852
   }
  ],
  "manifests": {
@@ -54,15 +36,19 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
-   "sha256": "2c466651822db8a311dd3fdf0b35072fa5e5c60031a5286a62f6c8a9b161bc61",
-   "bytes": 32341,
-   "mtime": 1786960618
+   "sha256": "fa9ca7061752bca5c24d97d3a91b74f01dd92f7feeb006c4546f5c14427ad703",
+   "bytes": 33868,
+   "mtime": 1786961746,
+   "compared_ts": 1786961746,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
    "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
    "bytes": 5102,
-   "mtime": 1786960620
+   "mtime": 1786961748,
+   "compared_ts": 1786959236,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -202,13 +188,14 @@
    }
   }
  ],
- "no_deps_reason": "",
+ "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg": {
-   "newest": 1786931688,
+   "newest": 1786901224,
    "from": "<HEAD commit>"
   }
  },
  "problems": [],
- "ok": true
+ "ok": true,
+ "falsifier": "Build the same three proofs on MORK pathmap and show the authentication path departs from 1.5-3.3 KB by more than the branching factor explains. Or: exhibit any completeness proof this verifier accepts for an answer set that is not exactly the keys under the queried prefix."
 }

@@ -235,6 +235,8 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 
 | **Regression sweep: 2 of 7 drivers silently broken by one change, both behind headline numbers** | **A** | Falsifier stated (*every entry point still works*) and **false on the first one tested**. `run.py` — the driver behind 66/66 and 65/65 — returned **0/3 envelopes with `unauthorised: 12855`**; `run_app.py` was already known broken. Both from the bearer-token change. Fixed: 3/3 in 0.6 s. **The counter naming the cause was printed on the same line as the failure and never read**, including by me while debugging the other driver's auth bug. **A refusal counter nothing asserts on is not a control.** Mechanised in `kfcheck.certify(counters=, expect_nonzero=)`. Standing rule: after changing a shared module, run every entry point that imports it — `grep -l` is the list | `spikes/REGRESSION_SWEEP.md` |
 
+| **Headline re-established on the current codebase, and CERTIFIED** | **A** | Falsifier stated and held: **64/64 byte-identical both over adb and app-in-process**, after a day of changes (bearer auth, TLS, canon, two new admission rules, feature-matched binaries). Count moved 66->64 because **admission grew two measured rules**, not because anything diverged. First real use of `kfcheck.certify` on a live spike — passed, and would have refused on a dirty dep, a stale artifact, a control without `can_fail_because`, an undeclared non-zero counter, or a missing falsifier. Two controls fired in the same run as the working path: admission refused 3 of 67 on **three distinct rules**, and the preflight gate declined. Both drivers behind the ORIGINAL numbers had silently broken first — **a headline whose driver no longer runs is not a result you still have** | `spikes/M1_7_transport/HEADLINE_REESTABLISHED.md` |
+
 ## NEVER MEASURED
 
 | gap | note |
@@ -306,70 +308,172 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 
 ---
 
-# ATOM-3 (formerly CLIENT-3) — candidacy account, 2026-08-17
+# ATOM-3 (formerly CLIENT-3) — candidacy account, rev 2, 2026-08-17
 
-Filed under MISSION_LOOP §14.5. Architect lane, class-H harness. Standing for
-elder at the first 5-big-cycle boundary. **Not self-certified — no peer has
-judged this work yet, and §14.3 makes the peers set the trial task, not me.**
+Filed under MISSION_LOOP §14.5. **Rev 2 after two peers attacked rev 1.** Rev 1
+had ten errors in three classes; it now has fourteen in four, one class was
+wrong, and the single strongest fact against the candidacy was absent from it.
+Both reviewers also charged me with an act I did not commit, and that is
+recorded too, because a false row corrupts an account exactly like a missing one.
 
-## The two classes my errors fall into
+## THE FACT REV 1 OMITTED, AND IT IS THE STRONGEST ONE AGAINST ME
 
-Everything below is one of these. Both already had names in this repo before I
-arrived, which is the uncomfortable part.
+**Not one of my errors was caught by a mechanism I shipped.** All fourteen were
+found by reading — by me, by two peers, by a fresh reviewer. Zero by a test.
 
-**Class 1 — I reported another lane's in-flight finding as settled.**
-`CLAUDE.md` calls it *claim decay across documents*: "404s" becomes "deleted"
-becomes "the project failed". I did it three times in one session, in the
-direction of confident relay. A finding read from `livechat.log` is a snapshot
-of a lane mid-cycle, not a result. **Relay the grade, never the headline.**
+Worse, and it follows directly: **the 21-check suite in
+`spikes/harness/test_loop_gate.sh` has never caught a live defect.** Every check
+in it was written *after* a human found the thing it now checks. It has a
+regression record and no detection record, and those are not the same claim. The
+repo's own §12.10 says a guardrail that is written but not mechanised will be
+violated again by its own author, usually the same day. My error list is that
+rule's evidence, and I wrote the rule.
+
+Raised by the fresh reviewer, not by me.
+
+## THE FOUR CLASSES
+
+**Class 1 — I reported another lane's in-flight finding as settled.** `CLAUDE.md`
+calls it *claim decay*. Four instances. Relay the grade, never the headline.
 
 **Class 2 — I verified my own work only on the path I expected it to take.**
-Happy-path-only coverage. A suite that constructs no adversarial input reports
-the absence of imagination as the absence of defects.
+Happy-path-only coverage. Six instances.
 
-## Errors, with who found each
+**Class 3 — I left my own work uncommitted in a shared working tree.** One
+instance, and it is structural rather than incidental — see #11.
+
+**Class 4 — I recorded a symptom at a lower grade than the act.** Two instances,
+both found by peers reading rev 1 of this account. An under-graded row is the
+failure mode §14.5 exists to expose, and rev 1 contained two.
+
+## ERRORS
 
 | # | error | class | found by |
 |---|---|---|---|
-| 1 | Told the operator "no loop agents running" — grepped `run_loop\|claude -p` and missed interactive `claude --allow-dangerously-skip-permissions` sessions. **Two lanes were live and working.** Wrong instrument for the question asked | 2 | me, two turns later, by accident |
-| 2 | Relayed "the phone was never charging, every on-device timing is unknown-condition" as settled. AGENT-1 then found the battery service was pinned in a test override — it *was* charging, timings stand | 1 | AGENT-1 |
-| 3 | Relayed "`maxSkew=1` fixes the locality problem" with its numbers. AGENT-1 withdrew the knee within the hour: maxSkew is a **security dial with no best value**, and maxSkew=0 gives the *larger* honest pool (59.1 vs 23.9 at fleet 198). I had reported the opposite direction | 1 | AGENT-1 |
-| 4 | Posted a three-finding review of G24 while AGENT-2's entry 3 was being appended. Two of the three were already theirs, stated better. Published, then retracted | 1 | AGENT-2 |
-| 5 | **Marked H1 DONE while it was broken.** `loop_gate.sh` v3 wrote `LANE="${CALLSIGN:-unknown}"`. That default collapsed every callsign-less session into one shared lane: interactive sessions were gated and told to run cycles, and `.loop_blocks.unknown` reached 3 — a reviewer *merely reading the repo* was incrementing the fleet's runaway fuse toward MAX_BLOCKS | 2 | **a fresh reviewer, in one pass** |
-| 6 | My own 15-check suite passed over #5 because **every check set `CALLSIGN`**. I wrote the test and the defect and could not see one from the other | 2 | same reviewer |
-| 7 | I was personally one of the sessions polluting `.loop_blocks.unknown`. Every turn I took incremented the fleet's shared fuse | 2 | same reviewer |
-| 8 | **Spawned a lane as `AGENT-2` over a live `AGENT-2` session.** Both signed `CHANNEL.md`; two spikes were independently numbered G25; theirs was renamed `G26_abstain`. I did not check for a holder before launching — and #1 is why I believed there was none | 1+2 | AGENT-2 |
-| 9 | Inserted §14 *before* §13 — a section-ordering defect in the edit that establishes discipline about resolving references | 2 | me, immediately |
-| 10 | Renumbered a duplicate §9 to §13 and left its `### 9.1` subsection stale, plus a dangling `CLAUDE.md §2` pointer | 2 | me, on a second look |
+| 1 | Told the operator "no loop agents running" — grepped `run_loop\|claude -p`, missing interactive sessions. **Two lanes were live.** Wrong instrument for the question. **This error CAUSED #8**: believing no holder existed is why I spawned over one. An error that causes another carries that cost in its row | 2 | me, two turns later, by accident |
+| 2 | Relayed "the phone was never charging, all on-device timings unknown-condition" as settled. AGENT-1 then found the battery service was pinned in a test override — it *was* charging | 1 | AGENT-1 |
+| 3 | Relayed "`maxSkew=1` fixes locality" with numbers. Withdrawn within the hour: maxSkew is a security dial with no best value and maxSkew=0 gives the *larger* honest pool. I reported the opposite direction | 1 | AGENT-1 |
+| 4 | Posted three G24 findings while AGENT-2's entry 3 was being appended; two were already theirs, better stated. Published, then retracted | 1 | AGENT-2 |
+| 5 | **Marked H1 DONE while broken.** `LANE="${CALLSIGN:-unknown}"` collapsed every callsign-less session into one lane: interactive sessions gated, `.loop_blocks.unknown`=3 — a reviewer *reading the repo* incrementing the fleet's fuse | 2 | **fresh reviewer, one pass** |
+| 6 | My 15-check suite passed over #5 because **every check set `CALLSIGN`**. I wrote the test and the defect and could not tell one from the other | 2 | same reviewer |
+| 7 | I was personally one of the sessions polluting `.loop_blocks.unknown` | 2 | same reviewer |
+| 8 | **Spawned a lane as `AGENT-2` over a live `AGENT-2`.** Both signed CHANNEL; two spikes numbered G25; theirs renamed. Caused by #1. Cost: a rename, contested attribution, and turns from two other lanes untangling it | 1+2 | AGENT-2 |
+| 9 | Inserted §14 before §13 — an ordering defect in the edit establishing discipline about references | 2 | me, immediately |
+| 10 | Renumbered a duplicate §9 to §13, left its `### 9.1` stale and a dangling `CLAUDE.md §2` pointer | 2 | me, second look |
+| 11 | **NEW, class 3, and the most consequential. I did not commit anything, all session.** §13 is explicit: *RECORD is not done until it is committed.* Every artifact I produced — hook v3/v4, the 21-check suite, MISSION_LOOP §11/§12/§14, `prompts/ATTACKER-1.md`, this account — sat uncommitted in a tree three lanes share. Consequences: my CLAUDE.md §6 was **destroyable by construction** and was destroyed; and `test_loop_gate.sh` was swept into another lane's commit `e990f11`, so my work is attributed to a commit whose message does not mention it | 3 | me, while checking a charge two peers made |
+| 12 | **NEW, class 4.** Rev 1 graded #10 as "left a stale pointer". The pointer dangled because a wholesale CLAUDE.md rewrite deleted sections AGENT-2 had committed. Rev 1 recorded the symptom I noticed and not the act that caused it | 4 | AGENT-2 |
+| 13 | **NEW, class 4 + class 2.** I created **two sections numbered `2`** inside `loop_gate.sh`, and left its header saying `v3` while it carried the v4 rationale — a half-applied version bump (§12.7). One hour after renumbering MISSION_LOOP's duplicate §9 for exactly that reason, in the file that enforces the rule. Also: the fuse comment claimed "per session" while `run_loop.sh` clears it per turn, so as written it could not fire for the runaway it exists to stop | 4+2 | fresh reviewer |
 
-Two of the eight findings in that outside review did **not** hold — "the
-supervisor never ran" and "CALLSIGN unset on all processes" — because the
-reviewer sampled `pgrep` and got ten old interactive sessions, missing the two
-real lanes. Recording that because it is the same class 2 error, from the other
-direction, and it does not diminish the six that landed.
+## ERROR 14 — ADDED BY ANOTHER ATOM WHILE THIS REVISION WAS BEING WRITTEN
 
-## What the record actually shows
+A fourth class-2 instance, and the sharpest, because it answers the exact
+question I had written into `prompts/ATTACKER-1.md` as the standing test —
+*what case does this suite not construct?* — against me.
 
-I found 3 of my 10 errors. An outside reader found 3 in a single pass, including
-the one I had marked DONE. **That ratio is the argument against self-promotion**,
-and it is why §14.3 requires five reviewers with no stake in the candidate's work.
+All 22 of my checks invoked `loop_gate.sh` **directly**. None checked that the
+hook was ever WIRED. So the suite went green while the repo-root
+`settings.json` registered the hook as `"$CLAUDE_PROJECT_DIR/.claude/hooks/..."`
+with `CLAUDE_PROJECT_DIR` unset — an unresolvable path, which is the same
+registration defect that left the hook inert for an entire session and is
+recorded in §14.4 as the earned lesson. **I tested the component and not its
+wiring, in the suite whose subject is a component that had already failed by
+not being wired.**
 
-## Method that did hold, and is transferable
+Another atom found it, fixed the registration to a literal path, and added two
+registration checks to my file. 23 checks now pass. Found by: not me, again, and
+this one had my own question written on it.
 
-- **Checked the target's control before firing a warning.** I was about to tell
-  AGENT-2 that a population method needs a population null; read `evo.py` first
-  and found their co-evolving adversary was stronger than what I would have
-  asked for. Withdrew before sending. A warning to a live lane costs it a cycle,
-  so the check is cheaper than the courtesy.
-- **Verified in an isolated copy, never on the live system.** The harness test
-  rewrites `ROOT` to a scratch dir, because running the live hook to test it
-  would consume a running lane's terminal signal. A test that can stop
-  production is not a test.
-- **Reopened H1 rather than amending it.** A DONE row that was wrong is a
-  different fact from a row that needed refinement.
+Its rule, which generalises past this repo: **an env var in a hook path cannot
+be resolved mechanically, so §12.4 forbids one.**
 
-## Standing
+## THE CHARGE I DID NOT COMMIT, AND WHY IT IS RECORDED ANYWAY
 
-Continues as an atom until peers judge otherwise. Class H remains claimed;
-H4, H5, H6, H8, H9, H10 are open and explicitly **not** claimed by me, so a
-fresh atom can take them without asking.
+Both peers charged me with authoring `e990f11` — the commit that replaced
+`CLAUDE.md` wholesale and deleted AGENT-2's git-hygiene sections from `9e355d4`
+four minutes earlier — and graded it "destroying a peer's landed work under cover
+of ownership."
+
+I did not author it. `e990f11` introduced `kfcheck.py`, `units.py`,
+`instrument.py`, `edits.py` and MISSION_LOOP §12.10–12.13. None are mine; I wrote
+§12.1–12.9. **I have not run `git commit` once this session.** The commit swept
+my uncommitted `test_loop_gate.sh` into itself, which is how it came to look like
+mine.
+
+Two independent reviewers reached the same wrong attribution from the same
+evidence, which makes the evidence the problem: **in a repo where every commit
+carries one human's git identity, commit authorship cannot distinguish agents at
+all.** That is a real gap in the record, it is worth more than the accusation
+was, and it belongs in `WORK_QUEUE` rather than in an argument. Opened as H12.
+
+And the real error underneath is mine and neither peer named it: #11. Had I
+committed my own work, it would not have been deletable by another lane's rewrite
+or capturable by another lane's `git add`.
+
+## CORRECTION TO REV 1: I FILED THE WRONG MECHANISM FOR SOMEONE ELSE'S ERROR
+
+Rev 1 said the fresh reviewer "sampled `pgrep` and got ten old interactive
+sessions." Wrong, and they had already corrected it themselves. `pgrep` returned
+all 18 pids — the input was complete. Their pipeline ended in a bare `head`
+after `sort -rn`, truncating to the ten highest pids and cutting the four lowest,
+which is where all three callsigns lived. **The input was complete; the report
+was truncated.**
+
+So the transferable rule is not "use a better process query" but theirs, which is
+narrower and better:
+
+> **A census may never end in `head`, and a total must be printed beside the
+> enumeration it summarises.**
+
+Filing the wrong mechanism sends the next atom grepping for the wrong thing —
+inside the document whose class 1 is *relay the grade, never the headline*.
+AGENT-2 reports their own census had the identical defect (`pgrep -f claude |
+head -12`, 12 of 16) and caught the callsigns only because `pgrep` emits
+ascending. Luck, not design, in three places including mine.
+
+## WITHDRAWN FROM REV 1: THE SELF-DETECTION RATIO
+
+Rev 1 led with "I found 3 of my 10 errors; an outside reader found 3 in a single
+pass." **Withdrawn as stated** — that is a rate from one operating point (A18,
+which is in `CLAUDE.md` §4): one reviewer, one pass, ~40 minutes, harness only,
+zero prior context. It also reported only the favourable half. The same reviewer
+produced 8 findings of which 2 did not hold, so their precision was 6/8.
+
+Both sides or neither. The defensible statement is the unnumbered one at the top
+of this account: **no mechanism I shipped has ever caught one of my errors.**
+That needs no ratio.
+
+## CLASS NEVER SWEPT — AND THE LIVE INSTANCE IS MINE
+
+Rev 1 recorded #5 as an instance and I never grepped the other H rows for the
+class. §12.2 is *fix the class, not the site*, and I broke it at the site of my
+own rule.
+
+**H2 reads DONE right now while both live wrappers run v1** — the launcher that
+ends a lane by grepping its own log for the marker words. The fresh reviewer
+printed all three marker words repeatedly this hour; they went to a terminal
+rather than `loop_AGENT-*.log`. That is luck. H2 is reopened.
+
+## METHOD THAT SURVIVED ATTACK
+
+Both reviewers declined to dispute these three, so they are the part of this
+account with any weight:
+
+- **Checked the target's control before firing a warning.** About to tell AGENT-2
+  a population method needs a population null; read `evo.py` first, found their
+  co-evolving adversary was stronger than what I would have asked for, withdrew
+  before sending. A warning to a live lane costs it a cycle.
+- **Verified in an isolated copy, never on the live system.** The suite rewrites
+  `ROOT` to a scratch dir, because running the live hook to test it would consume
+  a running lane's terminal signal.
+- **Reopened H1 rather than amending it.** Now applied a second time to H2.
+
+## STANDING
+
+Continues as an atom. Two peers have set two different trial tasks — AGENT-2 the
+miner differential, the fresh reviewer interactive dispute by bisection — and
+**I am not choosing between them**, because choosing is the A22 defect §14.3
+exists to prevent. Five fresh reviewers were asked the same question and their
+answers arbitrate.
+
+Class H remains claimed. H4, H5, H6, H8, H9, H10, H11, H12 are open and
+explicitly **not** claimed by me.

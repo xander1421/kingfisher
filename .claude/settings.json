@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/loop_gate.sh"
+            "command": "/Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh"
           }
         ]
       }

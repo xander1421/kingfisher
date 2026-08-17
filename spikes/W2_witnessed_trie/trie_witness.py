@@ -647,6 +647,7 @@ def provenance(here, out):
     sys.path.insert(0, os.path.join(here, '..', 'harness'))
     try:
         import provenance as P
+        import kfcheck as KF
     except ImportError:
         return
     cs = []
@@ -660,12 +661,35 @@ def provenance(here, out):
     # staleness and the dirty-tree checks -- which is the A24 hole, since a
     # digest pins which artifact and not what is in it. This spike was first
     # written with deps=() and had no staleness check at all.
-    ok, prov = P.record(here, deps=(os.path.join(here, '..', 'S52_realkg'),),
+    # CLAUDE.md's entry point is kfcheck.certify, not provenance.record. This
+    # spike called record directly for its first four cycles, so it ran family A
+    # and C and skipped B (instrument fiction) and E (the number is real, the
+    # model is wrong) -- and it declared no falsifier, which certify refuses.
+    # Family E fires here: `check_affine` REFUSES an affine model on the scaling
+    # points (adjacent slopes span 760% of tolerance), so the endpoint ratio is
+    # the only admissible claim and no rate may be derived from those four rows.
+    sc = out['scaling']
+    ok, problems = KF.certify(
+        here, deps=(os.path.join(here, '..', 'S52_realkg'),),
         artifacts=[os.path.join(here, 'trie_witness.py'),
                    os.path.join(here, 'witness.json')],
         controls=cs, allow_dirty=True,   # loop commits at cycle end; dirt is RECORDED
+        captures=[('trie_root', out['root']),
+                  ('aligned_witness_mean', out['shapes']['p_s_?o']['witness_mean'])],
+        measurements=[{'name': 'auth_path_vs_shard_bytes',
+                       'points': [(s['shard_bytes'], s['aligned_path_mean'])
+                                  for s in sc],
+                       'as_rate': False}],
+        falsifier='Build the same three proofs on MORK pathmap and show the '
+                  'authentication path departs from 1.5-3.3 KB by more than the '
+                  'branching factor explains. Or: exhibit any completeness proof '
+                  'this verifier accepts for an answer set that is not exactly '
+                  'the keys under the queried prefix.',
         note='W2 witnessed re-exec on a Merkle-committed radix trie; '
-             'membership + non-membership + completeness, real verifier')
+             'membership + non-membership + completeness, real verifier. '
+             'Scaling rows are MEASURED POINTS, not a rate: units.check_affine '
+             'refuses an affine fit on them.')
+    prov = {'problems': problems}
     if not ok:
         print('\nPROVENANCE PROBLEMS:')
         for p in prov['problems']:

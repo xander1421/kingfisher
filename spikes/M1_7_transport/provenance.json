@@ -1,0 +1,118 @@
+{
+ "spike": "M1_7_transport",
+ "recorded_utc": "2026-08-17T10:15:11Z",
+ "note": "Headline re-established after a day of changes (bearer auth, TLS, canon, admission rules, feature-matched binaries). Both drivers that produced the earlier numbers had silently broken; both fixed.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
+   "head": "3f76dc460da6961f57f69f6c3e550c59c74ada83",
+   "clean": false,
+   "dirty_files": [
+    "yperon-common/src/multitrie.rs",
+    "hyperon-space/src/index/trie.rs",
+    "lib/src/metta/runner/builtin_mods/fileio.rs",
+    "lib/src/metta/runner/builtin_mods/random.rs",
+    "lib/src/metta/runner/stdlib/atom.rs",
+    "lib/src/space/grounding/mod.rs"
+   ],
+   "diff_sha256": "04189487f726a26df787823055ddd11e12261894b41118411b1fe2d8e083234c",
+   "diff_bytes": 12070
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental": {
+   "files": 9,
+   "combined_sha256": "d29818ae02020053",
+   "per_file": {
+    "Cargo.toml": "00e1021440f11d14",
+    "Cargo.lock": "0652c60b939d379a",
+    "hyperon-atom/Cargo.toml": "a4e943ad2187ec02",
+    "repl/Cargo.toml": "5a73a6f8a2303c44",
+    "hyperon-common/Cargo.toml": "99dacd57ac7c975b",
+    "hyperon-macros/Cargo.toml": "54dc6d8db586b127",
+    "lib/Cargo.toml": "c218f4d2816b994c",
+    "hyperon-space/Cargo.toml": "06a5f0be1a9221d1",
+    "c/Cargo.toml": "1f2f30ce25f6d33a"
+   }
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host",
+   "sha256": "f52d98196ad048fcdd2cb0f4c78614c3c5b3ff62de62b1344c2fd7b41e77328a",
+   "bytes": 6065600,
+   "mtime": 1786959339,
+   "compared_ts": 1786955408,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.android",
+   "sha256": "c90624244472fb94e59baac90c990a3f8bae744655f6dd3e54b10f04244b879d",
+   "bytes": 6548072,
+   "mtime": 1786954717,
+   "compared_ts": 1786955408,
+   "compared_clock": "last-commit"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_1_android/app/build/outputs/apk/debug/app-debug.apk",
+   "sha256": "542be0b8d391bac8c54c8b9532d4b5f84c6552fc3fca1bd050f5281ee795798d",
+   "bytes": 16058855,
+   "mtime": 1786960395,
+   "compared_ts": 1786960395,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "admission-gate",
+   "must_fire_because": "a gate that never refuses is indistinguishable from no gate",
+   "can_fail_because": "if all 67 programs were admissible it would refuse 0 and this control would not fire",
+   "null_must_contain": "a corpus with no bannable program",
+   "fired": true,
+   "detail": "refused 3 of 67 on three distinct rules",
+   "constant_observations": false,
+   "observations": [
+    "flip",
+    "filesystem",
+    "feature-gated-module"
+   ]
+  },
+  {
+   "name": "preflight-refusal",
+   "must_fire_because": "the per-job gate must be able to decline, not only pass",
+   "can_fail_because": "if the 101% floor were satisfiable the worker would never log a refusal",
+   "null_must_contain": "a run where every preflight passes",
+   "fired": true,
+   "detail": "kf-refuse fired alongside the working path in the same run",
+   "constant_observations": false,
+   "observations": [
+    "battery:100%<101% -> retry with backoff"
+   ]
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental": {
+   "newest": 1786948573,
+   "from": "hyperon-space/src/index/trie.rs"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if any admitted program differs between the app in-process and the host verifier, the byte-identity claim is refuted for that program; 64/64 must be exact, not majority"
+}
