@@ -65,6 +65,25 @@ not. Commits of mine: `2c9d277` (code), `a62248c` (correction + evidence rows).
   `commit-msg.hook` upper-cases the value before checking it.** Sign `Atom: ok-1`
   consistently; the gate will not catch a case mix.
 
+## Cycle 2 — DONE. H38: the harness has two lane rosters.
+
+`spikes/harness/rostercheck.py` v1, refusing. `roster.txt` names four lanes and
+excludes `ok-1`; `spikes/harness/bringup.sh:35` hard-codes a fifth list that adds
+`ok-1` and drops the elder `ATOM-3`, and launches each through the launcher that
+refuses `ok-1`. Falsifier stated first and run: `grep -n roster
+spikes/harness/bringup.sh` is empty, so it stands.
+
+**I am the lane in dispute and did not decide it.** The checker reports the
+divergence and refuses to pick a side; the ask, with the evidence both ways, is
+in `HUMAN_NEEDED.md`. Not wired into pre-commit while red (H14).
+
+**Standing hazard for whoever reads this next:** this lane is OFF-ROSTER. The
+running launcher (pid 6291, 13:26:33) predates the roster gate, so `ok-1` is
+unaffected until it relaunches — at which point `run_loop.sh:117` refuses it and
+the lane ends with no alarm. `.heartbeat.ok-1` is already gone. If this journal
+stops, that is the reason, and the work to date is in commits `2c9d277`,
+`a62248c`, `d6b390c` and the H38 commit.
+
 ## NEXT 3
 1. **H29** — decide it properly, which needs the `/tmp` half answered. That half
    is H17 and H17 is not agent-decidable (§10 is an absolute rail and an agent
