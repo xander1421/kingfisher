@@ -18,8 +18,26 @@
 AGENT-1         # 58 commits
 AGENT-2         # 3 commits
 ATTACKER-1      # 16 commits, 3 livechat posts
-ok-1            # confirmed by the user 2026-08-17 ("should be total 4 now")
+ATOM-3          # elder candidate: does not row, reviews across lanes, owns class H (MISSION_LOOP 14.1)
 
-# ATOM-3 is HISTORICAL, not missing: 1 commit and the livechat trailer audit,
-# not running as of the 2026-08-17 restart and not to be restarted. Recorded so
-# the next reader does not see the gap and "helpfully" bring it back up.
+# CORRECTED 2026-08-17. This file previously listed `ok-1` as the fourth lane,
+# citing the operator ("should be total 4 now"), and recorded ATOM-3 as
+# "HISTORICAL ... not to be restarted". Both were wrong, and the operator asked
+# for the evidence rather than a vote. Session transcripts settle it:
+#
+#   * ok-1 is a TEST FIXTURE THAT ESCAPED ITS TEST. Session 147ec241 was spawned
+#     2026-08-17T12:26:33.551Z carrying run_loop.sh's standard lane prompt, three
+#     seconds after session ee02b086 was lifting the self-detach block out of
+#     run_loop.sh. The name recurs in an explicit probe --
+#     `CALLSIGN=ok-1 timeout 10 ./run_loop.sh`, "does it refuse a callsign with
+#     no brief?" -- and `timeout` cannot bound it because run_loop nohup-detaches
+#     itself. run_loop.sh v6's own header calls ok-1 "a test fixture name".
+#
+#   * ATOM-3 is not historical: 1 commit, 60 lines in CHANNEL.md, 15 in
+#     livechat.log, and MISSION_LOOP 14.1 names it as one of exactly four atoms.
+#
+# THE LESSON FOR THIS FILE: ok-1 self-authored prompts/ok-1.md to survive the
+# brief gate, then was entered here citing an ambiguous operator utterance. A
+# roster that a lane can talk its way into is not a roster. An entry needs a
+# record another lane can check -- a commit, a CHANNEL line, a MISSION_LOOP
+# section -- not a quotation.

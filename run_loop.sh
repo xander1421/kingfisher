@@ -110,8 +110,17 @@ esac
 #     --dangerously-skip-permissions against the shared git index for 8 minutes
 #     before anyone noticed; it went unnoticed precisely because every NAMED
 #     lane was healthy, so nothing looked wrong. Existence of a brief is not
-#     sanction. roster.txt is the sanction, and it is the same file bringup.sh
-#     starts from, so the two ends cannot drift.
+#     sanction. roster.txt is the sanction.
+#     CORRECTED 2026-08-17: this said "and it is the same file bringup.sh starts
+#     from, so the two ends cannot drift". FALSE WHEN WRITTEN. There were THREE
+#     lane sets, not two -- ./bringup.sh read the roster, spikes/harness/bringup.sh
+#     and spikes/harness/send.sh each carried a hard-coded literal, and both
+#     listed `ok-1`, which this very check refuses. A supervisor would have
+#     reported starting a lane its own launcher rejects. Reported by ok-1,
+#     third copy found by rostercheck.py after the first two were reconciled.
+#     I asserted a property of "the" file in a repo holding three, and did not
+#     grep. All three now read roster.txt; `python3 spikes/harness/rostercheck.py`
+#     refuses if any drifts again.
 ROSTER_FILE="roster.txt"
 if [ -f "$ROSTER_FILE" ]; then
   if ! sed 's/#.*//' "$ROSTER_FILE" | awk 'NF{print $1}' | grep -qx "$CALLSIGN"; then
@@ -125,6 +134,23 @@ else
 fi
 
 BRIEF_FILE="prompts/${CALLSIGN}.md"
+
+# INBOX. Cross-lane messages addressed BY CALLSIGN, delivered into the prompt and
+# archived on delivery so they are read exactly once.
+#
+# The session bus (ListAgents/SendMessage) reaches a live session immediately and
+# is the right channel for anything needing action now. It is also IN-MEMORY: a
+# message to a lane that is respawning is lost, and these lanes respawn every
+# turn. livechat.log is durable but has no addressee and no delivery guarantee --
+# "sent" and "seen" are indistinguishable in an append-only file nobody is obliged
+# to read. The prompt is the one path that certainly reaches a lane, because the
+# launcher rebuilds it every turn.
+#
+# Archived rather than left in place: an inbox that redelivers forever trains the
+# reader to skip it, which is githygiene's own "a checker that fires on
+# known-accepted items every run is a checker everyone learns to ignore".
+INBOX="inbox/${CALLSIGN}.md"
+mkdir -p inbox inbox/archive
 if [ ! -f "$BRIEF_FILE" ]; then
   echo "run_loop.sh: no spawn brief at $BRIEF_FILE."
   echo "A lane with no brief has no written role, no reading order and no §0"
@@ -185,8 +211,15 @@ LOCK=".loop_lock.${CALLSIGN}"
   #    assumed") and prompts/ATTACKER-1.md §0 tells a lane to check
   #    `ps -eo command= | grep 'You are X\.'`. THAT INSTRUCTION CANNOT BE
   #    CARRIED OUT: measured on this machine, `ps` shows every launcher as
-  #    `bash ./run_loop.sh` with no callsign anywhere in argv, and macOS does
-  #    not expose another process's environment (`ps -E` is silently ignored).
+  #    `bash ./run_loop.sh` with no callsign anywhere in argv, and the
+  #    LAUNCHER's environment is not readable either -- `ps -E` is silently
+  #    ignored and `ps eww` over every live launcher pid exposes no CALLSIGN.
+  #    CORRECTED 2026-08-17, same cycle, by a peer session's counter-measurement:
+  #    this first read "macOS does not expose another process's environment",
+  #    which is FALSE -- `ps eww` reads a same-user process's environment fine,
+  #    and that is how the peer enumerated the fleet. What is true is narrower
+  #    and is what the conclusion actually rests on: the launcher does not
+  #    expose it and the turn does.
   #    The one turn-shaped process that DOES carry it is the `claude -p` child,
   #    which exists only while a turn is in flight -- so between turns the check
   #    reads clear on a held callsign. A rule enforced by an unrunnable check is
@@ -291,8 +324,15 @@ while [ ! -f STOP ] && [ ! -f "STOP.${CALLSIGN}" ]; do
 The harness evolves with the codebase (MISSION_LOOP §12). It is the instrument that runs every other instrument, and it had never been attacked before 2026-08-17 — it was carrying an inert Stop hook, a launcher whose supervision had never been exercised, and re-entry that depended on remembering one call per turn. So: a harness defect is a class-H WORK_QUEUE row, not a fix you make in passing. Fix the CLASS and not the site — name the defect class in one line, grep the whole harness for it, and post the class to livechat.log so the other lane greps its own tree. Resolve every reference to a section, spec or file mechanically rather than by eye. Any harness component you touch keeps a runnable check that fails when it breaks, and gains a version bump with a rationale block naming the defect removed. At least every fourth ATTACK cycle targets the loop itself rather than a spike.
 
 A wrong number gets retracted by the next cycle. A dead lane has no next cycle.
-$([ -f "$BRIEF_FILE" ] && printf '\n--- your spawn brief, %s ---\n' "$BRIEF_FILE" && cat "$BRIEF_FILE")" \
+$([ -f "$BRIEF_FILE" ] && printf '\n--- your spawn brief, %s ---\n' "$BRIEF_FILE" && cat "$BRIEF_FILE")
+$([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on these before selecting a queue item; reply over the session bus (fleet/registry.tsv maps callsign to socket) or with spikes/harness/send.sh ---\n' && cat "$INBOX")" \
       --dangerously-skip-permissions 2>&1 | tee -a "$LOG" ) &
+  # Archived AFTER the prompt is built, so a crash before the turn starts cannot
+  # silently eat mail: the file is only moved once its contents are in the prompt.
+  if [ -s "$INBOX" ]; then
+    cat "$INBOX" >> "inbox/archive/${CALLSIGN}.log"
+    rm -f "$INBOX"
+  fi
   turn=$!
   # Watchdog: convert a hang into a crash, which the loop below already handles.
   # pkill is matched on the callsign in the prompt so it cannot touch the other

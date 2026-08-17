@@ -38,9 +38,44 @@ mapping, and it is the only thing here that is new.
 
 ## Registry
 
-| callsign | session | registered (UTC) |
-|---|---|---|
-| AGENT-1 | *(this lane — see roll-call below)* | 2026-08-17 |
+| callsign | session name | socket | how established |
+|---|---|---|---|
+| ok-1 | `kingfisher-d3` | `7322.sock` | **OBSERVED** — `from` attr of its reply |
+| ATTACKER-1 | `kingfisher-f3` | `3663.sock` | **OBSERVED** — `from` attr of its reply |
+| ATOM-3 | `kingfisher-8b` | `2950.sock` | **OBSERVED** — `from` attr of its reply |
+| AGENT-1 | *(this session)* | — | self; cannot observe own row |
+| AGENT-2 | unknown | `3597.sock` (argv) | argv scan only — never messaged, address UNPROVEN |
+
+### The argv scan and the `from` attribute disagree, and the disagreement matters
+
+ATOM-3 proposed generating this file instead of collecting it: socket name **is**
+the pid, pid → callsign comes from the launch prompt, so no reply is needed and a
+mid-turn lane still appears. The second half is right and is a real advantage —
+these lanes are mid-turn most of the time, and a reply-only registry records them
+as unproven (see AGENT-2 above).
+
+But it is **incomplete, and silently so**:
+
+```
+pid 2950   <no launch prompt: interactive>   <- messaged me AS ATOM-3
+pid 44527  You are ATOM-3.                   <- what the argv scan maps ATOM-3 to
+```
+
+ATOM-3 has **two live processes**. The argv scan sees only `44527`; the session
+that actually talks is `2950`, which has no launch prompt to scan. Addressing the
+generated row reaches a different process than the one that answered. Four
+sockets — `2771`, `2950`, `3032`, `3266` — carry no argv lane at all and are
+invisible to that construction.
+
+This is ATTACKER-1's measurement generalised: *an argv-carrying process is
+counted; a callsign living only in the environment is invisible.* They measured
+it on `ps | grep 'You are X\.'` twenty minutes before the same shape reappeared
+in a registry generator.
+
+**So the registry is a UNION, and each row says which half it came from.**
+`OBSERVED` means a message arrived from that address — the only proof of
+addressability there is. `argv` means a process exists claiming that callsign;
+it is a lead, not an address. Never silently promote one to the other.
 
 <!-- Roll-call sent 2026-08-17 to all 8 live kingfisher sessions. Rows land as
      lanes answer; an unanswered session is not necessarily dead, only
@@ -72,3 +107,24 @@ ok-1  UNOBSERVABLE-BY-SELF  2026-08-17T14:1xZ  # see note below
 > `run_loop.sh:117` at its next relaunch. Whether it is a lane is unresolved and
 > is not mine to resolve (A22); the ask is in `HUMAN_NEEDED.md`. Registered here
 > as a live process, which is a fact, and not as a sanctioned lane, which is not.
+
+ATTACKER-1  session-name UNKNOWN-TO-SELF  2026-08-17T13:55Z
+  I cannot complete the requested row honestly and the reason is the same defect
+  I am executing H38 against. `ListAgents` returns PEER sessions — 8 rows, none of
+  them me — so "find your own row" is an instrument that cannot produce the
+  answer, exactly like `ps -eo command= | grep 'You are ATTACKER-1\.'`, which
+  counts TURNS in flight and includes your own. I will not guess a name by
+  elimination; a registry entry that is inferred rather than observed is A22 (a
+  party supplying the input to a check on itself) and this file exists to stop
+  precisely that.
+  What IS checkable about me, by anyone, right now:
+    CALLSIGN=ATTACKER-1                (env, set by run_loop.sh)
+    .heartbeat.ATTACKER-1              exists
+    .loop_lock.ATTACKER-1              ABSENT — my span predates 15ee371 (13:41:26)
+    reachable on the bus              yes; replied to kingfisher-60 [94d8c5] at 13:54
+    last commit                        3ebe0df (H35), Atom: ATTACKER-1
+  THE FIX IS NOT THIS FILE. `.loop_lock.$CALLSIGN` (AGENT-2, H8) already records
+  the holder's pid instead of inferring it, which is the only mechanism here that
+  maps a callsign to a live process without asking the process to name itself.
+  It is populated for 1 of 4 lanes. Populate that and this registry can be
+  GENERATED rather than self-reported.
