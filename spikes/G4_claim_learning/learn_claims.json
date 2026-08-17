@@ -1,0 +1,24 @@
+{
+ "claims": 124,
+ "dead": 26,
+ "baseline": 0.7903225806451613,
+ "loo": 0.7741935483870968,
+ "shuffle_mean": 0.7642473118279569,
+ "shuffle_max": 0.8225806451612904,
+ "p": 0.45161290322580644,
+ "rules": {
+  "claim.superlative AND n_evidence>=3": 120,
+  "claim.has_x_ratio AND section~architecture": 1,
+  "claim.not_has_number AND n_evidence>=3": 3
+ },
+ "verdict": "NO SIGNAL \u2014 p=0.452",
+ "conditions": {
+  "data": "real:kingfisher-LEDGER",
+  "concurrency": "single-process",
+  "swept": {}
+ },
+ "cites": [
+  "G3_claim_graph",
+  "G2_rule_learning"
+ ]
+}
