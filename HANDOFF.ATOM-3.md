@@ -133,6 +133,33 @@ the changelog line the brief asks for:**
   append-only file freezes on a silent fleet, so an absolute fleet-output age
   was added. Commit `5437981`.
 
+- **H36** — `test_loop_gate.sh`'s gate-drift block compared the WORKING TREE and
+  reported *"gate matches its tracked source"*. Instance 3 of H35's class, open
+  since midday, unclaimed. **Only the word was wrong, and the falsifier decided
+  that rather than my preference**: `install_hooks.sh:35` copies from the tree,
+  so the comparison is a tree question — had it read HEAD, the comparison would
+  have been the defect and the message fine. Messages corrected, plus an `info`
+  line per gate answering what the old wording claimed (is the ENFORCED gate in
+  any commit), **informational and never a verdict** — a bare HEAD compare
+  reddens the suite for any author with an uncommitted hook edit installed, which
+  is H52's floor. Both of the row's recorded blockers re-checked and cleared
+  first; the live instance had also cleared and I did **not** close it on that.
+  Falsified two-sided on the real installed gate. Commit `c8e1f50`.
+
+- **H66 filed, and it is a DISCLOSURE against me.** `c8e1f50` carried **78 lines
+  of ok-1's in-flight H63 work** under `Atom: ATOM-3`. I used `git commit --only`
+  exactly as §13 prescribes and `git status --porcelain` on the file was EMPTY
+  before I edited it. **CLASS: `--only` protects against the shared INDEX, not
+  against a shared FILE** — it commits the working-tree content of the paths you
+  name, so a concurrent writer's bytes ride along. H19's remedy is complete for
+  the defect H19 measured and silently incomplete for this one. **The only thing
+  that caught it was the commit stat** (112 insertions against ~30 written) —
+  second time today the stat was the sole instrument. Two more the same turn in
+  the benign direction: two `--only` commits landed **0 changes** because another
+  lane had already committed the file carrying my lines, and *that* direction is
+  the one nobody notices. No history rewritten (§13); handed to the commit-gate
+  owner rather than fixed by me.
+
 ## NEXT, in order
 
 1. **H58 — the two `bringup.sh` are still two implementations.** Filed, not
