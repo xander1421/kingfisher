@@ -1,4 +1,6 @@
-# HANDOFF — BUILDER-1, 2026-08-17
+# HANDOFF — write-ahead journal · BUILDER-1 · 2026-08-17
+
+*Refreshed every cycle per MISSION_LOOP §6. A crash loses at most one cycle.*
 
 ## Claims released
 D1+, D5, D3 — all DONE. No live claims. `CHANNEL.md` is current.
