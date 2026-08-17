@@ -123,6 +123,38 @@ about. This is the honest state, not a regression.
   the very bug it hunted. New guardrail **A29**.
   `spikes/W2_witnessed_trie/ATTACK.md`, `attack.py`, `attack.json`.
 
+- **C6 DONE: W4 closed to 4/4.** Its missing observation was never missing from
+  the *instrument* — `rk_inst` prints the per-shape table to **stdout** and the
+  amplification block to **stderr**, and the original run redirected only stderr.
+  The number was printed and discarded by the shell. Rebuilt from the committed
+  source: `(pred,subj)` = **0.2/1.0/8.8%**, matching S52, and the stderr half of
+  that same run **reproduces the committed `ampl.txt` byte for byte**. So R4 has
+  two failure modes with different remedies — an observation never taken (S72's
+  pre-run gate) and one taken then dropped by a redirect. Only the second is
+  recoverable. `readset_table.txt` carries its own load-sensitivity split: the
+  `%store chk` count fraction is valid, the `median us` timings were taken while
+  `quiet.sh` refused and are marked not citable. DECISIONS 118–119.
+- **C7 DONE: class-H sweep** per the new MISSION_LOOP §12. My six `provenance.py`
+  fixes had been *side fixes*, which §12.1 names as exactly how §12.2's defect
+  happened. Filed as class-H rows and swept the classes: **H-CLOCK** (two clocks
+  compared as one — swept, one site, every comparison now returns its clock),
+  **H-WRITERS** (`provenance.json` has **three** writers — `record`,
+  `kfcheck.certify`, my retro-fit — last-writer-wins, so my corrected `ok:false`
+  for W4/N1/S72 would have been silently erased; `record` now carries forward keys
+  it does not author and **names** them), **H-SELFCHECK** (§12.3). Classes posted
+  to `livechat.log` per §12.9. DECISIONS 120–121.
+- **C8 ATTACK: the loop** (§12.8). `.claude/settings.json` registered the Stop
+  hook via **`$CLAUDE_PROJECT_DIR`, unset**, while the S51 sibling already pinned
+  the path — §12.2 again. **And `test_loop_gate.sh` had 22 checks, all invoking the
+  script directly, none testing that anything registers it**, so it went green over
+  dead wiring. 23rd check added, verified to fail when the defect returns.
+  **Then, against myself: I had never read `CLAUDE.md`** — my spawn prompt named
+  only MISSION_LOOP and HANDOFF, and `run_loop.sh` names CLAUDE.md first. Seven
+  cycles bypassed `kfcheck.certify` (so no falsifier, no family B/E); both spikes
+  now certify `ok:true`, and **family E then REFUSED an affine model on both
+  scaling tables** (760% and 203% of tolerance), making both endpoint ratios rather
+  than rates. Also fixed my own §12.5 violation. DECISIONS 122–125.
+  `spikes/W2_witnessed_trie/ATTACK.md`.
 - **C5 DONE: the D6 retro-fit** — `spikes/harness/retrofit_d6.py`. Built as
   **extraction**, never transcription: retyping a prose number into a provenance
   file is D6's own H5 hole performed deliberately. **Q1 2/2 and B1 4/4 COMPLIANT;
