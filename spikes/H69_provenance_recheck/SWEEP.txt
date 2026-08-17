@@ -1,0 +1,29 @@
+recheck v1 — 47 provenance record(s) re-hashed against the tree
+  40 still describe it, 7 do not
+
+  DRIFTED      ok=True  spikes/G25_carrying_capacity/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/G25_carrying_capacity/sweep.py
+                 recorded f700f65a98323e5e… (7787 B), disk 808b20aca64e3590… (8380 B)
+  DRIFTED      ok=True  spikes/G30_external_yardstick/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick/yardstick.py
+                 recorded 97bc80501989ec69… (22704 B), disk fb23b64578ce40e8… (22690 B)
+  DRIFTED      ok=True  spikes/G34_length1_and_constants/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/length1_constants.py
+                 recorded 2cbe114bd65afeca… (27304 B), disk 2955ff29946ee8a4… (27305 B)
+  DRIFTED      ok=True  spikes/M1_10_patchlive/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/M1_10_patchlive/control_unpatched.json
+                 recorded f15eb57f34ea45c4… (1163 B), disk 6e77626d56113cae… (1164 B)
+  DRIFTED      ok=True  spikes/M1_1_android/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/M1_1_android/app/build/outputs/apk/debug/app-debug.apk
+                 recorded 1d57cd690a3ac014… (16058855 B), disk ae3843726bf01c21… (16058855 B)
+  DRIFTED      ok=True  spikes/M1_9_mutation/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/M1_9_mutation/mutation.json
+                 recorded 576884aaced5c0a5… (2810 B), disk c658f184bca3c41a… (3370 B)
+  DRIFTED      ok=True  spikes/M2_1_fleet/provenance.json  <-- CLAIMS ok=true
+      DRIFTED    /Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/known/fuelrun.host
+                 recorded 97d24cce709fdca2… (3604032 B), disk f52d98196ad048fc… (6065600 B)
+
+  7 of the 7 read `ok=true`.
+  This says the RECORD is unverified. It does NOT say a published number is wrong —
+  a drifted generator is usually a later edit. Re-run the spike to clear it.
+recheck v1 selfcheck: PASS (positive 1 drift + 1 missing + 1 ok; negative clean; empty-artifacts blind spot held; fixture invisible to a real scan)
