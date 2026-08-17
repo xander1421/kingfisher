@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""refcheck.py v3 — H4/H18. Every §N / guardrail / file / ROW-ID citation resolves.
+"""refcheck.py v4 — H4/H18/H33. Every §N / guardrail / file / ROW-ID citation resolves.
+
+v4 RATIONALE (§12.7) — THE DEFECT REMOVED: a path carrying an unexpanded variable
+is a TEMPLATE, not a citation, and check 4 skipped `$` only as a LEADING
+character. So `$CLAUDE_PROJECT_DIR/...` passed and `prompts/$CALLSIGN.md` did
+not. That is v3(a)'s own class -- the site, not the class -- in the module whose
+v3 rationale is about scoping a fix to the site that needed it. It was a LIVE
+FLEET-STOP: `pre-commit.hook` gates this module, so three CORRECT citations of
+that template refused every lane's commits at rc=1. Scoped, not loosened --
+`git ls-files | grep -c '$'` is 0, so the character appears in no tracked path.
+Selfcheck asserts the template stays quiet WHILE `nope.py` still fires, because
+a checker that skipped every path would be quiet on the template too. Falsified:
+restore the leading-only skip on an isolated copy and `--selfcheck` goes red with
+`['template path refused']`. Full block at check 4. (ok-1, H33.)
 
 v3 RATIONALE (§12.7) — TWO DEFECTS REMOVED, both found by attacking v2 with a
 falsifier that FAILED TO FIRE, against a live control in the same fixture:
@@ -249,10 +262,25 @@ def scan():
         # is H14's named failure mode: a checker everyone learns to ignore.
         # The rule that separates them cheaply: a repo path's FIRST SEGMENT is an
         # existing top-level entry. `spikes/...` is checked, `boinc/...` is not.
+        # v4, 2026-08-17 (ok-1, H33). A PATH CARRYING AN UNEXPANDED VARIABLE IS A
+        # TEMPLATE, NOT A CITATION -- it names a family of files and cannot
+        # resolve by construction. `$` was skipped only as a LEADING character,
+        # so `$CLAUDE_PROJECT_DIR/...` passed and `prompts/$CALLSIGN.md` did not:
+        # the site, not the class (§12.2), in the checker whose own v3 rationale
+        # block is about scoping a fix to the site that needed it (H26).
+        # LIVE FLEET-STOP, not a hypothetical: `pre-commit.hook` gates this
+        # module, so when AGENT-1's H30 work cited `prompts/$CALLSIGN.md` in
+        # WORK_QUEUE.md and test_loop_gate.sh, and I cited it in prompts/ok-1.md,
+        # every lane's commits were refused -- rc=1, measured -- for three
+        # citations that were all correct.
+        # SCOPED, not a loosening: `git ls-files | grep -c '\$'` is 0, so no
+        # tracked path in this repo contains the character and nothing real is
+        # hidden by skipping it. The other three named skips (external trees,
+        # `.git/`, placeholders) each carry their reason the same way.
         top = set(os.listdir(ROOT))
         for tok in set(re.findall(r'`([^`\s]+/[^`\s]*)`', text)):
-            if tok.startswith(('~', 'http', '/', '$', '<')) or any(
-                    c in tok for c in '<>*?:\\'):
+            if tok.startswith(('~', 'http', '/', '<')) or any(
+                    c in tok for c in '<>*?:\\$'):
                 continue
             tok = tok.rstrip('.,;:')
             if tok.split('/')[0] not in top:
@@ -315,6 +343,11 @@ def selfcheck():
         # itself is one nobody checks.
         bad_sec, bad_g = '\u00a7' + '99', 'A' + '77'
         bad_path = 'spikes/' + 'harness/nope.py'
+        # v4's fixture (H33). A template path: same first segment as a real
+        # citation, an unexpanded variable in a LATER segment, so the leading-`$`
+        # skip never saw it. It must stay QUIET while bad_path above still fires
+        # -- one direction alone would pass for a checker that skipped every path.
+        tmpl_path = 'prompts/' + '$' + 'CALLSIGN.md'
         # Check 5's fixture. Interpolated rather than written literally for the
         # same reason as the others: two literal `| H99 |` rows in this source
         # would make refcheck flag ITSELF on every run, since it scans
@@ -338,6 +371,7 @@ def selfcheck():
         open(os.path.join(tmp, 'CLAUDE.md'), 'w').write(
             'cite \u00a71 and \u00a71.1 and A1 and `MISSION_LOOP.md` -- all fine.\n'
             f'now cite {bad_sec} and {bad_g} and `{bad_path}` -- none exist.\n'
+            f'and `{tmpl_path}`, a template that names a family of files.\n'
             # This line must NOT contain the word the scoping rule looks for --
             # the first draft of this fixture wrote "which only a per-lane brief
             # defines" and thereby handed CLAUDE.md the very permission the case
@@ -390,6 +424,13 @@ def selfcheck():
                 bad.append(d)
             else:
                 print(f'  QUIET   on a {d} ({good})')
+        # v4 (H33), and it is only evidence PAIRED with `nope.py` CATCHES above:
+        # a checker that skipped every path would be quiet here too.
+        if tmpl_path in out:
+            print(f'  FALSE-POSITIVE on a template path ({tmpl_path})')
+            bad.append('template path refused')
+        else:
+            print(f'  QUIET   on a template path ({tmpl_path})')
         # Check 5's other direction, and it is the one that matters: a check that
         # flagged EVERY id would also "catch" the duplicate and be useless.
         if f'numbered "{uniq}"' in out:

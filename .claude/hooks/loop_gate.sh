@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# loop_gate.sh v6 — Stop hook for MISSION_LOOP continuous mode.
+# loop_gate.sh v7 — Stop hook for MISSION_LOOP continuous mode.
+# v7 (ok-1, H13) locks the runaway-fuse increment; see section 4's block.
 # Terminal signals are FILES, not prose: to end legally, the agent must
 # write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.$CALLSIGN.
 # Bare .loop_signal is NO LONGER ACCEPTED -- see v5 below.
@@ -98,10 +99,36 @@ done
 # errored, the -gt comparison errored, and the hook fell through to block --
 # permanently, with a fuse that could never trip. `printf '3x' > .loop_blocks.L5`
 # reproduced it. Anything not all-digits is treated as absent.
+#
+# v7, 2026-08-17 (ok-1, H13). THE INCREMENT WAS AN UNSYNCHRONISED READ-MODIFY-
+# WRITE and lost most of what it counted. Measured on this tree before the fix:
+# 20 concurrent fires for one lane landed on 12, 13 and 14 across three runs, and
+# 60 fires landed on 28 -- so the fuse blows LATE, at roughly twice its nominal
+# MAX_BLOCKS, which is the direction that lets a runaway run on. `mkdir` is the
+# portable atomic test-and-set; macOS ships no flock(1). The lock is around the
+# RMW only, so the file stays a plain decimal count and checks 6, 7 and 12 --
+# per-lane counting, the 400-seeded fuse release, and corrupt-file recovery --
+# test exactly what they tested before.
+#
+# FAIL OPEN, deliberately, and this is the part that matters more than the
+# counting. A shared gate that can wedge every lane is a worse defect than the
+# one being fixed (H9, H11): after ~1s of spinning we clear the lock and proceed
+# UNLOCKED, degrading to the v6 behaviour rather than refusing to return. The
+# only way a holder keeps this for a second is that it died inside two shell
+# commands, so removing it is the correct reading of that state, not a guess.
+LOCK="${BLOCKS}.lock"
+held=no
+i=0
+while [ "$i" -lt 50 ]; do
+  if mkdir "$LOCK" 2>/dev/null; then held=yes; break; fi
+  i=$((i+1)); sleep 0.02
+done
+[ "$held" = no ] && rm -rf "$LOCK"
 N=$(cat "$BLOCKS" 2>/dev/null || echo 0)
 case "$N" in (''|*[!0-9]*) N=0 ;; esac
 N=$((N+1))
 echo "$N" > "$BLOCKS"
+[ "$held" = yes ] && rmdir "$LOCK" 2>/dev/null
 if [ "$N" -gt "${MAX_BLOCKS:-400}" ]; then
   echo LOOP-FUSE > "$EXIT_MARK"
   exit 0
