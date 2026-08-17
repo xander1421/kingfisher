@@ -8,3 +8,10 @@
 [2026-08-17T01:20Z] BLOCKED acurast-processor-runtime | what: the on-device Acurast runtime (ASHR / AZKR) that executes jobs inside the phone TEE | why: no public repository under github.com/Acurast; the org publishes the Substrate chain, SDKs, CLI and docs but not the processor binary | diagnosis: coordination layer is open (Unlicense/MIT), device runtime is deliberately closed | workaround: the on-chain half of attestation IS readable (pallets/acurast submit_attestation + certificate revocation list); TEE behaviour itself must be inferred from docs or measured against a real processor
 
 9 | 2026-08-16 | Acurast on-device runtime not published. Coordination layer fully open (Unlicense); processor binary closed. No visibility into TEE job sandboxing/execution.
+[2026-08-17T05:__Z] UPDATE yagna-monorepo | github.com/golemfactory/yagna still 404 on web AND REST API.
+  Verified NOT archived: golemfactory/clay is archived and returns 200, so archived repos stay
+  reachable. yagna is removed/private -> cannot be forked, no read-only mirror. Block STANDS.
+  PARTIALLY RESOLVED: the ORIGINAL marketplace is golemfactory/clay (renamed, archived 2022-12-27,
+  2877 stars). Cloned to elders/yagna @ develop, 229 MB, GPL-3.0 -> SPEC ONLY.
+  Holds golem/verifier/ (336 LOC) — directly on the open quorum/verification risk.
+  Rejected as unsafe: `curl -sSf https://join.golem.network/as-requestor | bash -` (mission 11).

@@ -1,0 +1,1253 @@
+{
+ "rows": [
+  {
+   "claim": "**`intersection-atom` returned WRONG ANSWERS, not just nondeterministic ones**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "Verified: 15 runs of `(A $x B $y C)` \u2229 `($y C A $x B)` gave card 5 nine times and card **3** six times. **40% of runs silently dropped set members.** Root cause is not the pointer-keyed HashMap I first blamed \u2014 `atom_to_trie_key` collapses every variable to one `Wildcard`, so index construction merged symbol `A`'s bucket under the wildcard key. Needs two variables to reproduce",
+   "cites": []
+  },
+  {
+   "claim": "**Both bugs fixed, 0 regressions**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "`proposed/hyperon-nondeterminism/patches/`. 30/30 correct after; `cargo test -p hyperon` **319 passed 0 failed**; **S57 corpus 67 programs, 0 rows differing, 235 assertions and 29 error atoms unchanged**. Cost: intersection/subtraction become O(n\u00b7m); the trie was only an index and correctness never depended on it",
+   "cites": [
+    "S57"
+   ]
+  },
+  {
+   "claim": "**LLM inference is byte-deterministic within a backend**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S62**, on the operator's own stack on the S25 Ultra. 4 runs each: CPU `-t 1/4/8` all `4e5b2619c0fb`, Hexagon NPU `81cef5aacba9`, Adreno `028aee58fa2d`. **Thread count does not change the CPU result** \u2014 llama.cpp fixes reduction order by design",
+   "cites": [
+    "S62"
+   ]
+  },
+  {
+   "claim": "**No two backends agree, and not subtly**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S62. Entirely different generations, not last-ULP drift \u2014 greedy sampling turns one flipped argmax into a permanently divergent sequence. **No tolerance model saves this**",
+   "cites": [
+    "S62"
+   ]
+  },
+  {
+   "claim": "**The equivalence class for AI inference is binary + RUNTIME ENVIRONMENT, and it is not observable from outside the device**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S62 attacker, reproduced by me today.** Same binary, model, seed and flags on one device \u2014 only env vars differ: default `81cef5aacba9`, `GGML_HEXAGON_USE_HMX=0` \u2192 `3b3c15512896`, `MM_SELECT=1` \u2192 `01e11bb3e178`, `ARCH=v75` \u2192 `d3848a54d223`. **Seven classes inside one \"HTP0\" label**, 17 such vars in the `.so`. Worse, `--fit` picks the device split from **free memory at launch**, so two identical ",
+   "cites": [
+    "S62",
+    "S63"
+   ]
+  },
+  {
+   "claim": "~~Neural inference verifiable by byte comparison, no TEE and no ZK~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": true,
+   "evidence": "The proposed mechanism was a `backend_class` job field. A backend label does not identify the computation (row above), is self-reported, and cannot be checked. **This quietly reintroduced the trust assumption the project exists to avoid.** Symbolic work is unaffected \u2014 S57 stands",
+   "cites": [
+    "S57"
+   ]
+  },
+  {
+   "claim": "S62's published \"CPU\" row was the **Adreno** hash",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "The documented invocation (`-t 4`, no `-dev`) offloads layers to GPU and NPU; the CPU row needs an undocumented `-dev none`. Anyone reproducing S62 from its own writeup gets the GPU answer labelled \"CPU\"",
+   "cites": [
+    "S62"
+   ]
+  },
+  {
+   "claim": "**The S62/S63 comparator fabricated AGREEMENT**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "`awk '/^> /{f=1;next}'` silently dropped every *generated* line starting with `> ` \u2014 three different answers hashed identically \u2014 and an empty capture hashed to `da39a3ee5e6b` (sha1 of \"\") and looked self-deterministic forever. **Wrong direction of error: in a verifier this accepts a divergent replica.** Fixed in `spikes/S62_llm_backend_determinism/extract.sh`, which fails loudly on empty",
+   "cites": []
+  },
+  {
+   "claim": "**Transcendental libm DIVERGES across ISAs \u2014 the no-float branch has a hole**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S59.** 11/197 evaluations differ arm64-vs-x86-64, 14/197 macOS-libSystem-vs-bionic, **max 2 ULP**. Per-**implementation**, not per-ISA: `sin`/`cos` split on ISA but agree across libms, `atan` the reverse, `tan` fails both (9/20 on bionic). Permitted by IEEE-754 \u2014 the libms are correct, our assumption was not",
+   "cites": [
+    "S59"
+   ]
+  },
+  {
+   "claim": "`sqrt-math` is exact cross-platform **by specification**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "0/20 both comparisons, and IEEE-754 *requires* correctly-rounded sqrt. Guaranteed, not observed",
+   "cites": []
+  },
+  {
+   "claim": "`log-math` / `pow-math` clean in sample \u2014 **not cleared**",
+   "grade": "C",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "0/60 and 0/25, but `pow` is the hardest function to round correctly and the sweep was 5\u00d75. Untested-clean, not proven-safe",
+   "cites": []
+  },
+  {
+   "claim": "**Ban `sin/cos/tan/asin/acos/atan-math` from replicable jobs**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S59. Statically checkable over the transitive import closure, alongside S58's `flip`/`&rng`/`reset-random-generator`. Alternative: ship a software libm so every device runs the same implementation",
+   "cites": [
+    "S58",
+    "S59"
+   ]
+  },
+  {
+   "claim": "**S57's 66/66 never tested transcendentals**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "The corpus contains **zero** transcendental evaluations \u2014 the only matching file is `stdlib.metta`, where every hit is an `@doc` block producing 0 results. S57 stands for symbolic reduction and `+ - * /`; its scope read wider than it was",
+   "cites": [
+    "S57"
+   ]
+  },
+  {
+   "claim": "Product hot path unaffected",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "HDC prefilter is integer popcount (S34, digest `f4e64fb7d70b9b0c`). No transcendental in the query path. This constrains the **job class**, not the engine",
+   "cites": [
+    "S34"
+   ]
+  },
+  {
+   "claim": "MeTTa byte-identical **across ISAs** \u2014 aarch64 and x86-64, libSystem and bionic, two OSes \u2014 incl. evaluation order and fuel count",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S57**, on hyperon's own 67-program corpus: **fuel identical on 67/67**, results on 66/67, **360,847 genuinely-terminating steps**, **235 `assertEqual` results and 29 error atoms identical on all three platforms**. Engine is hyperon, the one we can legally ship. **Attacked and survived in narrowed form**: 560,847 included a 200k fuel cap; result hashes are low-entropy (35 distinct/67) so the disc",
+   "cites": [
+    "S57"
+   ]
+  },
+  {
+   "claim": "**Fuel does NOT survive branching randomness** \u2014 4.5\u00d7 swing (954\u21924269) on one program",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S58, matched control. Corrects S57. Rung 1 bisects over step counts, so an unpinned nondeterministic job is **unverifiable, not merely unbillable**",
+   "cites": [
+    "S57",
+    "S58"
+   ]
+  },
+  {
+   "claim": "**A job with a correctly-bound seeded generator is bit-identical across two ISAs**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S58 as **rebuilt by an attacker after my instrument proved degenerate**: **40 seeds \u00d7 3 platforms, ~420 runs**, `random-int` *and* `random-float`, zero divergence. Floats reach the hash at full precision, so this is a genuine bit-level float comparison. My own b4 used `(= (g) \u2026)`, which re-seeds per call \u2014 all draws returned 526 and the program never branched",
+   "cites": [
+    "S58"
+   ]
+  },
+  {
+   "claim": "**`fuel + raw_hash` is NOT a sound replication oracle \u2014 PATCHED, unfiled**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "**The largest finding in this workspace's verification story, and it has nothing to do with randomness.** `intersection-atom` on variable-bearing args gives 3 distinct hashes in 10 runs with zero RNG \u2014 `multitrie.rs:302-364` iterates a `HashMap` **keyed by raw pointer**. Variable naming in *every* `match` is `HashMap`-order-dependent (`matcher.rs:193-756`). Fuel stays stable, so there is a **live ",
+   "cites": []
+  },
+  {
+   "claim": "**Three `Display` impls leak heap addresses \u2014 PATCHED, unfiled**",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "`new-space` alone gives 5 distinct hashes in 5 runs, no imports. Also `RandomGenerator` (`random.rs:64`) and `FileHandle` (`fileio.rs:94`), reachable via error atoms",
+   "cites": []
+  },
+  {
+   "claim": "`reset-random-generator` is a third unpinnable entropy source",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "Re-seeds an explicitly-seeded generator from OS entropy (`random.rs:43-45`)",
+   "cites": []
+  },
+  {
+   "claim": "Eleven `das-*` **network** ops are enabled by default",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "`lib/Cargo.toml:47` `default = [\"pkg_mgmt\", \"das\"]`. `!(match &das \u2026)` is a network query. Plus all of `fileio`",
+   "cites": []
+  },
+  {
+   "claim": "**No wall-clock op is exposed to MeTTa**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "A genuine and useful absence \u2014 one entire class of nondeterminism is unreachable",
+   "cites": []
+  },
+  {
+   "claim": "Atomspace / `match` / `superpose` iteration order **is** deterministic cross-platform",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "Attacked and held. `hyperon-space/src/index/trie.rs` walks insertion-ordered `SmallVec`s",
+   "cites": []
+  },
+  {
+   "claim": "**`flip` and `&rng` must be banned \u2014 necessary but NOT sufficient, and not an \"iff\"**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "`random.rs:186-188` \u2014 `flip` takes no generator and calls global `rand::random()`; `&rng` is `from_os_rng()` bound at module load (`:127-128`). Neither is reachable by `set-random-seed`. But the ban is a **conservative over-approximation, not an iff**: `!(if (flip) 1 1)` is deterministic 10/10. And it is nowhere near sufficient \u2014 see the address-leak and oracle rows above",
+   "cites": []
+  },
+  {
+   "claim": "S57's harness has a **null control that fires**",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "The corpus supplied it. `test_gnd_conv` diverges from itself on one machine, 4 distinct hashes in 5 runs, against a control stable 5/5. Rule 4 satisfied without my having to construct it \u2014 the argument for elder corpora, concretely",
+   "cites": []
+  },
+  {
+   "claim": "MORK 33/33 corpus byte-identical, incl. 48 MB dump",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S16. Independently *replicated*, never attacked",
+   "cites": [
+    "S16"
+   ]
+  },
+  {
+   "claim": "Packed popcount bit-exact vs scalar and SDOT, both machines",
+   "grade": "A",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S34. The UB sweep hunted unsequenced modification across every device program; `kernels.c` was clean",
+   "cites": [
+    "S34"
+   ]
+  },
+  {
+   "claim": "Determinism across build profiles (stock / LTO / oryon-1)",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S30, 12/12 cells. Missing from v1",
+   "cites": [
+    "S30"
+   ]
+  },
+  {
+   "claim": "Determinism across thread counts and split strategies",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S51",
+   "cites": [
+    "S51"
+   ]
+  },
+  {
+   "claim": "`mork --timing` writes nanoseconds into the hashed space",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S35",
+   "cites": [
+    "S35"
+   ]
+  },
+  {
+   "claim": "MORK's space is a set, hyperon's `match` a bag",
+   "grade": "B",
+   "section": "LIVE \u2014 determinism (still the asset)",
+   "dead": false,
+   "struck": false,
+   "evidence": "S35",
+   "cites": [
+    "S35"
+   ]
+  },
+  {
+   "claim": "~~W1: a witness is ~4.2 KB regardless of shard size~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "**`witness.py` modelled an engine that does not exist.** `S52/realkg.c:184` scores every bundle on every query \u2014 no skip, for any shape \u2014 so the read set is **100% of the prefilter index**. Corrected witness **1.54\u201312.23 MB**: 1.0\u20138.3\u00d7 over a cold fetch, **543\u20134,297\u00d7 a resident replica**. Also a unit error (12.8 MB is a B=8 index over 800k triples, not raw triples) and **zero working controls**. N",
+   "cites": [
+    "S52"
+   ]
+  },
+  {
+   "claim": "~~Witnessed verification works only where clustering aligns~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "Premise falsified by S52 on the identical corpus and clustering: measured **0.2% / 1.0% / 8.8%** store checked, against W1's 7.7% / 100% / 100%. Under S52 *two* of three shapes are cheap under `(pred,subj)`, and every clustering in its matrix leaves exactly one expensive shape. The honest statement is that **the cheaply-verifiable job class is whatever fraction of demand hits the aligned shapes, a",
+   "cites": [
+    "S52",
+    "S69",
+    "W1"
+   ]
+  },
+  {
+   "claim": "**W4: the prefilter's read set is 100% by construction and cannot be made sublinear without changing what it is**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`score_row` is a Hamming similarity over the whole hypervector; nearest neighbours are **not contiguous in any key order**, so there is no prefix to bound. W1 presumed a key lookup. Sublinearity needs an ANN index, which trades recall (S17: 0.97 mean, **0/100 minimum**) and voids S52's layout comparison. Measured 78.59\u00d7 amplification is oracle-fitting harness outside S52's timed region. **ATTACK c",
+   "cites": [
+    "S17",
+    "S52",
+    "W1"
+   ]
+  },
+  {
+   "claim": "**C4 quantified: 5 adversarial devices on a rare shard get wrong results accepted 72% of the time at honest pool 3, 0.5% at 100**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "**Q1**, the first join of S61's fleet model with S49's envelope adjudication. Captured seats and accepted-wrong **track exactly**, because colluders under one operator echo one digest \u2014 `DuplicateSourceInMatch` rejects one *source* twice, not one *operator* twice. Honest pool must exceed ~25 before capture drops under 10% against just five adversarial devices. Both controls fire",
+   "cites": [
+    "Q1",
+    "S49",
+    "S61"
+   ]
+  },
+  {
+   "claim": "**Shard demand is the load-bearing unmeasured quantity, and it cannot be measured from inside this workspace**",
+   "grade": "A",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S52's generator samples **uniformly over triples** (`realkg.c:170`) \u2014 an artefact, not a workload. The only instrument that measures real demand is a real user's query stream. **The buyer is no longer only the business risk; it is the missing measurement device**, and the security model's last free parameters wait on a design partner's logs",
+   "cites": [
+    "S52"
+   ]
+  },
+  {
+   "claim": "**Per-device supply is 2.83 jobs/s (1 worker) / 11.17 (4 workers), measured**",
+   "grade": "A",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S71 = C2 answered.** Sustained, background cpuset `taskset 33`, `job_terminating.metta` at exactly S32's 100,082 steps, zero failures, **device gate green both before and after**. Scaling 3.95\u00d7 at 4 workers. Replaces `RISKS.md`'s 2.87, which was `28,726/10,000` from an INVALID projection \u2014 and was within **1.4%** of the truth by luck",
+   "cites": [
+    "C2",
+    "S32",
+    "S71"
+   ]
+  },
+  {
+   "claim": "**A single device saturates per-job settlement**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "11.17 jobs/s at 4 workers (or **8.25 at the 3-worker shape** once a coordinator is subtracted \u2014 S71 gives both, and downstream has been quoting 11.17 unconditioned). Against a ~17 jobs/s ceiling with 3\u00d7 replication: **0.77 devices**. Sharpens R-NEW and strengthens the case for Merkle batching",
+   "cites": [
+    "S71"
+   ]
+  },
+  {
+   "claim": "**The dispute path is replaced by majority-of-quorum, not repaired**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S68 blocked bisection-to-a-committed-state; the substitution needs only byte-identical results (S57), which exist. **Deletes from the critical path:** the state commitment, bisection, the zkVM stack, the Groth16 trusted setup, and the **prover tier** (10\u2075\u201310\u2076\u00d7 native, in no schema or economic model here). Cost is 3\u00d7 execution \u2014 the abundant resource \u2014 and **0\u00d7 additional PoV under batching**, sinc",
+   "cites": [
+    "S57",
+    "S68"
+   ]
+  },
+  {
+   "claim": "**The seal (M3.4) is superseded ONLY where the honest pool per shard exceeds ~25 \u2014 live below that**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`PORT_PLAN:86` calls it \"the highest-value single fix identified by this recon.\" **Corrected 2026-08-17.** \"A majority of three cannot be carried by two colluders\" is true *per draw* and says nothing about **where the three are drawn from**. Q1 measures the gap: at honest pool 3 \u2014 what quorum-3 degenerates to when eligibility is coupled to residency and the shard is rare \u2014 **72% of wrong results a",
+   "cites": [
+    "Q1",
+    "W1"
+   ]
+  },
+  {
+   "claim": "**Quorum-3 costs 50% of the effective candidate pool \u2014 and locality shrinks that pool**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "C4. Random assignment: 50% of the fleet to control 2-of-3 at even odds, **independent of N**; a 1% adversary gets 0.027% of jobs. **But wedge #2's locality-aware matcher biases assignment toward shard holders**, so an adversary holding a *rare shard* faces a far smaller effective N. The seal is superseded for the uniform case, **not for rare shards.** ~~Priced in S69~~ \u2014 **INVALID.** Breadth is **",
+   "cites": [
+    "C4",
+    "S61",
+    "S69"
+   ]
+  },
+  {
+   "claim": "~~`N\u00b7C/S \u2273 4R`, from two constraints agreeing~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "**Circular** (both \"free\" rows had coverage 100 and R 25, and 100=4\u00d725 by construction; R was never varied). **Refuted by its own table** (the 236 MB row meets the floor at 1.14R). **\"Agreement\" manufactured** \u2014 S61 says coverage \u22485 and puts imbalance at 32\u00d7 at coverage 100, so the constraints point *opposite* ways. Survives only as the feasibility bound **`N\u00b7C/S \u2265 R`**",
+   "cites": [
+    "S61"
+   ]
+  },
+  {
+   "claim": "~~94% of shards below R=25 at coverage 10~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "The Zipf \u03b1=0.8 fit used **predicate frequency as a proxy for shard demand** \u2014 the wrong axis. S52's own generator samples uniformly over triples (`realkg.c:170`), giving max/median **1.04**. Coverage needed spans **2R to 780R** across demand models. `min=0` is also a category error: S8 has a desktop shard host origin and M1.5 calls the phone side an LRU **cache**",
+   "cites": [
+    "M1",
+    "S52",
+    "S8"
+   ]
+  },
+  {
+   "claim": "**Matcher needs two constraints Acurast does not have**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S69: minimum replication breadth **R \u2265 25**, and **one replica of every quorum drawn uniformly from the fleet** rather than the locality set. Acurast's pallet has no locality concept at all, so this is the ADAPT half of GAP row 4",
+   "cites": [
+    "S69"
+   ]
+  },
+  {
+   "claim": "**The self-reported binary hash is a matching hint, not a security control**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "C1. Unlike S62's `backend_class`, the hash is not the correctness argument: a device reporting an approved build and running another **produces a different result and loses 2-of-3**. Failure mode is a failed match, not an accepted wrong answer. Residual is C4, not C1",
+   "cites": [
+    "C1",
+    "C4",
+    "S62"
+   ]
+  },
+  {
+   "claim": "**Attestation now carries independence, not correctness**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "Strictly weaker than Acurast. A compromised TEE there yields a *trusted wrong answer*; here it yields *one wrong answer that loses a 2-of-3 vote*. **The property survives a broken attestation root rather than depending on one**",
+   "cites": []
+  },
+  {
+   "claim": "**The ban list is enforced by BUILD, not static analysis \u2014 which is undecidable here**",
+   "grade": "A",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`python/hyperon/stdlib.py:139-140` resolves `py-atom` from a **runtime string**, so `!(py-atom math.sin)` is invisible to any import-closure analysis. But the banned ops are *registrations* \u2014 `grounded_op!(SinMathOp, \"sin-math\")` at `math.rs:219`, registered `:426`, **zero `cfg(feature` in the file** \u2014 so not-registered means not-reachable by any path. S63's binary-hash field already pins it. **No",
+   "cites": [
+    "S63"
+   ]
+  },
+  {
+   "claim": "Issue 3 is on the **critical path for settlement**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S68. Variable ids differ *in content* across runs (`\"rargs\" id: 8` vs `\"result\" id: 9`), so sorting cannot repair it. It is the one item in `proposed/hyperon-nondeterminism/` shipped as a report with **no patch**",
+   "cites": [
+    "S68"
+   ]
+  },
+  {
+   "claim": "The **happy path** is unaffected",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "Merkle-batched result commitments plus payment channels need no state commitment. Only disputes do",
+   "cites": []
+  },
+  {
+   "claim": "**Every graph-AI family in the elder set has an integer formulation**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`analysis/GRAPH_AI.md`. Attention (DAS Hebbian/ECAN), VSA (torchhd), symbolic+PLN (hyperon). Determinism selects a *sub-family* of graph AI rather than excluding it \u2014 and that sub-family is what an integer NPU runs fastest",
+   "cites": []
+  },
+  {
+   "claim": "~~DAS's `double` ECAN fails the N-thread==1-thread oracle~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "**My harness parallelised a reduction DAS does not parallelise.** `visit_nodes` is a serial trie walk over a fixed 16-way content-keyed alphabet \u2014 order is content-determined. The oracle result is a property of my test, not of shipped DAS",
+   "cites": []
+  },
+  {
+   "claim": "**DAS's concurrent epochs diverge from serialised \u2014 INTER-phase, not intra**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "Corrected mechanism: `HandleTrie::traverse(keep_root_locked=true)` makes each pass atomic (`HandleTrie.cc:227-233`), so there is **no torn read inside `collect_rent`** \u2014 my first claim. `spread_stimuli` runs several root-locked passes and releases root between them, so epochs interleave at phase boundaries. Frequency scales with the window: `match_serialised` 47/50 at GAP=0, 20/50 at 100, **0/50 a",
+   "cites": []
+  },
+  {
+   "claim": "~~ECAN cannot diverge via FMA contraction~~",
+   "grade": "INVALID",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "**Inverted.** `StimulusSpreader.cc:74-75` is `lowerbound + (range_size * arity_ratio)` \u2014 an `a + b*c` my line list omitted. clang at `-O2` with default `-ffp-contract=on` emits `fmadd` on aarch64, `mulsd`+`addsd` on baseline x86-64. Inert only while the bounds are equal (default), live after `set_parameters`",
+   "cites": [
+    "O2"
+   ]
+  },
+  {
+   "claim": "**Unsynchronised `unordered_map<string, HebbianNetwork*>`**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`AttentionBrokerServer.h:213`, no mutex in the class, `operator[]` insertion from concurrent handlers = rehash race. **More severe than the epoch bug** and unpatched",
+   "cites": []
+  },
+  {
+   "claim": "A fixed-point BSP ECAN passes the N-thread==1-thread oracle",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S67**, reproduced 3\u00d7. 4,096 nodes, 12 epochs: `double` gives **four different state hashes for T=1/2/4/8**; fixed-point gives one. Anti-degeneracy guard asserts >half the nodes move and >100 distinct values. Reference implementation in `spikes/S67_ecan_fixedpoint/`. The cause is the **rate multiplication rounding plus non-associative float addition**, not integer addition \u2014 \"use integers\" is the",
+   "cites": [
+    "S67"
+   ]
+  },
+  {
+   "claim": "**torchhd makes determinism a model choice**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`cgr`/`mcr` are `int64`-only; `bsc`/`map` support bool/int8/int16/int32; **`hrr`/`fhrr`/`vtb` are float-only** and `fhrr` FFTs. Our prefilter is already `MAP` at int8 \u2014 S34 bit-exact, digest `f4e64fb7d70b9b0c`. Arrived at by accident, should be chosen on purpose",
+   "cites": [
+    "S34"
+   ]
+  },
+  {
+   "claim": "**PLN is verifiable as written**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`c3_pln_stv` does f64 truth-value chains over 37,788 steps and matched on all three platforms \u2014 because `+ - * /` are IEEE-754 correctly rounded (S59). It breaks the moment a confidence formula uses `log`/`exp`",
+   "cites": [
+    "S59"
+   ]
+  },
+  {
+   "claim": "**The NPU is an integer machine \u2014 so the fast path and the deterministic path are the same path**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`executorch/backends/qualcomm/quantizer/` config space is `use_8a8w / 8a4w / 16a16w / 16a8w / 16a4w / 16a2w / 16a4w_block` \u2014 **integer activations \u00d7 integer weights throughout**, with a single float option (`use_fp16a8w`). Dtypes: int32 \u00d768, int8 \u00d764, uint16 \u00d742, int4 \u00d726. **Integer accumulation is associative and exact** (`S7:9`), and S34 measured packed int kernels bit-exact on two machines. Qua",
+   "cites": [
+    "S34",
+    "S7"
+   ]
+  },
+  {
+   "claim": "**The symbolic/neural \"fork\" was stated at the wrong layer**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "It is not two products. `pub trait Grounded` (`hyperon-atom/src/lib.rs:485`) is **user-implementable**, so any computation \u2014 including neural inference \u2014 can be a MeTTa atom. hyperon already binds external services (`exts/snet_io`), a network atomspace (`builtin_mods/das.rs`), Python (`exts/py_ops`) and agents. **The module bus exists.** The real fork is per-module *verification rung*, not per-sys",
+   "cites": []
+  },
+  {
+   "claim": "**We deleted the machinery that verifies neural work, on purpose**",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "`S7:9` \u2014 *\"TOPLOC \u2026 verifies with an **exponent-exact / mantissa-tolerant** comparison, because GPU float accumulation order varies across hardware \u2026 We therefore keep TOPLOC's compression and **delete its tolerance model**.\"* That tolerance model is purpose-built for exactly the heterogeneous-float problem S59 later measured. It is MIT, in `elders/toploc`, and we discarded it on the assumption we",
+   "cites": [
+    "S59",
+    "S7"
+   ]
+  },
+  {
+   "claim": "Verification rung should be chosen **per module type**, not per system",
+   "grade": "D",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "Symbolic coordination \u2192 byte comparison (S57). Neural grounded atoms \u2192 TOPLOC exponent-exact/mantissa-tolerant commitment. Untested together",
+   "cites": [
+    "S57"
+   ]
+  },
+  {
+   "claim": "**Stage 2 must run in-process**",
+   "grade": "A",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S45 + S55/S56 + two attackers. Controlled pair, same session, same cores, `fork`+`execve`+`waitpid`, n=30: **7.07 ms spawned vs 0.247 ms resident = ~29\u00d7**",
+   "cites": [
+    "S45",
+    "S55",
+    "S56"
+   ]
+  },
+  {
+   "claim": "Stage 2 in-process = **0.25 ms** (12 processes \u00d7 3000 reps, background cpuset, sd 0.06, CV 23%, band 0.16\u20130.33)",
+   "grade": "A",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "Two independent attackers converged on it from separate binaries. Output byte-identical to `mork run` **and to S45's ground truth**, md5 `5befd44b\u2026` \u2014 the rule fires: 12 facts + 1 `exec` in, 11 deduped triples + 11 derived `(Answer \u2026)` out",
+   "cites": [
+    "S45"
+   ]
+  },
+  {
+   "claim": "~~Any stage-2 engine swap is capped at ~1.06\u00d7~~ **RE-OPENED**",
+   "grade": "D",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": true,
+   "evidence": "S44 computed this against a laptop prefilter and a numpy exact-match. Stage 2 is **~57% of the query, band 45\u201366%** \u2014 recomputed against S54's *own deployable shape* (T=3, 0.194 ms; I had used the T=4 cell S54 itself flags as having a free coordinator). **\"Majority\" is not supportable**: at the fast end of stage 2's spread against the T=3 prefilter it is 45%. What survives is decisive and weaker: ",
+   "cites": [
+    "S44",
+    "S52",
+    "S54"
+   ]
+  },
+  {
+   "claim": "**Never size a spin-barrier pool to `nproc`**",
+   "grade": "A",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S51: T=8 collapses 89\u00d7; S53 hit the same starvation at T=1 (14\u00d7 error) one spike later. Corroborated twice, by accident",
+   "cites": [
+    "S51",
+    "S53"
+   ]
+  },
+  {
+   "claim": "4 background cores \u2212 1 coordinator = **3 workers**, or the barrier must block",
+   "grade": "B",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S54",
+   "cites": [
+    "S54"
+   ]
+  },
+  {
+   "claim": "Custody is justified by **network fetch**, not bandwidth (~4,500 queries per 12.8 MB fetch)",
+   "grade": "D",
+   "section": "LIVE \u2014 architecture requirements",
+   "dead": false,
+   "struck": false,
+   "evidence": "S34. Retires S18's argument",
+   "cites": [
+    "S18",
+    "S34"
+   ]
+  },
+  {
+   "claim": "**C3 corrected: 5.7\u00d7 short at 4 workers, and the kernel is BANDWIDTH-bound**",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S72b**, the 4-worker measurement S72 admitted it was missing. 15.2\u00d7 was single-core. Per-instance falls **329 \u2192 220 GOP/s** as workers are added; scaling **2.68\u00d7** vs S71's 3.95\u00d7 for independent jobs. **S34's \"13.9\u00d7 faster while staying compute-bound\" is scoped to single-core.** My original prediction was off by 2.4\u00d7, not 6.3\u00d7. **A bandwidth bound cuts toward the NPU** \u2014 VTCM is on-chip memory \u2014",
+   "cites": [
+    "S34",
+    "S71",
+    "S72",
+    "S72b"
+   ]
+  },
+  {
+   "claim": "**Prefilter costs 23.9 \u00b5s at the deployable 3-worker shape \u2014 the Amdahl rung is measured and stronger**",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "**N1**, replacing the ~50 \u00b5s that inherited S18's artifact. 5.22 cycles/bundle, near-perfect scaling to T=3 (2.99\u00d7). Against S56's stage 2 the prefilter is **7.0\u201311.1% of the query** \u2014 a range, because S56's stage 2 is a **1.66\u00d7 DVFS band (191.88\u2013319.01 \u00b5s)** it explicitly retracted as a point value. N1b caught that the numerator was normalised (cycles/bundle) and the denominator was not. Every po",
+   "cites": [
+    "N1",
+    "N1b",
+    "S18",
+    "S56"
+   ]
+  },
+  {
+   "claim": "**T=4 on the background cpuset is coordinator starvation \u2014 third occurrence**",
+   "grade": "A",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "N1: 8080 \u00b5s vs 23.9 at T=3, **337\u00d7 slower**. S51 found it at T=8, S53 at T=1, and the LEDGER already carried the rule *\"4 background cores \u2212 1 coordinator = 3 workers\"*. **The rule was written and the code hit it anyway**",
+   "cites": [
+    "N1",
+    "S51",
+    "S53"
+   ]
+  },
+  {
+   "claim": "**The NPU descope is a resource-allocation decision, not a technical conclusion**",
+   "grade": "D",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "**`analysis/NPU_DESCOPE_AUDIT.md`.** The QNN licence rung is **verified dead** \u2014 oflineAI ships zero QNN/QAIRT and declares vendor libs rather than redistributing them. The SDK/delegate rung is largely paid (ggml-hexagon is MIT and already built). The ~50 \u00b5s Amdahl rung **inherits S18's overhead artifact** by the workspace's own note. Meanwhile S72b (bandwidth-bound), B1 (VTCM premise holds at B=1",
+   "cites": [
+    "B1",
+    "S18",
+    "S72b"
+   ]
+  },
+  {
+   "claim": "NPU tok/s figures are **READ**, not measured here",
+   "grade": "E",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "Sourced to `~/alex/oflineAI` (CPU 6-thread 48/22; NPU HTP0 v79 700/18.8). No NPU code has ever run in this workspace",
+   "cites": []
+  },
+  {
+   "claim": "`background` cpuset = `0-1,4-5`",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "S54, read from `/dev/cpuset` on device",
+   "cites": [
+    "S54"
+   ]
+  },
+  {
+   "claim": "NNAPI exposes no accelerator on SM8750",
+   "grade": "A",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "S31; a second agent independently searched HAL/VINTF \u2014 for a negative existence claim, an independent search *is* the attack",
+   "cites": [
+    "S31"
+   ]
+  },
+  {
+   "claim": "Rule: **scale \u2265 2\u00b7nnz(Q)/126** \u2014 pick the scale from the cutoff, not the observed range",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "S31. v1 had the symptom (recall 0/8), not the rule",
+   "cites": [
+    "S31"
+   ]
+  },
+  {
+   "claim": "Transmit the scale as an **exact rational**, never a float",
+   "grade": "A",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "**Independently confirmed from outside this workspace**: Acurast ships `MetricInput = (PoolId, u128, u128)` \u2192 `FixedU128` as `numerator/denominator` at 260k devices (`acurast/common/src/types.rs:558-561`). First external confirmation any claim here has received. **And `hyperjob_v1.proto` still declares `quant_scale` as `double`**",
+   "cites": []
+  },
+  {
+   "claim": "Pointer tagging aborts PathMap's `slim_ptrs`",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "S16; *used* in an attack, never targeted. v1 said A",
+   "cites": [
+    "S16"
+   ]
+  },
+  {
+   "claim": "Perf cluster 2 NEON ops/cycle, prime 4 (2.018\u00d7)",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "Attacker-produced, unattacked \u2014 **and unbankable**, prime is outside the background cpuset",
+   "cites": []
+  },
+  {
+   "claim": "MIT declared in MORK issue #2, file never committed",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "See the row below; `analysis/MORK_LICENCE_CHECK.md`",
+   "cites": []
+  },
+  {
+   "claim": "**MORK IS callable in-process** \u2014 `kernel/src/lib.rs` exports `pub mod space`; stage 2 in-process = **0.25 ms** (S55's \"0.310 ms\" was one draw at the ~80th perc",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "**S55.** v2 said the opposite at grade E and let it gate the query path. `Space::new` / `add_all_sexpr` / `metta_calculus` / `dump_all_sexpr` are all public, and an in-tree crate already uses them. **Blocker count goes 5\u21924, not 2\u21921** \u2014 licence, nightly, `/dev/shm`, and heap tagging all remain; `proposed/mork-license/README.md` said so before S55 and I contradicted my own artefact",
+   "cites": [
+    "S55"
+   ]
+  },
+  {
+   "claim": "~~MORK ~31.6\u00d7 faster on join work~~",
+   "grade": "D",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": true,
+   "evidence": "S35's two rows use **differently-bracketed timers**: MORK's internal `steps took` (excludes the 31% parse), hyperon's `run_ms` (includes it). Re-measured today: 8\u20139 ms vs 942\u20131001 ms = **~110\u00d7**, both moved >1.4\u00d7 from S35. Direction robust, magnitude not quotable",
+   "cites": [
+    "S35"
+   ]
+  },
+  {
+   "claim": "**MORK in-process is ~10\u00d7 hyperon in-process on stage 2, ~7.5\u00d7 end-to-end**",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "**The denominator that decides anything**, and nobody had measured it until an attacker did. MORK ~0.19\u20130.32 ms vs hyperon ~3 ms (boot 23 ms, amortisable). S55's 18.3\u00d7 used MORK-as-subprocess \u2014 a straw man nobody proposed shipping",
+   "cites": [
+    "S55"
+   ]
+  },
+  {
+   "claim": "MORK unlicensed at HEAD \u2014 **no licence file anywhere in the tree, no `license` key in any Cargo.toml**, remote HEAD `0653b50`",
+   "grade": "B",
+   "section": "LIVE \u2014 platform",
+   "dead": false,
+   "struck": false,
+   "evidence": "Promoted from E. `analysis/MORK_LICENCE_CHECK.md`, dated, reproducible, checked against remote not a local clone",
+   "cites": []
+  },
+  {
+   "claim": "Perf\u2192prime core migration is worth **2.26\u00d7**",
+   "grade": "B",
+   "section": "LIVE \u2014 magnitude survives, mechanism did not",
+   "dead": false,
+   "struck": false,
+   "evidence": "v1 buried this in DEAD; only the *mechanism* died. Third un-retraction",
+   "cites": []
+  },
+  {
+   "claim": "A **1.43\u00d7 scheduling headroom** exists",
+   "grade": "B",
+   "section": "LIVE \u2014 magnitude survives, mechanism did not",
+   "dead": false,
+   "struck": false,
+   "evidence": "Attacker's figure; v1 over-killed the claim and recorded nothing in its place",
+   "cites": []
+  },
+  {
+   "claim": "Single-thread throughput flat across size (**\u22640.5%**)",
+   "grade": "B",
+   "section": "LIVE \u2014 magnitude survives, mechanism did not",
+   "dead": false,
+   "struck": false,
+   "evidence": "S50/S53. v1 listed \"flat within 1.8%\" as DEAD and left no LIVE row saying flatness is real",
+   "cites": [
+    "S50",
+    "S53"
+   ]
+  },
+  {
+   "claim": "Shaping worth **1.43\u00d7\u20135.64\u00d7** on a real KG",
+   "grade": "D",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "S52. v1 wrote \"4.1\u20135.6\u00d7\", dropping the 1.43. **Composite**: measured prefilter + *computed* `shortlist \u00d7 per_check`; **stage 2 never executed** (S47:60); `per_check` varies 2\u00d7 run-to-run",
+   "cites": [
+    "S47",
+    "S52"
+   ]
+  },
+  {
+   "claim": "Store checked: shaped **0.0\u20131.0%**, random **5.2\u201357.2%**",
+   "grade": "B",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "v1 dropped the 5.2%. **Not a time proxy**: 207\u00d7 fewer rows buys 4.36\u00d7, implying a ~13 \u00b5s floor and an asymptotic cap near 5.7\u00d7",
+   "cites": []
+  },
+  {
+   "claim": "**The cutoff is oracle-fitted** \u2014 reads ground truth; ~18 ms to produce a \"127.8 \u00b5s\" query",
+   "grade": "B",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "Rule 5 requires this on the row; v1 relegated it to a gap",
+   "cites": []
+  },
+  {
+   "claim": "Worst mis-shaping 1.45\u00d7 worse than random",
+   "grade": "D",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "Same composite caveat",
+   "cites": []
+  },
+  {
+   "claim": "Selective-query shards should not pay for shaping (1.2\u20131.45\u00d7)",
+   "grade": "D",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "S48 finding 3, replicated. A surviving *negative* result, absent from v1",
+   "cites": [
+    "S48"
+   ]
+  },
+  {
+   "claim": "Exactness rule is **m \u2265 2 of 3 bound slots**",
+   "grade": "B",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "S10. `(p ?x ?x)` is inexpressible \u2192 ~10% scan",
+   "cites": [
+    "S10"
+   ]
+  },
+  {
+   "claim": "Layout buys CPU work at fixed recall, not recall",
+   "grade": "B",
+   "section": "LIVE \u2014 shaping, oracle labelled",
+   "dead": false,
+   "struck": false,
+   "evidence": "S17",
+   "cites": [
+    "S17"
+   ]
+  },
+  {
+   "claim": "**1.00\u00d7 at T=1\u20132, 1.06\u00d7 at T=3, 1.16\u00d7 at T=4** in the deployable cpuset",
+   "grade": "B",
+   "section": "LIVE \u2014 residency",
+   "dead": false,
+   "struck": false,
+   "evidence": "S54. Supersedes S53's 1.52\u00d7 and my earlier 1.80\u00d7, both on unreachable cores",
+   "cites": [
+    "S53",
+    "S54"
+   ]
+  },
+  {
+   "claim": "Whole-SoC (unreachable): 1.17\u00d7 at T=4, 1.52\u00d7 at T=6",
+   "grade": "B",
+   "section": "LIVE \u2014 residency",
+   "dead": false,
+   "struck": false,
+   "evidence": "S53 \u2014 **one run, thermal uncontrolled**, its own caveat which v1 omitted while reciting its strengths",
+   "cites": [
+    "S53"
+   ]
+  },
+  {
+   "claim": "**Bundling on real data: B=16 fits an 800k shard in VTCM at p90 0.2% store checked**",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "**B1.** The requirement is **32\u00d7**, not the 54\u00d7 assumed nor the 16\u00d7 B1 first reported \u2014 and **B1b revises the operating point to B=32**: at B=16, 7.66% of dimensions are exact ties all broken to 0, giving a 4.6-point sign imbalance \u2014 the worst of the VTCM-viable options. B=32 costs 0.3pp of p90 shortlist and buys 2.4\u00d7 fewer ties, 3\u00d7 less imbalance and 2\u00d7 VTCM headroom (3.20 MB). Bias is benign for",
+   "cites": [
+    "B1",
+    "B1b",
+    "B1c",
+    "S52"
+   ]
+  },
+  {
+   "claim": "**Co-tenancy does not perturb results \u2014 SEPARATE PROCESSES only**",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "8 concurrent **processes**, identical digest at every N. **This does not cover in-process concurrency**, and there is now a concrete reason to expect that to fail: `NEXT_VARIABLE_ID.fetch_add(\u2026, Relaxed)` keeps ids unique but makes *which* thread gets which id scheduling-dependent. Each process starts its counter at 1, which is exactly why this passed. Untested",
+   "cites": []
+  },
+  {
+   "claim": "**S32's 28,700 jobs/s**",
+   "grade": "INVALID",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "**RESULT.md now written (2026-08-16), verdict RED as a citation source.** 28,726 = 10,000 devices \u00d7 2-of-2 quorum, i.e. a projection; per device ~2.9 jobs/s. `tps.py` claims 5.87\u00d7 scaling but `tps.json` gives 7.71\u00d7 burst / 6.01\u00d7 sustained \u2014 **not derivable from its own data**. All `eight_way` rows are on cores S54 proved unreachable. Previously: `tps.py` still prints it under \"MEASURED\"; S33/S34 c",
+   "cites": [
+    "S33",
+    "S34",
+    "S54"
+   ]
+  },
+  {
+   "claim": "**Step-level bisection IS reachable on hyperon's public API**",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "S60 v2. `impl Debug for RunnerState` (`mod.rs:527-534`) exposes `interpreter_state` incl. the plan stack; it changes on **50,786 of 50,794 steps** (corpus median 1.0000). Also `interpret_init`/`interpret_step` and `Metta::space()`. v1 claimed the opposite",
+   "cites": [
+    "S60"
+   ]
+  },
+  {
+   "claim": "~~Checkpoint commitments reproduce *because of* the patches~~",
+   "grade": "INVALID",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": true,
+   "evidence": "**Falsified by revert test.** Stock `3f76dc4` with zero patches gives **byte-identical roots** on all six programs. The patches were not load-bearing for S65's result; S65's \"two different determinism regimes\" framing is unsupported",
+   "cites": [
+    "S65"
+   ]
+  },
+  {
+   "claim": "**S65's commitment is FORGEABLE \u2014 it binds no computation**",
+   "grade": "A",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "**100% of leaf content is `\"()\\n\"` repeated** across all six programs; content bytes are exactly `3\u00b7k(k\u22121)/2` in every case. The root is a function of ~22 integers, and was reproduced in 6 lines of Python without running hyperon. `current_results()` is emitted output, not interpreter state \u2014 two executions with divergent stacks and the same output prefix commit identically. **A bisection game over",
+   "cites": []
+  },
+  {
+   "claim": "**Checkpoint retention measured the wrong thing**",
+   "grade": "D",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "192\u20131,088 B is **leaf digests only**. An opening at position *k* is `(preimage_k, path_k)`; `ckpt.rs` drops every preimage, so a verifier can be shown only that an opaque hash is a tree member. Real openable retention for `c1` \u2248 **1,573 B** and scales with output volume, not checkpoint count. Also, leaf[0] is a bootstrap artefact (`prev_len` starts at `usize::MAX`)",
+   "cites": []
+  },
+  {
+   "claim": "**A dispute resolves to an interval of up to 3,309,427 steps**",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "S65 reported the *mean* gap over 6 hand-picked programs. A dispute lands in the interval containing the disagreement, so the quantity is the **max**. Full 24-program sweep: mean 168\u20131,103,188, **max 256\u20133,309,427**. Even within S65's own six the max is 29,742 \u2014 4.7\u00d7 its stated ceiling; corpus-wide it is **525\u00d7** off. The \"one-interval proving target is 1k\u20136k steps\" input to S66 is wrong",
+   "cites": [
+    "S65",
+    "S66"
+   ]
+  },
+  {
+   "claim": "**Bisection commitment THROUGHPUT cost is UNPRICED**",
+   "grade": "D",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "S60 v1's 11.6% timed a **5,709-step aborted re-run** \u2014 the harness reused one `Metta`, so iterations 2+ ran against a polluted space and terminated on an assertion error that `run_step` returns `Ok(())` for. Honest run: `lazy` 37.6%, and ~94% of that is `to_string()` not hashing; an O(1) probe gives 4.1%; a true per-step plan commitment costs **200\u00d7**. Cost is also **O(n\u00b2)** in accumulated results",
+   "cites": [
+    "S60"
+   ]
+  },
+  {
+   "claim": "`Variables({\u2026})` hash-set iteration order is a **second** nondeterminism source",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "S60. After masking every `0x\u2026` address, 386 diff hunks remain between runs of the same program. `proposed/hyperon-nondeterminism/` covers addresses and `intersection-atom`, not this",
+   "cites": [
+    "S60"
+   ]
+  },
+  {
+   "claim": "A hash chain cannot support post-a-root-then-open-at-k",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "S60. Fine for two-party interactive bisection (Arbitrum-style); fatal for R-NEW's shape. Needs a Merkle/vector commitment: ~2N hashes plus **32N bytes retained**, 1.6 MB per 50k-step run. Unmeasured",
+   "cites": [
+    "S60"
+   ]
+  },
+  {
+   "claim": "**MeTTa's reduction path is fs-clean, but \"bounded to the runner boundary\" is wrong**",
+   "grade": "D",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "The fs-location claim holds \u2014 all fs sites are in the runner across 8 files, `interpreter.rs` and `stdlib/` have zero. But the port is **not** a compilation unit: `GroundingSpace` lives in `lib`, not `hyperon-space`; `interpreter.rs:9` imports `crate::metta::runner::stdlib::core::IfEqualOp`; and there is no feature gate dropping `runner`, so building the interpreter builds the whole crate. Carving",
+   "cites": []
+  },
+  {
+   "claim": "hyperon **spawns** no threads, but is not free of threading primitives",
+   "grade": "B",
+   "section": "NEVER MEASURED",
+   "dead": false,
+   "struck": false,
+   "evidence": "S66's grep searched `std::thread`, the one primitive genuinely absent. Present: `hyperon-common/src/unique_string.rs:8` \u2014 a `LazyLock<Mutex<UniqueStringStorage>>` taken on **every** symbol/variable name construction; and `hyperon-atom/src/lib.rs:222-226` \u2014 `static NEXT_VARIABLE_ID: AtomicUsize`. **Corrected scope:** the id never reaches printed output (`Display` at `:335` prints `${name}` only), s",
+   "cites": [
+    "S66"
+   ]
+  }
+ ],
+ "retractions": [
+  {
+   "claim": "\"the seal defeats the echo attack, 13/13\"",
+   "spike": "S49",
+   "why": "seal bound `result_hash`, verdict computed from `payload`, nothing tied them; no commit-before-reveal ordering; unprefixed preimage collides. Retracted in `S49_schema_v1/RESULT.md` \u00a7S49b, fixed in `verifier2.py`."
+  },
+  {
+   "claim": "**\"bad shaping == no shaping; bounded downside\"**",
+   "spike": "S48",
+   "why": "**falsified, and my own published matrix already contained the counterexample.**"
+  },
+  {
+   "claim": "**\"the driver is prefix coverage\"**",
+   "spike": "S48",
+   "why": "the single 0.6 \u00b5s comparison it rests on reverses at B=4, B=16 and at two of five reseeds. A layout-only property cannot depend on B."
+  },
+  {
+   "claim": "\"bundling 54\u00d7, clustering 12.8\u00d7 of that\"",
+   "spike": "S47",
+   "why": "direction survives; both numbers are functions of a `per_check` constant that varies 2\u00d7 run-to-run and was measured on the most favourable access pattern. Correcting it moves the two figures in **opposite** directions."
+  },
+  {
+   "claim": "\"clustered bundling does not collapse on mismatch\"",
+   "spike": "S47",
+   "why": "true only for mismatches preserving the bucket-constant slot. S48's own `(subj,obj)`/`(p ?s o)` cell collapses to ~1\u00d7."
+  },
+  {
+   "claim": "\"prefilter at 86% of the roof; \u226416% left on the CPU\"",
+   "spike": "S45",
+   "why": "the attacker got **2.2\u00d7** more out of my own kernel by moving the barrier and pinning threads \u2014 without touching one instruction in `run_chunk`."
+  },
+  {
+   "claim": "\"59% of the T=8 query was `pthread_create`\"",
+   "spike": "S45b",
+   "why": "my own two tables say **41%** (483\u2192287 \u00b5s). Subtracting a separate `threadcost` measurement is invalid because spawn overlaps with work. And the pool did **not** fix the reversal: pooled T=8 (287) is still worse than pooled T=4 (252)."
+  },
+  {
+   "claim": "**\"stage 2 is 13 ms of `exec()`\"**",
+   "spike": "S45",
+   "why": "it is **5.66 ms**, and it is not `exec()`."
+  },
+  {
+   "claim": "\"the read roof peaks at 4 threads and declines at 8 \u2014 a property of the memory system\"",
+   "spike": "S45b",
+   "why": "**my own harness error.** `streamroof.c:20-24` puts `pthread_create` *inside* the timed region \u2014 the exact mistake I diagnose two sections earlier and then never applied to the instrument I used as ground truth. With spawn moved out: 65.7 \u2192 **69.1** GB/s from 4 to 8 threads. No decline."
+  },
+  {
+   "claim": "\"22.6 GB/s/core, compute-bound at ~2 IPC\"",
+   "spike": "S46",
+   "why": "a DVFS artefact of an unpinned short-lived process. Same binary pinned to cpu7: **39.3\u201343.6 GB/s**. My IPC derivation was fitted to the artefact \u2014 measured on cpu7 it is 3.3 IPC, not 2."
+  },
+  {
+   "claim": "\"flat within 1.8%\"",
+   "spike": "S46",
+   "why": "below the instrument's resolution. The arch timer granularity is **52.08 ns**; the smallest point (1.1 \u00b5s) is 21 ticks = \u00b14.8% quantisation, and best-of-14 systematically selects the favourable rounding at the small end."
+  },
+  {
+   "claim": "",
+   "spike": "cpu0 (performance, 2.9 GHz)",
+   "why": "cpu7 (prime, 3.28 GHz)"
+  },
+  {
+   "claim": "prefilter, 24 KB \u2192 102 MB",
+   "spike": "21.7 \u2192 22.1 GB/s",
+   "why": "50.2 \u2192 49.8 GB/s"
+  },
+  {
+   "claim": "MAD",
+   "spike": "0.0\u20132.2%",
+   "why": "0.1\u20130.2%"
+  }
+ ],
+ "n_atoms": 455,
+ "conditions": {
+  "data": "real:kingfisher-LEDGER",
+  "concurrency": "single-process",
+  "swept": {}
+ },
+ "cites": [
+  "G1_graph_ingest"
+ ]
+}

@@ -116,7 +116,17 @@ else. Two constraints do not improve with scale, and one gets worse:
   Verified now: the `golemfactory` org has 100 repos and pushed code **two days
   ago** (`ya-runtime-wasi` 2026-08-15, `ya-service-bus` 2026-08-14,
   `golem-stats-backend` 2026-08-12, `erc20_payment_lib` 2026-08-01). The
-  network is alive; only the monorepo is gone from public view. Emphasis has
+  network is alive; only the monorepo is gone from public view.
+  **`yagna` is NOT "archived" — it is removed.** The distinction has a clean
+  control: `golemfactory/clay` *is* archived and still returns HTTP 200, browsable
+  and forkable. `yagna` returns **404 on both the website and the REST API**, so
+  it cannot be forked and no read-only copy is reachable. Any advice to "fork the
+  archived yagna repo" is unactionable.
+  The **original** marketplace was renamed, not deleted: `golemfactory/clay`,
+  2,877 stars, 278 forks, archived 2022-12-27, *"Golem is creating a global market
+  for computing power."* Now cloned at `elders/yagna` (branch `develop`; `master`
+  is a Mercurial-era stub). **GPL-3.0 — SPEC only, no code lifted.**
+  Emphasis has
   shifted toward **GolemDB / Golem Base** (`golembase-rust-sdk` 2025-11,
   `golemdb-workshop` 2025-09, `marketplace-explorer`), and
   `yagna-arkiv-market-matcher` is archived.
