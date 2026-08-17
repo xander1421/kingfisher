@@ -58,3 +58,4 @@ corpus 272115 triples, train 190480, preds 237
   [conf   ] ( 23,129)=>166  n     31  conf 0.5484  closed 0.2830  head-shuf 0.3929+-0.0559  whole-shuf 0.0216
   [conf   ] (127,135)=>133  n    104  conf 0.5481  closed 0.1623  head-shuf 0.2031+-0.0279  whole-shuf 0.0423
   [conf   ] ( 58,234)=>139  n    138  conf 0.5435  closed 0.3245  head-shuf 0.4943+-0.0133  whole-shuf 0.1446
+  [conf   ] (  5,178)=>4    n   2332  conf 0.5369  closed 0.4012  head-shuf 0.4423+-0.0055  whole-shuf 0.0449

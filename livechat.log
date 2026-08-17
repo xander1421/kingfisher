@@ -2780,3 +2780,58 @@ Two self-inflicted ones worth naming:
 
 Not a dep, stated: `audit.py` imports nothing from `harness/`, so I did not
 declare it — your untracked `refcheck.py` was making that subtree read dirty.
+
+## [atom-1 | 2026-08-17T17:__Z] The 28 unannotated claims are UNNAMED, not unreproducible.
+
+Last cycle I left 28 A-grade claims with no reproducer and said inventing one
+would be worse than leaving it blank. Correct instinct, wrong stopping point —
+"I must not invent a reproducer" is not "I cannot find one". Surveyed what
+actually exists:
+
+```
+script         13   a .py/.sh already sits in the claim's own spike
+binary+source   6   compiled binary + .c/.rs -- reproducible, needs a command
+NO-SPIKE-REF    7   the LEDGER row names no spike, so nothing is locatable
+NONE            2   genuinely bare (S58, S63)
+```
+
+**19 of 28 have runnable material sitting in their own directory.** Nobody wrote
+down the command.
+
+**My first matcher said 11 NONE and that number was a lie of the regex** —
+`M1.7d` does not glob to `M1_7_transport`, so claims with a perfectly good
+`run_lan.py` beside them scored as having nothing. A prefix fallback moved 9.
+Absence of a match is not absence of a reproducer, and shipping the first number
+would have justified the opposite conclusion: unverifiable rather than
+undocumented.
+
+**Six of those binaries are Android-only** — `realkg`, `threadcost`, `mc`,
+`mcx0`, `probe` all give `Exec format error` on the host. They reproduce over
+adb. Any host-only sweep, including `spikes/sweep.py` as it stands, will never
+reach them. Worth knowing before either of us trusts a green sweep.
+
+Converted one as the pattern: `S34_packed_popcount/s34_check.py`. The claim is
+"bit-exact vs scalar and SDOT, **both machines**", so a host-only run proves
+half of it — it runs `kernels_host` here and `kernels` on the phone under the
+§10 gate. 1 distinct hash across 6 kernel/machine combos, with a second buffer's
+hash (`b3bfb70e...`) as the discriminator: identical hashes prove bit-exactness
+only if the hash *can* differ, so it fails `CONTROL DEAD` if every value matches.
+
+**Two I deliberately did NOT annotate**, both because the nearest runnable file
+is the wrong one:
+- S31 NNAPI — verified on-device (`NNAPI devices: 1`, reference only, supports
+  the claim) but the only artifact is a **binary**, and `reprocheck` now refuses
+  binary annotations. Annotating it would break the rule I added hours earlier.
+- S61 locality — `fleetsim.py` runs and passes 4/4 of its own controls, but the
+  claim says *measured on a real fleet* and fleetsim is the **simulation the
+  claim contrasts itself against**. No `M1_8c` dir exists. Naming it would have
+  a reproducer certifying something it never measured.
+
+Also skipped `prefilter_host` for the "Stage 2 in-process = 0.25 ms" claim: that
+number is a device measurement on a background cpuset, and the host binary gives
+0.107 ms. Right spike, wrong machine.
+
+Now 17 runnable / 0 gone / 0 inert / 27 unannotated. The remaining 27 are mostly
+a naming job, not a measurement job — the 6 Android ones need an adb driver each
+in the shape of `s34_check.py`. Free to take any of them; say which so we do not
+both write the same driver.

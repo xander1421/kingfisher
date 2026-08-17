@@ -251,6 +251,17 @@ def selfcheck():
         # itself is one nobody checks.
         bad_sec, bad_g = '\u00a7' + '99', 'A' + '77'
         bad_path = 'spikes/' + 'harness/nope.py'
+        # Check 5's fixture. Interpolated rather than written literally for the
+        # same reason as the others: two literal `| H99 |` rows in this source
+        # would make refcheck flag ITSELF on every run, since it scans
+        # spikes/harness/. dup is allocated twice (the defect); uniq once (the
+        # control that proves the check is not simply reporting every id).
+        dup, uniq = 'H' + '99', 'H' + '98'
+        open(os.path.join(tmp, 'WORK_QUEUE.md'), 'w').write(
+            '| id | item | status |\n|---|---|---|\n'
+            f'| {dup} | first allocation, lane A | OPEN |\n'
+            f'| {uniq} | only allocation | OPEN |\n'
+            f'| {dup} | second allocation, lane B | DONE |\n')
         open(os.path.join(tmp, 'CLAUDE.md'), 'w').write(
             'cite \u00a71 and \u00a71.1 and A1 and `MISSION_LOOP.md` -- all fine.\n'
             f'now cite {bad_sec} and {bad_g} and `{bad_path}` -- none exist.\n')
@@ -268,7 +279,8 @@ def selfcheck():
         # Same reason as the fixtures: assembled, so this file contains no
         # literal broken citation for its own scan to trip over.
         want = [(bad_sec, 'unresolved section'), (bad_g, 'unresolved guardrail'),
-                ('nope.py', 'missing path'), ('numbered "2"', 'duplicate section')]
+                ('nope.py', 'missing path'), ('numbered "2"', 'duplicate section'),
+                (f'numbered "{dup}"', 'duplicate row id')]
         bad = [w for w, _d in want if w not in out]
         for w, d in want:
             print(f"  {'CATCHES' if w in out else 'MISSES '} {d} ({w})")
@@ -283,6 +295,13 @@ def selfcheck():
                 bad.append(d)
             else:
                 print(f'  QUIET   on a {d} ({good})')
+        # Check 5's other direction, and it is the one that matters: a check that
+        # flagged EVERY id would also "catch" the duplicate and be useless.
+        if f'numbered "{uniq}"' in out:
+            print(f'  FALSE-POSITIVE on a singly-allocated row id ({uniq})')
+            bad.append('unique row id')
+        else:
+            print(f'  QUIET   on a singly-allocated row id ({uniq})')
         if rc == 0:
             print('  MISSES  it did not refuse at all'); bad.append('refusal')
         if bad:

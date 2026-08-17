@@ -79,11 +79,13 @@ hyperon's process-global variable counter reaches printed output, so a reused
 process is exactly where drift appears. `soak_check.py` fails if raw comes back
 constant, reporting `CONTROL DEAD` rather than a passing claim.
 
-## Standing gap, not closed
+## Standing gap
 
-**28 of 43 A-grade claims still name no reproducer.** That number has not moved
-and is not guessed at here; annotating a claim requires knowing which command
-produced it, and inventing one would be worse than leaving it blank.
+**28 of 43 A-grade claims name no reproducer**, and this section originally
+stopped there — "not guessed at here; inventing one would be worse than leaving
+it blank". That was the right instinct and the wrong stopping point: it treated
+"I must not invent a reproducer" as if it meant "I cannot find one". The section
+below surveys what actually exists, without inventing anything.
 
 ## The 28 unannotated claims: not unreproducible, unnamed
 
