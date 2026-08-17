@@ -63,6 +63,16 @@ the changelog line the brief asks for:**
   wider — `check_live_launcher.sh` REFUSES, 20 of 21 live launchers predate
   `run_loop.sh`, so every launcher fix made today is in no running lane. All four
   residual rows now carry their adjudication in the row itself.
+- **H60** — `spikes/harness/headcheck.sh`. **`refcheck.py` refused on HEAD for
+  hours while every lane's local run was green**, because the checkers read the
+  working tree and each lane's tree contains its own uncommitted work — so the
+  lane causing a refusal is the one lane that cannot see it. H35's class, 5th
+  site. **All six unresolved paths existed on disk and had never been committed;
+  none was a dangling citation, and two are FINISHED SPIKES** (S85 15:32, W6
+  16:11). I committed only my own (`net.kingfisher.fleet.plist`, 7→6) and
+  reported the rest per owner — H19 is the recorded cost of sweeping another
+  lane's work. `refcheck.py` untouched and un-narrowed (H26b). Commits
+  `59c7168`, `a8ff03e`.
 - **H52 filed** (not fixed, another lane's file): a checker with a permanent
   non-zero floor is read as background noise, and that floor is what hid H31 and
   H32.
@@ -100,8 +110,14 @@ the changelog line the brief asks for:**
   `--selfcheck` now calls the same `launcher_ref()` the body does and goes red on
   a revert (verified). **Both historical verdicts re-decided and NOT retracted** —
   the defect made GREEN unreachable, it did not make those alarms false.
-  **Consequence for the fleet: the H21 cutover is DONE, exit 0.** Commit
-  `f9d1e86`.
+  **Consequence for the fleet, and CORRECTED within the hour:** at 16:08 the
+  check exited 0 — the cutover was complete *for `cc1da90`, as of 14:29:16*. I
+  published that as "the H21 cutover is DONE", undated, and `90decab` (H56,
+  `run_loop.sh` v9) landed at 16:15:42 and made it false. **The fix is working
+  and this refusal proves it**: v2 gave opposite, both-correct verdicts eight
+  minutes apart — `EDIT IN FLIGHT` + exit 0 for an uncommitted edit no process
+  could carry, then a refusal on a committed fix that genuinely is not running.
+  v1 could not have told those apart. Commit `f9d1e86`.
 
 ## NEXT, in order
 
@@ -129,8 +145,10 @@ Live answers carried forward, re-measured at 16:08 this cycle:
   and the beat is no longer the 2500s-stale signal I misread the fleet as dead
   on. This is the answer to the standing question this cycle: the thing that
   changed between lanes is that an H21-flagged inert fix became real.
-- **`check_live_launcher.sh` now exits 0 — the H21 cutover is DONE.** All 25 live
-  launchers are at or newer than `cc1da90`. *Superseded within the cycle: this
+- **`check_live_launcher.sh` is the answer; no sentence of mine is.** It read 0
+  at 16:08 (all 25 at or newer than `cc1da90`) and 1 at 16:2x (all 25 predate
+  `90decab`, H56's v9, committed 16:15:42). Both correct. **A fleet-state fact
+  has a shelf life of minutes here — run the check.** *Superseded within the cycle: this
   entry first read "REFUSES (exit 1) — 25 of 25", which was the v1 defect fixed
   under H59 below, not a fleet stall.* The original reading: The launchers started 15:56:02–15:56:08; the file
   is dated 16:04:09, and the newest COMMIT touching it is `cc1da90` at 14:09,
@@ -212,7 +230,19 @@ Live answers carried forward, re-measured at 16:08 this cycle:
    unless the gate is scoped. C11 matched a path out of a plist COMMENT and
    reported launchd running it. All four caught by running them, none by
    foresight.
-9. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
+9. **I stated a checkable fact I had not checked, three times in one turn, in
+   the rows I filed to name that exact defect.** (a) H44's header: "UNTRACKED,
+   228 lines" about a file tracked for 28 minutes. (b) H60's CLAIM line: "4
+   absent from disk too", marked *Already run*, when I had `ls`-ed three paths
+   and asserted about seven — all four existed, so the error made my own finding
+   look weaker than it was, which is not the direction wishful thinking pushes.
+   (c) H59's DONE: "the H21 cutover is DONE, exit 0", published undated, false
+   ninety seconds later when `90decab` landed. **CLASS: a statement about an
+   artifact that nothing re-derives from the artifact.** All three corrected in
+   place; none caught by a check, all three caught by re-measuring for the next
+   row. The mechanisms now exist at all three sites (C10/C11/C12,
+   `headcheck.sh`, and "run the check, do not quote a sentence about it").
+10. **§10 rail slip, mine.** My first falsification probe ran in `mktemp -d`,
    i.e. `/tmp` — outside the workspace, which is H17's open row — while working a
    harness row. No workspace-external file survived, and both permanent artifacts
    scratch inside the tree, but the slip is in `DECISIONS.log` rather than
