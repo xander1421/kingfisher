@@ -1,0 +1,140 @@
+{
+ "spike": "S78_physical_nodes",
+ "recorded_utc": "2026-08-17T11:21:44Z",
+ "note": "S78 is GRADE D: arithmetic over inputs measured in S77, plus one E input read from pathmap source. Published as a threshold, never as a measured byte count.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes",
+   "head": "ad1a35df57ca8fbdeb2732e6588f4209bf241dec",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S78_physical_nodes/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes/threshold.json",
+   "sha256": "5d4c556350c82539ee06947e2b99354f147e597a1de9bedc9be036fb6bee3a43",
+   "bytes": 5112,
+   "mtime": 1786965704,
+   "compared_ts": 1786965704,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_single_child_physical_node_carries_no_digest",
+   "must_fire_because": "the whole question is whether a physical commitment charges per NODE or per SIBLING; the source states the composition and the loop implements it, so this is decidable without a measurement",
+   "can_fail_because": "the composition comment is absent, or the loop does not hash a (path, child_hash) pair per child, i.e. the node hash is not built from its children's digests one at a time",
+   "null_must_contain": "merkleization.rs, which is equally free to hash a fixed child array, a 256-slot map, or every node on the path -- any of which would charge a digest per node and flip this",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "file": "elders/PathMap/src/merkleization.rs",
+    "composition_comment": true,
+    "hashes_path_and_child_hash_per_child": true,
+    "iterates_children": true
+   }
+  },
+  {
+   "name": "C_inputs_are_the_committed_ones",
+   "must_fire_because": "this spike computes rather than measures, so its inputs must be the reviewed spikes' committed numbers and not retyped prose -- retyping a number out of a page is D6 hole H5 performed on purpose",
+   "can_fail_because": "any set is missing from S77/measure.json or any sibling/depth value is absent or non-numeric",
+   "null_must_contain": "S77's measure.json, whose values this spike reads and cannot adjust",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "atoms_interned": {
+     "siblings": 56.356,
+     "physical_nodes_on_path": 61.253237059379096,
+     "logical_auth_bytes": 1803.392
+    },
+    "atoms_original": {
+     "siblings": 45.658,
+     "physical_nodes_on_path": 139.0532147578416,
+     "logical_auth_bytes": 1461.056
+    },
+    "triples": {
+     "siblings": 70.194,
+     "physical_nodes_on_path": 10.260126582278481,
+     "logical_auth_bytes": 2246.208
+    }
+   }
+  },
+  {
+   "name": "C_threshold_is_decision_relevant",
+   "must_fire_because": "a threshold outside any framing anyone would build answers nothing in either direction, and publishing it would be a number with no decision attached",
+   "can_fail_because": "the flip threshold falls outside 1.0-32.0 B per node",
+   "null_must_contain": "a computed F free to land anywhere: below 1 B (even a length field flips the ordering, so S77 needs qualifying) or above 32 B (a full digest per node would not flip it, so the caveat was never a risk)",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "flip_threshold": 6.096227764410209,
+    "window": [
+     1.0,
+     32.0
+    ],
+    "deciding_pair": {
+     "fewest_siblings": "atoms_original",
+     "most_siblings": "triples",
+     "sibling_byte_gap": 785.152,
+     "physical_node_gap": 128.79308817556313
+    }
+   }
+  },
+  {
+   "name": "C_inversion_survives_minimal_framing",
+   "must_fire_because": "S77's inversion is the retraction; if a 1-2 B segment length per physical node undoes it, the retraction is specific to the logical view and must say so",
+   "can_fail_because": "the flip threshold is at or below 2 B per physical node",
+   "null_must_contain": "the atom trie's 139.1 physical nodes per path against the triples' 10.3 -- a 13x gap with ample room to overturn a 785 B sibling gap",
+   "fired": true,
+   "detail": "",
+   "constant_observations": false,
+   "observations": {
+    "flip_threshold": 6.096227764410209,
+    "minimal_framing_upper_bound": 2.0,
+    "margin": 3.0481138822051044
+   }
+  }
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes": {
+   "newest": 1786965704,
+   "from": "spikes/S78_physical_nodes/"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S78_physical_nodes at ad1a35df: 1 modified. The build is NOT ad1a35df."
+ ],
+ "ok": false,
+ "falsifier": "a physical-node commitment that charges a digest per node rather than per sibling, or a framing cost above the computed threshold, would reorder the key sets and make S77 a statement about the logical view only"
+}

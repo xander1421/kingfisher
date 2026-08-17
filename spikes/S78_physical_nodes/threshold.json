@@ -1,0 +1,120 @@
+{
+ "all_controls_fire": true,
+ "controls": {
+  "C_inputs_are_the_committed_ones": {
+   "can_fail_because": "any set is missing from S77/measure.json or any sibling/depth value is absent or non-numeric",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "this spike computes rather than measures, so its inputs must be the reviewed spikes' committed numbers and not retyped prose -- retyping a number out of a page is D6 hole H5 performed on purpose",
+   "name": "C_inputs_are_the_committed_ones",
+   "null_must_contain": "S77's measure.json, whose values this spike reads and cannot adjust",
+   "observations": {
+    "atoms_interned": {
+     "logical_auth_bytes": 1803.392,
+     "physical_nodes_on_path": 61.253237059379096,
+     "siblings": 56.356
+    },
+    "atoms_original": {
+     "logical_auth_bytes": 1461.056,
+     "physical_nodes_on_path": 139.0532147578416,
+     "siblings": 45.658
+    },
+    "triples": {
+     "logical_auth_bytes": 2246.208,
+     "physical_nodes_on_path": 10.260126582278481,
+     "siblings": 70.194
+    }
+   }
+  },
+  "C_inversion_survives_minimal_framing": {
+   "can_fail_because": "the flip threshold is at or below 2 B per physical node",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "S77's inversion is the retraction; if a 1-2 B segment length per physical node undoes it, the retraction is specific to the logical view and must say so",
+   "name": "C_inversion_survives_minimal_framing",
+   "null_must_contain": "the atom trie's 139.1 physical nodes per path against the triples' 10.3 -- a 13x gap with ample room to overturn a 785 B sibling gap",
+   "observations": {
+    "flip_threshold": 6.096227764410209,
+    "margin": 3.0481138822051044,
+    "minimal_framing_upper_bound": 2.0
+   }
+  },
+  "C_single_child_physical_node_carries_no_digest": {
+   "can_fail_because": "the composition comment is absent, or the loop does not hash a (path, child_hash) pair per child, i.e. the node hash is not built from its children's digests one at a time",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "the whole question is whether a physical commitment charges per NODE or per SIBLING; the source states the composition and the loop implements it, so this is decidable without a measurement",
+   "name": "C_single_child_physical_node_carries_no_digest",
+   "null_must_contain": "merkleization.rs, which is equally free to hash a fixed child array, a 256-slot map, or every node on the path -- any of which would charge a digest per node and flip this",
+   "observations": {
+    "composition_comment": true,
+    "file": "elders/PathMap/src/merkleization.rs",
+    "hashes_path_and_child_hash_per_child": true,
+    "iterates_children": true
+   }
+  },
+  "C_threshold_is_decision_relevant": {
+   "can_fail_because": "the flip threshold falls outside 1.0-32.0 B per node",
+   "constant_observations": false,
+   "detail": "",
+   "fired": true,
+   "must_fire_because": "a threshold outside any framing anyone would build answers nothing in either direction, and publishing it would be a number with no decision attached",
+   "name": "C_threshold_is_decision_relevant",
+   "null_must_contain": "a computed F free to land anywhere: below 1 B (even a length field flips the ordering, so S77 needs qualifying) or above 32 B (a full digest per node would not flip it, so the caveat was never a risk)",
+   "observations": {
+    "deciding_pair": {
+     "fewest_siblings": "atoms_original",
+     "most_siblings": "triples",
+     "physical_node_gap": 128.79308817556313,
+     "sibling_byte_gap": 785.152
+    },
+    "flip_threshold": 6.096227764410209,
+    "window": [
+     1.0,
+     32.0
+    ]
+   }
+  }
+ },
+ "deciding_pair": {
+  "fewest_siblings": "atoms_original",
+  "most_siblings": "triples",
+  "physical_node_gap": 128.79308817556313,
+  "sibling_byte_gap": 785.152
+ },
+ "digest_bytes": 32,
+ "flip_threshold_bytes_per_physical_node": 6.096227764410209,
+ "grade": "D (arithmetic over measured inputs) with one E input (composition read from source, not measured)",
+ "minimal_framing_is": "a segment length, 1-2 B; the segment BYTES are key bytes the verifier already holds and the child hash is the value it computed from below",
+ "plausible_framing_window": [
+  1.0,
+  32.0
+ ],
+ "sets": {
+  "atoms_interned": {
+   "logical_auth_bytes": 1803.392,
+   "physical_nodes_on_path": 61.253237059379096,
+   "siblings": 56.356
+  },
+  "atoms_original": {
+   "logical_auth_bytes": 1461.056,
+   "physical_nodes_on_path": 139.0532147578416,
+   "siblings": 45.658
+  },
+  "triples": {
+   "logical_auth_bytes": 2246.208,
+   "physical_nodes_on_path": 10.260126582278481,
+   "siblings": 70.194
+  }
+ },
+ "source": {
+  "composition_comment": true,
+  "file": "elders/PathMap/src/merkleization.rs",
+  "hashes_path_and_child_hash_per_child": true,
+  "iterates_children": true
+ },
+ "verdict": "the ordering flips only if a physical-node commitment costs more than 6.1 B of framing per node on the path; minimal framing is a segment length at 1-2 B, so S77 survives with a 3.0x margin"
+}
