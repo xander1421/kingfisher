@@ -550,3 +550,16 @@ Corollary, and the reason this rule is worth its length: the corrected fact was
 **more** interesting than the false one. A marketplace still running while
 visibly reweighting toward a database product is a live competitor and a real
 signal about compute demand. Inflating it into a corpse destroyed information.
+
+**A17 corollary — `pushed_at` is not "last commit".** The GitHub REST field
+`pushed_at` advances on any ref update (branch deletes, tags, bot activity), so
+it overstates liveness. `golemfactory/ya-runtime-wasi`: `pushed_at` 2026-08-15,
+last commit **2023-09-13** — a three-year gap. Use
+`/repos/{o}/{r}/commits?per_page=1` for activity, and check it per repo rather
+than sorting an org listing.
+
+This bit twice in one hour: a false claim ("Golem deleted the repo") was replaced
+by a claim resting on a misread field, and only a reader pointing at one specific
+repository exposed it. **A correction is a new claim and inherits no credibility
+from the error it replaces.** Verify it to the same standard, including the
+metadata field you are reading.

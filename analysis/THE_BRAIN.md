@@ -113,9 +113,19 @@ else. Two constraints do not improve with scale, and one gets worse:
   retelling: `LICENSE_LEDGER:34` records the narrow verified fact — the
   `golemfactory/yagna` **monorepo** 404s — and this line inflated it into "the
   project died."
-  Verified now: the `golemfactory` org has 100 repos and pushed code **two days
-  ago** (`ya-runtime-wasi` 2026-08-15, `ya-service-bus` 2026-08-14,
-  `golem-stats-backend` 2026-08-12, `erc20_payment_lib` 2026-08-01). The
+  Verified now, by **per-repo commit timestamps** — an earlier version of this
+  correction used the REST API's `pushed_at`, which bumps on any ref change and
+  is **not** the last commit. `ya-runtime-wasi` reports `pushed_at` 2026-08-15
+  and its last commit is **2023-09-13**.
+  Real last-commit dates split the org cleanly:
+  **live** — `ya-service-bus` 2026-08-14, `golem-stats-backend`/`-frontend`
+  2026-08-12, `golem-docs` 2026-08-06, `ya-relay` and `ya-installer` 2026-08-01
+  (transport, relay, observability, installer, docs);
+  **frozen** — `ya-runtime-vm` 2024-10-30, `ya-runtime-wasi` 2023-09-13,
+  `task-api` 2020 (**the execution runtimes**);
+  **newest work** — `golembase-rust-sdk` and `marketplace-explorer` 2025-11.
+  So they keep the network running and observable while the parts that actually
+  *execute compute* have not been touched in two to three years. The
   network is alive; only the monorepo is gone from public view.
   **`yagna` is NOT "archived" — it is removed.** The distinction has a clean
   control: `golemfactory/clay` *is* archived and still returns HTTP 200, browsable
