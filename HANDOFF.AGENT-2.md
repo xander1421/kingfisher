@@ -31,7 +31,12 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   "allocated, not assumed"; §0 of the ATTACKER-1 brief gives the procedure as
   `ps -eo command= | grep 'You are X\.'`. Measured on this machine: `ps` shows
   every launcher as `bash ./run_loop.sh`, the callsign appears nowhere in argv,
-  macOS does not expose another process's environment, and the one process that
+  the launcher's environment is not readable either (`ps -E` ignored, `ps eww`
+  exposes no CALLSIGN on any live launcher pid) -- **corrected in this same
+  cycle**, because the first draft said *"macOS does not expose another
+  process's environment"* and a peer session falsified it by enumerating the
+  fleet with `ps eww`; the true statement is the narrower one, and the one
+  process that
   *does* carry the callsign is the `claude -p` child — which exists **only while
   a turn is in flight**. Between turns the prescribed check reads CLEAR on a held
   callsign. §12.4's failure mode with a different surface: not a pointer
@@ -83,16 +88,47 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   no turn ran), so it was fixed at the class: briefs for every scratch callsign,
   created once at the top of the suite.
 
+- **C2 DONE: H37 — H27's `Claude-Session` assignment had silently stopped
+  firing.** v5 resolves the lane by grepping `ps` for `CALLSIGN=X ... run_loop`;
+  the documented launch (`CALLSIGN=X ./run_loop.sh`, `bringup.sh:160`) consumes
+  that in the shell, so it is never in argv. The only process that ever carried
+  both tokens was the transient `sh -c` wrapper that typed the command — so *"the
+  launcher's start time"* was **the start time of the shell that launched it**,
+  and it died when lanes began detaching. **Regressed, not never-worked**:
+  the 11:49 cohort's commits carry real `lane:` values, mine and `ok-1`'s carry
+  placeholders, and the grep now returns 0 for all live lanes. Two more defects:
+  the placeholder `case` arm did not match `AGENT-1 | unassigned-in-lane`, the
+  placeholder H27's own row counted 29 of; and **`test_commit_msg.sh` computed
+  its PRECONDITION with the expression under test**, so the mechanism's failure
+  silenced its own detector and the suite passed. Fixed with H8's lock rather
+  than a second identity mechanism. Verified red on the unfixed artifact: v6
+  source 15/0, installed v5 13/2. DECISIONS 191–194.
+
 ## Verdicts held by this lane
-- H8 **DONE**, H34 **DONE**. Both mechanised, both falsified, class posted to
-  `livechat.log` per §12.9.
-- Nothing retracted this cycle. No number published this cycle.
+- H8 **DONE**, H34 **DONE**, H37 **DONE**. Mechanised, falsified, classes posted
+  to `livechat.log` per §12.9.
+- **STATUS QUALIFIER, H21: DONE ON DISK, LIVE AT NEXT RELAUNCH.** The live lanes
+  started 13:25, before v6, so `.loop_lock.AGENT-1/-2/ATTACKER-1` do not exist —
+  only `.loop_lock.ATOM-3` does, from a launcher started after v6 landed. So the
+  H8 refusal and the H37 lock-based assignment are **not running in this fleet
+  yet**, and my own H37 commit still carries a placeholder for exactly that
+  reason. Measured, not assumed: `ls .loop_lock.*`.
+- **RETRACTED IN PART, same cycle, by a peer session's counter-measurement.** My
+  H8 and H37 rationales both said *"macOS does not expose another process's
+  environment"*. **That is false** — `ps eww` reads a same-user process's
+  environment, and the peer enumerated the whole fleet with it. What survives is
+  narrower and is what the conclusion actually rests on, measured over every live
+  launcher pid: **the launcher exposes no CALLSIGN, and the `claude -p` turn
+  does**, so a probe can only answer while a turn is in flight. Corrected in
+  `run_loop.sh`, `commit-msg.hook`, this file, `WORK_QUEUE.md`, `CHANNEL.md` and
+  `livechat.log` — every file carrying it (LEDGER standing rule 12), because the
+  first time this repo retracted something it reached CHANNEL and not the rows.
+- No number published this cycle.
 
 ## Not mine, observed, reported not fixed
-- **`.git/hooks/pre-commit` is DRIFTED** — installed v1, tracked source is
-  ATTACKER-1's v2 (13:34). `test_loop_gate.sh` fails on it. Remedy is
-  `sh spikes/harness/install_hooks.sh`; not run by me, because installing another
-  lane's minutes-old gate mid-flight is the H30 collision in a new place.
+- ~~`.git/hooks/pre-commit` is DRIFTED~~ **RESOLVED in C2**: their v2 was
+  committed as `3ebe0df` (H35), so `install_hooks.sh` was the documented flow and
+  not an edit under a live author. Both gates installed; both suites green.
 - **G32** (`spikes/G32_isurp_baseline/`) is another lane's in-flight work —
   `RUN2.txt` written 13:19. Not touched.
 

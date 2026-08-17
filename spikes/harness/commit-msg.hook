@@ -71,7 +71,10 @@ rev=$(up "$(val Reviewed-By)")
 #     A launcher started the documented way -- `CALLSIGN=X ./run_loop.sh`, which
 #     is this repo's usage line and `bringup.sh:160` -- consumes that assignment
 #     IN THE SHELL. `ps` shows `bash ./run_loop.sh`; the callsign is in the
-#     environment, and macOS does not expose another process's environment.
+#     environment. CORRECTED same cycle: `ps eww` DOES read a same-user
+#     process's environment -- but measured over every live launcher pid, none
+#     exposes CALLSIGN, while a `claude -p` turn does, so a probe can only work
+#     WHILE A TURN IS IN FLIGHT and a lane between turns still reads as free.
 #     The only process that ever carried both tokens on one line was the
 #     transient `sh -c "CALLSIGN=X ./run_loop.sh"` wrapper that typed the
 #     command -- so the "launcher's start time" was the start time of the SHELL
