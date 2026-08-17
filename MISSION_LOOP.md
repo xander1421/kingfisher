@@ -74,12 +74,22 @@ Lives in WORK_QUEUE.md. Rebuild from that file; it is authoritative.
 
 ## 7 · Halt conditions (enforced by the Stop hook; nothing else ends
 ## the loop)
-- STOP file exists → finish the current write, output LOOP-HALT.
-- LOOP_DONE: the M1-DEMO checklist (§8) passes AND D1–D6 exist as
-  written specs AND HUMAN_NEEDED.md contains a current digest. Output
-  LOOP-DONE and a 15-line closing summary.
-- Queue exhausted: every remaining item is BLOCKED_ON_HUMAN → write
-  the digest, output LOOP-IDLE.
+
+**Terminal signals are FILES, not prose.** A legal exit requires writing
+exactly one of `LOOP-DONE`, `LOOP-HALT`, `LOOP-IDLE` into `.loop_signal`.
+The hook consumes it to `.loop_signal.last`. **Saying a marker word in a
+message does nothing** — v1 grepped the transcript and would fire on a
+mere mention; v2 does not read the transcript at all.
+
+- **STOP file exists** → finish the current write, `echo LOOP-HALT > .loop_signal`.
+- **LOOP-DONE** → M1-DEMO (§8) passes AND D1–D6 exist as written specs AND
+  HUMAN_NEEDED.md holds a current digest. Write the signal, then a 15-line
+  closing summary.
+- **LOOP-IDLE** → every remaining queue item is BLOCKED_ON_HUMAN. Write the
+  digest first, then the signal.
+- **LOOP-FUSE** is written by the hook itself, not by the agent, when blocked
+  stops exceed `MAX_BLOCKS` (default 400). It means a session span ended, not
+  that work finished; the relauncher resets the counter.
 
 ## 8 · M1-DEMO — what "built" means for this loop
 - [ ] 3 physical devices + 1 coordinator, real transport (no adb)
