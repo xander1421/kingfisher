@@ -1,0 +1,73 @@
+{
+  "seed": 20260817,
+  "quorum": 3,
+  "supply_param_jobs_s": {
+    "1w": 2.83,
+    "4w": 11.17
+  },
+  "scenarios": {
+    "honest_pool_3": {
+      "pool": 8,
+      "adv_in_pool": 5,
+      "rounds": 1500,
+      "captured": 0.72,
+      "wrong_accepted": 0.72,
+      "no_majority": 0.0
+    },
+    "honest_pool_5": {
+      "pool": 10,
+      "adv_in_pool": 5,
+      "rounds": 1500,
+      "captured": 0.49866666666666665,
+      "wrong_accepted": 0.49866666666666665,
+      "no_majority": 0.0
+    },
+    "honest_pool_10": {
+      "pool": 15,
+      "adv_in_pool": 5,
+      "rounds": 1500,
+      "captured": 0.23933333333333334,
+      "wrong_accepted": 0.23933333333333334,
+      "no_majority": 0.0
+    },
+    "honest_pool_25": {
+      "pool": 30,
+      "adv_in_pool": 5,
+      "rounds": 1500,
+      "captured": 0.06,
+      "wrong_accepted": 0.06,
+      "no_majority": 0.0
+    },
+    "honest_pool_50": {
+      "pool": 55,
+      "adv_in_pool": 5,
+      "rounds": 1500,
+      "captured": 0.02266666666666667,
+      "wrong_accepted": 0.02266666666666667,
+      "no_majority": 0.0
+    },
+    "honest_pool_100": {
+      "pool": 105,
+      "adv_in_pool": 5,
+      "rounds": 1500,
+      "captured": 0.005333333333333333,
+      "wrong_accepted": 0.005333333333333333,
+      "no_majority": 0.0
+    }
+  },
+  "controls": {
+    "all_honest_always_agrees": {
+      "wrong_accepted": 0.0,
+      "no_majority": 0.0,
+      "pass": true,
+      "fails_if": "any wrong verdict or any failed majority in an honest fleet"
+    },
+    "one_operator_captures_rare_shard": {
+      "adv_in_pool": 6,
+      "pool": 9,
+      "wrong_accepted": 0.744,
+      "pass": true,
+      "fails_if": "an operator owning most of a 3-device pool does NOT get wrong results accepted"
+    }
+  }
+}

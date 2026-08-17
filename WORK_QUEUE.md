@@ -11,6 +11,7 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 | D5 | ban-surface closure | **DONE** — `specs/D5_ban_surface.md`, v1 surface + 5 falsifiers; F3 unrun, cfg-gate aspirational |
 
 ## P1 — verification substrate
+| Q1 | quorum simulator: fleet model × canonical envelope × majority adjudication | **DONE** — `spikes/Q1_quorum_sim/`, code+seed+2 firing controls. C4 quantified |
 | id | item | status |
 |---|---|---|
 | W2 | witnessed re-exec on the trie substrate; non-membership via authenticated ordered structure; code+seed+controls | OPEN |
