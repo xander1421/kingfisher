@@ -1,0 +1,6 @@
+
+READ AMPLIFICATION (W4)
+  bundles in index          4252
+  score-pass bundle reads   6122880
+  cutoff-pass bundle reads  475067456  over 111728 cutoff iterations
+  total / score-pass        78.59x

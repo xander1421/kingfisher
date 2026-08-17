@@ -15,7 +15,7 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 |---|---|---|
 | W2 | witnessed re-exec on the trie substrate; non-membership via authenticated ordered structure; code+seed+controls | OPEN |
 | W3 | ~~witness sizes under non-aligned access~~ | **CANCELLED** — premise falsified by S52 (0.2/1.0/8.8% measured vs W1's 7.7/100/100%). The 0.9× pathology is also an artefact: fixing the multiproof and the short final chunk gives exactly 1.000× |
-| **W4** | **read set of the HDC prefilter: what is it, and can it be sublinear without invalidating S52's timings?** The engine scores every bundle on every query. **Verification eligibility cannot be decided before this.** Highest priority in P1 | **OPEN — top of P1** |
+| **W4** | **read set of the HDC prefilter: what is it, and can it be sublinear without invalidating S52's timings?** The engine scores every bundle on every query. **Verification eligibility cannot be decided before this.** Highest priority in P1 | **DONE** — `spikes/W4_prefilter_readset/`. Read set is 100% by construction (similarity search has no key order to skip). 78.59× amplification measured but it is oracle-fitting harness, outside S52's timed region. Witness 1.5–12.2 MB. Residency coupling NOT cut |
 
 ## P2 — M1 integration (the demo path)
 | id | item | status |
