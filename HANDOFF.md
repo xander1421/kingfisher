@@ -52,9 +52,13 @@ wiring by 7 minutes. Real base: 26 executed, 22 non-error, 15 distinct hashes.
 
 **And that base cannot express every fault** (2026-08-17,
 `spikes/M1_9_mutation/RESULT.md`). Mutation-tested against the agreement key:
-a wrong `-` is caught by **4/64**, a wrong `<` by **0/64**. A replica whose
-comparison operator is wrong at every boundary passes quorum UNANIMOUS. Corpus
-fault-expression is now a measured quantity; `python3 mutate.py` costs ~30 s.
+a wrong `-` **4/64**, a wrong `<` **0/64**, a changed resolver message
+**24/64**, an extra stdlib rule **0/64**. The classes partition by layer: the 24
+import-failures are the ONLY detector of resolver faults, the 14 empties detect
+nothing at all. Two blind spots -- a replica whose `<` is wrong at every
+boundary passes quorum UNANIMOUS, and `fuel_used` does not move when the stdlib
+grows, so altered stdlib rules are invisible unless invoked. Corpus
+fault-expression is a measured quantity; `python3 mutate.py` costs ~40 s.
 Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
 (no attestation root) and `manifest` (all binaries from one Cargo.toml, which
 FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
