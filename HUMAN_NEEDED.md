@@ -45,3 +45,10 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
   Silence means the first production panic is classified by whatever the code
   happens to do. M1.8c currently answers `AGREED_FAILURE` and refuses payment —
   a safe default, not a specification.
+
+- **No attestation root exists, so operator independence cannot be established.**
+  `q3.py` pins the `operator` domain axis to `UNATTESTED` (one domain) rather
+  than reading a string a worker chose. This is the axis Q1's 72% capture figure
+  is about, so every conclusion downstream of Q1 assumes a defence the setup has
+  never had. Interim position: refuse. Real fix: an attestation root (Acurast's
+  hardware-attested key is the reference implementation, `reports/REPORT_Acurast_compute.md`).

@@ -7,7 +7,7 @@ match is (status, fuel_used, sorted_hash) -- fuel_used is in the key because
 S57 established that equal output with unequal fuel is a divergence, not an
 agreement.
 """
-import argparse, hashlib, json, os, shutil, subprocess, sys, time
+import argparse, hashlib, json, os, platform, shutil, subprocess, sys, time
 from collections import Counter
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'M1_5_shardstore'))
@@ -31,6 +31,9 @@ MIN_DOMAINS = 3  # independent failure domains required among AGREEING workers
 # not imply `host` does.
 DOMAIN_AXES = ('binary', 'host', 'os', 'isa', 'operator')
 
+# worker_id -> coordinator-OBSERVED domain vector. Never worker-declared.
+OBSERVED = {}
+
 # Fault classes NO axis separates, so replication cannot detect them at ANY
 # quorum size. Recorded because a domain count that omits them reads as
 # stronger than it is.
@@ -41,6 +44,53 @@ UNSEPARABLE = {
         'and android-aarch64 -- determinism extends to the crash, so quorum '
         'is structurally incapable here however many devices exist.',
 }
+
+
+def observed_domains(wid, binary, via):
+    """Domain identity the COORDINATOR observes, never what the worker declares.
+
+    A worker declaring its own independence is worth exactly what a worker's
+    claim about its own correctness is worth. For an honest worker `arm64` vs
+    `arm64-v8a` is a normalisation bug; for a dishonest one it is the attack --
+    emit distinct host/operator strings and inflate the domain count, achieving
+    the same capture through the field built to stop it. Third appearance of
+    self-reported identity as a defect (S62 `backend_class`, M1.5 binary hash,
+    this).
+
+    So each axis is filled from something the coordinator controls or measures,
+    and an axis with no attestation root collapses to ONE domain rather than
+    being taken on trust.
+    """
+    # the coordinator hashes the binary it dispatched -- not the one the worker
+    # says it ran. (It still cannot prove the worker EXECUTED this binary; that
+    # needs attestation. Recorded below.)
+    bin_sha = hashlib.sha256(open(binary, 'rb').read()).hexdigest()[:12]
+
+    if via == 'adb':
+        serial = subprocess.run(['adb', 'get-serialno'], capture_output=True,
+                                text=True).stdout.strip() or 'unknown-device'
+        host = f'adb:{serial}'          # observed from OUR adb connection
+        rel = subprocess.run(['adb', 'shell', 'getprop ro.build.version.release'],
+                             capture_output=True, text=True).stdout.strip()
+        os_id, isa = f'android-{rel or "?"}', 'aarch64'
+    else:
+        host = f'host:{platform.node()}'   # the coordinator's own machine
+        os_id = f'{platform.system().lower()}-{platform.release()}'
+        isa = platform.machine()
+    isa = 'aarch64' if isa.lower().startswith(('arm64', 'aarch64')) else \
+          ('x86_64' if isa.lower() in ('x86_64', 'amd64') else isa.lower())
+
+    return {
+        'binary': f'bin:{bin_sha}',
+        'host': host,
+        'os': os_id,
+        'isa': isa,
+        # NO ATTESTATION ROOT EXISTS. Every worker is dispatched by this
+        # coordinator, so operator independence cannot be established at all --
+        # and this is the axis Q1's 72% capture figure is about. Pinned to one
+        # domain by construction rather than read from a string a worker chose.
+        'operator': 'UNATTESTED',
+    }
 
 
 def key(e):
@@ -120,7 +170,7 @@ def adjudicate(envs):
         # for the weakest.
         per_class = {}
         for ax in DOMAIN_AXES:
-            per_class[ax] = len({e.get('domains', {}).get(ax, e.get('domain'))
+            per_class[ax] = len({OBSERVED.get(e.get('worker'), {}).get(ax)
                                  for e in agree_envs})
         # The binding constraint is the WEAKEST axis, not the count of seats.
         domains = min(per_class.values()) if per_class else 0
@@ -193,6 +243,15 @@ def main():
         workers.append(('phone', os.path.join(BIN, 'fuelrun.v2.android'), 'adb'))
     else:
         workers.append(('host-c', os.path.join(BIN, 'fuelrun.v2.host'), 'local'))
+
+    # Fill the coordinator-observed domain table BEFORE any worker runs, so
+    # nothing a worker says can influence it.
+    global OBSERVED
+    OBSERVED = {wid: observed_domains(wid, binary, via)
+                for wid, binary, via in workers}
+    print('observed domains (coordinator-side, not worker-declared):')
+    for wid, d in OBSERVED.items():
+        print(f'  {wid:8} ' + '  '.join(f'{k}={v}' for k, v in d.items()))
 
     shutil.rmtree(a.work, ignore_errors=True)
     if not a.no_device and not a.keep_device_cache:
@@ -277,6 +336,18 @@ def main():
             while not os.path.exists(fp) and time.time() - t0 < 1800:
                 time.sleep(0.02)
             envs.append(json.load(open(fp)) if os.path.exists(fp) else None)
+        for e in envs:
+            if not e:
+                continue
+            decl, obs = e.get('domains') or {}, OBSERVED.get(e.get('worker'), {})
+            diff = {ax: (decl.get(ax), obs.get(ax)) for ax in DOMAIN_AXES
+                    if ax in decl and decl.get(ax) != obs.get(ax)}
+            if diff:
+                # not fatal by itself -- honest workers differ on `operator`,
+                # which we pin to UNATTESTED. But a worker claiming a host or
+                # binary we did not observe is trying to buy a domain.
+                e['domain_mismatch'] = {k2: {'declared': d0, 'observed': o0}
+                                        for k2, (d0, o0) in diff.items()}
         v, k, n, disp, ret, dom = adjudicate(envs)
         rows.append((p, v, n, k, envs, disp, ret, dom))
 
@@ -306,6 +377,16 @@ def main():
         print('   Fault classes NO axis separates (quorum cannot help at any size):')
         for name, why in UNSEPARABLE.items():
             print(f'     - {name}: {why}')
+    mism = [(e['worker'], e['domain_mismatch'])
+            for _,_,_,_,es,_,_,_ in rows for e in es
+            if e and e.get('domain_mismatch')]
+    if mism:
+        seen_ax = sorted({ax for _, d in mism for ax in d})
+        print(f'\n!! DOMAIN MISMATCH on {len(mism)} envelope(s), axes {seen_ax}: '
+              f'a worker declared a domain the coordinator did not observe. '
+              f'Only the observed value was counted.')
+        w, d = mism[0]
+        print(f'     e.g. {w}: {d}')
     short = tally['REDUCED_QUORUM']
     if short:
         print(f'\n!! REDUCED_QUORUM on {short} job(s): fewer workers returned '

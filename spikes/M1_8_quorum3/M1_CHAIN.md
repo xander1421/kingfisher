@@ -132,6 +132,57 @@ disagreement, never a shared bug — and a shared abort is just the loudest shar
 bug. `q3.py` prints these classes with every refusal rather than letting a
 domain count imply coverage it does not have.
 
+### The key was worker-DECLARED, which is the third instance of a dead pattern
+
+The first version had each worker report its own `platform.node()`, its own
+binary hash, its own operator string. **Self-reported identity** — the same
+defect that made S62's `backend_class` INVALID and that was flagged on M1.5's
+binary hash.
+
+For an honest worker `arm64` vs `arm64-v8a` is a normalisation bug. For a
+dishonest one it is the attack: emit distinct host and operator strings, inflate
+the domain count, and take the quorum **through the field built to prevent
+exactly that**.
+
+The fix is a category change, not a string fix: **domain must be observed or
+attested, never declared.**
+
+```
+observed domains (coordinator-side, not worker-declared):
+  host-a   binary=bin:78d874f97674  host=host:Victorias-MacBook-Pro.local  os=darwin-25.4.0  isa=aarch64  operator=UNATTESTED
+  host-b   binary=bin:78d874f97674  host=host:Victorias-MacBook-Pro.local  os=darwin-25.4.0  isa=aarch64  operator=UNATTESTED
+  phone    binary=bin:deb4ee9b93f8  host=adb:R5CY93675MK                   os=android-16     isa=aarch64  operator=UNATTESTED
+```
+
+- `binary` — the coordinator hashes the file **it dispatched**. It still cannot
+  prove the worker *executed* it; that needs attestation.
+- `host` — read from the coordinator's own adb connection, or its own hostname.
+- `operator` — **`UNATTESTED`, pinned to one domain by construction.** There is
+  no attestation root, so operator independence cannot be established at all,
+  and this is the axis Q1's 72% capture is about.
+
+Worker declarations are still collected and **compared**, so a worker claiming a
+domain we did not observe is now visible rather than believed:
+
+```
+!! DOMAIN MISMATCH on 6 envelope(s), axes ['operator']
+   e.g. host-a: {'operator': {'declared': 'operator:self', 'observed': 'UNATTESTED'}}
+```
+
+That first firing is benign — honest workers say `operator:self` while the
+coordinator refuses to credit it — but the detector is the point.
+
+### Two things this does and does not change
+**Today's refusal does not depend on the fix.** `operator=1` and `isa=1` are
+true right now whatever the key's provenance, because every worker is ours and
+both sides are aarch64. The `INSUFFICIENT_DOMAINS` verdict was correct before
+this change and is correct after it.
+
+**Self-reporting becomes load-bearing on day one of a real fleet** — the first
+moment a worker is not ours. So this is an interim position (observation) with
+the real fix (attestation) still absent, and the two are recorded separately
+rather than blurred.
+
 ### The domain key itself overstates independence
 It separates `(host, binary)` and nothing else. **Two different binaries on one
 host still share kernel, libm, clock source, page-table behaviour and CPU

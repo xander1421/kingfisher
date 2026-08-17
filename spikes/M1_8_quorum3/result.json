@@ -1,5 +1,5 @@
 {
- "gate": "device quiet: cpu_busy 0.6% (limit 15%), runnable 1, thermal 35900m, battery status=5 level=100",
+ "gate": "device quiet: cpu_busy 1.2% (limit 15%), runnable 1, thermal 35500m, battery status=5 level=100",
  "fuel": 2000000,
  "bytes_pushed": 0,
  "normalisation": "canon_alpha",
@@ -50,7 +50,13 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 9.8,
+     "wall_ms": 11.2,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
      "_per_class": {
       "binary": 2,
       "host": 2,
@@ -83,7 +89,13 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.5,
+     "wall_ms": 10.1,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
      "_per_class": {
       "binary": 2,
       "host": 2,
@@ -116,7 +128,13 @@
      "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 69.5,
+     "wall_ms": 68.7,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
      "_per_class": {
       "binary": 2,
       "host": 2,
@@ -171,7 +189,13 @@
      "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.0,
+     "wall_ms": 9.9,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
      "_per_class": {
       "binary": 2,
       "host": 2,
@@ -204,7 +228,13 @@
      "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 10.7,
+     "wall_ms": 9.7,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
      "_per_class": {
       "binary": 2,
       "host": 2,
@@ -237,7 +267,13 @@
      "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
      "fuel_limit": 2000000,
      "bytes_pushed": 0,
-     "wall_ms": 68.9,
+     "wall_ms": 62.5,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "UNATTESTED"
+      }
+     },
      "_per_class": {
       "binary": 2,
       "host": 2,
