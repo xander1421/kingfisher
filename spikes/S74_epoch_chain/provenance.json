@@ -1,11 +1,11 @@
 {
  "spike": "S74_epoch_chain",
- "recorded_utc": "2026-08-17T11:12:22Z",
+ "recorded_utc": "2026-08-17T11:21:18Z",
  "note": "S74 epoch-chain commitment: binds sequence, explicitly does NOT bind state (that is S73 fold-forward). 32 B per epoch.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/../S57_hyperon_corpus",
-   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
+   "head": "4b57921ee16472fcec43a0e4d6ade9b6e494de2e",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -32,7 +32,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S74_epoch_chain/chain.json",
    "sha256": "fcc8109a514a67e347f68d9775cd536f4b502bfc0d26b00cb0619e0506e493e8",
    "bytes": 3717,
-   "mtime": 1786965142,
+   "mtime": 1786965678,
    "compared_ts": 1786962091,
    "compared_clock": "last-commit"
   }

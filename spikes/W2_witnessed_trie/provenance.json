@@ -1,11 +1,11 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T11:12:27Z",
+ "recorded_utc": "2026-08-17T11:21:23Z",
  "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit on them.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
+   "head": "4b57921ee16472fcec43a0e4d6ade9b6e494de2e",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -32,7 +32,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
    "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
    "bytes": 5102,
-   "mtime": 1786965147,
+   "mtime": 1786965683,
    "compared_ts": 1786959236,
    "compared_clock": "last-commit"
   }

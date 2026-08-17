@@ -29,7 +29,7 @@
   {
    "id": "A6-provenance-floor",
    "verdict": "SURVIVES",
-   "text": "a dep subdir with no commits of its own and an UNTRACKED source still raises the floor (ts=1786965144, from='dep/'), and a year-2020 artifact is caught."
+   "text": "a dep subdir with no commits of its own and an UNTRACKED source still raises the floor (ts=1786965680, from='dep/'), and a year-2020 artifact is caught."
   }
  ]
 }

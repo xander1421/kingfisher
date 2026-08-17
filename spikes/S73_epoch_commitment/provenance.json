@@ -1,11 +1,11 @@
 {
  "spike": "S73_epoch_commitment",
- "recorded_utc": "2026-08-17T11:12:21Z",
+ "recorded_utc": "2026-08-17T11:21:17Z",
  "note": "S73 canonical space state at an epoch boundary; fold-forward delta proofs, XOR null shown forgeable. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/../S57_hyperon_corpus",
-   "head": "570e553d3867690e945e1218aa0b676e7341b1ec",
+   "head": "4b57921ee16472fcec43a0e4d6ade9b6e494de2e",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -32,7 +32,7 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/epoch.json",
    "sha256": "96cd720f34700e02504d6754a6729b746e31edd65d936cd07a334a5f48cea80c",
    "bytes": 27907,
-   "mtime": 1786965141,
+   "mtime": 1786965677,
    "compared_ts": 1786960155,
    "compared_clock": "last-commit"
   }
