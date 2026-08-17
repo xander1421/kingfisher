@@ -852,3 +852,55 @@ Corollary for the tool: a checker that returns only pass/fail teaches you to
 discard data. `check_affine` said "not affine" for a curve with a wide stable
 regime; `affine_range` says where it holds. Prefer a checker that localises the
 failure to one that only announces it.
+
+---
+
+*A25–A30 were declared in `HANDOFF.md` as they were earned on 2026-08-17 and
+never landed here, so every citation to them across the harness resolved to
+nothing while reading as satisfied — exactly the H4/§12.4 defect. Found
+mechanically by `spikes/harness/refcheck.py` on its first live run, not by eye.
+The text below is EXTRACTED from the HANDOFF entries that earned them, not
+rewritten: retyping a guardrail into a new form is how a claim decays across
+documents.*
+
+### A25. An ablation that removes more than it names cannot measure the named part.
+
+G24's `no_death` arm also removed uniform-parent-choice, `MAX_POP`, and every use
+of the importance balance, so "carrying capacity is what makes fitness
+differential" was measured against a baseline **with no fitness at all**. Check
+what an `if flag:` guard actually gates before naming the arm after one of them.
+
+### A26. A knob is not a mechanism.
+
+A difference between arms is only about the mechanism if the constants around it
+were **measured, not chosen**. G25's coverage gap was 51–85% `WAGE_POOL`, a
+number picked by hand.
+
+### A27. A hold-out drawn from one end of the key order is not a sample of the key space.
+
+Shuffle before splitting. S73's scaling arm took the lexicographic tail as probes
+and the lexicographic prefix as base, so **every probe diverged at the root** and
+single-insert cost read **293 B flat across a 10× space range**. The flatness
+looked structural; it was the cost of inserting *outside* the occupied range, and
+the real figure is 6× larger.
+
+### A28. An enforcement field that is recorded but never read is documentation.
+
+`provenance.py` stored `null_must_contain` for the whole project without ever
+checking it, and `deps=()` silently disabled the entire staleness path. Same class
+as A26's hand-picked constant: **it looks like a mechanism from the outside.**
+
+### A29. A probe that cannot show it reached its target has produced no evidence.
+
+ATTACK cycle 4's A4 probe aimed at two unreachable branches, was blocked from
+reaching them *by the very bug it was hunting*, and reported SURVIVES on a clean
+null. "No FATAL" from a probe that missed is not a pass. **Reaching the target is
+a precondition of the verdict, not a detail of it.**
+
+### A30. A name grep cannot tell a word from a concept.
+
+S75's control searched `fn (prove|verify|proof|witness)` in `pathmap`, matched 14
+Rust **borrow** witnesses (`-> Self::WitnessT`, several `-> ()`), and therefore
+did not fire. **Test the property, not the vocabulary**: "depends on no
+cryptographic hash" cannot collide on a name, and it settled the same question in
+one line.

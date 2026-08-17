@@ -1,0 +1,233 @@
+#!/usr/bin/env python3
+"""refcheck.py v1 — H4. Every §N / guardrail / file citation in the harness resolves.
+
+§12.4: "A reference to a section, spec, or file is resolved MECHANICALLY, never
+by eye." The H4 row records three regressions inside one hour -- CLAUDE.md citing
+§10 for publishing after it moved to §11, MISSION_LOOP carrying two §9, and §13
+pointing at a `CLAUDE.md §2` a rewrite had deleted -- and notes that **all three
+were found by eye**, which is the thing §12.4 forbids. Its own row says
+`grep -E '^## [0-9]+ ·' | uniq -d` is a third of this check. This is the rest.
+
+WHY A CONTRACT THAT CITES A MISSING ARTIFACT IS WORSE THAN ONE THAT CITES NOTHING
+--------------------------------------------------------------------------------
+It reads as satisfied. §7 gated LOOP-DONE on "D1-D6 as written specs" while D4
+and D6 did not exist, and the gate looked met. That is family A: the instrument
+cannot produce the answer.
+
+WHAT IS CHECKED
+---------------
+  1. `§N` and `§N.M` -> MISSION_LOOP.md must carry that section / bullet.
+  2. duplicate section numbers -- two `## 9 ·` is what made every "§9" ambiguous.
+  3. `A<n>` guardrail citations -> `### A<n>` in analysis/GUARDRAILS.md.
+  4. backticked repo paths -> the file or directory exists.
+
+WHAT IS NOT, AND SAYING SO IS PART OF THE CHECK
+-----------------------------------------------
+It cannot tell whether a section says what the citation claims it says. §12.12
+already names that class as unmechanisable, and pretending otherwise would be its
+own defect. It resolves POINTERS, not meanings.
+
+  python3 refcheck.py [--selfcheck]     exit 0 = every citation resolves.
+"""
+import os, re, sys
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+ML = os.path.join(ROOT, 'MISSION_LOOP.md')
+GR = os.path.join(ROOT, 'analysis', 'GUARDRAILS.md')
+
+# The harness, per §12's own enumeration, plus this module's neighbours. CHANNEL
+# and livechat are DELIBERATELY EXCLUDED: they are append-only logs where a stale
+# pointer is a historical record of what a lane believed at the time, and
+# rewriting history to satisfy a checker is the opposite of the point.
+HARNESS = ['MISSION_LOOP.md', 'CLAUDE.md', 'WORK_QUEUE.md', 'HANDOFF.md',
+           'analysis/GUARDRAILS.md', 'run_loop.sh', '.claude/hooks/loop_gate.sh']
+
+
+def harness_files():
+    out = []
+    for rel in HARNESS:
+        p = os.path.join(ROOT, rel)
+        if os.path.exists(p):
+            out.append(rel)
+    for d in ('spikes/harness', 'prompts'):
+        dp = os.path.join(ROOT, d)
+        if not os.path.isdir(dp):
+            continue
+        for fn in sorted(os.listdir(dp)):
+            if fn.endswith(('.py', '.sh', '.md')):
+                out.append(os.path.join(d, fn))
+    for fn in sorted(os.listdir(ROOT)):
+        if re.match(r'HANDOFF\..+\.md$', fn):
+            out.append(fn)
+    return out
+
+
+def sections(text):
+    """Top-level `## N ·` numbers, in order, so duplicates are visible."""
+    return re.findall(r'^##\s+(\d+)\s+·', text, re.M)
+
+
+def subsections(text):
+    return set(re.findall(r'^-?\s*\*\*(\d+\.\d+)\s+·', text, re.M))
+
+
+def main():
+    # DISPATCH ONLY. The first draft had main() re-read sys.argv and selfcheck()
+    # call main(), so --selfcheck recursed until the stack blew -- a checker that
+    # cannot run its own check is the shape this module exists to catch.
+    if '--selfcheck' in sys.argv:
+        return selfcheck()
+    return scan()
+
+
+def scan():
+    ml = open(ML).read() if os.path.exists(ML) else ''
+    gr = open(GR).read() if os.path.exists(GR) else ''
+    secs, subs = sections(ml), subsections(ml)
+    sec_set = set(secs)
+    guards = set(re.findall(r'^###\s+A(\d+)', gr, re.M))
+    problems = []
+
+    # 2 · duplicate section numbers, the defect that made "§9" ambiguous
+    dupes = {n for n in secs if secs.count(n) > 1}
+    for n in sorted(dupes):
+        problems.append(f'MISSION_LOOP.md has {secs.count(n)} sections numbered '
+                        f'"{n}" -- every §{n} citation is ambiguous')
+
+    for rel in harness_files():
+        path = os.path.join(ROOT, rel)
+        try:
+            text = open(path, encoding='utf-8').read()
+        except (UnicodeDecodeError, OSError):
+            continue
+
+        # 1 · §N and §N.M
+        for ref in set(re.findall(r'§\s*(\d+(?:\.\d+)?)', text)):
+            if '.' in ref:
+                if ref not in subs and ref.split('.')[0] not in sec_set:
+                    problems.append(f'{rel}: §{ref} does not resolve -- '
+                                    f'MISSION_LOOP.md has no such bullet')
+            elif ref not in sec_set:
+                problems.append(f'{rel}: §{ref} does not resolve -- '
+                                f'MISSION_LOOP.md has sections {sorted(sec_set, key=int)}')
+
+        # 1b · `§N` in GUARDRAILS.md cites EXTERNAL documents (a standard's section 46,
+        #      a paper's section), not this repo's loop contract, so § resolution
+        #      is not applied there. Stated rather than silently skipped: a
+        #      checker that quietly drops a file is one nobody can audit.
+        if rel == 'analysis/GUARDRAILS.md':
+            problems = [x for x in problems if not x.startswith(f'{rel}: §')]
+
+        # 3 · guardrail citations
+        for ref in set(re.findall(r'\bA(\d{1,2})\b', text)):
+            if ref not in guards and rel != 'analysis/GUARDRAILS.md':
+                problems.append(f'{rel}: guardrail A{ref} is cited and '
+                                f'analysis/GUARDRAILS.md has no "### A{ref}"')
+
+        # 4 · backticked repo paths. `<...>` placeholders, globs, `~` and URLs are
+        # not citations of a file that should exist.
+        # A CITATION TO SOMETHING OUTSIDE THIS REPO IS NOT A BROKEN REFERENCE.
+        # GUARDRAILS cites `boinc/sched/credit.cpp:284-289` and
+        # `hyperon-experimental/.../Cargo.toml:17` -- upstream sources, with line
+        # numbers, in trees that are gitignored (`elders/`) or not present at all.
+        # Flagging those would make this fire on known-good items every run, which
+        # is H14's named failure mode: a checker everyone learns to ignore.
+        # The rule that separates them cheaply: a repo path's FIRST SEGMENT is an
+        # existing top-level entry. `spikes/...` is checked, `boinc/...` is not.
+        top = set(os.listdir(ROOT))
+        for tok in set(re.findall(r'`([^`\s]+/[^`\s]*)`', text)):
+            if tok.startswith(('~', 'http', '/', '$', '<')) or any(
+                    c in tok for c in '<>*?:\\'):
+                continue
+            tok = tok.rstrip('.,;:')
+            if tok.split('/')[0] not in top:
+                continue
+            # `.git/hooks/...` is INSTALLED STATE, not tracked content, and the
+            # harness cites it both ways -- MISSION_LOOP names a hook that exists
+            # and WORK_QUEUE's H15 row names one BECAUSE IT DOES NOT. A citation
+            # asserting absence cannot be told from a broken one by any check
+            # here, so this does not pretend to.
+            if tok.startswith('.git/'):
+                continue
+            if not os.path.exists(os.path.join(ROOT, tok)):
+                problems.append(f'{rel}: `{tok}` does not exist')
+
+    for p in sorted(set(problems)):
+        print('  UNRESOLVED ' + p)
+    if problems:
+        print(f'\nREFUSE: {len(set(problems))} citation(s) in the harness do not '
+              f'resolve. A contract citing a missing artifact reads as satisfied,\n'
+              f'        which is why this refuses rather than warns.')
+        return 1
+    print(f'refcheck: every §N, guardrail and path citation in '
+          f'{len(harness_files())} harness files resolves')
+    return 0
+
+
+def selfcheck():
+    """§12.3: the check ships a check, and it must fail on planted breakage.
+
+    Each of the four checks is driven with a citation that CANNOT resolve, and
+    with one that can, because a checker only ever seen failing is as
+    uninformative as one only ever seen passing.
+    """
+    import tempfile, shutil
+    tmp = tempfile.mkdtemp()
+    try:
+        os.makedirs(os.path.join(tmp, 'analysis'))
+        os.makedirs(os.path.join(tmp, 'spikes', 'harness'))
+        open(os.path.join(tmp, 'MISSION_LOOP.md'), 'w').write(
+            '## 1 · one\n## 2 · two\n## 2 · two again\n- **1.1 · a bullet**\n')
+        open(os.path.join(tmp, 'analysis', 'GUARDRAILS.md'), 'w').write('### A1\ntext\n')
+        # BUILT FROM PARTS, deliberately: written as literals, this file would
+        # carry four broken citations of its own and refcheck would flag itself
+        # on every run. Excluding the checker from its own scan was the other
+        # option and it is the H-HOOKREG blind spot -- a suite that exempts
+        # itself is one nobody checks.
+        bad_sec, bad_g = '\u00a7' + '99', 'A' + '77'
+        bad_path = 'spikes/' + 'harness/nope.py'
+        open(os.path.join(tmp, 'CLAUDE.md'), 'w').write(
+            'cite \u00a71 and \u00a71.1 and A1 and `MISSION_LOOP.md` -- all fine.\n'
+            f'now cite {bad_sec} and {bad_g} and `{bad_path}` -- none exist.\n')
+        global ROOT, ML, GR
+        keep = (ROOT, ML, GR)
+        ROOT = tmp
+        ML = os.path.join(tmp, 'MISSION_LOOP.md')
+        GR = os.path.join(tmp, 'analysis', 'GUARDRAILS.md')
+        import io, contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = scan()
+        out = buf.getvalue()
+        ROOT, ML, GR = keep
+        # Same reason as the fixtures: assembled, so this file contains no
+        # literal broken citation for its own scan to trip over.
+        want = [(bad_sec, 'unresolved section'), (bad_g, 'unresolved guardrail'),
+                ('nope.py', 'missing path'), ('numbered "2"', 'duplicate section')]
+        bad = [w for w, _d in want if w not in out]
+        for w, d in want:
+            print(f"  {'CATCHES' if w in out else 'MISSES '} {d} ({w})")
+        # THE OTHER HALF, and it was dead code in the first draft: a loop that
+        # computed nothing and asserted nothing. A checker only ever seen firing
+        # is as uninformative as one only ever seen passing, so the RESOLVABLE
+        # citations must be shown NOT to be reported.
+        for good, d in ((bad_sec[0] + '1', 'valid section'),
+                        ('A' + '1', 'valid guardrail')):
+            if f'{good} does not resolve' in out or f'guardrail {good} is cited' in out:
+                print(f'  FALSE-POSITIVE on a {d} ({good})')
+                bad.append(d)
+            else:
+                print(f'  QUIET   on a {d} ({good})')
+        if rc == 0:
+            print('  MISSES  it did not refuse at all'); bad.append('refusal')
+        if bad:
+            print(f'SELFCHECK FAILED: {bad}')
+            return 1
+        print('selfcheck: all four checks fire on planted breakage and it refuses')
+        return 0
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+if __name__ == '__main__':
+    sys.exit(main())
