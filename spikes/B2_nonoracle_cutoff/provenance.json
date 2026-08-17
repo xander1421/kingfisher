@@ -1,0 +1,153 @@
+{
+ "spike": "B2_nonoracle_cutoff",
+ "recorded_utc": "2026-08-17T13:13:42Z",
+ "note": "B2 does not retract any B1 number. C1 reproduces B1's published median and p90 exactly for all 7 B. What is scoped is the SENTENCE those numbers are quoted under.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/B2_nonoracle_cutoff/../B1_bundling_real",
+   "head": "a5a80e667ca3350874d4716dab662607b866bb74",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/B2_nonoracle_cutoff/../S52_realkg",
+   "head": "a5a80e667ca3350874d4716dab662607b866bb74",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/B2_nonoracle_cutoff/../B1_bundling_real": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/B2_nonoracle_cutoff/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "nonoracle.json",
+   "sha256": "c6c047a5f410cab90cf58eb6f09aee6753a5dc65dca4338305b16502e6826321",
+   "bytes": 14500,
+   "mtime": 1786972131,
+   "compared_ts": 1786972131,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "nonoracle.py",
+   "sha256": "d7130a7e4523ccd2a9a74807dd973a8c23e71d906696b0e7a5934057136501b2",
+   "bytes": 8229,
+   "mtime": 1786972023,
+   "compared_ts": 1786972023,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "RUN.txt",
+   "sha256": "18dc12a21730450af444e15a067f482620533a31fe700fb891c5e7070ed6e79e",
+   "bytes": 1462,
+   "mtime": 1786972131,
+   "compared_ts": 1786972131,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_regeneration_equivalence",
+   "must_fire_because": "the scorer is copied from B1, so the copy must reproduce B1 exactly or every number here describes a different instrument",
+   "can_fail_because": "it DID fail on the first run: the scorer had been reconstructed from a truncated read (2-term binding + bitwise-OR bundling instead of 3-way majority binding + per-bit majority bundling) and B=64 median came out 76% against B1's 0.17%",
+   "null_must_contain": "the outcome space includes a non-empty mismatch list, and it was OBSERVED non-empty on this spike's first run: 14 of 14 comparisons differed, B=64 median 0.76 against B1's 0.0016666",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "compared": 14,
+    "mismatches": [],
+    "pass": true
+   }
+  },
+  {
+   "name": "C2_resolution_floor_is_1_over_SAMP",
+   "must_fire_because": "every reported fraction is k/600 for integer k, so 0.00% means \"below one sampled bundle\", not zero",
+   "can_fail_because": "a frac that is not an integer multiple of 1/SAMP would mean the estimator changed",
+   "null_must_contain": "the outcome space includes a frac that is not k/600 -- any change of estimator, or averaging across B, produces one",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "all_fracs_integer_multiples_of_1_over_SAMP": true,
+    "SAMP": 600,
+    "floor": 0.0016666666666666668
+   }
+  },
+  {
+   "name": "C3_recall_monotone_in_budget",
+   "must_fire_because": "recall must not decrease as the budget grows; a non-monotone curve means the comparison is inverted",
+   "can_fail_because": "flip the <= in recall_at_budget and it fails",
+   "null_must_contain": "the outcome space includes a decreasing recall curve, which is what an inverted comparison produces and would reverse every conclusion here",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "monotone_for_every_B": true
+   }
+  },
+  {
+   "name": "C4_oracle_is_cheaper_than_full_recall",
+   "must_fire_because": "the whole finding is that the oracle minimum understates the deployed budget; if median > max there is no finding",
+   "can_fail_because": "it is false if the two statistics are read off different distributions",
+   "null_must_contain": "the outcome space includes median > max, which is what reading the two statistics off different query sets produces",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "median_le_max_for_every_B": true
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/B2_nonoracle_cutoff/../B1_bundling_real": {
+   "newest": 1786933710,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/B2_nonoracle_cutoff/../S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "If a cutoff fixed in advance reached full recall at a budget inside the spread of B1's published median/p90, the oracle was decorative and B1 stood as written. It did not: at B=16 the published p90 is 0.17% and full recall needs 2.0%, ~12x.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

@@ -139,8 +139,33 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   adding a lane to the sanction file *is* the sanction, and a lane sanctioning
   another lane is A22. DECISIONS 200–202.
 
+- **C5 DONE: B2 — the non-oracle cutoff.** `spikes/B2_nonoracle_cutoff/`,
+  `certify ok=true`, 4 controls, falsifier stated first and **it fired**. B1's
+  published *"% store checked"* is a **per-query oracle minimum**:
+  `target = score(bundles[pos])` where `pos` is the bundle containing the answer.
+  **No B1 number is withdrawn** — control C1 reproduces its median and p90
+  **exactly, 14 of 14**. Three findings: B1's own comment promises what must be
+  checked *"to be sure of catching the answer"* while the table reports the
+  **median** (B=16: 1.50% max vs 0.00% median; B=128: exactly 10×); a budget
+  fixed in advance needs **2.0%** at B=16 for full recall, ~12× the published
+  0.17%; and `SAMP=600` makes every figure `k/600`, so the **0.00% median is
+  "below one sampled bundle" and the 0.17% p90 is exactly one** — the resolution
+  floor quoted as a measurement. **A scope, not a kill:** B1's VTCM verdict is
+  about store size, uses no cutoff, and stands. DECISIONS 203–206.
+
+- **C5, against myself, and it is the transferable half: C1 failed on the first
+  run.** I reconstructed B1's `base()` and bundling step from a **truncated
+  read** and invented both — a 2-term binding where B1 has a 3-way majority, a
+  bitwise OR where B1 has a per-bit majority vote. B=64 median came out **76%
+  against 0.17%**, a 450× discrepancy, and **nothing in the output looked
+  malformed**. Without a regeneration-equivalence control written *before* the
+  numbers, that page would have shipped as a finding about B1. **Third instance
+  this span of one class**: truncated or unreached evidence producing a confident
+  answer about a region never examined (the probe that never arrived, the
+  `| head -3` grep, this).
+
 ## Verdicts held by this lane
-- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**. Mechanised, falsified, classes posted
+- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**. Mechanised, falsified, classes posted
   to `livechat.log` per §12.9.
 - **STATUS QUALIFIER, H21: DONE ON DISK, LIVE AT NEXT RELAUNCH.** The live lanes
   started 13:25, before v6, so `.loop_lock.AGENT-1/-2/ATTACKER-1` do not exist —
@@ -168,7 +193,12 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   `RUN2.txt` written 13:19. Not touched.
 
 ## Next 3
-1. **A FIXED, NON-ORACLE CUTOFF** — surfaced by the auditing session as the
+1. ~~**A FIXED, NON-ORACLE CUTOFF**~~ — **DONE as B2 in C5**, the cycle after it
+   was surfaced. Struck rather than left standing (§12.5). **The LEDGER item
+   itself stays OPEN**: B2 settles the instance under B1's live GREEN claim, and
+   S11 / S17 / S47 / S48 / N1 are unexamined. Original text kept below so the
+   next lane inherits the falsifier rather than re-deriving it.
+   ~~surfaced by the auditing session as the
    unassigned item nearest this lane, and it is the right next cycle. Every
    bundling and shaping result in the tree, *including* the real-KG 4.1–5.6×,
    uses a cutoff **fitted to the ground truth**. `out/RETRACTIONS.md` records
@@ -178,7 +208,7 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
    cutoff chosen without touching the labels reproduces the published gain within
    its own noise band, the oracle was decorative; if it does not, every live
    shaping claim needs the caveat on the claim itself, not in the LEDGER's
-   "never measured" column.
+   "never measured" column.~~
 2. **G29 — differential-test the hand-rolled miner against
    `elders/hyperon-miner`.** **GATED, verified this cycle rather than assumed:**
    `python3 -c "import hyperon"` → `ModuleNotFoundError`, no `metta` on PATH, and
