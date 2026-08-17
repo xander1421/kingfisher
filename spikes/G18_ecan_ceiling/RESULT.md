@@ -1,4 +1,63 @@
-# G18 — the ceiling is `match`, not `collapse`, and conjunction order decides between working and process death
+# G18 — CORRECTED. The attribution was wrong; the precedence bug was the cause.
+
+> **CORRECTION 2026-08-17, before anything was built on this.** Agent-1
+> identified that my G18 reproducers panic at `trie.rs:179` (`unwrap()` on
+> `None`), **not** `trie.rs:539` (the arity assert) — and that their
+> one-character precedence fix at `:545` removes every one of them.
+> Verified independently against a build made from the patched tree
+> (`fuelrun` at 07:36; my `fuelrun.v2.host` was built 16:16 the previous day,
+> **before every patch**, so all of G18 measured stock):
+>
+> ```
+> reproducer                    stock      patched
+> _b1022  collapse over 1022    PANIC  ->  OK
+> _broad  broad-first, N=3000   PANIC  ->  OK
+> bare match, n=5000            PANIC  ->  OK, n_results 5000
+> collapse over 1024            PANIC  ->  PANIC     <- the genuine 10-bit cap
+> ```
+>
+> **Three findings below are withdrawn:**
+>
+> 1. **"`match` aborts at ≥1022"** — withdrawn. There is no match arity
+>    ceiling. A bare match returns 5,000 results on a patched build. What I
+>    measured was a memory mis-decode: `self.0 & TK_VALUE_MASK -
+>    TK_MAX_EXPRESSION_SIZE` parses as `self.0 & (MASK - MAX)` because `&`
+>    binds looser than `-` in Rust.
+> 2. **"Conjunction order decides between a result and an abort"** — withdrawn
+>    as a language property. Broad-first materialised enough candidates to
+>    cross 1024 and trip the mis-decode. Nothing about conjunctions is unsafe
+>    once `value()` decodes correctly. **So cost-ordering conjunctions is the
+>    wrong fix** — it avoids the trigger and leaves a wrong memory read to
+>    resurface anywhere else an index passes 1024.
+> 3. **"Exact bound is 1021, head plus wrapper"** — withdrawn, and this is the
+>    worst of the three. The head-plus-wrapper explanation was **a story
+>    invented to fit a number produced by a different bug.** G16's original
+>    bisection (1023 OK / 1024 PANIC) was correct all along and describes the
+>    real arity field.
+>
+> **What survives:** `collapse` builds one expression per result set and is
+> genuinely capped by the 10-bit arity field at 1024. So `collapse`-based folds
+> cap; `match` and the graph do not. G5–G12 must be re-tested against a patched
+> build before any rewrite, and G19's bucket-indexed rewrite may be unnecessary
+> for correctness.
+>
+> **The collaboration result worth keeping.** Agent-1 found the precedence bug
+> by reading, could not construct a trigger, and recorded it as *"reachability
+> unproven"* rather than filing it. My broad-first conjunction is that trigger.
+> Neither of us had the finding alone: I had a reproducer with the wrong cause,
+> they had the cause with no reproducer.
+>
+> **One G18 result is unaffected and changes its justification.** Timing on a
+> patched build is still pending, but on stock, `plain_400` took **164.7 s**
+> against `buck_400` at **2.8 s** — a 59× gap from bucketing that has nothing
+> to do with panics. Bucketing may still be right, as *performance*, which is a
+> different claim needing a different measurement.
+
+---
+
+<details>
+<summary>Original G18 text, retained for provenance</summary>
+
 
 **Verdict: the attention architecture is NOT capped at ~1023 nodes — but the
 escape is a landmine.** G16 attributed the panic to `collapse` building one
@@ -103,3 +162,5 @@ cd spikes/G18_ecan_ceiling && python3 ceiling.py
 ../S30_speed_duel/bin/fuelrun.v2.host _broad.metta 400000000   # the abort
 ../S30_speed_duel/bin/fuelrun.v2.host _sel.metta   400000000   # same query, OK
 ```
+
+</details>
