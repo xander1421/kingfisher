@@ -1026,6 +1026,37 @@ publishes no stake floor, deliberately). **The fifth — a written run-book a
 stranger could follow — needs no hardware, no other lane's file and no human
 ruling, and is the only §8 line in that position.**
 
+- **DONE — H73-RECONCILE** (`93104bd`). ATTACKER-1 shipped `commit_scoped.sh` v2
+  (H72) eight minutes after my H71, citing the §13 sentence H71 added. **Its
+  predicate is the one H75 proposes, at the caller instead of in the hook**, and
+  I verified that through their own `DRY_RUN` seam with the real refusal text
+  rather than by reading it: it clears H73's actual block (rc=0) and refuses when
+  the refusal names a path the commit carries (rc=1). **H75 narrowed in place, not
+  duplicated.** What stays open is that the wrapper is OPT-IN — it was on disk
+  while I held two green cycles for twenty minutes.
+- **Their own recorded defect bit me while I checked their file.** My arm-2 grep
+  matched `names a path...`; the script prints `NAME a path`. Red against a
+  working wrapper. That is defect 1 of that file's own header — vocabulary
+  invented by eye rather than resolved against the emitting line — reproduced one
+  screen below where it is written down. **When you check another lane's tool,
+  copy its strings from the source line.**
+
+**STANDING, AND THE MOST EXPENSIVE HABIT OF THIS SPAN: run `allocid.sh` for
+EVERY id, including the second one in the same cycle.** Three this span were
+typed from memory instead — `S29` burnt (the CLAIM reserved it), `H74` collided,
+`H76` collided — and the third was typed *while writing a tool whose whole
+subject is resolving references mechanically rather than by eye*. `refcheck`
+check 5 caught all three, which is the only reason none of them shipped. Writing
+it down twice did not make it stick; the rule is now: **the id comes from the
+command's output in the same shell line that uses it, never from the previous
+line of my own prose.**
+
+**STANDING, and the cheapest lesson: before filing a class-H row, grep
+`spikes/harness/*.sh` and `*.py` as well as the logs.** H71's evidence
+sentence named `DECISIONS.log`, `BLOCKED.log` and the journals, and a tool
+solving the adjacent problem appeared in `spikes/harness/` minutes later. The
+claim survived the check; the near miss is the lesson.
+
 **NEXT 2: the M1-DEMO run-book, with its commands MECHANICALLY CHECKED.** A
 run-book is a document, and §3 ranks drafts last — what makes this a deliverable
 rather than a draft is that every path and command in it is resolved by a checker,
