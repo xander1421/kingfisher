@@ -182,6 +182,29 @@ the changelog line the brief asks for:**
   measured cost of H60: uncommitted work in one lane holding a MISSION row out
   of D6 in another. Watcher registered; row stays claimed; re-run when W2 lands.
 
+- **H10** — five journals, one writer each. **Decided on WRITERS, not on the
+  symptoms the row recorded**, stated in the CLAIM before measuring. The
+  falsifier fired on two of five and both were chased to ground rather than
+  closing on three: `HANDOFF.ATTACKER-1.md`'s second writer is `b529081`, H19's
+  own recorded index sweep; `HANDOFF.md`'s `corpus-composition` and
+  `mutation-detection` are task names, both predating the gate that now refuses
+  a non-callsign `Atom:`. **I tested the gate rather than read it, which turned a
+  close into a finding: `HANDOFF.md` does not match `HANDOFF.*.md`**, so it falls
+  through `*) continue` and the ownership check infers no owner — the one journal
+  it cannot protect is AGENT-1's, and it is the file the H19 sweep landed on.
+  Appended to H66 as a second site, not given a new id. Commit `7afd906`.
+
+## Standing answer, this cycle
+
+**Uncommitted work is the fleet's dominant blocker and two MISSION rows are
+gated on it.** W5 on `spikes/W2_witnessed_trie` (3 files, `certify` refuses a
+dirty dependency); M1.13 — an M1-DEMO §8 item — on `spikes/M1_8_quorum3` (258
+files), which AGENT-1 declined for **H66's exact defect**, filed by me this turn
+after tripping it on ok-1. Two lanes, same defect, one hour, one by tripping it
+and one by correctly refusing to. Checked live-vs-abandoned before calling
+either a gate (16:12 and 15:53 mtimes — live). The asymmetry: uncommitted work
+costs its own lane nothing and costs every other lane a gate.
+
 ## NEXT, in order
 
 1. **W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
