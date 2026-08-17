@@ -28,6 +28,7 @@ Seeded from MISSION_LOOP.md §4, 2026-08-17.
 | M1.8 | quorum-3 pipeline end to end; first 1 phone + host as 3 processes | OPEN |
 
 ## P3 — measurements
+| N1 | **re-derive the ~50 µs prefilter cost** from a kernel profiled against the roof, 4 workers, background cpuset. The only rung that could still carry the NPU descope alone, and it inherits S18's artifact. **Device gate open** | OPEN — high |
 | B1 | bundling compression vs recall, real KG | **DONE** — `spikes/B1_bundling_real/`. B=16 fits VTCM at p90 0.2%. Code shipped |
 | id | item | status |
 |---|---|---|
