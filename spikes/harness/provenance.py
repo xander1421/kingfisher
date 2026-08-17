@@ -35,6 +35,31 @@ def sha256_file(path):
     return h.hexdigest()
 
 
+def newest_source_mtime(path):
+    """Newest mtime among tracked source files, and the HEAD commit time.
+
+    Used to answer: could this artifact have been built from this tree? An
+    artifact older than the source it claims to come from could not have been.
+    """
+    head_ts = _run(['git', 'log', '-1', '--format=%ct'], cwd=path)
+    head_ts = int(head_ts) if head_ts.isdigit() else 0
+    newest, newest_file = head_ts, '<HEAD commit>'
+    files = _run(['git', 'ls-files'], cwd=path).splitlines()
+    # only the dirty ones can be newer than HEAD, and scanning every tracked
+    # file in a large repo is slow for no gain
+    dirty = [l[3:] for l in _run(['git', 'status', '--porcelain'],
+                                 cwd=path).splitlines()]
+    for f in dirty:
+        fp = os.path.join(path, f)
+        try:
+            m = int(os.path.getmtime(fp))
+        except OSError:
+            continue
+        if m > newest:
+            newest, newest_file = m, f
+    return newest, newest_file
+
+
 def repo_state(path):
     """HEAD is not enough. A dirty tree with HEAD=X is not X, and that is
     exactly how a patched build shipped under a stock commit hash."""
@@ -125,7 +150,8 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         'note': note,
         'repos': [repo_state(d) for d in deps],
         'artifacts': [{'path': a, 'sha256': sha256_file(a),
-                       'bytes': os.path.getsize(a)}
+                       'bytes': os.path.getsize(a),
+                       'mtime': int(os.path.getmtime(a))}
                       for a in artifacts if os.path.exists(a)],
         'missing_artifacts': [a for a in artifacts if not os.path.exists(a)],
         'toolchain': toolchain(),
@@ -133,6 +159,26 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
         'controls': [c.as_dict() for c in controls],
     }
     problems = []
+
+    # STALENESS. A digest pins WHICH artifact, never WHAT IS IN IT. Both agents
+    # on this project independently reasoned about a patched tree while running
+    # a binary built before the patches; in one case the provenance file
+    # recorded the correct sha256 of the wrong binary and nobody noticed,
+    # because an accurate hash of a stale artifact looks exactly like an
+    # accurate hash of a fresh one.
+    for d in deps:
+        src_ts, src_file = newest_source_mtime(d)
+        prov.setdefault('source_mtimes', {})[d] = {
+            'newest': src_ts, 'from': src_file}
+        for a in prov['artifacts']:
+            if a['mtime'] < src_ts:
+                age = (src_ts - a['mtime']) / 3600.0
+                problems.append(
+                    f"STALE ARTIFACT {os.path.basename(a['path'])} predates "
+                    f"{os.path.basename(d)} source by {age:.1f}h "
+                    f"(newest source: {src_file}). It cannot have been built "
+                    f"from the tree recorded here.")
+
     for r in prov['repos']:
         if not r['clean'] and not allow_dirty:
             problems.append(
@@ -196,6 +242,27 @@ def demo():
             assert ok2, 'allow_dirty should permit an acknowledged dirty tree'
 
     assert sha256_file(__file__) == sha256_file(__file__)
+
+    # --- staleness: an artifact older than the source cannot come from it
+    import time as _t
+    kf = os.path.expanduser('~/kingfisher/elders/hyperon-experimental')
+    if os.path.isdir(os.path.join(kf, '.git')):
+        old_art = os.path.join(d, 'stale.bin')
+        with open(old_art, 'wb') as f:
+            f.write(b'x')
+        os.utime(old_art, (1_600_000_000, 1_600_000_000))   # year 2020
+        ok, p = record(d, deps=[kf], artifacts=[old_art],
+                       controls=[c_good], allow_dirty=True)
+        assert not ok and any('STALE ARTIFACT' in x for x in p['problems']), \
+            p['problems']
+        # a freshly written artifact passes
+        fresh = os.path.join(d, 'fresh.bin')
+        with open(fresh, 'wb') as f:
+            f.write(b'x')
+        ok, p = record(d, deps=[kf], artifacts=[fresh],
+                       controls=[c_good], allow_dirty=True)
+        assert ok, p['problems']
+
     print('provenance: all assertions pass')
 
 

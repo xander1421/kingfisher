@@ -780,3 +780,35 @@ disturb it. So:
    reused process drifts without reusing the process — say so. The answer there
    is not a better instrument; it is stating that measurement and mechanism are
    the same act.
+
+### A24. A digest pins WHICH artifact. Only a build from a recorded tree pins WHAT IS IN IT.
+
+Both agents on this project hit this independently, within hours, from opposite
+directions:
+
+- **G18** measured a `fuelrun` built the previous afternoon against a tree that
+  had since been patched, and produced a real symptom with a wrong attribution —
+  a "1022 match ceiling" and a head-plus-wrapper explanation invented to fit a
+  number the stale binary produced.
+- **M1** ran its entire chain on the same two stale binaries. Its provenance file
+  recorded **the correct sha256 of the wrong binary**, which is the failure in
+  one line: an accurate hash of a stale artifact is indistinguishable from an
+  accurate hash of a fresh one.
+
+Disclosing it ("prebuilt from an unconfirmed commit") is better than hiding it
+and is **not** the same as closing it.
+
+Rules:
+1. Build the artifact from the tree you are recording, in the run you are
+   recording, or state plainly that the measurement is about a different tree.
+2. Record the artifact's **mtime** next to its digest. `provenance.py` now
+   compares it against the newest source mtime in each declared dependency and
+   refuses to certify when an artifact **predates the source it claims to come
+   from** — it cannot have been built from it.
+3. Prebuilt binaries kept for convenience are a standing hazard: `S30/bin/`
+   held `fuelrun.v2.*` for months and every spike that used them inherited an
+   unrecorded commit. Known-provenance builds now live in `S30/bin/known/`.
+
+The check is cheap and mechanical, which is the point — this class of error
+survives careful reading indefinitely and dies instantly to a timestamp
+comparison.

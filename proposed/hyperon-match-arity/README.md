@@ -86,6 +86,26 @@ broad-first conjunction   PANIC     OK
 `cargo test -p hyperon` **298 passed / 0 failed**; `-p hyperon-space` 29 + 6
 passed / 0 failed.
 
+### The fix costs ~7%, and the reason is worth stating
+`TK_VALUE_MASK` (`:504`) and `TK_MAX_EXPRESSION_SIZE` (`:511`) are both `const`,
+so the buggy form `self.0 & (MASK - MAX)` folds the subtraction at **compile
+time** and emits a single `AND`. The corrected form must subtract at runtime,
+after the mask. Measured on a MeTTa fold workload: the patched build is
+uniformly ~7% slower.
+
+So the original is faster and wrong. If that cost matters in a hot path, the
+zero-cost shape is to stop using an **offset** as the discriminator: `value()`
+subtracts 1024 only because `new()` adds it at `:531`, purely so that
+`is_start_expr()` (`:568`) can test `self.0 < TK_MAX_EXPRESSION_SIZE`. A spare
+tag bit alongside `TK_STORE_MASK` / `TK_MATCH_MASK` would let `value()` be a
+plain mask again and remove the failure mode by construction rather than
+correcting it.
+
+We are not proposing that layout change — it touches the bit budget and the
+reason the field is 10 bits is not in the code. Recording the trade so the
+choice is yours: **the attached patch is correct and ~7% slower; a re-layout
+could be correct and free.**
+
 **There is no `match` arity ceiling.** Earlier drafts of this report claimed one
 at 1022 and explained it as "head plus wrapper". That explanation was fitted to
 a number produced by this bug.
