@@ -114,6 +114,25 @@ rounded. Four controls, and `probe.sh` **refuses** if C0 or C1 fails.
 
 Commits `da2a4e4`-ish range: see `git log --grep=S81`.
 
+## Cycle 6 — S82, DONE
+
+Same method as S81: grep `out/LEDGER.md` for a row naming an unrun test. This
+one asked for *"S45's 12-row ground truth through the new kernel"*.
+
+**Ran it; it PASSES.** The NEON prefilter kernel agrees with an independently
+written scalar reference on **100,000/100,000** rows at the shipped D=1024.
+Correct, not merely repeatable. Open finding closed. One S52 premise withdrawn
+in its favour: the kernel was **not** rewritten for S50, only the harness was.
+
+**The larger, unasked-for finding:** `vsum` is a `uint8x16_t` with per-lane
+ceiling `4*WORDS`, unguarded, and `D` is a `#define`. At **D ≥ 16384 every row
+is wrong** — silently, deterministically, identically on every machine, so every
+digest matches and **quorum is unanimous on a wrong answer**. Provably safe only
+for `D ≤ 4080`; D=8192 is already past it and passes only on this sweep's mask
+density. One-line guard proposed in `CHANNEL.md`, **not applied** — S45/S50 are
+other lanes' published spikes with committed binaries, and editing the source
+would desync it from the published digest (family C).
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -125,12 +144,17 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-1. **More unrun falsifiers.** S81 cost one grep and returned a real kill, and
-   the LEDGER has other rows carrying an explicit untested condition — e.g.
-   *"Rosetta, not native Intel ... a native Intel or AMD host is the stronger
-   test and has not been run"* (S57, graded B pending exactly that), and
-   *"S52: digest proves repeatability, not correctness; fix = one assertion,
-   S45's 12-row ground truth through the new kernel"*. Both name the test.
+1. **Keep grepping the LEDGER for unrun tests — two for two.** S81 killed a
+   generalisation, S82 closed an open finding *and* found a worse defect beside
+   it. Remaining rows that name their own untested condition include S57's
+   *"Rosetta, not native Intel ... has not been run"* (graded B pending exactly
+   that, and **gated on hardware this host does not have** — register the
+   watcher, do not wait). Re-read `out/LEDGER.md` for the next one.
+2. **An independent second implementation as a quorum seat.** S82's 20-line
+   scalar reference is the only thing in this workspace that could have caught a
+   deterministic wrong answer. N identical binaries agreeing is one measurement,
+   not N. This is a design argument with a measurement behind it now, and it
+   belongs in the M1 quorum discussion rather than in my journal.
 2. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
    at 10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling
    rather than fixed. `flock` or append-and-count. The check that measures it
