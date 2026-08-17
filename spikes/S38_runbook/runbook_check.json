@@ -1,0 +1,109 @@
+{
+  "commands": 13,
+  "excused": 3,
+  "executed": 10,
+  "problems": [],
+  "results": [
+    {
+      "cmd": "git clone <this repo> kingfisher && cd kingfisher",
+      "line": 18,
+      "mode": "paths-only",
+      "verdict": "EXCUSED",
+      "why": "a clone URL is not resolvable from inside the repo"
+    },
+    {
+      "cmd": "sh spikes/harness/install_hooks.sh",
+      "line": 19,
+      "mode": "paths-only",
+      "verdict": "EXCUSED",
+      "why": "it writes into .git/hooks of the live tree"
+    },
+    {
+      "cmd": "python3 spikes/harness/refcheck.py",
+      "line": 32,
+      "mode": "paths-only",
+      "verdict": "EXCUSED",
+      "why": "its verdict is FLEET STATE and flips minute to minute (H73)"
+    },
+    {
+      "cmd": "python3 spikes/harness/journalcheck.py",
+      "line": 33,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/harness/githygiene.py",
+      "line": 34,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/harness/demo8.py",
+      "line": 35,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/S27_verify_floor/verify_floor.py",
+      "line": 51,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/S36_witnessed_job/witnessed_job.py",
+      "line": 52,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/S36_witnessed_job/attack.py",
+      "line": 53,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/harness/githygiene.py --selfcheck",
+      "line": 78,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/harness/demo8.py --selfcheck",
+      "line": 79,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "python3 spikes/H73_gate_scope/probe.py",
+      "line": 80,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    },
+    {
+      "cmd": "sh spikes/H73_gate_scope/reconcile_h72.sh",
+      "line": 81,
+      "mode": "run",
+      "rc": 0,
+      "verdict": "RAN",
+      "why": ""
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+ "spike": "S38_runbook",
+ "recorded_utc": "2026-08-17T16:31:21Z",
+ "note": "",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S38_runbook/runbook_check.json",
+   "sha256": "b00af9596b8a9b0acf50c66d81365a394a0036755f1f7b8a0365111e0a38b18d",
+   "bytes": 2372,
+   "mtime": 1786984281
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_commands_actually_execute",
+   "must_fire_because": "at least half the run-book's commands must be EXECUTED here, not excused. A page where everything is excused passes this checker while being unfollowable, which is the falsifier",
+   "can_fail_because": "fewer executed commands than excused ones",
+   "null_must_contain": "a run-book whose every command is annotated paths-only, which spell-checks perfectly",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "executed": 10,
+    "excused": 3
+   }
+  },
+  {
+   "name": "C_every_command_is_adjudicated",
+   "must_fire_because": "no command may be unannotated: an unmarked command is how a command that FAILS gets quietly downgraded to a mention",
+   "can_fail_because": "any UNMARKED or NO_REASON verdict",
+   "null_must_contain": "a command with no `# CHECK:` marker, which is what an author adds when the command breaks",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "verdicts": [
+     "EXCUSED",
+     "RAN"
+    ]
+   }
+  },
+  {
+   "name": "C_no_command_names_a_missing_path",
+   "must_fire_because": "a command exiting 0 while naming a path that does not exist is a command that silently did nothing; paths are checked in BOTH modes, not only the excused one",
+   "can_fail_because": "any MISSING verdict",
+   "null_must_contain": "an excused command naming a deleted file, which no execution would catch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "checked": 13
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_it_only_checks_spelling",
+   "must_fire_because": null,
+   "can_fail_because": "commands are passed without being executed and without a stated reason",
+   "null_must_contain": "an unannotated or unexplained command, which is exactly what this refuses on",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "executed": 10,
+    "excused": 3,
+    "problems": 0
+   },
+   "refutes": "this row: if the checker passes while a listed command cannot actually be run, it tests spelling rather than followability and the run-book buys nothing",
+   "fires_when": "commands are passed without being executed and without a stated reason",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "the run-book depends on the whole tree by construction, and its commands are EXECUTED rather than read -- a staleness check over spikes/harness would judge other lanes in-flight edits rather than this run",
+ "problems": [],
+ "ok": true,
+ "falsifier": "a command passing without being executed and without a stated reason, which would make this a spell-checker"
+}
