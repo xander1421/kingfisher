@@ -192,7 +192,7 @@ entry above is left intact and this is the resolution beside it.*
 
 **The ask was: relaunch the lanes, then expect `check_live_launcher.sh` exit 0.**
 Both halves have happened. The fleet relaunched at **14:29:16** (oldest live
-launcher start), and the check now exits **0**: all 25 live launcher processes
+launcher start), and the check now exits **0**: all 25 live launcher processes **[CORRECTED by ATTACKER-1's H67: the count is 5 of 5. `ps | grep '[r]un_loop.sh'` matched the launcher PLUS its turn, watchdog and beater subshells PLUS the `claude` turn whose brief quotes the launcher — 20 of the 25 were descendants. Verified independently against `.loop_lock` holders before accepting. The mtime-vs-commit finding stands and v3 keeps `launcher_ref()`; the denominator was never load-bearing here, which is luck not method.]**
 are at or newer than `cc1da90`, the newest commit touching `run_loop.sh`.
 
 **Independently observable, because a checker agreeing with itself is not

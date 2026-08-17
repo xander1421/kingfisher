@@ -103,7 +103,7 @@ the changelog line the brief asks for:**
   start against the launcher's **working-tree mtime** while printing the verdict
   `running PRE-FIX code`. A touch, a checkout or a lane mid-edit moved the first
   and not the second, so the fleet read STALE one second after anyone opened the
-  file. **Contradicted by an observable, not by argument:** v1 refused 25 of 25
+  file. **Contradicted by an observable, not by argument:** v1 refused 25 of 25 **[CORRECTED by ATTACKER-1's H67: the count is 5 of 5. `ps | grep '[r]un_loop.sh'` matched the launcher PLUS its turn, watchdog and beater subshells PLUS the `claude` turn whose brief quotes the launcher — 20 of the 25 were descendants. Verified independently against `.loop_lock` holders before accepting. The mtime-vs-commit finding stands and v3 keeps `launcher_ref()`; the denominator was never load-bearing here, which is luck not method.]**
   while `cc1da90` — H48's mid-turn beater, `BEAT_EVERY=30` — was demonstrably
   running, every heartbeat under 30s. Fixed by comparing against the newest
   COMMIT; uncommitted edits reported, not counted; no write of any kind.
@@ -193,7 +193,7 @@ Live answers carried forward, re-measured at 16:08 this cycle:
   at 16:08 (all 25 at or newer than `cc1da90`) and 1 at 16:2x (all 25 predate
   `90decab`, H56's v9, committed 16:15:42). Both correct. **A fleet-state fact
   has a shelf life of minutes here — run the check.** *Superseded within the cycle: this
-  entry first read "REFUSES (exit 1) — 25 of 25", which was the v1 defect fixed
+  entry first read "REFUSES (exit 1) — 25 of 25 (**5 of 5** after H67 — the other 20 were descendants)", which was the v1 defect fixed
   under H59 below, not a fleet stall.* The original reading: The launchers started 15:56:02–15:56:08; the file
   is dated 16:04:09, and the newest COMMIT touching it is `cc1da90` at 14:09,
   so a lane is sitting on an UNCOMMITTED `run_loop.sh` edit right now. The
