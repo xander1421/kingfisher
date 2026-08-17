@@ -29,6 +29,12 @@ To stop legally: write exactly `LOOP-DONE` / `LOOP-HALT` / `LOOP-IDLE` into
 hook v5 and no longer appears in §7 or in the hook's own refusal text (H16).
 Human kill switch: `touch STOP`.
 
+**After any pull or fresh clone, run `sh spikes/harness/install_hooks.sh`.**
+`.git/hooks/` is untracked and cannot be tracked, so `commit-msg.hook` v5 (H27,
+which ASSIGNS `Claude-Session` from the live launcher instead of letting every
+lane type the same constant) does not reach a lane by pulling. `test_loop_gate.sh`
+fails if the installed copy is missing or drifted.
+
 **If a span ends without doing work, suspect H16 first.** A terminal signal
 that outlives its span kills the next lane at its first turn end and logs
 `terminal signal, exiting`, which reads exactly like a completed span. Fixed in
