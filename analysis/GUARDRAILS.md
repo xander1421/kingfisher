@@ -710,3 +710,73 @@ case that is decidable **before** the run from the design alone.
 than `NOT_SIGNIFICANT` when `1/(n+1) > alpha`, and `draws_needed(alpha)` gives
 the minimum. Note also the add-one in `(k+1)/(n+1)`: without it a finite sample
 can report p exactly 0, which is never true.
+
+### A22. A party must not supply the input to a check applied to itself.
+
+Not a credibility rule — a **conflict-of-interest** rule. None of the three
+instances below is a trust claim as such; each is an input to a gate applied to
+the party that wrote it.
+
+| field | gated decision | supplied by |
+|---|---|---|
+| S62 `backend_class` | which results are compared | the worker **INVALID** |
+| M1.5 binary hash | admission | the worker |
+| M1.8d domain key | quorum independence | the worker |
+
+**The test, applied per field:** *who benefits if this value is wrong, and did
+they write it?* Same party -> the value must be **attested or observed**, never
+declared.
+
+Two properties make this stronger than "distrust the worker":
+
+1. **Cross-checking covers only fields where lying causes DISAGREEMENT.** In our
+   pipeline `status`, `fuel_used` and the result hash are in the quorum
+   agreement key, so a lone liar is caught by construction. Everything outside
+   the key is unchecked: `n_results`, `wall_ms`, `arch`, `os`, `bytes_pushed`.
+   Being worker-supplied is only a defect for fields nothing compares.
+2. **The absence of a field is not safety.** `hyperjob_v0` has no field for a
+   device's cache contents, yet `prefer_cached_cids` (`:114`) makes locality
+   matching depend on knowing it. When someone implements that, the natural
+   shape is the device declaring what it holds — *a worker telling the matcher
+   which jobs it should win*. The rule has to be applied at design time, or it
+   arrives as a default.
+
+Full field audit in `spikes/M1_8_quorum3/COI_AUDIT.md`.
+
+**Note the mismatch detector fired benignly on its first run** — honest workers
+declare `operator:self`, the coordinator credits `UNATTESTED`, and the
+difference is reported. A control that fires on honest input has proved it is
+live *before* anything depended on it. This workspace has found four dead
+controls; a control demonstrated live at introduction is the rarer event and
+worth preserving as the pattern.
+
+### A23. The instrument changes what it looks at. Pair the arms or say so.
+
+Distinct from A15/A20/A21, which are about an instrument that **cannot see** the
+effect. This is an instrument that **perturbs** it.
+
+Four instances, all this session:
+
+- **M1.1c is a literal observer effect.** "Does job N differ from job 1?" was
+  measured by running the program 40 times in one process — and *running it* is
+  what advances `NEXT_VARIABLE_ID`. The measurement produced the divergence it
+  detected.
+- **N1e was ruined by one.** Arm A heated the device into a different DVFS band,
+  so arm B ran under conditions arm A created. That is the whole reason it is
+  UNRESOLVED.
+- **Preflight sits inside its own measurement** — reading device state costs
+  device state (98.5 us against a 68.8 ms job).
+- **The inverse**: a backgrounded run redirected without `python -u`, so the
+  progress it needed to observe was buffered away. The thing worth observing was
+  the thing the setup did not record.
+
+Unlike quantum measurement this is **classical and fixable**: the state has a
+definite value and observation from outside, or in a fresh process, does not
+disturb it. So:
+
+1. Make observation cheap and idempotent where you can.
+2. Where you cannot, **pair the arms** so both share the perturbation (A16).
+3. Where the observation *is* the treatment — you cannot measure whether a
+   reused process drifts without reusing the process — say so. The answer there
+   is not a better instrument; it is stating that measurement and mechanism are
+   the same act.
