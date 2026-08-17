@@ -1,21 +1,53 @@
 {
  "spike": "W5_epoch_bisect",
- "recorded_utc": "2026-08-17T11:22:33Z",
- "note": "",
- "repos": [],
- "manifests": {},
+ "recorded_utc": "2026-08-17T12:54:58Z",
+ "note": "bisection over S73 space state only; interpreter-step bisection is OUT of scope (S68 RED, blocked upstream on hyperon Issue 3)",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../S73_epoch_commitment",
+   "head": "32e0766ef3f9666ba8068f33d6ff0a2d799c50bd",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie",
+   "head": "32e0766ef3f9666ba8068f33d6ff0a2d799c50bd",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../S73_epoch_commitment": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
  "artifacts": [
   {
    "path": "epoch_bisect.py",
-   "sha256": "a08a08038e522e060dff69fc039b76220a8eb4d9ac162a76a26e4b6b5b9f51ab",
-   "bytes": 20726,
-   "mtime": 1786965737
+   "sha256": "f80be740069d40970248229211a99327870f9b5dcf10506eed203d303fc104cd",
+   "bytes": 23693,
+   "mtime": 1786971094,
+   "compared_ts": 1786971094,
+   "compared_clock": "mtime"
   },
   {
    "path": "result.json",
-   "sha256": "a94ecaabb158cb6c280cd842a62aa16409a4ee84198eb20011f8bc273a5a56d9",
-   "bytes": 3333,
-   "mtime": 1786965753
+   "sha256": "4c37b5543be92c355f893a059f8a5c292ec1481f4df98205ab65f324124a1fc4",
+   "bytes": 3594,
+   "mtime": 1786971298,
+   "compared_ts": 1786971298,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -35,70 +67,183 @@
  },
  "controls": [
   {
-   "name": "C_chain_binds_all_three",
-   "must_fire_because": "an omitted input leaves two different histories with one chain root -- the link would not bind that input",
-   "can_fail_because": "an omitted input leaves two different histories with one chain root -- the link would not bind that input",
-   "null_must_contain": null,
-   "fired": null,
-   "detail": null,
-   "constant_observations": null,
-   "observations": null
+   "name": "C_state_root_cannot_separate_histories",
+   "must_fire_because": "a state root is a function of the space, so it cannot distinguish the history that produced it; the chain must",
+   "can_fail_because": "the two groupings give different STATE roots (S73 would already bind history), or equal CHAIN roots (the chain adds nothing)",
+   "null_must_contain": "two epoch groupings of one atom set, which reach the same state root by construction",
+   "fired": true,
+   "detail": "state roots equal, chain roots differ",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "state_root_g1": "ac08cfec10bb3fc1",
+    "state_root_g2": "ac08cfec10bb3fc1",
+    "chain_root_g1": "2e51bf18e228ff87",
+    "chain_root_g2": "1f3b1cda90eaf541"
+   }
   },
   {
-   "name": "C_state_root_cannot_separate_histories",
-   "must_fire_because": "the two groupings give different STATE roots, in which case S73 already bound history and this spike is unnecessary; or equal CHAIN roots, in which case the chain adds nothing",
-   "can_fail_because": "the two groupings give different STATE roots, in which case S73 already bound history and this spike is unnecessary; or equal CHAIN roots, in which case the chain adds nothing",
-   "null_must_contain": null,
-   "fired": null,
-   "detail": null,
-   "constant_observations": null,
-   "observations": null
+   "name": "C_chain_binds_all_three",
+   "must_fire_because": "dropping root_prev lets a prover splice onto another history; dropping the delta lets it claim a transition it never made; dropping root_next says nothing about where it arrived",
+   "can_fail_because": "an omitted input still separates the two groupings, i.e. that input was never binding",
+   "null_must_contain": "the same two groupings C1 uses, which a complete link separates and a crippled one must not",
+   "fired": true,
+   "detail": "each crippled link must still separate the groupings",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "drop_root_prev": true,
+    "drop_delta": true,
+    "drop_root_next": true
+   }
   },
   {
    "name": "C_forged_sequence_rejected",
-   "must_fire_because": "the chain accepts a sequence whose declared additions were never the ones applied -- then a prover can present a real state root reached by a route it invented",
-   "can_fail_because": "the chain accepts a sequence whose declared additions were never the ones applied -- then a prover can present a real state root reached by a route it invented",
-   "null_must_contain": null,
-   "fired": null,
-   "detail": null,
-   "constant_observations": null,
-   "observations": null
+   "must_fire_because": "a prover must not present a real state root reached by a route it invented",
+   "can_fail_because": "the chain accepts a claim whose declared additions were never the ones applied",
+   "null_must_contain": "an honest chain over g1, which must verify, so a rejection is not vacuous",
+   "fired": true,
+   "detail": "honest verifies, forged rejected",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "honest_accepts": true,
+    "forged_accepts": false,
+    "rejected_at_epoch": 0
+   }
   },
   {
    "name": "C_referee_does_not_reexecute",
-   "must_fire_because": "the referee verifies more than one epoch, or takes more than ceil(log2 N) rounds -- either way it is doing work proportional to the run and has saved nothing",
-   "can_fail_because": "the referee verifies more than one epoch, or takes more than ceil(log2 N) rounds -- either way it is doing work proportional to the run and has saved nothing",
-   "null_must_contain": null,
-   "fired": null,
-   "detail": null,
-   "constant_observations": null,
-   "observations": null
+   "must_fire_because": "a dispute must cost O(log N) rounds and ONE executed epoch, or it has saved nothing over re-execution",
+   "can_fail_because": "steps_verified > 1 at any N, or rounds exceeding ceil(log2 N)",
+   "null_must_contain": "N from 8 to 128, a 16x range, so a linear referee would be plainly visible",
+   "fired": true,
+   "detail": "rounds vs ceil(log2 N) vs epochs executed",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     8,
+     3,
+     1
+    ],
+    [
+     16,
+     4,
+     1
+    ],
+    [
+     32,
+     5,
+     1
+    ],
+    [
+     64,
+     6,
+     1
+    ],
+    [
+     128,
+     7,
+     1
+    ]
+   ]
   },
   {
    "name": "C_localises_every_epoch",
-   "must_fire_because": "any planted epoch, including 0 and N-1, is not the epoch the referee returns",
-   "can_fail_because": "any planted epoch, including 0 and N-1, is not the epoch the referee returns",
-   "null_must_contain": null,
-   "fired": null,
-   "detail": null,
-   "constant_observations": null,
-   "observations": null
+   "must_fire_because": "the referee must return exactly the planted epoch for every epoch, including 0 and N-1",
+   "can_fail_because": "any planted epoch is not the epoch returned",
+   "null_must_contain": "all N planted positions, not a sample -- an interior-only sweep cannot see a boundary bug",
+   "fired": true,
+   "detail": "planted vs found, all k",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     9,
+     9
+    ],
+    [
+     10,
+     10
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     13,
+     13
+    ],
+    [
+     14,
+     14
+    ],
+    [
+     15,
+     15
+    ]
+   ]
   }
  ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
  "no_deps_reason": null,
- "problems": [
-  "NO DEPS DECLARED and no no_deps_reason given -- staleness (A24) and dirty-tree checks are both silently skipped when deps is empty. Name the corpus/source tree, or state why there is none.",
-  "CONTROL C_chain_binds_all_three never observed",
-  "CONTROL C_chain_binds_all_three declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
-  "CONTROL C_state_root_cannot_separate_histories never observed",
-  "CONTROL C_state_root_cannot_separate_histories declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
-  "CONTROL C_forged_sequence_rejected never observed",
-  "CONTROL C_forged_sequence_rejected declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
-  "CONTROL C_referee_does_not_reexecute never observed",
-  "CONTROL C_referee_does_not_reexecute declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode",
-  "CONTROL C_localises_every_epoch never observed",
-  "CONTROL C_localises_every_epoch declares no null_must_contain -- a null that cannot contain the effect is not a null (A20), and a control with no stated failing input is W1's failure mode"
- ],
- "ok": false,
- "falsifier": "if the referee must execute more than one epoch, or rounds exceed ceil(log2 N), bisection saves nothing over re-execution"
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../S73_epoch_commitment": {
+   "newest": 1786961862,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie": {
+   "newest": 1786965691,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if the referee must execute more than one epoch, or rounds exceed ceil(log2 N), bisection saves nothing over re-execution and the dispute path is decorative",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
 }

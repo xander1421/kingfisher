@@ -44,6 +44,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'S73_epoch_commitment'))
 sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
 from epoch import commit, prove_epoch_delta, verify_epoch_delta, encode  # noqa: E402
+from kfcheck import certify, Control  # noqa: E402
 
 SEED = 20260817          # pinned; every arm below draws from this
 CHAIN_TAG = b'W5-epoch-chain-v1'
@@ -323,116 +324,165 @@ def main():
     quick = '--quick' in sys.argv
     rng = random.Random(SEED)
     out = {'seed': SEED, 'controls': {}, 'sweep': [], 'localisation': []}
+    ctrls = []
 
-    # C_chain_binds_all_three — omit each of the three inputs and confirm the
-    # chain stops distinguishing histories. Fails if any omission is harmless.
-    base = build_history([[b'(a 1)'], [b'(a 2)'], [b'(a 3)']])
-    c_full = chain_of(base)
-    variants = {
-        'drop_root_prev': lambda p, a, b, ad: hashlib.sha256(
-            CHAIN_TAG + p + b + delta_digest(ad)).digest(),
-        'drop_delta': lambda p, a, b, ad: hashlib.sha256(
-            CHAIN_TAG + p + a + b).digest(),
-        'drop_root_next': lambda p, a, b, ad: hashlib.sha256(
-            CHAIN_TAG + p + a + delta_digest(ad)).digest(),
-    }
-    binds = {}
-    for name, f in variants.items():
-        # same atom set, DIFFERENT grouping -> a sound chain must separate them
-        g1 = [[b'(a 1)'], [b'(a 2)', b'(a 3)']]
-        g2 = [[b'(a 1)', b'(a 2)'], [b'(a 3)']]
-        def fold(bs, f=f):
-            keys, root = [], GENESIS_ROOT
-            c = hashlib.sha256(CHAIN_TAG).digest()
-            for ad in bs:
-                rp = root; keys = keys + list(ad); root = root_hash(keys)
-                c = f(c, rp, root, ad)
-            return c
-        binds[name] = (fold(g1) != fold(g2))
-    out['controls']['C_chain_binds_all_three'] = {
-        'fires': all(binds.values()), 'detail': binds,
-        'fails_when': 'an omitted input leaves two different histories with one '
-                      'chain root -- the link would not bind that input'}
-
-    # C_state_root_cannot_separate_histories — the S73 fact this spike exists for.
-    g1 = [[b'(a 1)'], [b'(a 2)', b'(a 3)']]
+    g1 = [[b'(a 1)'], [b'(a 2)', b'(a 3)']]     # same atom set, two groupings
     g2 = [[b'(a 1)', b'(a 2)'], [b'(a 3)']]
-    same_state = build_history(g1)[-1]['root'] == build_history(g2)[-1]['root']
-    diff_chain = chain_of(build_history(g1)) != chain_of(build_history(g2))
-    out['controls']['C_state_root_cannot_separate_histories'] = {
-        'fires': same_state and diff_chain,
-        'state_roots_equal': same_state, 'chain_roots_differ': diff_chain,
-        'fails_when': 'the two groupings give different STATE roots, in which '
-                      'case S73 already bound history and this spike is '
-                      'unnecessary; or equal CHAIN roots, in which case the '
-                      'chain adds nothing'}
 
-    # C_forged_sequence_rejected — a valid final STATE reached by a forged
-    # sequence. The reviewer named this as criterion 2's second target.
+    # ---------------------------------------------------------------- C1
+    # The premise of this spike, stated as something that can come out the other
+    # way. If the two groupings gave DIFFERENT state roots, S73 would already bind
+    # history and W5 would be unnecessary; if they gave EQUAL chain roots, the
+    # chain would add nothing.
+    c1 = Control('C_state_root_cannot_separate_histories',
+                 'a state root is a function of the space, so it cannot '
+                 'distinguish the history that produced it; the chain must',
+                 null_must_contain='two epoch groupings of one atom set, which '
+                                   'reach the same state root by construction',
+                 can_fail_because='the two groupings give different STATE roots '
+                                  '(S73 would already bind history), or equal '
+                                  'CHAIN roots (the chain adds nothing)')
+    s1, s2 = build_history(g1)[-1]['root'], build_history(g2)[-1]['root']
+    k1, k2 = chain_of(build_history(g1)), chain_of(build_history(g2))
+    c1.observe(s1 == s2 and k1 != k2,
+               {'state_root_g1': s1.hex()[:16], 'state_root_g2': s2.hex()[:16],
+                'chain_root_g1': k1.hex()[:16], 'chain_root_g2': k2.hex()[:16]},
+               'state roots equal, chain roots differ')
+    ctrls.append(c1)
+
+    # ---------------------------------------------------------------- C2
+    # Each of the three inputs to a link is load-bearing. Omit one and the chain
+    # stops separating the two groupings.
+    c2 = Control('C_chain_binds_all_three',
+                 'dropping root_prev lets a prover splice onto another history; '
+                 'dropping the delta lets it claim a transition it never made; '
+                 'dropping root_next says nothing about where it arrived',
+                 null_must_contain='the same two groupings C1 uses, which a '
+                                   'complete link separates and a crippled one '
+                                   'must not',
+                 can_fail_because='an omitted input still separates the two '
+                                  'groupings, i.e. that input was never binding')
+    variants = {
+        'drop_root_prev': lambda p_, a_, b_, ad: hashlib.sha256(
+            CHAIN_TAG + p_ + b_ + delta_digest(ad)).digest(),
+        'drop_delta': lambda p_, a_, b_, ad: hashlib.sha256(
+            CHAIN_TAG + p_ + a_ + b_).digest(),
+        'drop_root_next': lambda p_, a_, b_, ad: hashlib.sha256(
+            CHAIN_TAG + p_ + a_ + delta_digest(ad)).digest(),
+    }
+    def fold(bs, f):
+        keys, root = [], GENESIS_ROOT
+        c = hashlib.sha256(CHAIN_TAG).digest()
+        for ad in bs:
+            rp = root; keys = keys + list(ad); root = root_hash(keys)
+            c = f(c, rp, root, ad)
+        return c
+    binds = {n: (fold(g1, f) != fold(g2, f)) for n, f in variants.items()}
+    c2.observe(all(binds.values()), binds,
+               'each crippled link must still separate the groupings')
+    ctrls.append(c2)
+
+    # ---------------------------------------------------------------- C3
+    # A valid final STATE reached by a forged SEQUENCE. The reviewer who set this
+    # task named it as the adaptive prover's second target.
+    c3 = Control('C_forged_sequence_rejected',
+                 'a prover must not present a real state root reached by a route '
+                 'it invented',
+                 null_must_contain='an honest chain over g1, which must verify, '
+                                   'so a rejection is not vacuous',
+                 can_fail_because='the chain accepts a claim whose declared '
+                                  'additions were never the ones applied')
     honest = build_history(g1)
-    forged = [dict(e) for e in HonestProver(honest).claim()]
-    forged[0]['added'] = [b'(a 2)']            # same endpoint, different route
-    ref = Referee()
-    ok_forged, at = ref.chain_consistent(forged)
-    out['controls']['C_forged_sequence_rejected'] = {
-        'fires': (not ok_forged), 'rejected_at_epoch': at,
-        'fails_when': 'the chain accepts a sequence whose declared additions '
-                      'were never the ones applied -- then a prover can present '
-                      'a real state root reached by a route it invented'}
+    hc = HonestProver(honest).claim()
+    ok_honest, _ = Referee().chain_consistent(hc)
+    forged = [dict(e) for e in hc]
+    forged[0]['added'] = [b'(a 2)']
+    ok_forged, at = Referee().chain_consistent(forged)
+    c3.observe(ok_honest and not ok_forged,
+               {'honest_accepts': ok_honest, 'forged_accepts': ok_forged,
+                'rejected_at_epoch': at},
+               'honest verifies, forged rejected')
+    ctrls.append(c3)
 
-    # C_referee_does_not_reexecute — the whole economic point.
-    r = run(64, 512, random.Random(SEED))
-    out['controls']['C_referee_does_not_reexecute'] = {
-        'fires': r['steps_verified'] == 1 and r['rounds'] <= r['ceil_log2'],
-        'steps_verified': r['steps_verified'], 'rounds': r['rounds'],
-        'ceil_log2': r['ceil_log2'],
-        'fails_when': 'the referee verifies more than one epoch, or takes more '
-                      'than ceil(log2 N) rounds -- either way it is doing work '
-                      'proportional to the run and has saved nothing'}
-
-    # localisation swept over EVERY planted epoch including 0 and N-1, because
-    # boundaries are where off-by-one lives.
-    n = 16
-    hist = build_history(batches_of(corpus(rng, 128), n))
-    miss = []
-    for k in range(len(hist)):
-        liar = AdaptiveLiar(hist, random.Random(SEED + k))
-        liar.lie_at = k                       # force the boundary case
-        ref = Referee()
-        got = ref.bisect(HonestProver(hist).claim(), liar.claim())
-        out['localisation'].append({'planted': k, 'found': got,
-                                    'rounds': ref.rounds})
-        if got != k:
-            miss.append(k)
-    out['controls']['C_localises_every_epoch'] = {
-        'fires': not miss, 'missed': miss, 'n': len(hist),
-        'fails_when': 'any planted epoch, including 0 and N-1, is not the epoch '
-                      'the referee returns'}
-
-    # cost curve over >=3 values of N, per A18: one point is not a rate.
+    # ---------------------------------------------------------------- C4
+    # The economic claim. Values are the per-N pairs so a third party can refit.
+    c4 = Control('C_referee_does_not_reexecute',
+                 'a dispute must cost O(log N) rounds and ONE executed epoch, or '
+                 'it has saved nothing over re-execution',
+                 null_must_contain='N from 8 to 128, a 16x range, so a linear '
+                                   'referee would be plainly visible',
+                 can_fail_because='steps_verified > 1 at any N, or rounds '
+                                  'exceeding ceil(log2 N)')
     for n_ep in ([8, 16, 32] if quick else [8, 16, 32, 64, 128]):
         out['sweep'].append(run(n_ep, max(64, n_ep * 8), random.Random(SEED)))
+    c4.observe(all(r['steps_verified'] == 1 and r['rounds'] <= r['ceil_log2']
+                   for r in out['sweep']),
+               [(r['n_epochs'], r['rounds'], r['steps_verified'])
+                for r in out['sweep']],
+               'rounds vs ceil(log2 N) vs epochs executed')
+    ctrls.append(c4)
 
-    fired = {k: v['fires'] for k, v in out['controls'].items()}
-    out['all_controls_fire'] = all(fired.values())
+    # ---------------------------------------------------------------- C5
+    # Every planted epoch, both boundaries included, because that is where
+    # off-by-one lives and a sampled interior proves nothing about k=0.
+    c5 = Control('C_localises_every_epoch',
+                 'the referee must return exactly the planted epoch for every '
+                 'epoch, including 0 and N-1',
+                 null_must_contain='all N planted positions, not a sample -- an '
+                                   'interior-only sweep cannot see a boundary bug',
+                 can_fail_because='any planted epoch is not the epoch returned')
+    hist = build_history(batches_of(corpus(rng, 128), 16))
+    pairs = []
+    for k in range(len(hist)):
+        liar = AdaptiveLiar(hist, random.Random(SEED + k))
+        liar.lie_at = k
+        got = Referee().bisect(HonestProver(hist).claim(), liar.claim())
+        pairs.append((k, got))
+        out['localisation'].append({'planted': k, 'found': got})
+    c5.observe(all(a == b for a, b in pairs), pairs, 'planted vs found, all k')
+    ctrls.append(c5)
+
+    for c in ctrls:
+        out['controls'][c.name] = {'fires': c.fired, 'values': c.values,
+                                  'fails_when': c.can_fail_because}
+    out['all_controls_fire'] = all(c.fired for c in ctrls)
 
     print('W5 — bisection over canonical epoch states')
     print('\nCONTROLS')
-    for k, v in out['controls'].items():
-        print(f"  {'FIRES' if v['fires'] else 'DEAD ':5} {k}")
-        print(f"        fails when: {v['fails_when']}")
-    print('\nLOCALISATION — every planted epoch, 0..N-1')
-    print(f"  planted/found mismatches: {out['controls']['C_localises_every_epoch']['missed'] or 'none'}")
-    print('\nCOST — rounds against N, and steps the referee executed')
+    for c in ctrls:
+        print(f"  {'FIRES' if c.fired else 'DEAD ':5} {c.name}"
+              f"{'  [CONSTANT — distinguished nothing]' if c.constant else ''}")
+    print('\nCOST')
     print(f"  {'N':>5} {'rounds':>7} {'ceil_log2':>10} {'steps':>6}  caught")
-    for s in out['sweep']:
-        print(f"  {s['n_epochs']:>5} {s['rounds']:>7} {s['ceil_log2']:>10} "
-              f"{s['steps_verified']:>6}  {s['caught']}")
-    print(f"\nall controls fire: {out['all_controls_fire']}")
+    for r in out['sweep']:
+        print(f"  {r['n_epochs']:>5} {r['rounds']:>7} {r['ceil_log2']:>10} "
+              f"{r['steps_verified']:>6}  {r['caught']}")
 
-    json.dump(out, open(os.path.join(HERE, 'result.json'), 'w'),
-              indent=1, default=lambda o: o.hex() if isinstance(o, bytes) else str(o))
-    return 0 if out['all_controls_fire'] else 1
+    json.dump(out, open(os.path.join(HERE, 'result.json'), 'w'), indent=1,
+              default=lambda o: o.hex() if isinstance(o, bytes) else str(o))
+
+    ok, problems = certify(
+        HERE,
+        # Absolute, and DIRECTORIES: provenance.repo_state refuses a file path
+        # because naming a file "silently produced a fake dirty verdict" -- its
+        # words. Relative paths also broke, since this runs from any cwd.
+        deps=[os.path.join(HERE, '..', 'S73_epoch_commitment'),
+              os.path.join(HERE, '..', 'W2_witnessed_trie')],
+        artifacts=['epoch_bisect.py', 'result.json'],
+        controls=ctrls,
+        measurements=[{'name': 'rounds_vs_N',
+                       'points': [(r['n_epochs'], r['rounds'])
+                                  for r in out['sweep']],
+                       'as_rate': False}],
+        falsifier='if the referee must execute more than one epoch, or rounds '
+                  'exceed ceil(log2 N), bisection saves nothing over '
+                  're-execution and the dispute path is decorative',
+        note='bisection over S73 space state only; interpreter-step bisection '
+             'is OUT of scope (S68 RED, blocked upstream on hyperon Issue 3)')
+    print(f"\ncertify ok: {ok}")
+    for pr in (problems or []):
+        print(f"  - {pr}")
+    return 0 if (ok and out['all_controls_fire']) else 1
 
 
 if __name__ == '__main__':

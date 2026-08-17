@@ -1,38 +1,134 @@
 {
  "seed": 20260817,
  "controls": {
+  "C_state_root_cannot_separate_histories": {
+   "fires": true,
+   "values": {
+    "state_root_g1": "ac08cfec10bb3fc1",
+    "state_root_g2": "ac08cfec10bb3fc1",
+    "chain_root_g1": "2e51bf18e228ff87",
+    "chain_root_g2": "1f3b1cda90eaf541"
+   },
+   "fails_when": "the two groupings give different STATE roots (S73 would already bind history), or equal CHAIN roots (the chain adds nothing)"
+  },
   "C_chain_binds_all_three": {
    "fires": true,
-   "detail": {
+   "values": {
     "drop_root_prev": true,
     "drop_delta": true,
     "drop_root_next": true
    },
-   "fails_when": "an omitted input leaves two different histories with one chain root -- the link would not bind that input"
-  },
-  "C_state_root_cannot_separate_histories": {
-   "fires": true,
-   "state_roots_equal": true,
-   "chain_roots_differ": true,
-   "fails_when": "the two groupings give different STATE roots, in which case S73 already bound history and this spike is unnecessary; or equal CHAIN roots, in which case the chain adds nothing"
+   "fails_when": "an omitted input still separates the two groupings, i.e. that input was never binding"
   },
   "C_forged_sequence_rejected": {
    "fires": true,
-   "rejected_at_epoch": 0,
-   "fails_when": "the chain accepts a sequence whose declared additions were never the ones applied -- then a prover can present a real state root reached by a route it invented"
+   "values": {
+    "honest_accepts": true,
+    "forged_accepts": false,
+    "rejected_at_epoch": 0
+   },
+   "fails_when": "the chain accepts a claim whose declared additions were never the ones applied"
   },
   "C_referee_does_not_reexecute": {
    "fires": true,
-   "steps_verified": 1,
-   "rounds": 6,
-   "ceil_log2": 6,
-   "fails_when": "the referee verifies more than one epoch, or takes more than ceil(log2 N) rounds -- either way it is doing work proportional to the run and has saved nothing"
+   "values": [
+    [
+     8,
+     3,
+     1
+    ],
+    [
+     16,
+     4,
+     1
+    ],
+    [
+     32,
+     5,
+     1
+    ],
+    [
+     64,
+     6,
+     1
+    ],
+    [
+     128,
+     7,
+     1
+    ]
+   ],
+   "fails_when": "steps_verified > 1 at any N, or rounds exceeding ceil(log2 N)"
   },
   "C_localises_every_epoch": {
    "fires": true,
-   "missed": [],
-   "n": 16,
-   "fails_when": "any planted epoch, including 0 and N-1, is not the epoch the referee returns"
+   "values": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     9,
+     9
+    ],
+    [
+     10,
+     10
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     13,
+     13
+    ],
+    [
+     14,
+     14
+    ],
+    [
+     15,
+     15
+    ]
+   ],
+   "fails_when": "any planted epoch is not the epoch returned"
   }
  },
  "sweep": [
@@ -95,83 +191,67 @@
  "localisation": [
   {
    "planted": 0,
-   "found": 0,
-   "rounds": 4
+   "found": 0
   },
   {
    "planted": 1,
-   "found": 1,
-   "rounds": 4
+   "found": 1
   },
   {
    "planted": 2,
-   "found": 2,
-   "rounds": 4
+   "found": 2
   },
   {
    "planted": 3,
-   "found": 3,
-   "rounds": 4
+   "found": 3
   },
   {
    "planted": 4,
-   "found": 4,
-   "rounds": 4
+   "found": 4
   },
   {
    "planted": 5,
-   "found": 5,
-   "rounds": 4
+   "found": 5
   },
   {
    "planted": 6,
-   "found": 6,
-   "rounds": 4
+   "found": 6
   },
   {
    "planted": 7,
-   "found": 7,
-   "rounds": 4
+   "found": 7
   },
   {
    "planted": 8,
-   "found": 8,
-   "rounds": 4
+   "found": 8
   },
   {
    "planted": 9,
-   "found": 9,
-   "rounds": 4
+   "found": 9
   },
   {
    "planted": 10,
-   "found": 10,
-   "rounds": 4
+   "found": 10
   },
   {
    "planted": 11,
-   "found": 11,
-   "rounds": 4
+   "found": 11
   },
   {
    "planted": 12,
-   "found": 12,
-   "rounds": 4
+   "found": 12
   },
   {
    "planted": 13,
-   "found": 13,
-   "rounds": 4
+   "found": 13
   },
   {
    "planted": 14,
-   "found": 14,
-   "rounds": 4
+   "found": 14
   },
   {
    "planted": 15,
-   "found": 15,
-   "rounds": 4
+   "found": 15
   }
  ],
  "all_controls_fire": true
