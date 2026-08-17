@@ -109,3 +109,5 @@
 83 | 2026-08-17 | S72 (C3): packed popcount on the deployable cpuset behind a green device gate. Exactness perfect (f4e64fb7d70b9b0c on all three kernels). Throughput 15.2x short of the memory roof vs my predicted 2.4x - wrong by 6.3x because I treated the shortfall as linear in worker count. This argues AGAINST my NPU descope; the descope survives only on the ladder argument, which was stated load-independently.
 
 84 | 2026-08-17 | Loop cycle 1: D1+ seat-draw spec written. Key decision - R3 removes the local/global seat split entirely, because W1 cut residency coupling; S69 local/global was itself the vector. F5 recorded live: R3 holds only for clustering-aligned classes until W3 grades non-aligned witness sizes.
+
+85 | 2026-08-17 | Loop cycle 2: D5 ban surface spec. Enforcement by build not analysis (py-atom makes static checking undecidable). Surface versioned by binary hash. Float print/parse and sort stability excluded on precaution not evidence, stated as such. Honest gap recorded: the upstream cfg-gate does not exist, so sin-math exclusion is aspirational today.
