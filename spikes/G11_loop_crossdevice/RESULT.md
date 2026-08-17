@@ -53,6 +53,46 @@ Android/bionic), **not cross-ISA**, per S57's correction of S15.
   Nothing here is timed, so the gate matters only for the run completing.
 - 60 nodes, one graph, one prune rate. Unchanged from G10.
 
+## Addendum — build provenance, resolved (and my own caveat was too pessimistic)
+
+I flagged that `fuelrun.v2.host` and `.android` might be from different commits,
+making G11 "agreement across two builds as well as two hosts" and therefore a
+weaker controlled comparison. Measured instead of assumed:
+
+```
+fuelrun.v2.host      built 2026-08-16 16:16
+fuelrun.v2.android   built 2026-08-16 16:17     one minute apart
+hyperon patches      committed 2026-08-16 23:15  ~7 hours LATER
+```
+
+Both binaries **predate the patches** and were built one minute apart from the
+same tree. So G11 *is* a controlled comparison: one build, two hosts. The
+caveat was wrong in the pessimistic direction and is withdrawn.
+
+### Which raises the opposite question, and it also resolves
+
+If both binaries are stock, the G-series ran on **unpatched** hyperon — the tree
+carries the `intersection-atom` cardinality bug and the three address-leaking
+`Display` impls. Do the G programs touch them?
+
+```
+grep -ohE 'intersection-atom|subtraction-atom|new-space|random-int|GroundingSpace' G*/*.metta
+  (no matches)
+```
+
+None. Every G program uses `match`, `collapse`, `foldl-atom`, `add-atom(s)`,
+`remove-atom` and integer arithmetic over symbol and integer atoms.
+
+And there is a stronger argument than absence: **an address leak could not have
+produced identical hashes on two machines.** Heap layout differs between an
+Android process and a macOS one, so a leaked pointer would diverge. G11 matched
+at every cycle, and G1/G5 matched too. Identical hashes are positive evidence
+the leak did not reach the output, not merely an absence of the call.
+
+`elders/hyperon-experimental` currently shows 5 modified files at `3f76dc4` —
+the patches are applied in the working tree now. Any future rebuild of `fuelrun`
+would therefore **not** be comparable to these binaries, and would need saying.
+
 ## Reproduce
 
 ```sh
