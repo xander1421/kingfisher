@@ -1,0 +1,23 @@
+H63 — the admission gate: does anything fail when it is removed?
+
+SUITE ARMS
+  control                 75 pass /  0 fail   roster-related red: NONE
+  roster gate DELETED     69 pass /  6 fail   roster-related red: ['a callsign that is a SUBSTRING of a rostered one is refused', 'never reached claude', 'refusal names the roster', 'unrostered callsign is refused']
+  exact match -> substr   73 pass /  2 fail   roster-related red: ['a callsign that is a SUBSTRING of a rostered one is refused', 'never reached claude']
+
+LAUNCHER ARMS (the gate itself, driven)
+  unrostered + roster    rc=1  reached_claude=False  said_roster=True
+  rostered (control)     rc=0  reached_claude=True  said_roster=False
+  roster ABSENT          rc=0  reached_claude=True  said_roster=True
+  substring of rostered  rc=1  reached_claude=False  said_roster=True
+  substring, grep -q     rc=0  reached_claude=True  said_roster=False
+
+FA  suite reds with the roster gate DELETED:      ['a callsign that is a SUBSTRING of a rostered one is refused', 'never reached claude', 'refusal names the roster', 'unrostered callsign is refused']
+FA' suite reds with exact match loosened:         ['a callsign that is a SUBSTRING of a rostered one is refused', 'never reached claude']
+FB  unrostered, roster present: rc=1, reached_claude=False, names the roster=True
+FC  roster ABSENT:              rc=0, reached_claude=True, warned=True
+FD  `ok` against roster `ok-1`: rc=1, reached_claude=False   (with grep -q: rc=0, reached=True)
+
+  FB did not fire: the gate refuses an unrostered callsign and names the roster.
+  FC MEASURED: with roster.txt absent the launcher launches ANY callsign — the admission gate fails OPEN on a missing input, and the only signal is a warning line.
+  FD did not fire, and `grep -qx` is what stops it: with `grep -q` the same callsign is admitted, so the exactness is load-bearing and needs a check that fails when it goes.

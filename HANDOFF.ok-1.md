@@ -297,3 +297,53 @@ a control's clothes.
 **H29 is BLOCKED on H17, not done, and the diagnosis is in BLOCKED.log.** Do not
 "finish" it by wiring the suite into pre-commit: that settles H17's open §10
 dispute by default, in the permissive direction, in favour of the agent doing it.
+
+**RECORD, cycle 7, and it is H19 for the third time against this lane:** the
+commit `d049820` carries 9 files, not the 12 I passed to `git commit --only`.
+`WORK_QUEUE.md`, `CHANNEL.md` and `DECISIONS.log` had already been committed two
+seconds earlier by `9800b1f` (`Atom: AGENT-2`, G36) out of the shared working tree,
+so `--only` found no diff for them. **The content is in HEAD and correct** — H61,
+H62, the H29 status rewrite, the DONE line and the decision log all resolve at
+HEAD — and the attribution is not. `--only` protects you from committing another
+lane's work; nothing protects your work from being committed by another lane.
+
+## Cycle 8 — ATTACK (§2), and §12.8 makes it the loop's. H63: the gate nobody tested.
+
+`spikes/H63_roster_attack/`. Suite 66 → **75 checks**. Four falsifiers stated
+first; two fired.
+
+**The roster gate — `run_loop.sh:124-134`, the thing that decides which lanes may
+run at all — had no check of any kind.** Delete the whole block and the suite stays
+66/66 green. Loosen `grep -qx` to `grep -q` and callsign `ok` is admitted by a
+roster listing `ok-1`: rc=0, reached claude. `ok-1` is this lane.
+
+**How I found it, and it is worth more than the fix:** `grep -n roster
+spikes/harness/test_loop_gate.sh` returned three lines and all three were a scratch
+roster written FOR a different block. **A fixture mention reads exactly like
+coverage in a grep.** That is a two-second audit anyone can run on any mechanism.
+
+**Not fixed, and not mine to fix:** with `roster.txt` absent the launcher warns and
+admits ANY callsign — H30's class (a missing input degrades a mechanism to a no-op
+while it still reports success) at the gate with the widest blast radius. It is the
+operator's sanction list, so ruling on its absence is A22 with me as the
+beneficiary. `HUMAN_NEEDED.md` carries both costs and a one-line ask; today's
+behaviour is pinned by a check so it cannot change silently.
+
+**Carried H62's lessons forward on purpose**: every arm asserts refusal TEXT, not
+just rc; every arm asserts the parent's detach announcement, not just the child's
+artifacts; every arm has a brief, because the brief gate is BELOW the roster gate
+and would otherwise refuse for a reason the block is not about; and the block has a
+rostered-callsign POSITIVE control, because "it refused" is satisfied by a launcher
+that refuses everything.
+
+## NEXT 3
+1. **H61** — the launcher lock handoff held closed by a `sleep 1`. Fix shape is in
+   the row; the 20-launcher check already fails when it breaks. Coordinate first:
+   `run_loop.sh` is shared and three lanes share one index (H19).
+2. **The class hunt is still only half run.** Class 1 (`rc`-only assertions) turned
+   up one candidate outside my tree — `spikes/H56_fleet_stall/probe.sh:179`,
+   `check "P2 --check exits non-zero on a STALLED lane" "$rc" "1"` — and I have not
+   checked whether that path has a second way to exit non-zero. Not my spike: ask
+   its owner rather than edit it.
+3. **H54** — a journal's evidence-path citations need a check that reports to the
+   journal's OWN lane, not to the shared commit gate.

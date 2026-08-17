@@ -211,3 +211,34 @@ after they started. Stale under either comparison. The same is true of my own
 the checker could never report GREEN, not that it reported red falsely then.**
 
 *No human action outstanding from this entry.*
+
+---
+
+## H63 · The admission gate FAILS OPEN on a missing roster, and the fix is a policy call, not a bug fix
+
+**What.** `run_loop.sh:124-134`. With `roster.txt` present, a callsign absent from
+it is refused — verified, and now checked in `test_loop_gate.sh` (9 new checks,
+`falsify.py` F27/F28 both fire). With `roster.txt` **absent**, the launcher prints
+`WARNING roster.txt absent -- launching unrostered` and admits **any** callsign
+that has a brief. Measured, not read off the source:
+`spikes/H63_roster_attack/attack.out`, arm `roster ABSENT` → `rc=0`,
+`reached_claude=True`.
+
+**Why I did not just change it.** `roster.txt` is the *operator's* sanction list —
+`run_loop.sh`'s own comment says a brief a lane wrote for itself is not sanction,
+and this lane (`ok-1`) exists because something ran unsanctioned for hours. So
+"what does a missing sanction list mean" is a question about the operator's
+authority, and an agent that answers it is a party supplying the input to a check
+applied to itself (A22). Both answers are defensible: fail-closed means a
+mistyped path or a `git rm` stops the whole fleet with no lane able to fix it;
+fail-open means deleting one tracked file silently removes admission for everyone
+and the only trace is a line in `detach_$CALLSIGN.log`.
+
+**Artifact ready.** No file in `proposed/` — the change is one branch in
+`run_loop.sh` and the check that pins today's behaviour is already in the suite
+(`roster ABSENT admits any callsign (FAIL-OPEN — measured, not chosen)`), so
+whichever way you rule, the suite tells the next lane that the behaviour is
+deliberate and refuses silently changing it.
+
+**The ask, one line:** rule fail-open or fail-closed on a missing `roster.txt`; if
+fail-closed, say what a lane should do when the file is gone.

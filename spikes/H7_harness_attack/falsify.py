@@ -380,6 +380,29 @@ FALSIFIERS = [
      'if [ ! -f "$BRIEF_FILE" ]; then',
      'if false; then   # brief gate neutered',
      'announced no detach (synchronous'),
+
+    # --- H63, 2026-08-17 (ok-1), the ATTACK cycle on the loop (§12.8). The
+    # ADMISSION gate had no falsifier because it had no check: measured, the whole
+    # block could be deleted from run_loop.sh and the suite stayed 66/66 green
+    # (spikes/H63_roster_attack/attack.out). roster.txt is the sanction that
+    # decides which lanes may run at all -- H32's answer and H38's subject.
+    ('F27',
+     'the roster gate is gone, so any callsign with a brief it wrote for itself '
+     'is admitted -- the sanction that decides which lanes may run at all',
+     LAUNCHER,
+     '''if [ -f "$ROSTER_FILE" ]; then
+  if ! sed 's/#.*//' "$ROSTER_FILE" | awk 'NF{print $1}' | grep -qx "$CALLSIGN"; then''',
+     '''if false; then
+  if false; then''',
+     'unrostered callsign is refused'),
+
+    ('F28',
+     'the roster match stops being exact, so a callsign that is a SUBSTRING of a '
+     'rostered one is admitted -- `ok` against a roster listing `ok-1`',
+     LAUNCHER,
+     'grep -qx "$CALLSIGN"',
+     'grep -q "$CALLSIGN"',
+     'SUBSTRING of a rostered one is refused'),
 ]
 
 
