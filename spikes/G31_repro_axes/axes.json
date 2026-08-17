@@ -1,0 +1,117 @@
+{
+ "pairs": [
+  {
+   "pair": "death ON",
+   "seed": 777,
+   "on": {
+    "pop": 150,
+    "solved": 3640,
+    "predicted": 150394,
+    "precision": 0.02420309320850566,
+    "top12": 0.263426370654997
+   },
+   "off": {
+    "pop": 134,
+    "solved": 4719,
+    "predicted": 227142,
+    "precision": 0.02077555009641546,
+    "top12": 0.26070966293926484
+   }
+  },
+  {
+   "pair": "death ON",
+   "seed": 1234,
+   "on": {
+    "pop": 156,
+    "solved": 3569,
+    "predicted": 142755,
+    "precision": 0.02500087562607264,
+    "top12": 0.26481481481481484
+   },
+   "off": {
+    "pop": 110,
+    "solved": 4144,
+    "predicted": 116752,
+    "precision": 0.03549403864601891,
+    "top12": 0.24578352591780195
+   }
+  },
+  {
+   "pair": "death ON",
+   "seed": 31337,
+   "on": {
+    "pop": 142,
+    "solved": 2866,
+    "predicted": 76169,
+    "precision": 0.03762685607005475,
+    "top12": 0.26203792649517915
+   },
+   "off": {
+    "pop": 117,
+    "solved": 3381,
+    "predicted": 97145,
+    "precision": 0.03480364403726388,
+    "top12": 0.25148303707338326
+   }
+  },
+  {
+   "pair": "death OFF",
+   "seed": 777,
+   "on": {
+    "pop": 553,
+    "solved": 6629,
+    "predicted": 1028718,
+    "precision": 0.006443942849255092,
+    "top12": 0.28547558645181753
+   },
+   "off": {
+    "pop": 562,
+    "solved": 6843,
+    "predicted": 1144867,
+    "precision": 0.00597711349877322,
+    "top12": 0.2964131611864241
+   }
+  },
+  {
+   "pair": "death OFF",
+   "seed": 1234,
+   "on": {
+    "pop": 542,
+    "solved": 6752,
+    "predicted": 970784,
+    "precision": 0.006955203217193526,
+    "top12": 0.2899233161132156
+   },
+   "off": {
+    "pop": 557,
+    "solved": 6361,
+    "predicted": 969298,
+    "precision": 0.006562481300900239,
+    "top12": 0.2971764182223239
+   }
+  },
+  {
+   "pair": "death OFF",
+   "seed": 31337,
+   "on": {
+    "pop": 561,
+    "solved": 6188,
+    "predicted": 738232,
+    "precision": 0.00838218879701774,
+    "top12": 0.28802656524514486
+   },
+   "off": {
+    "pop": 579,
+    "solved": 6196,
+    "predicted": 1069786,
+    "precision": 0.005791812568121101,
+    "top12": 0.3130382258771122
+   }
+  }
+ ],
+ "coverage_up": 1,
+ "pred_down": 4,
+ "prec_up": 5,
+ "n_pairs": 6,
+ "verdict": "FALSIFIER FIRES \u2014 repro selection is inert on these axes too. G24's 'worth approximately nothing' STANDS AS WRITTEN, and AGENT-2-LANE's C7b reading should be retracted rather than defended: this run is the designed instrument for that question and theirs was an accident of contamination with unequal budgets."
+}

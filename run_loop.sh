@@ -44,8 +44,9 @@
 #    exit. Checked by spikes/harness/test_loop_gate.sh, which drives this script
 #    with a stub claude and fails if a seeded stale signal reaches the turn.
 #
-# 6, 7 and 8 are documented AT THEIR CODE below, not here: the callsign
-# whitelist, the self-detach, and the spawn-brief requirement. Read to `while`.
+# 6 through 9 are documented AT THEIR CODE below, not here: the callsign
+# whitelist, the self-detach, the spawn-brief requirement, and the callsign lock.
+# Read to `while`.
 set -u
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -102,6 +103,27 @@ esac
 #    belong in a tracked reviewable file, not in one operator's chat scrollback.
 #    Read fresh every turn (below), so an edit to a brief reaches the lane on its
 #    next cycle without a relaunch.
+# 10. NO ROSTER (v7, AGENT-1, after the 2026-08-17 restart). The two checks
+#     above validate the callsign's CHARSET and that a brief EXISTS -- and a
+#     brief is written BY the lane it briefs, so a lane could author its own
+#     authorisation and launch on it. `ok-1` came up exactly that way and ran
+#     --dangerously-skip-permissions against the shared git index for 8 minutes
+#     before anyone noticed; it went unnoticed precisely because every NAMED
+#     lane was healthy, so nothing looked wrong. Existence of a brief is not
+#     sanction. roster.txt is the sanction, and it is the same file bringup.sh
+#     starts from, so the two ends cannot drift.
+ROSTER_FILE="roster.txt"
+if [ -f "$ROSTER_FILE" ]; then
+  if ! sed 's/#.*//' "$ROSTER_FILE" | awk 'NF{print $1}' | grep -qx "$CALLSIGN"; then
+    echo "run_loop.sh: '${CALLSIGN}' is not in ${ROSTER_FILE}."
+    echo "A brief that the lane wrote for itself is not sanction to run. Add the"
+    echo "callsign to ${ROSTER_FILE} deliberately, or launch a rostered lane."
+    exit 1
+  fi
+else
+  echo "run_loop.sh: WARNING ${ROSTER_FILE} absent -- launching unrostered."
+fi
+
 BRIEF_FILE="prompts/${CALLSIGN}.md"
 if [ ! -f "$BRIEF_FILE" ]; then
   echo "run_loop.sh: no spawn brief at $BRIEF_FILE."
@@ -148,10 +170,16 @@ LOCK=".loop_lock.${CALLSIGN}"
   #        be renamed (§12, §13.3).
   #      * 2026-08-17 13:26:33 a launcher was live in the repo root under
   #        CALLSIGN=ok-1 -- a test fixture name -- spawning real
-  #        `claude -p "You are ok-1."` turns with --dangerously-skip-permissions,
-  #        with no brief, no CHANNEL line and no queue row. Nothing refused it and
-  #        nothing recorded it; it was found by reading `lsof` output for an
-  #        unfamiliar detach log.
+  #        `claude -p "You are ok-1."` turns with --dangerously-skip-permissions.
+  #        At that moment it had no brief, no CHANNEL line and no queue row.
+  #        Nothing refused it and nothing recorded it: it was found by reading
+  #        `lsof` output for an unfamiliar detach log, because `ps` cannot show a
+  #        callsign. SCOPED AN HOUR LATER RATHER THAN LEFT TO DECAY: ok-1 is now a
+  #        legitimate atom with prompts/ok-1.md and CHANNEL claims of its own, so
+  #        the finding is about the WINDOW -- a lane ran unallocated and
+  #        unrecorded, and only a human's later decision separated it from a
+  #        runaway. That window is what this lock closes; it is not a claim that
+  #        the lane was illegitimate.
   #
   #    §12 answers this with prose ("a lane's callsign is allocated, not
   #    assumed") and prompts/ATTACKER-1.md §0 tells a lane to check
@@ -215,7 +243,7 @@ if [ -z "${KF_DETACHED:-}" ]; then
   echo "run_loop: ${CALLSIGN:-unset} detached (survives caller teardown); log detach_${CALLSIGN:-unset}.log"
   exit 0
 fi
-# A LAUNCHER'S PRIVATE CONTROL VARIABLES MUST NOT REACH THE TURN (v6, H31).
+# A LAUNCHER'S PRIVATE CONTROL VARIABLES MUST NOT REACH THE TURN (v6, H34).
 # `claude -p` below inherits this process's environment, and every shell the
 # agent then opens inherits it again. So KF_DETACHED=1 -- the recursion guard --
 # was live inside every lane's own shell, and a launcher started BY an agent

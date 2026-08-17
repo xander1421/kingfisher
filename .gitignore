@@ -74,3 +74,4 @@ spikes/S75_pathmap_check/pmprobe/target/
 spikes/S75_pathmap_check/keys_*.bin
 spikes/S77_proof_bytes/pmproof/target/
 spikes/S82_kernel_truth/check
+bringup.log

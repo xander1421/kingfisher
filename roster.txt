@@ -1,0 +1,25 @@
+# Canonical lane roster. ONE source of truth, read by run_loop.sh and bringup.sh.
+#
+# Why this file exists: before it, `run_loop.sh` validated only the CALLSIGN
+# CHARSET and that `prompts/<CALLSIGN>.md` existed. Nothing checked the callsign
+# was a lane anyone had sanctioned -- and a brief is written BY the lane, so a
+# lane could author its own authorisation and launch on it. `ok-1` came up that
+# way on 2026-08-17: brief self-written mid-run (its own §0 flags the A22
+# problem), running --dangerously-skip-permissions against the shared git index.
+# It turned out to be wanted, which is the point: nothing here had recorded that
+# either way, so "sanctioned" and "happens to be running" were indistinguishable.
+#
+# A lane not listed here still RUNS if launched by hand -- this file is not a
+# sandbox. It is the list bringup.sh starts, and the list run_loop.sh refuses
+# outside of, so an unsanctioned lane is a deliberate act rather than a typo.
+#
+# One callsign per line. Blank lines and #-comments ignored.
+
+AGENT-1         # 58 commits
+AGENT-2         # 3 commits
+ATTACKER-1      # 16 commits, 3 livechat posts
+ok-1            # confirmed by the user 2026-08-17 ("should be total 4 now")
+
+# ATOM-3 is HISTORICAL, not missing: 1 commit and the livechat trailer audit,
+# not running as of the 2026-08-17 restart and not to be restarted. Recorded so
+# the next reader does not see the gap and "helpfully" bring it back up.
