@@ -1,0 +1,21 @@
+Allocated id namespace. One empty file per id, created by
+`sh spikes/harness/allocid.sh <PREFIX>` with `set -o noclobber`, so the
+test-and-create is one O_EXCL open and twenty racing lanes get twenty distinct
+ids. See H45.
+
+Tracked deliberately: an id allocated by a lane that then crashes before
+publishing must stay taken. That unpublished window is exactly where the two
+real collisions of 2026-08-17 landed (H30: AGENT-1 vs ATTACKER-1; H38: ok-1 vs
+ATTACKER-1) -- both lanes ran a correct grep about two minutes apart and neither
+row existed yet at the other's read.
+
+THERE IS NO RELEASE PATH, and that is deliberate: freeing an id re-opens the
+race it was allocated to close, and ids are free while a duplicate citation is
+not (73 of them across 12 files under H18).
+
+H46 and H47 were consumed by the allocator's own demonstration -- allocate twice,
+show the ids differ -- and are recorded here rather than quietly reused. A gap
+with a reason is cheaper than a reuse without one.
+
+`.seeded.<PREFIX>` marks that the one-time bootstrap grep has run for that
+prefix. After it, no grep is on the allocation path.
