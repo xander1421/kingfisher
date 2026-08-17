@@ -1,0 +1,175 @@
+{
+ "spike": "S28_inprocess_concurrency",
+ "recorded_utc": "2026-08-17T16:09:38Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun/src",
+   "head": "27d97aab505d5f1861afd3dff1a10f9bfdf52bc8",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse",
+   "head": "27d97aab505d5f1861afd3dff1a10f9bfdf52bc8",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun/src": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S28_inprocess_concurrency/result.json",
+   "sha256": "8660ed5a234417d99ef40ab96af9df20584a6d59a6e8a3d32801f815b9e4dbe4",
+   "bytes": 2712,
+   "mtime": 1786982978,
+   "compared_ts": 1786982978,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C0_instrument_reproduces_soakrun",
+   "must_fire_because": "threadrun at 1 thread must reproduce soakrun's digest columns byte for byte on the same argv, or it is a DIFFERENT instrument and the comparison to M1.3b's published result is not a comparison at all",
+   "can_fail_because": "any of the three digest columns differs on any row",
+   "null_must_contain": "canon/canon_alpha copied rather than reimplemented, so a drift in either shows here",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rows_compared": 13,
+    "identical": true,
+    "mismatched_positions": []
+   }
+  },
+  {
+   "name": "C1_same_build_both_arms",
+   "must_fire_because": "the two arms must be the same binary with argv differing ONLY in the thread count, so the comparison is threads-vs-no-threads and not binary-vs-binary (A24: two builds of the same source are not the same artefact)",
+   "can_fail_because": "the binary is rebuilt mid-run, the two arms are handed different program lists, or threadrun predates threadrun.rs",
+   "null_must_contain": "a rebuild between arms, a different job list, or a binary older than its own source (A24)",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "binary_sha256": "00bcc9e0e606c94b9c554ad38942f860fa7a2382e2b0b4bb59833ac217d5981c",
+    "binary_newer_than_source": true,
+    "argv_delta": "threads 1 -> 4",
+    "jobs_1": 13,
+    "jobs_n": 52
+   }
+  },
+  {
+   "name": "C2_intervention_is_not_a_no_op",
+   "must_fire_because": "an unchanged digest under a SMALL intervention is a disconnected wire. The N-thread arm must actually run N times the job-runs of the 1-thread arm inside one process",
+   "can_fail_because": "job_runs_n / job_runs_1 != threads",
+   "null_must_contain": "threads that never spawned, which would make the job-run counts equal",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "job_runs_1": 13,
+    "job_runs_n": 52,
+    "threads": 4
+   }
+  },
+  {
+   "name": "C3_counter_reaches_printed_output",
+   "must_fire_because": "M1.3b's CONTROL DEAD, re-derived: the process-global variable counter must leak into the RAW digest, or every stability result below is vacuous -- a run that cannot show drift proves nothing by not showing it",
+   "can_fail_because": "the probe's raw digest is constant across its positions in one process",
+   "null_must_contain": "a probe whose result is ground and carries no data-origin variable, which would be stable however broken process reuse was",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "positions": 7,
+    "raw_distinct": 7,
+    "canon_distinct": 1
+   }
+  },
+  {
+   "name": "C5_fuel_is_the_quantity_that_decides_severity",
+   "must_fire_because": "`fuel_used` is IN M1.8's agreement key `(status, fuel_used, sorted_hash)`. If fuel moves under concurrency the divergence is in the computation itself and no canonicalisation can repair it; if only the variable ids move, canon does. Measured as its own column rather than inferred from the fact that `canon` leaves the `fuel=` line alone",
+   "can_fail_because": "the fuel_at_pos multiset is not identical across all invocations",
+   "null_must_contain": "a fuel count differing at any position between any two invocations of the N-thread arm",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "distinct_fuel_signatures_n_thread": 1,
+    "distinct_fuel_signatures_1_thread": 1,
+    "invocations": 5
+   }
+  },
+  {
+   "name": "C4_threads_are_not_serialised",
+   "must_fire_because": "if hyperon holds a global lock, the threads run one at a time and stability is explained by SERIALISATION rather than by safety. That is the evidence-vs-conclusion split: a serialised run cannot exhibit the scheduling dependence under test, so it would make a negative result unattributable",
+   "can_fail_because": "parallel speedup at or below 1.2x, i.e. the N-thread arm took about N times as long as the 1-thread arm",
+   "null_must_contain": "wall_N ~= N * wall_1, the serialised signature",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "wall_1_median_s": 5.11,
+    "wall_n_median_s": 5.19,
+    "threads": 4,
+    "speedup_vs_serialised": 3.94
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun/src": {
+   "newest": 1786982917,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse": {
+   "newest": 1786966693,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "a stable RAW digest multiset across repeated 4-thread invocations, which would show the Relaxed variable counter never reaches printed output and leave the LEDGER row's B standing unqualified",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
