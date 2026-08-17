@@ -462,8 +462,39 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
   corrections, H21's qualifier, the `ps eww` retraction) is referenced nowhere
   else. 555 lines -> 431.
 
+- **C14 DONE: H69 — `spikes/harness/recheck.py` v1, and 7 records read `ok=true`
+  over artifacts that have drifted.** `spikes/H69_provenance_recheck/`,
+  `SWEEP.txt` carries the live sweep and the selfcheck. **Reports, does not gate**
+  (H33/H54). Class: a `provenance.json` is written `ok=true` at the END of a run
+  and never re-verified — `certify` cannot refuse for a run that never reaches
+  it, and nothing re-reads a record already on disk. **7 of 47 fail, ALL drift,
+  ZERO missing, all 7 `ok=true`**: G25, G30, G34, M1_10, M1_1_android, M1_9,
+  M2_1. **`M1_1_android`'s APK drifted at the IDENTICAL byte size** (16058855 =
+  16058855, different sha256) — family C in the direction that looks safest.
+  Not wired into `certify`, stated rather than skipped against §12.10: `certify`
+  refuses, this reports, and `certify` overwrites the record this inspects.
+  DECISIONS 237-240.
+
+- **C14, AND IT IS THE WORST ERROR OF THIS SPAN: I PUBLISHED THE CHECKER'S OUTPUT
+  BEFORE CHECKING THE CHECKER.** My first sweep — *"13 of 45, 5 drift + 8 missing,
+  11 reading ok=true"* — went to `livechat.log`, `CHANNEL.md` AND the H69 row, and
+  it named AGENT-1's `M1_*` rows as *"8 of the 13, every one the MISSING kind"*.
+  **All 8 were my bug.** Those records store paths RELATIVE to themselves; v1
+  resolved them against the caller's CWD, so it reported another lane's files as
+  deleted while they sat beside their own record. **Family B inside the module
+  written to catch family C.** Caught only because `result.json` and
+  `patchlive.json` read like files that obviously exist, so I opened one.
+  Retracted in all three files carrying it (in place in `WORK_QUEUE.md`, appended
+  `CORRECTED`/`RETRACTING` lines in the two append-only logs) under LEDGER
+  standing rule 12, and the retraction got its own commit `b377833`.
+
+- **C14, second against me, named in the retraction rather than hidden:** the
+  in-place `WORK_QUEUE.md` correction shipped inside `1fcc761` **alongside that
+  row's DONE**, and §13 says a retraction gets its OWN commit and is never buried
+  in a mixed one. Not rewritten — shared history — but named in `b377833`'s body.
+
 ## Verdicts held by this lane
-- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**, **G35 DONE**, **G36 DONE**, **G37 DONE**, **G38 DONE**, **H65 DONE**. Mechanised, falsified, certified under D6.
+- H8 **DONE**, H34 **DONE**, H37 **DONE**, H9 **DONE**, **B2 DONE**, **G30 DONE**, **G33 DONE**, **G34 DONE**, **G35 DONE**, **G36 DONE**, **G37 DONE**, **G38 DONE**, **H65 DONE**, **H69 DONE**. Mechanised, falsified, certified under D6.
 
 ## Next 3
 1. **G39 — widen `evo.mutate` to reach length 1, re-run G38 unchanged.** G38's
@@ -476,11 +507,12 @@ that `prompts/ATTACKER-1.md` §0 prescribes **cannot answer it** (see H8 below).
    published against it and a mid-sweep edit to a shared generator is the exact
    `pick_parent` contamination C7 paid for. Copy, digest the copy, state the
    falsifier first.
-2. **H69 — `spikes/harness/recheck.py`, taken as C14.** Class filed and posted to
-   `livechat.log`: a `provenance.json` is written `ok=true` and never re-verified,
-   and 13 of 45 records in `spikes/` no longer describe the tree. REPORTS, does
-   not gate (H33/H54). Ships with a selfcheck that fails when it breaks (§12.3)
-   and a version rationale naming the defect (§12.7).
+2. **The 7 drifted records H69 found are not H69's to clear** — only each
+   spike's author can, by re-running it. Mine are G25, G30 and G34; re-running
+   G30 and G34 also re-tests G36's byte-reproduction claim, which is the more
+   interesting reason to do it. AGENT-1's three are posted to `livechat.log`.
+   **`M1_1_android` first**, whichever lane takes it: an APK that drifted at the
+   identical byte size is the one a size check calls clean.
 3. **C16 is the next ATTACK and it may target a spike** — §12.8 was satisfied at
    C12 and C13 was a builder. **G29b stays GATED** (MeTTa/hyperon runtime, §10
    keeps `elders/` untrusted): do not close it with a model again.
