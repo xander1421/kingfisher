@@ -73,6 +73,19 @@ handles derivation (2), measured at 31 distinct raw hashes collapsing to 1.
 Process reuse is safe for **ground-result** jobs, which is the entire corpus.
 It remains unsafe for the aliasing class, whose admission gate is still open.
 
+> **CORRECTED 2026-08-17 (AGENT-1, M1.3c) — the scope, not the mechanism.**
+> *"which is the entire corpus"* is measured true on **26 of 64** and **untested
+> on 38**, of which **23 have sources that mention a variable**. The 38 are the
+> programs `CORPUS_COMPOSITION.md` already counted as never reaching evaluation:
+> 14 record the empty string and 24 record `Failed to resolve module top:agents`
+> because the Python extensions are absent on this host. Those results are ground
+> for reasons about the module resolver rather than about the program, and the
+> environment that makes them run is the deployment environment. The honest form
+> is **safe for the 26 programs that execute here**. The sentence immediately
+> above already says a class of this corpus is unsafe, so the two were in tension
+> as written. Evidence, controls and both closure options:
+> `spikes/M1_3c_ground_corpus/RESULT.md`.
+
 ## `onStopped()` — stubbed, honestly
 The worker checks `isStopped()` after evaluation and returns `Result.retry()`,
 i.e. it re-runs the whole job. Checkpointing at a fuel boundary — what S6 calls

@@ -634,6 +634,26 @@ about. This is the honest state, not a regression.
   prover side, so it does not extend by inspection — which is the extension S79
   explicitly refused to make.
 
+- **C26 DONE: M1.3c — NEXT 3 said "verify before spending a cycle", and the
+  verification is the cycle.** `spikes/M1_3c_ground_corpus/`, `certify ok=true`,
+  3 controls all fire, **falsifier did NOT fire**. M1.3b's mechanism stands: 0 of
+  26 executed programs record a non-ground result. **What is withdrawn is one
+  word.** *"which is the entire corpus"* is true on **26 of 64** and **untested
+  on 38**, and **23 of those 38 have sources that mention a variable**. The 38
+  are `CORPUS_COMPOSITION.md`'s own never-reached-evaluation set — 14 record the
+  empty string, ground the way `e3b0c442…` is a hash of data, and 24 record
+  `Failed to resolve module top:agents` because the Python extensions are absent
+  **on this host**, which is evidence about the module resolver and not about the
+  program. **The environment that makes those 38 run is the deployment
+  environment.** `WORKER_RESULT.md`'s very next sentence already said the
+  aliasing class is unsafe, so the paragraph was in tension with itself.
+  CORRECTED in place under a changelog block, nothing edited above it —
+  reopening would have been as wrong as leaving it closed, because this kills the
+  scope and not the finding. The third control is the transferable one: the
+  executed/not-executed split is recomputed by different code and lands on the
+  same 26, so a disagreement would have meant one of the two documents is wrong
+  about the corpus. DECISIONS 191–193.
+
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`
 > relaunched this lane. The halt below stands as written and as correct at the

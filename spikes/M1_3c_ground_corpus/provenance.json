@@ -1,0 +1,128 @@
+{
+ "spike": "M1_3c_ground_corpus",
+ "recorded_utc": "2026-08-17T12:52:51Z",
+ "note": "",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_3c_ground_corpus/../M1_8_quorum3",
+   "head": "cc8a1e48650711710d0a25394b5b3e797f25940b",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_3c_ground_corpus/../M1_8_quorum3": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_3c_ground_corpus/ground.json",
+   "sha256": "d597b8130b32d112ca35a1ecf8c94614a4dfabe6fcdc69efc88d3e66006fc3b3",
+   "bytes": 22145,
+   "mtime": 1786971171,
+   "compared_ts": 1786971171,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_scanner_finds_variables",
+   "must_fire_because": "the variable scanner must be able to see a variable at all; a regex that matched nothing would report a perfectly ground corpus and be indistinguishable from the claim being true",
+   "can_fail_because": "if VAR did not match MeTTa syntax, or the blobs were unreadable, source_var_count would be 0 everywhere and the scan would prove nothing",
+   "null_must_contain": "a corpus whose sources mention no variables, against which the scanner cannot be exercised",
+   "fired": true,
+   "detail": "the scanner is exercised against real MeTTa source",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "programs_with_source": 64,
+    "sources_mentioning_a_variable": 45,
+    "total_distinct_vars_seen": 295
+   }
+  },
+  {
+   "name": "C_sources_resolve",
+   "must_fire_because": "every program must be matched to its shard blob by CID, or the source half of this measurement is about a subset nobody named",
+   "can_fail_because": "the CIDs in result.json could name blobs this store does not hold, e.g. a run against a store that has since been pruned",
+   "null_must_contain": "a store missing the shards, giving no sources",
+   "fired": true,
+   "detail": "CID to blob resolution over the committed store",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "programs": 64,
+    "sources_resolved": 64
+   }
+  },
+  {
+   "name": "C_execution_split_reproduces",
+   "must_fire_because": "the executed/not-executed split must reproduce CORPUS_COMPOSITION 's independently published 26 of 64, or this file's own notion of \"executed\" is a second, unvalidated instrument",
+   "can_fail_because": "keying \"executed\" off the resolver error string could miscount the 4 error-only programs, which DID execute and whose result is an assertion Error",
+   "null_must_contain": "a split that disagrees with the published one",
+   "fired": true,
+   "detail": "against CORPUS_COMPOSITION.md 26/64",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "executed_here": 26,
+    "published": 26,
+    "by_verdict": {
+     "NO_RESULTS": 14,
+     "INSUFFICIENT_DOMAINS": 50
+    }
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_corpus_not_all_ground",
+   "must_fire_because": null,
+   "can_fail_because": "any program that actually executed MeTTa recorded a result containing a variable token",
+   "null_must_contain": "a corpus in which some executed program does produce a non-ground result",
+   "fired": false,
+   "detail": "variables surviving into a recorded result",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "executed": 26,
+    "non_ground_results": 0,
+    "non_ground_among_executed": 0,
+    "examples": []
+   },
+   "refutes": "the sentence \"process reuse is safe for ground-result jobs, WHICH IS THE ENTIRE CORPUS\" -- and with it M1.3b's closure of M1.1's largest open issue",
+   "fires_when": "any program that actually executed MeTTa recorded a result containing a variable token",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_3c_ground_corpus/../M1_8_quorum3": {
+   "newest": 1786967114,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "any executed program records a result containing a variable"
+}
