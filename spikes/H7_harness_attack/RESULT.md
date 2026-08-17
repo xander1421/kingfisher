@@ -17,8 +17,10 @@ deterministic suite run; there is no sampling anywhere in this spike.
 
 ## Why this and not another spike
 
-The suite reports `38 checks pass`. Nothing had ever asked whether a *red* run
-was reachable. That is not a hypothetical concern here: `test_loop_gate.sh`'s
+The suite reported all-green and nothing had ever asked whether a *red* run was
+reachable. (No count here on purpose — §7's own rule, earned by a sentence that
+cited "15 checks" for hours while the suite grew: cite the artifact, not its
+size.) That is not a hypothetical concern here: `test_loop_gate.sh`'s
 own header records the 15-check version passing while the hook was broken,
 because every check set `CALLSIGN`, and check 3 asserting that the bare-signal
 path *worked* — thereby certifying the lane-theft hole it was meant to close.
@@ -36,10 +38,14 @@ path *worked* — thereby certifying the lane-theft hole it was meant to close.
 | F6 | non-numeric fuse counter written back unchanged | `corrupt fuse file recovers` | **FIRES** |
 | F7 | installed commit gate drifts from its tracked source | `DRIFTED from its tracked source` | **FIRES** |
 | F8 | launcher spawns a lane on a callsign the hook will not gate | `launcher refuses what the hook will not gate` | **FIRES** |
+| F9 | commit gate accepts another lane's per-lane files | `refuses another lane's journal` | **FIRES** |
+| F10–F19 | the hook stops refusing at all · no exit marker · signal not consumed · malformed signal kept · signal read by glob · one shared fuse · fuse never releases · `STOP` ignored · env var back in a registration path · marker words unrecognised | one named check each | **ALL FIRE** |
+| F20–F21 | the cross-lane gate refuses *everything* · the `Carries:` escape stops working | the two POSITIVE controls | **FIRE** |
+| F22–F23 | a registration points at a hook that is not there | `reg <settings.json> resolves to an executable` | **FIRE** |
 
-**CONTROL**: an unmodified copy comes back `40 pass, 0 fail`. Without it, a
+**CONTROL**: an unmodified copy comes back all-green, 0 fail. Without it, a
 driver that broke every copy — a bad `build()`, a missing file, an unset `PATH`
-— would report all seven firing and read as a perfect score. The control is
+— would report every falsifier firing and read as a perfect score. The control is
 what separates *"the defect fired"* from *"the copy is rubble"*.
 
 **The revert itself is a control.** Each one goes through
@@ -49,13 +55,44 @@ passing and this script would report it sound on the strength of having tested
 nothing — the failure mode `edits.py` exists for, and the one this script is
 most exposed to.
 
-**SCOPE, stated because a number without it decays.** Eight of forty checks are
-now proven non-inert. **Thirty-two are not.** F1–F8 are the newest checks plus
-the defects that were *observed live* rather than reasoned about; the older
-assertions about lane isolation, fuse separation and the STOP switch have no
-falsifier yet. **"H7 DONE" does not mean the suite is verified** — opened as
-H17 rather than left as a caveat in prose, because a caveat in prose is the
-thing this row exists to distrust.
+**SCOPE.** At the end of the first cycle this read *"eight of forty proven,
+thirty-two are not"* — a hand count, in prose, which is the instrument this
+whole row distrusts. It was opened as **H17** rather than left as a caveat, and
+H17 replaced it with a measurement the driver prints on every run. See below.
+
+## H17 — coverage, measured rather than asserted (cycle 3)
+
+The scope note above said *"9 of 43 proven, 34 are not"*. Counting by hand is
+the wrong instrument for that, so `falsify.py` now **measures** it: it unions
+every check name that went red under any revert and prints the ones that never
+did. **23 falsifiers; 35 of 43 checks observed going red; the remaining 8 are
+listed by the driver on every run**, so the number cannot decay into prose.
+
+Measuring it immediately found a defect in the checks themselves. **Seven
+checks renamed themselves on failure** — `hostile callsign refused: X` when
+green, `hostile callsign emits an UNPARSEABLE decision: X` when red — so they
+could not be tracked from a green run to a red one and coverage was
+unmeasurable for them. They reddened every time under F3, under a different
+name. Nobody would find that by reading; only counting found it. Fixed by
+giving each check a stable name with the outcome in a parenthetical.
+
+**The 8 that remain, with the reason each resists a single-edit revert.** They
+are not all inert, and saying "8 uncovered" without this would be the decay
+this row exists to stop:
+
+- `hostile callsign handled: L 6` / `../L6` / `$(touch pwned)` / `` L`6 `` —
+  under F3 the whitelist is gone and these callsigns still produce **valid
+  JSON**, because none contains a quote. The check correctly stays green. It
+  asserts a different property from the one F3 breaks.
+- `no callsign was executed`, `hostile callsigns left no state` — these guard
+  against `eval`/word-splitting, and the hook contains no `eval`. Falsifying
+  them means **inventing** a defect rather than restoring one this repo had,
+  which is a different and weaker kind of evidence. Named, not silently
+  counted.
+- `writes no 'unknown' marker`, `lane signal untouched` — need **two**
+  simultaneous reverts (the `LANE` default *and* the glob signal read). The
+  driver applies one edit per falsifier. This one is a real limitation of the
+  driver, not of the checks, and multi-edit falsifiers are the next step.
 
 ## The error I made writing this, since the account is part of the work
 

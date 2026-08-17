@@ -175,8 +175,8 @@ PYEOF
   for c in $cmds; do
     case "$c" in
       *'$'*) check "reg $sj resolves without env" "env-var-in-path" "literal-path" ;;
-      *) if [ -x "${c%% *}" ]; then ok "reg $sj -> $(basename "${c%% *}") exists"
-         else bad "reg $sj points at a missing or non-executable file: $c"; fi ;;
+      *) if [ -x "${c%% *}" ]; then ok "reg $sj resolves to an executable"
+         else bad "reg $sj resolves to an executable (missing or not executable: $c)"; fi ;;
     esac
   done
 done
@@ -239,11 +239,11 @@ src="$ROOT/spikes/harness/commit-msg.hook"
 if [ ! -f "$src" ]; then
   bad "commit-msg.hook source is missing from spikes/harness"
 elif [ ! -x "$hookdir/commit-msg" ]; then
-  bad "commit gate NOT INSTALLED at $hookdir/commit-msg (sh spikes/harness/install_hooks.sh)"
+  bad "commit gate matches its tracked source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
 elif ! cmp -s "$src" "$hookdir/commit-msg"; then
-  bad "installed commit gate has DRIFTED from its tracked source"
+  bad "commit gate matches its tracked source (DRIFTED from its tracked source)"
 else
-  ok "commit gate installed and identical to its tracked source"
+  ok "commit gate matches its tracked source"
 fi
 
 # --- THE COMMIT GATE MUST REFUSE ANOTHER LANE'S FILES. ATTACKER-1, H19.
@@ -299,12 +299,17 @@ for cs in 'L"6' 'L\6' 'L 6' '../L6' '$(touch pwned)' 'L`6' 'L
 6'; do
   out=$(CALLSIGN="$cs" ./gate.sh </dev/null 2>/dev/null)
   label=$(printf '%s' "$cs" | tr -d '\n')
+  # STABLE NAME, outcome in the parenthetical. A check that RENAMES ITSELF when
+  # it fails cannot be tracked from a green run to a red one, so its coverage is
+  # unmeasurable — falsify.py reported seven of these as never-reddened when they
+  # redden every time under F3, just under a different name. Measuring coverage
+  # is what exposed it; nobody would find this by reading.
   if [ -z "$out" ]; then
-    ok "hostile callsign refused: $label"
+    ok "hostile callsign handled: $label (refused)"
   elif printf '%s' "$out" | python3 -c 'import json,sys; json.load(sys.stdin)' 2>/dev/null; then
-    ok "hostile callsign still emits valid JSON: $label"
+    ok "hostile callsign handled: $label (gated, valid JSON)"
   else
-    bad "hostile callsign emits an UNPARSEABLE decision: $label"
+    bad "hostile callsign handled: $label (UNPARSEABLE decision)"
   fi
 done
 check "  no callsign was executed"  "$([ -f pwned ] && echo ran || echo none)" "none"

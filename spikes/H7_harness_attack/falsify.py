@@ -128,6 +128,128 @@ FALSIFIERS = [
      'foreign="$foreign $f"',
      ':  # foreign file accepted',
      "refuses another lane's journal"),
+
+    # --- H17, 2026-08-17. F1-F9 covered the newest checks and the defects that
+    # were observed live; these cover the rest of the suite, so a PASS anywhere
+    # in it means something. Each revert is the check's own defect, restored.
+    ('F10',
+     'the hook stops refusing at all, so every lane ends after one turn — the '
+     'whole point of the component',
+     GATE,
+     'printf \'{"decision":"block"',
+     'exit 0\nprintf \'{"decision":"block"',
+     'no signal refuses the stop'),
+
+    ('F11',
+     'a legal exit leaves no marker for the launcher to read, which is how v2 '
+     'drove the launcher to grep its own log for the marker words instead',
+     GATE,
+     "      printf '%s\\n' \"$SIG\" > \"$EXIT_MARK\"\n",
+     '',
+     'leaves exit marker'),
+
+    ('F12',
+     'a consumed signal is left in place, so it fires again on the next turn — '
+     'the H16 shape, one turn earlier',
+     GATE,
+     '      mv -f "$SIGFILE" "${SIGFILE}.last"',
+     '      cp -f "$SIGFILE" "${SIGFILE}.last"',
+     'consumes the signal'),
+
+    ('F13',
+     'a malformed signal is left on disk, so prose in the signal file is '
+     'retried every turn forever',
+     GATE,
+     '      rm -f "$SIGFILE"   # malformed signal: ignore it and block',
+     '      :   # malformed signal: leave it',
+     'malformed is removed'),
+
+    ('F14',
+     'the signal is read by glob, so any lane consumes any other lane\'s exit — '
+     '§12.6 defeated while the per-lane NAMES are still there',
+     GATE,
+     'for SIGFILE in ".loop_signal.${LANE}"; do',
+     'for SIGFILE in .loop_signal.*; do',
+     'other lane cannot consume'),
+
+    ('F15',
+     'one shared fuse file: the counter trips at half the intended count per '
+     'lane and each lane\'s reset clears the other\'s',
+     GATE,
+     'BLOCKS=".loop_blocks.${LANE}"',
+     'BLOCKS=".loop_blocks"',
+     'fuses count per lane'),
+
+    ('F16',
+     'the runaway fuse never releases the loop, so a wedged lane blocks forever '
+     'instead of handing the launcher a reason',
+     GATE,
+     'if [ "$N" -gt "${MAX_BLOCKS:-400}" ]; then',
+     'if [ "$N" -gt 99999999 ]; then',
+     'fuse releases the loop'),
+
+    ('F17',
+     'the human kill switch stops outranking the contract, so `touch STOP` no '
+     'longer lets a lane end and the only manual override is gone',
+     GATE,
+     '[ -f STOP ] && exit 0',
+     ': # STOP ignored',
+     'STOP outranks the contract'),
+
+    ('F18',
+     'a hook registration goes back to an env var in the path — the form that '
+     'left the Stop hook inert for a whole session, unresolvable by any check',
+     '.claude/settings.json',
+     '/Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh',
+     '$CLAUDE_PROJECT_DIR/.claude/hooks/loop_gate.sh',
+     'resolves without env'),
+
+    ('F19',
+     'the hook stops recognising the marker words, so a correctly written '
+     'terminal signal is treated as prose and no lane can ever exit',
+     GATE,
+     '    LOOP-DONE|LOOP-HALT|LOOP-IDLE)',
+     '    LOOP-NEVEREVER)',
+     'per-lane signal ends turn'),
+
+    # F20-F21 falsify the POSITIVE controls. A gate that refuses everything is
+    # not a gate, and those two checks are the only thing standing between
+    # "it checks ownership" and "it always says no" -- so they need falsifying
+    # more than the refusals do, not less.
+    ('F20',
+     'the cross-lane gate refuses the atom\'s OWN journal, i.e. it refuses '
+     'everything and no lane can commit its own work at all',
+     'spikes/harness/commit-msg.hook',
+     '[ "$(up "$owner")" = "$atom" ] && continue',
+     'false && continue',
+     "accepts the atom's OWN journal"),
+
+    ('F21',
+     'the Carries: escape stops working, so the only way to repair another '
+     'lane\'s file is --no-verify, which switches off the trailer gates too',
+     'spikes/harness/commit-msg.hook',
+     'grep -qi "^Carries:.*$owner" && continue',
+     'grep -qi "^CarriesNEVER:.*$owner" && continue',
+     'unless Carries: names it'),
+
+    # The registration block has two failure branches. F18 covers the env-var
+    # one; these cover "the path is literal and points at nothing", which is the
+    # form a moved or renamed hook takes.
+    ('F22',
+     'the repo-root registration points at a hook that is not there, the state '
+     'that left the Stop hook inert for an entire session',
+     '.claude/settings.json',
+     '/Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh',
+     '/Users/victorianikolenko/kingfisher/.claude/hooks/moved_away.sh',
+     'reg .claude/settings.json resolves to an executable'),
+
+    ('F23',
+     'the same, at the sibling registration — the one that was already correct '
+     'while the repo-root one was broken, which is how the class was missed',
+     'spikes/S51_multicore/.claude/settings.json',
+     '/Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh',
+     '/Users/victorianikolenko/kingfisher/.claude/hooks/moved_away.sh',
+     'reg spikes/S51_multicore/.claude/settings.json resolves to an executable'),
 ]
 
 
@@ -146,17 +268,24 @@ def build(dst):
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def norm(name):
+    """Check names carry a dynamic tail -- `(.loop_signal.L7)` on a pass,
+    `(want 'x', got 'y')` on a fail. Compare on the stable prefix."""
+    return name.split(' (')[0].strip()
+
+
 def run_suite(root):
-    """Run the suite in `root`; return (pass_count, [failed check names])."""
+    """Run the suite in `root`; return (pass_names, [failed check names], out)."""
     p = subprocess.run(['bash', SUITE], cwd=root, capture_output=True, text=True)
     out = p.stdout + p.stderr
     failed = [m.strip() for m in re.findall(r'^  FAIL  (.*)$', out, re.M)]
-    passed = len(re.findall(r'^  PASS  ', out, re.M))
+    passed = [m.strip() for m in re.findall(r'^  PASS  (.*)$', out, re.M)]
     return passed, failed, out
 
 
 def main():
     problems = []
+    reddened = set()          # every check name that went red under ANY revert
 
     # CONTROL. An unmodified copy must come back all-green. Without it a driver
     # that broke every copy -- a bad `build`, a missing file, an unset PATH --
@@ -169,7 +298,7 @@ def main():
         if base_fail:
             problems.append(f'CONTROL: unmodified copy already fails: {base_fail}')
             print(out)
-        print(f'  CONTROL  unmodified copy: {base_pass} pass, '
+        print(f'  CONTROL  unmodified copy: {len(base_pass)} pass, '
               f'{len(base_fail)} fail  -> {"ok" if not base_fail else "BROKEN"}')
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
@@ -190,6 +319,7 @@ def main():
                 continue
 
             n_pass, failed, out = run_suite(tmp)
+            reddened.update(norm(f) for f in failed)
             hit = [f for f in failed if want in f]
             if not failed:
                 problems.append(f'{fid}: defect restored, suite still all-green '
@@ -204,6 +334,21 @@ def main():
                 print(f'           defect: {why}')
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
+
+    # COVERAGE, measured rather than asserted. A falsifier names one check, but
+    # a restored defect often reddens several, so the honest number is the union
+    # of everything that ever went red -- and the honest OUTPUT is the list of
+    # what never did, because a ratio hides which ones and a list does not.
+    print()
+    covered = [c for c in map(norm, base_pass) if c in reddened]
+    uncovered = [c for c in map(norm, base_pass) if c not in reddened]
+    print(f'COVERAGE: {len(covered)}/{len(base_pass)} checks have been observed '
+          f'going red under a restored defect.')
+    if uncovered:
+        print(f'  {len(uncovered)} never have — their PASS is a statement about '
+              f'the current tree, not about the check (WORK_QUEUE H17):')
+        for c in uncovered:
+            print(f'    - {c}')
 
     print()
     if problems:
