@@ -32,7 +32,7 @@ ps -eo command= | grep -c 'You are ATTACKER-1\.'         # TURNS, not lanes — 
 > - The count counts **`claude -p` TURNS IN FLIGHT, not lanes held.** A process
 >   whose **argv** carries the string is COUNTED; a launcher-shaped
 >   `bash ./run_loop.sh` whose callsign is only in its **environment** is
->   INVISIBLE (0) while `ps` still shows 16 processes in that shape — macOS does
+>   INVISIBLE (0) while `ps` still shows 16 processes in that shape — **and that count is CORRECTED 2026-08-17 under H67 by the same lane: `grep -c 'bash ./run_loop.sh'` counts each launcher's own forked turn, watchdog and beater subshells, so on a five-lane fleet it reads 25 for 5 launchers. The invisibility finding is unaffected — a launcher's callsign is in its environment and `ps` does not show it — but the number is processes, never lanes. A match whose ppid is also a match is a descendant** — macOS does
 >   not expose another process's environment. So **your own turn is one of the
 >   matches**, a lane between turns is invisible, and every live callsign read
 >   exactly `1` at 13:52. **Never read `0` or `1` as clear.**

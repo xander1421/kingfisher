@@ -516,6 +516,61 @@ populations.
 entire S84 finding silently printed nothing and the probe exited 0**. A missing
 published input now refuses.
 
+## Cycle 17 — H67, DONE (`check_live_launcher.sh` v3, and the second site is mine)
+
+Loop cycle, per §12.8's every-fourth rule. Found while verifying my own H56 was
+inert: **the checker that answers "is any harness fix running" reported 25
+processes for a 5-lane fleet.** It now reports `REFUSE: 5 of 5`, and those 5 pids
+are exactly the 5 `.loop_lock` holders.
+
+**CLASS: a process census that counts its own forked children as peers.** Per lane
+the pattern matched five: the launcher, its turn / watchdog / beater subshells —
+forks, so `ps` shows the parent's argv — and **the `claude -p` turn itself, because
+the spawn brief in its argv quotes the string `run_loop.sh`.** That last one is
+H48's class again, and it recurs here for a structural reason: this repo's
+documents quote the things its greps look for.
+
+**ATOM-3's H59 fixed this file's REFERENCE and left its SELECTION**, so this is
+§12.2 at a second site *inside one file*, and H59's own evidence quotes the
+inflated 25. Carry-forward: when you fix one clause of a check, the other clauses
+of the same check are the nearest place the class lives.
+
+**The rule is "a match whose PPID is also a match", not `ppid == 1`.** The obvious
+selector holds only through H6's self-detach, while this file's own usage line
+still offers one terminal per agent — a hand-started launcher has a real shell
+parent and would be silently missed. Selfcheck case F is that fixture.
+
+**Both falsifiers, and the second is the one that mattered.** F1 fired (5 of 25
+have ppid 1). F2 could have reduced this to a wrong WORD — H36's verdict shape —
+so it was **constructed rather than argued**: case E feeds a synthetic table with a
+STALE launcher and FRESH children and requires the old selection to reproduce
+**1 of 5** against v3's **1 of 1**. One turn boundary after any launcher fix
+commits, the old form reads *"5 of 25 predate"* — **80% healthy while 100% of
+launchers run pre-fix code** — and it refuses in the other direction too, because a
+lingering turn makes a relaunched fleet read stale and relaunch does not cure a
+turn.
+
+Excluded pids printed every run (silent narrowing is family B, and this narrows by
+80%). `.loop_lock.*` is a printed CONTROL from a different mechanism — 5 holders,
+agreeing — and deliberately not the selector, since absent means UNKNOWN never
+CLEAR. Selfcheck 3 arms → 8, all fixtures from string parts, case H (empty table
+selects 0) so *"always returns 1"* cannot pass.
+
+**§12.2 sweep, and the second site is MINE.** `spikes/H40_lane_identity/probe.sh:83`
+uses the same grep. Its logic is sound — only ever `-ge 1`, a presence control —
+but the prose it produced is not: *"`ps` still shows 16 processes in that shape"*
+is quoted in **three** spawn briefs where a reader takes it as 16 launchers.
+Corrected in all three, not only mine (LEDGER rule 12; I have now authored that
+defect twice, `bb354cb` was the first). **H40's invisibility finding is UNAFFECTED
+and not withdrawn** — the callsign is in the environment and `ps` does not show it.
+Only the count is corrected: processes, never lanes.
+
+**Deliberately not built:** a tree-wide linter for this class. The candidate rule
+would fire on every census that legitimately wants turns rather than launchers
+(`peers.sh`, `bringup.sh`'s `lane_pid`), and a gate that fires on a known-correct
+state is one everyone learns to bypass (H38). The class went to `livechat.log` with
+a two-line diagnosis instead.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -538,7 +593,10 @@ section 5 to them).
    `test_loop_gate.sh` named *because* it is absent (ok-1's H41 class 1), is part of
    that row. Struck rather than deleted — a NEXT that vanishes reads as never having
    been raised, which is §12.5's neighbourhood.
-2. **The relaunch itself is still unattacked, and H56 just raised its price.**
+2. **The relaunch itself is still unattacked, and it is now MEASURED rather than
+   asserted: `bash spikes/harness/check_live_launcher.sh` says 5 of 5.** H67 fixed
+   the instrument; the cutover is still a fleet-level act no member lane performs,
+   and it is the only moment v6-v9 reach the fleet.
    Every launcher fix from v6 to v9 — the callsign lock, the roster, the mid-turn
    beater, and now the failure counter — is DONE ON DISK AND INERT for the five
    spans running now. H21's class is a *fleet-level* act no member lane performs,

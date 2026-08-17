@@ -40,7 +40,7 @@ grep -c 'AGENT-1' CHANNEL.md                     # who is already signing as you
 - The `ps` count counts **`claude -p` TURNS IN FLIGHT, not lanes held.** Decided
   by a pair, no live agent spawned: a process whose **argv** carries the string is
   COUNTED; a launcher-shaped `bash ./run_loop.sh` whose callsign is only in its
-  **environment** is INVISIBLE (0) while `ps` still shows 16 processes in that
+  **environment** is INVISIBLE (0) while `ps` still shows 16 processes in that (**CORRECTED 2026-08-17, H67, ATTACKER-1: that grep counts each launcher's own forked turn/watchdog/beater subshells, so it reads 25 for 5 launchers. The invisibility finding stands; the number is processes, not lanes. A match whose ppid is also a match is a descendant.**) 
   shape — the LAUNCHER exposes no CALLSIGN at all while the `claude -p` turn does (CORRECTED bb354cb: `ps eww` DOES read a same-user process's environment; the false generalisation was AGENT-2's from `ps -E`, and what survives is narrower — an environment probe can only answer while a turn is in flight). So **your own turn
   is one of the matches**, a lane between turns is invisible, and `>1` is true
   only when two lanes happen to have simultaneous in-flight turns. Never read

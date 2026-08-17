@@ -58,6 +58,58 @@ launcher_ref() {   # launcher_ref <repo-dir> <launcher-path>
   fi
 }
 
+# WHICH PROCESSES ARE LAUNCHERS (v3, H67, ATTACKER-1, 2026-08-17).
+#
+# THE DEFECT REMOVED. v1 and v2 both selected with
+# `ps -eo pid,lstart,command | grep '[r]un_loop.sh'`, and per lane that matches
+# FIVE processes, not one:
+#
+#   * `bash ./run_loop.sh`            the launcher
+#   * the turn subshell `( claude -p ... | tee ) &`   -- a fork, so ps shows the
+#     parent's argv
+#   * the watchdog subshell `( sleep MAX_TURN; ... ) &`
+#   * the beater subshell `( while kill -0 ...; done ) &`   (H48)
+#   * the `claude -p` turn ITSELF, because the spawn brief in its argv QUOTES
+#     `run_loop.sh` -- H48's own class, a pattern that matches the prose quoting
+#     the thing it looks for.
+#
+# MEASURED 2026-08-17 on a five-lane fleet: 25 matches, 5 with ppid 1. Both v1's
+# `REFUSE: 25 of 25` and H59's v2 evidence quoting the same 25 are that number.
+#
+# THE FALSE NEGATIVE IS THE POINT, AND IT ARRIVES WHEN A FIX LANDS. The four
+# non-launcher matches are re-forked EVERY TURN, so one turn boundary after a
+# launcher fix commits, 20 of 25 matches post-date the commit and the report
+# reads `REFUSE: 5 of 25 predate` -- 80% healthy while 100% of launchers are
+# still running pre-fix code. It also refuses in the other direction: one
+# lingering turn from a previous span makes a fully relaunched fleet read stale,
+# and relaunch does not cure a turn.
+#
+# THE RULE: a match whose PPID IS ALSO A MATCH is a descendant, not a peer.
+# Exact, and chosen over `ppid == 1` deliberately -- ppid 1 holds only because
+# H6's self-detach reparents the wrapper, and the usage line above still offers
+# "one terminal/tmux pane per agent", where a launcher has a real shell parent
+# and `ppid == 1` would silently MISS it. The descendant rule covers the
+# argv-quoting `claude` case for free, since every turn's parent is a matching
+# subshell.
+#
+# THE NARROWING IS PRINTED, NEVER SILENT: refcheck v3(b) shipped a green verdict
+# over a scan that had quietly narrowed itself (family B), so the excluded count
+# and its pids are reported on every run.
+launcher_rows() {   # reads a ps table on stdin, prints "pid lstart..." for launchers only
+  awk '
+    { pid[NR]=$1; ppid[NR]=$2; rest=""; for (i=3; i<=NF; i++) rest=rest (i>3?" ":"") $i;
+      line[NR]=rest; ismatch[$1]=1; n=NR }
+    END { for (i=1; i<=n; i++) if (!(ppid[i] in ismatch)) print pid[i], line[i] }
+  '
+}
+descendant_rows() {  # the complement, so the narrowing can be reported
+  awk '
+    { pid[NR]=$1; ppid[NR]=$2; ismatch[$1]=1; n=NR }
+    END { for (i=1; i<=n; i++) if (ppid[i] in ismatch) print pid[i] }
+  '
+}
+ps_matches() { ps -eo pid,ppid,lstart,command | grep '[r]un_loop.sh' | awk '{print $1, $2, $3, $4, $5, $6, $7}'; }
+
 if [ "${1:-}" = "--selfcheck" ]; then
   # §12.3: the check ships a check. Both directions, because a comparison that
   # only ever sees one side is the happy-path coverage that let H1's 15-check
@@ -123,7 +175,71 @@ if [ "${1:-}" = "--selfcheck" ]; then
   fi
   rm -rf "$sc"
 
-  [ "$fail" -eq 0 ] && echo "selfcheck: lstart parsing, and a pure mtime bump no longer condemns a live process"
+  # ---- v3 (H67): THE SELECTION. Synthetic ps tables, because the defect is in
+  # which rows are peers and not in `ps`. Every fixture is built from string
+  # parts so this block cannot accidentally describe the live fleet.
+  # D. one lane: launcher 100, its turn/watchdog/beater subshells, and the claude
+  #    turn whose brief quotes the launcher (parent is the turn subshell).
+  one_lane=$(printf '%s\n' \
+    "100 1 Mon Aug 17 14:29:20 2026" \
+    "101 100 Mon Aug 17 15:56:07 2026" \
+    "102 100 Mon Aug 17 15:56:07 2026" \
+    "103 100 Mon Aug 17 15:56:07 2026" \
+    "104 101 Mon Aug 17 15:56:07 2026")
+  n_l=$(printf '%s\n' "$one_lane" | launcher_rows | wc -l | tr -d ' ')
+  n_d=$(printf '%s\n' "$one_lane" | descendant_rows | wc -l | tr -d ' ')
+  [ "$n_l" = 1 ] || { echo "SELFCHECK FAIL: D one lane selected $n_l launchers, want 1"; fail=1; }
+  [ "$n_d" = 4 ] || { echo "SELFCHECK FAIL: D one lane excluded $n_d descendants, want 4"; fail=1; }
+
+  # E. THE FALSE NEGATIVE THIS VERSION EXISTS FOR, constructed rather than argued.
+  #    A STALE launcher with FRESH children -- the state one turn boundary after a
+  #    launcher fix commits. Ref instant sits between them.
+  ref_e=$(start_epoch "Mon Aug 17 15:00:00 2026")
+  stale_old=0; total_old=0; stale_new=0; total_new=0
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    t=$(start_epoch "${row#* * }")
+    total_old=$((total_old + 1)); [ "$t" -lt "$ref_e" ] && stale_old=$((stale_old + 1))
+  done <<EOF2
+$one_lane
+EOF2
+  while IFS= read -r row; do
+    [ -n "$row" ] || continue
+    t=$(start_epoch "${row#* }")
+    total_new=$((total_new + 1)); [ "$t" -lt "$ref_e" ] && stale_new=$((stale_new + 1))
+  done <<EOF3
+$(printf '%s\n' "$one_lane" | launcher_rows)
+EOF3
+  [ "$stale_old" = 1 ] && [ "$total_old" = 5 ] || \
+    { echo "SELFCHECK FAIL: E the v1/v2 selection does not reproduce 1-of-5 (got $stale_old of $total_old) -- the fixture cannot show the dilution"; fail=1; }
+  [ "$stale_new" = 1 ] && [ "$total_new" = 1 ] || \
+    { echo "SELFCHECK FAIL: E v3 must report 1 of 1, got $stale_new of $total_new"; fail=1; }
+
+  # F. A NON-DETACHED LAUNCHER MUST STILL COUNT. `ppid == 1` would have been the
+  #    obvious selector and it silently misses the usage this file's own header
+  #    offers -- one terminal per agent, where the parent is a real shell.
+  pane=$(printf '%s\n' \
+    "200 4242 Mon Aug 17 14:29:20 2026" \
+    "201 200 Mon Aug 17 15:56:07 2026")
+  n_p=$(printf '%s\n' "$pane" | launcher_rows | wc -l | tr -d ' ')
+  [ "$n_p" = 1 ] || { echo "SELFCHECK FAIL: F a launcher in a pane (ppid 4242) selected $n_p, want 1"; fail=1; }
+  n_pd=$(printf '%s\n' "$pane" | descendant_rows | wc -l | tr -d ' ')
+  [ "$n_pd" = 1 ] || { echo "SELFCHECK FAIL: F pane lane excluded $n_pd, want 1"; fail=1; }
+
+  # G. TWO LANES: the selection must not collapse them, since a per-lane count is
+  #    what every relaunch decision is made on.
+  two=$(printf '%s\n' \
+    "100 1 Mon Aug 17 14:29:20 2026" "101 100 Mon Aug 17 15:56:07 2026" \
+    "300 1 Mon Aug 17 14:29:21 2026" "301 300 Mon Aug 17 15:56:08 2026")
+  n_2=$(printf '%s\n' "$two" | launcher_rows | wc -l | tr -d ' ')
+  [ "$n_2" = 2 ] || { echo "SELFCHECK FAIL: G two lanes selected $n_2, want 2"; fail=1; }
+
+  # H. AND THE CONTROL MUST STILL BE ABLE TO FIRE: an empty table selects nothing,
+  #    so "always returns 1" cannot pass D through G.
+  n_0=$(printf '' | launcher_rows | wc -l | tr -d ' ')
+  [ "$n_0" = 0 ] || { echo "SELFCHECK FAIL: H empty table selected $n_0, want 0"; fail=1; }
+
+  [ "$fail" -eq 0 ] && echo "selfcheck: lstart parsing, a pure mtime bump no longer condemns a live process, and a launcher's own forked children are not counted as peers (1 of 5 -> 1 of 1)"
   exit "$fail"
 fi
 
@@ -190,7 +306,36 @@ while IFS= read -r line; do
     printf 'STALE  pid %-7s started %s, predates %s (%s) -- running PRE-FIX code\n' \
       "$pid" "$(date -r "$st" '+%H:%M:%S')" "$(date -r "$mtime" '+%H:%M:%S')" "$refwhat"
   fi
-done < <(ps -eo pid,lstart,command | grep '[r]un_loop.sh' | awk '{print $1, $2, $3, $4, $5, $6}')
+done < <(ps_matches | launcher_rows)
+
+# v3 (H67): say what was excluded and why, every run. A census that narrows
+# itself silently is family B, and this one narrows by 80% on a healthy fleet.
+_excl=$(ps_matches | descendant_rows | tr '\n' ' ')
+_nexcl=$(printf '%s' "$_excl" | wc -w | tr -d ' ')
+printf 'selection: %s launcher(s); %s descendant match(es) EXCLUDED (turn, watchdog,\n' \
+  "$seen" "$_nexcl"
+printf '           beater subshells and the claude turn whose brief quotes the launcher): %s\n' \
+  "${_excl:-none}"
+# CONTROL, printed and not gated: `.loop_lock.*` records the holder pid (H8), so
+# it is a second opinion on the same question from a different mechanism. NOT the
+# selector -- a lock is absent for spans predating v6 and absent means UNKNOWN,
+# never CLEAR (H40). A disagreement here means one of the two is wrong and the
+# reader needs to know which files to open, so it is reported rather than
+# resolved by picking a side.
+_locked=0
+for _lf in "$ROOT"/.loop_lock.*; do
+  [ -e "$_lf" ] || continue
+  _lp=$(tr -dc '0-9' < "$_lf")
+  [ -n "$_lp" ] && kill -0 "$_lp" 2>/dev/null && _locked=$((_locked + 1))
+done
+if [ "$_locked" -ne "$seen" ]; then
+  printf 'CONTROL DISAGREES: %s live .loop_lock holder(s) vs %s selected launcher(s).\n' \
+    "$_locked" "$seen"
+  printf '           Not resolved here. A lock is absent for pre-v6 spans, and a\n'
+  printf '           launcher started by hand in a pane has no lock at all.\n'
+else
+  printf 'control: %s live .loop_lock holder(s) agrees with the selection\n' "$_locked"
+fi
 
 if [ "$seen" -eq 0 ]; then
   echo "no live launcher: nothing to be stale (this is not a pass, it is an absence)"
