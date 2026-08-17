@@ -1,0 +1,263 @@
+{
+ "cycles": 10,
+ "prune_frac": 0.1,
+ "runs": {
+  "attention": [
+   {
+    "cycle": 0,
+    "live": 60,
+    "mean_preserved": 1.0,
+    "per_query": {
+     "q_red": 1.0,
+     "q_invalid": 1.0,
+     "q_green": 1.0,
+     "q_2hop_red": 1.0,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 1,
+    "live": 54,
+    "mean_preserved": 0.9889657373909342,
+    "per_query": {
+     "q_red": 1.0,
+     "q_invalid": 1.0,
+     "q_green": 0.9527027027027027,
+     "q_2hop_red": 0.9921259842519685,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 2,
+    "live": 49,
+    "mean_preserved": 0.9582026358898726,
+    "per_query": {
+     "q_red": 0.9767441860465116,
+     "q_invalid": 1.0,
+     "q_green": 0.8851351351351351,
+     "q_2hop_red": 0.9291338582677166,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 3,
+    "live": 45,
+    "mean_preserved": 0.9272054420287346,
+    "per_query": {
+     "q_red": 0.9534883720930233,
+     "q_invalid": 1.0,
+     "q_green": 0.777027027027027,
+     "q_2hop_red": 0.905511811023622,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 4,
+    "live": 41,
+    "mean_preserved": 0.8680082847909254,
+    "per_query": {
+     "q_red": 0.8837209302325582,
+     "q_invalid": 1.0,
+     "q_green": 0.668918918918919,
+     "q_2hop_red": 0.7874015748031497,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 5,
+    "live": 37,
+    "mean_preserved": 0.7954547479176668,
+    "per_query": {
+     "q_red": 0.7674418604651163,
+     "q_invalid": 1.0,
+     "q_green": 0.5405405405405406,
+     "q_2hop_red": 0.6692913385826772,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 6,
+    "live": 34,
+    "mean_preserved": 0.7233587552027398,
+    "per_query": {
+     "q_red": 0.6511627906976745,
+     "q_invalid": 1.0,
+     "q_green": 0.44594594594594594,
+     "q_2hop_red": 0.5196850393700787,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 7,
+    "live": 31,
+    "mean_preserved": 0.691764452604958,
+    "per_query": {
+     "q_red": 0.6046511627906976,
+     "q_invalid": 1.0,
+     "q_green": 0.3581081081081081,
+     "q_2hop_red": 0.49606299212598426,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 8,
+    "live": 28,
+    "mean_preserved": 0.6634699614465225,
+    "per_query": {
+     "q_red": 0.5813953488372093,
+     "q_invalid": 1.0,
+     "q_green": 0.2635135135135135,
+     "q_2hop_red": 0.47244094488188976,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 9,
+    "live": 26,
+    "mean_preserved": 0.6379620602107325,
+    "per_query": {
+     "q_red": 0.5348837209302325,
+     "q_invalid": 1.0,
+     "q_green": 0.22972972972972974,
+     "q_2hop_red": 0.4251968503937008,
+     "q_yellow": 1.0
+    }
+   }
+  ],
+  "control": [
+   {
+    "cycle": 0,
+    "live": 60,
+    "mean_preserved": 1.0,
+    "per_query": {
+     "q_red": 1.0,
+     "q_invalid": 1.0,
+     "q_green": 1.0,
+     "q_2hop_red": 1.0,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 1,
+    "live": 54,
+    "mean_preserved": 0.7906739187457005,
+    "per_query": {
+     "q_red": 0.9069767441860465,
+     "q_invalid": 0.5,
+     "q_green": 0.7432432432432432,
+     "q_2hop_red": 0.8031496062992126,
+     "q_yellow": 1.0
+    }
+   },
+   {
+    "cycle": 2,
+    "live": 49,
+    "mean_preserved": 0.6314890105267326,
+    "per_query": {
+     "q_red": 0.7674418604651163,
+     "q_invalid": 0.5,
+     "q_green": 0.5878378378378378,
+     "q_2hop_red": 0.6771653543307087,
+     "q_yellow": 0.625
+    }
+   },
+   {
+    "cycle": 3,
+    "live": 45,
+    "mean_preserved": 0.5231422321424153,
+    "per_query": {
+     "q_red": 0.5813953488372093,
+     "q_invalid": 0.5,
+     "q_green": 0.5067567567567568,
+     "q_2hop_red": 0.5275590551181102,
+     "q_yellow": 0.5
+    }
+   },
+   {
+    "cycle": 4,
+    "live": 41,
+    "mean_preserved": 0.3008685667905591,
+    "per_query": {
+     "q_red": 0.32558139534883723,
+     "q_invalid": 0.5,
+     "q_green": 0.4189189189189189,
+     "q_2hop_red": 0.25984251968503935,
+     "q_yellow": 0.0
+    }
+   },
+   {
+    "cycle": 5,
+    "live": 37,
+    "mean_preserved": 0.24235240550933645,
+    "per_query": {
+     "q_red": 0.2558139534883721,
+     "q_invalid": 0.5,
+     "q_green": 0.33783783783783783,
+     "q_2hop_red": 0.11811023622047244,
+     "q_yellow": 0.0
+    }
+   },
+   {
+    "cycle": 6,
+    "live": 34,
+    "mean_preserved": 0.22748754064447158,
+    "per_query": {
+     "q_red": 0.2558139534883721,
+     "q_invalid": 0.5,
+     "q_green": 0.2635135135135135,
+     "q_2hop_red": 0.11811023622047244,
+     "q_yellow": 0.0
+    }
+   },
+   {
+    "cycle": 7,
+    "live": 31,
+    "mean_preserved": 0.18487654473737608,
+    "per_query": {
+     "q_red": 0.13953488372093023,
+     "q_invalid": 0.5,
+     "q_green": 0.22972972972972974,
+     "q_2hop_red": 0.05511811023622047,
+     "q_yellow": 0.0
+    }
+   },
+   {
+    "cycle": 8,
+    "live": 28,
+    "mean_preserved": 0.17406573392656527,
+    "per_query": {
+     "q_red": 0.13953488372093023,
+     "q_invalid": 0.5,
+     "q_green": 0.17567567567567569,
+     "q_2hop_red": 0.05511811023622047,
+     "q_yellow": 0.0
+    }
+   },
+   {
+    "cycle": 9,
+    "live": 26,
+    "mean_preserved": 0.16325492311575446,
+    "per_query": {
+     "q_red": 0.13953488372093023,
+     "q_invalid": 0.5,
+     "q_green": 0.12162162162162163,
+     "q_2hop_red": 0.05511811023622047,
+     "q_yellow": 0.0
+    }
+   }
+  ]
+ },
+ "verdict": "SURVIVES \u2014 attention 64% vs control 16% after 10 cycles at 10%/cycle",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "cycle": 10
+  }
+ },
+ "cites": [
+  "G5_ecan_metta",
+  "G8_per_context",
+  "G9_context_discovery"
+ ]
+}

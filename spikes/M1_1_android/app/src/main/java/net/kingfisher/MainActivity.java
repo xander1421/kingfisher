@@ -73,6 +73,20 @@ public class MainActivity extends Activity {
             "SUMMARY thermal=%.2f cap=%.2f sticky=%.2f space=%.2f full=%.2f us"
             + " | adb+dumpsys was 35100 us -> %.0fx | vs 68.8 ms job = %.6fx",
             thermal, cap, sticky, space, total, 35100.0 / total, total / 68800.0));
+        // ---- run MeTTa in-process and report the result atoms
+        try {
+            String prog = "!(+ 1 2)\n!(if (> 3 2) yes no)\n"
+                        + "!(intersection-atom (A B C) (B C D))\n";
+            long t0 = System.nanoTime();
+            String out = Metta.run(prog, getFilesDir().getAbsolutePath());
+            double ms = (System.nanoTime() - t0) / 1e6;
+            Log.i(TAG, String.format("METTA in-process OK in %.2f ms", ms));
+            for (String line : out.split("\n")) {
+                if (!line.isEmpty()) Log.i(TAG, "METTA RESULT| " + line);
+            }
+        } catch (Throwable e) {
+            Log.i(TAG, "METTA FAILED: " + e);
+        }
         Log.i(TAG, "DONE");
     }
 }

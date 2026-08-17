@@ -31,3 +31,9 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
    outside the workspace, it needs retracting: the witness is 1.54–12.23 MB, not
    4.4 KB, because the measured engine reads the whole prefilter index on every
    query.
+
+- **hyperon: `libhyperonc.so` is built without a `SONAME`.** Any consumer linking
+  the C API records the absolute host build path in `DT_NEEDED`; on Android the
+  APK then fails `dlopen` with a `/Users/...` path. One-line fix upstream
+  (`-Wl,-soname,libhyperonc.so` in the cdylib link args). Found in M1.1.
+  Unfiled: publishing is disallowed by §11.

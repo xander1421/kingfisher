@@ -24,6 +24,33 @@ All four segments at 16 KB. S2 said *"cargo-ndk 4.x sets this by default for
 NDK >= 27, so likely already handled."* It is, and it is now verified on the
 artifact rather than inferred from a changelog.
 
+## It RUNS in-process — S2's gap closed
+
+```
+METTA in-process OK in 11.23 ms      (includes stdlib load + init.metta)
+METTA RESULT| 3
+METTA RESULT| yes
+METTA RESULT| (B C)
+```
+
+from `!(+ 1 2)` / `!(if (> 3 2) yes no)` / `!(intersection-atom (A B C) (B C D))`,
+evaluated by `libhyperonc` inside an Android app process via a JNI shim.
+
+**Same program, same device, native `fuelrun` binary:**
+```
+n_results 3   fuel_used 474
+0  3
+1  yes
+2  (B C)
+```
+
+**Identical.** This extends S57's determinism result along a new axis — not a
+second ISA but a **second runtime host**: ART/JNI/dlopen against a plain native
+process, same silicon. *Caveat:* `fuelrun.v2.android` was built from a hyperon
+commit that has not been confirmed equal to the `3f76dc4` used here, so this is
+agreement across two builds as well as two hosts. That makes it weaker as a
+controlled comparison and no weaker as evidence.
+
 ## It loads in-process
 ```
 libhyperonc.so load: OK 1.342969 ms
@@ -72,10 +99,26 @@ Two spec recommendations, both vindicated on cost as well as correctness.
   an offline build is impossible without it cached. Dropping Kotlin does not
   drop the Kotlin plugin.
 
+## Three build defects found on the way, recorded because each cost a cycle
+
+1. **`libhyperonc.so` ships with NO `SONAME`.** Anything linking it records the
+   *absolute host build path* in `DT_NEEDED`, so the APK installs and then dies
+   at `dlopen` with a `/Users/...` path on the device. Fixed here with
+   `RUSTFLAGS="-C link-arg=-Wl,-soname,libhyperonc.so"`. This is a genuine
+   packaging defect and it will hit anyone linking the C API on any platform.
+2. **`metta_new_core` loads no stdlib.** It returns `(+ 1 2)` unevaluated — an
+   echo that looks like success. The first run of this shim "passed" and proved
+   nothing; only reading the output caught it. `metta_new_with_stdlib_loader`
+   is the constructor that actually evaluates.
+3. **`metta_new_with_stdlib_loader` dereferences `space_ref` unconditionally**
+   (`metta.rs:857`), while its sibling `metta_new_core` explicitly guards
+   `space.is_null()` (`:883`). Passing NULL segfaults. The doc does not promise
+   nullability, so this is **API asymmetry, not a hyperon defect** — logged as
+   such rather than inflated into a third bug report.
+
 ## Not done
-- **No JNI call into MeTTa.** The `.so` is loaded, not invoked. `metta_new_core`
-  / `metta_run` through a JNI shim is the remaining half of M1.1 and needs a
-  CMake/`externalNativeBuild` step.
+- **No WorkManager worker.** `androidx.work` is not a dependency yet; the five
+  declarative constraints are unbuilt and M1.3's residue policy is still Python.
 - **No WorkManager worker.** `androidx.work` is not yet a dependency; the five
   declarative constraints are unbuilt. M1.3's residue policy is tested in Python
   and not yet ported to `doWork()`.
