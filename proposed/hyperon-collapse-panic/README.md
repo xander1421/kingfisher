@@ -1,5 +1,23 @@
 # Proposed upstream report — hyperon-experimental
 
+> **CORRECTION 2026-08-17, before filing.** This report attributes the panic to
+> `collapse`. That is wrong. `spikes/G18_ecan_ceiling` shows a **bare `match`
+> with no `collapse` at all** panics identically:
+> ```
+> !(match &self (imp 0 $c $v) $c)     N=1500  PANIC     N=3000  PANIC
+> ```
+> The limit is on the result cardinality of the **leading pattern of a
+> conjunction**, not on `collapse`'s aggregation. Exact bound is **1021**, not
+> 1024 — the expression carries a head and a wrapper.
+>
+> And the sharper defect for a report: **conjunction order decides between a
+> result and an abort.** At N=3000, `(, (bucket b0 $c) (imp 0 $c $v))` returns
+> normally while `(, (imp 0 $c $v) (bucket b0 $c))` — same denotation — aborts.
+> Reordering a conjunction for readability can kill the host process.
+>
+> Do not file the text below as written. It needs rewriting around `match` and
+> around the ordering asymmetry, which is the part a maintainer can act on.
+
 **`collapse` over 1024 or more results panics the process.**
 
 Found while cross-checking rule application against a Python reference
