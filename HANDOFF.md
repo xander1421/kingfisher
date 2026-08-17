@@ -193,6 +193,30 @@ about. This is the honest state, not a regression.
   was near-tautological and would have passed on a broken fold) and were replaced
   before publishing. DECISIONS 126–128.
 
+- **C10 DONE: S75 — I ran the falsifier W2 and S74 declared, and it FIRED on my
+  own work.** `spikes/S75_pathmap_check/`. Against MORK's real `pathmap`:
+  **atom keys 7.6 → 139.1 mean node depth (18.4×)**, triple keys 4.2 → 10.3
+  (2.4×), threshold 10× fixed before reading. Authentication overhead scales with
+  nodes on the path, so **S73's 1,770 B insert proof is ~33 KB on real pathmap**;
+  **W2 becomes ~3.6–5.8 KB, a constant factor exactly as its caveat claimed**; and
+  **S74 is untouched** because a chain step hashes digests and never walks a path.
+  Cause is **key length** — `pathmap` stores a bounded byte span per node, so a
+  1,155-byte atom encoding becomes ~1,148 nodes where my trie used one. **S73's
+  caveat was too weak**: "same shape, different constants" is wrong at 18.4×, and
+  it should have named key length as the load-bearing variable. **The fix is in the
+  ENCODING** (intern symbols to fixed-width ids, the regime FB15k triples already
+  occupy), not in the proof system.
+- **C10 SECOND FINDING, unlooked-for: `pathmap`'s own `merkleization.rs` is not a
+  commitment.** It is a dedup pass keyed by a **128-bit non-cryptographic gxhash**
+  — its own `Cargo.toml` says "for dag_serialization, merkleization, and caching",
+  and it is swapped for xxhash under miri. No proof, no verifier, and **the crate
+  depends on no cryptographic hash at all**. So *"the substrate already has
+  merkleization"* is wrong, and **W2 did not reimplement something that existed.**
+  The dedup is real: 1,565 of 3,160 nodes reused on the triple corpus, which is
+  independent support for the sharing S73's cost model leans on.
+  One control was wrong first — it grepped `fn (prove|verify|proof|witness)` and
+  matched **14 Rust borrow witnesses**. New guardrail **A30**. DECISIONS 129–132.
+
 ## Where I am, and the next three items
 - **BLOCKER RESOLVED — and it was my error.** The battery service was pinned in
   a test override (`UPDATES STOPPED`); `dumpsys battery reset` shows
@@ -222,13 +246,13 @@ about. This is the honest state, not a regression.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: **N1 and S72's remaining prose-only controls are device-gated, so
-  the honest next verification item is `pathmap`.** Both W2 and S74 name the same
-  falsifier — build the three proofs on MORK's real `pathmap` (`elders/PathMap`)
-  and show the authentication path departs from 1.5–3.3 KB by more than the
-  branching factor explains. That is the only outstanding check that would
-  invalidate the trie line rather than extend it, and `elders/` is already on
-  disk. Note §10: cloned code stays untrusted, build and test in place.
+- **NEXT 1**: **re-encode atom keys to fixed-width interned ids and re-measure.**
+  S75 localised the 18.4× to key length, and FB15k triples at 12 B come out at
+  2.4×, so the regime that works is known. Intern each symbol to a 4-byte id, keep
+  the arity framing, re-run S73 and S75. This is the one change that would move
+  S73's ~33 KB back toward its published 1,770 B, and it is load-insensitive.
+  Falsifier to state first: if interning does not bring the pathmap depth ratio
+  under 10×, the cause is not key length and S75's mechanism claim is wrong.
 - **NEXT 2**: **history binding for the epoch chain** — S73 proved the root
   commits to state and *not* to the path taken to it. A `(root, delta)` chain
   hashed together is what makes an epoch SEQUENCE evidence. Small, and it is the
