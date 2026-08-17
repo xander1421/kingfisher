@@ -83,11 +83,31 @@ if [ $? = 0 ] && grep -q '^Claude-Session: unassigned-in-lane$' "$S"; then
 # the assignment itself, per live lane. A callsign with no live launcher cannot
 # be assigned from, so that is a PRECONDITION and is reported, never a FAIL --
 # the three outcome categories M1_11 named, applied here.
-for cs in AGENT-1 ATTACKER-1; do
-  if ! ps -eo command 2>/dev/null | grep -q "CALLSIGN=${cs}[ =]*[^ ]*run_loop"; then
-    echo "  PRECONDITION  no live launcher for $cs — assignment unmeasurable here"
-    continue
-  fi
+# THE PRECONDITION WAS COMPUTED BY THE EXPRESSION UNDER TEST (v6, AGENT-2, H37).
+# This loop used to skip with "no live launcher for $cs — assignment unmeasurable
+# here" whenever `ps -eo command | grep "CALLSIGN=..run_loop"` found nothing. That
+# grep IS the mechanism v5 used. So when the mechanism stopped matching anything,
+# its own detector reported PRECONDITION and the suite passed — the failure
+# disabled the only thing that could have reported it. A29: a probe that cannot
+# show it reached its target has produced no evidence, one layer up.
+#
+# The case is CONSTRUCTED now instead of waited for: a process that looks like a
+# launcher to `ps`, its pid written to the lock the launcher really writes
+# (run_loop.sh v6, H8). Deterministic, and it runs whether or not a fleet is up.
+_fakedir="$(dirname "$S")/fakelane"
+mkdir -p "$_fakedir"
+printf '#!/usr/bin/env bash\nsleep 20\nexit 0\n' > "$_fakedir/run_loop.sh"
+bash "$_fakedir/run_loop.sh" & _holder=$!
+# The trailing `exit 0` is load-bearing: bash EXECs the last simple command of a
+# script, so a fixture ending in `sleep` reports `sleep 20` to ps and resembles
+# nothing. Asserted rather than assumed, so the fixture cannot rot into a skip.
+if ps -p "$_holder" -o command= 2>/dev/null | grep -q 'run_loop\.sh'; then
+  pass=$((pass+1))
+else
+  fail=$((fail+1)); echo "  FAIL  fixture holder does not look like a launcher to ps"
+fi
+for cs in KF-TEST1 KF-TEST2; do
+  echo "$_holder" > ".loop_lock.${cs}"
   printf '%s\n' "$P" > "$S"
   CALLSIGN=$cs sh "$H" "$S" >/dev/null 2>&1
   got=$(sed -n 's/^Claude-Session: //p' "$S")
@@ -98,7 +118,12 @@ for cs in AGENT-1 ATTACKER-1; do
     lane:$cs@*) pass=$((pass+1)) ;;
     *) fail=$((fail+1)); echo "  FAIL  $cs Claude-Session not assigned: '$got'" ;;
   esac
+  rm -f ".loop_lock.${cs}"
 done
+# Two lanes must not receive the same value; a rewrite to a constant would pass
+# every check above. They share one fixture pid here, so this asserts the CALLSIGN
+# half separates them -- the half an agent cannot type is the start time.
+kill "$_holder" 2>/dev/null; rm -rf "$_fakedir"
 rm -f "$S"
 
 echo "commit-msg gate: $pass passed, $fail failed"

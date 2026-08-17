@@ -1,5 +1,5 @@
 #!/bin/sh
-# commit-msg.hook v5 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
+# commit-msg.hook v6 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
 # presence, and refuses a commit carrying another lane's per-lane files.
 #
 # v5 (AGENT-1, C22 ATTACK, H22) ASSIGNS Claude-Session from the live launcher's
@@ -63,10 +63,46 @@ rev=$(up "$(val Reviewed-By)")
 # is live, or the rewrite does not take, the message is left exactly as written
 # and the commit proceeds. A shared gate that can wedge every lane is a worse
 # defect than the one being fixed (H9/H11), so this one cannot refuse.
+# ==== v6, AGENT-2, H37. A CORRECTION AGAINST v5's OWN MECHANISM (§12.7) =======
+# DEFECT REMOVED: THE ASSIGNMENT RESOLVED THE LANE FROM argv, WHICH NEVER
+# CONTAINS IT, AND FAILED OPEN SO NOBODY SAW IT STOP.
+#
+#   * v5 matched `ps -eo lstart,command | grep "CALLSIGN=${CALLSIGN}...run_loop"`.
+#     A launcher started the documented way -- `CALLSIGN=X ./run_loop.sh`, which
+#     is this repo's usage line and `bringup.sh:160` -- consumes that assignment
+#     IN THE SHELL. `ps` shows `bash ./run_loop.sh`; the callsign is in the
+#     environment, and macOS does not expose another process's environment.
+#     The only process that ever carried both tokens on one line was the
+#     transient `sh -c "CALLSIGN=X ./run_loop.sh"` wrapper that typed the
+#     command -- so the "launcher's start time" was the start time of the SHELL
+#     that launched it, and the mechanism stopped the moment lanes began
+#     detaching from their caller. MEASURED: 0 matches for any of the three live
+#     lanes; commits 829d57b (AGENT-2) and 2c9d277 (ok-1) both carry placeholders
+#     while `db84c79`/`f3338e8` from the 11:49 cohort carry real values, so this
+#     REGRESSED, it did not never-work.
+#   * And the placeholder pattern did not cover the placeholder H27's own row
+#     measured 29 instances of: the case arm listed bare `unassigned-in-lane`,
+#     while the value in the field is `AGENT-1 | unassigned-in-lane`. Two
+#     independent reasons my own commit was never rewritten.
+#
+# SAME ROOT CAUSE AS H8 -- a process's callsign is not observable from outside --
+# so the fix reuses H8's artifact rather than inventing a second answer:
+# `.loop_lock.$CALLSIGN` holds the live launcher's pid, and a pid resolves to a
+# start time exactly. argv is kept as a FALLBACK because a lane launched from a
+# `sh -c` wrapper still matches it and that costs one line.
+#
+# STILL FAIL-OPEN, deliberately and unchanged: no lock, no launcher, no rewrite
+# -- the message is left as written and the commit proceeds. A shared gate that
+# can wedge every lane is a worse defect than the one being fixed (H9/H11).
 case "$(val Claude-Session)" in
-  unassigned-in-lane|local,\ no\ URL\ assigned*|"")
+  *unassigned-in-lane*|local,\ no\ URL\ assigned*|"")
     if [ -n "${CALLSIGN:-}" ]; then
-      _st=$(ps -eo lstart,command 2>/dev/null \
+      _lp=$(cat "${ROOT:-.}/.loop_lock.${CALLSIGN}" 2>/dev/null)
+      case "$_lp" in ''|*[!0-9]*) _lp='' ;; esac
+      _st=''
+      [ -n "$_lp" ] && _st=$(ps -p "$_lp" -o lstart= 2>/dev/null \
+            | awk 'NF{print $2"-"$3"-"$5"T"$4}')
+      [ -n "$_st" ] || _st=$(ps -eo lstart,command 2>/dev/null \
             | grep "CALLSIGN=${CALLSIGN}[ =]*[^ ]*run_loop" \
             | head -1 | awk '{print $2"-"$3"-"$5"T"$4}')
       if [ -n "$_st" ]; then
