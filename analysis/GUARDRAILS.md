@@ -609,3 +609,38 @@ Two tells were available before any new measurement, and both were ignored:
    measurement that says a spec is impossible is far more likely to be
    measuring the wrong thing than to have found a broken spec. **Treat
    contradiction-with-spec as an instrument alarm, not a finding.**
+
+### A19. Record the state a third party could re-derive, before the run — not the state you assume.
+
+Five failures in the M1 series were all pre-run state, invisible to any
+write-up audit:
+
+| what happened | what would have caught it |
+|---|---|
+| built and shipped a **patched** `elders/hyperon-experimental` while the result claimed `3f76dc4` | `git status --porcelain` recorded next to HEAD |
+| positive control read STABLE because **our own patch had silenced it** | control declared up front and required to fire |
+| three probes returned empty / unevaluated, all reading STABLE | one sample output logged per probe |
+| harness cost published as system cost, twice (A18) | component attribution recorded with the number |
+| a rate extrapolated from one point in the fixed-cost regime | two points spanning an order of magnitude |
+
+**`HEAD` is not provenance.** A dirty tree at `HEAD=X` is not X. Record the
+commit, the porcelain status, and a hash of `git diff HEAD` — together those let
+anyone reconstruct the exact tree. Record the **sha256 of the artifact actually
+executed**, not the source it was supposed to come from; the `.so` in the APK is
+the ground truth, the build command is a claim about it.
+
+Prefer facts an outsider can check over facts only our data supports: commit
+hashes, binary digests, `ro.build.fingerprint`, toolchain version strings. A
+number defended only by our own notes is not verifiable, it is asserted.
+
+**A positive control that does not fire voids the run — it does not produce a
+negative.** Declare it before the run with the reason it must fire, and treat
+"did not fire" as an instrument fault. Three dead controls in one session all
+read as clean nulls: `(flip)` was a Python-ext atom absent from the Rust stdlib,
+`(random-int &rng ...)` had an unbound generator, and a probe matched an atom
+never added to the space. Each echoed or returned empty, which hashes stably.
+
+Implemented in `spikes/harness/provenance.py`; it refuses to certify a run with
+an unacknowledged dirty dependency or a control that did not fire.
+`allow_dirty=True` exists so a deliberate patched build is *recorded*, never
+silent.

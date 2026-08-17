@@ -1,0 +1,206 @@
+{
+ "sampled": 20,
+ "verdict_error": 0.05,
+ "citation_error": 0.04819277108433735,
+ "spurious": 4,
+ "missed": 0,
+ "edge_union": 83,
+ "rows": [
+  {
+   "id": "S72",
+   "ingest_verdict": "AMBER",
+   "audit_verdict": "AMBER",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [
+    "S52"
+   ],
+   "cites_missing": []
+  },
+  {
+   "id": "N1",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [
+    "S55"
+   ],
+   "cites_missing": []
+  },
+  {
+   "id": "S51",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S6",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S63",
+   "ingest_verdict": "INVALID",
+   "audit_verdict": "GREEN",
+   "verdict_ok": false,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S55",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S5",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [
+    "S7"
+   ],
+   "cites_missing": []
+  },
+  {
+   "id": "S32",
+   "ingest_verdict": "RED",
+   "audit_verdict": "RED",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [
+    "S15"
+   ],
+   "cites_missing": []
+  },
+  {
+   "id": "S66",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S64",
+   "ingest_verdict": null,
+   "audit_verdict": null,
+   "verdict_ok": true,
+   "how": "verdict line, no token",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S3",
+   "ingest_verdict": "YELLOW",
+   "audit_verdict": "YELLOW",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S33",
+   "ingest_verdict": "RED",
+   "audit_verdict": "RED",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S47",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S10",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S69",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S61",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S34",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S52",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S68",
+   "ingest_verdict": "RED",
+   "audit_verdict": "RED",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  },
+  {
+   "id": "S4",
+   "ingest_verdict": "GREEN",
+   "audit_verdict": "GREEN",
+   "verdict_ok": true,
+   "how": "verdict-line",
+   "cites_extra": [],
+   "cites_missing": []
+  }
+ ],
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {}
+ },
+ "cites": [
+  "G1_graph_ingest"
+ ]
+}

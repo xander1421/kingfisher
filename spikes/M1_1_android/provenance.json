@@ -1,0 +1,52 @@
+{
+ "spike": "M1_1_android",
+ "recorded_utc": "2026-08-17T05:08:43Z",
+ "note": "M1.1c soak, A/B/C/D sweep. STOCK hyperon: our 3 patches are in stash@{0}, tree verified clean. The earlier M1.1 run used a DIRTY tree and claimed 3f76dc4 -- that is the failure this file exists to prevent.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/elders/hyperon-experimental",
+   "head": "3f76dc460da6961f57f69f6c3e550c59c74ada83",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "artifacts": [
+  {
+   "path": "app/src/main/jniLibs/arm64-v8a/libhyperonc.so",
+   "sha256": "82d34485a478a344982538e93c2f0f7a508e156c0384e73e9e950baf80df7b4b",
+   "bytes": 6775648
+  },
+  {
+   "path": "app/build/outputs/apk/debug/app-debug.apk",
+   "sha256": "1d57cd690a3ac01467128a51a194eebda34f3ef99d3032023e8b93bc00078860",
+   "bytes": 16058855
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "POSCTL_space",
+   "must_fire_because": "!(new-space) prints a heap address on stock hyperon, so it MUST vary between calls in one process; if it reads STABLE the harness cannot see in-process variation and every STABLE row is void",
+   "fired": true,
+   "detail": "40/40 distinct hashes"
+  }
+ ],
+ "problems": [],
+ "ok": true
+}
