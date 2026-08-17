@@ -31,6 +31,24 @@ were different processes. This script reports SIGNED-ONLY sessions as exactly
 that, because "claims a callsign" and "is that lane" are different facts and the
 whole G25 collision came from conflating them.
 
+THE DETECTION FLOOR, and it is the reason this is not a lane-liveness tool.
+AGENT-2's lane measured it over every live launcher pid: THE LAUNCHER EXPOSES NO
+CALLSIGN; ONLY THE `claude -p` TURN DOES. Verified here independently --
+`ps eww` on the twelve `bash ./run_loop.sh` pids returns no CALLSIGN for any of
+them, while the five claude pids all return one.
+
+So an environment probe answers only WHILE A TURN IS IN FLIGHT. Between turns a
+held callsign reads as FREE, and that window is exactly where `ok-1` was
+launched onto a callsign nothing refused. ABSENCE HERE MEANS UNKNOWN, NEVER
+CLEAR -- the same distinction ok-1 drew for heartbeats: stale and absent are
+different failures and only one of them has a timestamp.
+
+`.loop_lock.<CALLSIGN>` (run_loop.sh v6) is the source that does NOT have this
+floor, because a file persists between turns. It is read here as a third source
+where it exists. Caveat measured with `ls .loop_lock.*`: only ATOM-3 has one,
+because the other spans started before v6 -- done on disk, live at next
+relaunch.
+
 CENSUS RULE: enumerate every pid, print the TOTAL beside the enumeration, never
 end in `head`. A reviewer's pid census ended in a bare `head` after `sort -rn`,
 cut the four lowest pids, and concluded no process carried a CALLSIGN — all
@@ -39,9 +57,13 @@ three that did were in the part it dropped.
 Exit 0 agree, 1 disagreement or unverifiable lane, 2 could not run.
 """
 
+import os
 import re
 import subprocess
 import sys
+
+ROOT = subprocess.run(["git", "rev-parse", "--show-toplevel"],
+                      capture_output=True, text=True).stdout.strip() or "."
 
 
 def sh(*a):
@@ -57,6 +79,17 @@ def from_argv(pid):
     cmd = sh("ps", "-p", pid, "-o", "command=")
     m = re.search(r"You are ([A-Za-z0-9._-]+)\.", cmd)
     return m.group(1) if m else None
+
+
+def from_lock(callsign):
+    """`.loop_lock.<CALLSIGN>` holds the live launcher pid. Survives between
+    turns, so it is the only source without the in-flight detection floor."""
+    try:
+        with open(os.path.join(ROOT, f".loop_lock.{callsign}")) as f:
+            v = f.read().strip()
+        return v if v.isdigit() else None
+    except OSError:
+        return None
 
 
 def from_environ(pid):
@@ -118,6 +151,22 @@ def main():
             print(f"   {c}: pids {', '.join(v)}")
             print(f"      They share .loop_signal.{c} and both sign CHANNEL.md "
                   f"as one atom.")
+
+    # Third source: the lock file, which persists BETWEEN turns.
+    locks = [f for f in os.listdir(ROOT) if f.startswith(".loop_lock.")]
+    print(f"\nLOCK FILES ({len(locks)}) — the only source without the "
+          f"in-flight floor:")
+    if not locks:
+        print("   none. Every callsign currently reads FREE between turns,")
+        print("   which is not the same as being free. This is the window a")
+        print("   second lane can be launched onto a held callsign.")
+    for f in sorted(locks):
+        cs = f[len(".loop_lock."):]
+        held = from_lock(cs)
+        alive = held and subprocess.run(
+            ["ps", "-p", held], capture_output=True).returncode == 0
+        print(f"   {cs:<14} launcher pid {held or '?'}"
+              f"  {'live' if alive else 'STALE — holder is gone'}")
 
     print("\nNOT ANSWERED BY THIS SCRIPT, and it is the third answer:")
     print("  a session that SIGNS a callsign in CHANNEL.md / livechat / a commit")
