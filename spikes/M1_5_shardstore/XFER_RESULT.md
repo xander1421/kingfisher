@@ -72,3 +72,45 @@ not a score. That survives every transport bound above.
   not exist yet.
 - **S61's operating point is not re-derived here.** This supplies the unit S61
   lacked; re-running the sweep against it is separate work.
+
+---
+
+## Addendum — the two regimes, and a 38x fix in the first one
+
+A reviewer split the finding by regime rather than by magnitude, which is the
+better reading and is now measured directly rather than fitted:
+
+| shard | fixed-cost share | what wins |
+|---|---|---|
+| 173 KiB (M1.5's point) | **93%** | fewer round trips — **batching** |
+| B=32, 6.41 MB | 27% | not transferring — **residency** |
+| B=16, 12.79 MB | 16% | residency |
+| 32 MB | 7% | residency |
+
+**M1.5's corpus is 173.5 KiB across 67 shards — mean 2,652 bytes.** It sits at
+the far end of the fixed-cost regime, so `device_fetch`'s per-shard round trips
+dominate everything.
+
+Measured, same bytes, cold each time, median of 3:
+
+```
+per-shard (3 adb calls x 67)   3680 ms    54.9 ms/shard
+batched   (1 adb push)           97 ms     1.4 ms/shard
+speedup                          38.0x
+```
+
+So M1.5's cold-cache penalty was ~97 ms of actual bytes and ~3.6 s of adb round
+trips. **The 40 ms/job it reported is a round-trip count, not a transfer cost.**
+
+Consequences, and the second one is a correction to this document:
+
+1. **`prefer_cached_cids` as a hard filter is right only at large shards.** At
+   2.6 KiB it is near-pointless; coalescing fetches beats locality by 38x. The
+   scheduler needs both mechanisms, selected by shard size.
+2. **"Never fetch during a job" was stated as holding under every transport
+   bound.** It does not — it holds in the residency regime. In the fixed-cost
+   regime the correct move is to batch the fetches, not to avoid them. This
+   document asserted the general form and the regime split refutes it.
+3. **A18 applies to this spike's own recommendation**, not just to the rate it
+   corrected: a conclusion drawn at one operating point was generalised across
+   four orders of magnitude of shard size.
