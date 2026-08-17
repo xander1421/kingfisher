@@ -38,6 +38,7 @@ BASELINE = os.path.join(HERE, 'baseline.json')
 
 ARITH = os.path.join(ELDERS, 'lib/src/metta/runner/stdlib/arithmetics.rs')
 STDLIB = os.path.join(ELDERS, 'lib/src/metta/runner/stdlib/stdlib.metta')
+RUNNER = os.path.join(ELDERS, 'lib/src/metta/runner/mod.rs')
 
 # Each mutation is a known-wrong evaluator. A corpus that cannot tell these from
 # the real one cannot tell a broken replica from an honest one either.
@@ -57,6 +58,28 @@ MUTATIONS = [
      'def_binary_number_op!(LessOp, <=, ATOM_TYPE_BOOL, Bool);',
      'comparison: (< a a) becomes True -- an off-by-one at every boundary',
      '!(< 1 1)'),
+
+    # These two exist to test the OTHER 38. CORPUS_COMPOSITION found that 14
+    # programs emit nothing and 24 die at their first import!, and the previous
+    # two mutations were caught only inside the 22 that evaluate. That left the
+    # question open: are the 38 pure padding, or do they police a narrower thing
+    # (parser, stdlib init, module resolver) that no evaluation mutation touches?
+    # NOTE: the obvious site, mod.rs:871, is under #[cfg(not(feature =
+    # "pkg_mgmt"))] and is NOT COMPILED in our build. The anchor matched, the
+    # edit applied, the build succeeded, and the mutant was inert -- reported
+    # VOID by the probe. anchored_replace guarantees the anchor EXISTS, never
+    # that the line is LIVE, and a feature-gated site looks identical to a
+    # reachable one in the source.
+    ('resolver-message', RUNNER,
+     'None => {return Err(format!("Failed to resolve module {mod_path}"))}',
+     'None => {return Err(format!("Cannot resolve module {mod_path}"))}',
+     'module resolver: the failure text a missing import! produces',
+     '!(import! &self kf_no_such_module)'),
+    ('stdlib-init', STDLIB,
+     '(@doc =\n',
+     '(= (kf-canary) 1)\n(@doc =\n',
+     'stdlib init: one extra rule, which shifts fuel_used for EVERY program',
+     '!(kf-canary)'),
 ]
 
 EMPTY_H = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'

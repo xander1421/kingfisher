@@ -52,6 +52,79 @@
   "total": 0,
   "n": 64
  },
+ "resolver-message": {
+  "desc": "module resolver: the failure text a missing import! produces",
+  "by_class": {
+   "empty": [
+    0,
+    14
+   ],
+   "error-only": [
+    0,
+    4
+   ],
+   "evaluated": [
+    0,
+    22
+   ],
+   "import-failure": [
+    24,
+    24
+   ]
+  },
+  "detectors": [
+   "python__hyperon__exts__agents__tests__test_0_passive_agents.metta",
+   "python__hyperon__exts__agents__tests__test_4_events.metta",
+   "python__hyperon__exts__snet_io__test_snet_call.metta",
+   "python__hyperon__exts__snet_io__test_snet_meta.metta",
+   "python__sandbox__bhv_binding__01_example_majority.metta",
+   "python__sandbox__bhv_binding__02_example_perm.metta",
+   "python__sandbox__bhv_binding__03_example_dict.metta",
+   "python__sandbox__bhv_binding__04_example_dollar_of_mexico.metta",
+   "python__sandbox__jetta__enum_lambda.metta",
+   "python__sandbox__jetta__test_basic_jetta.metta",
+   "python__sandbox__jetta__test_expr_compile.metta",
+   "python__sandbox__jetta__test_lambda.metta",
+   "python__sandbox__jetta__test_nondet.metta",
+   "python__sandbox__mork__test_mork.metta",
+   "python__sandbox__neurospace__test_nspace.metta",
+   "python__sandbox__numpy__nm_test.metta",
+   "python__sandbox__pytorch__tm_test.metta",
+   "python__sandbox__resolve__r.metta",
+   "python__sandbox__sql_space__sql_space_test.metta",
+   "python__tests__ext_sub__module.metta",
+   "python__tests__scripts__c2_spaces.metta",
+   "python__tests__scripts__f1_imports.metta",
+   "python__tests__scripts__f1_moduleA.metta",
+   "python__tests__scripts__f1_moduleB.metta"
+  ],
+  "total": 24,
+  "n": 64
+ },
+ "stdlib-init": {
+  "desc": "stdlib init: one extra rule, which shifts fuel_used for EVERY program",
+  "by_class": {
+   "empty": [
+    0,
+    14
+   ],
+   "error-only": [
+    0,
+    4
+   ],
+   "evaluated": [
+    0,
+    22
+   ],
+   "import-failure": [
+    0,
+    24
+   ]
+  },
+  "detectors": [],
+  "total": 0,
+  "n": 64
+ },
  "_tree": {
   "elders_head": "3f76dc4\n",
   "elders_patch_sha256": "e30a24454cc37e52"

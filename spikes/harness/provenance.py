@@ -100,18 +100,26 @@ def newest_source_mtime(path, exclude=()):
     return newest, newest_file
 
 
-def _newest_file_mtime(root):
+def _newest_file_mtime(root, exclude=()):
     """Newest real mtime under a dep tree, on the mtime clock.
 
     Skips .git and target/: a cargo target dir is both enormous and always
     newer than its own source, so including it would make every artifact look
     stale against a tree nobody edited.
     """
+    skip = {os.path.realpath(x) for x in exclude}
     newest = 0
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [x for x in dirnames if x not in ('.git', 'target', '__pycache__')]
         for fn in filenames:
             if fn.endswith('.md') or fn == 'provenance.json':
+                continue
+            # The declared ARTIFACTS live in this tree too, and a spike that
+            # writes two of them writes one after the other -- so without this
+            # the later artifact becomes the "newest source" and makes the
+            # earlier one stale against its own sibling. The primary staleness
+            # path already excludes them; this fallback has to agree.
+            if os.path.realpath(os.path.join(dirpath, fn)) in skip:
                 continue
             try:
                 newest = max(newest, int(os.path.getmtime(os.path.join(dirpath, fn))))
@@ -365,7 +373,7 @@ def record(spike_dir, deps=(), artifacts=(), controls=(),
             # It weakens the check to "clone-time evidence only" on a fresh
             # clone; the commit clock remains the primary and is unaffected.
             if a_ts < src_ts:
-                src_mt = _newest_file_mtime(d)
+                src_mt = _newest_file_mtime(d, exclude=_excl)
                 if src_mt and int(os.path.getmtime(a['path'])) >= src_mt:
                     a['compared_clock'] = 'regenerated (mtime >= newest source mtime)'
                     continue
