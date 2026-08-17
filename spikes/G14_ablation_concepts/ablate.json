@@ -1,0 +1,28 @@
+{
+ "baseline": 332,
+ "empty": 36,
+ "nonempty": 24,
+ "classes": 0,
+ "pairs": 0,
+ "p": 1.0,
+ "class_members": {},
+ "hubs": {
+  "S34": 17,
+  "S32": 12,
+  "M1": 8,
+  "S45": 7,
+  "S15": 5
+ },
+ "verdict": "NO CLASSES \u2014 every non-empty signature is unique; nothing to abstract",
+ "conditions": {
+  "data": "real:kingfisher-workspace",
+  "concurrency": "single-process",
+  "swept": {
+   "ablated_node": 60
+  }
+ },
+ "cites": [
+  "G1_graph_ingest",
+  "G10_closed_loop"
+ ]
+}
