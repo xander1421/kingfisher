@@ -381,16 +381,44 @@ case "$hookdir" in /*) ;; *) hookdir="$ROOT/$hookdir" ;; esac
 # Both gates, by list. AGENT-1/H15 added `pre-commit`; checking only the one
 # gate that existed when this check was written is how an installer ships with a
 # hook it does not install.
+# H36 (ATOM-3, 2026-08-17) — INSTANCE 3 OF H35's CLASS, AND ONLY THE WORD WAS
+# WRONG. This block compared `$ROOT/spikes/harness/$g.hook` — the WORKING TREE —
+# and reported "gate matches its TRACKED source". Tracked means committed. The
+# live instance the row recorded was two commands: `cmp` against the tree EQUAL
+# while `git show HEAD:...| cmp` DIFFER, so an uncommitted source edit plus a
+# reinstall read as NO DRIFT while the enforced gate existed in no commit.
+#
+# THE COMPARISON IS KEPT, because it is the right one and the falsifier decided
+# it rather than my preference: `install_hooks.sh:35` is `cp "$src" "$dst"` with
+# `src` the TREE path, so "does the installed gate match what installing would
+# put there" is a tree question. Had the installer read HEAD, the comparison
+# would have been the defect and the message fine — the opposite fix.
+#
+# THE HEAD LINE IS INFORMATIONAL AND MUST STAY THAT WAY. The row is explicit
+# that a bare HEAD comparison turns the suite red for every harness author with
+# an uncommitted hook edit installed, which is a legitimate mid-cycle state and
+# would make this an always-red gate — H52's class, and H14's "a flaky gate is a
+# bypassed gate" applies to an always-red one exactly as thoroughly.
 for g in commit-msg pre-commit; do
   src="$ROOT/spikes/harness/$g.hook"
   if [ ! -f "$src" ]; then
     bad "$g.hook source is missing from spikes/harness"
   elif [ ! -x "$hookdir/$g" ]; then
-    bad "$g gate matches its tracked source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
+    bad "$g gate matches its working-tree source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
   elif ! cmp -s "$src" "$hookdir/$g"; then
-    bad "$g gate matches its tracked source (DRIFTED from its tracked source)"
+    bad "$g gate matches its working-tree source (DRIFTED from spikes/harness/$g.hook)"
   else
-    ok "$g gate matches its tracked source"
+    ok "$g gate matches its working-tree source (what install_hooks.sh would copy)"
+  fi
+  # Informational, never a verdict: is the ENFORCED gate in any commit? A reader
+  # checking compliance, and every clean clone, gets the committed copy.
+  if [ -x "$hookdir/$g" ]; then
+    if git -C "$ROOT" show "HEAD:spikes/harness/$g.hook" 2>/dev/null | cmp -s - "$hookdir/$g"; then
+      printf '  info  %s installed gate is byte-identical to HEAD (in a commit)\n' "$g"
+    else
+      printf '  info  %s installed gate DIFFERS from HEAD — the enforcing gate exists in no commit%s\n' \
+        "$g" "$(git -C "$ROOT" diff --quiet HEAD -- "spikes/harness/$g.hook" 2>/dev/null || printf ' (its source is uncommitted)')"
+    fi
   fi
 done
 
@@ -608,6 +636,84 @@ for lk in .loop_lock.*; do
   case "$lkpid" in ''|*[!0-9]*) continue ;; esac
   ps -p "$lkpid" -o command= 2>/dev/null | grep -q 'run_loop\.sh' && kill "$lkpid" 2>/dev/null
 done
+
+# --- ADMISSION: THE ROSTER GATE. ok-1, H63, ATTACK cycle (§2, §12.8), 2026-08-17.
+# `roster.txt` is the fleet's sanction list, and run_loop.sh says why in its own
+# comment: *"a brief that the lane wrote for itself is not sanction to run.
+# roster.txt is the sanction."* It is the answer to H32 (the launcher gates entry
+# and nothing audits what is inside) and the subject of H38's two-roster
+# divergence -- i.e. it decides which lanes may run at all.
+#
+# MEASURED BEFORE THIS BLOCK EXISTED (`spikes/H63_roster_attack/attack.out`): the
+# ENTIRE gate could be deleted from run_loop.sh and this suite stayed 66/66 green,
+# and `grep -qx` could be loosened to `grep -q` -- which admits `ok` against a
+# roster listing `ok-1` -- with the same 66/66. `grep -n roster` in this file
+# returned three lines and all three were a scratch roster written FOR the
+# simultaneity block below. The gate with the widest blast radius in the launcher
+# had no check of any kind.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* .loop_lock.* launcher_reached_claude
+cp "$ROOT/run_loop.sh" ./run_loop.sh
+mkdir -p bin prompts
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo reached > launcher_reached_claude
+echo LOOP-HALT > ".loop_exit.${CALLSIGN}"     # let the launcher finish in one pass
+STUB
+chmod +x bin/claude
+printf '# scratch roster for the admission checks\nR-IN\nok-1\n' > roster.txt
+for l in R-IN R-OUT ok; do printf '# scratch\n' > "prompts/$l.md"; done
+# A BRIEF EXISTS FOR EVERY ARM HERE. The brief gate sits BELOW the roster gate,
+# and H62 is the cycle that measured what a later gate refusing first does to a
+# check: it goes green for a reason the block is not about. Every refusal below is
+# therefore attributable to the roster gate and nothing else.
+out=$(PATH="$T/bin:$PATH" CALLSIGN=R-OUT MAX_TURN=5 bash ./run_loop.sh 2>&1); rc=$?
+check "unrostered callsign is refused"                       "$rc" "1"
+check "  refusal names the roster, not just a code"                           \
+      "$(printf '%s' "$out" | grep -c 'is not in roster.txt')" "1"
+check "  and the unrostered lane never reached claude"                        \
+      "$([ -f launcher_reached_claude ] && echo spawned || echo none)" "none"
+check "  and announced no detach (unrostered)"                                \
+      "$(printf '%s' "$out" | grep -c 'detached (survives caller teardown)')" "0"
+# THE POSITIVE CONTROL, and without it this whole block is satisfied by a launcher
+# that refuses everything -- which is the state the H8 checks were measured in
+# (1 PASS / 3 FAIL, and the one PASS was the false one). KF_DETACHED=1 so the loop
+# body runs in the FOREGROUND and "it launched" is a fact rather than a race (H62).
+rm -f launcher_reached_claude
+PATH="$T/bin:$PATH" KF_DETACHED=1 CALLSIGN=R-IN MAX_TURN=5 bash ./run_loop.sh >/dev/null 2>&1
+check "  a ROSTERED callsign is admitted (else the gate just says no)"        \
+      "$([ -f launcher_reached_claude ] && echo launched || echo refused)" "launched"
+# `grep -qx`, not `grep -q`. Measured: with the x dropped, `ok` is admitted by a
+# roster listing `ok-1` -- and this fleet has a live callsign that is a prefix of
+# nothing and a suffix of nothing by luck, not by rule.
+rm -f launcher_reached_claude .loop_lock.* .loop_exit.*
+out=$(PATH="$T/bin:$PATH" CALLSIGN=ok MAX_TURN=5 bash ./run_loop.sh 2>&1); rc=$?
+check "a callsign that is a SUBSTRING of a rostered one is refused" "$rc" "1"
+check "  and it never reached claude either"                                  \
+      "$([ -f launcher_reached_claude ] && echo spawned || echo none)" "none"
+# ROSTER ABSENT IS FAIL-OPEN. Pinned by OBSERVATION, not endorsed: with no
+# roster.txt the launcher warns and admits ANY callsign, so the admission
+# mechanism degrades to a no-op on a missing input while still reporting success
+# -- H30's class at the gate that decides who may run. Whether a missing sanction
+# list should mean "no lanes" or "all lanes" is the OPERATOR's call, not an
+# agent's (A22: the agent is the beneficiary), so it is filed in HUMAN_NEEDED.md
+# and this check exists to make the current answer deliberate: change the
+# behaviour and you must change this check and say why.
+rm -f launcher_reached_claude .loop_lock.* .loop_exit.*
+mv roster.txt roster.txt.aside
+outn=$(PATH="$T/bin:$PATH" KF_DETACHED=1 CALLSIGN=R-OUT MAX_TURN=5 bash ./run_loop.sh 2>&1)
+check "roster ABSENT admits any callsign (FAIL-OPEN — measured, not chosen)"  \
+      "$([ -f launcher_reached_claude ] && echo launched || echo refused)" "launched"
+check "  and says so out loud"                                                \
+      "$(printf '%s' "$outn" | grep -c 'WARNING roster.txt absent')" "1"
+for lk in .loop_lock.*; do
+  [ -f "$lk" ] || continue
+  lkpid=$(cat "$lk" 2>/dev/null)
+  case "$lkpid" in ''|*[!0-9]*) continue ;; esac
+  ps -p "$lkpid" -o command= 2>/dev/null | grep -q 'run_loop\.sh' && kill "$lkpid" 2>/dev/null
+done
+rm -f roster.txt.aside prompts/R-IN.md prompts/R-OUT.md prompts/ok.md \
+      launcher_reached_claude loop_R-IN.log loop_R-OUT.log loop_ok.log \
+      detach_R-OUT.log detach_ok.log .loop_lock.* .loop_exit.* .loop_blocks.*
 
 # SIMULTANEITY, because "atomic by construction" is a claim this repo has been
 # wrong about before. AGENT-2, the ATTACK cycle on its own H8 lock. The checks
