@@ -215,6 +215,8 @@ about. This is the honest state, not a regression.
   was near-tautological and would have passed on a broken fold) and were replaced
   before publishing. DECISIONS 126–128.
 
+- **C10 — RETRACTED IN PART by S77 (C13). Its proof-size figures are withdrawn;
+  every depth number stands.** Original entry kept below, unedited above this line.
 - **C10 DONE: S75 — I ran the falsifier W2 and S74 declared, and it FIRED on my
   own work.** `spikes/S75_pathmap_check/`. Against MORK's real `pathmap`:
   **atom keys 7.6 → 139.1 mean node depth (18.4×)**, triple keys 4.2 → 10.3
@@ -263,6 +265,9 @@ about. This is the honest state, not a regression.
   decidable by me — A22) and H18 (two `## H —` sections, two id spaces).
   DECISIONS 133–135.
 
+- **C12 — RETRACTED IN PART by S77 (C13), one cycle later. The ~14 KB / ~9.9 KB
+  are withdrawn and the direction is REVERSED: interning makes proofs 22% bigger.
+  Every depth number, the sweep and the affine refusal stand.** Original below.
 - **C12 DONE: S76** — `spikes/S76_interned_keys/`, `certify ok=true`, 7 controls.
   Ran S75's own indicated fix. **Its mechanism claim survives its falsifier:
   18.39× → 7.86× at 4-byte ids, 5.50× at 2-byte, under the 10× bar S75 set before
@@ -283,6 +288,31 @@ about. This is the honest state, not a regression.
   `provenance.json` — every artifact regenerates byte-identically, which
   `allow_dirty=True` would have discarded. S75's RESULT.md corrected in place with
   a changelog, no number withdrawn. DECISIONS 137–139.
+
+- **C13 DONE: S77, and it retracts my own last two cycles.**
+  `spikes/S77_proof_bytes/`, `certify ok=true`, 6 controls. Ran the sentence S75
+  and S76 both wrote into their caveats and marked not yet run: *"no proof was
+  actually generated on pathmap."* **Node depth is not a proxy for proof size.**
+  An authentication path carries the digests of the SIBLINGS at each position, and
+  a single-child position has none — a 1,155-byte key is a long *unbranched* run,
+  ~1,148 nodes contributing ~0 digests. Walked pathmap's real paths with
+  `child_count` on the reviewed spikes' own committed key files: mean siblings
+  **45.7 / 56.4 / 70.2** (original atoms / interned / triples) = **1,461 / 1,803 /
+  2,246 B**, against depth's implied **4,450 / 1,960 / 328 B**. **The ordering
+  inverts**: by depth the triples are cheapest by 13×, by what a proof carries they
+  are the most expensive. Cross-checked against a prover that exists — the same
+  keys through W2's `prove_membership`, every sampled proof verified — giving
+  **1,568 / 1,917 / 2,350 B**, same order, within 5–7%. **Withdrawn**: S75's ~33 KB
+  and ~3.6–5.8 KB, S76's ~14 KB and ~9.9 KB, and "interning recovers about half"
+  (it costs **22% more**). **S73's published 1,770 B and W2's 1.5–2.4 KB were
+  approximately right all along**, and S75's criticism of S73's caveat is withdrawn
+  with them. Every depth number in both spikes stands and reproduces. Propagated to
+  both RESULT pages, both WORK_QUEUE rows, `out/RETRACTIONS.md` and `out/LEDGER.md`.
+  **What is worth keeping is how it survived two cycles**: both spikes had firing
+  controls, a declared falsifier and `certify ok=true`, and S76 added a sweep, a
+  monotonicity control, an affine refusal and an injectivity check — every one of
+  them a check on the measurement of depth. A more careful measurement of the wrong
+  quantity reads as a stronger result.
 
 ### HALT — 2026-08-17, AGENT-1, LOOP-HALT written to `.loop_signal.AGENT-1`
 > **DISCHARGED 2026-08-17 ~11:50.** The operator removed `STOP` and `run_loop.sh`

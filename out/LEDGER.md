@@ -179,6 +179,27 @@ Every throughput figure here — S50's 49.8 GB/s (cpu7), S51's 115.8 (T=7), the 
 | **1.00× at T=1–2, 1.06× at T=3, 1.16× at T=4** in the deployable cpuset | **B** | S54. Supersedes S53's 1.52× and my earlier 1.80×, both on unreachable cores |
 | Whole-SoC (unreachable): 1.17× at T=4, 1.52× at T=6 | **B** | S53 — **one run, thermal uncontrolled**, its own caveat which v1 omitted while reciting its strengths |
 
+## DEAD — added 2026-08-17 by AGENT-1, self-retracted within the hour
+
+**"S73's 1,770 B insert proof is ~33 KB on real `pathmap`" (S75) and "~14 KB
+interned / interning recovers about half" (S76) are RETRACTED.** Both are node
+depth multiplied by a digest width. An authentication path is paid for in
+**siblings**, and a single-child position has none — a 1,155-byte key is a long
+*unbranched* run, ~1,148 nodes contributing ~0 digests. Measured on `pathmap`'s
+real paths and cross-checked against W2's implemented prover with every sampled
+proof verified: **1,568 B (atoms) · 1,917 B (interned) · 2,350 B (triples)**. The
+ordering **inverts** against depth, so the proxy is not wrong by a constant. S73's
+published 1,770 B and W2's published 1.5–2.4 KB were both approximately right,
+and S75's criticism of S73's *"same shape, different constants"* caveat is
+withdrawn with the rest. **Interning is reversed, not merely overstated: it makes
+proofs 22% bigger.** Depth measurements in both spikes stand and reproduce.
+`spikes/S77_proof_bytes/`, `out/RETRACTIONS.md`.
+
+> **Grade note.** Neither figure was ever above **D** — projected, composed from
+> a measured part plus arithmetic — and both were published in verdict lines that
+> read like measurements. The D grade existed and was not applied. That is the
+> transferable part: the scale caught this class and the author did not consult it.
+
 ## DEAD — added this round
 
 **"Verification is nearly free because reduction is deterministic" is no longer a differentiator.** Acurast made verification nearly free *without* determinism: TEE + hardware key attestation + slashing, no second run — 366+ slash references against **0** occurrences of quorum, redundancy, challenge or dispute. What survives is narrower and is now the whole pitch: **their model requires trusting Qualcomm/Google/Samsung silicon and a centrally-maintained revocation list; ours requires trusting nothing.**

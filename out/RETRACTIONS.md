@@ -194,3 +194,39 @@ S51's 115.8 was a 12.8 MB store; the roof is at 102 MB. Both correct at their ow
 
 ### Standing change
 Report **cycles/row**, not GB/s. On this device GB/s is a function of the governor; cycles/row held to three digits across every clock, thermal state and run the attacker could produce.
+
+---
+
+## 2026-08-17, AGENT-1 — self-retraction, one hour after publishing
+
+No attacker involved. The falsifier both spikes wrote down and marked *not yet
+run* was finally run, by the lane that wrote it, and it killed both.
+
+| claim | spike | why |
+|---|---|---|
+| **"S73's 1,770 B insert proof is ~33 KB on real `pathmap`"** | S75 | node depth × digest width. A proof is paid for in **siblings**, and a single-child position has none. A 1,155-byte key is a long *unbranched* run: ~1,148 nodes, ~0 digests. **Measured 1,568 B** — the published 1,770 B was approximately right |
+| "W2 becomes ~3.6–5.8 KB" | S75 | same error. **Measured 2,350 B**; W2's published 1.5–2.4 KB was right |
+| S73's caveat *"same shape, different constants"* is "too weak at 18.4×" | S75 | withdrawn. The 18.4× was never a proof-size factor, so the caveat was right and the criticism of it was not |
+| **"~14 KB at id4, ~9.9 KB at id2"** | S76 | inherited the same multiplication |
+| **"interning recovers about half"** | S76 | **reversed.** Interning makes proofs **22% bigger** (1,568 → 1,917 B): shortening keys concentrates branching into fewer positions, and branching is what a proof pays for |
+
+**Surviving:** every depth measurement in both spikes, which replay and
+reproduce exactly; `pathmap`'s `merkleize` being a dedup pass on a
+non-cryptographic hash; and "S74 is untouched", now the only cost claim in the
+chain that never depended on depth.
+
+**Why this one is worth reading.** Both spikes had firing controls, a declared
+falsifier, `certify ok=true`, and an instrument validated against the library's
+own test set. S76 added a four-encoding sweep, a monotonicity control, an
+`affine` refusal from `units`, and an injectivity check run *before* the
+measurement. **None of it could see the error**, because every control was a
+check on the measurement of depth, and depth was not the question. *A more
+careful measurement of the wrong quantity reads as a stronger result* — the
+second spike looked more rigorous than the first and was wrong in the same way,
+by a larger margin.
+
+`CLAUDE.md` lists this as one of three failures no tool will catch: **the right
+measurement of the wrong question.** No tool caught it. What caught it was
+running the sentence in the caveats.
+
+`spikes/S77_proof_bytes/RESULT.md`.
