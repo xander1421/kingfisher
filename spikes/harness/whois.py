@@ -8,7 +8,10 @@ ATOM-3, on the cross-lane bus, named the gap this closes:
     depends on that same string. One string, load-bearing for both identity and
     termination, with nothing asserting it holds."
 
-There are in fact TWO independent links, and nothing had ever compared them:
+There are in fact two links, and nothing had ever compared them. They are
+independent in WHAT THEY ENCODE and correlated in HOW THEY FAIL -- see the note
+below the table, because "confirmed by two independent sources" was doing
+load-bearing work in the verdict column and it is overstated:
 
   ARGV     `You are <X>.` in the command line. Written by run_loop.sh into the
            launch prompt. This is what the watchdog's pkill matches, so it is
@@ -43,6 +46,14 @@ launched onto a callsign nothing refused. ABSENCE HERE MEANS UNKNOWN, NEVER
 CLEAR -- the same distinction ok-1 drew for heartbeats: stale and absent are
 different failures and only one of them has a timestamp.
 
+ARGV AND ENVIRON SHARE A FAILURE MODE, which ATOM-3 pointed out and which the
+verdict column overstates. Both are read off a live process, so both vanish
+between turns and both are missing for the same reason at the same moment.
+Agreement between them rules out drift; it does NOT give two chances of seeing a
+lane. `.loop_lock` is the only source with a DIFFERENT failure mode -- which is
+exactly why the lock section could see ATOM-3 when the table could not. Three
+sources, two of them correlated, is closer to two.
+
 `.loop_lock.<CALLSIGN>` (run_loop.sh v6) is the source that does NOT have this
 floor, because a file persists between turns. It is read here as a third source
 where it exists. Caveat measured with `ls .loop_lock.*`: only ATOM-3 has one,
@@ -71,8 +82,35 @@ def sh(*a):
 
 
 def pids():
-    out = sh("pgrep", "-f", "claude")
-    return [p for p in out.split() if p.isdigit()]
+    """SNAPSHOT with `ps`, then search it. NOT `pgrep`.
+
+    `man pgrep`, flag -a: "the current pgrep or pkill process and all of its
+    ancestors are excluded." Not just the caller -- EVERY ANCESTOR. When a lane
+    runs this script the chain is `claude -p` -> bash -> python3 -> pgrep, so
+    the excluded process is THE LANE'S OWN TURN: exactly the process this tool
+    exists to map.
+
+    MEASURED by ATOM-3 running the pgrep version from inside ATOM-3: the table
+    printed 4 lanes and omitted pid 44527, which carries `You are ATOM-3.` in
+    argv AND `CALLSIGN=ATOM-3` in its environment -- while the LOCK FILES
+    section eight lines below listed ATOM-3. The contradiction was on one screen
+    and nothing flagged it. Worse, the header asserted "total printed; nothing
+    truncated", which was true of the printing and false of the input.
+
+    The answer depended on WHO RAN IT, which is the one property a census must
+    not have. That is H6's class: A CENSUS THAT CANNOT SEE ITS OWN OBSERVER.
+    Three sibling sites were fixed in bringup.sh the same cycle; the sharpest is
+    the undeclared-lane audit, where an off-roster lane auditing the fleet
+    reports itself absent -- an audit that exists BECAUSE a lane ran undeclared.
+
+    pgrep's ancestor rule is not a bug in pgrep. It stops `pkill sshd` over ssh
+    killing your own session. The defect is using a self-protecting tool as a
+    census. run_loop.sh's watchdog `pkill -f "You are $CALLSIGN."` is FINE and
+    untouched: its target is a sibling subshell, never an ancestor.
+    """
+    out = sh("ps", "-eww", "-o", "pid=,command=")
+    return [l.split()[0] for l in out.splitlines()
+            if "claude" in l and l.split() and l.split()[0].isdigit()]
 
 
 def from_argv(pid):
@@ -122,7 +160,7 @@ def main():
             verdict = "interactive — carries no callsign"
         elif a == e:
             lanes += 1
-            verdict = "AGREE — lane confirmed by two sources"
+            verdict = "AGREE — argv and environ concur (correlated sources)"
         elif a is None:
             disagree += 1
             verdict = ("DISAGREE — environ only. loop_gate gates it; the "

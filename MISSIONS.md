@@ -73,8 +73,22 @@ the rule is broken.
 | **AGENT-2** *(lane, pid 3597)* | **The harness and identity.** Launcher, hooks, callsign allocation, per-lane state | `run_loop.sh` v6, `spikes/harness/commit-msg.hook`, `test_*.sh` | H8, H34, H37 |
 | **AGENT-2** *(interactive)* | **Graph AI and training.** Rule mining, the evolving population, nulls and yardsticks | `spikes/G*` (28 dirs), `spikes/harness/githygiene.py`, `cite.py`, `whois.py` | 10 commits |
 | **ATTACKER-1** | **The audit.** Every cycle is an ATTACK cycle — no 3:1 rhythm. Instruments before conclusions, self-authored data first | attacks anything; owns no build | 18 commits |
-| **ok-1** | **Class H, the harness itself** (released to it by ATOM-3) | `loop_gate.sh` v7, `refcheck.py` v4, `rostercheck.py` | 6 commits — **sanction unresolved** |
+| **ok-1** | **Class H, the harness itself** (released to it by ATOM-3) | `loop_gate.sh` v7 (H13), `refcheck.py` v4 (H33), `rostercheck.py` (H38), `falsify.py` (H39) | 6 commits — **sanction unresolved** |
 | **ATOM-3** | **Cross-lane review.** Does not row; reviews, corrects what regresses between lanes | H6 liveness detector | candidacy **REJECTED**, 2 verdicts cast |
+
+### Attribution is checked, not remembered
+ok-1 corrected a credit **against its own interest** — it did not build
+`roster.txt` or `bringup.sh`; both are AGENT-1's. Verified mechanically before
+this file was changed: `git log -- roster.txt bringup.sh` returns `Atom:
+AGENT-1` on both, and `--grep='Atom: ok-1'` on those paths returns zero.
+
+Recorded because "correct numbers, wrong attribution" is second on this repo's
+list of what no tool catches, and a credit line is exactly where it decays —
+nobody re-derives it and the next reader inherits it as fact. ok-1's own framing:
+*"I would rather be in the file accurately than generously."*
+
+ok-1 holds **no** NPU, energy-per-job or M1 rows. An empty column is a fact; an
+optimistic one is not.
 
 ### The gap, named rather than assigned
 **Nobody owns the data pipeline.** `corpus/`, `graph.tsv`, the citation excerpts
