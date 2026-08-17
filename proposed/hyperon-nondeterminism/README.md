@@ -159,13 +159,48 @@ counter determines bucket assignment, and therefore iteration order, of the maps
 holding bindings. **Binding-map layout depends on how many variables the process
 created beforehand.**
 
-Scope, so this is not overstated:
+Scope:
 - `VariableAtom::new` leaves `id: 0`; only `make_unique()` draws a fresh id, so
   the hazard is confined to atoms that have been through
-  `make_variables_unique` — the rule-instantiation path.
-- The id **never reaches printed output** (`Display for VariableAtom` at `:335`
-  prints `${name}` only), which is why a 67-program output-hash corpus shows
-  nothing. This is an ordering hazard, not an output-content one.
+  `make_variables_unique` — the rule-instantiation and match paths.
+
+**CORRECTION.** An earlier revision of this report claimed *"the id never
+reaches printed output … this is an ordering hazard, not an output-content
+one."* **That is wrong, and it understated the defect.**
+
+```rust
+// hyperon-atom/src/lib.rs:307-313
+pub fn name(&self) -> String {
+    if self.id == 0 { format!("{}", self.name) }
+    else            { format!("{}#{}", self.name, self.id) }   // <-- the counter
+}
+
+// :335-338
+impl Display for VariableAtom {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "${}", self.name()) }
+}
+```
+
+`Display` calls `name()`, and `name()` embeds the **process-global counter**. So
+any result containing a variable that came from stored data prints it.
+
+Measured on device, stock `3f76dc4`, one process, a fresh runner per iteration:
+
+```
+(implies (Frog $x) (Green $x))
+!(match &self (implies $p $q) ($p $q))
+
+40 runs -> 40 DISTINCT outputs
+sample: ((Frog $x#24605) (Green $x#24605))
+```
+
+Note the query does **not** alias anything — this is not the representative-
+selection problem, it is the counter itself being printed. It is therefore an
+**output-content** hazard, and it defeats result-hash comparison directly.
+
+Why a 67-program output-hash corpus still shows nothing: those programs return
+`()` and error atoms, not unbound data-origin variables. Absence of evidence
+from that corpus is a property of the corpus, not of the defect.
 
 Two practical consequences for anyone embedding hyperon:
 - **A long-lived runner is not equivalent to a fresh one.** The same program run

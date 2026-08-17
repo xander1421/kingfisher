@@ -63,6 +63,17 @@ public final class Soak {
         progs.put("D3_repeat3",  "(tri $z $z A)\n!(match &self (tri $x $y $w) ($x $y $w))\n");
         progs.put("D4_crossatom","(one $z)\n(two $z)\n!(match &self (one $x) (match &self (two $y) ($x $y)))\n");
 
+        // --- E. is the hazard a property of the DATA, or of the (data,query) PAIR?
+        // Data-only banning rejects 51% of hyperon's own corpus, so this decides
+        // whether that rule is even on the right axis.
+        String impl = "(implies (Frog $x) (Green $x))\n";
+        progs.put("E1_noalias",  impl + "!(match &self (implies $p $q) ($p $q))\n");
+        progs.put("E2_alias",    impl + "!(match &self (implies (Frog $a) (Green $b)) ($a $b))\n");
+        String rule = "(= (f $x) (g $x $x))\n";
+        progs.put("E3_rulequery",rule + "!(match &self (= $h $b) ($h $b))\n");
+        progs.put("E4_typedecl", "(: Pair (-> $ta $tb (PairType $ta $tb)))\n"
+                               + "!(match &self (: $n $t) ($n $t))\n");
+
         // --- controls
         progs.put("CTL_arith",   "!(+ 1 2)\n");
         progs.put("POSCTL_space","!(new-space)\n");
