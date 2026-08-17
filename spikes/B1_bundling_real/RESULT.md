@@ -88,3 +88,72 @@ All four hold.
 - One clustering, one corpus, D=1024 only.
 - Fitting VTCM is necessary for residency, **not sufficient**: nothing here shows
   an HVX kernel exists, and no NPU code has run in this workspace.
+
+---
+
+# B1b — the ternary/sign(0) hazard. Real, and worst at the B I recommended.
+
+**Checked after a reviewer flagged it. Bits-per-dimension is correct; tie-handling is not benign, and it moves the recommendation from B=16 to B=32.**
+
+## Bits per dimension — verified, no ternary hazard in the store
+`store_bytes = nb * WORDS * 8` = 128 B per bundle at D=1024 = **1 bit/dim**. It
+reconciles all three published figures exactly:
+
+| source | computed | published |
+|---|---|---|
+| S11 B=1, 800k triples | 102.4 MB | 102.4 |
+| S11 B=8, 800k triples | 12.80 MB | 12.8 |
+| S34 B=1, 100k rows packed | 12.8 MB | 12.8 |
+
+And the store needs no second bit: `realkg.c:80` is
+`vandq_u64(veorq_u64(t,s), m)` where `t` is the store, `s` the query sign and
+**`m` the query mask**. The mask is query-side only. If the store were ternary
+and needed 2 bits/dim, every figure above would double and **B=16 would not fit
+VTCM** — so this was the right thing to check.
+
+## sign(0) — the tie-break is biased, and the bias peaks where it matters
+`bundling.py:77` is `if ones * 2 > m: v |= 1 << bit`, so an exact tie resolves to
+**0**. Measured over 300 bundles per B, sampling 1 bit in 8:
+
+| B | tie rate | set-bit fraction | imbalance vs 0.5 |
+|---|---|---|---|
+| 4 | 19.60% | 0.411 | 0.089 |
+| 8 | 12.34% | 0.444 | 0.056 |
+| **16** | **7.66%** | **0.454** | **0.046** |
+| 32 | 3.15% | 0.486 | 0.014 |
+| 64 | 1.00% | 0.503 | 0.003 |
+
+At **B=16 — the value I recommended — 7.66% of dimensions are ties, all broken
+one way**, giving a 4.6-point sign imbalance. It is the worst of the
+VTCM-viable options.
+
+### What it does and does not break
+- **Ranking: unharmed, and measured.** The bias shifts every bundle by roughly
+  the same constant, so the rank-based recall in B1 above is unaffected — B=16
+  still showed median 0% / p90 0.2%.
+- **A fixed cutoff: harmed.** A constant score offset is exactly what a fixed
+  threshold cannot absorb, and S52 already records that *a fixed cutoff cannot
+  reach recall 1.0 on a bundled store*. This adds to that problem rather than
+  being independent of it.
+- **Determinism: fine.** Breaking ties always to 0 is reproducible, which is
+  what Tier A needs. A random tie-break would be worse.
+
+## Revised recommendation: B=32, not B=16
+
+| | B=16 | **B=32** |
+|---|---|---|
+| 800k-triple store | 6.41 MB | **3.20 MB** |
+| fits 8 MB VTCM | yes | **yes, with 2× headroom** |
+| tie rate | 7.66% | **3.15%** |
+| sign imbalance | 0.046 | **0.014** |
+| p90 store checked | 0.2% | 0.5% |
+
+B=32 costs 0.3 points of p90 shortlist and buys **2.4× fewer ties, 3× less
+imbalance, and twice the VTCM headroom**. The VTCM conclusion is unchanged and
+strengthened — the premise holds with room, not marginally.
+
+## The proper fix, not applied here
+Break ties by a **content-derived rule** — e.g. bit *i* of a hash of
+`(bundle_id, dim)` — rather than always to 0. That removes the bias while
+staying deterministic. Not applied because it changes the encoding, which is a
+D2 canonical-form decision, not a measurement change.
