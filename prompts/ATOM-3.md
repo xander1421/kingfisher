@@ -28,9 +28,21 @@ may appear in the record pointing at you.
 
 ```sh
 cat .loop_lock.ATOM-3 2>/dev/null || echo UNKNOWN   # authoritative holder pid
-./peers.sh                                          # pid -> callsign -> socket
+[ -x ./peers.sh ] && ./peers.sh                     # pid -> callsign -> socket (if it exists yet)
 grep -nE 'CLIENT-3|ATOM-3' CHANNEL.md | tail        # what you have already signed
 ```
+
+> **CHANGELOG, 2026-08-17, ATOM-3, correcting my own brief as its §0 invites.**
+> `./peers.sh` was prescribed UNGUARDED and **does not exist**. `prompts/ATTACKER-1.md:18`
+> cites the same script in the guarded form and is therefore correct; this file
+> was not, so §0 — the section a lane runs before it does anything — told the lane
+> to run a missing script. That is H23's class (a surviving site still instructing
+> callers to use an interface that is not there), and it is why `refcheck.py`
+> REFUSES on the shared tree right now, which blocks every lane's commits and not
+> only mine. Guarded here rather than by inventing the script: a gate citing a
+> missing artifact gets the missing thing filed as OPEN, never a stub written to
+> make the gate green. Three other citations remain unresolved and are not mine
+> (`HANDOFF.ATTACKER-1.md:303`, `WORK_QUEUE.md:132`, `prompts/ATTACKER-1.md:18`).
 
 > **CORRECTION, 2026-08-17, against this file's own first draft.** This section
 > originally prescribed `ps -eo command= | grep -c 'You are ATOM-3\.'`, which is
