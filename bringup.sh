@@ -136,6 +136,22 @@ beat_age() {
   echo $(( $(date +%s) - $(stat -f %m "$f") ))
 }
 
+# CONSECUTIVE FAILED TURNS (run_loop.sh v9 / H56). THE ONLY SIGNAL HERE THAT IS
+# ABOUT THE WORK. Everything else this census reads is about the WRAPPER: the
+# launcher pid, the lock it wrote, the beat it refreshes at turn start. All four
+# read healthy from 14:29:20 to 15:56:02 today while every lane in the fleet ran
+# `1..18` instant-exit turns on `You've hit your session limit` -- and this file
+# sampled it EIGHT times inside that window and printed `quorum: 5/5`,
+# `bringup: full quorum, nothing to start.`, every time. See
+# spikes/H56_fleet_stall/. -1 means the file is absent, which is a launcher
+# generation predating v9 (H21) and is NOT clear -- same rule as the beat.
+lane_fails() {
+  local f=".loop_fails.${1}" n
+  [ -f "$f" ] || { echo -1; return; }
+  n=$(tr -dc '0-9' < "$f")
+  [ -n "$n" ] && echo "$n" || echo -1
+}
+
 CHECK_ONLY=0; INSTALL=0
 for a in "$@"; do
   case "$a" in
@@ -214,7 +230,7 @@ done
 
 echo
 echo "=== QUORUM ==="
-UP=0; MISSING=()
+UP=0; STALLED=0; MISSING=()
 for lane in "${ROSTER[@]}"; do
   # TWO SOURCES, because neither alone can answer it (H6). A turn in flight is
   # visible to ps and vanishes between turns; the loop lock survives between
@@ -224,6 +240,21 @@ for lane in "${ROSTER[@]}"; do
   pid=$(lane_pid "$lane"); src="turn"
   if [ -z "$pid" ]; then pid=$(lane_lock_pid "$lane"); src="loop"; fi
   age=$(beat_age "$lane")
+  nfail=$(lane_fails "$lane")
+  if [ -n "$pid" ] && [ "$nfail" -ge 2 ]; then
+    # STALLED IS NOT UP AND IT IS NOT DOWN. The wrapper is alive and is producing
+    # nothing: two or more consecutive turns exited under 60 s. One failed turn is
+    # a transient and reads as 1; there is no healthy reading of 2.
+    # NOT ADDED TO MISSING, deliberately. The observed cause is an account-wide
+    # quota wall with a stated reset time, and relaunching five lanes into it is
+    # the "absent branch LAUNCHES" hazard H6 already recorded as worse than a
+    # wrong number. Same shape as the HALTED branch below: report it, refuse
+    # quorum, restore nothing.
+    printf '  %-12s STALLED pid %-7s (%s) %s CONSECUTIVE FAILED TURNS -- up and producing nothing; see loop_%s.log\n' \
+      "$lane" "$pid" "$src" "$nfail" "$lane"
+    STALLED=$((STALLED+1))
+    continue
+  fi
   if [ -n "$pid" ]; then
     UP=$((UP+1))
     if [ "$age" -lt 0 ]; then
@@ -252,7 +283,7 @@ for lane in "${ROSTER[@]}"; do
     MISSING+=("$lane")
   fi
 done
-echo "  quorum: ${UP}/${#ROSTER[@]}"
+echo "  quorum: ${UP}/${#ROSTER[@]}$([ "$STALLED" -gt 0 ] && printf ' (%s STALLED, NOT counted up)' "$STALLED")"
 
 # A lane running that the roster does not name. This is how ok-1 went unnoticed:
 # every named lane was healthy, so nothing looked wrong.
@@ -273,7 +304,7 @@ done < <(ps -eo command | grep -oE 'You are [A-Za-z0-9_-]+\.' \
 [ "$OFF" = 0 ] && echo "  none"
 
 if [ "$CHECK_ONLY" = 1 ]; then
-  [ "${#MISSING[@]}" -eq 0 ] && [ "$ROLE_FAIL" = 0 ] && exit 0 || exit 1
+  [ "${#MISSING[@]}" -eq 0 ] && [ "$ROLE_FAIL" = 0 ] && [ "$STALLED" -eq 0 ] && exit 0 || exit 1
 fi
 
 # A LAUNCHER THAT DOES NOT PARSE TAKES THE WHOLE FLEET DOWN SILENTLY (H44).
@@ -291,6 +322,19 @@ if [ "${#MISSING[@]}" -gt 0 ] && ! bash -n ./run_loop.sh 2>/dev/null; then
   bash -n ./run_loop.sh 2>&1 | sed 's/^/    /'
   echo "  Every lane started from it would die at parse time, into detach_*.log."
   echo "  Someone is probably mid-edit; edit to a temp file and mv it into place."
+  exit 1
+fi
+
+if [ "${#MISSING[@]}" -eq 0 ] && [ "$STALLED" -gt 0 ]; then
+  # THE SENTENCE THIS REPLACES IS THE DEFECT (H56). `bringup: full quorum,
+  # nothing to start.` is what this file printed eight times into bringup.log
+  # while all five lanes were crash-looping on a quota wall. Nothing to START is
+  # true and it is not the same claim as nothing WRONG.
+  echo
+  echo "bringup: ${STALLED} lane(s) STALLED -- up, and producing nothing."
+  echo "  Nothing to start: a relaunch does not clear a quota wall, and five"
+  echo "  lanes retrying one is how 86 minutes were lost on 2026-08-17."
+  echo "  Read the tail of loop_<lane>.log for the reason the turns are exiting."
   exit 1
 fi
 

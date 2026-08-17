@@ -80,3 +80,10 @@ bringup.log
 # callsign. Same category as .heartbeat.* and detach_*.log — regenerated at
 # every launch and meaningless in another clone.
 .loop_lock.*
+
+# per-lane consecutive-failure count (run_loop.sh v9, H56): same category. The
+# 86-minute fleet outage it exists to expose was only reconstructable because
+# loop_*.log is TRACKED while bringup.log — the monitor that printed `quorum:
+# 5/5` through all of it — is ignored above, so its evidence lives as a snapshot
+# under spikes/H56_fleet_stall/evidence/ instead.
+.loop_fails.*

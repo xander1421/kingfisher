@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
-# v8, 2026-08-17. Eleven defects fixed; each one had ended or could end a lane
+# v9, 2026-08-17. Twelve defects fixed; each one had ended or could end a lane
 # silently. Numbered so a stall can be diagnosed against this list. (7 and 8 are
 # numbered here by AGENT-1/H30; 7 is ATOM-3's self-detach, whose own rationale
 # block sits at the code and which was not in this list -- §12.7 asks a harness
@@ -294,8 +294,10 @@ export CALLSIGN
 LOG="loop_${CALLSIGN}.log"
 EXIT_MARK=".loop_exit.${CALLSIGN}"        # written by the hook, cleared only here
 BEAT=".heartbeat.${CALLSIGN}"             # refreshed every BEAT_EVERY s WHILE a turn runs
+FAILFILE=".loop_fails.${CALLSIGN}"        # consecutive failed turns, on disk (H56)
 MAX_TURN=${MAX_TURN:-3600}                # seconds before a turn is called wedged
 BEAT_EVERY=${BEAT_EVERY:-30}              # heartbeat refresh interval (H48)
+BACKOFF_STEP=${BACKOFF_STEP:-30}          # backoff = fails * this, capped 900 (H56: testable)
 command -v claude >/dev/null || { echo "claude CLI not found"; exit 1; }
 
 # BRIEF_FILE is set and REQUIRED above the detach (defect 8), because a refusal
@@ -306,6 +308,32 @@ command -v claude >/dev/null || { echo "claude CLI not found"; exit 1; }
 # nothing at launch said who was live.
 
 fails=0
+# 12. THE ONE VARIABLE THAT KNEW THE FLEET WAS DEAD LIVED IN MEMORY ONLY (v9,
+#     2026-08-17, H56, ATTACKER-1). MEASURED, from the logs and not argued: from
+#     14:29:20 to 15:56:02 ALL FIVE LANES ran `1..18` consecutive instant-exit
+#     turns on `You've hit your session limit`, 5130 s of pure backoff each, and
+#     `bringup.log` sampled the fleet EIGHT times inside that window and printed
+#     `quorum: 5/5`, every lane `UP`, `bringup: full quorum, nothing to start.`
+#     every time. 86.7 min x 5 lanes of zero production, and no signal anywhere
+#     said so. `fails` below was the only thing in the system that knew, and it
+#     was a shell local printed to `loop_$CALLSIGN.log`, which NOTHING reads --
+#     `grep -rn` over the tree returns the definition here and the test suite
+#     deleting the file. It is now a per-lane file (§12.6) with no healthy
+#     reading above 1, and `bringup.sh` refuses quorum on it.
+#     CLASS: A HEALTH SIGNAL THAT OBSERVES THE SUPERVISOR AND NOT THE WORK. The
+#     launcher pid was alive, `.loop_lock` was held, `.heartbeat` was fresh and
+#     `peers.sh` said ADDRESSABLE -- all four true, all four about the wrapper.
+#     Line 317's `date +%s > "$BEAT"` fires at turn START unconditionally, so a
+#     crash loop refreshes the beat every <=900 s forever while `STALE_SECS` is
+#     3900: the watchdog alarm CANNOT fire during any crash loop, by arithmetic.
+#     Deliberately NOT fixed by moving that write -- H48 shows a beat that only
+#     tracks work makes the legal 5 s inter-turn gap read stale, and H6 already
+#     concluded the beat cannot be a liveness threshold at any value. The cure is
+#     a counter, not a clock.
+#     The log line also gained a timestamp, because reconstructing the window
+#     above required summing `30*n` over 93 log lines: the only record of an
+#     86-minute fleet outage carried no clock.
+echo 0 > "$FAILFILE"   # a count from a previous span is defect 5's class, armed
 # PER-LANE STOP (H31). `touch STOP` is fleet-wide, and until now that was the only
 # stop that existed -- so there was no way to retire ONE lane. Worse, since H6's
 # self-detach the wrapper is reparented to init, so killing a lane's claude child
@@ -382,10 +410,10 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
         echo "[run_loop] ${CALLSIGN} terminal signal, exiting" | tee -a "$LOG"; break ;;
       LOOP-IDLE)
         echo "[run_loop] ${CALLSIGN} idle, all work blocked on human; 600s" | tee -a "$LOG"
-        fails=0; sleep 600; continue ;;
+        fails=0; echo 0 > "$FAILFILE"; sleep 600; continue ;;
       LOOP-FUSE)
         echo "[run_loop] ${CALLSIGN} fuse: session span ended, resuming" | tee -a "$LOG"
-        fails=0; sleep 5; continue ;;
+        fails=0; echo 0 > "$FAILFILE"; sleep 5; continue ;;
     esac
   fi
 
@@ -393,13 +421,19 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
   # under a minute did not, so back off instead of hammering the API.
   if [ "$elapsed" -ge 60 ]; then
     fails=0
+    echo 0 > "$FAILFILE"
     sleep 5
   else
     fails=$(( fails + 1 ))
-    back=$(( fails * 30 )); [ "$back" -gt 900 ] && back=900
-    echo "[run_loop] ${CALLSIGN} exited after ${elapsed}s (fail ${fails}), backing off ${back}s" | tee -a "$LOG"
+    back=$(( fails * BACKOFF_STEP )); [ "$back" -gt 900 ] && back=900
+    echo "$fails" > "$FAILFILE"
+    echo "[run_loop] $(date '+%H:%M:%S') ${CALLSIGN} exited after ${elapsed}s (fail ${fails}), backing off ${back}s" | tee -a "$LOG"
     sleep "$back"
   fi
 done
 rm -f "$BEAT"        # a retired lane must not leave a heartbeat that reads as live
+# $FAILFILE is deliberately NOT removed: a retired lane's last count is the
+# diagnosis of why it retired, and bringup's STALLED branch requires a LIVE pid,
+# so a leftover count on a dead lane cannot raise a false alarm. The stale-span
+# hazard (defect 5) is closed at the write above the loop, not here.
 echo "loop stopped (${CALLSIGN})"

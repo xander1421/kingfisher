@@ -1,0 +1,193 @@
+### loop_AGENT-1.log — session-limit run
+46:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+47:[run_loop] AGENT-1 exited after 28s (fail 1), backing off 30s
+48:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+49:[run_loop] AGENT-1 exited after 3s (fail 2), backing off 60s
+50:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+51:[run_loop] AGENT-1 exited after 2s (fail 3), backing off 90s
+52:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+53:[run_loop] AGENT-1 exited after 3s (fail 4), backing off 120s
+54:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+55:[run_loop] AGENT-1 exited after 2s (fail 5), backing off 150s
+56:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+57:[run_loop] AGENT-1 exited after 3s (fail 6), backing off 180s
+58:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+59:[run_loop] AGENT-1 exited after 3s (fail 7), backing off 210s
+60:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+61:[run_loop] AGENT-1 exited after 3s (fail 8), backing off 240s
+62:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+63:[run_loop] AGENT-1 exited after 2s (fail 9), backing off 270s
+64:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+65:[run_loop] AGENT-1 exited after 3s (fail 10), backing off 300s
+66:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+67:[run_loop] AGENT-1 exited after 3s (fail 11), backing off 330s
+68:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+69:[run_loop] AGENT-1 exited after 3s (fail 12), backing off 360s
+70:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+71:[run_loop] AGENT-1 exited after 3s (fail 13), backing off 390s
+72:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+73:[run_loop] AGENT-1 exited after 2s (fail 14), backing off 420s
+74:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+75:[run_loop] AGENT-1 exited after 3s (fail 15), backing off 450s
+76:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+77:[run_loop] AGENT-1 exited after 2s (fail 16), backing off 480s
+78:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+79:[run_loop] AGENT-1 exited after 2s (fail 17), backing off 510s
+80:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+81:[run_loop] AGENT-1 exited after 3s (fail 18), backing off 540s
+
+### loop_AGENT-2.log — session-limit run
+16:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+17:[run_loop] AGENT-2 exited after 24s (fail 1), backing off 30s
+18:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+19:[run_loop] AGENT-2 exited after 3s (fail 2), backing off 60s
+20:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+21:[run_loop] AGENT-2 exited after 3s (fail 3), backing off 90s
+22:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+23:[run_loop] AGENT-2 exited after 3s (fail 4), backing off 120s
+24:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+25:[run_loop] AGENT-2 exited after 3s (fail 5), backing off 150s
+26:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+27:[run_loop] AGENT-2 exited after 3s (fail 6), backing off 180s
+28:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+29:[run_loop] AGENT-2 exited after 2s (fail 7), backing off 210s
+30:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+31:[run_loop] AGENT-2 exited after 4s (fail 8), backing off 240s
+32:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+33:[run_loop] AGENT-2 exited after 2s (fail 9), backing off 270s
+34:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+35:[run_loop] AGENT-2 exited after 3s (fail 10), backing off 300s
+36:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+37:[run_loop] AGENT-2 exited after 3s (fail 11), backing off 330s
+38:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+39:[run_loop] AGENT-2 exited after 4s (fail 12), backing off 360s
+40:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+41:[run_loop] AGENT-2 exited after 3s (fail 13), backing off 390s
+42:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+43:[run_loop] AGENT-2 exited after 3s (fail 14), backing off 420s
+44:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+45:[run_loop] AGENT-2 exited after 2s (fail 15), backing off 450s
+46:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+47:[run_loop] AGENT-2 exited after 3s (fail 16), backing off 480s
+48:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+49:[run_loop] AGENT-2 exited after 3s (fail 17), backing off 510s
+50:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+51:[run_loop] AGENT-2 exited after 2s (fail 18), backing off 540s
+
+### loop_ATOM-3.log — session-limit run
+1:Execution errorYou've hit your session limit · resets 3:50pm (Europe/Lisbon)
+2:[run_loop] ATOM-3 exited after 30s (fail 1), backing off 30s
+3:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+4:[run_loop] ATOM-3 exited after 3s (fail 2), backing off 60s
+5:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+6:[run_loop] ATOM-3 exited after 2s (fail 3), backing off 90s
+7:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+8:[run_loop] ATOM-3 exited after 3s (fail 4), backing off 120s
+9:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+10:[run_loop] ATOM-3 exited after 3s (fail 5), backing off 150s
+11:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+12:[run_loop] ATOM-3 exited after 3s (fail 6), backing off 180s
+13:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+14:[run_loop] ATOM-3 exited after 3s (fail 7), backing off 210s
+15:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+16:[run_loop] ATOM-3 exited after 2s (fail 8), backing off 240s
+17:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+18:[run_loop] ATOM-3 exited after 3s (fail 9), backing off 270s
+19:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+20:[run_loop] ATOM-3 exited after 3s (fail 10), backing off 300s
+21:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+22:[run_loop] ATOM-3 exited after 2s (fail 11), backing off 330s
+23:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+24:[run_loop] ATOM-3 exited after 2s (fail 12), backing off 360s
+25:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+26:[run_loop] ATOM-3 exited after 3s (fail 13), backing off 390s
+27:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+28:[run_loop] ATOM-3 exited after 3s (fail 14), backing off 420s
+29:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+30:[run_loop] ATOM-3 exited after 2s (fail 15), backing off 450s
+31:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+32:[run_loop] ATOM-3 exited after 3s (fail 16), backing off 480s
+33:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+34:[run_loop] ATOM-3 exited after 3s (fail 17), backing off 510s
+35:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+36:[run_loop] ATOM-3 exited after 2s (fail 18), backing off 540s
+
+### loop_ATTACKER-1.log — session-limit run
+18:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+19:[run_loop] ATTACKER-1 exited after 22s (fail 1), backing off 30s
+20:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+21:[run_loop] ATTACKER-1 exited after 3s (fail 2), backing off 60s
+22:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+23:[run_loop] ATTACKER-1 exited after 3s (fail 3), backing off 90s
+24:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+25:[run_loop] ATTACKER-1 exited after 3s (fail 4), backing off 120s
+26:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+27:[run_loop] ATTACKER-1 exited after 2s (fail 5), backing off 150s
+28:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+29:[run_loop] ATTACKER-1 exited after 3s (fail 6), backing off 180s
+30:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+31:[run_loop] ATTACKER-1 exited after 7s (fail 7), backing off 210s
+32:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+33:[run_loop] ATTACKER-1 exited after 2s (fail 8), backing off 240s
+34:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+35:[run_loop] ATTACKER-1 exited after 3s (fail 9), backing off 270s
+36:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+37:[run_loop] ATTACKER-1 exited after 3s (fail 10), backing off 300s
+38:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+39:[run_loop] ATTACKER-1 exited after 2s (fail 11), backing off 330s
+40:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+41:[run_loop] ATTACKER-1 exited after 2s (fail 12), backing off 360s
+42:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+43:[run_loop] ATTACKER-1 exited after 3s (fail 13), backing off 390s
+44:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+45:[run_loop] ATTACKER-1 exited after 2s (fail 14), backing off 420s
+46:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+47:[run_loop] ATTACKER-1 exited after 3s (fail 15), backing off 450s
+48:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+49:[run_loop] ATTACKER-1 exited after 3s (fail 16), backing off 480s
+50:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+51:[run_loop] ATTACKER-1 exited after 2s (fail 17), backing off 510s
+52:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+53:[run_loop] ATTACKER-1 exited after 3s (fail 18), backing off 540s
+
+### loop_ok-1.log — session-limit run
+1:[run_loop] ok-1 exited after 20s (fail 1), backing off 30s
+2:Execution error[run_loop] ok-1 exited after 58s (fail 1), backing off 30s
+3:Execution errorExecution error[run_loop] ok-1 exited after 10s (fail 2), backing off 60s
+4:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+5:[run_loop] ok-1 exited after 28s (fail 1), backing off 30s
+6:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+7:[run_loop] ok-1 exited after 2s (fail 2), backing off 60s
+8:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+9:[run_loop] ok-1 exited after 3s (fail 3), backing off 90s
+10:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+11:[run_loop] ok-1 exited after 3s (fail 4), backing off 120s
+12:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+13:[run_loop] ok-1 exited after 2s (fail 5), backing off 150s
+14:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+15:[run_loop] ok-1 exited after 3s (fail 6), backing off 180s
+16:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+17:[run_loop] ok-1 exited after 3s (fail 7), backing off 210s
+18:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+19:[run_loop] ok-1 exited after 2s (fail 8), backing off 240s
+20:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+21:[run_loop] ok-1 exited after 3s (fail 9), backing off 270s
+22:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+23:[run_loop] ok-1 exited after 3s (fail 10), backing off 300s
+24:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+25:[run_loop] ok-1 exited after 2s (fail 11), backing off 330s
+26:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+27:[run_loop] ok-1 exited after 3s (fail 12), backing off 360s
+28:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+29:[run_loop] ok-1 exited after 3s (fail 13), backing off 390s
+30:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+31:[run_loop] ok-1 exited after 2s (fail 14), backing off 420s
+32:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+33:[run_loop] ok-1 exited after 3s (fail 15), backing off 450s
+34:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+35:[run_loop] ok-1 exited after 2s (fail 16), backing off 480s
+36:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+37:[run_loop] ok-1 exited after 3s (fail 17), backing off 510s
+38:You've hit your session limit · resets 3:50pm (Europe/Lisbon)
+39:[run_loop] ok-1 exited after 3s (fail 18), backing off 540s
+

@@ -1,0 +1,164 @@
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 85s
+  AGENT-2      UP   pid 40077   (loop) turn age 85s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 86s
+  ATOM-3       UP   pid 40237   (loop) turn age 76s
+  ok-1         UP   pid 40429   (loop) turn age 77s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 46s
+  AGENT-2      UP   pid 40077   (loop) turn age 46s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 44s
+  ATOM-3       UP   pid 40237   (loop) turn age 39s
+  ok-1         UP   pid 40429   (loop) turn age 40s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 72s
+  AGENT-2      UP   pid 40077   (loop) turn age 72s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 69s
+  ATOM-3       UP   pid 40237   (loop) turn age 63s
+  ok-1         UP   pid 40429   (loop) turn age 64s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 339s
+  AGENT-2      UP   pid 40077   (loop) turn age 339s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 336s
+  ATOM-3       UP   pid 40237   (loop) turn age 330s
+  ok-1         UP   pid 40429   (loop) turn age 332s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 183s
+  AGENT-2      UP   pid 40077   (loop) turn age 182s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 181s
+  ATOM-3       UP   pid 40237   (loop) turn age 175s
+  ok-1         UP   pid 40429   (loop) turn age 176s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 362s
+  AGENT-2      UP   pid 40077   (loop) turn age 360s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 360s
+  ATOM-3       UP   pid 40237   (loop) turn age 353s
+  ok-1         UP   pid 40429   (loop) turn age 355s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 26s
+  AGENT-2      UP   pid 40077   (loop) turn age 25s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 24s
+  ATOM-3       UP   pid 40237   (loop) turn age 18s
+  ok-1         UP   pid 40429   (loop) turn age 20s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 39997   (loop) turn age 114s
+  AGENT-2      UP   pid 40077   (loop) turn age 112s
+  ATTACKER-1   UP   pid 40160   (loop) turn age 112s
+  ATOM-3       UP   pid 40237   (loop) turn age 105s
+  ok-1         UP   pid 40429   (loop) turn age 107s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 51949   (turn) turn age 22s
+  AGENT-2      UP   pid 51998   (turn) turn age 20s
+  ATTACKER-1   UP   pid 52049   (turn) turn age 20s
+  ATOM-3       UP   pid 52208   (turn) turn age 14s
+  ok-1         UP   pid 52102   (turn) turn age 15s
+  quorum: 5/5
+
+=== OFF-ROSTER ===
+  none
+
+bringup: full quorum, nothing to start.

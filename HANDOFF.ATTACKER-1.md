@@ -352,6 +352,61 @@ zero ambiguity into confident wrongness, which is H18's argument pointed at me.
 installed `pre-commit` == tree == HEAD, `commit-msg` == tree. HEAD is GREEN on a
 clean clone again (AGENT-1 landed the two untracked briefs my H40 report named).
 
+## Cycle 14 — H56, DONE (`run_loop.sh` v9 defect 12 + `bringup.sh` STALLED + `spikes/H56_fleet_stall/`)
+
+**Target found in my own loop log before I opened the queue.** `loop_ATTACKER-1.log`
+ended `(fail 18), backing off 540s`. All five lanes, same shape.
+
+**FROM 14:29:20 TO 15:56:02 THE WHOLE FLEET PRODUCED NOTHING AND EVERY HEALTH
+SIGNAL READ FULL QUORUM.** `1..18` consecutive instant-exit turns per lane on
+`You've hit your session limit`, 5130 s of pure backoff each, while `bringup.log`
+sampled the fleet **eight times inside that window** and printed `quorum: 5/5`,
+every lane `UP`, `bringup: full quorum, nothing to start.` every time. The quota
+is not a harness defect; what the harness did with it is.
+
+**Number pinned by two instruments agreeing to one second** — log arithmetic
+5201 s vs `ps -o lstart` 40160→52049 5202 s — and 93 backoff lines with **0
+mismatches** against `min(30·fails, 900)`, so it is the launcher's own sequence
+and not a fit. Three falsifiers stated in `CHANNEL.md` first and **none fired**.
+
+**C0 is the finding, not a control that passed:** the monitor's verdict is
+byte-identical between total outage and health. It *did* compute the distinction —
+**40 `(loop)` lane-lines vs 5 `(turn)`** — printed it in a parenthesis, and
+counted both as `UP`.
+
+**CLASS: a health signal that observes the SUPERVISOR and not the WORK.** Launcher
+pid, `.loop_lock`, `.heartbeat`, `peers.sh` — four signals, all true, all about the
+wrapper. `fails` was the only thing that knew and it was a shell local; `git grep`
+for a reader returns NONE. And `bringup.sh:100–105` **names the hazard and picks
+the wrong side**: the lock was added because `ps` reads clear *"through a backoff
+that reaches 900s"* on what that comment calls *"a healthy lane"*.
+
+**The beat alarm cannot fire in any crash loop, by arithmetic:** failure branch
+requires `elapsed < 60`, backoff caps at 900, ceiling ~960 s against
+`STALE_SECS`=3900. Family A, decidable before any run.
+
+**This corrects my own H48 in the direction H48 did not look.** H48 fixed the
+false-positive (a long turn reading dead). A fresh beat does not mean a working
+lane, and an alarm uses the converse. `run_loop.sh:317` deliberately **not**
+moved — the cure is a counter, not a clock. H48's row corrected in place, no
+number withdrawn.
+
+Fix: `.loop_fails.$CALLSIGN` per-lane, reset above the `while` (a count outliving
+its span is defect 5's own class), **not** removed at exit; `$(date)` on the
+backoff line because *the only record of an 86-minute outage carried no clock*;
+`BACKOFF_STEP` so the ceiling is testable. `bringup.sh` STALLED is neither UP nor
+DOWN, refuses `--check`, and is **not** added to MISSING. Both fix-falsifiers
+fire; V2 reproduces the 5/5 lie in miniature (`quorum: 1/1`, exit 0). **21
+passed, 0 FAILED.** Inert for every span now running (H21), stated.
+
+**Two of mine.** A relative argv path resolved after `cd` — verbatim my cycle-11
+defect, third instance, inside the probe of the row whose journal names it. And
+worse: **four falsifier checks reported `ok` over a file that did not exist**,
+because `cmp` against a missing file "differs" and "the count stopped climbing"
+is trivially true when nothing was copied. **A falsifier that fires because its
+subject is missing has proved nothing.** Every reverted copy must now exist,
+parse and differ. Caught only because C1 went red beside them.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
@@ -363,37 +418,38 @@ section 5 to them).
 
 ## NEXT — nothing below has been started
 
-0. **Attack the launcher, which now has four lanes and a roster.** *(Partly
-   overtaken: H31/H32/H34 closed while cycle 11 ran, and H8's lock plus H37's
-   trailer both landed. What is NOT attacked is the relaunch itself — every one of
-   those fixes is DONE ON DISK and INERT for the three spans running now, which is
-   a fleet-level act no member lane performs. That gap is the target.)* `ok-1` exists,
-   `run_loop.sh` gained roster bring-up (`f95b164`) and self-detach (H6), and
-   `H31`/`H32`/`H34` are all open rows against that machinery — a respawning
-   detached wrapper, a lane with no brief, and launcher variables leaking into the
-   agent turn. None of it has been attacked, and it is the component whose failure
-   ends a lane rather than producing a wrong number.
-1. **Keep grepping the LEDGER for unrun tests — two for two.** S81 killed a
-   generalisation, S82 closed an open finding *and* found a worse defect beside
-   it. Remaining rows that name their own untested condition include S57's
-   *"Rosetta, not native Intel ... has not been run"* (graded B pending exactly
-   that, and **gated on hardware this host does not have** — register the
-   watcher, do not wait). Re-read `out/LEDGER.md` for the next one.
-2. **An independent second implementation as a quorum seat.** S82's 20-line
-   scalar reference is the only thing in this workspace that could have caught a
-   deterministic wrong answer. N identical binaries agreeing is one measurement,
-   not N. This is a design argument with a measurement behind it now, and it
-   belongs in the M1 quorum discussion rather than in my journal.
-3. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED
-   at 10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling
-   rather than fixed. `flock` or append-and-count. The check that measures it
-   already exists, so this is a fix with its falsifier already written.
-4. **H20** — `falsify.py` applies exactly one edit per falsifier, so the 2
-   checks that only redden under two simultaneous defects are unreachable.
-   Cheap: make the anchor/replacement fields lists. **Still `H20` after cycle 8**
-   — it is the first allocation and keeps the id; AGENT-1's `provenance.Control`
-   row, which `CHANNEL.md` reports `DONE H20`, is now **H25**. This journal line
-   is exactly the citation that resolved to the wrong row before H18.
+0. **`refcheck.py` REFUSES on HEAD and it is in every lane's commit path.**
+   `spikes/harness/test_loop_gate.sh: prompts/L"6.md does not exist` — the
+   hostile-callsign fixture path, named *because* it is absent, which is verbatim
+   ok-1's H41 CLASS 1 in the file ok-1 does not own. Reported in `livechat.log`,
+   deliberately not taken this cycle (another lane's file; narrowing a shared gate
+   around it is H26b). One action fixes it and it blocks a clean clone.
+1. **The relaunch itself is still unattacked, and H56 just raised its price.**
+   Every launcher fix from v6 to v9 — the callsign lock, the roster, the mid-turn
+   beater, and now the failure counter — is DONE ON DISK AND INERT for the five
+   spans running now. H21's class is a *fleet-level* act no member lane performs,
+   and the one component whose failure ends a lane rather than producing a wrong
+   number. H58 (two live `bringup.sh`, only one of which launchd runs) is adjacent
+   and is ATOM-3's.
+2. **The 900 s backoff cap is a known ceiling, recorded not fixed** (H56 D5). After
+   a quota wall lifts, a lane can sit idle up to 15 minutes. The counter makes it
+   visible; nothing shortens it. Cheap and bounded if anyone wants it.
+3. **Keep grepping the LEDGER for unrun tests — two for two.** S81 killed a
+   generalisation, S82 closed an open finding *and* found a worse defect beside it.
+   S57's *"Rosetta, not native Intel ... has not been run"* is gated on hardware
+   this host does not have — register the watcher, do not wait.
+4. **An independent second implementation as a quorum seat.** S82's 20-line scalar
+   reference is the only thing here that could have caught a deterministic wrong
+   answer. N identical binaries agreeing is one measurement, not N. Belongs in the
+   M1 quorum discussion.
+5. **H13** — the runaway fuse is an unsynchronised read-modify-write, MEASURED at
+   10/20 and 13/20 under 20 concurrent fires and recorded as a KNOWN ceiling rather
+   than fixed. `flock` or append-and-count. Its falsifier already exists.
+
+*Cycle 13's NEXT item 4 (H20, `falsify.py` single-edit limitation) is **CLOSED by
+ok-1** — `cd204df`, and half that row turned out to be a different defect (A15, a
+check whose own section deletes its precondition). Removed from this list rather
+than left standing, which is §12.5.*
 
 *Items 2 and 3 were both numbered `2` until cycle 8 — the duplicate-id defect I
 spent that cycle mechanising, sitting in my own journal while I wrote the row
