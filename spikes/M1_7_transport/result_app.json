@@ -1,11 +1,82 @@
 {
- "envelopes": [],
+ "envelopes": [
+  {
+   "job_id": "j0000",
+   "worker": "android",
+   "shard_cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0001",
+   "worker": "android",
+   "shard_cid": "bafkreidna5kb6ajv2nkvyq66xefc4kelugbdtinu7bo2avacqeehguooh4",
+   "status": "OK",
+   "results": "() | () | (Error (das-service-status! pattern_matching_query) ServiceNotAvailable: pattern_matching_query)"
+  },
+  {
+   "job_id": "j0002",
+   "worker": "android",
+   "shard_cid": "bafkreidluxzlasztx4fojrpaasraggc5bno7hwzh54upbgdacqdjrgk4ve",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0003",
+   "worker": "android",
+   "shard_cid": "bafkreiaumzp4agzvhj4motzszzi3zh2zwhwff7xa4wlrsliftqy2qm6uye",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0004",
+   "worker": "android",
+   "shard_cid": "bafkreigml2zxmt2jhfkpic7i3pa5bos6cd6nyrf24klzeb3jultniwa65y",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0005",
+   "worker": "android",
+   "shard_cid": "bafkreibebudwqa55rx5q6eupbhkdls6p7pptjegnejalcvpwo3js3wnvkm",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0006",
+   "worker": "android",
+   "shard_cid": "bafkreiecgxyoh6yoxpbtlb3audoy3qo2ygnhp32yojzsems3uzoi4klvjq",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0007",
+   "worker": "android",
+   "shard_cid": "bafkreig5dg6tel2bgneh4nmis7idpzndd7x2y62jziel63nuwmaaefkt24",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0008",
+   "worker": "android",
+   "shard_cid": "bafkreigcimmeraz6wv3lfawm2b76ufvzpvvwiqgdwgki3i3ljjfjpuoku4",
+   "status": "OK",
+   "results": ""
+  },
+  {
+   "job_id": "j0009",
+   "worker": "android",
+   "shard_cid": "bafkreidsu4oqpccqwdolfu37rg23o52oqzcjdqsepf5zuuab5ouykyhs5m",
+   "status": "OK",
+   "results": ""
+  }
+ ],
  "stats": {
-  "polls": 0,
-  "jobs_out": 0,
-  "shard_bytes": 0,
-  "results": 0,
+  "polls": 11,
+  "jobs_out": 10,
+  "shard_bytes": 12220,
+  "results": 10,
   "misses": 0
  },
- "wall_s": 240.1
+ "wall_s": 56.5
 }

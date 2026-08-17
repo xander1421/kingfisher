@@ -31,6 +31,17 @@ for i, p in enumerate(progs):
 
 server.serve(PORT)
 sh('adb', 'reverse', f'tcp:{PORT}', f'tcp:{PORT}')
+# INSTALL the APK we just built. Without this the device keeps whatever was
+# installed last, and the run measures a stale artifact -- A24's family, and it
+# cost a full 240 s timeout diagnosing a "transport bug" that was an old APK.
+APK = os.path.join(HERE, '..', 'M1_1_android', 'app', 'build', 'outputs',
+                   'apk', 'debug', 'app-debug.apk')
+import hashlib
+apk_sha = hashlib.sha256(open(APK, 'rb').read()).hexdigest()[:12]
+r = sh('adb', 'install', '-r', APK)
+if 'Success' not in r.stdout:
+    print('APK install FAILED:', r.stdout.strip(), r.stderr.strip()); sys.exit(1)
+print(f'installed app-debug.apk sha256 {apk_sha}')
 sh('adb', 'shell', 'pm clear net.kingfisher')     # cold shard cache in app storage
 sh('adb', 'logcat', '-c')
 sh('adb', 'shell', 'am start -n net.kingfisher/.MainActivity')
