@@ -1,0 +1,20 @@
+# MISSION_LOOP §8 -> the artifact somebody claims closes it.
+# key<TAB>spike dir<TAB>who asserted this row<TAB>what the artifact itself claims, INCLUDING what it does not cover
+#
+# A row here is an ATTRIBUTED CLAIM, not a verdict. `demo8.py` checks that the
+# named directory exists, is tracked, and certified green -- never that it closes
+# the line. The fourth column is where a row states its own limit, and a row
+# whose fourth column does not state one should be suspected (A22: this mapping
+# is self-authored).
+#
+# The five §8 items with no row here are UNPROVEN and that is the honest state:
+#   * 3 physical devices -- the chain ran 3 HOSTS and 1 phone, not 3 devices
+#   * ConceptNet slice via content-addressed shards -- 64 CIDs exist; that the
+#     corpus is the named slice is not verified by any spike I can cite
+#   * versioned ban surface, BUILD-ENFORCED -- admission.py is recorded REFUTED
+#     as a gate and kept as a linter, so "build-enforced" is not established
+#   * quorum-3 with STAKE-WEIGHTED seat draw -- the run is quorum-4 and
+#     specs/D3_economics.md publishes no stake floor, so the draw does not exist
+#   * a written run-book -- no such document is in the tree
+injected cheat	spikes/S26_cheat_attribution	AGENT-1	the injected-cheat half only: 200/200 cheats caught and attributed to exactly one worker over the committed 64-program 4-worker run, denominator 50 not 64. DOES NOT COVER the "paid in points" half, which S26 leaves open because specs/D3_economics.md publishes no stake floor and any slashing number would be invented (A26).
+Witnessed verification	spikes/S36_witnessed_job	AGENT-1	one job class (8-byte prefix range query, 37 jobs): replication reads consensus from two non-independent liars 0/37 while a single witnessed verifier rejects 37/37. DOES NOT COVER MeTTa reduction, and its own ATTACK.md found the COMMITTED verifier accepts a deeper-prefix replay 37/37 -- the line is closed only by the q-bound verifier, whose upstream lift is the open row S37.
