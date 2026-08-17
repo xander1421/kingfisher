@@ -2,3 +2,14 @@ split  train 191730  dev 41367  test 40818
 A15 planted 238,239=>240  1250 train edges, 550 dev conclusions
 
 ARM full
+   r0  pop   94  dev solved   1344  test solved   1302  test prec 0.0111  test top12 0.2786  body 2.04  A15 -
+   r1  pop  125  dev solved   4149  test solved   3577  test prec 0.0108  test top12 0.2786  body 2.08  A15 yes
+   r2  pop  151  dev solved   4613  test solved   4090  test prec 0.0143  test top12 0.2786  body 2.09  A15 yes
+   r3  pop  150  dev solved   4614  test solved   4067  test prec 0.0139  test top12 0.2805  body 2.09  A15 yes
+   r4  pop  135  dev solved   4854  test solved   4325  test prec 0.0139  test top12 0.2737  body 2.10  A15 yes
+   r5  pop  129  dev solved   5524  test solved   4994  test prec 0.0185  test top12 0.2727  body 2.09  A15 yes
+   r6  pop  128  dev solved   5310  test solved   4763  test prec 0.0113  test top12 0.2664  body 2.10  A15 yes
+   r7  pop  116  dev solved   5127  test solved   4600  test prec 0.0131  test top12 0.2687  body 2.11  A15 yes
+   r8  pop  115  dev solved   5645  test solved   5096  test prec 0.0139  test top12 0.2668  body 2.10  A15 yes
+   r9  pop  110  dev solved   5224  test solved   4673  test prec 0.0160  test top12 0.2587  body 2.08  A15 yes
+   r10 pop  105  dev solved   5104  test solved   4557  test prec 0.0161  test top12 0.2505  body 2.07  A15 yes

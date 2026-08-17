@@ -45,7 +45,16 @@ about. This is the honest state, not a regression.
    `proposed/das-concurrency/`, `proposed/mork-license/`.
 
 ## Where I am, and the next three items
-- **DONE just now**: M2.1 fleet routing. S61's locality/imbalance tension is
+- **BLOCKER, new**: the phone is not charging (all powered flags false).
+  WorkManager will not start any worker, so M1.1-on-M1.7 is untestable, and
+  every on-device timing this session is unknown-condition. Gate fixed and now
+  refuses. See `spikes/M1_3_worker/CHARGING_DEFECT.md`.
+- **DONE**: M1.7 transport (66/66 byte-identical, phone dials out, loopback
+  only); M1.3b process reuse (31 raw hashes -> 1 canon; SAFE for ground
+  results); M2.1 §6 maxSkew reframed as a security dial, §3's knee withdrawn;
+  both locality-ratchet falsifiers (skew- and density-independent, 89x at
+  fleet 64). Android worker ported onto the transport, builds, **untested**.
+- **DONE earlier**: M2.1 fleet routing. S61's locality/imbalance tension is
   real under *skewed* demand (zipf 1.4 -> 19.33x vs random 1.79x) and a k8s
   `maxSkew=1` cap buys out of it (1.06x imbalance, 78.7% transfer saved).
   Uniform demand shows no tension and I nearly published that.

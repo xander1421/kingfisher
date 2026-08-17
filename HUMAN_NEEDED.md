@@ -52,3 +52,13 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
   is about, so every conclusion downstream of Q1 assumes a defence the setup has
   never had. Interim position: refuse. Real fix: an attestation root (Acurast's
   hardware-attested key is the reference implementation, `reports/REPORT_Acurast_compute.md`).
+
+- **The phone is not actually charging — please connect a power source.**
+  `AC/USB/Wireless powered` are all false and `Max charging current: 0`, though
+  adb works, so the cable is data-only or charge management is holding it off at
+  100%. Consequences: (a) WorkManager will not run the fleet worker at all —
+  `Unsatisfied constraints: CHARGING` — so M1.1-on-M1.7 cannot be tested;
+  (b) every on-device timing this session was taken on battery, under a
+  different DVFS policy, and is unknown-condition until re-measured. The gate
+  that should have caught this accepted `status=5 FULL` as "plugged"; fixed, and
+  it now refuses (`spikes/M1_3_worker/CHARGING_DEFECT.md`).
