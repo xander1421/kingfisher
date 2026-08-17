@@ -287,7 +287,17 @@ was **falsified** by a clone already on disk, §D's shard row was re-scoped, and
 it. **All four were invisible from inside the document**; you had to leave it to
 discover the rule was standing on a withdrawn claim.
 
-**A9 has a third axis: claims whose scope is fixed by an ambiguous word.** Four
+**A9's widest form: a formula inherits the preconditions of the case it was
+fitted to, and reusing it silently re-asserts them.** Five instances now — S15's
+"cross-architecture" (cross-OS fitted, cross-ISA asserted), S32a's co-tenancy
+(separate processes fitted, in-process asserted), S72's 15.2× (single-core
+fitted, cpuset asserted), W1's read set (key-lookup fitted, similarity-search
+asserted), and B1's `1 bit/dim` (**B=1 bipolar fitted, B>1 ternary asserted**).
+The tell is never a wrong number — it is a premise that quietly stopped holding
+while the formula carried on. **Before reusing a formula, name the case it was
+derived from and check that case still obtains.**
+
+**A9's third axis: claims whose scope is fixed by an ambiguous word.** Four
 instances now — S15's "cross-architecture" (cross-OS read as cross-ISA), S35's
 "31.6×" (two differently-bracketed timers), S45's 5.66 ms comparand (from a
 disqualified instrument), and S32a's digest column read as corroborating S51

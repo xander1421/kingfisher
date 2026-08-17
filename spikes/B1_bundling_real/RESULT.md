@@ -157,3 +157,59 @@ Break ties by a **content-derived rule** — e.g. bit *i* of a hash of
 `(bundle_id, dim)` — rather than always to 0. That removes the bias while
 staying deterministic. Not applied because it changes the encoding, which is a
 D2 canonical-form decision, not a measurement change.
+
+---
+
+# B1c — the encoding was a choice, and B1 asserted it without saying so
+
+**The arithmetic is right for the encoding implemented. The encoding itself is a design decision B1 never flagged, and under any ternary-preserving alternative B=16 stops fitting VTCM. B=32 fits under all three.**
+
+## What the reference engine actually stores — verified
+`realkg.c:152-162`:
+```c
+for(int bit=0;bit<64;bit++){
+    int ones=0;
+    for(int k=lo;k<hi;k++) ones += (base[order[k]*WORDS+w]>>bit)&1ULL;
+    if(ones*2>m) out |= 1ULL<<bit;          // ties -> clear
+}
+bundle[b*WORDS+w]=out;                       // uint64_t: 1 bit/dim
+```
+`bundling.py` reproduces this construction exactly, so **B1's store sizes are a
+correct model of what is implemented**, and the S11 provenance check passing at
+B=1 was not luck.
+
+## But `sign(Σ)` is ternary, and the implementation discards the third state
+A bundle is `sign(Σ)`, and `sign(0)` is a **third value**. The reference collapses
+it to −1. That is a legitimate encoding choice, and B1 presented `1 bit/dim` as
+a fact rather than as the consequence of that choice. Two alternatives preserve
+the zero, at these costs on an 800k-triple shard using **B1b's measured tie
+rates on FB15k-237**:
+
+| B | binary (implemented) | + sparse zero-mask | full second plane | fits 8 MB VTCM |
+|---|---|---|---|---|
+| 8 | 12.80 MB | 28.60 MB | 25.60 MB | no / no / no |
+| **16** | **6.40 MB** | **11.30 MB** | **12.80 MB** | **YES / no / no** |
+| **32** | **3.20 MB** | **4.21 MB** | **6.40 MB** | **YES / YES / YES** |
+| 64 | 1.60 MB | 1.76 MB | 3.20 MB | yes / yes / yes |
+
+**So "satisfiable at 16×" was encoding-dependent. "Satisfiable at 32×" is not.**
+
+Note the sparse zero-mask only beats a full second plane below a ~10% tie rate
+(10 bits per zero index vs 1 bit per dimension), which is why it is worse than
+two-plane at B=8 and better at B≥16.
+
+## Two independent routes reached B=32
+B1b moved off B=16 because of **sign-bias** (7.66% ties, 4.6pt imbalance). B1c
+moves off it because of **encoding robustness**. Same answer, unrelated reasons —
+which is the kind of convergence that was manufactured in S70 and is genuine
+here, because the two arguments share no input.
+
+## Tie rates: mine differ from S11's
+The reviewer cited S11's 0.064 / 0.024 / 0.005 at B=16/32/64. B1b measured
+**0.0766 / 0.0315 / 0.0100** on FB15k-237 — consistently higher. B1b's are the
+real-data numbers and are the ones used above; the discrepancy is unexplained
+and worth a line if S11's construction is ever revisited.
+
+## What is unaffected
+The NPU descope. It never depended on this, and B=32 still closes the residency
+link with 2× headroom under the most pessimistic encoding.
