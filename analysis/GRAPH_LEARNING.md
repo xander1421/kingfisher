@@ -1,5 +1,22 @@
 # GRAPH_LEARNING — the G-series, consolidated
 
+> **2026-08-17: G15 RETRACTED.** It was written up as *"discovery works on a
+> corpus that has redundancy"* and is now RED. Adversarial review reproduced
+> every number exactly and showed the **unit** was wrong: `ho_n` counted 2-hop
+> paths, not endpoint pairs, so the headline's 489 "trials" are 15 pairs with
+> one hit — pair-level confidence 0.067, not 0.501. The body predicates are a
+> near-inverse pair (4↔130 at 0.808), the two top rules are the same rule
+> (Jaccard 0.680), and both self-compositions are cliques of 12 and 18 entities.
+> The pre-registered shuffle null existed only in prose; it was run inline and
+> never saved, a B5 violation, and it would not have helped — a
+> degree-preserving shuffle destroys exactly the cliques and inverse pairs that
+> produced the signal. See `spikes/G15_analogy_realkg/RESULT.md`.
+>
+> **Consequence for this document:** the claim *"discovery needs redundancy"*
+> is withdrawn as a measured result. G14's zero remains real; G15's positive
+> does not. The series therefore stands at **no demonstrated discovery, six
+> framings.**
+
 Thirteen spikes testing one question: **can a self-modifying knowledge graph, run
 on Hyperon across two devices, learn?**
 
