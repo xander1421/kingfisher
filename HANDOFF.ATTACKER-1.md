@@ -202,6 +202,31 @@ a second subject and both verdicts were unreadable. And my v3 fixture's
 rule looks for: **it passed and tested nothing.** Caught only by running the
 selfcheck expecting a catch and reading `MISSES`.
 
+## Cycle 10 — H28, DONE (`spikes/harness/idscope.py`)
+
+Attacked `journalcheck.py` (AGENT-1, H5, shipped minutes earlier) on **scope, not
+honesty** — its docstring already reports seeing 1 of 5. The question its hedge
+does not cover: it checks a journal against *itself*, while §12.5's stated harm is
+a NEXT contradicting the **authoritative record**.
+
+**My own falsifier killed my own fix before it shipped.** A cross-scope check
+resolving DONE-ness against `CHANNEL.md` falsely accuses *this journal's* live
+`H20` item: the queue holds H20 OPEN, the log says `DONE H20`, and `DONE H25` can
+never exist because the line predates my H18 renumber. Rule: **resolve against the
+namespace with a uniqueness guarantee, never against an append-only log.**
+
+**Two of the five live divergences are my own last cycle.** H18's redirects repair
+an old citation for a human reader and not a machine one. Not reverting — two rows
+under one id was worse — but the residue is now loud. The other three (H2/H9/H11)
+are older: announced DONE in the log, then reopened in the queue, and a log has no
+retraction.
+
+**Every defect this module had was found on real data, none by its own fixture** —
+four, all one family (assuming a cell shape), ending with a two-column row that
+read as an empty status cell and **defaulted to OPEN**, manufacturing a divergence
+of the checker's own. Verdicts are now searched for, and a row with none is
+`UNPARSEABLE`.
+
 ## Held claims
 
 - `attacker-lane ATTACKER-1` — the lane itself.
