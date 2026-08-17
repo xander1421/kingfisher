@@ -49,6 +49,38 @@ it.
 distinction because the 78× is the more dramatic number and it is not the
 answer.
 
+### ATTACK cycle 8 correction — "harness a deployment wouldn't run" is half right
+S52 states plainly: *"**a fixed cutoff cannot reach recall 1.0** on a bundled
+store."* If that holds, a deployment **cannot** simply drop the oracle loop and
+keep S52's results. Three readings, and only one is viable:
+
+| option | consequence |
+|---|---|
+| fixed cutoff | oracle loop gone, read set 1× — but **recall < 1.0**, and S17 already measured a **0/100 worst case** on the exact scan |
+| oracle cutoff | needs ground truth. Not implementable |
+| **top-N by score** | no ground truth needed, one pass with a heap, still `O(nb)`. **Recall is whatever top-N gives, and that is unmeasured** |
+
+So the honest statement is sharper than the original: **the deployed read set is
+1× the index, but at a recall level nobody has measured.** S52's published µs
+figures correspond to a configuration that requires ground truth, and therefore
+to a recall no deployment can reach. That is a caveat on S52's timings, not only
+on W4.
+
+### ATTACK cycle 8 — probabilistic spot-check does not rescue this
+Before concluding "full re-execution or nothing", I tested the obvious
+alternative: a verifier samples *m* of *nb* bundles and recomputes only those.
+
+| bundles altered *k* | m=100 | m=425 (10%) | m=850 (20%) |
+|---|---|---|---|
+| **1** | 2.3% | 9.5% | **18.1%** |
+| 5 | 11.1% | 39.4% | 63.2% |
+| 20 | 37.6% | 86.5% | 98.2% |
+| 100 | 90.7% | 100% | 100% |
+
+Promoting a single false positive is the minimum useful cheat, and at *k*=1 a
+verifier reading **20% of the index** still catches it only **18%** of the time.
+Spot-checking is not a substitute. **W4's conclusion survives this attack.**
+
 ## 3. Can it be made sublinear?
 Only by replacing it with an approximate-nearest-neighbour index — LSH, IVF,
 HNSW. That is a different data structure with a different contract:

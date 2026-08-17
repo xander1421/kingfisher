@@ -65,3 +65,14 @@ The cutoff is still chosen by an oracle reading `truth`, because a fixed cutoff 
 - `per_check` measured 0.40 ns/row here against 1.29 on synthetic — different arrays, different cache behaviour — and the attacker's finding that this constant varies 2× run-to-run applies equally.
 - Single-threaded, pinned to cpu7, throttling not controlled for.
 - Entities share one space, so `(subj,obj)` clustering means something slightly different than it did on the synthetic graph.
+
+---
+
+## Caveat added by W4 / ATTACK cycle 8 (2026-08-17)
+The µs figures above are measured with an **oracle cutoff** that reads `truth`,
+and this document already says *"a fixed cutoff cannot reach recall 1.0 on a
+bundled store."* Taken together: **these timings correspond to a configuration no
+deployment can reach.** A deployable variant must use a fixed cutoff or top-N,
+both of which give an unmeasured recall — and S17 already measured a 0/100
+worst case on the exact scan. The timings are not wrong; their operating point
+is not deployable, and that was not stated here before.
