@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
-# v6, 2026-08-17. Nine defects fixed; each one had ended or could end a lane
+# v8, 2026-08-17. Eleven defects fixed; each one had ended or could end a lane
 # silently. Numbered so a stall can be diagnosed against this list. (7 and 8 are
 # numbered here by AGENT-1/H30; 7 is ATOM-3's self-detach, whose own rationale
 # block sits at the code and which was not in this list -- §12.7 asks a harness
@@ -293,8 +293,9 @@ unset KF_DETACHED KF_LOCK_OWNER
 export CALLSIGN
 LOG="loop_${CALLSIGN}.log"
 EXIT_MARK=".loop_exit.${CALLSIGN}"        # written by the hook, cleared only here
-BEAT=".heartbeat.${CALLSIGN}"             # mtime = last turn start; watch this for staleness
+BEAT=".heartbeat.${CALLSIGN}"             # refreshed every BEAT_EVERY s WHILE a turn runs
 MAX_TURN=${MAX_TURN:-3600}                # seconds before a turn is called wedged
+BEAT_EVERY=${BEAT_EVERY:-30}              # heartbeat refresh interval (H48)
 command -v claude >/dev/null || { echo "claude CLI not found"; exit 1; }
 
 # BRIEF_FILE is set and REQUIRED above the detach (defect 8), because a refusal
@@ -344,8 +345,34 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
       kill -TERM "$turn" 2>/dev/null
     fi ) &
   dog=$!
+  # 11. THE HEARTBEAT MARKED A TURN BOUNDARY, NOT A LIVE PROCESS (v8, 2026-08-17,
+  #     H48, ATTACKER-1). Renumbered 10 -> 11 by `grep -nE '^# [0-9]+\.'` and not by
+  #     eye: AGENT-1's roster block took 10 in v7 while this was being written,
+  #     which is the numbering race this header already records for defect 9. `date +%s > "$BEAT"` above fires once, at turn START, so
+  #     a lane in a long turn is byte-for-byte indistinguishable from a dead one.
+  #     MEASURED at 14:02:49, not argued: AGENT-1 2257s stale, AGENT-2 2256s,
+  #     ATTACKER-1 2255s, ATOM-3 949s — and in the three minutes 14:00:17-14:02:57
+  #     FOUR DISTINCT ATOMS committed, including the lane reading 2255s. So three
+  #     of four lanes looked 37 minutes dead while all of them were working.
+  #
+  #     That is fatal for the thing the file exists for. `MAX_TURN` is 3600, so an
+  #     alarm built on this beat has a FALSE-POSITIVE FLOOR OF ONE TURN LENGTH,
+  #     and raising its threshold past 3600s to avoid that recreates the exact
+  #     complaint H6 exists to fix — "a lane dead for an hour is currently
+  #     silent". Family A: the instrument cannot produce the answer the alarm
+  #     needs. `spikes/harness/bringup.sh:178` already reads this file as
+  #     `now - cat`, and it was the only reader when this was found.
+  #
+  #     The beat now tracks the PROCESS. `kill -0 "$turn"` is the same handle the
+  #     watchdog above uses, so a stale beat once again means a stalled lane and
+  #     nothing else. Deliberately NOT a trap: a trap covers a clean exit and
+  #     misses SIGKILL and the watchdog's own pkill, which is the reasoning
+  #     defect 9 already recorded for the lock.
+  ( while kill -0 "$turn" 2>/dev/null; do date +%s > "$BEAT"; sleep "$BEAT_EVERY"; done ) &
+  beater=$!
   wait "$turn" 2>/dev/null
   kill -TERM "$dog" 2>/dev/null          # turn finished first: cancel the watchdog
+  kill -TERM "$beater" 2>/dev/null       # and stop beating for a turn that ended
   elapsed=$(( $(date +%s) - started ))
 
   # Terminal signal: a file the hook moved here, never a word in the transcript.

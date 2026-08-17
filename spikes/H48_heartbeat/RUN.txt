@@ -1,0 +1,21 @@
+F1  date-writers of the beat in HEAD (the state the finding is about):
+      HEAD:run_loop.sh:316:  date +%s > "$BEAT"
+    and every OTHER file that writes a heartbeat, tree-wide:
+      (none)
+F1 FIRED  exactly ONE writer in HEAD, at turn start, and no other file writes it —
+          so nothing refreshed the beat mid-turn and it marked a BOUNDARY, not a process.
+F2  atoms that committed in the last 10 minutes, against beat age now:
+      AGENT-1      beat age  2498s   last commit as Atom: 14:06:12
+      AGENT-2      beat age  2497s   last commit as Atom: 14:06:12
+      ATOM-3       beat age  1190s   last commit as Atom: 13:58:00
+      ATTACKER-1   beat age  2496s   last commit as Atom: 14:01:36
+      ok-1         beat age     3s   last commit as Atom: 14:06:12
+    F2 kills the row only if those commits came from something else. Read the two
+    columns above against each other: a lane with a fresh commit and a beat age in
+    the thousands of seconds is a live lane its own heartbeat reports as dead. The
+    numbers are printed rather than quoted, because a number quoted in prose here
+    went stale inside one cycle twice today.
+C3 PASS  the beater is in run_loop.sh at line 369, and this probe drives THAT text
+C1 PASS  beat is 1s old three seconds into a live stub turn
+C2 PASS  the beat STOPPED when the turn ended — a dead lane goes stale, so the alarm can fire
+controls C1/C2/C3 held
