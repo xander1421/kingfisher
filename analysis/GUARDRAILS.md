@@ -351,3 +351,25 @@ content hash and never by pointer.
 **Acceptance oracle, for any parallel component: N threads and 1 thread must
 produce an identical state hash.** If that test does not exist, the component is
 not known to be deterministic — it is merely untested.
+
+---
+
+### A12. When a design depends on something unmeasurable, price *removing the dependency* before pricing the measurement.
+
+Three descopes in a row, all the same move, and each time the replacement was
+already measured or free:
+
+| dependency | unmeasurable part | retired by |
+|---|---|---|
+| phone NPU | cross-vendor requantisation bit-exactness (grade E, never run) | **removal** — the CPU has `asimddp`+`i8mm` and does the kernel bit-exactly |
+| zkVM dispute path | a reproducible interpreter-state commitment (S68, RED, one contaminant still unidentified) | **quorum** — majority-of-3 needs only S57, which exists |
+| static ban list | decidability under `py-atom`'s runtime string resolution | **build** — unregistered ops are unreachable by any path |
+
+Each carried a component whose cost was unknown and whose necessity was assumed.
+In all three the honest answer to *"what would it cost to measure this?"* was
+larger than the answer to *"what would it cost to not need it?"*
+
+**Ask the second question first.** The ladder's first rung — *does this need to
+exist at all?* — applies to architecture, not only to code, and it has now paid
+three times running. The tell is a grade-D or grade-E claim sitting on the
+critical path: that is a design smell before it is an evidence problem.

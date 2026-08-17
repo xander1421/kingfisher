@@ -259,7 +259,44 @@ vote — but it degrades **silently**: three devices with three different libms
 could split 1-1-1, producing no majority at all, which reads as a *failed job*
 rather than as *detected nondeterminism*.
 
-**The static ban list is what prevents that, and it is enforcement at admission,
-not at adjudication.** A job containing `sin/cos/tan/asin/acos/atan-math`,
-`flip`, `&rng` or `reset-random-generator` must be rejected before scheduling.
-That check is now load-bearing on settlement, not merely on tidiness.
+**The ban list prevents that — but NOT by static analysis, which is undecidable
+here.** `python/hyperon/stdlib.py:139-140` resolves `py-atom` from a **runtime
+string**:
+```python
+name = str(path.get_object().content if isinstance(path, GroundedAtom) else path)
+obj  = find_py_obj(name, mod)
+```
+`!(py-atom math.sin)` returns Python's `math.sin` as a callable atom, and the
+path is a value the program can construct at runtime. **No analysis over the
+transitive import closure can see that.**
+
+**Enforce by build instead.** The banned operations are *registrations*, not
+language features: `grounded_op!(SinMathOp, "sin-math")` at
+`stdlib/math.rs:219`, registered at `:426`, with **zero `cfg(feature` in the
+entire file**. Not registered → not reachable, by any path, static or dynamic.
+And S63 already established the equivalence class is **the binary**, so pinning
+the binary hash pins the ban list. One field does both jobs.
+
+Three things follow:
+- **There is no checker to write**, no closure to compute, and no
+  dynamic-dispatch hole.
+- **The failure mode becomes the right one.** A program naming an unregistered
+  symbol fails identically on every honest device, so majority-of-quorum
+  resolves cleanly instead of splitting 1-1-1. That is the
+  `RESULT_FUEL_EXHAUSTED` pattern from `hyperjob.proto`: make the failure a
+  **deterministic result that is agreed and payable**, not an error requiring
+  adjudication.
+- **The verifier never analyses the program.** It compares the envelope's binary
+  hash against an approved build — one comparison, and the same field Tier B
+  needs anyway.
+
+Cost: dropping the Python bindings is free (the device build is already
+`--no-default-features`). Dropping `sin-math` needs an upstream
+`#[cfg(feature = ...)]` around the registration — the same shape as the M0.2 ask
+already in the backlog for `builtin_mods/json.rs`, so it is a second instance of
+a request upstream has independent reason to want: a genuinely minimal build.
+
+If a job class ever legitimately needs transcendentals, S59 named the
+alternative: **ship a software libm** so every device runs one implementation.
+That converts them from banned to Tier-A-with-a-pinned-implementation — a build
+decision again, not an analysis one.
