@@ -173,8 +173,15 @@ def repo_state(path):
     # gate that is permanently red is allow_dirty=True, which voids it. Scoping
     # keeps the check honest -- each declared dep is checked against its own
     # subtree, and a spike that depends on a shared module must name it.
-    dirty = _run(['git', 'status', '--porcelain', '--', '.'], cwd=path)
-    diff = _run(['git', 'diff', 'HEAD', '--', '.'], cwd=path)
+    # Same two exclusions the staleness half already applies (see excl_spec):
+    # certify WRITES provenance.json into the spike dir, so without excluding it
+    # every certify dirtied the subtree it had just scoped the check to and the
+    # next run refused -- a gate that poisons itself on second use. *.md is
+    # excluded for the reason given above: a writeup edit does not change what
+    # was built, and the writeup is authored AFTER certify passes.
+    _spec = ['--', '.', ':(exclude)provenance.json', ':(exclude)*.md']
+    dirty = _run(['git', 'status', '--porcelain'] + _spec, cwd=path)
+    diff = _run(['git', 'diff', 'HEAD'] + _spec, cwd=path)
     return {
         'path': path,
         'head': head,
