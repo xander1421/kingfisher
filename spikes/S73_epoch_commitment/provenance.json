@@ -1,47 +1,18 @@
 {
  "spike": "S73_epoch_commitment",
- "recorded_utc": "2026-08-17T09:56:41Z",
- "note": "S73 canonical space state at an epoch boundary; fold-forward delta proofs, XOR null shown forgeable",
+ "recorded_utc": "2026-08-17T10:16:08Z",
+ "note": "S73 canonical space state at an epoch boundary; fold-forward delta proofs, XOR null shown forgeable. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/../S57_hyperon_corpus",
-   "head": "261f0f670bfd41316fe3a8688ca6b7169122aad0",
+   "head": "68207b9828e0b76d3e5ee458bef7958a2a31356e",
    "clean": false,
    "dirty_files": [
-    "claude/hooks/loop_gate.sh",
-    ".loop_blocks.unknown",
-    ".loop_exit.unknown",
-    ".loop_signal.last",
-    "CHANNEL.md",
-    "CLAUDE.md",
-    "DECISIONS.log",
-    "MISSION_LOOP.md",
-    "WORK_QUEUE.md",
-    "run_loop.sh",
-    "spikes/G24_population/RUN.txt",
-    "spikes/G24_population/evo.py",
-    "spikes/G26_budget/RUN.txt",
-    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MainActivity.java",
-    "spikes/M1_1_android/app/src/main/java/net/kingfisher/MettaWorker.java",
-    "spikes/M1_1_android/app/src/main/java/net/kingfisher/Transport.java",
-    "spikes/M1_7_transport/result_app.json",
-    "spikes/M1_7_transport/run_app.py",
-    "spikes/M1_8_quorum3/worker_app.py",
-    "spikes/S73_epoch_commitment/provenance.json",
-    "spikes/W2_witnessed_trie/trie_witness.py",
-    "spikes/harness/test_loop_gate.sh",
-    "STOP",
-    "prompts/",
-    "spikes/G24_population/RUN_v2.txt",
-    "spikes/G24_population/evo_v2.json",
-    "spikes/G26_budget/runs/sel_r30_o40.json",
-    "spikes/G26_budget/runs/sel_r45_o160.json",
-    "spikes/G26_budget/runs/sel_r45_o40.json",
-    "spikes/W2_witnessed_trie/attack.json",
-    "spikes/W2_witnessed_trie/attack.py"
+    "pikes/G25_carrying_capacity/analyse.py",
+    "spikes/S73_epoch_commitment/epoch.py"
    ],
-   "diff_sha256": "50f71577a340ac1730a02a4865e93dc95da3a454618cd0bea1e51afd4b9abcfb",
-   "diff_bytes": 62259
+   "diff_sha256": "055de9a7f5abe62f9598bb0dfdf860da87c3577c446095dc81e9a87c45d089ed",
+   "diff_bytes": 7361
   }
  ],
  "manifests": {
@@ -54,15 +25,19 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/epoch.py",
-   "sha256": "2c5958c26275e68f92649b842232dcc1825afbc863d0b41a94d77aa7c4699d62",
-   "bytes": 30907,
-   "mtime": 1786960141
+   "sha256": "4c660c09d2b4f830c687b29e0d93f2da82169b4c00f47fe700084ea89423a876",
+   "bytes": 32184,
+   "mtime": 1786961764,
+   "compared_ts": 1786961764,
+   "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/epoch.json",
    "sha256": "96cd720f34700e02504d6754a6729b746e31edd65d936cd07a334a5f48cea80c",
    "bytes": 27907,
-   "mtime": 1786960601
+   "mtime": 1786961768,
+   "compared_ts": 1786960155,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -239,7 +214,7 @@
    }
   }
  ],
- "no_deps_reason": "",
+ "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S73_epoch_commitment/../S57_hyperon_corpus": {
    "newest": 1786923851,
@@ -247,5 +222,6 @@
   }
  },
  "problems": [],
- "ok": true
+ "ok": true,
+ "falsifier": "Exhibit an epoch delta this verifier folds to the prover's new root while the added atom set differs from the one it declares -- that refutes the delta proof. Or: show two epoch groupings of one atom set reaching different roots, which refutes it as a state commitment at all."
 }

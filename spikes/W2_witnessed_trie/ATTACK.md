@@ -164,3 +164,97 @@ line rather than a silent edit, per its own P3.
   `pathmap` itself, which is the falsifier W2 already names.
 - **`node_hash`'s collision resistance is assumed**, not tested — it is SHA-256 in
   a length-prefixed encoding, and no attack here tries to break that.
+
+---
+
+# ATTACK cycle 8 — the loop and the harness (MISSION_LOOP §12.8)
+
+**Verdict: the Stop hook's repo-root registration could not resolve, its own
+22-check suite could not have noticed, and I had never read `CLAUDE.md`. Three
+findings, all in the machinery rather than in a result.**
+
+## A7 — the hook registration did not resolve · CONFIRMED, fixed
+
+`.claude/settings.json` registered the Stop hook as:
+
+```
+"command": "$CLAUDE_PROJECT_DIR/.claude/hooks/loop_gate.sh"
+```
+
+`CLAUDE_PROJECT_DIR` is **unset** in this session, and the sibling
+`spikes/S51_multicore/.claude/settings.json` already pins the absolute path.
+Mechanically, per §12.4:
+
+| file | expands to | exists |
+|---|---|---|
+| `.claude/settings.json` | `$CLAUDE_PROJECT_DIR/.claude/hooks/loop_gate.sh` (unexpanded) | **False** |
+| `spikes/S51_multicore/.claude/settings.json` | `/Users/…/kingfisher/.claude/hooks/loop_gate.sh` | True |
+
+**This is §12.2 exactly: the S51 fix pinned the path at one site and left the
+repo-root registration — the one a session started at the repo root loads — on an
+env var.** Fix-the-site-not-the-class, in the very file whose header documents
+having been bitten by it.
+
+*Honest scope:* Claude Code may inject `CLAUDE_PROJECT_DIR` into the hook's own
+environment even though it is absent from a Bash tool's env, so this is
+"unresolvable from any environment observable here", not "proven never to have
+fired". §12.4 settles it anyway — a reference that cannot be resolved mechanically
+is the defect, and pinning costs nothing. Fixed to match the sibling.
+
+## The suite could not have caught it · the sharper half
+
+`spikes/harness/test_loop_gate.sh` had **22 checks and every one invoked
+`loop_gate.sh` directly.** None tested whether anything *registers* it. So the
+suite reported all-green while the wiring was dead — the same shape as §14.4's
+earned lesson, where a 15-check suite passed over a defect because every check
+set `CALLSIGN` itself.
+
+Added a 23rd check: every `settings.json` under version control must register a
+command that resolves to an existing executable **without expanding any
+environment variable**. Verified it can fail — reintroducing the `$` form gives:
+
+```
+FAIL  reg .claude/settings.json resolves without env (want 'literal-path', got 'env-var-in-path')
+loop_gate.sh: 1 FAILED, 22 passed — the loop contract is not enforceable as written
+```
+
+and restoring the pin gives `23 checks pass`.
+
+## A8 — `run_loop.sh`'s cross-file claim · SURVIVES
+
+`loop_gate.sh` v3's header asserts the exit marker "lands in
+`.loop_exit.$CALLSIGN`, which only `run_loop.sh` clears." Resolved mechanically:
+the hook writes `EXIT_MARK=".loop_exit.${LANE}"`, and `run_loop.sh:26,41,74-79`
+declares, clears and reads it. The claim holds.
+
+## A9 — I had never read `CLAUDE.md` · CONFIRMED against myself
+
+`run_loop.sh:48` spawns each lane with *"Read CLAUDE.md, then MISSION_LOOP.md,
+then HANDOFF.md"*. My prompt named `MISSION_LOOP.md` and `HANDOFF.md` only, so I
+was not spawned by this launcher, and **I ran seven cycles without the file the
+repo calls "the one place a rule will actually be seen."** Two rules were being
+broken as a result:
+
+1. **`kfcheck.certify` is the entry point, not `provenance.record`.** Both my
+   spikes called `record` directly, so they ran families A and C and **skipped B
+   (instrument fiction) and E (the number is real, the model is wrong)** — and
+   declared no falsifier, which `certify` refuses outright. Both now certify
+   `ok: true` with a falsifier recorded.
+2. **`edits.anchored_replace`, not `str.replace`** — because `str.replace`
+   returns the string unchanged when the anchor is absent, and a silent no-op edit
+   shipped that way before. I used `str.replace` throughout. Audited all of this
+   session's document edits for stale strings left by a missed anchor: **0 hits
+   across six patterns.** They landed, but by luck in the cases where I omitted
+   the assert; the anchored form now used for the rest.
+
+**Family E fires on both spikes' scaling tables.** `units.check_affine` REFUSES an
+affine model on W2's auth-path points (adjacent slopes span **760%** of the 25%
+tolerance) and on S73's insert-proof points (**203%**). So both scaling
+statements are endpoint ratios over measured points, and **no rate may be fitted
+to either.** Recorded as changelog lines on both pages; no number changed.
+
+## And one §12.5 violation of my own
+`HANDOFF.md`'s NEXT 1 named "re-run W4 and commit its per-shape table", which
+cycle 6 had already recorded DONE — an item in a DONE list and a NEXT list at
+once, which is the defect §12.5 exists for and which costs a restarting agent a
+whole cycle. Replaced with the epoch-chain history binding S73 left open.

@@ -176,13 +176,11 @@ about. This is the honest state, not a regression.
   NEXT 1 (residency feedback) and NEXT 2 (M1.7 transport) were both already
   recorded DONE higher in this same file — a restarting agent reading them
   would have redone finished work. Old NEXT 3 retained as NEXT 3 below.
-- **NEXT 1**: **re-run W4 and commit its per-shape table.** The retro-fit left it
-  at 3/4, and the missing control is the one W4's own page calls *"the one that
-  matters"* — it ties the instrumented binary to S52's 0.2/1.0/8.8%. `rk_inst.c`
-  is committed and the measurement is a **read count, not a timing**, so it is
-  load-insensitive and runnable while `quiet.sh` refuses. This is the only one of
-  the three PARTIAL spikes that can be closed without the device gate: N1 and S72
-  need timings under a gate that is refusing.
+- **NEXT 1**: **history binding for the epoch chain.** S73 proved the root commits
+  to state and *not* to the path taken to it — two epoch groupings of one atom set
+  reach the same root. A `(root, delta)` chain hashed together is what makes an
+  epoch SEQUENCE evidence rather than a snapshot. Small, load-insensitive, and it
+  is the gap S73 named rather than papered over.
 - **NEXT 2**: **history binding for the epoch chain** — S73 proved the root
   commits to state and *not* to the path taken to it. A `(root, delta)` chain
   hashed together is what makes an epoch SEQUENCE evidence. Small, and it is the

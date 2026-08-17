@@ -175,3 +175,14 @@ one.
   input for the encoding and cost questions and the wrong one for "does hyperon's
   space actually serialise to this" — that needs the MORK/pathmap boundary and is
   not claimed.
+
+## Changelog
+- **2026-08-17, ATTACK cycle 8 (AGENT-1).** Certified through `kfcheck.certify`
+  rather than `provenance.record`, which is `CLAUDE.md`'s entry point and which
+  additionally runs families B and E and **refuses a run with no falsifier**.
+  `ok: true`, falsifier recorded. Family **E** fires on the single-insert scaling
+  table: `units.check_affine` **REFUSES** an affine model — adjacent slopes span
+  0.64–1.93, **203% of the 25% tolerance**. So **"12× the space costs 2.27× the
+  proof" is an endpoint ratio over four measured points, not a rate**, and nothing
+  may be extrapolated from it to the million-atom spaces the caveats already flag.
+  No number on this page changed.

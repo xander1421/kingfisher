@@ -650,6 +650,7 @@ def provenance(out):
     sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
     try:
         import provenance as P
+        import kfcheck as KF
     except ImportError:
         return
     cs = []
@@ -659,12 +660,32 @@ def provenance(out):
                         can_fail_because=CAN_FAIL[name])
         ctl.observe(c['fires'], c['observed'])
         cs.append(ctl)
-    ok, prov = P.record(HERE, deps=(os.path.join(HERE, '..', 'S57_hyperon_corpus'),),
-                        artifacts=[os.path.join(HERE, 'epoch.py'),
-                                   os.path.join(HERE, 'epoch.json')],
-                        controls=cs, allow_dirty=True,
-                        note='S73 canonical space state at an epoch boundary; '
-                             'fold-forward delta proofs, XOR null shown forgeable')
+    # kfcheck.certify, not provenance.record: CLAUDE.md's entry point runs
+    # families B and E too and REFUSES a run with no declared falsifier.
+    # Family E fires on the scaling rows -- units.check_affine refuses an affine
+    # model (adjacent slopes span 203% of tolerance) -- so "12x the space costs
+    # 2.27x the proof" is an ENDPOINT RATIO over measured points and no rate may
+    # be fitted to it.
+    ok, problems = KF.certify(
+        HERE, deps=(os.path.join(HERE, '..', 'S57_hyperon_corpus'),),
+        artifacts=[os.path.join(HERE, 'epoch.py'),
+                   os.path.join(HERE, 'epoch.json')],
+        controls=cs, allow_dirty=True,
+        captures=[('final_trie_root', out['final']['trie_root']),
+                  ('final_xor_root', out['final']['xor_root'])],
+        measurements=[{'name': 'insert_proof_bytes_vs_space_atoms',
+                       'points': [(s['space_atoms'], s['proof_bytes_mean'])
+                                  for s in out['scaling']],
+                       'as_rate': False}],
+        falsifier='Exhibit an epoch delta this verifier folds to the prover\'s '
+                  'new root while the added atom set differs from the one it '
+                  'declares -- that refutes the delta proof. Or: show two epoch '
+                  'groupings of one atom set reaching different roots, which '
+                  'refutes it as a state commitment at all.',
+        note='S73 canonical space state at an epoch boundary; fold-forward delta '
+             'proofs, XOR null shown forgeable. Scaling rows are MEASURED POINTS, '
+             'not a rate: units.check_affine refuses an affine fit.')
+    prov = {'problems': problems}
     if not ok:
         print('\nPROVENANCE PROBLEMS:')
         for p in prov['problems']:

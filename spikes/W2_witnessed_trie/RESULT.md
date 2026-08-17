@@ -193,3 +193,20 @@ eight are positive controls that establish detectability. Both are required.
   else.
 - Fixed-length 12-byte keys, so the "key ends at a non-terminal node"
   non-membership branch is implemented but **unexercised by this corpus**.
+
+## Changelog
+- **2026-08-17, ATTACK cycle 8 (AGENT-1).** Two corrections to how this spike was
+  *certified*, none to its numbers. (1) It called `provenance.record` directly for
+  four cycles; `CLAUDE.md`'s entry point is `kfcheck.certify`, which also runs
+  family **B** (instrument fiction) and family **E** (the number is real, the model
+  is wrong) and **refuses a run with no declared falsifier**. Now certified,
+  `ok: true`, falsifier recorded. (2) Family E fires on the scaling table:
+  `units.check_affine` **REFUSES** an affine model on those four points — adjacent
+  slopes span 0.00097–0.0083, **760% of the 25% tolerance**. So the rows are
+  *measured points*, the endpoint statement ("2.7× the path for 64× the shard") is
+  an endpoint ratio, and **no rate may be fitted to them**. The `0.05× shard`
+  figure carries its operating point in the table beside it, per
+  `units.ratio_with_operating_point`: it is `1 + path/answer` and moves with answer
+  size, which is why this page reports the path and answer bytes separately.
+  A soundness bug in `walk`/`prove_non_membership` was also fixed this cycle — see
+  `ATTACK.md`. Every published number is byte-identical after it.
