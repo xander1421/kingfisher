@@ -1,0 +1,18 @@
+binary   /Users/victorianikolenko/kingfisher/spikes/S30_speed_duel/bin/fuelrun.v2.host
+sha256   78d874f976748cb67ad1717995d6e8c57a84ed9b03cbb4b8ecca5b8f13290ed7
+host     arm64 Darwin
+
+C0  flip WITHOUT the import: 1 distinct hash(es) in 5   -> inert, as expected
+C0  flip WITH    the import: 2 distinct hash(es) in 20   -> ACTIVE
+C1  forced True branch  fuel = 1258
+C1  forced False branch fuel = 264
+C1  separation          = 994 fuel  -> the meter CAN see the branch
+C2  fixed program, 20 runs: fuel 1258(x20) 
+
+TREATMENT  !(if (flip) LONG 0), 20 runs
+  fuel   335(x13) 1329(x7) 
+  hash   29e06aec(x12) 91bd5b2c(x8) 
+
+ATTRIBUTION  bare import = 130,  import+flip = 204,  so (flip) costs 74
+             forced branches 1258 / 264  + 74  =  1332 / 338
+             -> compare against the two treatment fuel values above.
