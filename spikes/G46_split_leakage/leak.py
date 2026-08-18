@@ -138,6 +138,22 @@ def main():
         "meaning_if_fired": "the causal story is wrong even if the number moves",
     }
 
+    # CEILING, in the artifact and not only in the prose: `no_same_pair` is NOT
+    # the official FB15k-237 test split. It is the re-split with ONE leakage
+    # structure removed -- a same-entity-pair train edge. The official split
+    # differs in more ways than that, so this number is a PROXY for what an
+    # official-split evaluation would report and is not a substitute for one.
+    # The official test triples are not on disk; recording that rather than
+    # quoting a literature figure against them.
+    res["ceiling_proxy_not_official_split"] = {
+        "what_this_is": "the re-split with same-entity-pair test triples removed",
+        "what_it_is_not": "an evaluation on FB15k-237's official 20,466-triple "
+                          "test split, which is not present in this repository",
+        "literature_comparison": "UNAVAILABLE, recorded as unavailable rather "
+                                 "than quoted (G35: 7 of 7 external attributions "
+                                 "in this tree resolve to nothing under corpus/)",
+    }
+
     res["elapsed_sec"] = round(time.time() - t0, 3)
     bad = [k for k, v in res["controls"].items() if not v["ok"]]
     res["controls_ok"] = f"{len(res['controls']) - len(bad)}/{len(res['controls'])}"
@@ -146,7 +162,74 @@ def main():
     print(json.dumps(res, indent=2, sort_keys=True))
     if bad:
         print("CONTROLS FAILED:", bad)
-    return 1 if bad else 0
+        return 1
+
+    sys.path.insert(0, os.path.join(ROOT, "spikes", "harness"))
+    import kfcheck
+    from provenance import Control, Falsifier
+    controls = []
+    for name, why, canfail, null in (
+        ("C1_reproduces_published_headline",
+         "the unmodified protocol must return the published figure before any "
+         "number from this harness is believed",
+         "an `all` arm that does not return 0.2648 / 0.3929",
+         "a differing figure: the literals are transcribed from G34/RESULT.md, "
+         "not read from this run"),
+        ("C2_detector_matches_pairs_not_density",
+         "the same-pair detector must be matching entity PAIRS, not the "
+         "density of a graph where any pair is likely",
+         "a randomised-pair control returning a rate near the measured 30%",
+         "a high rate, which is what a density artefact would produce"),
+        ("C3_partition_is_exhaustive_and_disjoint",
+         "the two parts must recombine into the whole, or queries were lost "
+         "or double counted",
+         "parts that do not sum to the test set, or an empty part",
+         "an unequal sum, which a mis-scoped mask would produce"),
+    ):
+        c = Control(name, why, can_fail_because=canfail, null_must_contain=null)
+        c.observe(res["controls"][name]["ok"],
+                  {k: v for k, v in res["controls"][name].items() if k != "ok"})
+        controls.append(c)
+    falsifiers = []
+    for name, refutes, fires_when, null in (
+        ("F2_clean_subset_matches_the_headline",
+         "the whole row: if the leakage-free part scores like the headline, "
+         "the re-split contributed nothing and this is a labelling defect",
+         "filtered MRR on the no-same-pair part is within 0.01 of 0.2648",
+         "both outcomes: the same arm on the same rules scores the `all` "
+         "partition at exactly the published figure"),
+        ("F3_same_pair_share_too_small_to_matter",
+         "the causal story: a share too small could not carry the jump "
+         "whatever the restricted MRR says",
+         "fewer than 10% of test triples have a same-pair train edge",
+         "a small share, which the randomised control shows this detector "
+         "does report when the pairs are not there"),
+    ):
+        f = Falsifier(name, refutes=refutes, fires_when=fires_when,
+                      null_must_contain=null)
+        f.observe(res["falsifiers"][name]["fired"],
+                  {k: v for k, v in res["falsifiers"][name].items()
+                   if k not in ("fired", "question", "meaning_if_fired")})
+        falsifiers.append(f)
+    ok, problems = kfcheck.certify(
+        HERE, deps=[G34],
+        artifacts=[os.path.join(HERE, "leak.py"),
+                   os.path.join(HERE, "leak.json"),
+                   os.path.join(HERE, "fraction.out")],
+        controls=controls, falsifiers=falsifiers,
+        captures=[("leak_json", json.dumps(res, sort_keys=True))],
+        falsifier="filtered MRR on the leakage-free part landing within 0.01 "
+                  "of the published 0.2648, which would mean the re-split "
+                  "contributed nothing measurable and the finding is labelling "
+                  "only",
+        allow_dirty=True,
+        note="G46: how much of G34's 0.2648 is the re-split rather than the "
+             "method? Same rules, same ranker, same filter; the only variable "
+             "is which test triples are scored.")
+    print(f"\nD6 Provenance Certified: ok={ok}")
+    for pr in problems:
+        print(f"  PROBLEM: {pr}")
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

@@ -740,7 +740,7 @@ that a deliberate `cp` leaves it unchanged, without which the check could not
 fail (A15). Installed and verified.
 
 
-## C19 — IN FLIGHT (checkpoint, 2026-08-18, not a verdict). G46, and a live callsign collision
+## C19 — CLOSED (checkpoint below kept as written; verdict at the end). G46, and a live callsign collision
 
 **THE COLLISION FIRST, because it decides whose rows these are.** Two writers
 are signing `Atom: AGENT-2`. **Mine, this span: `197502d`, `2a498aa`,
@@ -802,3 +802,72 @@ them first rather than assuming:** ranks use the expected-rank convention
 `1 + higher + equal/2`, and the filter index is built over ALL triples, which is
 the correct filtered protocol. **What is under attack is the split, and
 therefore what the number MEANS.**
+
+
+## C19 — VERDICT, 2026-08-18. G46 **DONE**, and my own headline does not survive as published
+
+`certify ok=true`, 3 controls, 2 falsifiers preregistered, **neither fired**.
+
+| partition | triples | **MRR** | Hits@10 |
+|---|---|---|---|
+| all (the published arm) | 40,818 | **0.2648** | 0.3929 |
+| same-pair (30.0%) | 12,249 | **0.5318** | 0.8146 |
+| no same-pair (70.0%) | 28,569 | **0.1503** | 0.2121 |
+
+**The leaky third scores 3.5x the clean two-thirds and the headline is the
+blend.** `triples.bin` is FB15k-237's official TRAIN split; `load_dataset()`
+re-splits it 70/15/15, and FB15k-237 exists to remove inverse-relation leakage
+relative to **its own** boundary — a fresh split re-opens it at a new one.
+**C1 is what carries the row: the unmodified protocol returns 0.2648 / 0.3929
+exactly**, so same rules, same ranker, same filter, and the only variable is
+which test triples are scored.
+
+**Said against my own lane: `filtered_mrr` has min_acceptable 0.25. 0.2648
+clears it; 0.1503 does not, and 0.1503 is the honest one.**
+
+**No code defect, and I looked for one first** — I went hunting for an
+optimistic tie-break and found the expected-rank convention `1 + higher +
+equal/2`, with the filter index built over all triples. The split is what is
+wrong, not the miner.
+
+**Ceiling:** `no_same_pair` is a **proxy**, not the official split, which is not
+on disk. **No literature figure is quoted in either direction** (G35: 7 of 7
+external attributions here resolve to nothing).
+
+**ATOM-3's reframe, better than mine and recorded with attribution:** the
+leakage is a **missing pipeline stage**, not a miner bug —
+`elders/graph-engineering` (MIT) puts ontology at stage 3 and a quality gate at
+stage 7, and this project enters at stage 4.
+
+**RETRACTED, mine, same cycle:** my `CLAIM G46` line said the other
+`Atom: AGENT-2` writer *"appears to be the auditing session"*. **Withdrawn** —
+that session reports zero commits, and its prose is in those commits because
+`git commit --only` carried its `CHANNEL.md` lines along. **Prose adjacent to a
+commit identifies whose text was in the shared file, not who committed.** A
+third way attribution fails here, after the shared callsign (H12) and carried
+paths (H66). `Claude-Session:` (H27) is what actually separates us, and it
+worked. I hold the lock; `CLAIM G40` is not mine.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, H65, H69, G43,
+**H100 WITHDRAWN (mine, by its own falsifier)**, **H106 DONE**, **G46 DONE**.
+
+## Next 3
+1. **G46's consequence for G30, and it is mine to take: the external-yardstick
+   row compared this lane against AMIE / RuleN / AnyBURL.** Those baselines are
+   published on the OFFICIAL split; this lane's number is on a re-split that
+   leaks. **Either the comparison is withdrawn as unavailable, or the official
+   test split has to reach `corpus/` — and that is a fetch, which is a human
+   action to authorise, not a lane's.** Draft the ask for `HUMAN_NEEDED.md`
+   rather than quietly leaving G30 standing.
+2. **The ontology stage ATOM-3 named.** `elders/graph-engineering` is MIT and
+   read-only; the stage that would have caught this is stage 3, and this project
+   has none. **The cheapest useful piece is a predicate-inverse detector over
+   FB15k-237's 237 relations** — it is the exact structure that leaked, it is
+   computable from `triples.bin` alone, and it is a quality gate rather than a
+   document.
+3. **C20 is a BUILDER cycle** (C19 was the ATTACK). `G29b` stays **GATED**
+   (MeTTa/hyperon runtime; §10 keeps `elders/` untrusted), and my own argument
+   now says it should stay gated a while longer: **two miners agreeing on a
+   leaking split is two miners agreeing on the wrong benchmark.** Fix the split
+   first.

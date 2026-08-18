@@ -1,0 +1,162 @@
+{
+ "spike": "G46_split_leakage",
+ "recorded_utc": "2026-08-18T11:01:34Z",
+ "note": "G46: how much of G34's 0.2648 is the re-split rather than the method? Same rules, same ranker, same filter; the only variable is which test triples are scored.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
+   "head": "380a7335798b60d3af7068c00b9616bca086bd04",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G36_repro_g34/length1_constants.json"
+   ],
+   "diff_sha256": "d6798cea5ed28a8914d9bcc49f53d2312f3c584a811cf523949e4517c73a955f",
+   "diff_bytes": 2060
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G46_split_leakage/leak.py",
+   "sha256": "dd9bdfc59be6f68a29d51f52a4e8057a8d9ddd73e5bf4c5c75fcc5f96c5d1d08",
+   "bytes": 12017,
+   "mtime": 1787050801,
+   "compared_ts": 1787050801,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G46_split_leakage/leak.json",
+   "sha256": "4d3c8282a485c4b82921a69b3d3ab514d942a87b8a1cea164ca8573f5a264382",
+   "bytes": 3072,
+   "mtime": 1787050894,
+   "compared_ts": 1787050894,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G46_split_leakage/fraction.out",
+   "sha256": "ce9e020da460950e1b99a3fa227f5c92d73ba74a42592078a6417dfc5a67ac19",
+   "bytes": 313,
+   "mtime": 1787050619,
+   "compared_ts": 1787050750,
+   "compared_clock": "last-commit"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_reproduces_published_headline",
+   "must_fire_because": "the unmodified protocol must return the published figure before any number from this harness is believed",
+   "can_fail_because": "an `all` arm that does not return 0.2648 / 0.3929",
+   "null_must_contain": "a differing figure: the literals are transcribed from G34/RESULT.md, not read from this run",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "an `all` arm that does not return the published 0.2648 / 0.3929, which would mean this harness is not the instrument that produced them",
+    "mrr": 0.2648,
+    "hits10": 0.3929,
+    "published_mrr": 0.2648,
+    "published_hits10": 0.3929
+   }
+  },
+  {
+   "name": "C2_detector_matches_pairs_not_density",
+   "must_fire_because": "the same-pair detector must be matching entity PAIRS, not the density of a graph where any pair is likely",
+   "can_fail_because": "a randomised-pair control returning a rate near the measured 30%",
+   "null_must_contain": "a high rate, which is what a density artefact would produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a randomised-pair control returning a rate comparable to the measured 30%, which would mean the detector matches any pair at all",
+    "randomised_pair_hits": 34,
+    "randomised_pair_pct": 0.083
+   }
+  },
+  {
+   "name": "C3_partition_is_exhaustive_and_disjoint",
+   "must_fire_because": "the two parts must recombine into the whole, or queries were lost or double counted",
+   "can_fail_because": "parts that do not sum to the test set, or an empty part",
+   "null_must_contain": "an unequal sum, which a mis-scoped mask would produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the parts not summing to the whole",
+    "sum": 40818,
+    "test": 40818
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F2_clean_subset_matches_the_headline",
+   "must_fire_because": null,
+   "can_fail_because": "filtered MRR on the no-same-pair part is within 0.01 of 0.2648",
+   "null_must_contain": "both outcomes: the same arm on the same rules scores the `all` partition at exactly the published figure",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_all": 0.2648,
+    "mrr_same_pair": 0.5318,
+    "mrr_no_same_pair": 0.1503,
+    "drop_vs_published": 0.1145
+   },
+   "refutes": "the whole row: if the leakage-free part scores like the headline, the re-split contributed nothing and this is a labelling defect",
+   "fires_when": "filtered MRR on the no-same-pair part is within 0.01 of 0.2648",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_same_pair_share_too_small_to_matter",
+   "must_fire_because": null,
+   "can_fail_because": "fewer than 10% of test triples have a same-pair train edge",
+   "null_must_contain": "a small share, which the randomised control shows this detector does report when the pairs are not there",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "same_pair_pct": 30.01
+   },
+   "refutes": "the causal story: a share too small could not carry the jump whatever the restricted MRR says",
+   "fires_when": "fewer than 10% of test triples have a same-pair train edge",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "newest": 1787050131,
+   "from": "spikes/G36_repro_g34/length1_constants.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "filtered MRR on the leakage-free part landing within 0.01 of the published 0.2648, which would mean the re-split contributed nothing measurable and the finding is labelling only"
+}
