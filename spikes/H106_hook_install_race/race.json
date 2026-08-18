@@ -1,0 +1,74 @@
+{
+  "arms": {
+    "cp_run1": {
+      "execs": 1199,
+      "other_failures": 0,
+      "parse_failures": 19,
+      "sample_error": "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/a/live.sh: line 126: syntax error near unexpected token `('\n/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/a/live.sh: lin",
+      "writes": 60697
+    },
+    "cp_run2": {
+      "execs": 1219,
+      "other_failures": 0,
+      "parse_failures": 17,
+      "sample_error": "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/c/live.sh: line 126: syntax error near unexpected token `('\n/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/c/live.sh: lin",
+      "writes": 61529
+    },
+    "mv": {
+      "execs": 1207,
+      "other_failures": 0,
+      "parse_failures": 0,
+      "sample_error": null,
+      "writes": 27669
+    }
+  },
+  "ceiling_arms_not_write_rate_matched": {
+    "cp_writes": 122226,
+    "mv_writes": 27669,
+    "why_it_does_not_rescue_mv": "rename(2) is atomic, so the mv arm's exposure window is zero at any write rate"
+  },
+  "controls": {
+    "C1_executor_actually_ran": {
+      "cp_run1_successes": 1180,
+      "cp_run2_successes": 1202,
+      "mv_successes": 1207,
+      "ok": true,
+      "what_would_fail_it": "an arm with zero successful parses, which would make a zero-failure verdict an executor that never executed (A15)"
+    },
+    "C2_writer_actually_wrote": {
+      "ok": true,
+      "what_would_fail_it": "an arm with zero writes, which would make the whole comparison a no-op",
+      "writes": {
+        "cp_run1": 60697,
+        "cp_run2": 61529,
+        "mv": 27669
+      }
+    },
+    "C3_cp_arm_reproduces_its_own_sign": {
+      "cp_run1_failures": 19,
+      "cp_run2_failures": 17,
+      "ok": true,
+      "what_would_fail_it": "the two cp runs disagreeing about whether failures occur at all, which would make the rate unreportable"
+    }
+  },
+  "controls_ok": "3/3",
+  "falsifiers": {
+    "F1_cp_never_produces_a_partial_read": {
+      "cp_failures": 36,
+      "fired": false,
+      "meaning_if_fired": "cp is effectively atomic here, the mechanism is wrong, and the observation is published with its cause unattributed",
+      "question": "can `cp` over a live script be observed as a partial read?",
+      "sample_error": "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/a/live.sh: line 126: syntax error near unexpected token `('\n/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/a/live.sh: lin"
+    },
+    "F2_mv_does_not_eliminate_it": {
+      "fired": false,
+      "meaning_if_fired": "the fix does not fix it and shipping it would be fiction",
+      "mv_failures": 0,
+      "question": "does the rename(2) installer bring the failure rate to 0?"
+    }
+  },
+  "seconds_per_arm": 6.0,
+  "source": "spikes/harness/pre-commit.hook",
+  "source_bytes": 13863,
+  "spike": "H106"
+}

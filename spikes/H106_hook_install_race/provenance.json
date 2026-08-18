@@ -1,0 +1,127 @@
+{
+ "spike": "H106_hook_install_race",
+ "recorded_utc": "2026-08-18T10:48:50Z",
+ "note": "H106: a shared executable replaced by an in-place truncating write. Both falsifiers survived; install_hooks.sh v3 ships the rename(2) installer and a deterministic inode selfcheck.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H106_hook_install_race/race.py",
+   "sha256": "9ba667cec96970aef8773b3f3ef707d9c04bb1c15a8b44c02c14d1a349f171b2",
+   "bytes": 10682,
+   "mtime": 1787050112
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H106_hook_install_race/race.json",
+   "sha256": "9ffdc731e2965f0b1862d78f7306004d2290cccd68c6647001fcc1ab06d1e5ee",
+   "bytes": 2875,
+   "mtime": 1787050130
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_executor_actually_ran",
+   "must_fire_because": "each arm must be shown to have parsed the script successfully many times, or a zero-failure arm is an executor that never executed",
+   "can_fail_because": "an arm with zero successful parses",
+   "null_must_contain": "successes and failures both, which the cp arms produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "an arm with zero successful parses, which would make a zero-failure verdict an executor that never executed (A15)",
+    "cp_run1_successes": 1180,
+    "mv_successes": 1207,
+    "cp_run2_successes": 1202
+   }
+  },
+  {
+   "name": "C2_writer_actually_wrote",
+   "must_fire_because": "each arm must be shown to have rewritten the live file, or the comparison is a no-op",
+   "can_fail_because": "an arm with zero writes",
+   "null_must_contain": "a non-zero write count under both installers",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "an arm with zero writes, which would make the whole comparison a no-op",
+    "writes": {
+     "cp_run1": 60697,
+     "mv": 27669,
+     "cp_run2": 61529
+    }
+   }
+  },
+  {
+   "name": "C3_cp_arm_reproduces_its_own_sign",
+   "must_fire_because": "two independent cp runs must agree on whether failures occur at all, or the effect is not reportable",
+   "can_fail_because": "one cp run failing and the other not",
+   "null_must_contain": "both signs: an arm is free to come out at zero",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the two cp runs disagreeing about whether failures occur at all, which would make the rate unreportable",
+    "cp_run1_failures": 19,
+    "cp_run2_failures": 17
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_cp_never_produces_a_partial_read",
+   "must_fire_because": null,
+   "can_fail_because": "the cp arms produce zero parse failures across every execution",
+   "null_must_contain": "zero failures, which the mv arm demonstrates this harness can report",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "cp_failures": 36,
+    "sample_error": "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/a/live.sh: line 126: syntax error near unexpected token `('\n/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/h106__sgbev_b/a/live.sh: lin"
+   },
+   "refutes": "the mechanism: if cp is effectively atomic here, the observed refusal has another cause and is published unattributed",
+   "fires_when": "the cp arms produce zero parse failures across every execution",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_mv_does_not_eliminate_it",
+   "must_fire_because": null,
+   "can_fail_because": "the mv arm produces one or more parse failures",
+   "null_must_contain": "failures, which the cp arms show the same executor does report",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mv_failures": 0
+   },
+   "refutes": "the fix: a rename(2) installer that still fails is fiction",
+   "fires_when": "the mv arm produces one or more parse failures",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "the payload is this repo's own pre-commit.hook, read at run time and recorded by size; there is no generated input directory",
+ "problems": [],
+ "ok": true,
+ "falsifier": "zero parse failures in the cp arms, which would mean cp is effectively atomic on this filesystem and the live refusal that opened this row has some other cause"
+}

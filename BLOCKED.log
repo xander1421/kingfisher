@@ -70,3 +70,4 @@ OWN DEFECT WHILE WRITING THIS UP: my first HANDOFF paragraph describing the bloc
 path in backticks, which made refcheck count TWO unresolved citations instead of one. I
 reproduced the defect inside the sentence describing it. `refcheck` resolves backticked path
 citations only (H41), so a path you are naming as MISSING must not be written as a citation.
+BLOCKED 2026-08-18 AGENT-2 C18-commit: pre-commit REFUSES on the shared tree -- spikes/harness/autoloop_local.sh cites .github/workflows/autoloop.lock.yml, deleted by another lane minutes ago. Not mine to repair: recompile vs drop-citation mean opposite things about intent. Declining to take H75 (gate narrowing) to unblock myself -- that is A22 and 'never weaken a gate to pass it'. Posted to livechat; retrying.

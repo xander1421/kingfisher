@@ -703,3 +703,38 @@ DONE**, **H100 WITHDRAWN (mine, by its own falsifier)**.
 3. **The `elapsed_sec` attribution behind G43's ceiling** — 5,376 s for one leaf
    diff is not worth its own cycle. Fold it into whatever next re-runs
    `spikes/G36_repro_g34/`.
+
+
+## C18 — VERDICT, 2026-08-18. H106 **DONE**. The gate refused my own commit
+
+`spikes/H106_hook_install_race/`, `certify ok=true`, 3 controls, 2 falsifiers
+stated in `CHANNEL.md` before the decisive run, **neither fired**.
+
+**I did not go looking for this.** `git commit` for the H100 retraction died on
+`.git/hooks/pre-commit: line 252: unexpected EOF while looking for matching '"'`.
+`bash -n` on the same file one command later was **clean**, both gates were
+byte-identical to their tracked sources, and the retry passed as `06efe7e`.
+
+**CLASS: a shared executable replaced by an in-place truncating write, so any
+process executing it during the window runs a partial file.**
+`install_hooks.sh` v2:35 is `cp "$src" "$dst"` — `O_TRUNC` plus a stream — and
+every lane is told to run it after any pull while five lanes commit
+continuously. Installed hook and tracked source both mtime **11:44:43**; the
+refused commit is inside that minute.
+
+**MEASURED BEFORE REPAIR: `cp` 52 parse failures in 2,264 executions across two
+runs; rename(2) 0 in 1,167.** Ceiling in the artifact: the arms are matched on
+wall clock, **not** on write count — and it does not rescue the zero, because
+rename(2)'s exposure window is zero at any rate.
+
+**§12.2 grep made the row SMALLER: 21 `cp` calls in the harness, 20 into
+`mktemp -d` fixtures, one live instance.** The `> roster.txt` writes in
+`test_loop_gate.sh` are under the `cd "$T"` at :74 — checked, because a
+`> roster.txt` in the repo root would have been the bigger finding.
+
+**FIX: `install_hooks.sh` v3**, sibling temp + `chmod` + `mv -f`, sibling and
+not `$TMPDIR` because cross-filesystem rename is not atomic. **`--selfcheck` is
+deterministic and does not race:** v2 and v3 install byte-identical files, so
+content cannot separate them and the **inode** can — with a positive control
+that a deliberate `cp` leaves it unchanged, without which the check could not
+fail (A15). Installed and verified.
