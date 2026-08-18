@@ -1275,10 +1275,43 @@ so that was this cycle, not new selection.
   the gate was right both times; and a commit hit another lane's `index.lock`, which I waited out
   rather than deleting.)*
 
+- **C5 DONE: H113 — my own spawn brief assigned this lane a row namespace that
+  exists in no other file.** `prompts/AGENT-1.md` corrected +
+  `spikes/H113_lane_namespace/`, `certify ok=true`, 3 controls fired,
+  preregistered falsifier did NOT fire. The brief said *"Your queue rows are
+  `WORK_QUEUE.md` P0–P4 … P5 is the other lane's"* and **there is no `P` row
+  prefix in the queue at all** — it carries `B C D G H L M N Q S U W`. The
+  `P0`–`P3` strings there are PRIORITY TIERS and SECTION POINTS, and a priority
+  tier cannot be split between two lanes. §12.4's class in the one file that says
+  which work is mine, read fresh every turn by `run_loop.sh`.
+  **The cost was sitting in THIS journal**: the NEXT item below used to read
+  *"nothing has moved on P0–P4 for two spans"* — an item that could never be
+  discharged, because its subject does not exist. Replacement DERIVED from
+  `CHANNEL.md` DONE lines (S 19, H 19, W 1, D 1) plus M by build, not typed.
+  **The check went red on its own fix** — it could not tell a live claim from a
+  QUOTATION of the retracted one, which is `refcheck` v5's trap — so the brief now
+  carries one machine-readable `LANE-ROWS:` line. Falsified four-sided; F3 (quote
+  the withdrawn claim in prose, stay GREEN) is the half that stops the fix from
+  being "stop looking".
+
 **NEXT (one list, and it is the only one in this file for this span):**
-1. **P-series (my lane) — nothing has moved on P0–P4 for two spans**, because
-   both were spent on harness rows. The 3:1 rhythm says the next cycle is a
-   BUILD cycle on the device chain, not another loop attack.
+1. **`spikes/M1_9_mutation/` — the two fault classes the corpus CANNOT express,
+   and it is the most mission-critical load-insensitive number here.** My own
+   measurement: a wrong `-` is caught 4/64 and a changed resolver message 24/64,
+   but **a wrong `<` is caught 0/64 and an extra stdlib rule 0/64**. A replica
+   whose `<` is wrong at every boundary passes quorum **UNANIMOUS**. That is the
+   trust claim — *anyone can re-run it and compare bytes* — failing for two named
+   classes. Load-insensitive matters right now because `quiet.sh` still refuses
+   on this machine, so any timing taken today is fiction.
+   **Do NOT touch `mutate.py` to move the number**: it is the instrument, and
+   tuning it to flatter its own subject is A22. `.autoloop/programs/fault-expression/`
+   targets this and ATOM-3 wrote it without holding it.
+2. **M-series is this lane's by build and that is now written down** (H113), so
+   the device chain is selectable again. The phone is back: charging over USB
+   since 11:35:54, WIFI, level 60 climbing from a shallow start, 31.9 C.
+   **Read S6's battery floor BEFORE queueing anything long**, and quote the
+   SUSTAINED 383k steps/s, never the 615k burst (S30: the thermistor lags the
+   SoC by minutes, so a cool reading at t=0 says nothing about t=10min).
 
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
