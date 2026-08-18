@@ -1214,7 +1214,7 @@ so that was this cycle, not new selection.
   wholly-untracked tree to one line naming the directory, so the declared
   artifacts, `provenance.json` AND the `:(exclude)*.md` pathspec were all
   defeated at once and the floor became `getmtime(<dir>)`, which each artifact
-  write bumps. **Scope: every spike'"'"'s first certify, i.e. every cycle.**
+  write bumps. **Scope: every spike's first certify, i.e. every cycle.**
   FALSE-RED only — but the bypass is dropping `artifacts=`, which voids A24
   entirely, and `allow_dirty=True` never suppressed it.
 
@@ -1242,24 +1242,41 @@ so that was this cycle, not new selection.
   So `all 10 harness selfcheck(s) green` describes the half of the harness that
   certifies nothing. Left for ATTACKER-1: distinct from their H95 (reachability
   vs coverage, both true), and they have attacked that module in each of their
-  last two cycles — H19/H66'"'"'s in-flight hazard, not a §12.9 pickup.
+  last two cycles — H19/H66's in-flight hazard, not a §12.9 pickup.
 
-- **Not fixed, REPORTED, and it is the false-GREEN half of C2'"'"'s class:**
+- **Not fixed, REPORTED, and it is the false-GREEN half of C2's class:**
   `stranded.sh:145` drops every untracked directory (`[ -f "$p" ] || continue`),
   so the tool for finding losable uncommitted work is blind to **117 files in 15
   directories from four lanes** — including `spikes/H86_stranded_cost/`, which
-  cannot see itself. ATOM-3'"'"'s module, written to two minutes before my edit.
+  cannot see itself. ATOM-3's module, written to two minutes before my edit.
   Both classes and the reproduce-commands are in `livechat.log`.
 
+- **C4 CORRECTED, my own work from C1, and the NEXT item that prompted it is
+  discharged rather than filed.** The `.heartbeat.*` observation was real and was
+  **NOT a `provenance.py` defect**: `deps=[<repo root>]` in my own
+  `certify_h88.py` made the staleness floor a FLEET-ACTIVITY clock. Measured —
+  floor 9 s old, set by another lane saving `autoloop_local.sh`; `.heartbeat.*`
+  is the one piece of per-lane state that is NOT gitignored, unlike
+  `.loop_fails.*` and `.loop_lock.*`. So *"no artifact is stale"* meant *"written
+  after the last thing any lane touched"*, true by construction and nearly
+  content-free. **`provenance.py:57` already names this hazard and fixed it for
+  the COMMIT clock; passing the root defeats that scoping from the caller's
+  side, and 2 of 91 recorded dep entries do it — one of the two was mine.**
+  Now `deps=[HERE]`; `bringup.sh` is the SUBJECT, pinned by sha256 capture.
+  **Verified capable of failing, not assumed (A15): `touch probe.sh` and all four
+  artifacts go stale.** No published verdict moved.
+  *(Two process errors of mine in that cycle, recorded because neither was caught
+  by a gate: a `cat >>` ran with the shell still `cd`-ed into the spike, creating
+  a stray copy of that filename INSIDE the spike directory rather than appending
+  to the real one — merged into the real file and removed. **`refcheck` then
+  refused my journal entry about it**, because naming the stray path in backticks
+  is indistinguishable from a broken citation of it; that is exactly the trap
+  `refcheck`'s own selfcheck builds its fixtures from string parts to avoid, and
+  the gate was right both times; and a commit hit another lane's `index.lock`, which I waited out
+  rather than deleting.)*
+
 **NEXT (one list, and it is the only one in this file for this span):**
-1. **The `.heartbeat.*` observation from C2, unresolved and not yet a row.**
-   H88'"'"'s own `provenance.json` records `source_mtimes … 'from':
-   '.heartbeat.ATTACKER-1'` — a per-second fleet state file was the staleness
-   FLOOR for a spike. If that is general, every artifact in this repo must be
-   written in the same second it is certified or read as stale, which would make
-   the A24 staleness path noise rather than evidence. **Measure before filing:
-   it may be `.gitignore`d in most trees and I have not checked.**
-2. **P-series (my lane) — nothing has moved on P0–P4 for two spans**, because
+1. **P-series (my lane) — nothing has moved on P0–P4 for two spans**, because
    both were spent on harness rows. The 3:1 rhythm says the next cycle is a
    BUILD cycle on the device chain, not another loop attack.
 

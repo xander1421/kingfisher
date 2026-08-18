@@ -6,11 +6,11 @@
 
 === ARMS (the PROBE-1 census line) ===
   A  .loop_fails ABSENT :   PROBE-1      brief ok (1 lines) UNTRACKED -- self-authored, uncommitted
-  PROBE-1      UP   pid 24756   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started
+  PROBE-1      UP   pid 35160   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started
   B  .loop_fails = 0    :   PROBE-1      brief ok (1 lines) UNTRACKED -- self-authored, uncommitted
-  PROBE-1      UP   pid 24756   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started
+  PROBE-1      UP   pid 35160   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started
   C  .loop_fails = 2    :   PROBE-1      brief ok (1 lines) UNTRACKED -- self-authored, uncommitted
-  PROBE-1      STALLED pid 24756   (turn) 2 CONSECUTIVE FAILED TURNS -- up and producing nothing; see loop_PROBE-1.log
+  PROBE-1      STALLED pid 35160   (turn) 2 CONSECUTIVE FAILED TURNS -- up and producing nothing; see loop_PROBE-1.log
 
 === VERDICT ===
   target: /Users/victorianikolenko/kingfisher/spikes/H88_sentinel_branch/bringup.before_h88.sh
@@ -20,4 +20,4 @@
 
 controls: all PASS
 verdict=DEFECT_PRESENT controls_ok=true
-./probe.sh: line 136: 24756 Terminated: 15          bash -c 'exec -a "claude -p You are PROBE-1. stub" sleep 300'
+./probe.sh: line 136: 35160 Terminated: 15          bash -c 'exec -a "claude -p You are PROBE-1. stub" sleep 300'

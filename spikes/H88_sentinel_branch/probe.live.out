@@ -6,11 +6,11 @@
 
 === ARMS (the PROBE-1 census line) ===
   A  .loop_fails ABSENT :   PROBE-1      brief ok (1 lines) UNTRACKED -- self-authored, uncommitted
-  PROBE-1      UP   pid 24985   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  PROBE-1      UP   pid 35380   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
   B  .loop_fails = 0    :   PROBE-1      brief ok (1 lines) UNTRACKED -- self-authored, uncommitted
-  PROBE-1      UP   pid 24985   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started
+  PROBE-1      UP   pid 35380   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started
   C  .loop_fails = 2    :   PROBE-1      brief ok (1 lines) UNTRACKED -- self-authored, uncommitted
-  PROBE-1      STALLED pid 24985   (turn) 2 CONSECUTIVE FAILED TURNS -- up and producing nothing; see loop_PROBE-1.log
+  PROBE-1      STALLED pid 35380   (turn) 2 CONSECUTIVE FAILED TURNS -- up and producing nothing; see loop_PROBE-1.log
 
 === VERDICT ===
   target: /Users/victorianikolenko/kingfisher/bringup.sh
@@ -18,4 +18,4 @@
 
 controls: all PASS
 verdict=DEFECT_ABSENT controls_ok=true
-./probe.sh: line 136: 24985 Terminated: 15          bash -c 'exec -a "claude -p You are PROBE-1. stub" sleep 300'
+./probe.sh: line 136: 35380 Terminated: 15          bash -c 'exec -a "claude -p You are PROBE-1. stub" sleep 300'
