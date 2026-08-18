@@ -1,0 +1,11 @@
+$ python3 spikes/harness/recordloss.py --commit 10ed3f2
+recordloss REFUSES 10ed3f2:
+  HANDOFF.ok-1.md
+      LOST  ## Cycle 10
+      LOST  ## Cycle 11
+      LOST  ## Cycle 8
+      LOST  ## Cycle 9
+A completed record present in the previous revision is absent in this
+one (H94). If the removal is deliberate, say so in the commit message
+and use: git commit --no-verify
+rc=1

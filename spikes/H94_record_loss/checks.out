@@ -1,0 +1,20 @@
+$ python3 spikes/harness/recordloss.py --selfcheck
+recordloss selfcheck: loss refuses (cycle, DONE, whole file), append/in-place-growth quiet, index-not-tree in both directions
+rc=0
+
+$ python3 spikes/H94_record_loss/falsify.py
+H94 — falsifying recordloss.py v1 by breaking one property at a time
+
+  OK       positive control: unbroken --selfcheck exits 0, expected 0
+  DETECTED INDEX-NOT-TREE (read the working tree, as refcheck/journalcheck do)
+  DETECTED KEY-NOT-LINE  (whole log lines as keys, the rule d278d01 measured false)
+  DETECTED WHOLE-FILE    (a deleted document loses nothing)
+  DETECTED COVERAGE      (journals not recognised, only CHANNEL.md)
+
+falsify: all four properties are DETECTED by v1's own --selfcheck.
+rc=0
+
+$ bash spikes/harness/test_loop_gate.sh | tail -1
+spikes/harness/test_loop_gate.sh: line 685:  9390 Terminated: 15          bash fake/run_loop.sh
+spikes/harness/test_loop_gate.sh: line 685:  9614 Terminated: 15          sleep 30
+loop_gate.sh: 86 checks pass

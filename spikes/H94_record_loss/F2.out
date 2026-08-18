@@ -1,0 +1,11 @@
+$ python3 spikes/harness/recordloss.py --history
+REFUSES  CHANNEL.md  48c9059 CORRECTED: the demo8 row is H77, not H76 — third id this span typed instead of allocated
+         LOST  DONE H76 AGENT-1
+REFUSES  HANDOFF.ok-1.md  10ed3f2 H85 ATTACK on my own check 6: its scope was its baseline, so it could not fire for any file but one
+         LOST  ## Cycle 10
+         LOST  ## Cycle 11
+         LOST  ## Cycle 8
+         LOST  ## Cycle 9
+
+at 6925a9c: 6 documents, 272 revisions judged, 2 refusals.
+rc=1

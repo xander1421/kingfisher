@@ -1,0 +1,108 @@
+{
+ "spike": "H94_record_loss",
+ "recorded_utc": "2026-08-18T10:45:22Z",
+ "note": "H94 \u2014 a completed record must not leave an append-mostly document. Tree is dirty with four other lanes' in-flight work; the artifacts above are hashed, which is what pins this run.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness/recordloss.py",
+   "sha256": "a075e272aac21106c27657db73cb5c0827b3acd43b5a70752a97e7728a369886",
+   "bytes": 15593,
+   "mtime": 1787049883
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H94_record_loss/falsify.py",
+   "sha256": "fc20ef8bb9162f85a3e22afe884249c669e90c143275c10425c176ae61686823",
+   "bytes": 5251,
+   "mtime": 1787049386
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H94_record_loss/F1.out",
+   "sha256": "cb0df4364d4db13d5711780e6452545dff0a58df8e4cdc7472307dd49698c80b",
+   "bytes": 373,
+   "mtime": 1787049401
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H94_record_loss/F2.out",
+   "sha256": "e02ed8667aa526fa33a026830f9ca27a990815db6fe0528a0d944d209c482711",
+   "bytes": 494,
+   "mtime": 1787049429
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H94_record_loss/checks.out",
+   "sha256": "f2f7dc1f03debb74d5b4f8b4c550f122ca20d8d65552b5d1769291079e73922b",
+   "bytes": 733,
+   "mtime": 1787049434
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "f1_sees_its_own_defect",
+   "must_fire_because": "replaying 10ed3f2 must refuse and name the four lost cycles",
+   "can_fail_because": "recordloss returns 0 on 10ed3f2 \u2014 a check that cannot see the commit it was written for",
+   "null_must_contain": "the four `## Cycle` keys deleted by that commit",
+   "fired": true,
+   "detail": "10ed3f2: 4 keys lost",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "## Cycle 10",
+    "## Cycle 11",
+    "## Cycle 8",
+    "## Cycle 9"
+   ]
+  },
+  {
+   "name": "f2_no_backlog",
+   "must_fire_because": "every committed revision of every covered document, replayed",
+   "can_fail_because": "a third refusal, or either of the two failing to name a record that a reader agrees left the file",
+   "null_must_contain": "a refusal on a revision that loses no record",
+   "fired": true,
+   "detail": "270 revisions judged, 2 refusals",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "48c9059 CHANNEL.md",
+    "10ed3f2 HANDOFF.ok-1.md"
+   ]
+  },
+  {
+   "name": "f3_inplace_rewrite_quiet",
+   "must_fire_because": "a CLAIM line rewritten in place and grown must not refuse",
+   "can_fail_because": "recordloss refuses a477a74, which would make this rule the false-positive one ATOM-3 already measured",
+   "null_must_contain": "a refusal on a476/a477-style in-place growth",
+   "fired": true,
+   "detail": "line-level rule would fire on 2 of 137 CHANNEL revisions; key rule on 1",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "a477a74"
+   ]
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": "no external repo: the subject is this repo's own history",
+ "problems": [],
+ "ok": true,
+ "falsifier": "If replaying 10ed3f2 did not refuse, the check cannot see the defect it was built for and the row is withdrawn. If the history replay refused on a revision that lost no record, the rule is a checker everyone learns to ignore (H14) and it narrows or dies.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

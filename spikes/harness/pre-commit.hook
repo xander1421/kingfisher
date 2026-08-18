@@ -1,5 +1,25 @@
 #!/bin/sh
-# pre-commit.hook v2 — 2026-08-17. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35).
+# pre-commit.hook v3 — 2026-08-17. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35);
+# v3 ok-1 (H94).
+#
+# ==== v3, H94 — the defect removed ==========================================
+# CLASS: A COMPLETED RECORD CAN LEAVE AN APPEND-MOSTLY DOCUMENT AND EVERY GATE
+# IN THIS REPO STAYS GREEN. Commit `10ed3f2` deleted 177 lines and four whole
+# `## Cycle` entries from `HANDOFF.ok-1.md` -- its author's own evidence for
+# four cycles -- and passed all three checks below, plus `commit-msg`, CLEAN.
+# None of them looks at what a commit REMOVES.
+#
+# Added: `spikes/harness/recordloss.py`. It compares HEAD's blob against the
+# INDEX blob for the paths in the commit, so unlike the two document checkers
+# above it is not a function of the shared tree and cannot be tripped by another
+# lane's uncommitted edit (H72). Replaying every committed revision of the five
+# journals and CHANNEL.md finds 2 refusals, both read and both real -- so it is
+# added with no backlog, which is the H14 condition this header sets for adding
+# anything here. The revision count is deliberately not quoted: it grows with
+# the history, and `python3 spikes/harness/recordloss.py --history` prints it
+# next to the HEAD it was taken at.
+# Cites: file:MISSION_LOOP.md "12.3"
+# ===========================================================================
 #
 # ==== v2, AND IT IS A CORRECTION AGAINST v1's HEADER (§12.7) ================
 # DEFECT REMOVED: THE GATE JUDGED THE WORKING TREE WHILE SAYING IT JUDGED THE
@@ -125,7 +145,8 @@ cd "$(git rev-parse --show-toplevel)"
 
 CHECKS='spikes/harness/refcheck.py
 spikes/harness/journalcheck.py
-spikes/harness/githygiene.py'
+spikes/harness/githygiene.py
+spikes/harness/recordloss.py'
 
 # Paths this commit carries whose WORKING-TREE copy is not the copy being
 # committed. While that set is empty the tree-based verdict below is exactly the

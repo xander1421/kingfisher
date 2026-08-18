@@ -436,6 +436,44 @@ for g in commit-msg pre-commit; do
   fi
 done
 
+# --- WHAT THE INSTALLED GATE ACTUALLY RUNS. ok-1, H94.
+# The drift block above proves the installed gate is the reviewed gate. It says
+# nothing about whether the checks that gate NAMES can run, and `pre-commit.hook`
+# is fail-open by design on an absent checker -- "a broken clone, not a
+# violation". So a renamed or moved module silently converts a gate into a
+# SKIP line, and the hook still exits 0. That is H30's class (a missing input
+# degrades a mechanism to a no-op while it still reports success) sitting in the
+# only enforcing gate this repo has, and nothing in this suite looked at it.
+# Read out of the INSTALLED copy, not the source: the enforced list is the one
+# that matters, and the two can differ for exactly as long as a reinstall is
+# forgotten.
+installed_pc="$hookdir/pre-commit"
+if [ -r "$installed_pc" ]; then
+  pc_checks=$(sed -n "/^CHECKS='/,/'\$/p" "$installed_pc" | sed "s/^CHECKS='//; s/'\$//")
+  n_missing=0; n_checks=0
+  for c in $pc_checks; do
+    # Only path-shaped tokens: if the CHECKS block's terminating quote ever moves,
+    # the sed range runs on into the body and the loop would otherwise report
+    # every word of the hook as a missing check.
+    case "$c" in */*.py) ;; *) continue ;; esac
+    n_checks=$((n_checks+1))
+    [ -f "$ROOT/$c" ] || { n_missing=$((n_missing+1)); printf '  info  gate names a check that is not there: %s\n' "$c"; }
+  done
+  check "every check the installed pre-commit names EXISTS (else it SKIPs, green)" \
+        "$n_missing" "0"
+  [ "$n_checks" -ge 4 ] && ok "the installed pre-commit runs $n_checks checks" \
+    || bad "the installed pre-commit runs $n_checks checks (want >= 4)"
+  # H94 by name: the record-loss gate is the one whose absence is invisible --
+  # it fires only on a commit that REMOVES a completed record, so an inert copy
+  # looks exactly like a fleet that never lost one.
+  case "$pc_checks" in
+    *recordloss.py*) ok "the record-loss gate (H94) is wired into pre-commit" ;;
+    *) bad "the record-loss gate (H94) is NOT wired into pre-commit" ;;
+  esac
+else
+  bad "no installed pre-commit to read a CHECKS list from (sh spikes/harness/install_hooks.sh)"
+fi
+
 # --- THE COMMIT GATE MUST REFUSE ANOTHER LANE'S FILES. ATTACKER-1, H19.
 # Three lanes share one git index and `git commit` takes the index, not your
 # adds, so a correctly-scoped `git add` by one lane lands in the next lane's
