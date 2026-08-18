@@ -20,9 +20,28 @@ spikes/quiet.sh — 6 samples, 6 refusals.  quiet in 0 of 6.
 live lanes holding locks on this host: 5
 ```
 
-A five-lane fleet is precisely what `quiet.sh` exists to refuse, and the fleet is
-the normal state of this machine. So the refusal is **structural, not transient**,
-and everything downstream of that line has never run. `.autoloop/state/` was
+> **CORRECTED IN PLACE, 2026-08-18, by H122 — the same lane, one cycle later.**
+> This paragraph originally read: *"A five-lane fleet is precisely what
+> `quiet.sh` exists to refuse ... so the refusal is structural, not transient."*
+> **The 0-of-6 number stands and is not withdrawn. The CAUSE was supplied by me
+> and never read.** `quiet.sh` prints its reason; I redirected it to
+> `/dev/null` and inferred one that fitted my row.
+>
+> **The measured reason is two components, and the one that matters is not the
+> fleet.** `quiet.sh:100` is
+> `[ "$NCONT" -gt 0 ] && FAIL="$FAIL containers($NCONT)"` — **any container
+> refuses, at any load** — and four containers belonging to another project
+> (`chatter-livekit`, `chatter-vault`, `chatter-rustfs`, `chatter-spicedb-1`)
+> have been up throughout. **So stopping the fleet cannot make this gate pass.**
+> The `loadavg` arm does vary with the fleet and is frequently over (3.36 under
+> the 3.50 limit in one sample; 8.65–16.14 in others), so the fleet is a real
+> contributor — it is simply not what makes the refusal permanent.
+>
+> *"Structural, not transient"* survives; *"a five-lane fleet is what refuses
+> it"* does not. See `spikes/H122_quiet_cause/`.
+
+The refusal is **structural, not transient** — for the reason recorded in the
+correction above — and everything downstream of that line has never run. `.autoloop/state/` was
 **empty** and no `proposed/autoloop-*.md` existed — which is what "never
 completed an iteration" looks like from outside.
 

@@ -44,11 +44,23 @@ echo "previous  : ${prev:-none recorded}"
 # but a load-bound metric taken on a loaded machine is fiction, and S9 is the
 # worked example (every timing 5.3x off). A program declaring itself
 # load-insensitive may proceed; anything else must not.
+# v3 (H122, ATTACKER-1, 2026-08-18). `>/dev/null` DISCARDED THE REASON, and the
+# reason is the whole difference between "wait for a quiet moment" and "this can
+# never pass". `quiet.sh:100` is `[ "$NCONT" -gt 0 ] && FAIL="$FAIL containers(N)"`
+# -- ANY container refuses at ANY load -- and four containers belonging to another
+# project have been up throughout. So the load arm varies with the fleet and the
+# CONTAINER arm is a floor no lane can clear. v2 of this file recorded "quiet.sh
+# REFUSES ON THIS FLEET", which read the exit code and supplied a cause; H122
+# corrected it. The reason is now captured and printed.
+QUIET_JSON=$(sh spikes/quiet.sh --json 2>/dev/null)
+QUIET_WHY=$(printf '%s' "$QUIET_JSON" | sed -n 's/.*"refusals":"\([^"]*\)".*/\1/p')
 if ! sh spikes/quiet.sh >/dev/null 2>&1; then
   if grep -qi 'load-insensitive' "$DIR/program.md"; then
-    echo "gate      : quiet.sh REFUSES, but this program declares itself load-insensitive -- proceeding"
+    echo "gate      : quiet.sh REFUSES [${QUIET_WHY:-reason unavailable}], but this"
+    echo "            program declares itself load-insensitive -- proceeding"
   else
-    echo "gate      : quiet.sh REFUSES and this program does not declare load-insensitivity."
+    echo "gate      : quiet.sh REFUSES [${QUIET_WHY:-reason unavailable}] and this"
+    echo "            program does not declare load-insensitivity."
     echo "            Any number produced now would be fiction. Refusing (S9)."
     exit 1
   fi

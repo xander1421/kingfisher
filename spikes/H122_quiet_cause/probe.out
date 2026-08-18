@@ -1,0 +1,52 @@
+=== F1 — the reason, per sample (n=8) ===
+  1: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  2: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  3: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  4: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  5: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  6: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  7: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  8: rc=1 reason=loadavg(10.17>3.50) containers(4) loadavg=10.17
+  limit=3.50 on 14 cores; live lanes: 5
+
+=== F2 — whose containers are they? ===
+  chatter-livekit	livekit/livekit-server:latest
+  chatter-vault	hashicorp/vault:latest
+  chatter-rustfs	rustfs/rustfs:latest
+  chatter-spicedb-1	authzed/spicedb:latest
+  named in this repo (grep, excluding this spike):
+    chatter-livekit          referenced in 1 repo file(s)
+    chatter-vault            referenced in 1 repo file(s)
+    chatter-rustfs           referenced in 1 repo file(s)
+    chatter-spicedb-1        referenced in 1 repo file(s)
+
+=== F3 — who else has recorded a REASON, and is it dated? ===
+  spikes/S76_interned_keys/intern.py:390:             'timings, so the result is valid while quiet.sh refuses.')
+  spikes/S84_verify_cost/verifycost.py:24:`spikes/quiet.sh` REFUSES on this host (loadavg 55.96 against a 3.50 limit, 4
+  spikes/S84_verify_cost/verifycost.py:445:        'wall_us_reason': 'spikes/quiet.sh REFUSES on this host (loadavg 55.96 vs '
+  spikes/harness/autoloop_local.sh:49:    echo "gate      : quiet.sh REFUSES, but this program declares itself load-insensitive -- proceeding"
+  spikes/harness/autoloop_local.sh:51:    echo "gate      : quiet.sh REFUSES and this program does not declare load-insensitivity."
+  spikes/harness/autoloop_local.sh:93:# quiet.sh REFUSES ON THIS FLEET IN 0-OF-6 SAMPLES WITH 5 LANES LIVE.
+  spikes/harness/retrofit_d6.py:121:                  'same table is NOT valid (quiet.sh refused) and is not used'}
+  spikes/harness/bringup.sh:247:    note WARN "quiet.sh REFUSES — no load-bound measurement is valid; lanes must"
+  spikes/S24_range_crossover/range_crossover.py:22:That matters here: `spikes/quiet.sh` REFUSES on this host and has all day, so a
+  spikes/S26_cheat_attribution/cheat_attr.py:25:`quiet.sh` refuses on this host anyway.
+  spikes/S77_proof_bytes/measure.py:306:             'timings, so valid while quiet.sh refuses.')
+  spikes/H86_stranded_cost/certify_h86.py:193:        'wall_reason': 'spikes/quiet.sh REFUSES on this host (loadavg 6.86 vs '
+
+=== F4 — does quiet.sh already emit the reason machine-readably? ===
+  --json support in source: 4 mention(s)
+  {"quiet":false,"loadavg":11.27,"limit":3.50,"ncores":14,"containers":4,"container_names":"chatter-livekit chatter-vault chatter-rustfs chatter-spicedb-1","top3":"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python(100.0%) /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared(48.2%) /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared(44.5%) ","cpu_speed_limit":null,"refusals":"loadavg(11.27>3.50) containers(4)"}
+
+  callers that read only the EXIT CODE (>/dev/null, discarding the reason):
+    spikes/H116_inert_loop/probe.sh:18:  sh spikes/quiet.sh >/dev/null 2>&1
+    spikes/harness/autoloop_local.sh:47:if ! sh spikes/quiet.sh >/dev/null 2>&1; then
+    spikes/harness/bringup.sh:244:  if sh spikes/quiet.sh >/dev/null 2>&1; then
+
+=== THE SEPARATION — which component is unclearable? ===
+  load=11.27  plain=[loadavg(11.27>3.50) containers(4)]  containers-allowed=[loadavg(11.27>3.50)]
+  load=11.27  plain=[loadavg(11.27>3.50) containers(4)]  containers-allowed=[loadavg(11.27>3.50)]
+  load=11.81  plain=[loadavg(11.81>3.50) containers(4)]  containers-allowed=[loadavg(11.81>3.50)]
+  load=11.81  plain=[loadavg(11.81>3.50) containers(4)]  containers-allowed=[loadavg(11.81>3.50)]
+  load=12.54  plain=[loadavg(12.54>3.50) containers(4)]  containers-allowed=[loadavg(12.54>3.50)]
+  load=12.54  plain=[loadavg(12.54>3.50) containers(4)]  containers-allowed=[loadavg(12.54>3.50)]

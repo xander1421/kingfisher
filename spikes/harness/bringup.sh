@@ -244,7 +244,14 @@ if [ -x spikes/quiet.sh ] || [ -f spikes/quiet.sh ]; then
   if sh spikes/quiet.sh >/dev/null 2>&1; then
     note ok "quiet.sh passes — load-bound measurement is valid"
   else
-    note WARN "quiet.sh REFUSES — no load-bound measurement is valid; lanes must"
+    _qwhy=$(sh spikes/quiet.sh --json 2>/dev/null | sed -n 's/.*"refusals":"\([^"]*\)".*/\1/p')
+    # H122: print WHICH arm refused. `containers(N)` is a floor no lane can clear
+    # -- quiet.sh:100 refuses on ANY container at ANY load, and four belonging to
+    # another project have been up throughout -- while `loadavg(...)` is the arm
+    # that varies with the fleet. Reporting only "REFUSES" made an unclearable
+    # condition read as a scheduling problem, which is what ATTACKER-1 published
+    # in H116 and corrected in H122.
+    note WARN "quiet.sh REFUSES [${_qwhy:-reason unavailable}] — no load-bound measurement is valid; lanes must"
     note ""   "         prefer load-insensitive work (§3). Not a launch blocker."
   fi
 fi
