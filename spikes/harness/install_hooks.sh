@@ -94,7 +94,14 @@ if [ "$1" = "--selfcheck" ]; then
   exit "$fail"
 fi
 
-for h in commit-msg pre-commit; do
+# v4 (H115, ATTACKER-1, 2026-08-18) adds `pre-push`, and adds it to the LIST
+# rather than beside it -- which is the extension point v2's header wrote down
+# after v1 installed one gate and left the next one tracked, reviewed and
+# installed nowhere. THE DEFECT IT CLOSES IS NOT IN THIS FILE: `.git/hooks/` held
+# two gates, both refusing at COMMIT time, while §11's rail is crossed at PUSH
+# time -- and `git remote -v` began resolving on 2026-08-18, so the rail stopped
+# being safe by accident. See `spikes/H115_push_rail/`.
+for h in commit-msg pre-commit pre-push; do
   src="spikes/harness/$h.hook"
   dst="$(git rev-parse --git-path hooks)/$h"
   [ -f "$src" ] || { echo "install_hooks: no $src"; exit 1; }

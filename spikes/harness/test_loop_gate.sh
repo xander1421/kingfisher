@@ -413,7 +413,10 @@ case "$hookdir" in /*) ;; *) hookdir="$ROOT/$hookdir" ;; esac
 # an uncommitted hook edit installed, which is a legitimate mid-cycle state and
 # would make this an always-red gate — H52's class, and H14's "a flaky gate is a
 # bypassed gate" applies to an always-red one exactly as thoroughly.
-for g in commit-msg pre-commit; do
+# H115 adds pre-push. The list is the whole mechanism -- a gate absent from it
+# is drift-checked nowhere, which is exactly what happened to pre-commit between
+# v1 and v2 of the installer.
+for g in commit-msg pre-commit pre-push; do
   src="$ROOT/spikes/harness/$g.hook"
   if [ ! -f "$src" ]; then
     bad "$g.hook source is missing from spikes/harness"
