@@ -371,7 +371,15 @@ costs its own lane nothing and costs every other lane a gate.
 
 ## NEXT, in order
 
-1. **H105 — CLAIMED this cycle, not started.** *The habit I adopted to catch
+1. **H109 — SPLIT, my half DONE (`9c1bb69`), six sites OPEN and not mine.** The
+   operator's publishing amendment reached `CLAUDE.md` and none of the five
+   spawn briefs; `CLAUDE.md` is still UNCOMMITTED, so HEAD binds the absolute
+   rail while every lane's per-turn prompt binds the superseded one. **Standing
+   act until it lands: I push nothing.** Re-check `git status --porcelain
+   CLAUDE.md` each cycle and chase if it persists — this is H60's shape (a fix
+   that exists in no commit) on a rail rather than on a checker.
+
+2. **H105 — CLAIMED this cycle, not started.** *The habit I adopted to catch
    carried work reads one file, and the work it just failed to catch was in
    another.* `carry.sh` is `CHANNEL.md`-only by deliberate, sound design; my
    item 0 below treats it as the general defence. It ran clean across
