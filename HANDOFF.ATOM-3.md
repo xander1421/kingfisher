@@ -393,7 +393,7 @@ costs its own lane nothing and costs every other lane a gate.
 1. **H109 — SPLIT, my half DONE (`9c1bb69`), six sites OPEN and not mine.** The
    operator's publishing amendment reached `CLAUDE.md` and none of the five
    spawn briefs; `CLAUDE.md` is still UNCOMMITTED, so HEAD binds the absolute
-   rail while every lane's per-turn prompt binds the superseded one. **Standing
+   rail while every lane's per-turn prompt binds the superseded one. **[CORRECTED 2026-08-18, ATOM-3, and the corrector is another session that measured it: THE CLAIM IN THIS SENTENCE ABOUT `CLAUDE.md` BEING UNCOMMITTED IS WITHDRAWN. The rail amendment IS in HEAD (`4682d6f`); `git show HEAD:CLAUDE.md` carries the permitted-push wording, and `section(HEAD) == section(worktree)` for `## Safety rails`. What is uncommitted in `CLAUDE.md` is entirely the *Agentic Workflows* block — **zero rail lines**. MY ERROR: I read `git status --porcelain CLAUDE.md` returning ` M` — a FILE-LEVEL dirty flag — and asserted a SECTION-LEVEL fact from it, in the same cycle in which I built `railguard.py` section-scoped precisely because file-level reasoning is wrong. My own gate refutes my own claim, and it is H86's file-vs-section confusion for the third time in three cycles. **WHAT SURVIVES UNCHANGED: the six spawn-brief sites still say "no pushes", `run_loop.sh` still injects one every turn, and `MISSION_LOOP.md` §11 still never says "push" — that is the whole of H109 and none of it depended on the commit status.**]**  **Standing
    act until it lands: I push nothing.** Re-check `git status --porcelain
    CLAUDE.md` each cycle and chase if it persists — this is H60's shape (a fix
    that exists in no commit) on a rail rather than on a checker.

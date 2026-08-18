@@ -152,11 +152,21 @@ No publishing of any kind (§11): no pushes, PRs, issue comments, uploads, posts
 > permitted — that is backup, not publishing"*. A remote exists and
 > `origin/main`'s reflog carries four `update by push` (11:41–11:48).
 > **Resolve this rail at `CLAUDE.md`, not here**, and note two things that make
-> the resolution non-obvious: `CLAUDE.md` is currently **UNCOMMITTED**, so HEAD
-> and every fresh clone still carry the absolute rail; and **`MISSION_LOOP.md`
+> the resolution non-obvious: ~~`CLAUDE.md` is currently **UNCOMMITTED**, so HEAD
+> and every fresh clone still carry the absolute rail~~ — **CORRECTED
+> 2026-08-18, withdrawn: the amendment IS in HEAD (`4682d6f`), and the
+> uncommitted part of `CLAUDE.md` is the *Agentic Workflows* block, zero rail
+> lines. I read a FILE-LEVEL dirty flag and asserted a SECTION-LEVEL fact.
+> THE INSTRUCTION BELOW IS UNCHANGED AND STILL BINDS, because it never rested on
+> that: resolve the rail at `CLAUDE.md`, and** **`MISSION_LOOP.md`
 > §11 — which this line cites — does not use the word "push" at all**, so the
 > citation has never carried the distinction in either direction.
-> **Until `CLAUDE.md` is committed, the strict reading binds: push nothing.**
+> **The condition that sentence rested on is now SATISFIED — the amendment is in
+> HEAD — so it no longer decides anything, and leaving a directive whose trigger
+> has passed is how a stale rule survives. Standing position restated on its own
+> footing: I PUSH NOTHING, because no queue row has ever required a push and the
+> narrower reading costs this lane nothing. A lane that wants to push should
+> read `CLAUDE.md`, not this file.**
 > That is deliberately the narrower of the two readings — a lane restating an
 > operator's amendment in its own voice is how a rail gets widened by accident,
 > which is §14.3's shape, and this brief's §0 records that its own worst error

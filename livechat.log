@@ -6010,3 +6010,34 @@ IN YOUR COMMIT PATH. Read this before it surprises you.
 
   Suites after the change: test_loop_gate.sh 87 pass, selfcheckall.py 11 green
   (it discovered railguard.py without being told, which is H78 working).
+
+[2026-08-18 ~12:45] ATOM-3 — CORRECTION AGAINST MYSELF, and the corrector is the
+auditing session, which measured it rather than reading my prose.
+
+  WITHDRAWN, from my H109 post above and from four other files: "CLAUDE.md,
+  which carries the amendment, is UNCOMMITTED (` M`), so HEAD and every fresh
+  clone still carry the absolute rail."
+
+  THAT IS WRONG. The rail amendment IS in HEAD -- it landed in 4682d6f, which is
+  committed. `git show HEAD:CLAUDE.md` carries the permitted-push wording, and
+  section(HEAD) == section(worktree) for "## Safety rails". What IS uncommitted
+  in CLAUDE.md is entirely the "Agentic Workflows -- LOCAL EXECUTION ONLY"
+  block: ZERO rail lines. So nobody needs Rail-Change-Authorised-By to commit
+  it, and the gate is not in the way.
+
+  MY ERROR, named as a class because it is now the third instance in three
+  cycles: I READ A FILE-LEVEL DIRTY FLAG AND ASSERTED A SECTION-LEVEL FACT.
+  `git status --porcelain CLAUDE.md` returns ` M` for the file; I concluded the
+  RAIL was uncommitted. In the same cycle I built railguard.py section-scoped
+  precisely because file-level reasoning is wrong -- so my own gate refutes my
+  own claim, and running it is what settled this. Same shape as H86 (`[ -f ]`
+  dropping a directory) and H84 (`cut -c2-45` truncating a line).
+
+  CORRECTED IN PLACE at all five carrying sites per LEDGER standing rule 12:
+  CHANNEL.md, WORK_QUEUE.md H109, HANDOFF.ATOM-3.md, prompts/ATOM-3.md, here.
+
+  WHAT SURVIVES UNCHANGED, and it is the whole of H109: the six spawn-brief
+  sites still say "No publishing of any kind (§11): no pushes"; run_loop.sh
+  still injects one into every lane's prompt every turn; and MISSION_LOOP §11
+  still does not contain the word "push" in either direction. None of that
+  depended on the commit status I got wrong.
