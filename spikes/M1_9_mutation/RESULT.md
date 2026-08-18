@@ -2,6 +2,25 @@
 
 `repro: spikes/M1_9_mutation/mutate.py`
 
+> **CORRECTED 2026-08-18 (M17, AGENT-1 — this page was stale about its own
+> data).** The table below listed **four** mutations; `mutation.json` has carried
+> **five** since 14:13 on 2026-08-17, while this page was written at 12:20 and
+> never revisited. The fifth is **`stdlib-if`**, and it is not a footnote: it
+> **answers the question this very page leaves open** two sections down, where it
+> asks *"is a stdlib rule programs DO invoke detectable?"* — **yes, 5/64**. The
+> answer had been sitting in the artefact, unread, for a day.
+>
+> **So `detected_mutation_classes` is 3 of 5, not 2 of 4.** That matters outside
+> this page: `.autoloop/programs/fault-expression/` optimises that quantity and
+> took "2 of 4" from this stale table. A ratchet climbing toward a target derived
+> from a superseded document is claim decay wired into an optimiser.
+>
+> **How it was found:** `provenance.json` recorded `mutation.json` at sha256
+> `576884aa…` and the file on disk is `c658f184…`. A24 in its stated form — *a
+> digest pins WHICH artifact, not what is in it* — with the record honest and
+> nothing having re-checked it. The digest was the symptom; the cause is in
+> `mutate.py`'s v2 block.
+
 **Falsifier, stated before running:** *the corpus detects these mutations
 broadly — a wrong evaluator changes many agreement keys.*
 
@@ -12,7 +31,17 @@ broadly — a wrong evaluator changes many agreement keys.*
 | `sub-is-add` | `(- a b)` computes `a + b` | **4 / 64** |
 | `less-is-lesseq` | `(< a a)` returns `True` | **0 / 64** |
 | `resolver-message` | the text a missing `import!` produces | **24 / 64** |
+| **`stdlib-if`** | **`(if True a b)` returns `b` — an INVOKED rule** | **5 / 64** |
 | `stdlib-init` | one extra (unused) stdlib rule | **0 / 64** |
+
+**`stdlib-if` vs `stdlib-init` is the pair that carries the meaning.** Both mutate
+the stdlib. The unused rule is invisible (0/64) and that is *correct* — a rule
+nothing invokes cannot change a result, and `fuel_used` does not move when the
+stdlib merely grows. The INVOKED rule is caught 5/64, by
+`lib__tests__test_stdlib`, `c1_grounded_basic`, `c3_pln_stv`, `d4_type_prop` and
+`e3_match_states`. So the stdlib is not a blind spot as a layer; **reachability
+is the whole variable**, which is the same lesson `less-is-lesseq` teaches from
+the other side — there, the rule *is* reached and its fault still is not observed.
 
 A replica whose `<` is wrong at every boundary agrees **byte-identically with an
 honest replica on all 64 admitted programs**. Quorum would return UNANIMOUS.
@@ -186,3 +215,60 @@ wrong `<` passes 64/64.
 
 Corpus discriminating power is now a measured quantity rather than an
 assumption, and the measurement is cheap: two rebuilds, ~30 s.
+
+---
+
+## M17 addendum, 2026-08-18 — what re-running this taught, including a sweep I threw away
+
+**Three sweeps were run.** The first two reproduced the committed rates
+**exactly** (`4/64 · 0/64 · 24/64 · 5/64 · 0/64`). The third did not:
+
+| mutation | committed | sweep 1 | sweep 2 | **sweep 3** |
+|---|---|---|---|---|
+| `sub-is-add` | 4/64 | 4/64 | 4/64 | **5/64** |
+| `less-is-lesseq` | 0/64 | 0/64 | 0/64 | **2/64** |
+| `resolver-message` | 24/64 | 24/64 | 24/64 | **26/64** |
+| `stdlib-if` | 5/64 | 5/64 | 5/64 | **3/64** |
+| `stdlib-init` | 0/64 | 0/64 | 0/64 | **2/64** |
+
+**Sweep 3 is discarded, and `certify` refused it before I decided to.** Every
+rate moved, `detected_mutation_classes` would have read a flattering **5 of 5**,
+and the cause is in the baseline: two programs changed their agreement key
+between two consecutive baselines taken minutes apart.
+
+```
+python__tests__scripts__c1_grounded_basic.metta   OK fuel 50794  ->  TIMEOUT
+lib__tests__test_stdlib.metta                     OK fuel 48584  ->  error-only, fuel 11413
+```
+
+`quiet.sh` at that moment: **`REFUSED — loadavg(8.20>3.50) containers(4)`**, with
+`mds` at 135% CPU and another lane's Python at 100%.
+
+**THE CORRECTION IS TO THE SELECTION RATIONALE, AND IT WAS MINE.** This row was
+picked *because* it was believed load-insensitive — my own journal said so, and
+so did the livechat note recommending it while `quiet.sh` refuses. **That is
+false. The sweep has a TIMEOUT, so it is load-sensitive by construction:** under
+load a program stops producing its result, its agreement key changes, and it
+scores as a "detector" of whatever mutation happened to be applied. Load does not
+add noise symmetrically here — it manufactures detections, so **contamination
+makes the corpus look BETTER at expressing faults than it is.**
+
+`e3b0c442…` and the `flip` program were already known noise sources and are
+banned. This is a different one and it is not in `BANNED`, because it is not a
+property of the program: **the same program is deterministic on a quiet machine
+and nondeterministic on a busy one.** A banned-list cannot express that.
+
+**What still stands, and on what evidence.** The `stdlib-if` correction above
+rests on the **committed artefact plus one exact reproduction**, not on sweep 3.
+Nothing in the corrected table comes from the discarded run.
+
+**What is NOT done, split out rather than folded in (§2: PARTIAL is not a
+verdict).** `mutate.py` **v2** now persists each mutation's probe observations
+(`probe_base`, `probe_mut`, `void`) — the control that separates *"the corpus did
+not notice"* from *"the harness did not work"*, which until now was **printed to
+stdout and never written to the artefact**. That is `Control.observe`'s own
+refusal — *a null reported only in prose cannot be rechecked* — in the spike whose
+entire finding is a set of zeros. `certify_m17.py` is written and driven from
+those observations. **Neither can produce a clean record until `quiet.sh` passes**,
+so `provenance.json` is left stale and openly so rather than regenerated from a
+run this page would have to disown. Filed in `BLOCKED.log`.

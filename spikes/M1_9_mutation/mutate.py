@@ -251,9 +251,36 @@ def main():
             if after.get(n, {}).get('key') != b['key']:
                 caught[c][0] += 1
                 detectors.append(n)
+        # v2 (M17, 2026-08-18). DEFECT REMOVED: THE CONTROL THAT MAKES A ZERO
+        # MEANINGFUL WAS PRINTED AND NEVER PERSISTED. `probe` is described eleven
+        # lines up as "REQUIRED and is the control" -- the thing that separates
+        # "the corpus did not notice" (0/64, the finding) from "the harness did
+        # not work" (0/64, a fact about this script). It was written to STDOUT on
+        # the live path and stored in `results` only on the VOID path, so
+        # mutation.json carried the verdict for four of five mutations and the
+        # evidence for none of them. That is `Control.observe`'s own stated
+        # refusal -- "a null computed inline and reported in prose is
+        # unfalsifiable afterwards: nobody can recheck a number that exists only
+        # in a sentence" -- in the spike whose entire finding is a set of zeros,
+        # two of which are 0/64.
+        #
+        # HOW IT WAS FOUND, because it was not by reading this line: the spike's
+        # provenance.json recorded mutation.json at a sha256 that no longer
+        # matched the file, and regenerating the record was impossible because
+        # the control observations needed to re-observe the controls were not in
+        # the artefact. The stale digest was the symptom; this is the cause.
+        #
+        # ADDITIVE ON PURPOSE: `void`, `probe`, `probe_base`, `probe_mut` are new
+        # keys. No rate moves, no existing key changes shape, and nothing here
+        # touches what is measured -- the sweep that produced these numbers ran
+        # before and after this edit and reproduced every one of them exactly
+        # (4/64, 0/64, 24/64, 5/64, 0/64). Tuning this instrument to move its own
+        # number would be A22 and is not what this is.
         results[name] = {'desc': desc, 'by_class': caught, 'detectors': detectors,
                          'total': sum(v[0] for v in caught.values()),
-                         'n': sum(v[1] for v in caught.values())}
+                         'n': sum(v[1] for v in caught.values()),
+                         'void': False, 'probe': probe,
+                         'probe_base': base_probe, 'probe_mut': mut_probe}
         print(f'\n{name}: {desc}')
         for c in classes:
             d, t = caught[c]

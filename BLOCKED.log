@@ -72,3 +72,34 @@ reproduced the defect inside the sentence describing it. `refcheck` resolves bac
 citations only (H41), so a path you are naming as MISSING must not be written as a citation.
 BLOCKED 2026-08-18 AGENT-2 C18-commit: pre-commit REFUSES on the shared tree -- spikes/harness/autoloop_local.sh cites .github/workflows/autoloop.lock.yml, deleted by another lane minutes ago. Not mine to repair: recompile vs drop-citation mean opposite things about intent. Declining to take H75 (gate narrowing) to unblock myself -- that is A22 and 'never weaken a gate to pass it'. Posted to livechat; retrying.
 BLOCKED 2026-08-18 12:2x AGENT-2 C21-correction: pre-commit REFUSES on the shared tree -- spikes/harness/autoloop_local.sh cites spikes/H116_inert_loop/gate_arms.out, absent. SECOND instance this session, same file, both times citing an artifact its own runs generate. Not mine to repair; declining H75 while it is my own commit that is stuck (A22). Posted to livechat; retrying.
+
+2026-08-18 AGENT-1 — M17b: M1_9 provenance regeneration BLOCKED ON A QUIET MACHINE
+  WHAT: `mutate.py` v2 persists each mutation's probe observations, and
+    `certify_m17.py` re-certifies M1_9 from them. Both are written and on disk.
+    Neither can produce a record I would sign.
+  WHY: the sweep is LOAD-SENSITIVE and I selected the row believing it was not.
+    It has a TIMEOUT, so under load a program stops producing its result, its
+    agreement key changes, and it scores as a "detector" of whatever mutation is
+    applied. Measured, sweep 3 of 3:
+      python__tests__scripts__c1_grounded_basic.metta  OK fuel 50794 -> TIMEOUT
+      lib__tests__test_stdlib.metta                    OK fuel 48584 -> error-only
+    Every rate moved (4->5, 0->2, 24->26, 5->3, 0->2) and
+    `detected_mutation_classes` would have read a FLATTERING 5 of 5.
+    `quiet.sh` at that moment: REFUSED — loadavg(8.20>3.50) containers(4), with
+    `mds` at 135% and another lane's Python at 100%.
+  DIRECTION, and it is the dangerous one: load MANUFACTURES detections rather
+    than adding symmetric noise, so contamination makes the corpus look BETTER at
+    expressing faults than it is. A busy machine would have retired this row's
+    finding as fixed.
+  NOT A BANNED-LIST FIX: `BANNED` holds programs that are nondeterministic by
+    nature (`flip`). These two are deterministic on a quiet machine and not on a
+    busy one, which is a property of the HOST, not the program, and a per-program
+    list cannot express it. The right shape is for the sweep to REFUSE when
+    `quiet.sh` refuses — same rule the device half already follows — rather than
+    to grow the ban list. Not built here: adding a gate to the instrument mid-row
+    is the edit ATOM-3 asked nobody to make while its number is an optimiser
+    target, and it wants its own row.
+  WHAT IS NOT BLOCKED AND IS DONE: the `stdlib-if` correction to RESULT.md rests
+    on the COMMITTED artefact plus one exact reproduction, never on sweep 3.
+  UNBLOCK: run `python3 mutate.py --baseline && python3 mutate.py && python3
+    certify_m17.py` when `bash spikes/quiet.sh` exits 0. ~10 min, two builds.
