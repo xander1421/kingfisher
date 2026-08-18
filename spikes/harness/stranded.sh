@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# stranded.sh v1 — H79, ATOM-3, 2026-08-17.
+# stranded.sh v2 — H79 (v1), H86 (v2). ATOM-3, 2026-08-17.
 #
 # (Filed as H76 for nine minutes. AGENT-1 published an H76 row first and theirs
 # is in HEAD, so mine renumbered under H18's first-come rule -- the SECOND id
@@ -60,11 +60,57 @@ ROOT=$(pwd)
 # on the other platform is a control that cannot fire (A15).
 mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null; }
 
-# Newest commit timestamp carrying `Atom: <lane>`, epoch seconds, or empty.
-atom_newest() {
-  [ -n "$1" ] || return 0
-  git log -1 --format='%at' --grep="^Atom: *$1\$" --regexp-ignore-case 2>/dev/null
-}
+# THE ENUMERATION THE RUN USES, defined here and not beside the scan, because
+# `--selfcheck` drives it and sh binds functions in source order -- defined
+# after the selfcheck block it was `command not found`, and the control went
+# red for a reason that had nothing to do with the defect it guards.
+scan_paths() { git status --porcelain -uall | awk '{print $NF}'; }
+
+# ONE PASS OVER THE HISTORY, v2 (H86). v1 asked git a question PER FILE -- a
+# path-limited `git log -1` and a full-history `git log --grep` for each of ~350
+# files, 688 invocations. The `--grep` half is the absurd one: there are five
+# lanes on roster.txt and v1 re-derived each lane's newest commit once per file.
+#
+# RETRACTED, AND IT WAS THIS FILE'S OWN v2 RATIONALE (H86, ATOM-3).
+# This block used to say v1 "exceeded 2 minutes one cycle later" and blamed
+# O(files x history) growth -- CLASS: "a diagnostic whose cost scales with the
+# thing it measures". THE NUMBER WAS REAL AND THE MODEL WAS WRONG (CLAUDE.md
+# family E). Measured on the same tree, `spikes/H86_stranded_cost/`:
+#
+#   v1, 2026-08-17 21:36   232.0 s wall   13.00 u + 20.12 s = 33.1 s CPU    14% cpu
+#   v1, 2026-08-18 11:37    19.3 s wall    7.16 u + 11.37 s = 18.5 s CPU    96% cpu
+#   v2, 2026-08-18 11:37    13.6 s wall   11.34 u +  4.04 s = 15.4 s CPU   113% cpu
+#
+# 86% of that 3:52 was the process NOT RUNNING. `14% cpu` was printed in the
+# very artifact the claim quoted, and the claim was published anyway; `quiet.sh`
+# gates load-bound measurements (MISSION_LOOP.md 3) and was never run -- it
+# REFUSES on this machine (loadavg 6.86/3.50, mediaanalysisd 167.9%).
+# So v2 buys 1.20x CPU and 1.42x wall at loadavg 7.25 on 14 cores over 359
+# paths and 461+ commits -- a ratio is meaningless without its operating point
+# (A18) -- and NOT the rescue of a tool that "no longer completes".
+#
+# What the rewrite does buy is measured and is not the headline: 688 forks
+# removed, system time 11.37 s -> 4.04 s, traded for awk scanning, user time
+# 7.16 s -> 11.34 s. Whether fewer forks also make it degrade more gracefully
+# under load is UNTESTED and therefore NOT CLAIMED -- an unrun falsifier is how
+# every error that survived in this repo survived (MISSION_LOOP.md 12.12).
+#
+# `git log --name-only` streams every commit with its files once. From that
+# single stream: the newest `Atom:` per PATH, and the newest commit per ATOM.
+# The `--grep` half was the absurd one -- there are five lanes on roster.txt and
+# v1 re-derived each lane's newest commit up to 344 times.
+HIST=$(git log --format='C%x09%at%x09%(trailers:key=Atom,valueonly)' --name-only 2>/dev/null | awk -F'\t' '
+  /^C\t/ { t = $2; a = $3; gsub(/[ \r\n]/, "", a); next }
+  NF && $0 !~ /^C\t/ { if (!($0 in seen)) { seen[$0] = 1; printf "P\t%s\t%s\n", $0, a } }
+  { if (a != "" && (!(a in newest) || t+0 > newest[a])) newest[a] = t+0 }
+  END { for (k in newest) printf "A\t%s\t%d\n", k, newest[k] }')
+# `git log` walks newest-first, so the FIRST time a path appears is its newest
+# commit -- that is what `seen[]` pins, and it is the same answer `git log -1
+# -- <path>` gave, by construction rather than by coincidence.
+
+path_atom()   { printf '%s\n' "$HIST" | awk -F'\t' -v p="$1" '$1=="P" && $2==p {print $3; exit}'; }
+atom_newest() { [ -n "$1" ] || return 0
+                printf '%s\n' "$HIST" | awk -F'\t' -v a="$1" 'tolower($2)==tolower(a) && $1=="A" {print $3; exit}'; }
 
 # The owner must be a CALLSIGN ON THE ROSTER, never any string that happens to
 # sit in an `Atom:` trailer. v1's first run reported
@@ -114,21 +160,48 @@ if [ "${1:-}" = "--selfcheck" ]; then
   case "$(classify 1500 AGENT-1 1500)" in
     IN-FLIGHT) ;; *) echo "SELFCHECK FAIL: a tie must favour the editing lane"; fail=1 ;;
   esac
+  # H86's defect as its own control, and it CAN fail (A15): drop `-uall` from
+  # the scan above and this goes red. A file inside a wholly untracked directory
+  # must be visible to the scan -- default porcelain reports only `dir/`, which
+  # `[ -f ]` then drops, and 151 files across 16 directories vanished that way.
+  # CORRECTED BEFORE SHIPPING, and the first draft was A15 inside the fix for
+  # A15: it called `git status --porcelain -uall` directly, so it proved a fact
+  # about GIT and would have stayed green with `-uall` dropped from the scan --
+  # a control that cannot fail for the thing it guards. It calls `scan_paths`,
+  # the function the run actually uses, which is why that function exists.
+  probe=".stranded_selfcheck.$$/deep"
+  mkdir -p "$ROOT/$probe" && : > "$ROOT/$probe/buried.txt"
+  seen=$(cd "$ROOT" && scan_paths | grep -c "^$probe/buried.txt$")
+  blind=$(cd "$ROOT" && git status --porcelain | awk '{print $NF}' \
+           | grep -c "^$probe/buried.txt$")
+  rm -rf "$ROOT/${probe%/deep}"
+  [ "$seen" -eq 1 ] || { echo "SELFCHECK FAIL: the scan cannot reach a file inside an untracked dir"; fail=1; }
+  [ "$blind" -eq 0 ] || { echo "SELFCHECK FAIL: the control cannot fire -- plain porcelain already saw it"; fail=1; }
+
   # And `mtime` must actually work on this platform: an empty mtime would make
   # every file NO-OWNER and the whole scan meaningless while still exiting 0.
   [ -n "$(mtime "$ROOT/MISSION_LOOP.md")" ] || { echo "SELFCHECK FAIL: mtime unsupported here"; fail=1; }
-  [ "$fail" -eq 0 ] && echo "selfcheck: STRANDED / IN-FLIGHT / NO-OWNER all fire and differ, a tie favours the lane, and a non-roster Atom: is refused"
+  [ "$fail" -eq 0 ] && echo "selfcheck: STRANDED / IN-FLIGHT / NO-OWNER all fire and differ, a tie favours the lane, a non-roster Atom: is refused, and the scan reaches inside an untracked directory"
   exit "$fail"
 fi
 
 git rev-parse --git-dir >/dev/null 2>&1 || { echo "stranded: not a git repo"; exit 2; }
 now=$(date +%s)
 n_str=0; n_fly=0; n_none=0
-out=$(git status --porcelain | awk '{print $NF}' | while read -r p; do
+# `-uall`, AND IT IS THE ACTUAL DEFECT H86 FOUND (v2, ATOM-3).
+# CLASS: `git status --porcelain` COLLAPSES AN UNTRACKED DIRECTORY TO A SINGLE
+# ENTRY, so the `[ -f ]` guard below silently drops every file inside it and the
+# scan reports a count that reads as total coverage. Measured on this tree at
+# 2026-08-18 11:35: 382 reported paths, 16 of them directories, hiding 151 files
+# -- including 8 LIVE SPIKE DIRECTORIES belonging to four lanes. A brand-new
+# spike directory is the commonest stranded artifact this repo produces and the
+# tool built to find it could not see one. 382 -> 483 paths under `-uall`.
+# The falsifier is in --selfcheck: it drives `scan_paths` -- this exact function
+# -- so dropping the flag turns it red.
+out=$(scan_paths | while read -r p; do
   [ -f "$p" ] || continue
   fm=$(mtime "$p"); [ -n "$fm" ] || continue
-  owner=$(git log -1 --format='%(trailers:key=Atom,valueonly)' -- "$p" 2>/dev/null | tr -d ' \n')
-  owner=$(canon "$owner")
+  owner=$(canon "$(path_atom "$p")")
   onew=$(atom_newest "$owner")
   printf '%s\t%d\t%s\t%s\n' "$(classify "$fm" "$owner" "$onew")" "$(( (now - fm) / 60 ))" "${owner:-none}" "$p"
 done)
