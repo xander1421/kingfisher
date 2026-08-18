@@ -1,5 +1,35 @@
 #!/usr/bin/env python3
-"""railguard.py v1 — H112, ATOM-3, 2026-08-18.
+"""railguard.py v2 — H112 (v1), H118 (v2). ATOM-3, 2026-08-18.
+
+==== v2, H118 — ATTACK ON v1, TWO DEFECTS, BOTH MINE (§12.7) ================
+D1 · AN ANCHOR THAT MATCHES NOTHING ON EITHER SIDE GUARDED NOTHING AND SAID
+     NOTHING. `section()` returns None for a missing anchor and `None == None`,
+     so once a rail heading was renumbered the gate went PERMANENTLY, SILENTLY
+     INERT for that rail. Measured on v1: head "## 9 · Safety rails / no keys,
+     no wallets" -> staged "...keys and wallets are fine", anchor "## 10 ·",
+     verdict NO CHANGE. Not hypothetical -- §13's own header records this repo
+     renumbering a section "from a second §9". The renumbering COMMIT is caught
+     (head still carries the anchor, so it reads REMOVED); every commit AFTER it
+     was invisible. Now ANCHOR-STALE, and the authorisation trailer does NOT
+     clear it -- a trailer there would buy permission for a gate already blind.
+     My first form of this attack was WRONG and is recorded refuted in the H118
+     CLAIM: I predicted the renumbering commit itself would slip through.
+D2 · PLAIN-LANGUAGE SELF-AUTHORISATION. v1 accepted any non-roster string, so
+     `me`, `self`, `myself`, `nobody`, `n/a`, `unknown` and `-` all authorised a
+     rail change. THE REMEDY ALREADY EXISTED IN THE FILE I WIRED THIS INTO:
+     `commit-msg.hook:313` refuses exactly that set for `Reviewed-By` as
+     "self-review in plain language". CLASS: a defect already solved in the same
+     file, re-introduced by an addition to that file.
+AND THE FIRST DRAFT OF THE D1 FIX WAS H112 DEFECT 2 VERBATIM, ONE CYCLE LATER:
+     it fired on any file lacking the anchor, so every sandbox with a stub
+     MISSION_LOOP.md tripped it -- fail-closed scoped to the CHECKER's
+     expectation rather than the GUARDED THING's presence. Now: a document with
+     `## ` sections but not this one has MOVED the heading; a document with no
+     sections at all is not the document the anchor is about.
+Both fixes are mutation-tested in --selfcheck: undo D2 and seven controls go
+red; undo D1 and `stale_anchor_is_loud` goes red.
+============================================================================
+
 
 THE DEFECT IT EXISTS FOR
 ========================
@@ -91,6 +121,17 @@ RAILS = {
     'MISSION_LOOP.md': ['## 10 ·', '## 11 ·'],
 }
 TRAILER = 'Rail-Change-Authorised-By:'
+# D2 (H118). v1 accepted ANY non-roster string, so `me`, `self`, `myself`,
+# `nobody`, `n/a`, `unknown` and `-` all authorised a rail change. THE REMEDY
+# ALREADY EXISTED IN THE FILE I WIRED THIS INTO: `commit-msg.hook:313` refuses
+# exactly this set for `Reviewed-By` as "self-review in plain language". I added
+# a check to that hook and did not reuse the list 150 lines below it.
+# CLASS: a defect already solved in the same file, re-introduced by an addition
+# to that file. Kept as one list here rather than shelling out, because the hook
+# applies it to a different field and coupling them would make each unreadable.
+NOT_AN_AUTHORITY = {'self', 'me', 'none', 'n/a', 'na', 'unknown', 'nobody',
+                    'myself', 'own', 'operator?', 'human', 'tbd', 'todo', '-',
+                    'x', 'yes', 'ok', 'approved'}
 # A lane may not authorise itself. The roster is the set of things that are NOT
 # an authorisation -- same reasoning as §13.1's "Reviewed-By must not equal Atom".
 def _roster(root):
@@ -145,6 +186,28 @@ def changed_rails(root=None):
         head = _git('show', 'HEAD:' + path, root=root) or ''
         for a in anchors:
             before, after = section(head, a), section(staged, a)
+            # D1 (H118). BOTH SIDES MISSING IS NOT "UNCHANGED" -- it means this
+            # module's own anchor no longer matches the document, so the rail is
+            # unguarded and `None == None` was reporting that as success. Measured
+            # on v1: head "## 9 · Safety rails / no keys, no wallets" -> staged
+            # "...keys and wallets are fine" with anchor "## 10 ·" gave NO CHANGE.
+            # Not hypothetical: §13's own header records it was "renumbered from a
+            # second §9", so rail-adjacent headings in this repo have moved before.
+            # The renumbering COMMIT is caught (head still has the anchor, so it
+            # reads REMOVED) -- it is every commit AFTERWARDS that was invisible.
+            #
+            # SCOPED, and the first draft of THIS FIX was the same mistake one
+            # cycle later: it fired on any file lacking the anchor, so every
+            # sandbox whose MISSION_LOOP.md is a one-line stub tripped it -- a
+            # fail-closed branch scoped to the CHECKER's expectation rather than
+            # to the GUARDED THING's presence, which is H112 defect 2 verbatim.
+            # A document that has SECTIONS but not this one has moved the
+            # heading; a document with no `## ` sections at all is not the
+            # document this anchor is about.
+            if before is None and after is None:
+                if re.search(r'^## ', head, re.M):
+                    changed.append((path, a, 'ANCHOR-STALE'))
+                continue
             if before != after:
                 what = ('ADDED' if before is None else
                         'REMOVED' if after is None else 'MODIFIED')
@@ -157,7 +220,9 @@ def authorised(msg, root=None):
     for ln in msg.splitlines():
         if ln.strip().startswith(TRAILER):
             who = ln.split(':', 1)[1].strip()
-            if who and who.lower() not in _roster(root or ROOT):
+            if not who or who.lower() in NOT_AN_AUTHORITY:
+                continue
+            if who.lower() not in _roster(root or ROOT):
                 return True
     return False
 
@@ -179,6 +244,18 @@ def main(argv):
         if not changed:
             return 0
         msg = open(msg_path).read()
+        stale = [c for c in changed if c[2] == 'ANCHOR-STALE']
+        if stale and authorised(msg, root=repo):
+            sys.stderr.write(
+                'RAILGUARD REFUSES: %d anchor(s) match nothing in the document.\n\n'
+                % len(stale) +
+                ''.join('    %-16s %-18s %s\n' % c for c in stale) +
+                '\n  This is NOT a rail change and the authorisation trailer does '
+                'NOT clear it:\n  the anchor guards nothing, so the trailer would '
+                'buy permission for a gate\n  that is already blind. Fix RAILS in '
+                'railguard.py to match the heading,\n  or restore the heading. '
+                'Either is one edit and any lane can make it.\n')
+            return 1
         if authorised(msg, root=repo):
             return 0
         sys.stderr.write(
@@ -226,6 +303,15 @@ def selfcheck():
         check('absent_is_none', section(t, '## Nope') is None,
               'a MISSING anchor must be None, not empty string, or a DELETED '
               'rail reads as unchanged')
+        # D2 (H118). Plain-language self-authorisation. v1 accepted every one of
+        # these; the remedy already existed at commit-msg.hook:313 for
+        # Reviewed-By and was not reused when railguard was wired into that
+        # same file.
+        for bad_who in ('me', 'self', 'myself', 'nobody', 'n/a', 'unknown', '-'):
+            check('plain_language_%s_refused' % bad_who,
+                  not authorised('x\n\n%s %s' % (TRAILER, bad_who), root=ROOT),
+                  '%r authorised a rail change; v1 accepted all seven of these '
+                  'while the same hook refused them for Reviewed-By' % bad_who)
         check('lane_cannot_authorise',
               not authorised('x\n\n%s AGENT-2' % TRAILER, root=ROOT),
               'a roster callsign was accepted as an authority')
@@ -264,6 +350,37 @@ def selfcheck():
         check('rail_edit_detected',
               got == [('CLAUDE.md', '## Safety rails', 'MODIFIED')],
               'a widened rail was not detected; got %r' % (got,))
+
+        # D1 (H118). A STALE ANCHOR MUST BE LOUD. Both sides missing is not
+        # "unchanged" -- it means RAILS no longer matches the document and the
+        # rail is unguarded. v1 reported that as success, so a rail could be
+        # rewritten freely once a heading had been renumbered. §13's own header
+        # records this repo renumbering a section "from a second §9".
+        open(os.path.join(tmp, 'MISSION_LOOP.md'), 'w').write(
+            '# m\n\n## 9 · Safety rails\nno keys, no wallets\n\n## 12 · x\ny\n')
+        run('git', 'add', 'MISSION_LOOP.md')
+        run('git', 'commit', '-qm', 'renumbered rails')
+        open(os.path.join(tmp, 'MISSION_LOOP.md'), 'w').write(
+            '# m\n\n## 9 · Safety rails\nkeys and wallets are fine\n\n## 12 · x\ny\n')
+        run('git', 'add', 'MISSION_LOOP.md')
+        got = [c for c in changed_rails(root=tmp) if c[0] == 'MISSION_LOOP.md']
+        check('stale_anchor_is_loud',
+              any(c[2] == 'ANCHOR-STALE' for c in got),
+              'a rail rewritten under a RENUMBERED heading read as no change; '
+              'got %r -- this is exactly what v1 did' % (got,))
+        # ...and the negative half: a document with NO sections at all is not
+        # the document the anchor is about, and must NOT trip it. The first
+        # draft of this very fix failed here and broke every sandbox.
+        open(os.path.join(tmp, 'MISSION_LOOP.md'), 'w').write('# m\n')
+        run('git', 'add', 'MISSION_LOOP.md')
+        run('git', 'commit', '-qm', 'stub')
+        open(os.path.join(tmp, 'MISSION_LOOP.md'), 'w').write('# m\nedited\n')
+        run('git', 'add', 'MISSION_LOOP.md')
+        check('sectionless_file_does_not_trip',
+              not [c for c in changed_rails(root=tmp) if c[0] == 'MISSION_LOOP.md'],
+              'a file with no `## ` sections tripped ANCHOR-STALE -- fail-closed '
+              'scoped to the checker rather than the guarded thing (H112 d2)')
+        run('git', 'checkout', '-q', '--', 'MISSION_LOOP.md')
 
         # DELETION: removing the section entirely must not read as "unchanged".
         open(os.path.join(tmp, 'CLAUDE.md'), 'w').write('# c\n\n## Other\nx\n')
