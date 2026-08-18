@@ -28,8 +28,35 @@ that cannot express its verdict -- inside the module that enforces A21.
 recorded verdict moves, and a falsifier is still refused for everything a control
 is refused for EXCEPT its verdict. `demo()` asserts the difference in one place,
 driving the SAME observation through both types.
+
+v3, 2026-08-18 (H98). DEFECT REMOVED: AN EXCLUSION LIST OF FILES APPLIED TO A
+`git status --porcelain` OUTPUT THAT CAN NAME A DIRECTORY. For a wholly-untracked
+tree porcelain emits ONE line naming the DIRECTORY (`?? spikes/H88_sentinel_branch/`),
+not its files -- measured against a tracked spike, which lists per file. Every
+exclusion this module owns is a set of FILE paths, so none of them could match:
+the declared artifacts, `provenance.json`, and the `:(exclude)*.md` pathspec were
+all defeated at once, and `getmtime(<dir>)` is bumped by the creation of each file
+inside it -- INCLUDING THE ARTIFACTS THEMSELVES. So a spike writing two artifacts
+made the first stale against its own containing directory, and writing RESULT.md
+afterwards made every artifact stale, which is precisely what the `.md` suppression
+at line 61 exists to prevent. It is the hazard the comment at `_newest_file_mtime`
+says was already fixed for files, recurring one level up through the directory
+that holds them -- two copies of one rule, and only the file copy had it.
+SCOPE: every spike's FIRST certify, i.e. every cycle (§13/H71: every cycle creates
+a new spike directory). DIRECTION IS FALSE-RED, never false-green -- but the
+bypass a refused lane reaches for is dropping `artifacts=`, which voids the whole
+A24 staleness path, and `allow_dirty=True` does NOT suppress it (measured on the
+run that found this). Fixed by expanding a porcelain-named directory into its
+files and RE-APPLYING in Python the exclusions the pathspec could not deliver.
+`demo()` builds an untracked subdirectory of two files and asserts the earlier one
+is not stale against the later one's directory bump.
+NOT FIXED HERE, REPORTED INSTEAD: `stranded.sh:145` carries the same class in the
+FALSE-GREEN direction (`[ -f "$p" ] || continue` silently drops every untracked
+directory -- 117 files in 15 directories at the time of writing, including the
+`H86_stranded_cost` spike itself). It is ATOM-3's module and was being written to
+two minutes before this edit, so it is livechat's, not mine (H19/H66).
 """
-import hashlib, json, os, subprocess, sys, time
+import hashlib, json, os, re, subprocess, sys, time
 
 
 def _run(cmd, cwd=None):
@@ -46,6 +73,35 @@ def sha256_file(path):
         for chunk in iter(lambda: f.read(1 << 20), b''):
             h.update(chunk)
     return h.hexdigest()
+
+
+def _porcelain_files(fp, root):
+    """Yield the SOURCE FILES a `git status --porcelain` path stands for.
+
+    H98. Porcelain collapses a wholly-untracked tree to a single line naming the
+    DIRECTORY. Callers here match that path against sets of FILE paths -- the
+    declared artifacts, `provenance.json` -- and apply `:(exclude)*.md` as a
+    pathspec, and NONE of those can match a directory. So for every new spike the
+    exclusions silently did nothing while the directory's own mtime, which each
+    artifact write bumps, became the staleness floor.
+
+    The `.md` and `provenance*.json` filters are re-applied HERE because a
+    pathspec cannot reach inside a path git never expanded. Keeping them in one
+    place would be better; they are duplicated deliberately and named in both, on
+    the reasoning that a rule stated twice is a defect only when one copy can be
+    changed without the other being found -- one grep for endswith('.md') across
+    this module finds both.
+    """
+    if not os.path.isdir(fp):
+        yield fp
+        return
+    for dirpath, dirnames, filenames in os.walk(fp):
+        dirnames[:] = [x for x in dirnames
+                       if x not in ('.git', 'target', '__pycache__')]
+        for fn in filenames:
+            if fn.endswith('.md') or re.match(r'provenance.*\.json$', fn):
+                continue
+            yield os.path.join(dirpath, fn)
 
 
 def newest_source_mtime(path, exclude=()):
@@ -105,11 +161,14 @@ def newest_source_mtime(path, exclude=()):
     excl = {os.path.realpath(x) for x in exclude}
     for f in dirty:
         fp = os.path.join(root, f)
-        if not os.path.exists(fp) or os.path.realpath(fp) in excl:
+        if not os.path.exists(fp):
             continue
-        m = int(os.path.getmtime(fp))
-        if m > newest:
-            newest, newest_file = m, f
+        for g in _porcelain_files(fp, root):
+            if os.path.realpath(g) in excl:
+                continue
+            m = int(os.path.getmtime(g))
+            if m > newest:
+                newest, newest_file = m, os.path.relpath(g, root)
     return newest, newest_file
 
 
@@ -634,6 +693,101 @@ def demo():
             assert ok2, 'allow_dirty should permit an acknowledged dirty tree'
 
     assert sha256_file(__file__) == sha256_file(__file__)
+
+    # --- H98: a porcelain line that names a DIRECTORY, not a file --------------
+    # THE CONTROLLED REPRODUCTION, and it has to be controlled: at repo scope the
+    # defect is MASKED whenever any other lane touches a tracked file, because
+    # that file's own porcelain line sets a higher floor than the directory ever
+    # reaches. Measured, and it is why a whole-repo sweep reported 0 flips one
+    # minute after the same fix demonstrably flipped H88 -- the instant another
+    # lane saved `stranded.sh`, its mtime dominated every directory-derived floor
+    # in the tree. A defect that only bites when the new spike IS the newest thing
+    # is a defect that bites exactly at certify time, and nowhere else.
+    import tempfile as _tf2
+    g2 = _tf2.mkdtemp()
+    _run(['git', 'init', '-q'], cwd=g2)
+    _run(['git', 'config', 'user.email', 't@example.invalid'], cwd=g2)
+    _run(['git', 'config', 'user.name', 'test'], cwd=g2)
+    with open(os.path.join(g2, 'tracked.txt'), 'w') as f:
+        f.write('committed source\n')
+    _run(['git', 'add', '-A'], cwd=g2)
+    # THE COMMIT DATE IS PINNED, and v1 of this fixture did not pin it. The floor
+    # has TWO sources -- the HEAD commit and the dirty files -- and a sandbox
+    # committed just now puts HEAD at the current second, so backdated artifacts
+    # were stale against HEAD and the assertion fired for a reason that had
+    # nothing to do with H98. A fixture that does not control every clock it
+    # compares is measuring whichever one it forgot.
+    _base = 1_700_000_000
+    _env = dict(os.environ, GIT_AUTHOR_DATE='@%d +0000' % (_base - 1000),
+                GIT_COMMITTER_DATE='@%d +0000' % (_base - 1000))
+    subprocess.run(['git', 'commit', '-qm', 'base'], cwd=g2, env=_env,
+                   capture_output=True)
+    # A NEW SPIKE: one wholly-untracked directory, two artifacts written in
+    # order, then a RESULT.md written last -- the exact shape of every cycle.
+    sp = os.path.join(g2, 'spikes', 'NEW')
+    os.makedirs(sp)
+    # THE FIXTURE MUST CONTAIN A SOURCE FILE, and v1 of it did not -- which made
+    # it the right measurement of the wrong question. With ONLY declared
+    # artifacts and a .md inside, the `:(exclude)` pathspecs suppress every path
+    # in that directory and git prints no porcelain line at all, so even v2 read
+    # a clean floor and the reproduction passed against the unfixed code. A real
+    # spike always carries its driver (§5: "a number without its generator does
+    # not exist"), that driver is neither an artifact nor a .md, and its presence
+    # is what makes git emit the directory line the defect rides on.
+    drv = os.path.join(sp, 'driver.py')
+    with open(drv, 'w') as f:
+        f.write('# the generator\n')
+    a1, a2 = os.path.join(sp, 'first.out'), os.path.join(sp, 'second.out')
+    for i, a in enumerate((a1, a2)):
+        with open(a, 'w') as f:
+            f.write('artifact\n')
+        os.utime(a, (_base + i, _base + i))
+    with open(os.path.join(sp, 'RESULT.md'), 'w') as f:
+        f.write('# writeup\n')
+    # The directory mtime is bumped by each creation and is NEWER than both
+    # artifacts -- that is the whole mechanism, so assert it rather than assume.
+    # the driver PREDATES its outputs, which is the only ordering that can occur
+    os.utime(drv, (_base - 100, _base - 100))
+    dir_mt = int(os.path.getmtime(os.path.join(g2, 'spikes')))
+    assert dir_mt > int(os.path.getmtime(a2)), \
+        'reproduction is void: the directory mtime must exceed its artifacts'
+    assert _run(['git', 'status', '--porcelain', '--', '.'], cwd=g2).strip() \
+        .endswith('spikes/'), 'reproduction is void: porcelain must collapse to a directory'
+    # v3: the floor comes from the FILES, and both declared artifacts are
+    # excluded, so the only survivor is... nothing. RESULT.md is dropped by the
+    # .md rule that a pathspec could not deliver here. Floor falls back to HEAD.
+    # THE NEGATIVE CONTROL, and it is the half that decides the assertion below
+    # means anything: under v2 the porcelain directory IS the floor, so the first
+    # artifact was stale against its own sibling's creation. Computed here from
+    # the same fixture rather than asserted from the changelog.
+    assert dir_mt > int(os.path.getmtime(a1)), (
+        'fixture is void: v2 floor (%s) must exceed the artifact (%s), or there '
+        'was never anything to fix' % (dir_mt, int(os.path.getmtime(a1))))
+    assert int(os.path.getmtime(drv)) < int(os.path.getmtime(a1)), \
+        'fixture is void: the driver must predate the artifacts it produced'
+    n, nf = newest_source_mtime(g2, exclude=[a1, a2])
+    assert n < int(os.path.getmtime(a1)), (
+        'H98 REGRESSION: an artifact is stale against its own containing '
+        'directory again -- floor %s from %r, artifact %s'
+        % (n, nf, int(os.path.getmtime(a1))))
+    # ...and for the RIGHT REASON. A floor that fell back to HEAD would satisfy
+    # the line above while proving the expansion never ran, which is how v1 of
+    # this fixture passed against unfixed code.
+    assert nf.endswith('driver.py'), (
+        'the floor must come from the expanded source file, not %r -- a HEAD '
+        'fallback passes the assertion above without the fix' % (nf,))
+    # and the exclusion must still be capable of failing: an UNDECLARED file
+    # inside that same directory must raise the floor, or the fix has simply
+    # stopped looking at untracked directories altogether.
+    # and the floor must still RISE when real source moves: touching the driver
+    # past the artifacts has to make them stale, or the fix has simply stopped
+    # looking inside untracked directories, which would be a false GREEN.
+    os.utime(drv, (_base + 500, _base + 500))
+    n2, nf2 = newest_source_mtime(g2, exclude=[a1, a2])
+    assert n2 == _base + 500 and nf2.endswith('driver.py'), \
+        'the expansion must still SEE source edits inside the directory: %s %s' % (n2, nf2)
+    _sh2 = __import__('shutil')
+    _sh2.rmtree(g2, ignore_errors=True)
 
     # manifest hashing must notice a feature change, which a binary digest cannot
     kf2 = os.path.expanduser('~/kingfisher/spikes/S15_android_device/fuelrun')

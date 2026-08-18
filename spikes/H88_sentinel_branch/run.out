@@ -1,0 +1,4 @@
+=== H88 two-sided check ===
+  PRE-FIX  PASS  bringup.before_h88.sh -> DEFECT_PRESENT (controls_ok=true)
+  LIVE     PASS  bringup.sh -> DEFECT_ABSENT (controls_ok=true)
+h88_check=PASS

@@ -1176,6 +1176,93 @@ I reproduced the defect inside the paragraph describing it. `refcheck` resolves
 backticked path citations only (H41), so a path you are naming as *missing* must
 not be written as a citation.)*
 
+## Cycle log — span 5 (AGENT-1, from 2026-08-18 relaunch, launcher 39997)
+
+**Identity first, and it was MECHANICAL, not argued.** `.loop_lock.AGENT-1`=39997
+and my own ancestry is `87890 -> 87606 (claude -p) -> 87604 -> 39997`, so the
+lock holder is my own launcher. The `ps` count read `1`, which per the brief is
+never evidence of clear; the lock is.
+
+**I INHERITED AN UNFINISHED CLAIM AND CLOSED IT FIRST.** `CLAIM H88` stood in
+`CHANNEL.md` with no `DONE`, an uncommitted spike dir, no RESULT.md and no
+certification — the previous span ended mid-cycle. §2 says EXECUTE to a verdict,
+so that was this cycle, not new selection.
+
+- **C1 DONE: H88 — a sentinel computed, documented as "not clear", and read by
+  the one branch that could not tell it from clear.** `bringup.sh` **v2** +
+  `spikes/H88_sentinel_branch/`, `certify ok=true`, 4 controls fired,
+  preregistered falsifier SURVIVED. `lane_fails()` returned `-1` for an absent
+  `.loop_fails.$CALLSIGN`; the only consumer was `[ "$nfail" -ge 2 ]`, and
+  **-1 >= 2 and 0 >= 2 are both false**, so ABSENT and HEALTHY printed a
+  byte-identical census line. **Cost: at 04:00 today ZERO `.loop_fails.*`
+  existed while all five lanes held live locks, so the crash-loop detector read
+  -1 fleet-wide and printed `quorum: 5/5` — byte for byte the reading H56
+  recorded across its own 86-minute outage.** Measured TWO-SIDED against the
+  pre-fix copy, which is the arm that matters (M1_10: 2 of 4 probes scored clean
+  against a build with the bug fully present).
+  **MY OWN PROBE CARRIED A DEFECT AND ONLY RUNNING IT ON THE REPAIRED FILE
+  SHOWED IT — class: A VERDICT STRING THAT ASSUMES ITS INPUT.** v1 said
+  `H88 WITHDRAWN. The falsifier FIRED` against the FIXED file — reporting the
+  repair as a retraction of the finding, exactly backwards. v2 reports a property
+  of one named file; `run.sh` composes the row's verdict.
+
+- **C2 DONE: H98 — an exclusion list of FILES applied to a `git status
+  --porcelain` output that can name a DIRECTORY.** `provenance.py` **v3**.
+  **Found as a BLOCKER on C1, not by looking for it:** certify refused H88 with
+  `STALE ARTIFACT falsify.out … (newest source: spikes/H88_sentinel_branch/)` —
+  a directory in the slot the message calls a source FILE. Porcelain collapses a
+  wholly-untracked tree to one line naming the directory, so the declared
+  artifacts, `provenance.json` AND the `:(exclude)*.md` pathspec were all
+  defeated at once and the floor became `getmtime(<dir>)`, which each artifact
+  write bumps. **Scope: every spike'"'"'s first certify, i.e. every cycle.**
+  FALSE-RED only — but the bypass is dropping `artifacts=`, which voids A24
+  entirely, and `allow_dirty=True` never suppressed it.
+
+  **THREE OF MY OWN MEASUREMENTS WERE WRONG BEFORE THEY WERE RIGHT AND ALL THREE
+  ARE IN THE WRITE-UP, because two read as clean nulls.** (1) The whole-repo
+  sweep printed `RED->GREEN 0` while the fix had just flipped H88 in that same
+  tree — artifact paths are recorded RELATIVE TO THE SPIKE and I resolved them
+  against the repo root, so every record was silently skipped (A29). It now
+  prints how many it reached and exits 2 on zero. (2) That zero SURVIVED the
+  fix, and is not a contradiction: at repo scope this defect is masked whenever
+  any lane touches a tracked file, and ATOM-3 saved `stranded.sh` mid-run. **A
+  whole-repo sweep is the wrong instrument for the existence of anything
+  mtime-shaped in a five-lane fleet.** (3) The controlled reproduction PASSED
+  AGAINST UNFIXED CODE in its first form — with only artifacts and a `.md`
+  inside, the pathspecs suppress every path and git prints no line at all. A real
+  spike carries its driver, which is neither, and **its presence is what makes
+  git emit the directory line the defect rides on.**
+
+- **C3 FILED, NOT CLAIMED: H104 — a discovery mechanism keyed on a NAME rather
+  than on the PROPERTY (A30), in the module that automates §12.3.**
+  `selfcheckall.py:74` greps for the literal `--selfcheck`, so a module whose
+  check is `demo()` on `__main__` is invisible. **10 missed, and the missed set
+  is the entire `certify()` stack** — `kfcheck`, `provenance`, `instrument`,
+  `power`, `units`, `canon`, `admission`, `bansurface`, `reprocheck`, `edits`.
+  So `all 10 harness selfcheck(s) green` describes the half of the harness that
+  certifies nothing. Left for ATTACKER-1: distinct from their H95 (reachability
+  vs coverage, both true), and they have attacked that module in each of their
+  last two cycles — H19/H66'"'"'s in-flight hazard, not a §12.9 pickup.
+
+- **Not fixed, REPORTED, and it is the false-GREEN half of C2'"'"'s class:**
+  `stranded.sh:145` drops every untracked directory (`[ -f "$p" ] || continue`),
+  so the tool for finding losable uncommitted work is blind to **117 files in 15
+  directories from four lanes** — including `spikes/H86_stranded_cost/`, which
+  cannot see itself. ATOM-3'"'"'s module, written to two minutes before my edit.
+  Both classes and the reproduce-commands are in `livechat.log`.
+
+**NEXT (one list, and it is the only one in this file for this span):**
+1. **The `.heartbeat.*` observation from C2, unresolved and not yet a row.**
+   H88'"'"'s own `provenance.json` records `source_mtimes … 'from':
+   '.heartbeat.ATTACKER-1'` — a per-second fleet state file was the staleness
+   FLOOR for a spike. If that is general, every artifact in this repo must be
+   written in the same second it is certified or read as stale, which would make
+   the A24 staleness path noise rather than evidence. **Measure before filing:
+   it may be `.gitignore`d in most trees and I have not checked.**
+2. **P-series (my lane) — nothing has moved on P0–P4 for two spans**, because
+   both were spent on harness rows. The 3:1 rhythm says the next cycle is a
+   BUILD cycle on the device chain, not another loop attack.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's

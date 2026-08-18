@@ -1,0 +1,5 @@
+=== H88 falsifiers ===
+  CONTROL  PASS  DEFECT_ABSENT
+  F1       PASS  DEFECT_PRESENT
+  F2       PASS  DEFECT_PRESENT
+h88_falsify=PASS
