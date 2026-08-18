@@ -1,0 +1,44 @@
+H111 — the veto gate, attacked
+  interpreter: /Users/victorianikolenko/kingfisher/spikes/S5_hdc_prototype/.venv/bin/python
+  numpy: 2.5.2  (bitwise_count present: True)
+  mutation_targets from config.json: 3
+    - spikes/G34_length1_and_constants/length1_constants.py  (present)
+    - spikes/W6_incremental_witness/incremental_verifier.py  (present)
+    - spikes/S85_verify_vs_reexec/verify_vs_reexec.py  (present)
+
+A1 baseline: {"determinism_exact": 1.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "ffffff7c", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "RECOMPUTED"}  rc=0
+   deterministic across two runs: True
+
+A2 INPUT SET (audit hook, complete rather than sampled):
+   repo modules imported by the gate: ['__main__']
+   mutation targets among them: NONE
+
+A3b THE GATE ITSELF (family C: the artifact is not what you think)
+   files of .github/autoloop/ tracked by git: 0
+   git-ignored: False  -> so it is UNCOMMITTED, not deliberately excluded
+   consequence: the veto protecting the keystone claim exists in ONE working
+   tree. Any clean checkout, any other lane, any CI runner has no gate at all.
+
+A3 MUTATION ARM (HEAD + the working-tree gate; shared tree untouched)
+   sandbox baseline equals live baseline: True  (rc=0) -- if this is False every arm below is void
+   all 3 targets truncated to empty           -> IDENTICAL  {"determinism_exact": 1.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "ffffff7c", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "RECOMPUTED"}  rc=0
+   all 3 targets replaced with a syntax error -> IDENTICAL  {"determinism_exact": 1.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "ffffff7c", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "RECOMPUTED"}  rc=0
+   all 3 targets deleted outright             -> IDENTICAL  {"determinism_exact": 1.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "ffffff7c", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "RECOMPUTED"}  rc=0
+   F1 VERDICT: did NOT fire — the verdict is invariant over every mutation applied
+
+A4 NEGATIVE CONTROL — can it go RED at all?
+   the identity itself: D - 2*h  ->  D - h          -> RED  {"determinism_exact": 0.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "000003be", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "IDENTITY_BROKEN"}  rc=1
+   one score off by one (a PARTIAL break)           -> RED  {"determinism_exact": 0.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "ffffff7d", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "IDENTITY_BROKEN"}  rc=1
+   NOT A BREAK (equivalent on bipolar data): T > 0 -> T >= 0 -> STILL GREEN  {"determinism_exact": 1.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "ffffff7c", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "RECOMPUTED"}  rc=0
+   the packing: T > 0 -> T > -2 (all-ones)          -> RED  {"determinism_exact": 0.0, "scope": "single_process_single_numpy_local_identity", "not_verified_here": "cross-machine, cross-kernel (that is S34)", "score_digest": "00000000", "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; reporting only, never the verdict", "pairs_checked": 32000, "status": "IDENTITY_BROKEN"}  rc=1
+   F3 VERDICT: 3/3 REAL planted breaks turn it red (the 4th arm is a no-op and must stay green)
+
+A5 THE SECOND DEPENDENCY DOOR (numpy present, too old)
+   metric emitted: False   rc=2
+   what the caller sees instead: {"status": "REFUSED_NUMPY_TOO_OLD", "detail": "numpy 2.5.2 has no bitwise_count (added in 2.0); no metric emit
+   F4 VERDICT: guarded
+
+A6 THE DIGEST (F5 — measure its ROLE before attacking its strength)
+   verdict source: np.array_equal   digest used in the verdict: False
+   permuted scores collide with the original: True
+   a duplicated pair and a zeroed pair collide: True
