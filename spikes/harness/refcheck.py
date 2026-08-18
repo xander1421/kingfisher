@@ -1,6 +1,42 @@
 #!/usr/bin/env python3
-"""refcheck.py v6 — H4/H18/H33/H41/H82. Every §N / guardrail / file / ROW-ID
+r"""refcheck.py v7 — H4/H18/H33/H41/H82/H85. Every §N / guardrail / file / ROW-ID
 citation resolves, and every table row still has a status column to read.
+
+v7 RATIONALE (§12.7) — THE DEFECT REMOVED: check 6 shipped INERT for every file
+but one. Its body sat under `if rel in BASELINE_ROW_SHAPE:` and that dict has a
+single key, so a malformed row in `MISSION_LOOP.md`, `CLAUDE.md`, a `RESULT.md`
+or any other harness `.md` was unreachable while refcheck still printed "every
+citation resolves". That is A15 (a control that cannot fire) and H30's class (a
+missing input degrades a mechanism to a no-op while it reports success) -- in the
+module whose own v5 header names H30's class, shipped by the lane that has now
+written that class three times. MEASURED, not read: `spikes/H85_check6_scope/`
+plants one row in three files; reported in `WORK_QUEUE.md`, invisible in the
+other two.
+
+AND THE ONE-LINE FIX -- delete the guard -- WOULD HAVE BEEN WRONG, which is why
+the attack measured before repairing. The old rule hard-codes `n != 5`, i.e.
+`WORK_QUEUE.md`'s width; `analysis/GUARDRAILS.md` declares a FOUR-field table and
+its three rows would have been accused on every run. Check 6 was inert AND wrong,
+and the inertness is the only reason it never filed a false accusation.
+
+TWO CANDIDATE REPAIRS WERE REJECTED BY THEIR OWN NUMBERS (falsifier FD, stated
+before the run): a width derived from the nearest table HEADER reports 2 of the
+10 live defects, and the blank-line-terminated variant also 2 -- because
+`WORK_QUEUE.md` holds 170 pipe-rows and 7 delimiter rows, and a blank line at
+line 123 ends the `## H` table so 75 class-H rows follow no header at all. A
+repair that trades false positives for false NEGATIVES on the one file the check
+exists for does not ship.
+
+WHAT SHIPS: the width each row is judged against is the NEAREST PRECEDING
+delimiter row in the same file, falling back to the MODAL id-row width of that
+file where no delimiter precedes it. On live content that reports exactly the
+same 10 rows as v6 (no false negatives) and nothing anywhere else (no new
+accusations), and it catches the planted row in all four files v6 could not see.
+CEILING, stated rather than fixed: a lone id-row in a file with NO table at all
+is its own mode and cannot be judged -- measured, the bare plant in
+`MISSION_LOOP.md` is not reported. It needs a second row or a header to have a
+reference width, and inventing one would be a rule with no evidence behind it.
+(ok-1, H85.)
 
 v6 RATIONALE (§12.7) — THE DEFECT REMOVED: a row with an unescaped `|` in its
 text gains a cell, every later cell shifts, and the STATUS column -- the one §2's
@@ -131,6 +167,7 @@ own defect. It resolves POINTERS, not meanings.
   python3 refcheck.py [--selfcheck]     exit 0 = every citation resolves.
 """
 import os, re, sys
+from collections import Counter
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 ML = os.path.join(ROOT, 'MISSION_LOOP.md')
@@ -207,7 +244,8 @@ def row_ids(text):
 
 # Rows whose shape was already broken when check 6 shipped (H82, 2026-08-17).
 # Reported every run, never gating -- see check 6 for why, and shrink this list
-# rather than growing it.
+# rather than growing it. v7: this is a BASELINE and no longer the check's SCOPE.
+# It was both, and being both is what made check 6 inert everywhere else (H85).
 BASELINE_ROW_SHAPE = {
     'WORK_QUEUE.md': {'S75', 'N1', 'G30', 'H27', 'H28', 'H36', 'H52', 'H53',
                       'H59', 'H71'},
@@ -216,24 +254,51 @@ BASELINE_ROW_SHAPE = {
 CELL = re.compile(r'(?<!\\)\|')
 
 
+DELIM_ROW = re.compile(r'^\|(?:\s*:?-{2,}:?\s*\|)+\s*$')
+
+
+def _id_cell(line):
+    """The row id of a markdown table row, or None if this is not an id row."""
+    if not line.startswith('|'):
+        return None
+    cell = line.split('|')[1].strip().strip('*`').strip()
+    if ID_CELL.match(cell) and (any(c.isdigit() for c in cell) or '-' in cell):
+        return cell
+    return None
+
+
 def malformed_rows(text):
-    """(id, field count) for every table row that is not exactly 3 cells wide.
+    """(id, field count, expected) for every id row that is not its table's width.
 
     Splits on a pipe NOT preceded by a backslash, because that is what GFM
     delimits a cell on. A plain split('|') counts the escape itself and reports
     correctly-escaped rows as broken -- measured, 21 against a true 10.
+
+    v7 (H85): the expected width is the NEAREST PRECEDING delimiter row, not the
+    constant 5. Five was `WORK_QUEUE.md`'s width baked into a check that only ran
+    on `WORK_QUEUE.md`, so widening the scope without this would have accused
+    `analysis/GUARDRAILS.md`'s four-field rows on every run. Where no delimiter
+    precedes a row -- 75 class-H rows are in that state, the `## H` table having
+    been ended by a blank line and never reopened -- the file's MODAL id-row width
+    stands in. A header-derived width ALONE was measured and rejected: it sees 2
+    of the 10 live defects, i.e. it trades this check's false positives for false
+    negatives on the one file it exists for.
     """
-    out = []
-    for line in text.splitlines():
-        if not line.startswith('|'):
+    lines = text.splitlines()
+    widths = [len(CELL.split(l)) for l in lines if _id_cell(l)]
+    modal = Counter(widths).most_common(1)[0][0] if widths else None
+    out, declared = [], None
+    for line in lines:
+        if DELIM_ROW.match(line):
+            declared = len(CELL.split(line))
             continue
-        cell = line.split('|')[1].strip().strip('*`').strip()
-        if not (ID_CELL.match(cell) and
-                (any(c.isdigit() for c in cell) or '-' in cell)):
+        cell = _id_cell(line)
+        if cell is None:
             continue
+        want = declared if declared is not None else modal
         n = len(CELL.split(line))
-        if n != 5:
-            out.append((cell, n))
+        if want is not None and n != want:
+            out.append((cell, n, want))
     return out
 
 
@@ -472,18 +537,22 @@ def scan():
         # lane that trips it (H33, and H14's "a checker that fires on known items
         # every run is one everyone learns to ignore"). They are REPORTED every
         # run with their owner's cue and they do not gate. A NEW one refuses.
-        if rel in BASELINE_ROW_SHAPE:
-            known = BASELINE_ROW_SHAPE[rel]
-            for rid, n in malformed_rows(text):
-                if rid in known:
-                    print(f'  KNOWN ROW SHAPE {rel}: `{rid}` has {n} fields, not '
-                          f'5 -- its status column is unreadable. Owner fixes it '
-                          f'by escaping the pipe as \\| (H82).')
-                else:
-                    problems.append(
-                        f'{rel}: row `{rid}` has {n} fields, not 5 -- an '
-                        f'unescaped `|` shifts every later cell, so the STATUS '
-                        f'column reads as a fragment of prose. Escape it as \\|')
+        #
+        # v7 (H85): this runs for EVERY harness file. Until v7 the loop below sat
+        # under `if rel in BASELINE_ROW_SHAPE`, whose one key is `WORK_QUEUE.md`,
+        # so the check could not fire anywhere else -- A15, in the module whose v5
+        # header names that class. The baseline is now a lookup, not a gate.
+        known = BASELINE_ROW_SHAPE.get(rel, ())
+        for rid, n, want in malformed_rows(text):
+            if rid in known:
+                print(f'  KNOWN ROW SHAPE {rel}: `{rid}` has {n} fields, not '
+                      f'{want} -- its status column is unreadable. Owner fixes '
+                      f'it by escaping the pipe as \\| (H82).')
+            else:
+                problems.append(
+                    f'{rel}: row `{rid}` has {n} fields, not {want} -- an '
+                    f'unescaped `|` shifts every later cell, so the STATUS '
+                    f'column reads as a fragment of prose. Escape it as \\|')
 
     for p in sorted(set(problems)):
         print('  UNRESOLVED ' + p)
@@ -544,6 +613,23 @@ def selfcheck():
         dot_bad = '.' + '/nosuch.sh'                        # dot-slash, absent
         dot_good = '.' + '/run_loop.sh'                     # dot-slash, present
         journal_bad = 'spikes/' + 'harness/journal_nope.py'  # broken, in a journal
+        # v7 (H85), and BOTH fixtures reuse the ids above rather than allocating
+        # new ones -- check 5 is per-FILE, and H64 says a fixture id lives in the
+        # same namespace as a real allocation.
+        #  (a) THE SAME malformed row, in a DIFFERENT file. Until v7 check 6 ran
+        #      only for files keyed in BASELINE_ROW_SHAPE, so this row was
+        #      unreachable and refcheck printed its all-clear over it.
+        #  (b) a FOUR-field table, which is what `analysis/GUARDRAILS.md` really
+        #      declares. It must stay QUIET: v6 hard-coded `n != 5`, WORK_QUEUE's
+        #      width, so widening the scope without a per-table width would have
+        #      accused that file's three real rows on every run.
+        open(os.path.join(tmp, 'MISSION_LOOP.md'), 'a').write(
+            '\n| id | item | status |\n|---|---|---|\n'
+            f'| {shape_bad} | the same defect, one file over | DONE — '
+            f'`grep -c . WORK_QUEUE.md | wc -l` says so |\n')
+        open(os.path.join(tmp, 'analysis', 'GUARDRAILS.md'), 'a').write(
+            f'\n| id | note |\n|---|---|\n'
+            f'| {shape_ok} | four fields, and that is this table width |\n')
         open(os.path.join(tmp, 'WORK_QUEUE.md'), 'w').write(
             '| id | item | status |\n|---|---|---|\n'
             f'| {dup} | first allocation, lane A | OPEN |\n'
@@ -618,8 +704,15 @@ def selfcheck():
                 (f'numbered "{dup}"', 'duplicate row id'),
                 (fence_bad, 'absent path inside a ```sh fence (v5a)'),
                 (dot_bad, 'absent dot-slash path (v5b)'),
-                (f'row `{shape_bad}`', 'a row whose unescaped pipe shifts its '
-                                       'status column (check 6)')]
+                # v7 (H85) FILE-QUALIFIED. Written as a bare `row `H97`` this
+                # matched EITHER file's report, so the pair below could both be
+                # satisfied by the one file check 6 already ran on -- which is
+                # the same shape as the defect v7 removes.
+                (f'WORK_QUEUE.md: row `{shape_bad}`',
+                 'a row whose unescaped pipe shifts its status column (check 6)'),
+                (f'MISSION_LOOP.md: row `{shape_bad}`',
+                 'THE SAME row in a file check 6 could not reach before v7 '
+                 '(H85: A15, the control that cannot fire)')]
         bad = [w for w, _d in want if w not in out]
         for w, d in want:
             print(f"  {'CATCHES' if w in out else 'MISSES '} {d} ({w})")
@@ -645,11 +738,20 @@ def selfcheck():
         # ESCAPED pipe is the documented way to write one in a cell and this file
         # already used it 12 times before the check existed. Flagging it would
         # have refused eleven correct rows.
-        if f'row `{shape_ok}`' in out:
+        if f'WORK_QUEUE.md: row `{shape_ok}`' in out:
             print(f'  FALSE-POSITIVE on a correctly ESCAPED pipe ({shape_ok})')
             bad.append('escaped pipe refused')
         else:
             print(f'  QUIET   on a correctly ESCAPED pipe ({shape_ok})')
+        # v7 (H85), and this is the half that stopped the one-line fix shipping:
+        # deleting the scope guard alone leaves `n != 5` hard-coded, and the
+        # four-field table below is live content in `analysis/GUARDRAILS.md`.
+        if f'GUARDRAILS.md: row `{shape_ok}`' in out:
+            print(f'  FALSE-POSITIVE on a FOUR-field table ({shape_ok}) -- the '
+                  f'accusation v6\'s hard-coded width would have filed')
+            bad.append('narrower table refused')
+        else:
+            print(f'  QUIET   on a table narrower than WORK_QUEUE.md ({shape_ok})')
         # v5's three QUIET directions. Each is the half a checker that simply
         # flagged every slash-bearing token would fail, and `nope.py` CATCHES
         # above is what stops "quiet everywhere" from reading as a pass.

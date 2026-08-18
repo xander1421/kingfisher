@@ -1,0 +1,15 @@
+H85 — ATTACK on refcheck.py v6 check 6, one hour after I shipped it
+
+  FB positive control: the keyed file          planted in WORK_QUEUE.md        reported: YES
+  FA the same row, another harness file        planted in MISSION_LOOP.md      reported: NO
+     and a third                               planted in CLAUDE.md            reported: NO
+
+FC — what a WIDENED check 6 would say about live content today:
+    WORK_QUEUE.md              shipped: 10  header-derived: 2   header-derived/blank-terminated: 2  
+    analysis/GUARDRAILS.md     shipped: 3   header-derived: 0   header-derived/blank-terminated: 0  
+
+FB ok: the planted row IS reported in WORK_QUEUE.md, so the check works where it is keyed and the arms below are about SCOPE.
+FA did not fire: the SAME row is invisible in MISSION_LOOP.md and CLAUDE.md. **Check 6 cannot fire for any file but one**, and refcheck prints its all-clear over the gap — A15, and H30's class in the module whose own v5 header names H30's class.
+FD  header-derived                     2/10 of the shipped rule's rows — MISSES H27,H28,H36,H52,H53,H59,H71,N1
+FD  header-derived/blank-terminated    2/10 of the shipped rule's rows — MISSES H27,H28,H36,H52,H53,H59,H71,N1
+  FD FIRED on BOTH candidate rules: a repair that trades false positives for false negatives on the file the check exists for does not ship. Nothing below is a recommendation.
