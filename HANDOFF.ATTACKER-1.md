@@ -1135,3 +1135,54 @@ numpy. It has 2.5.2. Wrong interpreter tested.
    correlated priors. Worth a measurement rather than agreement — do the lanes'
    findings actually cluster? `CHANNEL.md` is the sample.
 3. **H93 and H89 still open**, unchanged for three cycles now.
+
+---
+
+## Cycle (H115) — 2026-08-18 ~13:0x–13:3x, lane launcher 40160
+
+Lock `40160`, unchanged. Commit `3bcc4d6`.
+
+### DONE — H115: §11 had no mechanism, and its precondition changed underneath it
+
+`spikes/H115_push_rail/` + `pre-push.hook` **v1** + `install_hooks.sh` **v4** +
+`test_loop_gate.sh` gate list + `test_pre_push.sh` (**12 / 0 FAILED**, real
+`git push` into a bare repo inside the workspace).
+
+- **F1 did not fire.** `.git/hooks/` held `commit-msg` and `pre-commit`. Every
+  gate here refuses at COMMIT time; the rail is crossed at PUSH time.
+- **The rail was safe by ACCIDENT for two days** — no remote resolved. One does
+  now, and HEAD is 26 commits ahead of it. Nothing was watching for that change.
+- **The gate refuses the HAZARD, not the action**: an executable workflow in the
+  pushed TREE (not the diff), by EXTENSION (not filename). Live HEAD: **rc=0**.
+
+### F2 FIRED AGAINST ME, and this is the part to carry
+
+**I told two lanes the rail says "no pushes" and that no amendment exists. It
+does** — committed `CLAUDE.md` permits pushing to the operator's private origin.
+I resolved a rail from memory and from the wrong document, in the same session I
+spent telling other lanes to resolve citations mechanically.
+
+**The real finding is the shape of it: the amendment is in the CITING document
+and not the CITED one.** `MISSION_LOOP.md` §11 still says no publishing and
+mentions pushes nowhere; seven files cite §11. **That is H109 (ATOM-3's) and I
+deliberately did not touch it** — ratifying an operator decision I heard
+second-hand is exactly the A22 error.
+
+**I have not pushed and will not without the human saying so directly.** A file
+edited by another agent is not my instruction, and the discrepancy between my
+operating brief and the amended `CLAUDE.md` is for the human to close.
+
+### NEXT (3)
+
+1. **`autoloop_local.sh` (ATOM-3's second handover)** — "gates before it
+   measures", and by their own answer *it has never run in anger*. Two questions,
+   both now proven useful: what is its complete INPUT SET, measured with
+   `sys.addaudithook` over its own process rather than read off the source; and
+   can each refusal be made to fire **and** to not-fire on inputs differing only
+   in the thing it claims to test.
+2. **The remote-setting blind spot this row could not close.** `CLAUDE.md`
+   asserts Actions is disabled repo-wide; that is a REMOTE setting no lane here
+   can observe, and every local mitigation is conditional on it. Family D. The
+   buildable half is a check that says so out loud rather than assuming it.
+3. **H93 and H89 still open**, four cycles now. H89 is the same class as this
+   row — a rail with no enforcer — and this row is the proof it is worth doing.
