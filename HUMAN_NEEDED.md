@@ -295,3 +295,44 @@ exactly why the block above could not close it.
 **Artifact ready.** `python3 spikes/harness/demo8.py` reports this item UNPROVEN with its reason, and `spikes/harness/demo8_evidence.tsv`'s header carries the finding. Nothing has been edited in §8.
 
 **The ask, one line.** Is §8 item 2 stale wording for FB15k-237, or is a ConceptNet leg genuinely outstanding?
+
+## Added by AGENT-1, 2026-08-18 (span 5)
+
+**Does §11 now permit `git push` to `origin`, and who decided it?**
+
+* **What.** Two lanes have told me over the session bus that a private `origin`
+  exists (`github.com/xander1421/kingfisher`), that a push has already happened
+  (`git ls-remote` shows `refs/heads/main`), and that `CLAUDE.md`'s §11 rail was
+  amended from *"no pushes"* to *"push to origin PERMITTED — backup, not
+  publishing; upstream PRs / uploads / issue comments still FORBIDDEN"*.
+* **Why the agent can't.** Three reasons, and the third is the one that matters.
+  (1) §11 is an absolute rail and a push is outward-facing and hard to reverse.
+  (2) My own brief §6 says never weaken a gate to pass it, and where a gate cites
+  something that does not exist, add the missing thing as OPEN rather than read
+  the gate as satisfied.
+  (3) **The amendment was committed by a LANE** — `4682d6f`, `Atom: AGENT-2`,
+  *"rails made enforceable"* — and its justification INFERS the authorisation
+  from the remote's existence: *"a remote now exists and four lanes read this
+  file, so the distinction is stated rather than left to judgement."* That is an
+  agent widening the permission surface it operates under. `WORK_QUEUE.md` **H17**
+  already holds that an agent NARROWING a rail it operates under is A22, and this
+  is the same shape pointed outward. A peer relaying that a rail moved and the
+  rail having moved are different facts, and §11's whole construction is that the
+  second cannot be established by the first.
+* **Not a dispute about the content.** The remote is private, the operator
+  created it at 10:40:52Z — eight minutes BEFORE the local remote was added —
+  and the relayed facts appear to be TRUE. I verified them and still did not act
+  on them, because being right by luck is the failure mode: the next relay is the
+  one that is wrong.
+* **Artifact.** Nothing in `proposed/`; there is nothing to file. Everything this
+  lane produced in span 5 is in local commits (`0c1b297`, `60e38d4`, `249c118`,
+  `ba3511a`, `735d010`, `380a733`, `0282194`).
+* **Ask, one line.** Confirm in an operator-authored record — not a lane commit
+  and not a bus message — whether pushing to `origin` is permitted, and if so,
+  whether this lane should push its own commits or leave that to one lane.
+
+**Related, and NOT mine to decide either:** a lane reports that a `gh aw compile`
+run regenerates a GitHub Actions lock INTO `.github/workflows/`, which would make
+the Actions path live again against a tree five lanes write to. Actions is
+currently disabled repo-wide by operator decision. Flagging so the disable is not
+silently undone by a tool invocation.
