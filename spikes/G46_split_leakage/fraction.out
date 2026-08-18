@@ -1,0 +1,5 @@
+seed=0xC0FFEE  nt=272115 train=190480 test=40818
+test triples with a TRAIN edge on the same entity pair: 12249 = 30.0%
+  forward (s,o) under a DIFFERENT predicate : 5379 = 13.2%
+  inverse (o,s) under any predicate         : 9623 = 23.6%
+C2 control, entity pairs randomised       : 53 = 0.13%  (must be near zero)

@@ -738,3 +738,67 @@ deterministic and does not race:** v2 and v3 install byte-identical files, so
 content cannot separate them and the **inode** can — with a positive control
 that a deliberate `cp` leaves it unchanged, without which the check could not
 fail (A15). Installed and verified.
+
+
+## C19 — IN FLIGHT (checkpoint, 2026-08-18, not a verdict). G46, and a live callsign collision
+
+**THE COLLISION FIRST, because it decides whose rows these are.** Two writers
+are signing `Atom: AGENT-2`. **Mine, this span: `197502d`, `2a498aa`,
+`06efe7e`, `b6983ad`.** **NOT mine: `4682d6f` (the CLAUDE.md publishing-rail
+amendment), `f6987d9`, `b2dec92` `CLAIM G40`.** I hold `.loop_lock.AGENT-2`=40077,
+alive; the other writer holds none, and the CHANNEL lines around those commits
+read *(auditing session, CEO-authorised)* — the operator in this tree, not a
+rogue lane. **I am not contesting the name. G40 is not my row and I am not
+working it.** `Atom:` cannot separate two writers who share a callsign: that is
+**H12, still OPEN**, and this is its second live instance today. Told both peers
+directly, because one of them was about to record a rails-amendment process
+finding against me for a commit I did not make.
+
+**I HAVE NOT PUSHED AND WILL NOT.** The amendment permitting pushes to the
+private origin arrived under my callsign from a writer that is not me, and
+`MISSION_LOOP.md` §11 — which `CLAUDE.md`'s own rails heading cites as its
+source — still reads *"No external posts, issues, PRs, comments, uploads, or
+publishing."* Two documents, one citing the other, disagreeing. Reported to the
+lanes; **not filed as a class-H row, deliberately** — the operator's message in
+`inbox/AGENT-2.md` says class-H rows are climbing while this lane's assigned
+metrics sit unmeasured, and the rail question belongs to the writer who moved it.
+
+**THE PIVOT, and it is an operator instruction and not my selection.**
+`inbox/AGENT-2.md`, from `victorianikolenko@interactive`: *"AGENT-2 GRAPH AI
+TRAINING — the whole G-series, and filtered_mrr/hits_at_10 are yours. They are
+the heaviest-weighted metrics and currently unmeasured."* I had spent three
+cycles on class H. Taking the assignment.
+
+**G46 — ATTACK on the largest number this lane has published, which is also the
+scoreboard's heaviest-weighted metric: G34's filtered MRR 0.2648.**
+
+- **`spikes/S52_realkg/triples.bin` reads `nt=272115, npred=237, nent=14505` —
+  FB15k-237's OFFICIAL TRAIN SPLIT to the triple** (official: train 272,115 /
+  valid 17,535 / test 20,466), and `realkg.c`'s header says so in words.
+  `load_dataset()` re-splits it 70/15/15 under seed `0xC0FFEE`. **So G34's "full
+  FB15k-237 test split" is a random 15% slice of TRAIN and the official test set
+  is never touched.** ATOM-3 reached the neighbouring conclusion independently.
+- **FB15k-237 exists to remove inverse-relation leakage relative to ITS OWN
+  train/test boundary. A fresh random split re-opens it at a new one.**
+- **MEASURED, on disk: 30.0% of the re-split's test triples have a train edge on
+  the same entity pair** — 23.6% inverse `(o,s)`, 13.2% forward `(s,o)` under a
+  different predicate. **Randomised-pair control: 0.13%**, so the detector
+  matches pairs and not density. **F3 does not fire**: 30% is more than enough
+  to carry the 0.0631 → 0.2648 jump, which is entirely length-1 rules — and
+  length-1 rules fire on exactly that pair.
+- **CAUGHT BEFORE PUBLISHING: my first run used `SEED=42` and the generator's
+  seed is `0xC0FFEE`.** Re-run on the real split: 30.0% against 30.1%, so the
+  number is a property of the data rather than the seed — but it was measured,
+  not assumed, and the wrong-seed run was never quoted.
+- **F2 IS THE OPEN ONE and it is running detached** (`leak.py`, pid 55640): the
+  same published full-system arm over the same test set, partitioned. *If
+  filtered MRR on the no-same-pair part is within 0.01 of 0.2648, the re-split
+  contributed nothing measurable and I publish this at labelling size only.*
+  **Predicted: F2 fires the other way.** `C1` gates everything — the `all` arm
+  must return **0.2648 / 0.3929 exactly** before any new number is believed.
+
+**Nothing about the miner, the ranker or the filter is under attack, and I read
+them first rather than assuming:** ranks use the expected-rank convention
+`1 + higher + equal/2`, and the filter index is built over ALL triples, which is
+the correct filtered protocol. **What is under attack is the split, and
+therefore what the number MEANS.**
