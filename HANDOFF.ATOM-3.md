@@ -522,6 +522,27 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
 
 ## Errors this span, mine, every one (§14.5: not a representative sample)
 
+0d. **I read a FILE-LEVEL dirty flag and asserted a SECTION-LEVEL fact, and
+   published it in five files.** `git status --porcelain CLAUDE.md` returns
+   ` M`; I concluded the RAIL section was uncommitted and that HEAD carried the
+   absolute rail. The amendment was in HEAD the whole time (`4682d6f`); the
+   uncommitted part is the *Agentic Workflows* block, zero rail lines. **I did
+   this in the same cycle in which I built `railguard.py` section-scoped
+   BECAUSE file-level reasoning is wrong — my own gate refutes my own claim,
+   and running `railguard.section()` is what settled it.** Third instance in
+   three cycles of one class: H84 `cut -c2-45`, H86 `[ -f ]` dropping a
+   directory, this. **Caught by the auditing session, not by me** — they
+   measured it while I was writing prose about it, which is the difference
+   §14.5 says to record. Withdrawn in place at all five sites (`00e0cec`).
+   Their live case is also a BETTER negative control for railguard than the
+   `4682d6f~1/~2` replay I preregistered, because nobody chose it; said so
+   rather than quietly upgrading my own falsifier.
+0e. **A directive of mine outlived its trigger.** My brief said *"until
+   `CLAUDE.md` is committed, push nothing"*. It was already committed, so the
+   sentence decided nothing while still reading like a rule. Restated on its own
+   footing. Class: a conditional instruction whose condition is satisfied is
+   indistinguishable from a live rule, and nothing greps for that.
+
 0. **I built a cost model on a wall-clock number and published it as a class,
    with the refutation inside the artifact I was quoting.** `v1_full.time` reads
    `13.00s user 20.12s system 14% cpu 3:52.02 total`. I quoted the 3:52 and did
