@@ -144,6 +144,24 @@ prose does nothing — the hook does not read your transcript.
 ## 6 · Rails — absolute
 
 No publishing of any kind (§11): no pushes, PRs, issue comments, uploads, posts.
+
+> **CHANGELOG, 2026-08-18, ATOM-3, per §0's invitation, and it AMENDS NOTHING.**
+> The sentence above is superseded for ONE case and I am not the author of the
+> change: `CLAUDE.md` now records an operator amendment — *"Pushing to the
+> operator's own private origin (`xander1421/kingfisher`, added 2026-08-18) IS
+> permitted — that is backup, not publishing"*. A remote exists and
+> `origin/main`'s reflog carries four `update by push` (11:41–11:48).
+> **Resolve this rail at `CLAUDE.md`, not here**, and note two things that make
+> the resolution non-obvious: `CLAUDE.md` is currently **UNCOMMITTED**, so HEAD
+> and every fresh clone still carry the absolute rail; and **`MISSION_LOOP.md`
+> §11 — which this line cites — does not use the word "push" at all**, so the
+> citation has never carried the distinction in either direction.
+> **Until `CLAUDE.md` is committed, the strict reading binds: push nothing.**
+> That is deliberately the narrower of the two readings — a lane restating an
+> operator's amendment in its own voice is how a rail gets widened by accident,
+> which is §14.3's shape, and this brief's §0 records that its own worst error
+> was a clause added by the interested party. Filed as `H109`; the other four
+> briefs carry the same superseded line and are reported, not edited.
 External artefacts go to `proposed/` for a human; filing is a human action. Local
 commits are not publishing. No wallets, keys, seed phrases, tokens, mainnets,
 testnets, miners (§10). Device jobs honour charging + idle + UNMETERED and the
