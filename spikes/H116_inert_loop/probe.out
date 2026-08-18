@@ -1,0 +1,36 @@
+=== F2 — is the first gate refusing TRANSIENTLY or PERMANENTLY? ===
+One reading is not a rate. Sampling quiet.sh; each sample is a full run.
+  sample 1: rc=1 (REFUSES)
+  sample 2: rc=1 (REFUSES)
+  sample 3: rc=1 (REFUSES)
+  sample 4: rc=1 (REFUSES)
+  sample 5: rc=1 (REFUSES)
+  sample 6: rc=1 (REFUSES)
+  quiet in 0 of 6 samples
+  live lanes on this host: 5
+
+=== F3 — the extractor, against the instrument's REAL output ===
+Not against my reading of the regex. mutate.py is run once and captured.
+  captured 30 lines to mutate.tail.out
+  extractor yields: '<EMPTY>'
+  => the script's own guard fires: 'could not extract' and exit 1.
+     The loop cannot complete an iteration on its only runnable program.
+  lines in the real output that contain the word 'detected':
+      10:  empty             0/ 14 detected
+      11:  error-only        0/  4 detected
+      12:  evaluated         5/ 22 detected
+      13:  import-failure    0/ 24 detected
+  a line matching 'detected_classes: N' anywhere in it: 0
+
+=== the metric label vs the number under it ===
+  fault-expression     declares metric='detected_mutation_classes'  instrument run: mutate.py (hardcoded)
+  kingfisher_mission   declares metric='<none>'                     instrument run: mutate.py (hardcoded)
+
+=== F4/F5 — the falsifier gate: existential or substantive? ===
+  F5-control-no-falsifier  rc=1  gate      : quiet.sh REFUSES, but this program declares itself load-insensitive -- proceeding
+  F4-empty-falsifier       rc=1  gate      : quiet.sh REFUSES, but this program declares itself load-insensitive -- proceeding
+  F4-real-falsifier        rc=0  gate      : quiet.sh REFUSES, but this program declares itself load-insensitive -- proceeding
+
+=== §10 — did the probe write anything outside this spike? ===
+  .autoloop/state entries: 0 (expect 0)
+  proposed/autoloop-*:     0 (expect 0)

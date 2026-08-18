@@ -1,0 +1,19 @@
+# CAPTURED AGAINST autoloop_local.sh v2 (after H116). Same arms, same file.
+
+F5 CONTROL — the gate must be able to REFUSE, or F4 proves nothing:
+  rc=1   no-falsifier-section       | REFUSE: program states no falsifier. Rule 2 cannot be applied to a program
+
+F4 — what does it actually require?
+  rc=1   heading-only-EMPTY         | REFUSE: program has a '## Falsifier' HEADING and no falsifier under it.
+  rc=1   heading-plus-blank-line    | REFUSE: program has a '## Falsifier' HEADING and no falsifier under it.
+  rc=0   heading-with-real-text     | falsifier : present with a body; program.md last committed at UNCOMMITTED
+  rc=0   heading-saying-none        | falsifier : present with a body; program.md last committed at UNCOMMITTED
+
+  The gate is a grep for the heading. Its header claims the falsifier
+  was 'stated BEFORE the run' -- a TEMPORAL property. A run-time grep can
+  only decide an EXISTENTIAL one, and above it decides even less than that:
+  it decides whether a HEADING is present.
+
+§10 check — the arms wrote nothing outside this spike:
+  .autoloop/state entries: 0 (expect 0)
+  proposed/autoloop-*:     0 (expect 0)

@@ -1,0 +1,30 @@
+      detector: python__tests__ext_sub__module.metta
+      detector: python__tests__scripts__c2_spaces.metta
+      detector: python__tests__scripts__f1_imports.metta
+      detector: python__tests__scripts__f1_moduleA.metta
+      detector: python__tests__scripts__f1_moduleB.metta
+
+  probe !(if True yes no): '0\tyes' -> '0\tno'  (mutant live)
+
+stdlib-if: stdlib: (if True a b) returns b -- an INVOKED rule, unlike stdlib-init
+  empty             0/ 14 detected
+  error-only        0/  4 detected
+  evaluated         5/ 22 detected
+  import-failure    0/ 24 detected
+  TOTAL             5/64
+      detector: lib__tests__test_stdlib.metta
+      detector: python__tests__scripts__c1_grounded_basic.metta
+      detector: python__tests__scripts__c3_pln_stv.metta
+      detector: python__tests__scripts__d4_type_prop.metta
+      detector: python__tests__scripts__e3_match_states.metta
+
+  probe !(kf-canary): '0\t(kf-canary)' -> '0\t1'  (mutant live)
+
+stdlib-init: stdlib init: one extra rule, which shifts fuel_used for EVERY program
+  empty             0/ 14 detected
+  error-only        0/  4 detected
+  evaluated         0/ 22 detected
+  import-failure    0/ 24 detected
+  TOTAL             0/64
+
+rebuilt unmutated; wrote mutation.json

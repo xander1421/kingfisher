@@ -57,18 +57,84 @@ fi
 # THE FALSIFIER MUST EXIST BEFORE THE RUN. This is the whole basis of the accept
 # rule below: a falsifier written after the number moved is a story fitted to a
 # result, and rule 2 would launder it into an accepted retraction.
+# v2 (H116, ATTACKER-1, 2026-08-18). THE GATE DECIDED WHETHER A HEADING EXISTED
+# AND PRINTED A CLAIM ABOUT *WHEN* THE FALSIFIER WAS WRITTEN. Measured, four arms
+# on copies (`spikes/H116_inert_loop/gate_arms.v1.out`, with the same arms
+# against v2 beside it in `gate_arms.v2.out`): an EMPTY `## Falsifier`
+# section passed, a heading followed by a blank line passed, and a section whose
+# body reads "None. This program cannot be falsified." passed -- each printing
+# `falsifier : stated before the run`. The control fires (no section REFUSES), so
+# the gate works; it just answers a smaller question than it reports.
+#
+# TEMPORAL PROPERTIES CANNOT BE DECIDED AT RUN TIME, so this does two things
+# instead of overclaiming one: it requires the section to have a BODY, and it
+# records the commit that last touched program.md beside the number, which is
+# what actually lets a later reader check the falsifier predates the metric.
 grep -qi '^## Falsifier' "$DIR/program.md" || {
   echo "REFUSE: program states no falsifier. Rule 2 cannot be applied to a program"
   echo "        whose falsifier could be written after seeing the metric."; exit 1; }
-echo "falsifier : stated before the run (present in program.md)"
+FBODY=$(awk 'tolower($0) ~ /^## falsifier/ {f=1; next} /^## / {f=0} f' "$DIR/program.md" \
+        | grep -v '^[[:space:]]*$' | head -5)
+[ -n "$FBODY" ] || {
+  echo "REFUSE: program has a '## Falsifier' HEADING and no falsifier under it."
+  echo "        An empty section satisfies a grep and states nothing."; exit 1; }
+FCOMMIT=$(git log -1 --format=%h -- "$DIR/program.md" 2>/dev/null)
+echo "falsifier : present with a body; program.md last committed at ${FCOMMIT:-UNCOMMITTED}"
+echo "            (CEILING: this checks that text EXISTS, not that it says"
+echo "            anything -- no run-time check can read English, and none can"
+echo "            date a claim. The text is reproduced in the summary and the"
+echo "            commit is recorded so a human can date it.)"
+printf '            > %s\n' "$FBODY"
 
 [ "$CHECK" = "--check" ] && { echo; echo "--check: gates pass, nothing run."; exit 0; }
 
 echo; echo "=== measure ==="
+# v2 (H116). TWO DEFECTS HERE, AND THE LOOP HAD NEVER REACHED EITHER BECAUSE
+# quiet.sh REFUSES ON THIS FLEET IN 0-OF-6 SAMPLES WITH 5 LANES LIVE.
+#
+# (a) THE EXTRACTOR COULD NOT MATCH ITS OWN INSTRUMENT. It grepped stdout for
+#     `detected[_ ]classes?[: ]+[0-9]+`; `mutate.py` prints
+#     `  {class:15s} {d:3d}/{t:3d} detected` -- the word at the END of the line --
+#     and emits no such string anywhere. So `cur` was always empty and the run
+#     exited 1 on its only runnable program. `.autoloop/state/` was empty and no
+#     `proposed/autoloop-*.md` existed, which is what that looks like from
+#     outside. Scraping a regex out of another program's PROSE is the same defect
+#     `eval_graph_ai.py` was repaired for hours earlier; the artifact exists
+#     (`mutation.json`) and is machine-readable.
+#
+# (b) THE METRIC WAS DECLARED AND THE INSTRUMENT WAS HARDCODED. `METRIC` came
+#     from program.md while the measurement ran `mutate.py` regardless -- so a
+#     program declaring anything else got a number labelled with its own metric
+#     name and computed from a different one. `kingfisher_mission` declares NO
+#     metric at all. Now: a metric this runner cannot source REFUSES, by name,
+#     rather than being silently mislabelled (H111's class).
+ART=spikes/M1_9_mutation/mutation.json
+started=$(date +%s)
 raw=$(python3 spikes/M1_9_mutation/mutate.py 2>&1 | tail -30)
-cur=$(printf '%s\n' "$raw" | grep -oE 'detected[_ ]classes?[: ]+[0-9]+' | grep -oE '[0-9]+$' | tail -1)
-[ -n "$cur" ] || { echo "could not extract $METRIC from the instrument's output."; echo "$raw" | tail -8; exit 1; }
-echo "current   : $cur"
+case "$METRIC" in
+  detected_mutation_classes) ;;
+  *) echo "REFUSE: this runner can source 'detected_mutation_classes' and nothing"
+     echo "        else. The program declares '${METRIC:-<none>}'. A number under"
+     echo "        the wrong label is worse than no number."; exit 1 ;;
+esac
+[ -f "$ART" ] || { echo "REFUSE: the instrument produced no $ART."; printf '%s\n' "$raw" | tail -8; exit 1; }
+# C-FAMILY: the artifact must be the one THIS run wrote. A stale file left by an
+# earlier run reads exactly like a fresh measurement.
+mt=$(stat -f %m "$ART" 2>/dev/null || stat -c %Y "$ART" 2>/dev/null)
+[ -n "$mt" ] && [ "$mt" -ge "$started" ] || {
+  echo "REFUSE: $ART is not newer than this run (mtime=$mt, started=$started)."
+  echo "        Reading it would report a previous run's number as this one's."
+  printf '%s\n' "$raw" | tail -8; exit 1; }
+cur=$(python3 - "$ART" <<'PYEOF'
+import json, sys
+d = json.load(open(sys.argv[1]))
+muts = {k: v for k, v in d.items() if k != '_tree'}
+print(sum(1 for v in muts.values()
+          if sum(a for a, _ in v['by_class'].values()) > 0))
+PYEOF
+)
+[ -n "$cur" ] || { echo "could not compute $METRIC from $ART."; exit 1; }
+echo "current   : $cur  ($METRIC, computed from $ART, not scraped from stdout)"
 
 # ACCEPT RULE, tuned. Stock autoloop accepts only an improvement, and that rule
 # would have rejected every correction that gives this project its value --
@@ -77,8 +143,11 @@ echo "current   : $cur"
 # unfalsified claims, and unfalsified is not true.
 verdict=REJECT; why=""
 if [ -z "${prev:-}" ]; then verdict=BASELINE; why="first observation; nothing to compare"
-elif [ "$DIR_" = higher ] && [ "$cur" -gt "$prev" ]; then verdict=ACCEPT; why="metric rose $prev -> $cur"
-elif [ "$DIR_" = lower ]  && [ "$cur" -lt "$prev" ]; then verdict=ACCEPT; why="metric fell $prev -> $cur (lower is better)"
+# v2 (H116): `-gt` is an INTEGER comparison and this fleet's headline metrics are
+# floats (`filtered_mrr` 0.2648). A float here did not compare wrong, it made the
+# shell error out -- so the comparison goes through awk, which handles both.
+elif [ "$DIR_" = higher ] && awk -v a="$cur" -v b="$prev" 'BEGIN{exit !(a>b)}'; then verdict=ACCEPT; why="metric rose $prev -> $cur"
+elif [ "$DIR_" = lower ]  && awk -v a="$cur" -v b="$prev" 'BEGIN{exit !(a<b)}'; then verdict=ACCEPT; why="metric fell $prev -> $cur (lower is better)"
 elif [ "$cur" = "$prev" ]; then verdict=REJECT; why="metric unchanged at $cur"
 else
   verdict=REJECT
@@ -126,6 +195,8 @@ printf '%s\t%s\t%s\n' "$(date +%Y-%m-%dT%H:%M:%S)" "$cur" "$verdict" >> "$STATE"
   printf '| when | %s | verdict |\n|---|---|---|\n' "$METRIC"
   awk -F'\t' '{printf "| %s | %s | %s |\n", $1, $2, $3}' "$STATE"
   printf '\n**This run:** %s\n\n' "$why"
+  printf '**Falsifier stated in program.md** (last committed `%s` -- date it\n' "${FCOMMIT:-UNCOMMITTED}"
+  printf 'against the row above; this script cannot):\n\n%s\n\n' "$FBODY"
   printf 'D6 is NOT established by this script. Before any number here is quoted:\n'
   printf 'runnable code, pinned seed, controls that can fail, and\n'
   printf '`python3 spikes/harness/kfcheck.py` certification. A metric with no\n'
