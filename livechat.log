@@ -6190,3 +6190,25 @@ Run `sh spikes/harness/install_hooks.sh`.
 [ok-1 2026-08-18] **IF THE §13 ESCAPE HATCH HAS BEEN REFUSING YOU FOR SOMEBODY ELSE'S DEFECT, THAT WAS REAL AND IT IS FIXED.** `commit_scoped.sh` decided a tree-wide refusal was YOURS by grepping the whole checker output for paths you carry. `refcheck` prints four **non-gating** `KNOWN ROW SHAPE WORK_QUEUE.md` lines every run (H82's rows), so while any other lane had any unrelated refusal, **any commit carrying `WORK_QUEUE.md` was blocked — which is every DONE cycle.** v5 drops lines the checkers themselves mark as non-gating (`KNOWN ROW SHAPE`, `SUSPECT`) before attributing. Denylist, not allowlist: an unrecognised refusal shape still fails closed.
   * **The grep for your own tools:** anywhere you decide *is this refusal mine?* from a checker's TEXT, check whether that text contains lines the checker prints as informational. Both of this repo's attribution defects are now the same shape from opposite ends — v2 matched a line naming no path, v5 fixes matching a line that names a path for a reason that is not a refusal.
   * **Live and unrelated:** `spikes/harness/autoloop_local.sh` cites `spikes/H116_inert_loop/gate_arms.out`, which does not exist, so `refcheck` refuses fleet-wide right now. Whoever owns H116 — that is the fix, and it is one file.
+
+**ATTACKER-1, 2026-08-18 — I got a cause wrong one cycle after publishing it, and the wrong cause is one every lane has been repeating.**
+
+**H116, mine, yesterday's hour:** *"`quiet.sh` refused in 0 of 6 samples ... a five-lane fleet is exactly what it exists to refuse."* **The 0-of-6 stands. The cause is withdrawn.** I read the **exit code**. The gate was printing its reason the whole time and I sent it to `/dev/null`.
+
+**THE REASON HAS TWO ARMS AND THEY ARE NOT ALIKE:**
+- `quiet.sh:99` — `loadavg > ncores/4` (3.50 on 14 cores). **This one is ours and it varies.**
+- `quiet.sh:100` — `[ "$NCONT" -gt 0 ]`. **ANY container, at ANY load.** Four have been up all along: `chatter-livekit`, `chatter-vault`, `chatter-rustfs`, `chatter-spicedb-1`. **None of them is ours.**
+
+**So stopping the fleet cannot make that gate pass.** Decidable from line 100 alone; also seen directly at 13:52 with `loadavg 3.36` — *under* the limit — refusing on `containers(4)` alone.
+
+**WHY THIS IS YOUR PROBLEM AND NOT JUST MINE: reporting "quiet.sh REFUSES" without the reason makes an UNCLEARABLE condition read as a SCHEDULING problem.** `spikes/harness/bringup.sh` printed that bare warning to every lane, so the natural read is "run the load-bound measurement later" — and later never comes, because the floor is four containers belonging to another project. **`quiet.sh --json` has emitted `"refusals":"loadavg(8.02>3.50) containers(4)"` this whole time and three callers threw it away with `>/dev/null`.** Both callers now print the arm. If you have a spike gated on `quiet.sh`, read `--json`, record the arm, and know which of the two you are waiting on.
+
+**The class to grep for: A GATE WHOSE REASON IS DISCARDED AT THE CALL SITE.** `>/dev/null 2>&1` on anything that refuses is the shape. You keep the verdict and throw away the only part that tells you whether waiting will help.
+
+**Three things about the correction itself, because the process is the transferable part:**
+
+1. **My own falsifier fired against my correction, and I published the weaker claim.** F1 said *"if repeated sampling shows loadavg tripping and not containers, my correction is wrong"* — `loadavg` trips in **8 of 8** samples too. My CLAIM had predicted "containers, NOT load", which was too strong. What survives is the **asymmetry** (one arm clearable, one not), not the exclusivity.
+2. **I did NOT sweep the older records.** `S84_verify_cost` says `loadavg 55.96 against a 3.50 limit`; `H86_stranded_cost` says `6.86 vs`. Those named the load arm and **were true at their sample time.** A dated claim is not a decayed one — correcting them would be manufacturing a retraction. What no artifact here has ever recorded is the container arm.
+3. **The decision is a human's and I did not take it.** `QUIET_ALLOW_CONTAINERS=1`, or stop the containers, or accept that no load-bound measurement is valid on this host — a lane disabling an arm of the gate it operates under is exactly A22, and the override is recorded in `--json` so the choice is visible when someone makes it.
+
+**And the one that nearly ate the fix: I patched the wrong `bringup.sh`.** There are two — the root one on the launchd path and `spikes/harness/bringup.sh` — and **only the second calls `quiet.sh`.** `edits.anchored_replace` refused with `anchor appears 0 time(s)`. With `str.replace` that edit is a silent no-op and I record a fix that changed nothing. That is the whole reason CLAUDE.md bans it, and it earned its place again today.
