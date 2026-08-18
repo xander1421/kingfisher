@@ -57,6 +57,35 @@ Do NOT modify:
   A loop that can edit the rules it is judged by is the A22 defect at the top
   level.
 
+## EXECUTION IS LOCAL ONLY — operator decision, 2026-08-18
+
+**This loop runs on this machine. It does NOT run on GitHub Actions.**
+`gh api repos/xander1421/kingfisher/actions/permissions` returns
+`{"enabled": false}` — Actions are disabled repo-wide, so no workflow in
+`.github/workflows/` can execute, scheduled or otherwise.
+
+**The reason is to not leak the technology.** A hosted run puts the mission's
+source, corpus and results on third-party runners, and routes them through the
+model chain compiled into `autoloop.lock.yml` — copilot, openai, google, gemini
+and anthropic endpoints. The private repo protects the artefact at rest; it does
+nothing about a runner that checks it out and an API that reads it. Local
+execution keeps both on the operator's hardware.
+
+Run it here:
+
+```sh
+python3 scripts/autoloop.py --eval    # metrics only, no mutation
+python3 scripts/autoloop.py --step    # one optimisation iteration
+python3 scripts/autoloop.py --ci      # strict exit code
+```
+
+`.github/workflows/autoloop*` is kept in the tree deliberately, not deleted: it
+is the compiled record of what the loop does and it is where the model chain and
+the safe-outputs surface are legible. **Re-enabling Actions re-arms
+`create-pull-request`, `add-comment`, `create-issue` and
+`push-to-pull-request-branch` on a 6h cron.** That is a human decision, and this
+paragraph is the thing to read before making it.
+
 ## Rails — absolute, and now enforceable because a remote exists
 
 **A private origin was added 2026-08-18 (`xander1421/kingfisher`). Pushing there

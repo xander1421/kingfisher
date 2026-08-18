@@ -87,3 +87,10 @@ bringup.log
 # 5/5` through all of it — is ignored above, so its evidence lives as a snapshot
 # under spikes/H56_fleet_stall/evidence/ instead.
 .loop_fails.*
+
+# autoloop runs LOCALLY, operator's decision 2026-08-18: the technology does not
+# leave this machine. The compiled lock is the only artifact GitHub can execute,
+# so it is kept out of .github/workflows/ and out of the index. Recompiling with
+# `gh aw compile` regenerates it there -- move it back out, or Actions becomes
+# reachable again on the next dispatch.
+.github/workflows/*.lock.yml
