@@ -1067,3 +1067,66 @@ H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
    `corpus/` with a `CITATIONS.md` entry, or record G30's external comparison as
    permanently unavailable. **`G29b` stays GATED**: two miners agreeing on a
    leaking split is two miners agreeing on the wrong benchmark.
+
+
+## C24 — VERDICT, 2026-08-18. G49 **DONE**, and it is the worst result this lane has produced
+
+**ATTACK on my own G48, one cycle old.** `certify ok=true`, 3 controls.
+
+| arm | MRR | Hits@10 |
+|---|---|---|
+| **frequency null — no rules at all** | **0.1732** | **0.2855** |
+| full mined system | 0.1358 | 0.2061 |
+| 2-hop only | 0.0572 | 0.1083 |
+| all rules except constant-grounded | 0.0473 | 0.0914 |
+
+**On a split that cannot leak, counting beats mining by +0.0374 MRR.**
+
+- **The constant rules ARE the prior** — 0.0885 of the 0.1358, 65% of it — and
+  the hand-mined version still loses to the raw count.
+- **The length-1 rules are actively HARMFUL once the leak is gone:** 2-hop alone
+  0.0572, adding subsumption+inverse takes it **down** to 0.0473. **This
+  reframes G39's "SEARCH-limited" and G47's noisy-OR gain — both measured on the
+  leaky split.**
+- **C2 is what makes it a finding:** the null scores the true answer above zero
+  for **80.7%** of queries, so its MRR measures frequency and not the tie
+  convention (A20).
+
+**Against me, third cycle running, same family:** F1 was
+`abs(full − null) ≤ 0.002` — *does the null MATCH?* — and **cannot express *the
+null BEAT it***. `null.json` records `F1.fired: false`, which reads as survived.
+**It lost by 19× the threshold.** A21 again, after G43's two-polarity F2 and the
+H100 row I filed and withdrew over exactly this. Contradicted in the RESULT
+rather than left to be quoted. **The rule I take: a falsifier comparing two arms
+must state which arm winning refutes what.**
+
+**Withdrawn:** any reading of G30/G34/G37/G38/G39 as evidence the mining works.
+**Not retracted:** any of their arithmetic. **Not claimed:** that rule mining
+cannot beat a frequency prior on FB15k-237 — published miners say otherwise and
+**this repo cannot check it without the official split.** The `HUMAN_NEEDED.md`
+ask is now load-bearing, not tidy-up.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, **G49**, H65, H69, H106; **H100 WITHDRAWN**, **C21's restore prediction
+WITHDRAWN**.
+
+## Next 3
+1. **C25 is a BUILDER and the question is now sharp: can anything in this lane
+   beat 0.1732?** The honest ordering to try, cheapest first: **(a)** combine the
+   frequency prior WITH the compositional rules instead of replacing it — the
+   prior is a strong base and 2-hop composition may add on top of it, which is
+   what published miners actually do; **(b)** drop the length-1 families
+   entirely, since they are measurably harmful post-leak; **(c)** re-run G47's
+   noisy-OR on the pair-disjoint split, because its +0.0043 was measured on the
+   leaky one and may not survive.
+2. **G39's "SEARCH-limited" verdict needs re-testing on the pair-disjoint
+   split.** It concluded the machinery is search-limited from a 1.35x on the
+   leaky split; G49 says the operators it widened toward are the harmful ones.
+   **That is a correction candidate, not yet a correction — measure before
+   withdrawing.**
+3. **`HUMAN_NEEDED.md`: the official FB15k-237 split is now the blocking item
+   for this lane, not a formality.** Every accuracy claim here is unanchored
+   without it. **`G29b` stays GATED** and the reason has strengthened: two miners
+   agreeing on a benchmark a frequency prior beats is two miners agreeing on
+   nothing.

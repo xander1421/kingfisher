@@ -1,0 +1,191 @@
+{
+ "spike": "G49_frequency_null",
+ "recorded_utc": "2026-08-18T11:28:55Z",
+ "note": "G49: ATTACK on my own G48 from one cycle earlier. What does 0.1358 buy over a predicate-conditional frequency prior?",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
+   "head": "a135c2ed565937b1e41926638ec23024ba63a8b8",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G36_repro_g34/length1_constants.json"
+   ],
+   "diff_sha256": "d6798cea5ed28a8914d9bcc49f53d2312f3c584a811cf523949e4517c73a955f",
+   "diff_bytes": 2060
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split",
+   "head": "a135c2ed565937b1e41926638ec23024ba63a8b8",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G48_pairdisjoint_split/split.out"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G49_frequency_null/null.py",
+   "sha256": "32215ab3ea103920f2b4b99fae1a310b4a611296aba85e2b5cc0a8c6de177b24",
+   "bytes": 12234,
+   "mtime": 1787052442,
+   "compared_ts": 1787052442,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G49_frequency_null/null.json",
+   "sha256": "d45fcbfee2bf4c6398845945e33d8698e68be6ba68bc63332013ab4b4b83780e",
+   "bytes": 3331,
+   "mtime": 1787052535,
+   "compared_ts": 1787052535,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_instrument_reproduces_G48",
+   "must_fire_because": "the full-system arm must return G48's figure, or this is not the instrument G48 used and no comparison from it means anything",
+   "can_fail_because": "the full arm returning anything but 0.1358 / 0.2061",
+   "null_must_contain": "a differing figure: the literals are transcribed from G48/RESULT.md",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the full-system arm returning anything but 0.1358 / 0.2061 on the pair-disjoint split",
+    "mrr": 0.1358,
+    "hits10": 0.2061,
+    "g48_mrr": 0.1358,
+    "g48_hits10": 0.2061
+   }
+  },
+  {
+   "name": "C2_null_is_not_degenerate",
+   "must_fire_because": "the null must score the true answer above zero for a real share of queries, or its MRR measures the tie convention and not frequency",
+   "can_fail_because": "a null that scores almost no target above zero",
+   "null_must_contain": "a low share, which a genuinely uninformative prior would produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a null that scores the true answer above zero for almost no query, whose MRR would then measure the tie-averaging convention rather than frequency",
+    "queries_with_a_scored_target": 65862,
+    "n_queries": 81634,
+    "share": 0.8068
+   }
+  },
+  {
+   "name": "C3_same_filtered_candidate_sets",
+   "must_fire_because": "both arms must use one rank convention and one filter index, or this compares two protocols rather than two scorers",
+   "can_fail_because": "a null scored by a different rank rule than the system",
+   "null_must_contain": "both: the convention is lifted verbatim and is inspectable",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the null and the system using different rank conventions or filters, making this a comparison of two protocols",
+    "how": "rank_from_scores() is G34's convention lifted verbatim (1 + higher + equal/2, zero-branch averaged over the unscored tail) and both arms read the same true_sp / true_po index"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_null_matches_the_full_system",
+   "must_fire_because": null,
+   "can_fail_because": "the frequency prior lands within 0.002 of the full system",
+   "null_must_contain": "a matching score, which C2 shows this null is capable of producing",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "full_mrr": 0.1358,
+    "null_mrr": 0.1732,
+    "gap": -0.0374
+   },
+   "refutes": "the accuracy claim of the whole G-series: that its number is inference rather than a marginal",
+   "fires_when": "the frequency prior lands within 0.002 of the full system",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_null_is_too_weak_to_test_anything",
+   "must_fire_because": null,
+   "can_fail_because": "the frequency prior scores below 0.01 MRR",
+   "null_must_contain": "a near-zero score, which an uninformative prior would give",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "null_mrr": 0.1732
+   },
+   "refutes": "the null's standing as a null (A20)",
+   "fires_when": "the frequency prior scores below 0.01 MRR",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_advantage_is_all_compositional",
+   "must_fire_because": null,
+   "can_fail_because": "removing the constant rules costs 0.002 MRR or less",
+   "null_must_contain": "no contribution, which the ablation is free to report",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "full_mrr": 0.1358,
+    "no_constant_mrr": 0.0473,
+    "constant_contribution": 0.0885,
+    "null_mrr": 0.1732
+   },
+   "refutes": "the reading that the constant-grounded rules are the prior",
+   "fires_when": "removing the constant rules costs 0.002 MRR or less",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "newest": 1787050131,
+   "from": "spikes/G36_repro_g34/length1_constants.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "newest": 1787052151,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "a frequency prior scoring within 0.002 of the full rule system on a leak-free split, which would make this series' accuracy a marginal rather than an inference"
+}
