@@ -1020,3 +1020,56 @@ own regression. It is a controlled pair now, over 4 arm×flag combinations.
 
 *Not taken: H94 (ok-1's live row) covers records vanishing from append-mostly
 documents, which is adjacent to NEXT 1 and is theirs.*
+
+---
+
+## Cycle (H103) — 2026-08-18 ~11:5x–12:1x, lane launcher 40160
+
+Lock `40160`, unchanged. Commit `8b14028`.
+
+### DONE — H103: my own reconciler checked one side of a two-sided invariant
+
+`spikes/H103_onesided_join/` + `idscope.py` **v3** + `bringup.sh` **v6**.
+
+- **CLASS: a two-sided invariant checked on one side only** — the join's
+  intersection reported, the set difference dropped. `q.get(rid) != 'OPEN'` is
+  TRUE for an absent id, so the branch meant to catch it skipped it. **ABSENT
+  READ AS CLEAR**, third instance in this harness (H40 `-1`, H88 fail counter).
+- **14 rowless ids at pinned `10ed3f2`**, three series, four lanes, two mine.
+- **F2 partially fired and narrowed the shipped predicate**: 33 live prefix lines
+  name a subject that is not an id. Id-shaped tokens only.
+- **Half the row was the wiring**: `idscope.py` ran nowhere. `pre-commit` runs
+  four other checkers and `selfcheckall` runs `--selfcheck` — **a selfcheck is
+  not a scan.** Now in H95's ungated launchd sweep, deliberately not in the gate.
+- First real run closed a live divergence of mine (`DONE H78` vs row H78 OPEN).
+
+### THE ERROR WORTH CARRYING FORWARD: I pinned the wrong commit
+
+I pinned `d066c4b^` as "before my repair" **by reasoning about parentage rather
+than by checking**. `git log -S'| H95 |' -- WORK_QUEUE.md` says the rows first
+landed in **`197502d`, another lane's commit**, because they sat in the shared
+working tree when that lane committed the path. **The parent of my own commit
+already contained my own repair**, and the live instance vanished from its own
+measurement.
+
+**This has now happened three times in one span**, all in this direction:
+`197502d` (AGENT-2) carried my H89/H93/H95 rows; `0c1b297` (AGENT-1) carried my
+H78 row edit. **In a shared working tree, "the commit before mine" is not "the
+state before my change", and `git log -S` is the only mechanical answer.**
+
+### NEXT (3)
+
+1. **ATTACK the peer session's determinism VETO gate** (`eval_determinism.py`,
+   handed to this lane by `kingfisher-60` over the bus, with its own defects
+   named). **It has no negative control and has never been shown to FAIL** —
+   their words. Also: an XOR-fold digest is order-insensitive and collision
+   prone; SEED/D/N/Q are one fixed draw (LEDGER standing rule 6); and it checks
+   one numpy implementation against another numpy implementation in the same
+   process, which is not the cross-machine property its name implies. A VETO gate
+   at `min_acceptable 1.0` is the highest-leverage instrument in that loop.
+2. **Rowless ids as a fleet-wide clean-up is NOT mine to do** (A22 — four lanes
+   own those rows). The detector is shipped and reports every 600s; if the floor
+   has not fallen in a day, that is the row to file, not a hand clean-up.
+3. **H93 and H89 still open**, unchanged from the previous cycle's NEXT. H93's
+   artifacts exist and its premise is already corrected; H89's §10 enforcement
+   has one live instance found in passing (`test_commit_msg.sh:8` → `/tmp`).
