@@ -1,0 +1,4 @@
+host: Darwin 25.4.0 arm64
+HEAD_before: 0324843
+commits_in_history: 461
+uncommitted_paths: 362

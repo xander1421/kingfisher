@@ -1,0 +1,57 @@
+{
+  "contention_resistance": "NOT CLAIMED -- falsifier not run (\u00a712.12)",
+  "coverage": {
+    "after_uall": 482,
+    "before_uall": 387,
+    "directories_recovered": 15,
+    "files_recovered": 110
+  },
+  "dep_dirty_residue": [
+    "M spikes/harness/pre-commit.hook",
+    "M spikes/harness/provenance.py",
+    "M spikes/harness/retrofit_d6.py",
+    "M spikes/harness/test_loop_gate.sh",
+    "?? spikes/harness/recordloss.py"
+  ],
+  "dep_pinned_commit_for_tool": "afcf3a5",
+  "falsifier_preregistered_and_run": {
+    "fired": false,
+    "protocol_verdict": "NOT DECISIVE -- compare.sh's drift control fired: the tree fingerprint moved at all four boundaries. Recorded as the control reported it. The control was NOT narrowed to make it pass (H26b).",
+    "result": "IDENTICAL file-by-file (verdict, owner, path) over 359 paths; v2a == v2b across the v1 run",
+    "scope": "covers the HIST rewrite ONLY. The -uall fix deliberately CHANGES the output (359 -> 483 paths) and is therefore not covered by an identity falsifier; C1 and C2 cover it.",
+    "text": "if one git log --name-only pass does not reproduce v1's exact classification on the current tree, the rewrite is wrong and v1 stays"
+  },
+  "operating_point": {
+    "commits": "461+",
+    "cores": 14,
+    "loadavg_1m": 7.25,
+    "paths": 359,
+    "quiet_sh": "REFUSES"
+  },
+  "retracted_claim": "stranded.sh \"no longer completes\"; cost is O(files x history)",
+  "retraction_reason": "family E -- number real, model wrong. 86% of the 232 s wall was not this process running.",
+  "speedup_cpu": 1.205,
+  "speedup_wall": 1.419,
+  "timings": {
+    "v1_2026-08-17T21:36": {
+      "cpu_pct": 14,
+      "sys_s": 20.12,
+      "user_s": 13.0,
+      "wall_s": 232.02
+    },
+    "v1_2026-08-18T11:37": {
+      "cpu_pct": 96,
+      "sys_s": 11.37,
+      "user_s": 7.16,
+      "wall_s": 19.3
+    },
+    "v2_2026-08-18T11:37": {
+      "cpu_pct": 113,
+      "sys_s": 4.04,
+      "user_s": 11.34,
+      "wall_s": 13.6
+    }
+  },
+  "wall_citable": false,
+  "wall_reason": "spikes/quiet.sh REFUSES on this host (loadavg 6.86 vs 3.50, 4 foreign containers, mediaanalysisd 167.9%). CPU seconds are the load-insensitive measure and the ratio is published with its operating point (A18, \u00a73). The S84 precedent."
+}

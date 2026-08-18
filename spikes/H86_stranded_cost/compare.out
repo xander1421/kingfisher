@@ -1,0 +1,16 @@
+fingerprint before v2a : a7daf8f05e329b9f
+v2a  13s
+fingerprint after  v2a : ce48f6356603f72d
+v1   19s
+fingerprint after  v1  : ecda58c866d81aee
+v2b  13s
+fingerprint after  v2b : 8c040c3ee0a1844b
+
+tree fingerprint unmoved across all four boundaries : NO  <-- window was dirty
+v2 reproduces itself across the v1 run (v2a == v2b) : yes
+rows: v1=     359 v2a=     359 v2b=     359
+speedup: v1 19s / v2 13s
+
+VERDICT: IDENTICAL file-by-file (verdict, owner, path) across 359 paths.
+
+*** NOT DECISIVE: the tree moved under the comparison. Re-run. ***

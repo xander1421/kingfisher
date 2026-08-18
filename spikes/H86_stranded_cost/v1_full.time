@@ -1,0 +1,1 @@
+sh spikes/H86_stranded_cost/v1.sh > spikes/H86_stranded_cost/v1_full.out 2>&1  13.00s user 20.12s system 14% cpu 3:52.02 total

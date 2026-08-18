@@ -1,0 +1,154 @@
+{
+ "spike": "H86_stranded_cost",
+ "recorded_utc": "2026-08-18T10:42:56Z",
+ "note": "dep spikes/harness is dirty in files this row does not touch: ?? spikes/harness/recordloss.py; M spikes/harness/pre-commit.hook; M spikes/harness/provenance.py; M spikes/harness/retrofit_d6.py; M spikes/harness/test_loop_gate.sh",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "afcf3a50b0146e2902b3551243b3bdb8e649db47",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/pre-commit.hook",
+    "spikes/harness/provenance.py",
+    "spikes/harness/retrofit_d6.py",
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/recordloss.py"
+   ],
+   "diff_sha256": "76d703f125c1f66f7f25f7bb4dc2904d28e5ba32ad8ac37efe8fcf653cbd7aa4",
+   "diff_bytes": 17607
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H86_stranded_cost/h86.json",
+   "sha256": "b5201f73902351689993421fd902539dc92331e4c754d475290692a214167210",
+   "bytes": 2259,
+   "mtime": 1787049776,
+   "compared_ts": 1787049776,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "untracked_dirs_collapse",
+   "must_fire_because": "the scan must be shown to have been blind: plain porcelain returns DIRECTORY entries that the [ -f ] guard drops",
+   "can_fail_because": "if every untracked path were already a file, `dirs` would be empty, `hidden` 0, and plain == -uall -- the defect would not exist on this tree and C1 would not fire",
+   "null_must_contain": "a tree with zero untracked directories, where plain and -uall agree and there is nothing to find",
+   "fired": true,
+   "detail": "15 directories hid 110 files",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "plain_paths": 387,
+    "uall_paths": 482,
+    "directory_entries_dropped": 15,
+    "files_hidden_behind_them": 110,
+    "dirs": [
+     ".autoloop/",
+     ".github/",
+     ".vscode/",
+     "inbox/",
+     "scripts/",
+     "spikes/G34_length1_and_constants/",
+     "spikes/H100_falsifier_polarity/",
+     "spikes/H101_autoloop_metric/",
+     "spikes/H13_fuse_race/",
+     "spikes/H86_stranded_cost/",
+     "spikes/H88_sentinel_branch/",
+     "spikes/H93_selfcheck_blast/",
+     "spikes/H94_record_loss/",
+     "spikes/S85_verify_vs_reexec/",
+     "spikes/W6_incremental_witness/"
+    ]
+   }
+  },
+  {
+   "name": "selfcheck_is_mutation_tested",
+   "must_fire_because": "the new control must FAIL when the fix it guards is removed, or it is decoration (A15)",
+   "can_fail_because": "if --selfcheck returned 0 with -uall stripped, C2 does not fire; that is exactly what the first draft did",
+   "null_must_contain": "a selfcheck that queries git directly rather than the shipped scan -- which is what the FIRST DRAFT of this control did, and it stayed green under the mutant",
+   "fired": true,
+   "detail": "green -> red -> green across the mutation",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "unmutated_rc": 0,
+    "mutant_rc": 1,
+    "restored_rc": 0,
+    "mutant_stdout": "SELFCHECK FAIL: the scan cannot reach a file inside an untracked dir"
+   }
+  },
+  {
+   "name": "wall_was_not_cpu",
+   "must_fire_because": "the retraction rests on cpu%% being far below 100 in the ORIGINAL artifact, not on a re-run being fast",
+   "can_fail_because": "if v1_full.time read e.g. \"95% cpu\" the original claim would be supported and this retraction would be wrong",
+   "null_must_contain": "a v1_full.time showing ~100% cpu, which would mean the 232 s really was this process computing and the O(files x history) story would stand",
+   "fired": true,
+   "detail": "the artifact quoted by the claim contained its refutation",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v1_full.time": "sh spikes/H86_stranded_cost/v1.sh > spikes/H86_stranded_cost/v1_full.out 2>&1  13.00s user 20.12s system 14% cpu 3:52.02 total",
+    "cpu_seconds_then": 33.120000000000005,
+    "wall_seconds_then": 232.02,
+    "wall_seconds_now": 19.3,
+    "cpu_seconds_now": 18.53
+   }
+  },
+  {
+   "name": "class_has_a_second_site",
+   "must_fire_because": "\u00a712.2 requires grepping the whole harness for the class before the row closes; a class with one instance is a site",
+   "can_fail_because": "if grep returned only stranded.sh, C4 does not fire and the \"CLASS\" framing is withdrawn",
+   "null_must_contain": "a harness where stranded.sh is the only reader of git status --porcelain, in which case there is no class to propagate and H102 should not be filed",
+   "fired": true,
+   "detail": "4 site(s) besides stranded.sh",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "other_sites": [
+     "Binary file spikes/harness/__pycache__/provenance.cpython-314.pyc matches",
+     "spikes/harness/provenance.py:33:`git status --porcelain` OUTPUT THAT CAN NAME A DIRECTORY. For a wholly-untracked",
+     "spikes/harness/provenance.py:79:    \"\"\"Yield the SOURCE FILES a `git status --porcelain` path stands for.",
+     "spikes/harness/provenance.py:142:    # THIS LOOP WAS DEAD until 2026-08-17. `git status --porcelain` prints paths"
+    ]
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787049759,
+   "from": "spikes/harness/provenance.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if v1_full.time had shown ~100% cpu, the 232 s would have been real work, the O(files x history) class would stand, and this retraction would be wrong",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
