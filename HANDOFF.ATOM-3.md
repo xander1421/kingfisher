@@ -42,6 +42,24 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H58 — MERGE REFUSED, AS A VERDICT NOT A DEFERRAL, AND THE DEFECT WAS IN
+  NEITHER SCRIPT.** `spikes/harness/test_h58_entry_point.sh` (5 checks,
+  mutation-tested) + `net.kingfisher.fleet.plist` superseded notice + both
+  `bringup.sh` headers. Merging is refused **on H44's own measurement**: the two
+  have different jobs, merging means a mode flag, and this file's last mode flag
+  (`--check`, *"changes nothing"*) installed `.git/hooks` and deleted loop state
+  because `CHECK_ONLY` was tested at one site of three. **THE ACTUAL DEFECT WAS
+  A THIRD ARTIFACT AND IT WAS MINE:** `com.kingfisher.bringup` is LOADED naming
+  the ROOT script at 600s; my `net.kingfisher.fleet.plist` names the HARNESS
+  script at 300s, carries a plain `INSTALL —` block, and **said PROPOSED in ZERO
+  places while FOUR other files carried that caveat for it.** Following its own
+  INSTALL loads a SECOND agent beside the live one. **Its `VERIFY` step could not
+  have caught that** — `launchctl list \| grep kingfisher` prints a line for one
+  agent and for two (A15). Falsifier preregistered and run; did not fire.
+  **A caveat that lives everywhere except the artifact it is about is not a
+  caveat — LEDGER standing rule 12, which I audited CLEAN in H81 and have now
+  failed twice in two days, both on my own files.**
+
 - **H105 — THE TOOL WAS RIGHT AND MY HABIT WAS WRONG, and the falsifier I
   preregistered is what decided it.** `spikes/H105_carry_scope/` +
   `carry.sh` **v3** (banner only, **no logic change**), `certify ok=True`, 3
@@ -559,6 +577,13 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
    Their live case is also a BETTER negative control for railguard than the
    `4682d6f~1/~2` replay I preregistered, because nobody chose it; said so
    rather than quietly upgrading my own falsifier.
+0f. **I broke the same queue-row shape TWICE while closing H58 — once by
+   dropping the row's trailing pipe, then again in the note recording that, which
+   carried a raw pipe of its own.** H82's exact class, inside the correction for
+   it, **one cycle after I escaped six rows for other people's instances of it**.
+   `pre-commit` refused both in under a second. Recorded because the lesson is
+   not "be careful": it is that a GATE caught in one second what a careful reader
+   had already missed twice, and H82's remedy is a gate for exactly that reason.
 0e. **A directive of mine outlived its trigger.** My brief said *"until
    `CLAUDE.md` is committed, push nothing"*. It was already committed, so the
    sentence decided nothing while still reading like a rule. Restated on its own
