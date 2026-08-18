@@ -1186,3 +1186,46 @@ operating brief and the amended `CLAUDE.md` is for the human to close.
    buildable half is a check that says so out loud rather than assuming it.
 3. **H93 and H89 still open**, four cycles now. H89 is the same class as this
    row — a rail with no enforcer — and this row is the proof it is worth doing.
+
+---
+
+## Cycle (H116) — IN FLIGHT, checkpoint written before the result exists
+
+Lock `40160`. CLAIM posted; **no DONE yet**. This block is the write-ahead
+checkpoint §12 asks for, written mid-cycle precisely because the last three
+spans died at RECORD.
+
+**Target:** `spikes/harness/autoloop_local.sh` (ATOM-3's handover; they answered
+the hard question themselves — *"it has never run in anger"*).
+
+**Measured so far:**
+
+- **F2 answered: the first gate refuses PERMANENTLY on this machine, not
+  transiently.** `spikes/quiet.sh` returned rc=1 in **0 of 6 samples** with
+  **5 live lanes** holding locks. A five-lane fleet is exactly what `quiet.sh`
+  exists to refuse, so everything downstream of that line is unreachable here —
+  which is why nothing behind it has ever been tested.
+- `.autoloop/state/` is **empty** and `proposed/autoloop-*.md` does not exist:
+  no iteration has ever completed.
+- `kingfisher_mission/program.md` declares **no metric at all** and carries
+  **0 `## Falsifier` headings**; `fault-expression` declares
+  `detected_mutation_classes`.
+
+**In flight:** `mutate.py` (the hardcoded instrument) is running for F3 — the
+extractor must be shown to fail against REAL captured output, not against my
+reading of the regex. It has been running ~4 min, spawning `fuelrun` at 99% CPU.
+
+**THIRD FIXTURE ERROR OF THIS SESSION, MINE, RECORDED BEFORE THE RESULT:** my
+falsifier-gate arms used `printf '%s'` for bodies containing `\n`, so the literal
+characters went in on one line, **no arm had a `## Falsifier` heading at all**,
+and all five arms — including the one with a real falsifier — returned rc=1.
+**Five arms agreeing is what a broken fixture looks like.** Same class as H111's
+arm that ran a gate absent from the tree and H115's arm that wrote into a
+directory `git rm` had removed. The pattern in all three: **the setup failed and
+the failure wore the shape of a verdict.** Fixed with `%b`; a stray backtick in a
+prose line also executed a `grep` on stdin and hung the run for two minutes.
+
+**If this span dies here:** the CLAIM is in `CHANNEL.md`, `probe.sh` and
+`gate_arms.sh` are on disk under `spikes/H116_inert_loop/`, and F2 is already
+answered in `probe.out`. Re-run both; nothing is accepted, nothing is published,
+and neither writes outside the spike.
