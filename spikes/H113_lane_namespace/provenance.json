@@ -1,0 +1,144 @@
+{
+ "spike": "H113_lane_namespace",
+ "recorded_utc": "2026-08-18T10:58:53Z",
+ "note": "H113: the lane-definition file assigned this lane a row namespace that exists in no other file.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H113_lane_namespace",
+   "head": "4480f00791b0ebe5b3997f1a2292553943c98a3d",
+   "clean": false,
+   "dirty_files": [
+    "spikes/H113_lane_namespace/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/H113_lane_namespace": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "probe.out",
+   "sha256": "922d259738042d40f35142107e9d6564ccf4108fb3a12245fd54461493a1b777",
+   "bytes": 873,
+   "mtime": 1787050732,
+   "compared_ts": 1787050732,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "falsify.out",
+   "sha256": "e2130c629826fe9850b085483d21c228aa12d1a8c942cff4dcf0270431c1a184",
+   "bytes": 226,
+   "mtime": 1787050733,
+   "compared_ts": 1787050733,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "P_is_not_a_row_namespace",
+   "must_fire_because": "the row turns on P not existing as a row prefix; if it does exist the row is void",
+   "can_fail_because": "add one `| P1 |` row to WORK_QUEUE.md and P appears in this list",
+   "null_must_contain": "the full set of row prefixes WORK_QUEUE.md carries, which must be non-empty",
+   "fired": true,
+   "detail": "twelve P0-P3 strings in that file are priority tiers and section points, not row ids",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "prefixes=B,C,D,G,H,L,M,N,Q,S,U,W",
+    "P_present=False"
+   ]
+  },
+  {
+   "name": "brief_claims_only_real_prefixes",
+   "must_fire_because": "the repaired brief must name only prefixes the queue carries -- that is the whole fix",
+   "can_fail_because": "add P back to LANE-ROWS, or delete the line, and probe.sh exits 1 (F1/F2)",
+   "null_must_contain": "a LANE-ROWS line, which must be present and non-empty to be judged",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "LANE-ROWS=S H M W D",
+    "probe_rc=0",
+    "C1     PASS extractor found 12 row prefixes: B C D G H L M N Q S U W",
+    "C2     PASS a known-present prefix (H) is reported present",
+    "C3     PASS LANE-ROWS line found: S H M W D",
+    "S      PASS brief claims prefix S and WORK_QUEUE.md carries S rows",
+    "H      PASS brief claims prefix H and WORK_QUEUE.md carries H rows",
+    "M      PASS brief claims prefix M and WORK_QUEUE.md carries M rows",
+    "W      PASS brief claims prefix W and WORK_QUEUE.md carries W rows",
+    "D      PASS brief claims prefix D and WORK_QUEUE.md carries D rows"
+   ]
+  },
+  {
+   "name": "check_detects_its_own_removal",
+   "must_fire_because": "a check nobody has broken on purpose is a check nobody has tested",
+   "can_fail_because": "F3 is the two-sided half: quoting the withdrawn claim in PROSE must stay GREEN, and probe v1 went RED on exactly that",
+   "null_must_contain": "an untouched copy, which must stay green",
+   "fired": true,
+   "detail": "F1 reinstate P -> red; F2 delete the line -> red; F3 quote it in prose -> green; mutations asserted non-no-op",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "CONTROL  PASS  rc=0 as required",
+    "F1       PASS  rc=1 as required",
+    "F2       PASS  rc=1 as required",
+    "F3       PASS  rc=0 as required",
+    "h113_falsify=PASS"
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "the brief was right about P",
+   "must_fire_because": null,
+   "can_fail_because": "a P row is found in WORK_QUEUE.md, or some file defines P0-P5 as a row-id namespace rather than a priority tier",
+   "null_must_contain": "the complete prefix list extracted from the queue table",
+   "fired": false,
+   "detail": "did not fire: D2 says \"Last P0 freeze-gate item\", HUMAN_NEEDED says \"(\u00a75 P1)\"",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "P_in_queue_prefixes=False"
+   ],
+   "refutes": "H113's claim that prompts/AGENT-1.md names a row namespace that does not exist",
+   "fires_when": "a P row is found in WORK_QUEUE.md, or some file defines P0-P5 as a row-id namespace rather than a priority tier",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/H113_lane_namespace": {
+   "newest": 1787050732,
+   "from": "spikes/H113_lane_namespace/certify_h113.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if a P row exists in WORK_QUEUE.md, or any file defines P0-P5 as row ids rather than a priority tier, H113 is withdrawn",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

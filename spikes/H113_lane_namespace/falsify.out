@@ -1,0 +1,6 @@
+=== H113 falsifiers (isolated copies; prompts/AGENT-1.md untouched) ===
+  CONTROL  PASS  rc=0 as required
+  F1       PASS  rc=1 as required
+  F2       PASS  rc=1 as required
+  F3       PASS  rc=0 as required
+h113_falsify=PASS

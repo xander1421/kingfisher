@@ -1,0 +1,18 @@
+=== CONTROLS ===
+  C1     PASS extractor found 12 row prefixes: B C D G H L M N Q S U W 
+  C2     PASS a known-present prefix (H) is reported present
+
+=== THE CLAIM: every row prefix prompts/AGENT-1.md assigns to this lane ===
+  C3     PASS LANE-ROWS line found: S H M W D
+  S      PASS brief claims prefix S and WORK_QUEUE.md carries S rows
+  H      PASS brief claims prefix H and WORK_QUEUE.md carries H rows
+  M      PASS brief claims prefix M and WORK_QUEUE.md carries M rows
+  W      PASS brief claims prefix W and WORK_QUEUE.md carries W rows
+  D      PASS brief claims prefix D and WORK_QUEUE.md carries D rows
+
+=== what P actually is, where it appears ===
+  **Status: spec, falsifiable. Last P0 freeze-gate item.**
+  a lost document: D2 self-describes as "Last P0
+    gate to pass it (§5 P1), and since the gate is my own exit conditi
+
+verdict=BRIEF_MATCHES_QUEUE

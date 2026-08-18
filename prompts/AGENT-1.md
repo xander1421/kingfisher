@@ -65,9 +65,57 @@ lane's. If it is unset you are not a lane and the loop contract does not apply.
 
 **M1/M2 — the device chain, and the verification substrate under it.**
 `HANDOFF.md`: *"Two lanes: agent-1 (this one) = M1/M2 device chain; agent-2 =
-G-series graph learning / attention."* Your queue rows are `WORK_QUEUE.md`
-**P0–P4** and the W/S-series spikes; **P5 is the other lane's**. Class **H** is
-shared and either rower may take a row (§12.9).
+G-series graph learning / attention."*
+
+**CORRECTED 2026-08-18, H113, and the sentence this replaces was the only line in
+this file that cited nothing checkable.** It read *"Your queue rows are
+`WORK_QUEUE.md` **P0–P4** and the W/S-series spikes; **P5 is the other lane's**"*.
+**There is no `P` row prefix in `WORK_QUEUE.md` at all** — the twelve `P0`–`P3`
+strings in that file are PRIORITY TIERS and SECTION POINTS
+(`specs/D2_canonical_result.md`: *"Last **P0** freeze-gate item"*;
+`HUMAN_NEEDED.md`: *"weakening a gate to pass it (**§5 P1**)"*), plus Part-1/2/3
+labels inside write-ups. So the line read a priority notation as a row-id
+namespace and then split it between two lanes, which cannot be true of a priority
+tier. It is §12.4's class — a citation to a missing artifact reads as satisfied —
+sitting in the one sentence that says which work is yours, and it cost this lane
+a NEXT item that could never be discharged.
+
+**DERIVED, NOT TYPED, because a second self-authored assertion is the same defect
+this row is about.** From `CHANNEL.md`'s own `DONE` lines, which another lane can
+recount in one command:
+
+```sh
+grep -oE '^DONE [A-Z]+[0-9]+[a-z]? AGENT-1' CHANNEL.md | awk '{print $2}' \
+  | sed 's/[0-9].*$//' | sort | uniq -c | sort -rn
+```
+
+* **S** and **H** are where this lane actually works (19 and 19).
+* **M** is the device chain and is yours by build, not by DONE lines:
+  `git log --format='%(trailers:key=Atom,valueonly=true)' -- 'spikes/M1_*'` is
+  AGENT-1 13, plus 12 pre-gate commits under task-name Atoms (`agent-1`,
+  `mutation-detection`, `corpus-composition`) that the `commit-msg` gate would
+  now refuse.
+* **W** and **D** are yours in ones, not as a series.
+* **G** is AGENT-2's (8 DONE, 0 to this lane) — that is the real lane boundary
+  the deleted sentence was reaching for.
+* **H is shared** and either rower may take a row (§12.9): ATOM-3 21,
+  ATTACKER-1 18, ok-1 15, AGENT-2 7. **Class H is ok-1's to own** (`roster.txt`),
+  which is not the same as ok-1's to do.
+
+**THE CLAIM IS THE LINE BELOW, AND THE PROSE ABOVE IS COMMENTARY.** It exists
+because the check could not tell a live claim from a QUOTATION of the withdrawn
+one: the paragraph above quotes `P0-P4` in order to retract it, and a checker
+scanning this file for row prefixes read that quotation as a fresh claim and went
+red on the repair. That is `refcheck` v5's recorded trap — *a rationale block
+naming an absent path is indistinguishable from a broken citation of it* — and
+A30's remedy applies: put the property somewhere prose cannot collide with it.
+
+    LANE-ROWS: S H M W D
+
+**The check is `bash spikes/H113_lane_namespace/probe.sh`** and it fails if that
+line ever names a row prefix `WORK_QUEUE.md` does not carry. It reads the line
+out of this file rather than having the list retyped into the probe, because
+retyping is how the sentence above drifted from the queue in the first place.
 
 The mission is a trustless world computer: a result is trusted because anyone can
 re-run it and compare bytes. That works for one reason — MeTTa reduction is
