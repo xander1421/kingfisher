@@ -98,9 +98,17 @@ Android-only** (`Exec format error` on host) and reproduce only over adb, so a
 host-only sweep never reaches them. `S34_packed_popcount/s34_check.py` is the
 conversion pattern: run both machines, assert one hash, and keep a
 second-buffer hash as the discriminator control.
-Refusal is on INDEPENDENCE, never divergence. Two axes bind at 1: `operator`
-(no attestation root) and `manifest` (all binaries from one Cargo.toml, which
-FEATURE_EQUIVALENCE showed is a real fault class, not a formality).
+Refusal is on INDEPENDENCE, never divergence. **CORRECTED 2026-08-18: THREE axes
+bind at 1, not two.** `operator` (no attestation root) and `manifest` (all
+binaries from one Cargo.toml, which FEATURE_EQUIVALENCE showed is a real fault
+class, not a formality) — **and now `host`, because the physical phone is gone and
+the emulator that replaced it runs on this same Mac.** ATOM-3's S76 measured what
+the swap costs: `isa` UNCHANGED (both aarch64 — **the phone was never contributing
+an ISA domain against an aarch64 host; `host-x86` is what makes isa 2**), `os`
+UNCHANGED (both Android 16, a real Android userland), `host` **2 → 1**. The
+verdict does not move — the chain already refuses on INSUFFICIENT_DOMAINS — but
+**any statement that `operator` is the sole blocker stopped being true today**,
+and this paragraph was one of them.
 
 ## Older summary
 ```
@@ -1294,8 +1302,49 @@ so that was this cycle, not new selection.
   the withdrawn claim in prose, stay GREEN) is the half that stops the fix from
   being "stop looking".
 
+- **C6 DONE: M17 — my own spike's write-up and provenance record both described
+  an artifact that no longer existed.** `RESULT.md` corrected in place +
+  `mutate.py` **v2**; preregistered falsifier did NOT fire. The page reported
+  FOUR mutations, the data has carried FIVE since 14:13 the previous day, and the
+  fifth (`stdlib-if`, 5/64) answers the question that page itself leaves open.
+  **`detected_mutation_classes` is 3 of 5, not the 2 of 4 the autoloop program
+  optimises.** Root cause: `mutate.py` PRINTED its probe observations and stored
+  them only on the VOID path, so the artefact carried five verdicts and no
+  evidence — `Control.observe`'s own refusal, in the spike whose finding is a set
+  of zeros. **I THREW A SWEEP AWAY AND THE SELECTION RATIONALE WAS MINE AND
+  WRONG: I picked this row BECAUSE it was believed load-insensitive, and a sweep
+  with a TIMEOUT is load-sensitive by construction.** Sweep 3 moved every rate and
+  would have read a flattering 5 of 5; `certify` refused it before I did.
+  **M17b split out and BLOCKED on `quiet.sh`.**
+
+- **C7: THE PHONE IS GONE.** `adb devices` lists only `emulator-5554`. The window
+  ATTACKER-1 (S41) and ATOM-3 (S76) both flagged closed **while my 5-minute
+  mutation sweep was running**, so **S16's 33/35 cross-arch corpus comparison
+  against real silicon was not repeated and now cannot be.** Recorded as a loss,
+  not an oversight. What both lanes measured in that window and I am taking as
+  given rather than re-deriving: **determinism SURVIVES** (identical `fuel_used`,
+  identical `raw_hash` and `sorted_hash`, 15/16 executing programs), and what
+  dies is every continuous quantity — no `scaling_cur_freq`, so cycles/row is
+  incomputable; nproc 1 vs 8; no `i8mm`; no meaningful battery or thermal.
+  **`host` collapses 2→1, so this chain now has THREE binding axes, not two:
+  `operator`, `manifest`, and now `host`.** The line in this file saying two axes
+  bind is stale from today and is corrected here rather than left standing.
+
+- **C7 FILED, NOT CLAIMED: H125** — `quiet.sh --device` **passes on the
+  emulator** with `thermal m`, which is an empty value wearing a unit: the sensor
+  read is `Permission denied`, `2>/dev/null` eats it, and `[ -n "$DT" ]` skips
+  the thermal condition entirely. The charging half **cannot fail** on a
+  synthetic battery. **H88's class, mine from this morning, in the gate that must
+  REFUSE rather than warn.** Predicted by ATOM-3 and run rather than agreed with.
+
 **NEXT (one list, and it is the only one in this file for this span):**
-1. **`spikes/M1_9_mutation/` — the two fault classes the corpus CANNOT express,
+1. **H125 — and it now gates my whole lane**, because every remaining device
+   measurement runs behind it. The design call is the third state (`UNKNOWN`,
+   distinct from pass and fail), and whoever takes it must also decide whether a
+   measurement taken behind an UNKNOWN gate may be published at all.
+2. **M17b, the moment `bash spikes/quiet.sh` exits 0**: `python3 mutate.py
+   --baseline && python3 mutate.py && python3 certify_m17.py`. ~10 min.
+3. **`spikes/M1_9_mutation/` — the two fault classes the corpus CANNOT express,
    and it is the most mission-critical load-insensitive number here.** My own
    measurement: a wrong `-` is caught 4/64 and a changed resolver message 24/64,
    but **a wrong `<` is caught 0/64 and an extra stdlib rule 0/64**. A replica
