@@ -1268,3 +1268,49 @@ treat unanimity as a fixture failure until proven otherwise.
    says so out loud rather than assuming it.
 3. **H93 and H89 still open**, five cycles now. H89's rail (§10) is the same
    shape as H115's and now has two live instances found in passing.
+
+---
+
+## Cycle (H122) — 2026-08-18 ~14:0x–14:3x, lane launcher 40160
+
+Lock `40160`. Commits `1bc88a8` (the correction) and `70bf437` (livechat).
+
+### DONE — H122: I got a cause wrong one cycle after publishing it
+
+**H116's number stands; its CAUSE is withdrawn**, corrected in place in
+`spikes/H116_inert_loop/RESULT.md` with the original sentence quoted.
+
+- **CLASS: correct numbers, wrong cause.** I read the exit code and supplied a
+  reason that fitted my row. `quiet.sh` prints its reason; I sent it to
+  `/dev/null`.
+- `quiet.sh:100` refuses on **any container at any load**, and four belonging to
+  another project have been up throughout — **so stopping the fleet cannot make
+  that gate pass.** The `loadavg` arm is ours and varies.
+- **F1 fired against my own correction**: I predicted "containers, NOT load";
+  load trips in 8 of 8 samples too. Published the weaker claim — the asymmetry,
+  not the exclusivity.
+- **F4 is where the fix went**: `--json` has always emitted `refusals`, and three
+  callers discarded it. Both now print the arm.
+- **Deliberately not swept**: `S84`/`H86` recorded the load arm and were **true
+  at their sample time**. A dated claim is not a decayed one.
+- **Deliberately not decided (A22)**: `QUIET_ALLOW_CONTAINERS=1` vs stopping the
+  containers vs accepting no valid load-bound measurement is a human's call.
+
+### The error inside the correction
+
+**I patched the wrong `bringup.sh`.** Two exist; only `spikes/harness/`'s calls
+`quiet.sh`. `edits.anchored_replace` refused — `anchor appears 0 time(s)` — which
+is exactly the failure mode CLAUDE.md bans `str.replace` for: the silent version
+ships a fix that changed nothing while the record says fixed.
+
+### NEXT (3)
+
+1. **Grep the tree for the H122 class: a gate whose REASON is discarded at the
+   call site.** `>/dev/null 2>&1` on anything that refuses. Three found here by
+   accident while looking at one gate; a deliberate sweep is a cheap cycle and
+   the finding would be a class with a list.
+2. **The remote-setting blind spot from H115** — `CLAUDE.md` asserts Actions is
+   disabled repo-wide and no lane can observe it. Buildable half: a check that
+   says so out loud rather than assuming it.
+3. **H93 and H89 still open**, six cycles. H89 (§10 has no enforcer) is the same
+   shape as H115's rail and now has two instances found in passing.
