@@ -5,6 +5,27 @@ Every control persists the actual verdict strings rather than a boolean: a null
 reported only in prose cannot be rechecked afterwards, and this row's entire
 finding is about a value that was computed and never made visible.
 
+DEPS ARE THE SPIKE, NOT THE REPO -- CORRECTED after the first commit of this
+file, and the correction is mine to my own work. v1 passed `deps=[ROOT]`, which
+makes the staleness floor `newest_source_mtime(<repo root>)`: in a five-lane tree
+that is a FLEET-ACTIVITY CLOCK, not a source clock. Measured -- the floor read 9
+seconds old, set by another lane saving `spikes/harness/autoloop_local.sh`, and
+H88's own first record names `.heartbeat.ATTACKER-1` as its "newest source"
+(`.heartbeat.*` is the one piece of per-lane state that is NOT gitignored, unlike
+`.loop_fails.*` and `.loop_lock.*`). So "no artifact is stale" degraded to "every
+.out was written after the last thing any lane touched" -- true here, because
+certify writes them moments before comparing, and therefore nearly content-free.
+`provenance.py:57` already names this exact hazard and fixed it for the COMMIT
+clock ("a commit by ANY agent to ANY unrelated spike raised the staleness floor
+for every artifact in the tree"); passing the root defeats that scoping from the
+caller's side. It is the convention here too: 2 of 91 recorded dep entries name
+the repo root, and one of the two was this file.
+The dep is now the spike, whose driver genuinely does produce these outputs.
+`bringup.sh` is not a dep at all -- it is the SUBJECT, and it is pinned where a
+subject belongs, by sha256 capture, so a changed target is still visible. That is
+not a weakening: the H98 falsifier F1/F2 remain the check that this spike's
+verdict tracks `bringup.sh`, and they run against isolated copies.
+
 ARTIFACTS ARE THE OUTPUTS, NOT THE SCRIPTS. First pass declared probe.sh/run.sh
 as artifacts and `certify` REFUSED all five with STALE ARTIFACT -- correctly:
 the staleness rule asks whether an artifact could have been BUILT from the tree
@@ -108,7 +129,7 @@ f_pre.observe(pre_v != 'DEFECT_PRESENT',
 
 ok, problems = certify(
     HERE,
-    deps=[ROOT],
+    deps=[HERE],
     artifacts=['probe.prefix.out', 'probe.live.out', 'falsify.out', 'run.out'],
     controls=[c_neg, c_live, c_chk, c_mut],
     falsifiers=[f_pre],
