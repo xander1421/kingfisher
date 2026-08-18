@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""recordloss.py v1 — H94. A completed record must not leave an append-mostly
+"""recordloss.py v2 — H94 (v1), H117 (v2). A completed record must not leave an append-mostly
 document, and every gate in this repo was blind to it.
 
 WHY THIS EXISTS (§12.7 rationale)
@@ -77,6 +77,15 @@ in place and grow (1,547 -> 2,145 bytes, identical tail), which git renders as
 delete-plus-add. A key-PREFIX rule is quiet on exactly that, and `--selfcheck`
 arm 3 is that case as a fixture rather than as an assurance.
 
+v2, H117 — DEFECT REMOVED: **A RENAME CARRIED EVERY RECORD OUT OF THE MODULE'S
+VIEW.** `git diff --cached --name-only` reports a rename as the DESTINATION path
+alone, so v1 never walked the source: `git mv` on a journal, with a cycle dropped
+in the same commit, was QUIET. v2 pairs source and destination from
+`--name-status -M` and judges the old content against the new path, so a rename
+is quiet because the records MOVED and not because nothing was looked at. Found
+by this lane's own H117 attack, behind a positive control that a pure deletion
+still refuses -- without that control the silence reads as correctness.
+
   python3 recordloss.py               gate: HEAD vs the index, commit paths only
   python3 recordloss.py --commit REV  replay one commit (F1: 10ed3f2 refuses)
   python3 recordloss.py --history     every revision of every covered document
@@ -148,17 +157,39 @@ def report(losses):
     print('and use: git commit --no-verify')
 
 
+def pairs(status_text):
+    """(source, destination) for each changed path, renames paired.
+
+    v1 walked `git diff --cached --name-only`, which collapses a rename to the
+    DESTINATION path only -- so `git mv HANDOFF.ok-1.md HANDOFF.ok-2.md` deleted
+    fifteen `## Cycle` records from a path this module never looked at, and the
+    gate was silent. Found by H117's FA2c against a positive control (FA2b, a
+    pure deletion, refuses), which is the arm that separated "quiet because the
+    records moved" from "quiet because the source was never walked".
+    """
+    out = []
+    for line in status_text.split('\n'):
+        f = line.split('\t')
+        if len(f) < 2:
+            continue
+        if f[0].startswith('R') and len(f) >= 3:
+            out.append((f[1], f[2]))      # renamed: judge old content vs new path
+        else:
+            out.append((f[1], f[1]))
+    return out
+
+
 def gate(cwd=None):
     """HEAD vs the INDEX, for the paths this commit carries."""
-    staged = git(['diff', '--cached', '--name-only'], cwd) or ''
+    status = git(['diff', '--cached', '--name-status', '-M'], cwd) or ''
     losses = {}
-    for path in [p for p in staged.split('\n') if p and covered(p)]:
-        before = blob(f'HEAD:{path}', cwd)
+    for src, dst in [(a, b) for a, b in pairs(status) if covered(a)]:
+        before = blob(f'HEAD:{src}', cwd)
         if before is None:                # new file: no previous revision
             continue
-        lost = compare(before, blob(f':{path}', cwd), covered(path))
+        lost = compare(before, blob(f':{dst}', cwd), covered(src))
         if lost:
-            losses[path] = lost
+            losses[src if src == dst else f'{src} -> {dst}'] = lost
     if losses:
         print('recordloss REFUSED — a record in HEAD is not in the commit:')
         report(losses)
@@ -168,15 +199,15 @@ def gate(cwd=None):
 
 def replay(rev, cwd=None):
     """One commit, judged as the gate would have judged it."""
-    files = git(['show', '--pretty=', '--name-only', rev], cwd) or ''
+    status = git(['show', '--pretty=', '--name-status', '-M', rev], cwd) or ''
     losses = {}
-    for path in [p for p in files.split('\n') if p and covered(p)]:
-        before = blob(f'{rev}^:{path}', cwd)
+    for src, dst in [(a, b) for a, b in pairs(status) if covered(a)]:
+        before = blob(f'{rev}^:{src}', cwd)
         if before is None:                # added by this commit
             continue
-        lost = compare(before, blob(f'{rev}:{path}', cwd), covered(path))
+        lost = compare(before, blob(f'{rev}:{dst}', cwd), covered(src))
         if lost:
-            losses[path] = lost
+            losses[src] = lost
     return losses
 
 
@@ -297,14 +328,31 @@ def selfcheck():
         run('git', 'rm', '-q', 'HANDOFF.x.md', cwd=t)
         if quiet_gate(t) != 1:
             fails.append('deleting a journal outright must REFUSE')
+        restore(t, 'HANDOFF.x.md')
+
+        # 8/9 — H117: a RENAME carried every record out of v1's view, because
+        # `--name-only` reports only the destination. A rename that preserves the
+        # records must be QUIET; a rename that drops one must still REFUSE, and
+        # without the second arm the first is satisfied by a module that looks at
+        # nothing at all.
+        run('git', 'mv', 'HANDOFF.x.md', 'HANDOFF.y.md', cwd=t)
+        if quiet_gate(t) != 0:
+            fails.append('a rename that preserves every record must be QUIET')
+        y = os.path.join(t, 'HANDOFF.y.md')
+        text = open(y, encoding='utf-8').read()
+        open(y, 'w', encoding='utf-8').write(text.replace('## Cycle 1 — a\n\n', ''))
+        run('git', 'add', 'HANDOFF.y.md', cwd=t)
+        if quiet_gate(t) != 1:
+            fails.append('a rename that DROPS a record must REFUSE (H117 FA2c)')
     finally:
         shutil.rmtree(root, ignore_errors=True)
 
     for f in fails:
         print(f'  FAIL  {f}')
     if not fails:
-        print('recordloss selfcheck: loss refuses (cycle, DONE, whole file), '
-              'append/in-place-growth quiet, index-not-tree in both directions')
+        print('recordloss selfcheck: loss refuses (cycle, DONE, whole file, and '
+              'under a rename), append/in-place-growth/clean-rename quiet, '
+              'index-not-tree in both directions')
     return 1 if fails else 0
 
 

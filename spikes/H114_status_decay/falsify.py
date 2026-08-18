@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """H114 — the falsifier for statuscheck.py v1's own selfcheck.
 
-Four properties, each broken on a copy, each expected to turn `--selfcheck` red
+Five properties, each broken on a copy, each expected to turn `--selfcheck` red
 NAMING WHICH. Three of the four are other rows' findings turned into fixtures:
 
   * OFFER-FORM   the case that earned the row. The first rule shipped could see
@@ -38,6 +38,11 @@ BREAKS = [
          "            if actual is None or actual in ('NO-ROW', 'OTHER'):\n                continue",
          "            if actual in ('NO-ROW', 'OTHER'):\n                continue"),
      'an UNREADABLE row (H82) must not be reported as a mismatch'),
+    ('QUEUE-FROM-HEAD (v1: judge the journal against the row\'s PREVIOUS status)',
+     lambda s: s.replace(
+         "    qs = queue_status(blob(':WORK_QUEUE.md', root) or blob('HEAD:WORK_QUEUE.md', root) or",
+         "    qs = queue_status(blob('HEAD:WORK_QUEUE.md', root) or"),
+     'a row closed IN THIS COMMIT must not refuse the journal'),
     ('PATH-NOT-STATUS (drop the filename guard)',
      lambda s: s.replace(r"r'\**(' + '|'.join(STATUSES) + r')\b(?!\.\w)', re.I)",
                          r"r'\**(' + '|'.join(STATUSES) + r')\b', re.I)"),
@@ -80,7 +85,7 @@ if p.returncode != 0:
 results = [run(*b) for b in BREAKS]
 print()
 if all(results):
-    print("falsify: all four properties are DETECTED by v1's own --selfcheck.")
+    print("falsify: all five properties are DETECTED by v1's own --selfcheck.")
     sys.exit(0)
 print('REFUSE: a broken property was not caught, so its fixture is decoration.')
 sys.exit(1)

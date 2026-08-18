@@ -29,10 +29,10 @@ SRC = os.path.join(ROOT, 'spikes', 'harness', 'recordloss.py')
 BREAKS = [
     ('INDEX-NOT-TREE (read the working tree, as refcheck/journalcheck do)',
      lambda s: s.replace(
-         "        lost = compare(before, blob(f':{path}', cwd), covered(path))",
-         "        _p = os.path.join(cwd or '.', path)\n"
+         "        lost = compare(before, blob(f':{dst}', cwd), covered(src))",
+         "        _p = os.path.join(cwd or '.', dst)\n"
          "        _t = open(_p).read() if os.path.exists(_p) else None\n"
-         "        lost = compare(before, _t, covered(path))"),
+         "        lost = compare(before, _t, covered(src))"),
      'clean staged blob must pass'),
     ('KEY-NOT-LINE  (whole log lines as keys, the rule d278d01 measured false)',
      lambda s: s.replace(
@@ -45,6 +45,12 @@ BREAKS = [
          "    if after is None:\n        return set()\n"
          "    return keys(before, kind) - keys(after, kind)"),
      'deleting a journal outright must REFUSE'),
+    ('RENAME-BLIND  (v1: --name-only, which reports only the destination)',
+     lambda s: s.replace(
+         "    status = git(['diff', '--cached', '--name-status', '-M'], cwd) or ''",
+         "    status = '\\n'.join('M\\t' + p for p in "
+         "(git(['diff', '--cached', '--name-only'], cwd) or '').split('\\n') if p)"),
+     'a rename that DROPS a record must REFUSE'),
     ('COVERAGE      (journals not recognised, only CHANNEL.md)',
      lambda s: s.replace(
          "    if re.fullmatch(r'HANDOFF(\\.[\\w.-]+)?\\.md', base):\n        return 'cycle'\n",
@@ -102,7 +108,7 @@ if p.returncode != 0:
 results = [run(*b) for b in BREAKS]
 print()
 if all(results):
-    print('falsify: all four properties are DETECTED by v1\'s own --selfcheck.')
+    print('falsify: all five properties are DETECTED by v1\'s own --selfcheck.')
     sys.exit(0)
 print('REFUSE: a broken property was not caught, so its fixture is decoration.')
 sys.exit(1)

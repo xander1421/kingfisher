@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""statuscheck.py v1 — H114. A row's status is asserted in one place: the queue.
+"""statuscheck.py v2 — H114 (v1), H117 (v2). A row's status is asserted in one place: the queue.
 
 WHY THIS EXISTS (§12.7 rationale)
 ---------------------------------
@@ -43,6 +43,13 @@ column is not where a reader looks (H82, baselined there), so a row whose field
 count differs from the file's modal width is reported UNREADABLE and never
 counted as a disagreement — otherwise this module would inherit H82's defect and
 report it as other lanes' errors.
+
+v2, H117 — DEFECT REMOVED: **THE GATE READ THE QUEUE FROM HEAD AND SO REFUSED THE
+COMMONEST COMMIT SHAPE HERE** — a row moving OPEN -> DONE in the same commit as the
+journal recording it. It had not fired only because this lane's NEXT lists do not
+phrase verdicts as `Hnn is DONE`. And the reason no suite caught it: `--selfcheck`
+drives `check_text()`, a seam, while `pre-commit` runs `gate()`, which no arm of
+any suite touched. THE TESTED PATH WAS NOT THE EXECUTED PATH.
 
   python3 statuscheck.py              gate: assertions in the commit's own files
   python3 statuscheck.py --all        every tracked brief and journal NEXT block
@@ -131,11 +138,11 @@ def scope(text, path):
     return []
 
 
-def check(paths, qs):
+def check(paths, qs, root=None):
     bad = []
     for p in paths:
         try:
-            text = open(os.path.join(ROOT, p), encoding='utf-8').read()
+            text = open(os.path.join(root or ROOT, p), encoding='utf-8').read()
         except OSError:
             continue
         for offset, chunk in scope(text, p):
@@ -154,14 +161,26 @@ def report(bad):
               f'WORK_QUEUE.md says {actual}')
 
 
-def gate():
-    qs = queue_status(blob('HEAD:WORK_QUEUE.md') or
-                      open(os.path.join(ROOT, 'WORK_QUEUE.md')).read())
-    staged = (git(['diff', '--cached', '--name-only'], ROOT) or '').split('\n')
+def gate(cwd=None):
+    """`cwd` exists so this function is DRIVEABLE. v1's selfcheck exercised
+    `check_text()`, a seam, while `pre-commit` runs THIS -- so the HEAD-vs-index
+    defect H117 found sat in the one function no arm of any suite touched. The
+    tested path was not the executed path, and a `cwd` parameter is what made the
+    difference between a fixture and a test of the thing that runs."""
+    root = cwd or ROOT
+    # THE QUEUE THIS COMMIT CARRIES, not HEAD's. v1 read HEAD and therefore
+    # refused the commonest commit in this repo: a row moving OPEN -> DONE
+    # together with the journal that records it, judged against the row's
+    # PREVIOUS status. Reproduced by H117 FA1 behind a positive control. `:path`
+    # is the index, which under `git commit --only` is HEAD plus your paths --
+    # so a lane not committing the queue still gets HEAD's answer.
+    qs = queue_status(blob(':WORK_QUEUE.md', root) or blob('HEAD:WORK_QUEUE.md', root) or
+                      open(os.path.join(root, 'WORK_QUEUE.md')).read())
+    staged = (git(['diff', '--cached', '--name-only'], root) or '').split('\n')
     paths = [p for p in staged if p and scope('', p) is not None
              and (p.startswith('prompts/') or re.fullmatch(
                  r'HANDOFF(\.[\w.-]+)?\.md', os.path.basename(p)))]
-    bad = check(paths, qs)
+    bad = check(paths, qs, root)
     if bad:
         print('statuscheck REFUSED — a document in this commit contradicts the queue:')
         report(bad)
@@ -247,11 +266,59 @@ def selfcheck():
         fails.append('no row parses as UNREADABLE, so the width rule is untested '
                      'here — check H82 rather than deleting this arm')
 
+    # 9/10 — THE EXECUTED PATH, in a throwaway repo (§10: under the workspace).
+    #        Everything above drives `check_text`; `pre-commit` runs `gate()`,
+    #        and H117 found a fleet-stop living in exactly that gap.
+    import tempfile, shutil, subprocess
+    root = tempfile.mkdtemp(prefix='.statuscheck_selfcheck.', dir=HERE)
+    t = os.path.join(root, 'repo')
+    os.makedirs(t)
+    try:
+        def run(*a):
+            subprocess.run(a, cwd=t, capture_output=True, text=True, check=True)
+        run('git', 'init', '-q', '.')
+        run('git', 'config', 'user.email', 'a@b')
+        run('git', 'config', 'user.name', 'a')
+        q = os.path.join(t, 'WORK_QUEUE.md')
+        j = os.path.join(t, 'HANDOFF.x.md')
+        open(q, 'w').write('| id | what | status | who |\n|---|---|---|---|\n'
+                           '| H90 | a thing | OPEN | x |\n')
+        open(j, 'w').write('# j\n\n## NEXT 3\n1. **H90** is OPEN and mine\n')
+        run('git', 'add', 'WORK_QUEUE.md', 'HANDOFF.x.md')
+        run('git', 'commit', '-q', '-m', 'base')
+
+        import io, contextlib
+
+        def quiet_gate():
+            with contextlib.redirect_stdout(io.StringIO()):
+                return gate(cwd=t)
+
+        # 9 — the commonest commit here: close the row AND record it. Must PASS.
+        txt = open(q, encoding='utf-8').read().replace('| OPEN |', '| DONE (x) |')
+        open(q, 'w', encoding='utf-8').write(txt)
+        txt = open(j, encoding='utf-8').read().replace('is OPEN and mine', 'is DONE')
+        open(j, 'w', encoding='utf-8').write(txt)
+        run('git', 'add', 'WORK_QUEUE.md', 'HANDOFF.x.md')
+        if quiet_gate() != 0:
+            fails.append('a row closed IN THIS COMMIT must not refuse the journal '
+                         'that records it (H117 FA1)')
+        run('git', 'commit', '-q', '-m', 'done')
+
+        # 10 — the journal contradicting a queue this commit does NOT touch.
+        txt = open(j, encoding='utf-8').read().replace('is DONE', 'is OPEN')
+        open(j, 'w', encoding='utf-8').write(txt)
+        run('git', 'add', 'HANDOFF.x.md')
+        if quiet_gate() != 1:
+            fails.append('a journal contradicting the committed queue must REFUSE')
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
     for f in fails:
         print(f'  FAIL  {f}')
     if not fails:
         print('statuscheck selfcheck: offer and sentence forms caught, history quiet, '
-              'unreadable rows and filenames and unknown ids quiet, queue parse controlled')
+              'unreadable rows and filenames and unknown ids quiet, queue parse controlled, '
+              'and gate() driven in a repo for both directions')
     return 1 if fails else 0
 
 

@@ -1,0 +1,61 @@
+$ python3 spikes/H117_gate_attack/attack.py --v1   # the state the attack was run against
+MODULES: v1, the state this attack was RUN against
+--v1 revert anchor missing in statuscheck.py:     qs = queue_status(blob(':WORK_QUEUE.md') or bl
+
+$ python3 spikes/H117_gate_attack/attack.py        # v2, after the fixes
+MODULES: v2, current — the fixes in place
+FA0  POSITIVE CONTROL, journal contradicts an unchanged queue: rc=1
+     statuscheck REFUSED — a document in this commit contradicts the queue:
+       HANDOFF.ok-1.md:8 [sentence] H90 is asserted DONE; WORK_QUEUE.md says OPEN
+     WORK_QUEUE.md is the authority (§4). Fix the sentence, or fix the row.
+FA1  statuscheck on a DONE-cycle commit: rc=0
+     (quiet)
+FA2  recordloss on `git mv` of a journal: rc=0
+     (quiet)
+FA2b  recordloss, PURE deletion (control for FA2): rc=1
+     recordloss REFUSED — a record in HEAD is not in the commit:
+       HANDOFF.ok-1.md
+           LOST  ## Cycle 1
+     A completed record present in the previous revision is absent in this
+     one (H94). If the removal is deliberate, say so in the commit message
+     and use: git commit --no-verify
+FA2c  recordloss, rename AND drop a cycle — the record leaves: rc=1
+     recordloss REFUSED — a record in HEAD is not in the commit:
+       HANDOFF.ok-1.md -> HANDOFF.ok-2.md
+           LOST  ## Cycle 1
+     A completed record present in the previous revision is absent in this
+     one (H94). If the removal is deliberate, say so in the commit message
+     and use: git commit --no-verify
+FA3  same commit, verdict phrased without an is-DONE claim: rc=0
+     (quiet)
+
+FA1 quiet — expected under v2; under --v1 it must FIRE or the finding was never real
+FA2 quiet — and FA2b/FA2c below say whether that is correctness or blindness
+FA2b FIRES — a pure deletion is refused, so the module RUNS here
+FA2c FIRES — a record leaving under a rename is caught
+FA3: an escape exists that is not --no-verify
+
+$ python3 spikes/H94_record_loss/falsify.py
+H94 — falsifying recordloss.py v1 by breaking one property at a time
+
+  OK       positive control: unbroken --selfcheck exits 0, expected 0
+  DETECTED INDEX-NOT-TREE (read the working tree, as refcheck/journalcheck do)
+  DETECTED KEY-NOT-LINE  (whole log lines as keys, the rule d278d01 measured false)
+  DETECTED WHOLE-FILE    (a deleted document loses nothing)
+  DETECTED RENAME-BLIND  (v1: --name-only, which reports only the destination)
+  DETECTED COVERAGE      (journals not recognised, only CHANNEL.md)
+
+falsify: all five properties are DETECTED by v1's own --selfcheck.
+$ python3 spikes/H114_status_decay/falsify.py
+H114 — falsifying statuscheck.py v1 by breaking one property at a time
+
+  OK       positive control: unbroken --selfcheck exits 0, expected 0
+  DETECTED OFFER-FORM   (sentence assertions only, as v1 before F3 fired)
+  DETECTED HISTORY      (judge a journal whole, not only its NEXT blocks)
+  DETECTED H82          (the consumer stops skipping an unreadable row)
+  DETECTED QUEUE-FROM-HEAD (v1: judge the journal against the row's PREVIOUS status)
+  DETECTED PATH-NOT-STATUS (drop the filename guard)
+
+falsify: all five properties are DETECTED by v1's own --selfcheck.
+$ bash spikes/harness/test_loop_gate.sh | tail -1
+loop_gate.sh: 88 checks pass

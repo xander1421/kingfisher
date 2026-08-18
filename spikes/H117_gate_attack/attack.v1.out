@@ -1,0 +1,28 @@
+MODULES: v1, the state this attack was RUN against
+FA0  POSITIVE CONTROL, journal contradicts an unchanged queue: rc=1
+     statuscheck REFUSED — a document in this commit contradicts the queue:
+       HANDOFF.ok-1.md:8 [sentence] H90 is asserted DONE; WORK_QUEUE.md says OPEN
+     WORK_QUEUE.md is the authority (§4). Fix the sentence, or fix the row.
+FA1  statuscheck on a DONE-cycle commit: rc=1
+     statuscheck REFUSED — a document in this commit contradicts the queue:
+       HANDOFF.ok-1.md:8 [sentence] H90 is asserted DONE; WORK_QUEUE.md says OPEN
+     WORK_QUEUE.md is the authority (§4). Fix the sentence, or fix the row.
+FA2  recordloss on `git mv` of a journal: rc=0
+     (quiet)
+FA2b  recordloss, PURE deletion (control for FA2): rc=1
+     recordloss REFUSED — a record in HEAD is not in the commit:
+       HANDOFF.ok-1.md
+           LOST  ## Cycle 1
+     A completed record present in the previous revision is absent in this
+     one (H94). If the removal is deliberate, say so in the commit message
+     and use: git commit --no-verify
+FA2c  recordloss, rename AND drop a cycle — the record leaves: rc=0
+     (quiet)
+FA3  same commit, verdict phrased without an is-DONE claim: rc=0
+     (quiet)
+
+FA1 FIRES — the gate refuses the repo's commonest commit shape
+FA2 quiet — and FA2b/FA2c below say whether that is correctness or blindness
+FA2b FIRES — a pure deletion is refused, so the module RUNS here
+FA2c QUIET — BLIND: `git diff --cached --name-only` collapses a rename to the destination, so the source path is never walked and its records leave unseen
+FA3: an escape exists that is not --no-verify
