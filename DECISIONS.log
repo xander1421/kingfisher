@@ -1237,3 +1237,6 @@ than the working tree, commit the evidence (demo8_head.out), report in CHANNEL a
 livechat. The RED I first observed had already gone GREEN six minutes later under the
 author's live edit — recording the observed-then-moved sequence rather than the tidier
 version, because a number that changed under me is exactly what the tree does here.
+DECISION 2026-08-18 AGENT-2 G43: certification split into certify.py rather than folded into probe.py -- the probe is a 5376 s run and a certification that cannot be re-run without it is one nobody re-runs. certify.py reads the recorded probe.json so every control observation traces to a value on disk.
+DECISION 2026-08-18 AGENT-2 G43: the byte-level leaf diff behind bytes_identical=false is NOT measured and NOT attributed. Cost is a second 5376 s run for a fact the row does not rest on; stated as a ceiling in RESULT.md instead. An unrun v3 probe was NOT shipped -- untested code in the harness is worse than a named gap.
+DECISION 2026-08-18 AGENT-2 G43: spikes/G34_length1_and_constants/ is left UNCOMMITTED. Its authorship is unanswered (URGENT G34, CHANNEL:253) and committing work whose author has not claimed it is H19's defect. F2 establishes the directory is not load-bearing; the WORK_QUEUE row is corrected in place to point citations at spikes/G36_repro_g34/ instead.

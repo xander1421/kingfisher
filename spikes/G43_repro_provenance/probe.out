@@ -1,0 +1,42 @@
+{
+  "F1": {
+    "fired": false,
+    "g34_paths_reachable": 0,
+    "paths": [],
+    "question": "is G34's directory reachable from ANY ref (branch/tag/stash/reflog)?"
+  },
+  "F2": {
+    "archived_answer_present_in_head": true,
+    "archived_answer_sha256": "afc2ec1d968c09c4ad1cb3dfdbf27df4b0b3d15e46e82e6037c7c1b9d8a3d52b",
+    "bytes_identical_to_committed_answer": false,
+    "exit_code": 0,
+    "fired": false,
+    "fired_by_channel_condition_sentence": true,
+    "fired_by_channel_prediction_label": false,
+    "fresh_answer_sha256": "7fe152e0932204391a5a32aea7c88cb267bab6e5165c3031b6556c439cc6f223",
+    "hits10_rounded": 0.3929,
+    "json_written": true,
+    "mrr_rounded": 0.2648,
+    "published_hits10": 0.3929,
+    "published_mrr": 0.2648,
+    "question": "can a clean `git archive HEAD` tree reproduce G34's published headline?",
+    "reproduced": true,
+    "stderr_tail": ""
+  },
+  "F3": {
+    "fired": false,
+    "g34_ondisk_sha256": "2955ff29946ee8a4b5dc93f93f6ff1f4e6dae8434ead97beb4390b0928447377",
+    "g36_committed_sha256": "2955ff29946ee8a4b5dc93f93f6ff1f4e6dae8434ead97beb4390b0928447377",
+    "identical": true,
+    "question": "is G36's committed generator byte-identical to G34's on-disk original?"
+  },
+  "orphan_census": {
+    "CLAIM G34 lines in CHANNEL.md": 0,
+    "DONE G34 lines in CHANNEL.md": 0,
+    "queue row status": "DONE",
+    "tracked files under G34": 0
+  }
+}
+
+controls: 5/5 ok
+falsifiers fired: none

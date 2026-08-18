@@ -1,0 +1,202 @@
+{
+ "spike": "G43_repro_provenance",
+ "recorded_utc": "2026-08-18T10:33:07Z",
+ "note": "G43: is the comparand of this repo's only byte-reproduction claim actually in this repo? Certifies the recorded probe run (elapsed_sec=5377), not a fresh one.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
+   "head": "10ed3f2500b93f44e538e24bd998a88cb5d1e26b",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G43_repro_provenance/probe.py",
+   "sha256": "8efff27ea03b7c4dc608db272e33c4a0396517b601e94ca0dff609163fa75e91",
+   "bytes": 10879,
+   "mtime": 1787030236,
+   "compared_ts": 1787030236,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G43_repro_provenance/probe.json",
+   "sha256": "43358bbae0edaccba098ae48fe4da43db7df4c05f77f727c2ecfadeddd39f9f8",
+   "bytes": 2551,
+   "mtime": 1787038440,
+   "compared_ts": 1787038440,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G43_repro_provenance/probe.out",
+   "sha256": "df8b88b2fcbaaca69955c93337e3ac4f15383b3d0648d6d6fd6162078569f39d",
+   "bytes": 1440,
+   "mtime": 1787038440,
+   "compared_ts": 1787038440,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_sweep_finds_a_committed_path",
+   "must_fire_because": "the ref sweep must find a path that IS committed, else F1's zero is inertness rather than absence",
+   "can_fail_because": "a bad prefix or an empty ref set returns 0 for G36 too",
+   "null_must_contain": "paths under a directory that IS committed (G36's), so a zero for G34 is absence",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "g36_paths_reachable": 5,
+    "what_would_fail_it": "a ref sweep that returns nothing for a path that IS committed"
+   }
+  },
+  {
+   "name": "C2_archive_is_head_not_tree",
+   "must_fire_because": "the F2 tree must be HEAD and not the working tree, else the reproduction runs against the very files under test",
+   "can_fail_because": "G34's directory appearing inside the archive",
+   "null_must_contain": "both answers: an archive that leaks the working tree would show G34 present",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "g34_in_archive": false,
+    "g36_gen_in_archive": true,
+    "what_would_fail_it": "G34's directory appearing in a HEAD archive, or G36's missing from it"
+   }
+  },
+  {
+   "name": "C3_comparator_can_report_differ",
+   "must_fire_because": "the sha256 comparison behind F3 must be able to say DIFFER",
+   "can_fail_because": "a one-bit mutation hashing equal",
+   "null_must_contain": "a DIFFER verdict, produced here from a one-bit mutation of the same file",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a sha256 comparison that returns equal for a one-bit change"
+   }
+  },
+  {
+   "name": "C4_repro_can_miss",
+   "must_fire_because": "F2 compares against literals transcribed from G34/RESULT.md, not against a value read from the run being checked",
+   "can_fail_because": "the generator writing no arm, so there is nothing to compare",
+   "null_must_contain": "a MISS: any arm, filter or split change moves the 4 dp literals it compares to",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "compared_against": "literals transcribed from G34/RESULT.md, not from this run",
+    "what_would_fail_it": "a comparison against a value read from the same run it is checking"
+   }
+  },
+  {
+   "name": "C5_answer_was_produced_not_shipped",
+   "must_fire_because": "the answer read by F2 must be one the generator WROTE this run; the HEAD archive ships a committed copy at that path",
+   "can_fail_because": "the generator failing to recreate the file the probe deleted before running it",
+   "null_must_contain": "the shipped-answer case: v1 read exactly that file and this control is what sees it",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "answer_exists_after_run": true,
+    "archived_answer_removed_before_run": true,
+    "what_would_fail_it": "reading a length1_constants.json the generator did not write this run"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_G34_reachable_from_some_ref",
+   "must_fire_because": null,
+   "can_fail_because": "git ls-tree over every ref, reflog entry and stash finds one path under G34's directory",
+   "null_must_contain": "a reachable path, which C1 proves the same sweep does return for G36",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "g34_paths_reachable": 0,
+    "paths": []
+   },
+   "refutes": "that G36 compared against an artifact no clone contains; if G34 is reachable from ANY ref the whole row is withdrawn",
+   "fires_when": "git ls-tree over every ref, reflog entry and stash finds one path under G34's directory",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_clean_HEAD_tree_reproduces",
+   "must_fire_because": null,
+   "can_fail_because": "the freshly written answer's rounded mrr and hits10 differ from the published literals",
+   "null_must_contain": "a differing number: the literals come from G34/RESULT.md, not from this run",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_rounded": 0.2648,
+    "hits10_rounded": 0.3929,
+    "published_mrr": 0.2648,
+    "published_hits10": 0.3929,
+    "reproduced": true,
+    "fired_by_channel_condition_sentence": true,
+    "fired_by_channel_prediction_label": false
+   },
+   "refutes": "that the finding is larger than attribution; a clean HEAD tree returning 0.2648 / 0.3929 means the mission proposition survives on G36's copy",
+   "fires_when": "the freshly written answer's rounded mrr and hits10 differ from the published literals",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_generators_differ",
+   "must_fire_because": null,
+   "can_fail_because": "G36's committed generator and G34's on-disk original hash differently",
+   "null_must_contain": "a DIFFER verdict, which C3 demonstrates the same comparator produces",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "g34_ondisk_sha256": "2955ff29946ee8a4b5dc93f93f6ff1f4e6dae8434ead97beb4390b0928447377",
+    "g36_committed_sha256": "2955ff29946ee8a4b5dc93f93f6ff1f4e6dae8434ead97beb4390b0928447377",
+    "identical": true
+   },
+   "refutes": "the 'same program' claim this row rests on",
+   "fires_when": "G36's committed generator and G34's on-disk original hash differently",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "newest": 1786980398,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "G34's directory turning out to be reachable from some ref (F1), which would make G36's 'the committed one' true and retire the row entirely",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
