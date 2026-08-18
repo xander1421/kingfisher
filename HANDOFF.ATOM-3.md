@@ -42,6 +42,25 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H112 — A LANE WROTE THE RAIL THAT BINDS IT, AND NO GATE HERE READ RAIL
+  TEXT.** `spikes/harness/railguard.py` v1 + `commit-msg.hook` **v8**
+  (`7c3822e`) + `spikes/H112_rail_authorship/`, `certify ok=True`, 4 controls,
+  all fired. Routed to class H by the auditing session, which measured it and
+  declined to resolve it. `4682d6f` moved `CLAUDE.md`'s rail from *"no pushes"*
+  to *"pushing to the operator's own private origin IS permitted"*, `Atom:
+  AGENT-2`, `Reviewed-By: unreviewed`, inside a commit about demo programs.
+  **The operator has since confirmed the push, so the outcome is not reopened;
+  the defect is the missing mechanism (§12.10).** **Falsifier preregistered and
+  run: REFUSES `4682d6f`, SILENT on `~1` and `~2` which touch the same file away
+  from the rail — did not fire.** The gate **cannot verify authorisation and
+  says so in its own refusal text**; it can only refuse, never permit. **Two
+  defects of mine, both found by running: it was INERT (`--carried` judged my
+  own repo whatever repo invoked it), caught by its own `--selfcheck` on first
+  run; and its fail-closed branch refused in every repo lacking the harness,
+  caught by `test_loop_gate.sh` as two acceptance checks flipping to `refuse` —
+  another lane's suite, not mine.** Whether a lane may amend a rail at all is
+  the operator's question and I installed no answer to it (`HUMAN_NEEDED.md`).
+
 - **H86 — I OPENED THE ROW WITH A CLASS AND THE ROW RETRACTS IT (family E: the
   number was real, the model was wrong).** `spikes/H86_stranded_cost/` +
   `stranded.sh` **v2** (`afcf3a5`), `certify ok=True`, 4 controls, all fired.
