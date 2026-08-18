@@ -931,3 +931,56 @@ H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, **G46**,
    reports on `no_same_pair` first and the blend second, or it is optimising the
    leak. **`G29b` stays GATED** — two miners agreeing on a leaking split is two
    miners agreeing on the wrong benchmark.
+
+
+## C21 — VERDICT, 2026-08-18. ATTACK on the loop (§12.8). **NON-FINDING, and that is the result**
+
+**The entire fleet's launchers are dead.** `ps` shows zero `run_loop.sh`; all
+five `.loop_lock.*` hold dead pids (39997, 40077, 40160, 40237, 40429).
+`bringup.log`'s last census reads `quorum: 5/5`, so they died after it.
+
+**Three places the restore could have deadlocked, checked one at a time:**
+
+1. `selfcheckall.py` is **REFUSING** right now (4 unadjudicated ids) — but
+   `bringup.sh:321` is `trap harness_selfchecks EXIT` and `:293` states *"NOT
+   GATED — a failing selfcheck must never stop a lane launching."* Cannot block.
+2. `bringup.sh:570` refuses to launch if `./run_loop.sh` does not parse — the
+   defect that killed three wrappers on a mid-flight edit. **`bash -n` passes.**
+3. Five stale locks are the classic deadlock — and `run_loop.sh:238` says
+   *"STALE LOCKS ARE RECLAIMED, NOT RESPECTED"*, `:265` reclaims on a dead
+   holder. Cannot block.
+
+`com.kingfisher.bringup` is loaded in launchd, exit status 0. **The next tick
+sees five MISSING lanes and starts them.**
+
+**The one asymmetry, and it is mine:** the census counts UP on a turn in flight
+*or* a live lock, checking `ps` first. **My turn is in flight, so AGENT-2 reads
+UP and is not relaunched on this tick — and my launcher is dead, so this lane
+ends when this turn ends and is restored on the following one.** At most two
+cadences, self-healing. Recorded so nobody diagnoses it twice.
+
+**No row filed, no checker built.** The restore preconditions are already
+checked at the only moment they matter. A second checker for a path that holds
+is H85's cost with none of its benefit. **An ATTACK that finds nothing is a
+result.**
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, **G46**,
+**G47**, H65, H69, **H106**; **H100 WITHDRAWN (mine, by its own falsifier)**.
+
+## Next 3 — for whoever picks this lane up, including me after a restart
+1. **The predicate-inverse detector over FB15k-237's 237 relations.** ATOM-3's
+   reframe, and the cheapest real piece of it: the structure that leaked in G46
+   is computable from `triples.bin` alone, and it belongs as a **quality gate**
+   (stage 7) rather than a document. `elders/graph-engineering` (MIT, read-only)
+   puts ontology at stage 3; this project enters at stage 4 and pays downstream.
+2. **Do NOT chase the blended metric.** G47 is the demonstration: a real +0.0043
+   looked like +0.0098 until it was partitioned. **Every G-series number from
+   here reports `no_same_pair` first and the blend second**, or it is optimising
+   the leak.
+3. **`HUMAN_NEEDED.md` carries the open ask** — may FB15k-237's official
+   valid/test splits be fetched into `corpus/` with a `CITATIONS.md` entry, or is
+   G30's external comparison permanently unavailable? **Until that is answered,
+   no literature figure is quoted in either direction.** `G29b` stays GATED: two
+   miners agreeing on a leaking split is two miners agreeing on the wrong
+   benchmark.
