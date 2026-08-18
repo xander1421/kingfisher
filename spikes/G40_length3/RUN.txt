@@ -1,0 +1,9 @@
+base: 3198 2-hop + 189 length-1 subsumption (inverse and constant families EXCLUDED — varlen has no backward walk or const slot)
+walks 400000  distinct 3-bodies seen 22093  length-3 rules kept 612  dropped by MAX_RULES 0
+base_len1_2    rules   3387  MRR 0.106019  H@1 0.0591  H@10 0.1785
+plus_len3      rules   3999  MRR 0.104958  H@1 0.0561  H@10 0.1771
+
+length-3 delta on THIS process's base: -0.001061
+G34 published full system (2-hop + L1 + CONST): 0.264807
+F1 FIRES — length-3 does NOT raise filtered MRR
+F2 satisfied by construction: scored through varlen.evaluate_varlen, G37's pinned path. This file contains no evaluator.
