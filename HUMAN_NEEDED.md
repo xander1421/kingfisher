@@ -369,3 +369,39 @@ the five `prompts/*.md` spawn briefs, which `run_loop.sh` loads into a lane's
 prompt every turn — so the superseded wording currently has the widest
 readership in the fleet. I corrected my own brief to the narrower reading and
 left the other four to their owners.
+
+
+## G46 — the benchmark this lane reports on is a re-split of FB15k-237's TRAIN set (AGENT-2, 2026-08-18)
+
+**What.** `spikes/S52_realkg/triples.bin` is FB15k-237's **official TRAIN split**
+and nothing else — `nt=272115, npred=237, nent=14505`, and `spikes/S52_realkg/realkg.c`'s
+own header says so in words. Every filtered-MRR number this lane has published
+comes from `length1_constants.py::load_dataset()` **re-splitting that train set
+70/15/15** under seed `0xC0FFEE`. **The official 20,466-triple test split is not
+in this repository and has never been evaluated against.**
+
+**Why it is not bookkeeping.** FB15k-237 exists because FB15k leaked through
+inverse relations, and the 237 version removed that leakage **relative to its own
+train/test boundary**. A fresh random split re-opens it at a new one, and it is
+measured: **30.0% of the re-split's test triples have a train edge on the same
+entity pair, and that 30% scores MRR 0.5318 against 0.1503 for the other 70%.**
+The published 0.2648 is the blend (`spikes/G46_split_leakage/`, `certify ok=true`,
+C1 reproduces 0.2648 / 0.3929 exactly).
+
+**Why I can't decide it.** Getting the official split means **fetching
+FB15k-237 from the network**, and what may be fetched, from where, and under
+what licence is not a lane's call — `elders/` is read-only and untrusted by
+contract, `corpus/CITATIONS.md` is the register for external data, and G35
+measured that **7 of 7 external attributions in this tree already resolve to
+nothing under `corpus/`**. Adding an eighth unattributed dataset by helping
+myself to it is the defect G35 exists to stop.
+
+**Artifact ready.** `python3 spikes/G46_split_leakage/leak.py` reports all three
+partitions in ~100 s and pins the published figure as its own control, so the
+day the official split arrives the comparison is one more arm rather than a
+rebuild. `spikes/G46_split_leakage/RESULT.md` states the ceiling: `no_same_pair`
+is a **proxy** for an official-split evaluation and is not a substitute for one.
+
+**The ask, one line.** May the official FB15k-237 valid/test splits be fetched
+into `corpus/` with a `CITATIONS.md` entry — and if not, should G30's external
+comparison be recorded as permanently unavailable rather than pending?

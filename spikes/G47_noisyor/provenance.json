@@ -1,0 +1,174 @@
+{
+ "spike": "G47_noisyor",
+ "recorded_utc": "2026-08-18T11:12:14Z",
+ "note": "G47: noisy-OR against max, one variable, reported on G46's partition so a gain cannot hide inside the leaky third.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
+   "head": "e7673aa08404ac52fd6d644775a377c2ae6f1b30",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G36_repro_g34/length1_constants.json"
+   ],
+   "diff_sha256": "d6798cea5ed28a8914d9bcc49f53d2312f3c584a811cf523949e4517c73a955f",
+   "diff_bytes": 2060
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G47_noisyor/run.py",
+   "sha256": "cb434f7400d5c3a81b2bfda464612b84ff7b6e155476f940ed5b477d1426006b",
+   "bytes": 11054,
+   "mtime": 1787051360,
+   "compared_ts": 1787051360,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G47_noisyor/agg.py",
+   "sha256": "adb2bcb40a7e932db1094438bbaf81f9a51c8bc4d838526ca54d055990b9fefc",
+   "bytes": 27991,
+   "mtime": 1787051075,
+   "compared_ts": 1787051075,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G47_noisyor/agg.json",
+   "sha256": "2680aa843adac7bc516ab97bce25c7a99f31feb0911d510de459faf697c598f7",
+   "bytes": 4061,
+   "mtime": 1787051534,
+   "compared_ts": 1787051534,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_copy_reproduces_the_original_under_max",
+   "must_fire_because": "the rewritten file under the ORIGINAL setting must return the ORIGINAL published figure, or it is a different instrument and no arm from it means anything",
+   "can_fail_because": "the max arm returning anything but 0.2648 / 0.3929",
+   "null_must_contain": "a differing figure: the literals are transcribed from G34/RESULT.md",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the max arm of the rewritten file returning anything but 0.2648 / 0.3929",
+    "mrr": 0.2648,
+    "hits10": 0.3929,
+    "published_mrr": 0.2648,
+    "published_hits10": 0.3929
+   }
+  },
+  {
+   "name": "C2_operators_differ",
+   "must_fire_because": "the two aggregation operators must actually differ, or the rewrite is inert by construction and F3 could not detect it",
+   "can_fail_because": "both operators returning the same score for the same confidences",
+   "null_must_contain": "an equal pair, which is what an inert rewrite would produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "both operators returning the same score for the same two confidences, which would make the rewrite inert by construction",
+    "max_of_0.4_0.5": 0.5,
+    "noisy_or_of_0.4_0.5": 0.7
+   }
+  },
+  {
+   "name": "C3_partition_recombines",
+   "must_fire_because": "the parts must sum to the test set, as in G46",
+   "can_fail_because": "parts that do not sum, or an empty part",
+   "null_must_contain": "an unequal sum, which a mis-scoped mask would produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the parts not summing to the test set",
+    "sum": 40818,
+    "test": 40818
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_noisy_or_does_not_help_the_clean_partition",
+   "must_fire_because": null,
+   "can_fail_because": "the no-same-pair gain is at or below the 0.002 floor stated first",
+   "null_must_contain": "no gain, which the same harness reports for the max arm against itself",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "max_no_same_pair": 0.1503,
+    "noisy_or_no_same_pair": 0.1546,
+    "gain": 0.0043,
+    "threshold_absolute": 0.002,
+    "threshold_is": "an absolute floor chosen before the run, NOT a measured seed band -- no seed band for filtered MRR exists in this lane and inventing one would be A26"
+   },
+   "refutes": "the hypothesis G30 named: that the aggregation operator explains part of the gap to published rule miners",
+   "fires_when": "the no-same-pair gain is at or below the 0.002 floor stated first",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_gain_is_bought_on_the_leaky_third",
+   "must_fire_because": null,
+   "can_fail_because": "the blended arm gains while the leakage-free partition does not",
+   "null_must_contain": "a clean-partition gain, which is what would license the claim",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "all_gain": 0.0098,
+    "clean_gain": 0.0043
+   },
+   "refutes": "the right to report any gain as a METHOD improvement",
+   "fires_when": "the blended arm gains while the leakage-free partition does not",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_rewrite_is_inert",
+   "must_fire_because": null,
+   "can_fail_because": "the noisy-OR arm returning exactly the max arm's blended MRR",
+   "null_must_contain": "a moved number, which C2 shows the operators can produce",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "noisy_or_all_mrr": 0.2746,
+    "max_all_mrr": 0.2648
+   },
+   "refutes": "that this run measures anything about aggregation at all",
+   "fires_when": "the noisy-OR arm returning exactly the max arm's blended MRR",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "newest": 1787050131,
+   "from": "spikes/G36_repro_g34/length1_constants.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "no gain on the leakage-free partition, which would say the aggregation difference G30 named does not explain the gap for this rule set"
+}

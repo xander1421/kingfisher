@@ -871,3 +871,63 @@ H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, H65, H69, G43,
    now says it should stay gated a while longer: **two miners agreeing on a
    leaking split is two miners agreeing on the wrong benchmark.** Fix the split
    first.
+
+
+## C20 — VERDICT, 2026-08-18. G47 **DONE**. The metric moves, and most of the move is on the leak
+
+`certify ok=true`, 3 controls, 3 falsifiers preregistered, **none fired**.
+
+| partition | max | noisy-OR | gain |
+|---|---|---|---|
+| all | 0.2648 | **0.2746** | +0.0098 |
+| same-pair (30%) | 0.5318 | **0.5545** | +0.0227 |
+| no same-pair (70%) | 0.1503 | **0.1546** | **+0.0043** |
+
+**F2 did not fire and I still refuse the +0.0098 headline.** The blend
+decomposes as `0.30 × 0.0227 + 0.70 × 0.0043` — **70% of the gain comes from 30%
+of the queries**, and that 30% is G46's leaky partition. **The result is
++0.0043.** Reporting every arm on all three partitions is what G46 bought, and
+this is the first cycle it paid off in.
+
+**Mechanism, mostly tie-breaking:** on the leaky third Hits@1 jumps **+0.0755**
+while Hits@3 and Hits@10 both fall slightly — max leaves candidates at identical
+confidence and noisy-OR separates them by counting agreeing rules. On the clean
+partition the gain is small and even across @1/@3/@10, which is the honest kind.
+
+**C1 carries the row:** the rewritten file under `max` returns **0.2648 / 0.3929
+exactly**, so the copy is the same instrument and the operator is the only
+variable. The copy asserts its own 8-site rewrite count, so a missed anchor
+fails loudly rather than shipping an inert arm.
+
+**ATOM-3's compounding finding, with attribution:** `.github/autoloop/PROGRAM.md:40`
+sets `filtered_mrr >= 0.2500` on the same line as `(Current: 0.2648)` — **the bar
+was calibrated from the leak-blended value it gates.** Flagged, **not changed**:
+re-baselining a gate I am measured by is A22, and the config is autoloop's.
+
+**Also filed this cycle:** `HUMAN_NEEDED.md` — may FB15k-237's official
+valid/test splits be fetched into `corpus/` with a `CITATIONS.md` entry, or
+should G30's external comparison be recorded as permanently unavailable rather
+than pending? **Fetching external data is not a lane's call**, and G35 measured
+7 of 7 external attributions here already resolving to nothing.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, **G46**,
+**G47**, H65, H69, **H106**; **H100 WITHDRAWN (mine, by its own falsifier)**.
+
+## Next 3
+1. **C21 is the ATTACK (C20 was a builder), and §12.8 says at least every
+   fourth targets the LOOP.** C19 hit a spike, C18 hit the loop. **A candidate
+   is measured and unclaimed:** a sixth live `run_loop.sh` launcher, pid 65797,
+   holds **no `.loop_lock.*`** while the other five map 1:1 to the five lanes —
+   either a lane's lock is missing or a launcher runs for no lane, and both are
+   H21's class.
+2. **The ontology stage, and it is the cheapest real piece of ATOM-3's reframe:
+   a predicate-inverse detector over FB15k-237's 237 relations.** It is the exact
+   structure that leaked, computable from `triples.bin` alone, and it belongs as
+   a **quality gate** rather than a document — `elders/graph-engineering` (MIT,
+   read-only) puts it at stage 3 and this project enters at stage 4.
+3. **Do NOT chase the blended metric.** G47 is the demonstration: a real +0.0043
+   looked like +0.0098 until it was partitioned. Any further G-series work
+   reports on `no_same_pair` first and the blend second, or it is optimising the
+   leak. **`G29b` stays GATED** — two miners agreeing on a leaking split is two
+   miners agreeing on the wrong benchmark.
