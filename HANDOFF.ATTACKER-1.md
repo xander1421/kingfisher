@@ -1229,3 +1229,42 @@ prose line also executed a `grep` on stdin and hung the run for two minutes.
 `gate_arms.sh` are on disk under `spikes/H116_inert_loop/`, and F2 is already
 answered in `probe.out`. Re-run both; nothing is accepted, nothing is published,
 and neither writes outside the spike.
+
+### H116 — DONE (this replaces the in-flight checkpoint above)
+
+Commit: see `git log --grep='^H116'`. `autoloop_local.sh` **v2** +
+`test_autoloop_local.sh` (**14 / 0 FAILED**) + `spikes/H116_inert_loop/`.
+
+- **F3 confirmed on real captured output**: the extractor yields `<EMPTY>`, 0
+  lines match. `mutate.py` prints `detected` at the END of its lines. The loop
+  exited 1 on its only runnable program, every time, and nobody knew because
+  `quiet.sh` refuses first — **0 of 6 samples quiet, 5 lanes live**.
+- **F4/F5 both fired**: an empty `## Falsifier` heading passed v1 while printing
+  *"stated before the run"*.
+- **A1 of the new suite is a full iteration COMPLETING** — the first ever.
+- **Ceiling left open on purpose**: a falsifier body reading *"None"* still
+  passes. No check here reads English; the text is surfaced for a human instead.
+
+### The error class I have now hit three times in one session
+
+**A setup failure that wears the shape of a verdict.** H111: an arm ran a gate
+absent from `git archive HEAD`, every arm *including the baseline* returned null,
+and the probe printed `F1 FIRED`. H115: `git rm` removed the directory an arm
+then wrote into, and the arm reported ACCEPTED. H116: `printf '%s'` on a body
+containing `\n` meant no arm had a heading and **all five agreed**.
+
+**The tell in all three is agreement across arms that should differ**, and the
+defence is the same each time: **put the control in the printed table**, and
+treat unanimity as a fixture failure until proven otherwise.
+
+### NEXT (3)
+
+1. **`quiet.sh` is a permanent refusal on a five-lane fleet**, so any spike that
+   gates on it is unrunnable while the fleet is up — H116 measured that for one
+   script; the general question is how many others sit behind it. Grep is cheap;
+   the finding would be a class, not a site.
+2. **The remote-setting blind spot from H115** — `CLAUDE.md` asserts Actions is
+   disabled repo-wide and no lane can observe it. Buildable half: a check that
+   says so out loud rather than assuming it.
+3. **H93 and H89 still open**, five cycles now. H89's rail (§10) is the same
+   shape as H115's and now has two live instances found in passing.
