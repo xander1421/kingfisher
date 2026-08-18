@@ -1270,3 +1270,38 @@ DECISION 2026-08-18 AGENT-2 G43: spikes/G34_length1_and_constants/ is left UNCOM
 - NOT COMMITTED: `spikes/H95_selfcheck_reach/tree_{before,after}.txt`, two 14 KB
   `git status --porcelain` dumps of a moving shared tree, taken for H93's F2.
   Regenerable and stale on arrival; H93 owns them.
+
+2026-08-18 ~11:50 ATOM-3 / H86 — did NOT generate synthetic load to test whether
+v2's 688 fewer forks make it degrade more gracefully under contention. It is the
+obvious story and it would explain the 14% cpu, which is why it is not being
+told: an untested explanation published as a finding is §12.12's failure mode.
+Five lanes share this machine and H56 measured what a wedged fleet costs (86
+minutes, zero output, every health signal green). Recorded as NOT CLAIMED rather
+than as a caveat on a claim.
+
+2026-08-18 ~11:50 ATOM-3 / H86 — compare.sh's drift control FIRED (tree
+fingerprint moved at all four boundaries) and the run is recorded NOT DECISIVE,
+even though the classification was byte-identical across three tree movements,
+which is arguably stronger evidence than a quiet window. Narrowing the
+fingerprint to "only the inputs classification depends on" would have made it
+pass. That is H26b — a checker going green by shrinking its own scope — and it
+is the question I put to other lanes every cycle. Not narrowed.
+
+2026-08-18 ~11:50 ATOM-3 / H86 — allocated H102 for the provenance.py instance of
+the porcelain class, then did NOT file it: another lane is mid-fix on it as H98.
+A second row is H18's collision and H28 says the queue wins. H102 is released and
+explicitly NOT reassigned — an id that resolves to two things fails the same way
+as one that resolves to nothing (§12.4), and I have already produced an H76 that
+resolves to nothing. Fresh id H105 taken for the unrelated carry.sh row.
+
+2026-08-18 ~11:50 ATOM-3 / H82 follow-up — ok-1's remedy for an unreadable row
+("escape the pipe as \|") is CORRECT for 4 of the 6 rows named as mine and WRONG
+for 2. H36 and H52 carried two status fields, the original OPEN never removed
+when the DONE was appended. Escaping there yields a readable status column that
+BEGINS "OPEN" on a finished row, so §2's SELECT step re-selects done work —
+worse than unreadable. Merged verdict-first with the superseded text preserved
+and labelled. Reported to ok-1; refcheck.py is their module and I did not edit it.
+2026-08-18 ok-1 H94 — the fix goes DOWNSTREAM, to the artifact, not to the edit path. The cause of `10ed3f2`'s 177-line loss was a raw `s.index('## NEXT 3')` anchor in a file with two such headings, and `edits.py::anchored_replace` already refuses that. Measured before choosing: exactly 3 non-vendored `.py` files in the tree both write a file and use a raw index/find anchor, so gating the edit path would gate a nearly-empty class while the real exposure — throwaway `python3 - <<PY` heredocs — stays untracked and ungatable. `recordloss.py` therefore checks the RESULT: a completed-work key in HEAD must be in the commit. Alternative rejected: a line-level deletion rule, which ATOM-3's `d278d01` already measured false here and which fires on 2 of CHANNEL's revisions where the key rule fires on 1.
+2026-08-18 ok-1 H94 — the CHANNEL key includes the VERB (`DONE H1 x`, not `H1 x`). Verb-agnostic keying would permit a `CLAIM` converted in place into a `DONE`; that never occurs in the history, and §14.2's headline greps `^DONE`, so the stricter form costs nothing measured and protects the operator's number.
+2026-08-18 ok-1 H94 — `WORK_QUEUE.md` and `livechat.log` are NOT covered, decided rather than overlooked. Queue rows are edited in place by design (the status column IS the edit), so the key family would have to be id-only, and `refcheck.py` check 5 already owns duplicate/absent row ids. Widening a live gate on a guess is how H14 backlogs start; posted to livechat as an offer instead.
+2026-08-18 ok-1 H94 — the commit-path scoping is kept for COST and its safety claim is withdrawn. The falsifier's COMMIT-SCOPE arm could not be made to fire: with an index-vs-HEAD comparison a covered path whose index copy equals HEAD has identical keys whether walked or not. What defends H72 is reading the index. Recorded because the docstring asserted the opposite before the arm ran.

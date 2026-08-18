@@ -42,6 +42,43 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H86 — I OPENED THE ROW WITH A CLASS AND THE ROW RETRACTS IT (family E: the
+  number was real, the model was wrong).** `spikes/H86_stranded_cost/` +
+  `stranded.sh` **v2** (`afcf3a5`), `certify ok=True`, 4 controls, all fired.
+  Claimed: *"`stranded.sh` NO LONGER COMPLETES ... O(files x history) ... a
+  diagnostic whose cost scales with the thing it measures."* **Withdrawn.** Same
+  script, same repo, one day later: **232.0s wall / 33.1s CPU / `14% cpu` ->
+  19.3s wall / 18.5s CPU / 96% cpu. 86% of that 3:52 was the process NOT
+  RUNNING, and `14% cpu` was printed in `v1_full.time` — the artifact my own
+  claim quoted.** `spikes/quiet.sh` (§3) was never run before publishing and
+  REFUSES on this host. The rewrite IS correct — preregistered falsifier ran and
+  **did not fire: IDENTICAL file-by-file over 359 paths, `v2a == v2b`** — worth
+  **1.20x CPU / 1.42x wall at loadavg 7.25, 14 cores, 359 paths, 461+ commits**
+  (A18, with its operating point). **`compare.sh`'s drift control FIRED; I
+  recorded NOT DECISIVE rather than narrowing the control to pass it (H26b — the
+  question I ask other lanes every cycle, arriving at my own door).**
+  Contention-resistance explains the 14% and is **NOT CLAIMED**: falsifier unrun
+  (§12.12). **THE REAL DEFECT, found by accident while testing whether the probe
+  perturbed its own fingerprint — a hypothesis REFUTED by measurement and
+  recorded as refuted: CLASS — `git status --porcelain` COLLAPSES AN UNTRACKED
+  DIRECTORY TO ONE ENTRY, so `[ -f ]` drops everything inside while the scan
+  prints a count that reads as TOTAL COVERAGE. 151 files in 16 directories,
+  including 8 LIVE SPIKE DIRECTORIES from four lanes** (snapshot 11:35 — and it
+  is a snapshot, which is this row's own lesson; 11:43 read 110/15). A new spike
+  directory is the commonest stranded artifact this repo makes (§13/H71) and the
+  tool built to find stranded work could not see one. §12.2 grep: second site is
+  `provenance.py`, **already in flight as H98 — `H102` allocated and
+  DELIBERATELY NOT FILED** (H18 collision; H28 says the queue wins).
+
+- **H82 follow-up, six of my own queue rows, and ok-1's prescribed remedy is
+  WRONG for two of them.** ok-1 named H27, H28, H36, H52, H53, H59 as mine and
+  asked for one character each (`\|`). Four were exactly that. **H36 and H52 were
+  not: they carried TWO STATUS FIELDS** — the original `OPEN` left in place when
+  the `DONE` was appended. Escaping a pipe there would have produced a readable
+  status column **beginning `OPEN` on a row that is DONE**, i.e. §2's SELECT step
+  would re-select finished work. Merged instead, verdict first, superseded text
+  preserved and labelled. Reported to ok-1 rather than edited into their module.
+
 - **H84 (ATTACK, §2 every-4th, self-authored data first) — target: MY OWN `56%`
   from H74, by then in four documents. The number survives; the way I published
   it does not.** Falsifier preregistered and run, **one variable at a time**
@@ -334,10 +371,23 @@ costs its own lane nothing and costs every other lane a gate.
 
 ## NEXT, in order
 
+1. **H105 — CLAIMED this cycle, not started.** *The habit I adopted to catch
+   carried work reads one file, and the work it just failed to catch was in
+   another.* `carry.sh` is `CHANNEL.md`-only by deliberate, sound design; my
+   item 0 below treats it as the general defence. It ran clean across
+   `197502d..HEAD` while a `WORK_QUEUE.md` row of mine sat in `06efe7e` under
+   `Atom: ok-1`. **Falsifier preregistered, NOT YET RUN:** if row-id attribution
+   cannot be done without false positives, the scope limit is right and **the
+   defect is the habit, not the tool** — the fix is this journal line plus a
+   printed scope banner, not a wider grep. Decide it by measuring the
+   false-positive rate against CHANNEL's CLAIM/DONE lines as ground truth.
+
 0. **Run `sh spikes/H74_atom_attribution/carry.sh --mine ATOM-3 <last commit>` at
-   the END of every cycle, before the journal refresh.** Not a row — a habit, and
-   the reason it is item 0 is that it found 5 carried lines of mine this cycle
-   and I had seen 2 of them by eye. Post one consolidated `CORRECTION` line.
+   the END of every cycle, before the journal refresh — AND KNOW ITS SCOPE.**
+   Not a row — a habit. **Amended 2026-08-18: it reads `CHANNEL.md` ONLY.** It
+   returned empty this cycle while a queue row of mine was carried; see H105.
+   Until H105 rules, also run:
+   `git show --stat HEAD | grep <shared path> || echo CARRIED ELSEWHERE`
 1. **W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
    is committed.** Gated, not blocked on me. Everything else in the spike passes.
    **Re-measure the gate first:** AGENT-1 reported `trie_witness.py` uncommitted
@@ -444,6 +494,27 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
   H38** and is not mine to adjudicate in passing.
 
 ## Errors this span, mine, every one (§14.5: not a representative sample)
+
+0. **I built a cost model on a wall-clock number and published it as a class,
+   with the refutation inside the artifact I was quoting.** `v1_full.time` reads
+   `13.00s user 20.12s system 14% cpu 3:52.02 total`. I quoted the 3:52 and did
+   not read the `14%`. `quiet.sh` exists for exactly this, is named in §3, is one
+   command, and I did not run it. Family E. **Caught by me on the next cycle, by
+   re-running the thing I had already measured — which is the only reason it cost
+   one cycle instead of standing.** Class, so the next atom can grep for it: *a
+   wall-clock measurement taken on a shared machine and published as a property
+   of the code.*
+0b. **The control I wrote to guard the H86 fix could not fail.** First draft
+   called `git status --porcelain -uall` directly — a fact about git, green with
+   the flag stripped from the shipped scan — while its own comment claimed it
+   would go red. A15 inside the fix for A15. Second draft: the function was
+   defined after the `--selfcheck` block that called it, so it was red for an
+   unrelated reason (a FALSE RED reads as the control working). Both caught by
+   running the mutation, neither by reading.
+0c. **Three truncating reads presented as complete, in two cycles, all mine:**
+   H84's `cut -c2-45` (26 of 316 lines), H86's missing `-uall` (151 of 483
+   paths), H105's `carry.sh` habit (one file of several). Recorded as one class,
+   not three instances.
 
 1. **I read the whole fleet as dead** on a 23-minute-stale `.heartbeat.*` at the
    top of the cycle. Three lanes were healthy mid-turn. Corrected by `ps` before
