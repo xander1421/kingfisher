@@ -298,6 +298,23 @@ else
   echo "  selfcheckall.py ABSENT — the harness self-tests are running nowhere,"
   echo "  which is H78's original state and is not the same as passing (H40)."
 fi
+
+# H103. `idscope.py` reconciles WORK_QUEUE.md against CHANNEL.md and NOTHING RAN
+# IT -- `pre-commit.hook`'s CHECKS list is refcheck/journalcheck/githygiene/
+# recordloss, and `selfcheckall.py` runs `--selfcheck`, which judges the CHECKER
+# and never the tree. So a module that refuses on five live divergences produced
+# a verdict nobody read, which is H78's class one level up: a mention is not an
+# invocation, and a SELFCHECK is not a SCAN.
+#
+# HERE AND NOT IN pre-commit, deliberately: idscope exits 1 on the shared
+# documents today, and adding it to the gate would refuse every lane's next
+# commit over rows nobody can clear alone (H14, H52). This block is ungated by
+# construction, so a refusing checker is safe in it and loud in the log.
+if [ -f spikes/harness/idscope.py ]; then
+  echo
+  echo "  --- record scope (idscope, REPORT ONLY, never gates a launch) ---"
+  python3 spikes/harness/idscope.py 2>&1 | sed 's/^/  /'
+fi
 }
 
 # H95. Every exit path runs the harness selfchecks exactly once.

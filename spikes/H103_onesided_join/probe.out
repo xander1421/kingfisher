@@ -1,0 +1,33 @@
+H103 probe — pinned pair at 10ed3f2 (10ed3f2)
+  WORK_QUEUE.md 201 lines, 143 rows; CHANNEL.md 377 lines
+
+F2 — classification of every CLAIM/DONE prefix line at the pin:
+   not-an-id: 33 line(s), 29 distinct — B1-oracle-cutoff D1+ G24-review G25-no_death G24-selection2x2 H-class H1b H3b H6b H57-ATTACK H73-RECONCILE H77-ATTACK M1.3c S20-ATTACK S36-ATTACK S52-correctness S57-fuel-branch S72b S79-ATTACK W5-epoch-bisect architect-lane attacker-lane d6-retrofit elder-candidacy journalcheck-scope-attack prompts/ refcheck-resolver-attack verifier2-attack w4-4of4
+     has-row: 187 line(s), 104 distinct — B1 B2 D2 D3 D5 D6 G27 G28 G31 G33 G35 G36 G37 G38 G39 H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H13 H14 H15 H16 H17 H18 H19 H20 H26 H28 H29 H30 H31 H32 H33 H34 H35 H36 H37 H38 H40 H41 H43 H44 H45 H48 H50 H51 H52 H54 H56 H57 H59 H60 H61 H62 H63 H64 H65 H66 H67 H68 H69 H70 H71 H72 H73 H74 H77 H78 H81 H82 H83 H84 H85 N1 Q1 S20 S21 S22 S23 S24 S26 S27 S28 S36 S38 S73 S74 S75 S76 S77 S78 S79 S80 S84 W2 W4
+     ROWLESS: 17 line(s), 14 distinct — G26 G32 G43 H39 H42 H76 H86 H88 H89 H93 S29 S81 S82 S83
+  F2 VERDICT: rowless ids span series ['G', 'H', 'S']. A naive "every CLAIM needs a row" would additionally accuse 33 line(s) carrying no id at all.
+
+F1 — does ANY existing harness checker name a rowless id? (killing falsifier: if one does, this row is a non-finding)
+        idscope @10ed3f2.scan() rc=1 — mentions none of the subjects; 0 line(s) tie one to the queue
+         refcheck (live).scan() rc=0 — mentions none of the subjects; 0 line(s) tie one to the queue
+     journalcheck (live).scan() rc=([], ['HANDOFF.md: NEXT cites M1 in its  — mentions none of the subjects; 0 line(s) tie one to the queue
+       recordloss (live).scan() rc=None — mentions none of the subjects; 0 line(s) tie one to the queue
+  F1 VERDICT: did NOT fire — no checker names a rowless id
+
+F3 — inertness: a planted rowless CLAIM must be flagged, and the unmodified pair must give the same answer twice.
+  The BASELINE arm loads the PINNED v2 source rather than trusting a
+  remembered terminal, for the same reason H95 pinned its control by sha:
+  once this row is committed the live module IS the patch.
+  reproducible on the unmodified pair (live module, twice): True
+     pinned v2: plant H999 flagged = False; real subjects flagged = none
+   live module: plant H999 flagged = True; real subjects flagged = ['H89', 'H93']
+
+F4 — size of intervention. +0 new detections is FATAL and is printed.
+  rowless ids at the pin, by the classification above: 14
+  of which the live instance: ['H89', 'H93']
+  reported by idscope v2 (baseline, from F3 above): 0
+  reported by idscope v3 on the same pair: 14 — G26 G32 G43 H39 H42 H76 H86 H88 H89 H93 S29 S81 S82 S83
+  DELTA: +14 detections. The wire carries.
+  agreement with the independent classification above: True
+  live instance now named: ['H89', 'H93']
+  CONTROL — the direction v2 already had must survive: 5 DISAGREE line(s), rc=1 (ROWLESS must not gate: rc is unchanged from the baseline rc=1)

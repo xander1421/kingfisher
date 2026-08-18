@@ -1,6 +1,37 @@
 #!/usr/bin/env python3
-"""idscope.py v2 — H27, H52. The queue and the append-only log must not disagree
-about whether a row is closed.
+"""idscope.py v3 — H27, H52, H103. The queue and the append-only log must not
+disagree about whether a row is closed — in EITHER direction.
+
+v3 CHANGELOG (H103, ATTACKER-1, 2026-08-18; §5 — corrected in place, nothing
+above this line edited).
+DEFECT REMOVED: **A TWO-SIDED INVARIANT CHECKED ON ONE SIDE ONLY.** v2's whole
+comparison was `for rid in sorted(d): if q.get(rid) != 'OPEN': continue`, where
+`d` came from `log_done()` — DONE lines and nothing else. Two consequences, and
+both were live:
+
+  * a CLAIM was never read at all, so an id could be claimed and worked on with
+    no queue row in existence;
+  * `q.get(rid)` returns None for an id the queue does not carry, and
+    `None != 'OPEN'` is TRUE, so the id was SKIPPED. **ABSENT READ AS CLEAR** —
+    the third time in this harness after H40's `-1` lock reading and H88's
+    missing fail counter, and the second time in a module of mine.
+
+MEASURED at pinned `10ed3f2`, before the author repaired his own instance by
+hand (`spikes/H103_onesided_join/probe.py`): **14 ids appear in `CHANNEL.md`
+with no `WORK_QUEUE.md` row of any kind** — G26 G32 G43 H39 H42 H76 H86 H88 H89
+H93 S29 S81 S82 S83, spanning three series and four lanes. v2 reported 0 of
+them, and so did `refcheck.py`, `journalcheck.py` and `recordloss.py`; the F1
+falsifier was "if any checker already names one, this is a non-finding" and it
+did not fire. Two of the fourteen were this module's author's, one of them
+carrying a fix that was live on the fleet at the time.
+
+CEILING, STATED RATHER THAN PAPERED OVER: **ROWLESS does not change the exit
+code.** The floor is 14 pre-existing ids across four lanes and nobody can clear
+another lane's; a checker that refuses on a permanent floor is bypassed as
+thoroughly as a flaky one (H14, H52 — this module's own previous row). It is
+reported, counted, and printed on every run. If the floor ever reaches 0, making
+it refuse is a one-line change and its selfcheck asserts the current choice so
+the change cannot be silent.
 
 v2 — DEFECT REMOVED: A PERMANENT NON-ZERO FLOOR (H52, filed by ATOM-3, fixed by
 this module's author)
@@ -175,6 +206,35 @@ def adjudications(text):
     return out
 
 
+ID = re.compile(r'^[A-Z]\d+$|^[A-Z]\d+\.\d+$')
+
+
+def log_ids(text):
+    """Every ID-SHAPED subject the log names, whatever the prefix.
+
+    v2 read DONE lines only, which is half of a two-sided invariant. This reads
+    CLAIM too — a row worked on without ever being filed is the case the module
+    was blind to.
+
+    ID-SHAPED IS THE WHOLE PREDICATE, and it is the F2 falsifier of H103 rather
+    than a nicety: 33 prefix lines in the live log name a subject that is not an
+    id at all (`attacker-lane`, `H73-RECONCILE`, `S20-ATTACK`, `prompts/`). A
+    naive "every CLAIM needs a row" accuses all of them, which is this repo's
+    correct-numbers-wrong-attribution failure. §14.3's `VERDICT <candidate>
+    <APPROVE|REJECT|ABSTAIN> <atom>` puts its subject first as well and is
+    deliberately NOT read here: a candidacy is not a queue row.
+    """
+    out = {}
+    for line in text.split('\n'):
+        m = re.match(r'^(CLAIM|DONE)\s+(\S+)', line)
+        if not m:
+            continue
+        tok = m.group(2).strip('*` ')
+        if ID.match(tok):
+            out.setdefault(tok, set()).add(m.group(1))
+    return out
+
+
 def scan(queue_text=None, log_text=None):
     qtext = (queue_text if queue_text is not None
              else open(os.path.join(ROOT, QUEUE), encoding='utf-8').read())
@@ -182,6 +242,7 @@ def scan(queue_text=None, log_text=None):
              else open(os.path.join(ROOT, LOG), encoding='utf-8').read())
     q = queue_rows(qtext)
     d = log_done(ltext)
+    rowless = {i: p for i, p in log_ids(ltext).items() if i not in q}
     adj = adjudications(qtext)
     lines = ltext.split('\n')
 
@@ -203,6 +264,16 @@ def scan(queue_text=None, log_text=None):
                              f'`DONE {rid}` line -- ' + base))
         else:
             settled.append(f'row {rid} adjudicated against {LOG}:{n}')
+
+    for rid in sorted(rowless, key=lambda r: (r[0], int(re.sub(r'\D', '', r) or 0))):
+        seen = '/'.join(sorted(rowless[rid]))
+        print(f'  ROWLESS {rid} is {seen} in {LOG} and has NO {QUEUE} row -- '
+              f'the queue is authoritative (§2 SELECT reads it), so this work is '
+              f'invisible to every lane that has not read the log')
+    if rowless:
+        print(f'  ROWLESS: {len(rowless)} id(s). REPORTED, NOT GATED -- see the v3 '
+              f'ceiling in the docstring; the floor is other lanes\' rows and no '
+              f'committer can clear it.\n')
 
     for s in settled:
         print('  ADJUDICATED ' + s)
@@ -325,11 +396,48 @@ def selfcheck():
     r, _ = mini('', f'DONE {agreed} LANE-1 unrelated, and {stale} is not closed\n')
     check(r == 0, True, 'a pair with no divergence at all still exits 0')
 
+    # ---- v3, H103: the OTHER side of the invariant -------------------------
+    # v2's fixture could not construct this case at all: every fixture id it
+    # built had a queue row, so "the log names an id the queue does not carry"
+    # was unreachable from the suite. That is the standing question -- WHAT CASE
+    # DOES THIS FIXTURE NOT CONSTRUCT -- answered against itself.
+    rowq = ('| id | item | status |\n|---|---|---|\n'
+            f'| {stale} | held open by the queue | OPEN |\n')
+
+    def rowscan(log_text):
+        b = io.StringIO()
+        with contextlib.redirect_stdout(b):
+            r = scan(rowq, log_text)
+        return r, b.getvalue()
+
+    r, o = rowscan(f'CLAIM {agreed} LANE-1 claimed, never filed\n')
+    check(f'ROWLESS {agreed}' in o, True, 'an id CLAIMED with no queue row')
+    check(r != 0, False, 'and ROWLESS alone does NOT change the exit code '
+                         '(the v3 ceiling: the floor is other lanes\' rows)')
+    r, o = rowscan(f'DONE {silent} LANE-1 finished, never filed\n')
+    check(f'ROWLESS {silent}' in o, True, 'an id DONE with no queue row')
+    r, o = rowscan(f'CLAIM {stale} LANE-1 claimed, and the row exists\n')
+    check('ROWLESS' in o, False, 'on an id the queue does carry')
+    # F2 of H103: 33 live prefix lines name a subject that is not an id. A naive
+    # predicate accuses every one of them.
+    r, o = rowscan('CLAIM attacker-lane LANE-1 a role, not a row\n'
+                   f'CLAIM {stale}-RECONCILE LANE-1 a suffixed subject\n'
+                   'DONE prompts/ LANE-1 a path\n'
+                   'VERDICT LANE-9 REJECT LANE-1 a candidacy, and §14.3 puts the '
+                   'CANDIDATE first, which is why VERDICT is not read here\n')
+    check('ROWLESS' in o, False, 'on prefix lines whose subject is not id-shaped')
+    # No trade: the direction v2 already had must still refuse while the new one
+    # is reporting. A fix that swaps one blind side for the other reads as green.
+    r, o = rowscan(f'DONE {stale} LANE-1 the log closes what the queue holds open\n'
+                   f'CLAIM {agreed} LANE-1 and an unfiled id in the same log\n')
+    check(r == 1 and 'DISAGREE' in o and f'ROWLESS {agreed}' in o, True,
+          'both directions reported from one pass, and the old one still refuses')
+
     if bad:
         print(f'SELFCHECK FAILED: {bad}')
         return 1
-    print('selfcheck: the one refusing direction fires, both quiet directions '
-          'stay quiet, and it refuses')
+    print('selfcheck: both refusing directions fire, every quiet direction stays '
+          'quiet, ROWLESS reports without gating, and it refuses')
     return 0
 
 
