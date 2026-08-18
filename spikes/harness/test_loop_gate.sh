@@ -427,6 +427,23 @@ for g in commit-msg pre-commit pre-push; do
   else
     ok "$g gate matches its working-tree source (what install_hooks.sh would copy)"
   fi
+  # H124, ATOM-3. THE DRIFT CHECK ABOVE CANNOT SEE A BROKEN GATE: `cmp -s`
+  # compares an installed copy to its source, and IDENTICAL BROKEN BYTES COMPARE
+  # EQUAL. Earned the same hour -- a stray `"` in pre-commit.hook was installed
+  # in front of five lanes for 2m16s while this suite reported 88 checks pass.
+  # git reads a non-zero exit from pre-commit as REFUSE, so an unparseable gate
+  # does not leak commits through, it refuses EVERY commit from EVERY lane.
+  # CLASS: a check that verifies an artifact is the RIGHT one but never that it
+  # is a VALID one. `install_hooks.sh` v5 now refuses to install one; this is
+  # the detection half, because .git/hooks can also be edited by hand.
+  if [ -x "$hookdir/$g" ]; then
+    if sh -n "$hookdir/$g" 2>/dev/null; then
+      ok "  $g installed gate PARSES"
+    else
+      bad "  $g installed gate DOES NOT PARSE -- it refuses every commit from
+        every lane: $(sh -n "$hookdir/$g" 2>&1 | head -1)"
+    fi
+  fi
   # Informational, never a verdict: is the ENFORCED gate in any commit? A reader
   # checking compliance, and every clean clone, gets the committed copy.
   if [ -x "$hookdir/$g" ]; then

@@ -1,6 +1,29 @@
 #!/bin/sh
-# install_hooks.sh v3 — 2026-08-18. v1 ATTACKER-1 (H7); v2 AGENT-1 (H15);
-# v3 AGENT-2 (H106).
+# install_hooks.sh v5 — 2026-08-18. v1 ATTACKER-1 (H7); v2 AGENT-1 (H15);
+# v3 AGENT-2 (H106); v4 ATTACKER-1 (H115); v5 ATOM-3 (H124).
+#
+# ==== v5, H124. THE DEFECT REMOVED (§12.7) =================================
+# **THIS INSTALLER WOULD INSTALL A GATE THAT CANNOT BE PARSED, AND NOTHING
+# DOWNSTREAM NOTICED.** Earned the same hour: editing `pre-commit.hook` for H75
+# I left a stray `"`, ran this installer, and put an unparseable gate in front of
+# five lanes for 2m16s (12:26:46 -> 12:29:02 by commit timestamps; no commit
+# landed in the window). `sh` exits non-zero on a syntax error, and git reads
+# non-zero from `pre-commit` as REFUSE -- so the failure mode is not a broken
+# gate that lets things through, it is a gate that refuses EVERY commit from
+# EVERY lane, for a reason whose message ("unexpected end of file") points at
+# the hook rather than at the editor.
+#
+# `test_loop_gate.sh` reported **88 checks pass** during that window. It
+# drift-checks the installed copy against its source with `cmp -s`, and
+# IDENTICAL BROKEN BYTES COMPARE EQUAL. CLASS: **a check that verifies an
+# artifact is the RIGHT one but never that it is a VALID one.**
+#
+# v3 made the write atomic (H106) so no lane ever executes a PREFIX of a hook;
+# that is the same hazard one step earlier, and it does nothing about a source
+# that is whole and wrong. Parsed here, before the rename, because this is the
+# last point where refusing costs nobody anything.
+# Cites: file:MISSION_LOOP.md "12.3"
+# ===========================================================================
 #
 # v3 REMOVES A DEFECT THAT REFUSED A LIVE COMMIT. v2's `cp "$src" "$dst"` opens
 # the destination with O_TRUNC and streams into it, so a lane running `git
@@ -101,10 +124,30 @@ fi
 # two gates, both refusing at COMMIT time, while §11's rail is crossed at PUSH
 # time -- and `git remote -v` began resolving on 2026-08-18, so the rail stopped
 # being safe by accident. See `spikes/H115_push_rail/`.
+# v5, H124. PARSE EVERY SOURCE BEFORE INSTALLING ANY OF THEM. All-or-nothing on
+# purpose: installing the two that parse and refusing the third leaves the fleet
+# in a state no lane can reason about, and a partial gate set is exactly the
+# condition H115 closed. `sh -n` reads without executing.
+_bad=''
+for h in commit-msg pre-commit pre-push; do
+  src="spikes/harness/$h.hook"
+  [ -f "$src" ] || { echo "install_hooks: no $src"; exit 1; }
+  sh -n "$src" 2>/dev/null || _bad="$_bad $h"
+done
+if [ -n "$_bad" ]; then
+  echo "install_hooks REFUSED — these sources are not parseable:$_bad"
+  for h in $_bad; do sh -n "spikes/harness/$h.hook" 2>&1 | sed 's/^/    /'; done
+  echo ""
+  echo "  NOTHING was installed; the gates already in .git/hooks are untouched."
+  echo "  git reads a non-zero exit from pre-commit as REFUSE, so installing an"
+  echo "  unparseable gate refuses EVERY commit from EVERY lane until someone"
+  echo "  diagnoses a message that points at the hook and not at the edit (H124)."
+  exit 1
+fi
+
 for h in commit-msg pre-commit pre-push; do
   src="spikes/harness/$h.hook"
   dst="$(git rev-parse --git-path hooks)/$h"
-  [ -f "$src" ] || { echo "install_hooks: no $src"; exit 1; }
   mkdir -p "$(dirname "$dst")"
   install_atomic "$src" "$dst"
   echo "installed: $dst <- $src"
