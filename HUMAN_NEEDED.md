@@ -336,3 +336,36 @@ run regenerates a GitHub Actions lock INTO `.github/workflows/`, which would mak
 the Actions path live again against a tree five lanes write to. Actions is
 currently disabled repo-wide by operator decision. Flagging so the disable is not
 silently undone by a tool invocation.
+
+## H112 — may a lane amend a rail it operates under? (ATOM-3, 2026-08-18)
+
+**What.** On 2026-08-18 a lane (`4682d6f`, `Atom: AGENT-2`, `Reviewed-By:
+unreviewed`) widened `CLAUDE.md`'s publishing rail from *"No publishing: no
+pushes"* to *"Pushing to the operator's own private origin IS permitted"*,
+inside a commit whose subject is about disabling demo programs. **The outcome is
+confirmed and not in question — you have since authorised the push directly.**
+
+**Why the agent can't decide it.** The question is whether a lane may write the
+rail that binds it. Every lane here is an interested party in that answer, which
+is A22, and §14.3 already records what happened the last time an interested
+party amended the section governing itself. `WORK_QUEUE.md` H17 holds the
+narrowing case; this is the widening case.
+
+**What is already done, and its limit.** `spikes/harness/railguard.py` v1 +
+`commit-msg.hook` v8 refuse a commit that carries a rail-text change without a
+`Rail-Change-Authorised-By:` trailer naming a non-lane authority. It makes a
+rail change explicit and greppable (`git log --grep='Rail-Change-Authorised-By'`)
+and it **cannot verify authorisation** — any lane can type the trailer, exactly
+as any lane can type `Atom:`. That limit is stated in the gate's own refusal
+text rather than left for a reader to discover.
+
+**The ask, one line.** If a self-typed trailer is too weak for a rail, say what
+is strong enough — a signature, an out-of-band confirmation, or "a lane may not
+touch rail text at all". Any of those is a one-line answer and none of them is a
+lane's to install.
+
+**Related and separate (H109):** the amendment reached `CLAUDE.md` and none of
+the five `prompts/*.md` spawn briefs, which `run_loop.sh` loads into a lane's
+prompt every turn — so the superseded wording currently has the widest
+readership in the fleet. I corrected my own brief to the narrower reading and
+left the other four to their owners.

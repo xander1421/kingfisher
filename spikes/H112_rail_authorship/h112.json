@@ -1,0 +1,22 @@
+{
+  "case": "4682d6f",
+  "case_atom": "AGENT-2",
+  "case_reviewed_by": "unreviewed",
+  "case_subject": "autoloop tuned to the mission: 5 demo programs disabled, baseline recorded, rails made enforceable",
+  "defects_found_by_running_not_reading": [
+    "--carried used the module ROOT, so the hook judged this repo whatever repo invoked it: THE GATE WAS INERT and exited 0 on every rail change. Caught by its own --selfcheck on first run.",
+    "the fail-closed branch refused in any repo without the harness, including every test sandbox. Caught by test_loop_gate.sh: 2 acceptance checks flipped to refuse. Scoped to \"repo has rail text but no guard\"."
+  ],
+  "outcome_not_in_dispute": "the operator has since confirmed the push is authorised, directly. This row is about the absence of a mechanism, not that decision.",
+  "rail_moved_by": {
+    "4682d6f": true,
+    "4682d6f~1": false,
+    "4682d6f~2": false
+  },
+  "suites": {
+    "selfcheckall.py": "11 green",
+    "test_loop_gate.sh": "87 checks pass"
+  },
+  "what_the_gate_cannot_do": "verify authorisation. Any lane can type the trailer, as any lane can type Atom: (\u00a713.1). It makes a rail change explicit and greppable; it does not authenticate it.",
+  "would_refuse_case": true
+}

@@ -1,0 +1,126 @@
+{
+ "spike": "H112_rail_authorship",
+ "recorded_utc": "2026-08-18T11:03:18Z",
+ "note": "dep spikes/harness: railguard.py and commit-msg.hook v8 are COMMITTED at 7c3822e before this runs, so the gate under test is pinned; any residue belongs to other lanes and may not be committed by me (\u00a713, H19, H66).",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "0282194b5cdfb34376cfe7932cb394d739a3d4e5",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/pre-commit.hook",
+    "spikes/harness/retrofit_d6.py",
+    "spikes/harness/statuscheck.py"
+   ],
+   "diff_sha256": "52c736022f865eed887c04d918f333bab856eea80602b287cee1ae266e5d6d2b",
+   "diff_bytes": 3495
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H112_rail_authorship/h112.json",
+   "sha256": "d4c663280d11f9986b6d8087ff290e7cecdac05044da64156d160e02a80828fe",
+   "bytes": 1245,
+   "mtime": 1787050998,
+   "compared_ts": 1787050998,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "replays_the_real_case_and_only_it",
+   "must_fire_because": "the gate must REFUSE the commit that actually widened the rail and stay SILENT on neighbouring commits that touch the same file elsewhere",
+   "can_fail_because": "if either neighbour also read as a rail change, the gate is a file-level tripwire and the row is withdrawn",
+   "null_must_contain": "a history where 4682d6f~1 and ~2 also moved the rail section, in which case \"refuses 4682d6f\" would show nothing about precision",
+   "fired": true,
+   "detail": "refuses 4682d6f, silent on both neighbours",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rail_moved_by": {
+     "4682d6f": true,
+     "4682d6f~1": false,
+     "4682d6f~2": false
+    },
+    "case_carried_authorisation": false,
+    "would_refuse_4682d6f": true
+   }
+  },
+  {
+   "name": "module_selfcheck_green",
+   "must_fire_because": "\u00a712.3: a harness component ships a runnable check that fails when it breaks; it must be green through the CLI a hook actually invokes",
+   "can_fail_because": "it returned non-zero twice during development: once when --carried judged the wrong repo, once on the trailing-blank-line comparison",
+   "null_must_contain": "a selfcheck that only asserts pure functions and never drives git -- which would stay green while the hook was inert, the exact defect v1 shipped with",
+   "fired": true,
+   "detail": "selfcheck exits 0 through the CLI",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rc": 0,
+    "stdout": "railguard selfcheck: anchors survive edits above them, a removed rail is not \"unchanged\", a NON-RAIL edit to the same file passes (the falsifier), a lane cannot authorise itself, and the gate refuses then accepts under BOTH `git commit` and `--only`"
+   }
+  },
+  {
+   "name": "gate_is_installed_and_undrifted",
+   "must_fire_because": "a gate that exists only in the tree enforces nothing -- .git/hooks is untracked and cannot be tracked",
+   "can_fail_because": "skip `sh spikes/harness/install_hooks.sh` after editing the source and this goes red",
+   "null_must_contain": "an installed hook that predates v8 and does not mention railguard, which is what a forgotten install_hooks.sh leaves behind",
+   "fired": true,
+   "detail": "installed copy is byte-identical to the reviewed source",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "installed_matches_source": true,
+    "v8_wires_railguard": true
+   }
+  },
+  {
+   "name": "ordinary_commits_still_pass",
+   "must_fire_because": "a gate that refuses commits it has no business judging is a false positive that wedges every lane (H72/H73)",
+   "can_fail_because": "the first draft DID fail this: two acceptance checks in test_loop_gate.sh flipped to `refuse`",
+   "null_must_contain": "a gate scoped to FILES rather than sections, which would have refused this very commit -- it edits neither CLAUDE.md nor MISSION_LOOP.md, but the file-scoped version also refused any repo lacking the harness, which test_loop_gate.sh caught",
+   "fired": true,
+   "detail": "the commit carrying the gate passed the gate",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "head": "0282194b5cdfb34376cfe7932cb394d739a3d4e5 livechat: an independent instance of the torn-read class, and a zsh trap that made my verification lie",
+    "head_changed_a_rail": false
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787050989,
+   "from": "spikes/harness/pre-commit.hook"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if 4682d6f~1 or 4682d6f~2 also read as rail changes, the gate cannot separate a rail edit from any other edit to the same file, it is a file-level tripwire, and the row is withdrawn"
+}
