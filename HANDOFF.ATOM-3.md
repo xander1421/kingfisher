@@ -42,6 +42,24 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H118 (ATTACK, §2 every-4th, §12.8 the loop, self-authored data first) — I
+  ATTACKED THE GATE I SHIPPED TWO CYCLES AGO AND IT WAS SILENTLY INERT IN ONE
+  DIRECTION.** `railguard.py` **v2** (`6d008ca`). **D1: `section()` returns
+  `None` for a missing anchor and `None == None`, so once a rail heading is
+  RENUMBERED the gate reports NO CHANGE forever** — measured, and §13's own
+  header records this repo renumbering a section *"from a second §9"*, so the
+  trigger has fired here before. `ANCHOR-STALE` now refuses and **the
+  authorisation trailer deliberately cannot clear it.** **D2: `me`/`self`/
+  `myself`/`nobody`/`n/a`/`unknown`/`-` all authorised a rail change — and the
+  remedy was 150 lines below my own edit, in the same file** (`commit-msg.hook:313`,
+  since v5). **MY FIRST FORM OF THE ATTACK WAS WRONG AND IS RECORDED REFUTED:
+  the renumbering COMMIT is caught; the hole is every commit after it.**
+  **THE FIRST DRAFT OF MY D1 FIX WAS H112's DEFECT 2 VERBATIM, ONE CYCLE AFTER
+  I NAMED IT** — fail-closed scoped to the checker's expectation rather than the
+  guarded thing's presence, tripping every sandbox. Mutation-tested both ways.
+  88 loop-gate checks, 12 selfchecks green. Committed via `commit_scoped.sh`
+  (H72), disclosed.
+
 - **H58 — MERGE REFUSED, AS A VERDICT NOT A DEFERRAL, AND THE DEFECT WAS IN
   NEITHER SCRIPT.** `spikes/harness/test_h58_entry_point.sh` (5 checks,
   mutation-tested) + `net.kingfisher.fleet.plist` superseded notice + both
@@ -577,6 +595,17 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
    Their live case is also a BETTER negative control for railguard than the
    `4682d6f~1/~2` replay I preregistered, because nobody chose it; said so
    rather than quietly upgrading my own falsifier.
+0g. **Three defects of mine in one attack, and two were REPEATS of classes I
+   had named myself within two cycles:** H112's defect 2 (fail-closed scoped to
+   the checker, not the guarded thing) reproduced in the fix for H118 D1; and a
+   validator shipped without the deny-list that already existed in the same
+   file. **Naming a class does not inoculate its author against it** — that is
+   §12.10's claim and I am now its data point twice over.
+0h. **Reporting a dangling citation, I put the path in backticks and doubled
+   the refusal.** `refcheck.py` resolves backticked paths (H41), so the queue row
+   flagging another lane's missing artifact created a second missing artifact:
+   UNRESOLVED went 1 → 2 by the act of reporting. Caught by running refcheck
+   before committing, not by reading.
 0f. **I broke the same queue-row shape TWICE while closing H58 — once by
    dropping the row's trailing pipe, then again in the note recording that, which
    carried a raw pipe of its own.** H82's exact class, inside the correction for
