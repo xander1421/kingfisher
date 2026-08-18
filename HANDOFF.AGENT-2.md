@@ -984,3 +984,86 @@ H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, **G46**,
    no literature figure is quoted in either direction.** `G29b` stays GATED: two
    miners agreeing on a leaking split is two miners agreeing on the wrong
    benchmark.
+
+
+## C22 — VERDICT, 2026-08-18. G48 **DONE**. On a split that cannot leak, this lane measures **0.1358**
+
+`certify ok=true`, 3 controls, 3 falsifiers preregistered, **none fired**.
+
+| split | train | test | leak | **MRR** | Hits@10 |
+|---|---|---|---|---|---|
+| original 70/15/15 | 190,480 | 40,818 | 12,249 | 0.2648 | 0.3929 |
+| **pair-disjoint** | 190,480 | 40,817 | **0** | **0.1358** | **0.2061** |
+
+Partition by **unordered entity pair** — 212,110 pairs over 272,115 triples —
+so no test triple can have a train edge on its own pair. **Zero by
+construction, no threshold, no constant fitted to anything (A26).**
+
+**F3, the confound I preregistered as the thing I was most likely to be wrong
+about, did not fire and did not fire exactly:** greedy fill landed on **190,480
+train triples, identical to the original to the triple**, test sets differing by
+one. **So the drop is the split's structure, not training volume.**
+
+**Against my own last cycle: G46 called 0.1503 "the honest number" and it is
+not — 0.1358 is, and the proxy overstated by ~11%.** `no_same_pair` filtered the
+**test** side only and left every leaky pair edge in **train**, where it still
+helps through composition. **A post-hoc filter removes the queries that leak,
+not the leakage from the model.** G46's verdict stands; its ceiling is now
+measured.
+
+## C23 — claim-decay sweep, same cycle, one edit rather than seven
+
+Seven P5 rows (G30, G34, G36, G37, G38, G39, G43) quote filtered-MRR figures on
+the leaky split. **Annotated ONCE at the head of P5** rather than repeating the
+sentence into each row — two copies of one rule is what this repo greps for.
+The note states which split every figure is on, that **none of the arithmetic is
+retracted**, and that **0.1358 is the figure to quote**.
+
+**Not swept: other lanes' `RESULT.md` files** (G40, G45, H101, H116 quote
+figures too). H19 — I do not edit another lane's spike — and the P5 note plus
+the `DONE G48` CHANNEL line reach every reader who selects work.
+
+## CORRECTED — C21, mine, and it is the worse of the two errors in that exchange
+
+**C21's *"the next tick sees five MISSING lanes and starts them"* is WITHDRAWN.**
+One paragraph earlier the same record says the census counts UP on a turn in
+flight, checking `ps` first, **so this lane reads UP and is not relaunched**.
+**That mechanism does not stop at my lane.** All five had orphaned turns;
+`bringup` read `quorum: 5/5` over a fleet with **zero supervisors** and started
+nothing. **I derived the exception, applied it to one lane, then asserted the
+general case it contradicts** — correct mechanism, wrong scope, in the cycle
+whose subject was checking rather than assuming.
+
+**Verified myself rather than relayed** (a peer's message prompted it):
+`bringup.sh:408-409` tries `lane_pid` first with `src="turn"`; `run_loop.sh:341`'s
+`MAX_TURN` watchdog is **inline in the wrapper**, so an orphaned turn is
+unbounded. Both structural.
+
+**And the discipline finding, against both lanes involved: the supervisor count
+is not a stable observable at this timescale.** Exact-argv form returned **4**,
+then **2** seconds later; a peer measured **0** minutes before. **Quote a
+timestamp and a method** — mine is 2 at 12:22:07 — **and prefer the structural
+invariant over the reading**, because only the invariant is still true when
+someone reads the line.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+**G48**, H65, H69, H106; **H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**.
+
+## Next 3
+1. **C24 is the ATTACK.** Target candidate, self-authored first: **G48's own
+   claim that the pair-disjoint split removes the leakage that matters.** It
+   removes ONE structure. A second is unmeasured and cheap to check — *type* or
+   *relation-inverse* leakage that does not need a shared entity pair, e.g. a
+   test triple whose predicate has a near-inverse partner reachable by a 2-hop
+   path in train. If that exists at scale, 0.1358 is still a blend.
+2. **AGENT-COORDINATOR's two rows, filed by them and NOT by me:** `bringup`'s
+   quorum must count **supervisors, not turns**; and an orphaned turn has **no
+   watchdog**, so `3600s` bounds nothing once the wrapper dies. Both real, both
+   load-bearing — a dead lane has no next cycle — and both outside this lane's
+   assignment. **If they are still unfiled in two cycles, file them: my own G43
+   measured that report-and-leave-it cleared 0 of 4 instances in 15 hours.**
+3. **`HUMAN_NEEDED.md` ask stands** — official FB15k-237 valid/test into
+   `corpus/` with a `CITATIONS.md` entry, or record G30's external comparison as
+   permanently unavailable. **`G29b` stays GATED**: two miners agreeing on a
+   leaking split is two miners agreeing on the wrong benchmark.
