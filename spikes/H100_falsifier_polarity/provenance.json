@@ -1,0 +1,129 @@
+{
+ "spike": "H100_falsifier_polarity",
+ "recorded_utc": "2026-08-18T10:42:19Z",
+ "note": "H100: filed by AGENT-2 from AGENT-2's own defect, and run falsifier-first. FA fired: the row is WITHDRAWN as a class.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H100_falsifier_polarity/polarity.py",
+   "sha256": "bda2a86b089103f8b13315711bc1857ce24e2f3b8ad9e3ee17a2be585323959f",
+   "bytes": 10662,
+   "mtime": 1787049703
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H100_falsifier_polarity/polarity.json",
+   "sha256": "14f7b31c2d6588572aa31b38b47417cbff53416f3378bdfd2610252c47ce3617",
+   "bytes": 1611,
+   "mtime": 1787049739
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_rule_catches_a_planted_ambiguity",
+   "must_fire_because": "the rule must go red on a falsifier carrying two polarity statements, or it cannot see the defect the row was filed for",
+   "can_fail_because": "a rule that flags nothing when both statements are present",
+   "null_must_contain": "a flagged verdict, produced here from a planted statement",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a rule that flags nothing when both polarity statements are present in one falsifier",
+    "planted_extracted": 1,
+    "planted_flagged": 1
+   }
+  },
+  {
+   "name": "C2_rule_is_quiet_on_a_clean_label",
+   "must_fire_because": "the rule must be quiet on a bare `Predicted:` label, which live falsifiers carry legitimately, or it is an always-red gate",
+   "can_fail_because": "flagging a clean label, which would accuse two live falsifiers",
+   "null_must_contain": "a NOT-flagged verdict on a statement with one polarity",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a rule that flags a bare prediction label, which two live falsifiers carry legitimately",
+    "clean_flagged": 0
+   }
+  },
+  {
+   "name": "C3_reader_is_deterministic",
+   "must_fire_because": "two reads of an unchanged CHANNEL.md must agree, or no count in this spike means anything",
+   "can_fail_because": "two reads returning different extractions",
+   "null_must_contain": "both outcomes: the reader is re-run, not asserted",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "two reads of an unchanged CHANNEL.md returning different counts, which would make every number here meaningless",
+    "first": 26,
+    "second": 26
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "FA_every_other_falsifier_is_unambiguous",
+   "must_fire_because": null,
+   "can_fail_because": "no statement other than this row's own is flagged by the rule",
+   "null_must_contain": "a flagged other-lane statement, which C1 shows the rule can produce",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "flagged_excluding_own": [],
+    "unambiguous_others": 25,
+    "total_others": 25
+   },
+   "refutes": "H100 as a CLASS: if every if-form falsifier other than this row's own instance has exactly one polarity, the defect is one author's",
+   "fires_when": "no statement other than this row's own is flagged by the rule",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "FA_as_first_stated_could_not_fire",
+   "must_fire_because": null,
+   "can_fail_because": "this row's own instance is present in the corpus FA reads",
+   "null_must_contain": "both outcomes: the corpus is read, not assumed",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "own_instance_present_in_corpus": true
+   },
+   "refutes": "the original wording of FA, which read on a corpus containing the very statement whose absence it required",
+   "fires_when": "this row's own instance is present in the corpus FA reads",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "FA_every_other_falsifier_is_unambiguous",
+  "FA_as_first_stated_could_not_fire"
+ ],
+ "no_deps_reason": "reads CHANNEL.md, a shared append-only log with no generator, plus its own source",
+ "problems": [],
+ "ok": true,
+ "falsifier": "a flagged statement belonging to any lane but this one, which would make the ambiguity a class rather than an author's error",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

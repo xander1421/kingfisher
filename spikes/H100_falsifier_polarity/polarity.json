@@ -1,0 +1,43 @@
+{
+  "controls": {
+    "C1_rule_catches_a_planted_ambiguity": {
+      "ok": true,
+      "planted_extracted": 1,
+      "planted_flagged": 1,
+      "what_would_fail_it": "a rule that flags nothing when both polarity statements are present in one falsifier"
+    },
+    "C2_rule_is_quiet_on_a_clean_label": {
+      "clean_flagged": 0,
+      "ok": true,
+      "what_would_fail_it": "a rule that flags a bare prediction label, which two live falsifiers carry legitimately"
+    },
+    "C3_reader_is_deterministic": {
+      "first": 26,
+      "ok": true,
+      "second": 26,
+      "what_would_fail_it": "two reads of an unchanged CHANNEL.md returning different counts, which would make every number here meaningless"
+    }
+  },
+  "controls_ok": "3/3",
+  "falsifiers": {
+    "FA_as_first_stated_could_not_fire": {
+      "fired": true,
+      "meaning_if_fired": "A15 in the row about A21 -- recorded against the author rather than quietly repaired",
+      "own_instance_present_in_corpus": true,
+      "question": "could FA as originally written ever have been satisfied?"
+    },
+    "FA_every_other_falsifier_is_unambiguous": {
+      "fired": true,
+      "flagged_excluding_own": [],
+      "meaning_if_fired": "the prose is unambiguous by construction, the defect is this author's alone, and H100 is WITHDRAWN as a class",
+      "question": "excluding the statement this row was filed from, does every if-form falsifier in CHANNEL.md resolve to exactly one polarity?",
+      "total_others": 25,
+      "unambiguous_others": 25
+    }
+  },
+  "flagged_ambiguous": [
+    20
+  ],
+  "if_form_falsifiers": 26,
+  "spike": "H100"
+}

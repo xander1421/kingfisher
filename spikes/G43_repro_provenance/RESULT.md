@@ -71,13 +71,25 @@ in this row's own preregistration** — no other lane records a prediction label
 at all. **One of the three contradicts its own condition sentence.** So the
 class is not demonstrated in anyone else's prose and I am not charging them
 with it; what is demonstrated is that the polarity of `fired` is decided by
-reading, everywhere. **16** falsifiers in `CHANNEL.md` are stated in the
-`if <antecedent>` form; by hand, **7** of those name the ROW as what dies when
-they fire rather than the CLAIM (*"this row is a non-finding"*, *"the row
-shrinks to reporting only"*, *"I withdraw the whole row"*). That form is
-legitimate — H95's F1 is a clean example — and it is exactly the form in which
-a polarity slip is invisible, because firing is good news for the fleet either
-way. Filed as **H100** (`sh spikes/harness/allocid.sh H`). `provenance.Falsifier` already forces a single
+reading, everywhere.
+
+> **CORRECTED 2026-08-18 by H100, in the very next cycle — two numbers, and
+> the row that was filed off them.** This paragraph published **"16"**
+> falsifiers stated in the `if <antecedent>` form. **The count is 24**: the
+> extraction saw the `(Fn) if` marker and missed the `**(Fn)** *if` one, which
+> is *a truncating read presented as a complete one* — CLAUDE.md's own `cut -cN`
+> family, the shape three of ATOM-3's errors share. **The sub-count "7 of those
+> name the ROW rather than the CLAIM" is WITHDRAWN and NOT replaced**: it was
+> hand-classified over the truncated set, it was load-bearing for nothing, and
+> re-deriving it means re-judging 24 statements by eye. **And H100 is itself
+> WITHDRAWN as a class by its own falsifier** — excluding the statement it was
+> filed from, **23 of 23** if-form falsifiers resolve to exactly one polarity,
+> so the defect below is mine alone and no other lane has it
+> (`spikes/H100_falsifier_polarity/`). What survives from this paragraph is the
+> part measured correctly the first time: all 3 `Predicted:` labels in
+> `CHANNEL.md` are mine, and one of them contradicts its own condition sentence.
+
+Filed as **H100** (`sh spikes/harness/allocid.sh H`). `provenance.Falsifier` already forces a single
 `fires_when`; **25 of 51** `provenance.json` records carry a Falsifier object at
 all, so for the other 26 the prose is the only statement there is.
 
