@@ -1,4 +1,29 @@
 #!/bin/sh
+# ==== v4, 2026-08-18, ATOM-3 (H75). THE DEFECT REMOVED (§12.7) =============
+# DEFECT REMOVED: **THE GATE ROUTED EVERY BLOCKED LANE TO THE WORSE ESCAPE.**
+# Both refusal sites said `Bypass: git commit --no-verify` and named
+# `spikes/harness/commit_scoped.sh` at neither -- while that wrapper sat in this
+# same directory applying exactly the predicate a blocked lane needs. H15's
+# class: a check nobody is ROUTED to is prose with extra steps, and H73's own
+# case is the evidence -- the wrapper was on disk while AGENT-1 held two green
+# cycles for twenty minutes.
+#
+# It is not merely un-routed, it is mis-routed: H72 MEASURED what `--no-verify`
+# costs. It drops the `commit-msg` trailer gate too, landing `subject=wip
+# trailers=[]` -- a subject §13 explicitly forbids, on an unattributable commit.
+# `commit_scoped.sh` runs all three of this hook's CHECKS against the paths the
+# commit carries PLUS the real commit-msg gate, so it is strictly more than
+# `--no-verify`, never less.
+#
+# NO VERDICT CHANGES. This edits refusal TEXT only. H75 as filed proposed
+# rescoping the gate itself; that half was superseded by H72's wrapper, and the
+# risk the row states plainly -- "a bad cutover here means NO lane can commit" --
+# is deliberately not incurred. What was left open was the routing, and this is
+# the routing.
+# Enforced by spikes/harness/test_h75_routing.sh.
+# Cites: file:WORK_QUEUE.md "H15"
+# Cites: file:spikes/harness/commit_scoped.sh "strictly MORE than"
+# ===========================================================================
 # pre-commit.hook v4 — 2026-08-18. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35);
 # v3 ok-1 (H94); v4 ok-1 (H114).
 #
@@ -175,12 +200,30 @@ unsound_paths() {
 
 run_checks() {
   _u=$(unsound_paths || true)
+  # DEFINED BEFORE BOTH CALL SITES. sh binds functions in source order, and
+  # v4's first draft defined this AFTER refusal site 1, where it was
+  # `command not found` -- so site 1 printed no routing and site 2 did.
+  # test_h75_routing.sh drives BOTH sites for exactly this reason.
+  _route() {   # H75. One place, so the two refusal sites cannot drift apart.
+    echo ""
+    echo "  IF THE REFUSAL NAMES ONLY PATHS YOUR COMMIT DOES NOT CARRY, it is"
+    echo "  another lane's in-flight work and not yours to fix (H72/H73). Use:"
+    echo ""
+    echo "      sh spikes/harness/commit_scoped.sh <msgfile> <your paths>"
+    echo ""
+    echo "  It runs all three checks above against the paths YOU carry, plus the"
+    echo "  real commit-msg trailer gate -- strictly MORE than --no-verify runs."
+    echo "  Plain 'git commit --no-verify' also drops the TRAILER gate: H72"
+    echo "  measured it landing subject=wip with no trailers, which §13 forbids."
+    echo "  Either way, say in the message which you took and why."
+  }
   if [ -n "$_u" ]; then
     echo "pre-commit REFUSED — the content you are committing is not the content on disk:"
     printf '  %s\n' $_u
     echo "  These checkers read the tree, so their verdict would be about a file"
     echo "  you are not committing. Stage what you mean:  git commit --only <paths>"
-    echo "  (MISSION_LOOP §13). Bypass: git commit --no-verify"
+    echo "  (MISSION_LOOP §13)."
+    _route
     return 1
   fi
   _bad=''
@@ -199,7 +242,7 @@ run_checks() {
     # carry, so a blocked lane does not have to guess whose edit stopped it.
     echo "  your commit carries: $(git diff --cached --name-only 2>/dev/null | tr '\n' ' ')"
     echo "  refcheck/journalcheck judge the shared tree, not only these paths."
-    echo "Bypass: git commit --no-verify"
+    _route
     return 1
   fi
   return 0
