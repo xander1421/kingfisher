@@ -1,0 +1,87 @@
+{
+  "name": "Operation Kingfisher",
+  "program": ".github/autoloop/PROGRAM.md",
+  "memory_file": ".github/autoloop/MEMORY.md",
+  "memory_branch": "memory/autoloop",
+  "discipline": "D6",
+  "metrics": {
+    "determinism_exact": {
+      "direction": "maximize",
+      "target": 1.0,
+      "min_acceptable": 1.0,
+      "weight": 0.0,
+      "veto": false,
+      "why": "ENVIRONMENT TRIPWIRE, NOT A CANDIDATE GATE. Relabelled 2026-08-18 after ATTACKER-1's H111 measured that it CANNOT FIRE ON ANY CANDIDATE: the gate opens no mutation_target and imports no repo module, and with all three targets truncated, corrupted and DELETED outright it still returns determinism_exact 1.0 with a byte-identical digest. A veto at min_acceptable 1.0 that no candidate can move is worse than absent, because it reads as coverage. What it DOES check is real and worth keeping: if this machine's popcount arithmetic is broken, every measurement in the run is void. So it gates THE RUN, not the candidate. A true candidate-level determinism gate must recompute the identity THROUGH a code path a mutation target actually controls; that is not built and is filed, not claimed.",
+      "gate_scope": "ENVIRONMENT_PREFLIGHT_NOT_CANDIDATE"
+    },
+    "hygiene_score": {
+      "direction": "maximize",
+      "target": 1.0,
+      "min_acceptable": 1.0,
+      "weight": 1.0
+    },
+    "filtered_mrr": {
+      "direction": "maximize",
+      "target": 0.28,
+      "min_acceptable": 0.25,
+      "weight": 2.0
+    },
+    "hits_at_10": {
+      "direction": "maximize",
+      "target": 0.4,
+      "min_acceptable": 0.35,
+      "weight": 1.5
+    },
+    "witness_bandwidth_savings_pct": {
+      "direction": "maximize",
+      "target": 80.0,
+      "min_acceptable": 70.0,
+      "weight": 1.5
+    },
+    "verifier_ram_bytes": {
+      "direction": "minimize",
+      "target": 72,
+      "max_acceptable": 128,
+      "weight": 1.0
+    }
+  },
+  "evaluators": {
+    "hygiene": {
+      "command": "python3 .github/autoloop/evaluators/eval_hygiene.py",
+      "timeout_sec": 30
+    },
+    "graph_ai": {
+      "command": "python3 .github/autoloop/evaluators/eval_graph_ai.py",
+      "timeout_sec": 180
+    },
+    "verification": {
+      "command": "python3 .github/autoloop/evaluators/eval_verification.py",
+      "timeout_sec": 60
+    },
+    "determinism": {
+      "command": "./spikes/S5_hdc_prototype/.venv/bin/python .github/autoloop/evaluators/eval_determinism.py",
+      "timeout_sec": 60,
+      "requires": "numpy",
+      "note": "REFUSES with exit 2 if numpy is absent and emits NO metric. A missing dependency is not a failing score \u2014 scoring 0.0 there would veto every candidate for a reason that has nothing to do with the candidate. CI must `pip install numpy` or this gate cannot run."
+    }
+  },
+  "mutation_targets": [
+    "spikes/G34_length1_and_constants/length1_constants.py",
+    "spikes/W6_incremental_witness/incremental_verifier.py",
+    "spikes/S85_verify_vs_reexec/verify_vs_reexec.py"
+  ],
+  "gate_policy": {
+    "veto_metrics_disqualify": true,
+    "note": "A metric with veto=true and a value below min_acceptable INVALIDATES the candidate outright; it is not traded off against weighted terms. H101: two evaluators once scored a markdown file that was itself in mutation_targets, so the loop could have optimised its own scoreboard. Both now execute and check kfcheck.certify. Any evaluator added later must RECOMPUTE or carry provenance \u2014 never regex-scrape a mutable file.",
+    "preflight_metrics": [
+      "determinism_exact"
+    ],
+    "preflight_note": "A preflight metric below min_acceptable INVALIDATES THE RUN and every measurement in it. It does not discriminate between candidates and must never be reported as if it did. H111."
+  },
+  "security_policy": {
+    "local_only": true,
+    "publishing_allowed": false,
+    "remote_push_forbidden": true,
+    "rationale": "CEO directive: All Autoloop executions run strictly locally on host and attached hardware devices. Zero remote publishing or external leakage (\u00a711 compliance)."
+  }
+}
