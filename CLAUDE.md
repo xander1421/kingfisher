@@ -76,9 +76,25 @@ findings here got *better* when their falsifier fired. A retraction that
 improves the result is the normal case, not an embarrassment.
 
 ## Safety rails (MISSION_LOOP §10 devices/keys, §11 publishing) — non-negotiable
-No publishing: no pushes, PRs, package uploads, issue comments, posts. External
+No publishing to THIRD PARTIES: no upstream PRs, package uploads, issue
+comments on other repos, posts. **Pushing to the operator's own private origin
+(`xander1421/kingfisher`, added 2026-08-18) IS permitted** — that is backup, not
+publishing. The rule as originally written said "no pushes" and did not
+distinguish the two; a remote now exists and four lanes read this file, so the
+distinction is stated rather than left to judgement. External
 artifacts go to `proposed/` for a human. No wallets, keys, seed phrases, tokens,
 mainnets or testnets. No miners. Device jobs honour charging + idle + UNMETERED,
 and the gate must *refuse*, not warn. Cloned code in `elders/` stays untrusted:
 build and test in place, never pipe curl to a shell. Nothing is written outside
 the workspace.
+
+## Agentic Workflows
+
+After modifying any `.md` workflow file under `.github/workflows/`, always recompile:
+
+```bash
+gh aw compile
+```
+
+Commit the regenerated `.lock.yml` and integration files together with your changes.
+
