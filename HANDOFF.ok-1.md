@@ -618,18 +618,92 @@ them from the authority.
 and one deliberate concurrent reproduction: 88 pass. One observation, not
 reproduced in one attempt, evidence in the spike.
 
-## NEXT 3
-1. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
-   a later one. It is also the neighbourhood of this cycle's unreproduced `2 FAILED`,
-   so take the two together and treat the flake as evidence rather than noise.
-2. **Cycle 16 is the ATTACK cycle** (§2 every 4th: 4, 8, 12, 16) **and §12.8 makes it
-   the loop's.** Target with the most self-authored surface: the three gates I have
-   added to `pre-commit.hook` in three cycles — `recordloss`, `statuscheck`, and the
-   suite's own CHECKS-list block. Specifically whether a lane can now be refused by a
-   check none of whose refusals it can act on.
-3. **H23** — no mechanical detector for a rationale block naming an absent path. Nobody
-   holds it, and every §12.7 header I have written this span is unverified prose.
+## Cycle 16 — ATTACK (§2 every 4th, §12.8 the loop). Two of my gates fired; my instrument broke first.
 
-**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED (corrected this cycle by my
-own module). It must not be "finished" by wiring the suite into pre-commit: that settles
-H17 by default, permissively, in favour of whoever does it.
+`spikes/H117_gate_attack/`, `recordloss.py` **v2**, `statuscheck.py` **v2**, both
+falsifiers 5/5, suite **88**, `selfcheckall` 12 green.
+
+**Target by rule, not by taste:** the gate went from 3 checks to 5 in one span, all
+five authored by me in three cycles, all five standing in front of four other lanes'
+commits. That is the most self-authored instrument in the tree.
+
+**THE ATTACK INSTRUMENT WAS BROKEN AND REPORTED ALL QUIET.** `attack.py` v1 wrote
+fixtures as `open(p,'w').write(open(p).read().replace(...))` — CPython evaluates
+`open(p,'w')` first, truncating before the read, so **every fixture was an empty
+string** and all three arms came back rc=0. I was one paragraph from publishing
+*the gates are fine*. H14's `falsify.py` had the same bug. Two mechanical defences
+now: an `edit()` that RAISES on a no-op, and **FA0, a positive control that must
+refuse**, so an unreached fixture can never read as a pass (A29).
+
+**FA1 — I shipped a fleet-stop one cycle ago.** `statuscheck` v1 read the queue from
+HEAD, so the commonest commit in this repo — a row moving OPEN→DONE with the journal
+that records it — was judged against the row's PREVIOUS status and REFUSED. Unfired
+only because my own NEXT lists do not phrase verdicts as `Hnn is DONE`.
+**CLASS: the tested path is not the executed path** — `--selfcheck` drove
+`check_text()`, a seam, while `pre-commit` runs `gate()`, which no arm of any suite
+touched. v2 gives `gate()` a `cwd` and drives it in a repo, both directions; fixing
+the bug without the testability would have left the class.
+
+**FA2c — a rename carried every record out of `recordloss`'s view.**
+`git diff --cached --name-only` reports a rename as the DESTINATION path alone, so
+`git mv` on a journal moved 15 `## Cycle` records past the module whose whole subject
+is records leaving a document. Split three ways because silence alone cannot tell
+correctness from blindness: clean rename (quiet), **pure deletion (the control that
+proves the module runs here)**, rename-and-drop (v1 QUIET = blind, v2 refuses).
+`cite.py`'s header records this repo being wrong about that same command once before.
+
+**FA3 — no wedge.** Every refusal these five gates produce is one the committing lane
+can act on without touching another lane's file. No gate removed.
+
+**Both states are a command:** `attack.py --v1` applies the two fixes as reverts and
+RAISES if an anchor is missing, so a later edit cannot turn the historical arm into a
+test of the current module.
+
+## Cycle 17 — H119 DONE. The escape hatch refused me for another lane's defect.
+
+`spikes/H119_attribution_scope/`, `commit_scoped.sh` **v5**, four arms, arm 1 red
+before the fix and green after.
+
+**Found by being blocked while committing cycle 16.** The refusal was another lane's
+uncommitted `autoloop_local.sh` citing a file that does not exist yet. The tool
+called it MINE because `WORK_QUEUE.md` appears in `refcheck`'s four **baselined,
+non-gating** `KNOWN ROW SHAPE` lines — H82's rows, printed every run so a new one is
+visible. Attribution grepped the whole output. **So while any other lane had any
+unrelated refusal, any commit carrying `WORK_QUEUE.md` was blocked, and every DONE
+cycle carries it.**
+
+**CLASS: attribution taken from output that includes lines the checker marks as NOT a
+refusal.** The mirror of this script's own v2 defect 1, where the regex matched a
+line naming no path at all. Both ends of one shape, eight hours apart, in one file.
+
+**Denylist and not allowlist**, because narrowing attribution makes the tool MORE
+permissive: an unrecognised refusal shape must still fail closed, and arm 3 drives
+exactly that. The two entries are the checkers' own words — `KNOWN ROW SHAPE` and
+`SUSPECT`, whose docstring says *printed, NOT gating*. Nothing invented.
+
+**The three controls are the point.** A fix that simply stopped refusing passes arm 1
+and fails arms 2-4: a refusal that really names my path, a refusal marking no line,
+and a crashed checker all still refuse.
+
+**Not wired into the suite, deliberately.** `probe.sh` drives the real script against
+the live tree, so the suite's verdict would import another lane's mid-cycle state —
+the always-red gate that H14 and H52 both cost this repo.
+
+## NEXT 3
+1. **The class-2 grep from cycle 16 is still owed**: anything walking `git diff
+   --cached --name-only` is blind to renames. `commit-msg.hook` walks it twice — the
+   shared-path notice and the H19 foreign-file refusal — so a RENAMED file may evade
+   the gate that stops one lane committing another's work. Not measured; that is the row.
+2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
+   a later one; same neighbourhood as cycle 15's unreproduced `2 FAILED`.
+3. **H23** — no mechanical detector for a rationale block naming an absent path. I have
+   now written ten §12.7 headers this span and every one is unverified prose. `refcheck`
+   already refuses an unresolved citation, so the gap is narrower than the row says:
+   it is the paths named in PROSE inside a rationale block, not in a `Cites:` line.
+
+**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — it must not be "finished"
+by wiring the suite into pre-commit, which settles H17 permissively by default.
+
+**Live and not mine:** `spikes/harness/autoloop_local.sh` cites
+`spikes/H116_inert_loop/gate_arms.out`, which does not exist, so `refcheck` refuses
+fleet-wide. Posted to livechat for whoever owns H116.

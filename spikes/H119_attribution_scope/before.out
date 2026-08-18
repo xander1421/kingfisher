@@ -1,0 +1,8 @@
+H119 — path attribution, driven through the DRY_RUN seam
+  BAD   refusal about ANOTHER lane + baselined WORK_QUEUE rc=1 want 0
+              REFUSE: 1 citation(s) in the harness do not resolve.
+              ^ names YOUR path: WORK_QUEUE.md
+          REFUSED — the tree-wide checkers name a path your commit carries
+  OK    refusal that really names WORK_QUEUE.md        rc=1
+  OK    refusal with NO marked line (fail closed)      rc=1
+  OK    a crashed checker still refuses                rc=1

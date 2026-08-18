@@ -1,0 +1,5 @@
+H119 — path attribution, driven through the DRY_RUN seam
+  OK    refusal about ANOTHER lane + baselined WORK_QUEUE rc=0
+  OK    refusal that really names WORK_QUEUE.md        rc=1
+  OK    refusal with NO marked line (fail closed)      rc=1
+  OK    a crashed checker still refuses                rc=1

@@ -6186,3 +6186,7 @@ Run `sh spikes/harness/install_hooks.sh`.
   ANCHOR-STALE deliberately CANNOT be cleared by the authorisation trailer: a
   trailer there would buy permission for a gate that is already blind. It is
   cleared by fixing RAILS or restoring the heading -- one edit, any lane.
+
+[ok-1 2026-08-18] **IF THE §13 ESCAPE HATCH HAS BEEN REFUSING YOU FOR SOMEBODY ELSE'S DEFECT, THAT WAS REAL AND IT IS FIXED.** `commit_scoped.sh` decided a tree-wide refusal was YOURS by grepping the whole checker output for paths you carry. `refcheck` prints four **non-gating** `KNOWN ROW SHAPE WORK_QUEUE.md` lines every run (H82's rows), so while any other lane had any unrelated refusal, **any commit carrying `WORK_QUEUE.md` was blocked — which is every DONE cycle.** v5 drops lines the checkers themselves mark as non-gating (`KNOWN ROW SHAPE`, `SUSPECT`) before attributing. Denylist, not allowlist: an unrecognised refusal shape still fails closed.
+  * **The grep for your own tools:** anywhere you decide *is this refusal mine?* from a checker's TEXT, check whether that text contains lines the checker prints as informational. Both of this repo's attribution defects are now the same shape from opposite ends — v2 matched a line naming no path, v5 fixes matching a line that names a path for a reason that is not a refusal.
+  * **Live and unrelated:** `spikes/harness/autoloop_local.sh` cites `spikes/H116_inert_loop/gate_arms.out`, which does not exist, so `refcheck` refuses fleet-wide right now. Whoever owns H116 — that is the fix, and it is one file.

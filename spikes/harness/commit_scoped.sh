@@ -69,6 +69,20 @@
 #   sh spikes/H72_scoped_bypass/probe.sh     (C1-C3, C6)
 #   sh spikes/H72_scoped_bypass/attack.sh    (C7-C11, both directions)
 #
+# ==== v5, H119 (ok-1, 2026-08-18) — ONE DEFECT REMOVED =====================
+# THE ESCAPE HATCH WAS DEFEATED BY A LINE ITS OWN CHECKER PRINTS AS NON-GATING.
+# Path attribution grepped the WHOLE combined output, so `refcheck`'s four
+# baselined `KNOWN ROW SHAPE WORK_QUEUE.md` lines (H82) made every commit
+# carrying WORK_QUEUE.md read as "names YOUR path" whenever any OTHER lane's
+# file had a refusal. Found by being blocked by it, on the H117 commit.
+# CLASS: attribution taken from output that includes lines marked NOT a refusal
+# -- the mirror of v2's defect 1, where the regex matched a line naming no path.
+# Denylist, not allowlist, so an unanticipated refusal shape still fails closed;
+# both directions driven through the DRY_RUN seam in
+# spikes/H119_attribution_scope/probe.sh, RED observed before the fix.
+# Cites: file:spikes/harness/journalcheck.py "SUSPECT"
+# ===========================================================================
+#
 # ==== v4, H114 (ok-1, 2026-08-18) ==========================================
 # `statuscheck.py` added to the gate, and THE v3 CHECK ABOVE CAUGHT THIS FILE
 # BEFORE I DID -- `test_loop_gate.sh` went red with "commit_scoped.sh does not
@@ -154,7 +168,20 @@ else
     exit 1
   fi
   # Full relative paths named anywhere in the refusal, not basenames (defect 2).
-  NAMED=$(echo "$OUT" | grep -oE '[A-Za-z0-9_.@-]+(/[A-Za-z0-9_.@-]+)*\.[a-z]+' | sort -u)
+  #
+  # v5, H119: MINUS the lines the checkers themselves print as NON-GATING. A
+  # refusal about another lane's file arrives with `refcheck`'s four baselined
+  # `KNOWN ROW SHAPE WORK_QUEUE.md` lines (H82) and `journalcheck`'s `SUSPECT`
+  # tier, whose own docstring says "printed, NOT gating" -- so any commit
+  # carrying WORK_QUEUE.md was told "names YOUR path" and refused. The H72
+  # escape hatch, defeated by an informational line about somebody else's row.
+  #
+  # A DENYLIST AND NOT AN ALLOWLIST, deliberately: an unrecognised line still
+  # attributes, so a checker that refuses in a shape nobody anticipated fails
+  # CLOSED. Arm 3 of spikes/H119_attribution_scope/probe.sh is that direction.
+  GATING=$(printf '%s\n' "$OUT" | grep -vE 'KNOWN ROW SHAPE|^[[:space:]]*SUSPECT|^[[:space:]]*info ')
+  [ -n "$(printf '%s' "$GATING" | tr -d '[:space:]')" ] || GATING=$OUT
+  NAMED=$(echo "$GATING" | grep -oE '[A-Za-z0-9_.@-]+(/[A-Za-z0-9_.@-]+)*\.[a-z]+' | sort -u)
   if [ -z "$NAMED" ]; then
     echo "REFUSED — the checkers refused and named no path, so it cannot be shown not to be yours" >&2
     exit 1
