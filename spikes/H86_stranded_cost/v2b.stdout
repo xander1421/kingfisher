@@ -1,0 +1,40 @@
+STRANDED 261 file(s)   IN-FLIGHT 7   NO-OWNER 91
+
+grouped by directory, oldest file first -- each line is ONE 'git commit --only':
+  NO-OWNER    1402m    1 file(s)  owner-by-history=none        proposed
+  STRANDED    1356m    2 file(s)  owner-by-history=AGENT-1     spikes/G32_isurp_baseline
+  NO-OWNER    1334m    4 file(s)  owner-by-history=none        spikes/G32_isurp_baseline
+  NO-OWNER    1304m   16 file(s)  owner-by-history=none        .
+  STRANDED    1286m    1 file(s)  owner-by-history=AGENT-1     spikes/S77_proof_bytes
+  STRANDED    1202m    2 file(s)  owner-by-history=AGENT-1     spikes/W2_witnessed_trie
+  NO-OWNER    1201m    1 file(s)  owner-by-history=none        spikes/W2_witnessed_trie
+  NO-OWNER    1187m    1 file(s)  owner-by-history=none        spikes
+  STRANDED    1181m    1 file(s)  owner-by-history=AGENT-1     spikes/M1_7_transport
+  NO-OWNER    1181m    1 file(s)  owner-by-history=none        spikes/S30_speed_duel
+  STRANDED    1180m    2 file(s)  owner-by-history=AGENT-1     spikes/M1_8_quorum3
+  STRANDED    1162m    1 file(s)  owner-by-history=AGENT-1     spikes/M1_8_quorum3/run/store
+  STRANDED    1162m   64 file(s)  owner-by-history=AGENT-1     spikes/M1_8_quorum3/run/phone/out
+  STRANDED    1162m   63 file(s)  owner-by-history=AGENT-1     spikes/M1_8_quorum3/run/host-x86/out
+  STRANDED    1162m   63 file(s)  owner-by-history=AGENT-1     spikes/M1_8_quorum3/run/host-min/out
+  STRANDED    1162m   58 file(s)  owner-by-history=AGENT-1     spikes/M1_8_quorum3/run/host-a/out
+  NO-OWNER    1162m    1 file(s)  owner-by-history=none        spikes/M1_8_quorum3/run/host-x86/out
+  NO-OWNER    1162m    4 file(s)  owner-by-history=none        spikes/M1_8_quorum3/run/host-a/out
+  NO-OWNER    1160m    2 file(s)  owner-by-history=none        spikes/M1_8_quorum3
+  NO-OWNER    1119m   59 file(s)  owner-by-history=none        .ids
+  STRANDED    1071m    2 file(s)  owner-by-history=AGENT-1     spikes/S38_runbook
+  STRANDED    1071m    1 file(s)  owner-by-history=AGENT-1     spikes/H77_demo8
+  STRANDED    1071m    1 file(s)  owner-by-history=AGENT-1     spikes/H73_gate_scope
+  IN-FLIGHT    972m    1 file(s)  owner-by-history=ATOM-3      spikes/harness
+  IN-FLIGHT    840m    1 file(s)  owner-by-history=AGENT-1     corpus
+  NO-OWNER     441m    1 file(s)  owner-by-history=none        spikes/harness
+  IN-FLIGHT    237m    2 file(s)  owner-by-history=ok-1        .
+  IN-FLIGHT    194m    1 file(s)  owner-by-history=AGENT-2     .
+  IN-FLIGHT    149m    1 file(s)  owner-by-history=ATTACKER-1  .
+  IN-FLIGHT     41m    1 file(s)  owner-by-history=AGENT-1     .
+
+STRANDED means the last atom to COMMIT this path has committed again SINCE
+the file was last touched -- the lane moved on and the file did not. It does
+NOT name the author of the edit: git cannot attribute an uncommitted edit at
+all (H74), so this is evidence for an ask, never a verdict about a lane.
+DO NOT COMMIT ANOTHER LANE'S FILE on the strength of it (MISSION_LOOP.md 13,
+H19, H66). Post the list to livechat.log and let the owner answer.
