@@ -51,8 +51,18 @@ c_nonuniform.observe(len({t for t, _ in rates.values()}) > 1,
                      [f'{k}={t}' for k, (t, _) in rates.items()],
                      'totals 4, 0, 24, 5, 0 -- four distinct values across five mutations')
 
+# WRITES ITS OWN RECORD, NEVER provenance.json -- and this is a repair, not a
+# precaution. v1 omitted record_name and OVERWROTE the spike's historical
+# provenance.json with a REFUSED record derived from the contaminated sweep 3,
+# while RESULT.md two directories up was simultaneously claiming that file was
+# "left openly stale". H49's RecordCollision guard did not fire because the
+# artifact list matched exactly -- it compares WHICH artifacts, not which RUN,
+# so a re-certification of the same spike is precisely the case it cannot see.
+# The historical record is the evidence that this row's defect was real; a tool
+# written to diagnose a stale record must not be able to destroy it.
 ok, problems = certify(
     HERE, deps=[HERE], artifacts=['mutation.json', 'baseline.json'],
+    record_name='provenance.m17.json',
     controls=[c_live, c_gap, c_nonuniform],
     captures=[('mutate.py', hashlib.sha256(open('mutate.py','rb').read()).hexdigest()[:16]),
               ('elders_head', M['_tree']['elders_head'].strip()),
