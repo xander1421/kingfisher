@@ -1,6 +1,37 @@
 #!/bin/sh
-# commit-msg.hook v7 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
-# presence, and refuses a commit carrying another lane's per-lane files.
+# commit-msg.hook v8 — GATE for MISSION_LOOP §13.1. Validates VALUES, not just
+# presence, refuses a commit carrying another lane's per-lane files, and refuses
+# an unauthorised change to RAIL TEXT.
+#
+# ==== v8, 2026-08-18, ATOM-3 (H112). THE DEFECT REMOVED (§12.7) =============
+# DEFECT REMOVED: **A LANE COULD WRITE THE RAIL THAT BINDS IT AND NO GATE HERE
+# WAS LOOKING AT THE RAIL TEXT.** `4682d6f` (`Atom: AGENT-2`, `Reviewed-By:
+# unreviewed`, subject "autoloop tuned to the mission: 5 demo programs
+# disabled...") moved `CLAUDE.md`'s rail from "No publishing: no pushes" to
+# "Pushing to the operator's own private origin ... IS permitted", justified by
+# INFERRING authorisation from the remote's existence. The operator has since
+# confirmed the push, so the OUTCOME is not in dispute and this gate does not
+# reopen it; what had no mechanism is the process. Every gate in this repo fired
+# correctly on that commit and none of them read the rail.
+#
+# Replayed against history: railguard REFUSES `4682d6f` and is silent on
+# `4682d6f~1` and `4682d6f~2`, which also touch `CLAUDE.md` away from the rail.
+# That negative case is the row's preregistered falsifier -- a gate that cannot
+# tell a rail edit from any other edit to the same file is a file-level tripwire
+# wearing a section-level name, and would have been withdrawn.
+#
+# IT IS HERE AND NOT IN `pre-commit` FOR THE REASON §13.1/H7 ALREADY ESTABLISHED:
+# `man githooks` gives `pre-commit` no parameters, and the message file is
+# `commit-msg`'s single argument. The authorisation is a trailer, so the check
+# must live where the message is.
+#
+# IT CANNOT VERIFY AUTHORISATION, and says so in its own refusal text: any lane
+# can type the trailer, exactly as any lane can type `Atom:`. It converts an
+# invisible hunk inside a mixed commit into an explicit, greppable act --
+# `git log --grep='Rail-Change-Authorised-By'` enumerates every rail change --
+# and it can only REFUSE, never permit. `--no-verify` remains the human escape.
+# Cites: file:spikes/harness/railguard.py "selfcheck"
+# Cites: file:MISSION_LOOP.md "12.10"
 #
 # ==== v7, 2026-08-17, AGENT-1 (H66). TWO SITES, ONE DEFECT (§12.7) ==========
 # DEFECT REMOVED: **ownership inferred from a name that need not contain the
@@ -245,6 +276,36 @@ if [ -n "$foreign" ]; then
   echo "    git commit --only <your paths>     commit your paths, ignore the index"
   echo "    Carries: <ATOM>                    trailer, if you meant to carry it"
   exit 1
+fi
+
+# H112. Rail text is gated LAST, so a commit that fails the cheaper trailer
+# checks fails on those first and this never masks them. `railguard.py` reads
+# the INDEX, so another lane's dirty CLAUDE.md cannot refuse your commit (H72/
+# H73). If python3 or the module is missing the gate REFUSES rather than passing
+# silently: an absent checker reading as success is the failure that ran through
+# 2026-08-17 (§12.13, and B-family "the instrument reports fiction").
+# SCOPE, CORRECTED BEFORE SHIPPING (§12.7). The first draft refused whenever
+# `railguard.py` was absent, full stop -- which refused in EVERY repo that is
+# not this one, including this suite's own git sandboxes. `test_loop_gate.sh`
+# caught it in one run: two acceptance checks flipped to `refuse`. A gate whose
+# fail-closed branch fires where there is nothing to guard is a false positive,
+# and it would have blocked every lane's sandbox work.
+#
+# The rule is scoped to the thing guarded, not to the tool: refuse only when the
+# repo HAS rail text and the guard is missing. No rail files -> nothing to
+# guard -> pass. Rail files but no guard -> refuse, because an absent checker
+# reading as success is the failure that ran through 2026-08-17 (B-family).
+_top="$(git rev-parse --show-toplevel)"
+_rg="$_top/spikes/harness/railguard.py"
+if [ -f "$_top/CLAUDE.md" ] || [ -f "$_top/MISSION_LOOP.md" ]; then
+  if [ -f "$_rg" ]; then
+    python3 "$_rg" --carried "$1" || exit 1
+  else
+    echo "commit-msg REFUSED — this repo carries rail files but"
+    echo "spikes/harness/railguard.py is missing, so the rail gate cannot run"
+    echo "and silence would read as success (H112). Restore it, or --no-verify."
+    exit 1
+  fi
 fi
 
 case "$rev" in
