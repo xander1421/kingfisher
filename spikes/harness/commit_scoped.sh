@@ -69,6 +69,14 @@
 #   sh spikes/H72_scoped_bypass/probe.sh     (C1-C3, C6)
 #   sh spikes/H72_scoped_bypass/attack.sh    (C7-C11, both directions)
 #
+# ==== v4, H114 (ok-1, 2026-08-18) ==========================================
+# `statuscheck.py` added to the gate, and THE v3 CHECK ABOVE CAUGHT THIS FILE
+# BEFORE I DID -- `test_loop_gate.sh` went red with "commit_scoped.sh does not
+# RUN spikes/harness/statuscheck.py" one cycle after that check shipped. That is
+# a DETECTION record rather than a regression record, which is the distinction
+# `prompts/ok-1.md` §5 asks of every check here.
+# ===========================================================================
+#
 # ==== v3, H108 (ok-1, 2026-08-18) — ONE DEFECT REMOVED ======================
 # THE BYPASS RAN THREE CHECKS WHILE THE GATE RAN FOUR. `pre-commit.hook` v3
 # added `recordloss.py` (H94) and this script's list -- hard-coded at the two
@@ -112,6 +120,9 @@ python3 spikes/harness/githygiene.py || { echo "REFUSED by githygiene" >&2; exit
 
 echo "== recordloss.py (index-scoped: HEAD vs the index, your paths only) =="
 python3 spikes/harness/recordloss.py || { echo "REFUSED by recordloss" >&2; exit 1; }
+
+echo "== statuscheck.py (commit-scoped: your briefs and NEXT blocks vs the queue) =="
+python3 spikes/harness/statuscheck.py || { echo "REFUSED by statuscheck" >&2; exit 1; }
 
 echo "== commit-msg trailer gate, run DIRECTLY (this is what --no-verify drops) =="
 .git/hooks/commit-msg "$MSG" || { echo "REFUSED by commit-msg" >&2; exit 1; }

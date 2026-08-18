@@ -1,6 +1,6 @@
 #!/bin/sh
-# pre-commit.hook v3 — 2026-08-17. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35);
-# v3 ok-1 (H94).
+# pre-commit.hook v4 — 2026-08-18. v1 AGENT-1 (H15); v2 ATTACKER-1 (H35);
+# v3 ok-1 (H94); v4 ok-1 (H114).
 #
 # ==== v3, H94 — the defect removed ==========================================
 # CLASS: A COMPLETED RECORD CAN LEAVE AN APPEND-MOSTLY DOCUMENT AND EVERY GATE
@@ -19,6 +19,16 @@
 # the history, and `python3 spikes/harness/recordloss.py --history` prints it
 # next to the HEAD it was taken at.
 # Cites: file:MISSION_LOOP.md "12.3"
+# ===========================================================================
+#
+# ==== v4, H114 (ok-1) ======================================================
+# CLASS: A STATUS ASSERTION LIVING OUTSIDE `WORK_QUEUE.md`, WHICH §4 CALLS THE
+# AUTHORITY. `prompts/ok-1.md` §6 offered H15, H14 and H32 as rows "nobody
+# holds"; all three are DONE, and a lane took one off that list. Added:
+# `statuscheck.py`, COMMIT-SCOPED like recordloss -- every journal in the tree
+# goes stale when a row closes without being touched, so a tree-wide rule here
+# would refuse every lane for every other lane's untouched file (H72). You fix
+# the assertions in the documents your own commit carries.
 # ===========================================================================
 #
 # ==== v2, AND IT IS A CORRECTION AGAINST v1's HEADER (§12.7) ================
@@ -146,7 +156,8 @@ cd "$(git rev-parse --show-toplevel)"
 CHECKS='spikes/harness/refcheck.py
 spikes/harness/journalcheck.py
 spikes/harness/githygiene.py
-spikes/harness/recordloss.py'
+spikes/harness/recordloss.py
+spikes/harness/statuscheck.py'
 
 # Paths this commit carries whose WORKING-TREE copy is not the copy being
 # committed. While that set is empty the tree-based verdict below is exactly the

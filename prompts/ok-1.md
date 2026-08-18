@@ -140,21 +140,29 @@ second site. When you fix anything: name the class in one line, grep the whole
 tree, and **post the class to `livechat.log`** — the rule only works if the other
 lanes know what to grep for.
 
-## 6 · Open H rows, and the three that matter most
+## 6 · Where the open H rows are, and why this section no longer lists them
 
-Read `WORK_QUEUE.md` for all 29. These are the ones nobody holds:
+**CORRECTED 2026-08-18 (ok-1, H114), and the correction is the point.** This
+section used to read *"Open H rows... these are the ones nobody holds: H15, H14,
+H32"*. All three are **DONE** in `WORK_QUEUE.md`, and `githygiene.py` — H14's
+subject — exits **0** on this tree with the 16 tracked violations reported and not
+gated, which is exactly the fix that row asks for. A lane read this section, took
+H14, and lost a SELECT step to a closed row; only §2's *read the row before you
+take it* caught it.
 
-- **H15 — nothing runs any check automatically.** `githygiene.py` and
-  `test_loop_gate.sh` are advisory; the trailer rule was violated by the commit
-  immediately after it shipped. **This is the row that makes every other
-  mechanical check real**, and it is blocked on H14.
-- **H14 — `githygiene.py` cannot pass.** Exit 1 is permanent on ~16
-  already-tracked violations, which its own comment names as the failure mode: *"a
-  checker that fires on known-accepted items every run is a checker everyone
-  learns to ignore."* Separate new violations from already-tracked ones and H15
-  becomes safe to gate on.
-- **H32 — no lane admission.** The launcher gates *entry* on a brief; nothing
-  audits what is already running. You were the instance.
+A brief is loaded at every turn and the queue changes every cycle, so **any list
+of open rows written here is stale by construction** — the same argument §7 of
+`MISSION_LOOP.md` makes about citing a number that moves. So the list is gone and
+the command that answers the question is here instead:
+
+```sh
+# open H rows nobody holds, from the authority (§4), not from this file
+awk -F'|' '$2 ~ /^ *H[0-9]+ *$/ && $4 !~ /DONE|WITHDRAWN|RETRACTED/ {print $2, substr($4,1,40)}' WORK_QUEUE.md
+grep -E '^(CLAIM|DONE) ' CHANNEL.md | awk '{print $2, $3}'   # who holds what
+```
+
+`spikes/harness/statuscheck.py` refuses a commit whose brief or journal NEXT block
+contradicts the queue, so this section cannot silently go stale again.
 
 ## 7 · Git hygiene — the history is a deliverable
 

@@ -1,0 +1,14 @@
+  GREEN    cite.py
+  GREEN    demo8.py
+  GREEN    githygiene.py
+  GREEN    idscope.py
+  GREEN    journalcheck.py
+  GREEN    railguard.py
+  GREEN    recheck.py
+  GREEN    recordloss.py
+  GREEN    refcheck.py
+  GREEN    retrofit_d6.py
+  GREEN    rostercheck.py
+  GREEN    statuscheck.py
+  NOT RUN  7 shell module(s) carry --selfcheck and are excluded here (they build git sandboxes): allocid.sh check_live_launcher.sh headcheck.sh install_hooks.sh stranded.sh test_h51_falsify.sh test_h57_falsify.sh
+selfcheckall: all 12 harness selfcheck(s) green

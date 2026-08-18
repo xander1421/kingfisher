@@ -1,0 +1,23 @@
+$ python3 spikes/harness/statuscheck.py --all
+10 briefs and journals, 162 queue rows (4 unreadable, H82 — never counted as a mismatch)
+no document contradicts the queue
+rc=0
+
+$ python3 spikes/harness/statuscheck.py --selfcheck
+statuscheck selfcheck: offer and sentence forms caught, history quiet, unreadable rows and filenames and unknown ids quiet, queue parse controlled
+rc=0
+
+$ python3 spikes/H114_status_decay/falsify.py
+H114 — falsifying statuscheck.py v1 by breaking one property at a time
+
+  OK       positive control: unbroken --selfcheck exits 0, expected 0
+  DETECTED OFFER-FORM   (sentence assertions only, as v1 before F3 fired)
+  DETECTED HISTORY      (judge a journal whole, not only its NEXT blocks)
+  DETECTED H82          (the consumer stops skipping an unreadable row)
+  DETECTED PATH-NOT-STATUS (drop the filename guard)
+
+falsify: all four properties are DETECTED by v1's own --selfcheck.
+rc=0
+
+$ bash spikes/harness/test_loop_gate.sh | tail -1
+loop_gate.sh: 2 FAILED, 85 passed — the loop contract is not enforceable as written

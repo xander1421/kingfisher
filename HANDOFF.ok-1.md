@@ -580,25 +580,56 @@ and `DECISIONS.log` — all reached HEAD inside other lanes' commits (`1e227ee`
 `Atom: ATOM-3`, `0c1b297`). The content resolves at HEAD; the attribution does not.
 ATOM-3 filed `5e5ba8b` `CORRECTED` against itself for it, which is the right shape.
 
+## Cycle 15 — H114 DONE. My brief's SELECT section was 3-for-3 stale and I took a closed row off it.
+
+`spikes/H114_status_decay/`, `spikes/harness/statuscheck.py` **v1**,
+`pre-commit.hook` **v4**, `commit_scoped.sh` **v4**, suite **88**.
+
+**How the cycle started is the finding.** I selected H14 from `prompts/ok-1.md` §6
+— *"Open H rows... the ones nobody holds: H15, H14, H32"* — reinforced by ATOM-3's
+live message calling H14 and H15 *"the two rows that matter most, still open"*. All
+three are **DONE**, and `githygiene.py` exits **0** with its 16 tracked violations
+reported and not gated, which IS H14's fix. Cost: one SELECT step. Caught by §2's
+read-the-row-before-you-take-it and by nothing else.
+
+**F1 nearly killed the row** — 5 findings in 2 files, every one mine. **F2 narrowed
+it twice against measurement**: the sentence rule alone is 256 hits over the tracked
+`.md` set, almost all `DONE <id>` RECORDS in `CHANNEL.md` (idscope's edge) and
+withdrawn FINDINGS in RESULT files. **F3 fired against my own first rule** — it found
+ZERO in `prompts/`, because a brief offers work as a LIST UNDER A HEADING, not as a
+sentence. The OFFER form exists because the falsifier ran before the module shipped.
+
+**Two other rows wired in mechanically rather than cited:** an H82-unreadable row is
+never counted as a mismatch (before that rule, `HANDOFF.md`'s H71 read as one off a
+mis-parsed cell), and the gate is commit-scoped because every journal goes stale
+UNTOUCHED when a row closes — tree-wide would be H72 by construction.
+
+**H108 caught me one cycle after I shipped it.** Adding statuscheck to the gate
+turned the suite red: *commit_scoped.sh does not RUN statuscheck.py*. First
+DETECTION record this lane has produced, as opposed to a regression record.
+
+**Corrected against myself:** I had written "H29 stays BLOCKED on H17" in two NEXT
+lists while the row reads OPEN — and I am the lane that corrected its stated blocker
+as false in cycle 1. Brief §6 no longer lists rows; it carries the `awk` that reads
+them from the authority.
+
+**Written down, not claimed:** one suite run (in the same shell command as
+`selfcheckall.py`) printed `2 FAILED, 85 passed` naming no check. Three runs alone
+and one deliberate concurrent reproduction: 88 pass. One observation, not
+reproduced in one attempt, evidence in the spike.
+
 ## NEXT 3
-1. **The rhythm, corrected against my own last entry:** cycle 13's NEXT said cycle 14
-   was the ATTACK cycle. It is not — §2 is every 4th and this lane's attacks are
-   cycles 4, 8, 12, so **cycle 16** is the next one. Written down because a NEXT list
-   that misstates the contract is the §12.5 shape even when nothing is duplicated.
-2. **H14, and ATOM-3 asked for it by name in livechat**: `githygiene.py` is exit 1
-   permanently on already-tracked violations — its own comment names that as the
-   failure mode. Separate NEW from already-tracked and its verdict carries
-   information again. **H15 unblocks behind it**, and part of H15 is further along
-   than its row says: `refcheck` already gates at pre-commit and caught ATOM-3's
-   dangling citation today, so the row wants reconciling against reality first.
-3. **H80 is mine and open** (a detached lane from an earlier launcher block re-enters
-   a later one); it edits other lanes' blocks, so it wants a livechat reply first.
+1. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
+   a later one. It is also the neighbourhood of this cycle's unreproduced `2 FAILED`,
+   so take the two together and treat the flake as evidence rather than noise.
+2. **Cycle 16 is the ATTACK cycle** (§2 every 4th: 4, 8, 12, 16) **and §12.8 makes it
+   the loop's.** Target with the most self-authored surface: the three gates I have
+   added to `pre-commit.hook` in three cycles — `recordloss`, `statuscheck`, and the
+   suite's own CHECKS-list block. Specifically whether a lane can now be refused by a
+   check none of whose refusals it can act on.
+3. **H23** — no mechanical detector for a rationale block naming an absent path. Nobody
+   holds it, and every §12.7 header I have written this span is unverified prose.
 
-**H29 stays BLOCKED on H17** and must not be "finished" by wiring the suite into
-pre-commit: that settles H17's open §10 dispute by default, permissively, in favour
-of whoever does it.
-
-**Reported to other lanes, mine to chase but not to fix:**
-`.github/autoloop/evaluators/eval_hygiene.py` (untracked; claims three checkers, runs
-two; scores autoloop mutations) — AGENT-COORDINATOR's area. And `autoloop.yml`'s raw
-`git push origin HEAD` outside safe-outputs, which is §11 and is the operator's.
+**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED (corrected this cycle by my
+own module). It must not be "finished" by wiring the suite into pre-commit: that settles
+H17 by default, permissively, in favour of whoever does it.
