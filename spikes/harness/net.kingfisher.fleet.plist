@@ -2,6 +2,40 @@
 <!--
   net.kingfisher.fleet — bring the fleet up at login and keep it up.
 
+  ============================================================================
+  PROPOSED, NEVER INSTALLED, AND SUPERSEDED. READ THIS BEFORE THE INSTALL BLOCK.
+  (H58, ATOM-3, 2026-08-18. This file is mine and the omission below was mine.)
+
+  A DIFFERENT AGENT IS ALREADY LOADED AND DOING THIS JOB:
+
+      launchctl list  ->  com.kingfisher.bringup   LOADED
+      it names        ->  /Users/victorianikolenko/kingfisher/bringup.sh
+                          (/bin/bash, StartInterval 600)
+
+  THIS file names spikes/harness/bringup.sh at StartInterval 300 — a DIFFERENT
+  SCRIPT on a DIFFERENT INTERVAL. The two are not variants: the root copy is the
+  RECONCILER (census, start what is missing) and the harness copy is PRE-FLIGHT
+  (installs .git/hooks, runs test_loop_gate.sh, clears stale signals). Running
+  pre-flight every 300s as a supervisor is not what either was built for.
+
+  So following the INSTALL block below adds a SECOND fleet agent beside the
+  loaded one. Four other files already record this as PROPOSED and never
+  installed — spikes/harness/bringup.sh:7, spikes/H6_liveness/RESULT.md:175,
+  CHANNEL.md:183, spikes/H78_selfcheck_wiring/RESULT.md — and THIS file, the one
+  a human actually copies, said it nowhere: `grep -c 'PROPOSED'` returned 0.
+  A caveat that lives everywhere except the artifact it is about is not a
+  caveat (LEDGER standing rule 12).
+
+  AND THE VERIFY STEP BELOW COULD NOT CATCH IT. `launchctl list | grep
+  kingfisher` prints a line whether ONE agent is loaded or TWO, so the check
+  that confirms the install cannot detect the one mistake the install makes —
+  a control that cannot fail in the direction that matters (A15). Corrected in
+  place below rather than removed.
+
+  IF YOU WANT REBOOT SURVIVAL, IT IS ALREADY THERE. Do not install this.
+  Enforced by spikes/harness/test_h58_entry_point.sh.
+  ============================================================================
+
   WHY launchd AND NOT A WATCHDOG SCRIPT. macOS already ships the supervisor, so
   writing one would be a second implementation of a solved problem. More to the
   point: any watchdog this repo launched would itself be a child of whatever
@@ -22,7 +56,10 @@
   stop the fleet permanently, unload this agent — otherwise removing STOP is the
   only thing standing between a reboot and four running lanes.
 
-  INSTALL — this is a human action, deliberately. §10 forbids writing outside the
+  INSTALL — DO NOT. See the superseded notice above; com.kingfisher.bringup is
+  already loaded and this would be a second agent. Kept verbatim because the
+  reasoning is cited elsewhere and deleting a superseded artifact loses the
+  record. This is a human action, deliberately. §10 forbids writing outside the
   workspace, and ~/Library/LaunchAgents is outside it, so this file is tracked here
   and installed by you:
 
@@ -30,8 +67,10 @@
     launchctl load  ~/Library/LaunchAgents/net.kingfisher.fleet.plist
     launchctl start net.kingfisher.fleet          # or just wait 5 minutes
 
-  VERIFY:
-    launchctl list | grep kingfisher              # pid or last exit status
+  VERIFY — counts, because a match is not an answer (H58):
+    launchctl list | grep -c kingfisher           # MUST be 1. 2 means you now
+                                                  # have two fleet agents.
+    launchctl list | grep    kingfisher           # which one(s), + exit status
     tail -20 /Users/victorianikolenko/kingfisher/bringup.launchd.log
 
   UNINSTALL:

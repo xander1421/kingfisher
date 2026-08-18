@@ -4,6 +4,15 @@
 # -- measured with `launchctl list`, not assumed. This file is the PRE-FLIGHT
 # copy: it installs the untrackable .git/hooks, runs test_loop_gate.sh, clears
 # stale signals and audits undeclared lanes, none of which the root copy does.
+# H58 DECIDED 2026-08-18: the two bringup.sh are NOT merged, and that is a
+# verdict rather than a deferral. They have different jobs (this one is
+# PRE-FLIGHT: hooks, test_loop_gate.sh, stale signals; the root one is the
+# RECONCILER launchd runs). Merging means one script with a mode flag, and H44
+# measured what this file's LAST mode flag did: `--check`, documented as
+# "changes nothing", installed .git/hooks and deleted loop state because
+# CHECK_ONLY was tested at one site out of three. A shared mode flag buys a
+# shared failure mode across both jobs and no coverage. The real defect was a
+# THIRD artifact -- see spikes/harness/test_h58_entry_point.sh.
 # `net.kingfisher.fleet.plist` names this path and is PROPOSED, NOT installed --
 # `ls ~/Library/LaunchAgents` confirms. Consolidating the two is H58. Both now
 # read `roster.txt` and share the same `ps`-based `lane_pid` (H6), so they
