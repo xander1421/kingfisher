@@ -1,0 +1,32 @@
+=== ROLES ===
+  AGENT-1      brief ok (146 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (153 lines)
+  ok-1         brief ok (199 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 81970   (turn) turn age 11s, last CHANNEL line 6 back NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  AGENT-2      UP   pid 79817   (turn) turn age 23s, last CHANNEL line 3 back NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  ATTACKER-1   UP   pid 73799   (turn) turn age 6s, last CHANNEL line 0 back NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  ATOM-3       UP   pid 68432   (turn) turn age 22s, last CHANNEL line 8 back NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  ok-1         UP   pid 82402   (turn) turn age 26s, last CHANNEL line 1 back NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  quorum: 5/5
+  fleet output: CHANNEL.md last written 10m 23s ago (no threshold -- compare across samples)
+
+=== RUNNING CODE ===
+  STALE  pid 39997   started 14:29:16, predates 17:17:34 (newest commit touching run_loop.sh (cf9f5a2)) -- running PRE-FIX code
+  STALE  pid 40077   started 14:29:18, predates 17:17:34 (newest commit touching run_loop.sh (cf9f5a2)) -- running PRE-FIX code
+  STALE  pid 40160   started 14:29:20, predates 17:17:34 (newest commit touching run_loop.sh (cf9f5a2)) -- running PRE-FIX code
+  STALE  pid 40237   started 14:29:22, predates 17:17:34 (newest commit touching run_loop.sh (cf9f5a2)) -- running PRE-FIX code
+  STALE  pid 40429   started 14:29:24, predates 17:17:34 (newest commit touching run_loop.sh (cf9f5a2)) -- running PRE-FIX code
+  STALE  pid 65797   started 16:46:27, predates 17:17:34 (newest commit touching run_loop.sh (cf9f5a2)) -- running PRE-FIX code
+  selection: 6 launcher(s); 20 descendant match(es) EXCLUDED (turn, watchdog,
+  REFUSE: 6 of 6 live launcher processes predate the newest commit touching run_loop.sh (cf9f5a2).
+  NOT GATED (H52: a permanent non-zero floor reads as noise). Relaunch is a
+  human action -- see HUMAN_NEEDED.md. Until then every launcher fix newer
+  than those start times is committed and NOT running.
+
+=== OFF-ROSTER ===
+  none
+rc=0

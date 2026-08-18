@@ -145,6 +145,36 @@ beat_age() {
 # `bringup: full quorum, nothing to start.`, every time. See
 # spikes/H56_fleet_stall/. -1 means the file is absent, which is a launcher
 # generation predating v9 (H21) and is NOT clear -- same rule as the beat.
+#
+# v2 (H88, AGENT-1, 2026-08-17). THE DEFECT REMOVED: THIS SENTINEL WAS COMPUTED,
+# DOCUMENTED AS "NOT clear", AND READ BY A BRANCH THAT COULD NOT TELL IT FROM
+# CLEAR. -1 was the whole vocabulary for "absent"; the only consumer was
+# `[ "$nfail" -ge 2 ]` below, and -1 >= 2 and 0 >= 2 are both false, so ABSENT
+# and HEALTHY printed a BYTE-IDENTICAL census line. MEASURED, not argued:
+# spikes/H88_sentinel_branch/probe.sh drives this exact file against a synthetic
+# one-lane roster and a stub process; arms A (absent) and B (nfail=0) are
+# identical strings, arm C (nfail=2) is STALLED, so the census can distinguish a
+# VALUE and could not distinguish NO VALUE.
+#
+# WHAT IT COST, and it is the same 5/5 twice: at 04:00 today ZERO
+# `.loop_fails.*` existed while all 5 roster lanes held live locks, because 5 of
+# 6 live launchers parsed the 14:09 body (cc1da90) and `echo 0 > "$FAILFILE"`
+# first appears in 90decab (16:15, H56). So the crash-loop detector read -1 for
+# the entire fleet and the census printed `quorum: 5/5` -- byte for byte the
+# reading H56 recorded across its own 86-minute outage. The class survived
+# inside the fix for it, in this file, for the second time.
+#
+# THE FIX IS A NAMED STATE AND DELIBERATELY NOT AN ALARM, pre-registered in
+# CHANNEL.md before the probe existed:
+#   * NEVER STALLED -- absent is the NORMAL reading for every launcher
+#     generation predating v9, so alarming on it refuses quorum permanently, and
+#     an always-red gate is bypassed as thoroughly as a flaky one (H14, H52).
+#   * NEVER ADDED TO MISSING -- H6's "absent branch LAUNCHES" hazard: relaunching
+#     a healthy lane because its counter is old is worse than a wrong number.
+#   * SO: the beat's own idiom, ten lines below in this same file, where
+#     `age < 0` prints NO BEAT FILE and names the four states one observation
+#     covers. Two of the three sentinels here were already branched and named;
+#     this was the outlier, and it was the only one aimed at a crash loop.
 lane_fails() {
   local f=".loop_fails.${1}" n
   [ -f "$f" ] || { echo -1; return; }
@@ -198,6 +228,80 @@ lane_lastwork() {
   [ -n "$n" ] || { echo -1; return; }
   echo $(( $(wc -l < CHANNEL.md) - n ))
 }
+
+# v4 (H78, ATTACKER-1, 2026-08-17). THE DEFECT: §12.3 says every harness
+# component ships a runnable check that fails when it breaks. Fifteen modules do.
+# **NOTHING RAN THEM.** `pre-commit.hook:126` runs three of them in SCAN mode --
+# the mode that judges the tree, never the mode that judges the checker -- and
+# every other invocation in the repo is a line of `.md` prose. A mention in a
+# document is not an invocation, and that distinction is the whole measurement.
+# Measured cost on the day it was written: `demo8.py --selfcheck` was exiting 1,
+# and had been since `ed1a68e` committed the live spike directory its positive
+# control depends on. Nobody saw it because nothing looked.
+#
+# THIS FILE IS WHERE IT GOES BECAUSE THIS FILE IS THE ONLY AUTOMATIC PATH.
+# `launchctl list` shows `com.kingfisher.bringup` LOADED and its plist names this
+# script, RunAtLoad + StartInterval 600. Not the pre-commit gate: bolting
+# tree-wide checks onto a gate three lanes share is `pre-commit.hook` v2's F2,
+# i.e. H72.
+#
+# THREE PROPERTIES, EACH DELIBERATE:
+#   * LAST IN THE FILE, AFTER the launch loop. Preregistered falsifier F3 was
+#     "if the step can delay or block a lane launch it is worse than the gap it
+#     fills". Placing it above the loop would have cost every lane ~2s per
+#     reconcile; placing it here costs a launch nothing.
+#   * NOT GATED. Bringup is a reconciler that STARTS lanes. Same reasoning the
+#     RUNNING CODE block states for check_live_launcher.sh, and H52's: a red that
+#     stops the fleet is a red everyone learns to remove.
+#   * BOUNDED. `selfcheckall.py` caps each module and reports TIMEOUT as its own
+#     state; `timeout(1)` does not exist on this host.
+#
+# v5 (H95, ATTACKER-1, 2026-08-18). DEFECT REMOVED: **THIS BLOCK HAD NEVER RUN.**
+# v4 placed it last in the file and asserted that placement POSITIONALLY -- which
+# was true, and is not the property that matters. `bringup.sh` has five `exit`
+# statements above it; the two that carry the traffic are `:430` (`--check`, the
+# census path) and `:467` (`full quorum, nothing to start.`, the steady state).
+# Measured before the fix: `bringup.log` carried **26** terminal `full quorum`
+# lines and **0** occurrences of the string `selfcheck`, and one of those runs
+# names `pid 73799`, which started 2026-08-18 04:59:11 -- eleven hours AFTER v4
+# committed (`64af5af`, 17:46). So it was unreachable, not merely not-yet-run.
+#
+# CLASS: A CONTROL-FLOW PROPERTY ASSERTED BY TEXT POSITION INSTEAD OF BY
+# EXECUTION. v4's own rationale is the confession: *"placing it here costs a
+# launch nothing"* -- it cost a launch nothing because it ran ONLY when there was
+# a launch, i.e. only when the fleet was already degraded, which is the inverse
+# of the property v4 was optimising for.
+#
+# WHY A TRAP AND NOT A MOVE. Moving the block above `:430` would fix the two
+# exits that exist today and would be re-broken by the next `exit` added above
+# it -- the same site-not-class repair §12.2 forbids. `trap ... EXIT` is reached
+# from EVERY termination path by construction, including ones not yet written,
+# and it still fires AFTER the launch loop, so v4's preregistered F3 ("the step
+# must not delay a lane launch") is preserved rather than traded away. The guard
+# makes it once-only; the handler runs no `exit`, so `$?` is passed through
+# untouched and `--check`'s contract (`:45`, exit 1 when quorum fails) is intact.
+_SELFCHECKS_RAN=0
+harness_selfchecks() {
+  [ "$_SELFCHECKS_RAN" = 0 ] || return 0
+  _SELFCHECKS_RAN=1
+echo
+echo "=== HARNESS SELFCHECKS ==="
+if [ -f spikes/harness/selfcheckall.py ]; then
+  _sca=$(python3 spikes/harness/selfcheckall.py 2>&1); _scarc=$?
+  printf '%s\n' "$_sca" | sed 's/^/  /'
+  if [ "$_scarc" -ne 0 ]; then
+    echo "  NOT GATED — a failing selfcheck must never stop a lane launching."
+    echo "  It means the CHECKER is broken, so every verdict it has given since is"
+    echo "  unattributable. Fix the module, or open a class-H row for it."
+  fi
+else
+  echo "  selfcheckall.py ABSENT — the harness self-tests are running nowhere,"
+  echo "  which is H78's original state and is not the same as passing (H40)."
+fi
+}
+
+# H95. Every exit path runs the harness selfchecks exactly once.
+trap harness_selfchecks EXIT
 
 CHECK_ONLY=0; INSTALL=0
 for a in "$@"; do
@@ -288,6 +392,13 @@ for lane in "${ROSTER[@]}"; do
   if [ -z "$pid" ]; then pid=$(lane_lock_pid "$lane"); src="loop"; fi
   age=$(beat_age "$lane")
   nfail=$(lane_fails "$lane")
+  # H88. -1 is "no counter on disk", which is NOT the same observation as "the
+  # counter says 0" and until v2 printed the same line. Carried as a suffix
+  # rather than a branch of its own because it is orthogonal to beat and work:
+  # a lane can be missing its counter and stale and silent, and collapsing
+  # those into one branch would hide two of them.
+  fnote=''
+  [ "$nfail" -lt 0 ] && fnote=' NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear'
   if [ -n "$pid" ] && [ "$nfail" -ge 2 ]; then
     # STALLED IS NOT UP AND IT IS NOT DOWN. The wrapper is alive and is producing
     # nothing: two or more consecutive turns exited under 60 s. One failed turn is
@@ -310,23 +421,23 @@ for lane in "${ROSTER[@]}"; do
       # never started, or -- observed on ok-1, alive and mid-turn with no beat
       # file at all -- a wrapper still running a launcher generation that
       # predates the beat (H21). Four states, one observation: say so.
-      printf '  %-12s UP   pid %-7s (%s) NO BEAT FILE -- retired, pre-v5 launcher, or never started\n' "$lane" "$pid" "$src"
+      printf '  %-12s UP   pid %-7s (%s) NO BEAT FILE -- retired, pre-v5 launcher, or never started%s\n' "$lane" "$pid" "$src" "$fnote"
     elif [ "$age" -gt "$STALE_SECS" ]; then
       # Not "the lane is dead" -- ps or the lock just said it is not. It means
       # the turn outlived MAX_TURN, i.e. the watchdog that exists to bound it
       # did not fire. There is no healthy reading of this.
-      printf '  %-12s UP   pid %-7s (%s) WATCHDOG FAILED: turn age %ss > MAX_TURN+300 (%ss)\n' "$lane" "$pid" "$src" "$age" "$STALE_SECS"
+      printf '  %-12s UP   pid %-7s (%s) WATCHDOG FAILED: turn age %ss > MAX_TURN+300 (%ss)%s\n' "$lane" "$pid" "$src" "$age" "$STALE_SECS" "$fnote"
     else
       # THE WORK COLUMN (H43). Reported beside the turn age, never instead of
       # it: turn age says the supervisor is alive, this says the lane has
       # produced something. Both, because either alone was the 5/5 lie.
       w=$(lane_lastwork "$lane")
       if [ "$w" -lt 0 ]; then
-        printf '  %-12s UP   pid %-7s (%s) turn age %ss, NO CHANNEL LINE EVER -- nothing observed of this lane\n' \
-          "$lane" "$pid" "$src" "$age"
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, NO CHANNEL LINE EVER -- nothing observed of this lane%s\n' \
+          "$lane" "$pid" "$src" "$age" "$fnote"
       else
-        printf '  %-12s UP   pid %-7s (%s) turn age %ss, last CHANNEL line %s back\n' \
-          "$lane" "$pid" "$src" "$age" "$w"
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, last CHANNEL line %s back%s\n' \
+          "$lane" "$pid" "$src" "$age" "$w" "$fnote"
       fi
     fi
   elif [ -f STOP ] || [ -f "STOP.$lane" ]; then
@@ -480,44 +591,3 @@ for lane in "${MISSING[@]}"; do
 done
 echo
 echo "re-check with: ./bringup.sh --check"
-
-# v4 (H78, ATTACKER-1, 2026-08-17). THE DEFECT: §12.3 says every harness
-# component ships a runnable check that fails when it breaks. Fifteen modules do.
-# **NOTHING RAN THEM.** `pre-commit.hook:126` runs three of them in SCAN mode --
-# the mode that judges the tree, never the mode that judges the checker -- and
-# every other invocation in the repo is a line of `.md` prose. A mention in a
-# document is not an invocation, and that distinction is the whole measurement.
-# Measured cost on the day it was written: `demo8.py --selfcheck` was exiting 1,
-# and had been since `ed1a68e` committed the live spike directory its positive
-# control depends on. Nobody saw it because nothing looked.
-#
-# THIS FILE IS WHERE IT GOES BECAUSE THIS FILE IS THE ONLY AUTOMATIC PATH.
-# `launchctl list` shows `com.kingfisher.bringup` LOADED and its plist names this
-# script, RunAtLoad + StartInterval 600. Not the pre-commit gate: bolting
-# tree-wide checks onto a gate three lanes share is `pre-commit.hook` v2's F2,
-# i.e. H72.
-#
-# THREE PROPERTIES, EACH DELIBERATE:
-#   * LAST IN THE FILE, AFTER the launch loop. Preregistered falsifier F3 was
-#     "if the step can delay or block a lane launch it is worse than the gap it
-#     fills". Placing it above the loop would have cost every lane ~2s per
-#     reconcile; placing it here costs a launch nothing.
-#   * NOT GATED. Bringup is a reconciler that STARTS lanes. Same reasoning the
-#     RUNNING CODE block states for check_live_launcher.sh, and H52's: a red that
-#     stops the fleet is a red everyone learns to remove.
-#   * BOUNDED. `selfcheckall.py` caps each module and reports TIMEOUT as its own
-#     state; `timeout(1)` does not exist on this host.
-echo
-echo "=== HARNESS SELFCHECKS ==="
-if [ -f spikes/harness/selfcheckall.py ]; then
-  _sca=$(python3 spikes/harness/selfcheckall.py 2>&1); _scarc=$?
-  printf '%s\n' "$_sca" | sed 's/^/  /'
-  if [ "$_scarc" -ne 0 ]; then
-    echo "  NOT GATED — a failing selfcheck must never stop a lane launching."
-    echo "  It means the CHECKER is broken, so every verdict it has given since is"
-    echo "  unattributable. Fix the module, or open a class-H row for it."
-  fi
-else
-  echo "  selfcheckall.py ABSENT — the harness self-tests are running nowhere,"
-  echo "  which is H78's original state and is not the same as passing (H40)."
-fi

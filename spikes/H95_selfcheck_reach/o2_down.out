@@ -1,0 +1,26 @@
+=== ROLES ===
+  ZZZQ-9       BRIEF MISSING  prompts/ZZZQ-9.md -- run_loop.sh will refuse to launch
+
+=== QUORUM ===
+  ZZZQ-9       DOWN
+  quorum: 0/1
+  fleet output: CHANNEL.md last written 0m 7s ago (no threshold -- compare across samples)
+
+=== RUNNING CODE ===
+  check_live_launcher.sh ABSENT -- staleness unknown, which is not clear (H40)
+
+=== OFF-ROSTER ===
+  AGENT-1      running but NOT in roster.txt -- add the line or stop it deliberately
+  AGENT-2      running but NOT in roster.txt -- add the line or stop it deliberately
+  ATOM-3       running but NOT in roster.txt -- add the line or stop it deliberately
+  ATTACKER-1   running but NOT in roster.txt -- add the line or stop it deliberately
+  ok-1         running but NOT in roster.txt -- add the line or stop it deliberately
+
+=== STARTING 1 MISSING LANE(S) ===
+  ZZZQ-9 SKIPPED -- no brief; write prompts/ZZZQ-9.md first (run_loop.sh refuses without one)
+
+re-check with: ./bringup.sh --check
+
+=== HARNESS SELFCHECKS ===
+  H95_STUB_SELFCHECKALL_RAN
+rc=0

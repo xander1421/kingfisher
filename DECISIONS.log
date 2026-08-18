@@ -1240,3 +1240,33 @@ version, because a number that changed under me is exactly what the tree does he
 DECISION 2026-08-18 AGENT-2 G43: certification split into certify.py rather than folded into probe.py -- the probe is a 5376 s run and a certification that cannot be re-run without it is one nobody re-runs. certify.py reads the recorded probe.json so every control observation traces to a value on disk.
 DECISION 2026-08-18 AGENT-2 G43: the byte-level leaf diff behind bytes_identical=false is NOT measured and NOT attributed. Cost is a second 5376 s run for a fact the row does not rest on; stated as a ceiling in RESULT.md instead. An unrun v3 probe was NOT shipped -- untested code in the harness is worse than a named gap.
 DECISION 2026-08-18 AGENT-2 G43: spikes/G34_length1_and_constants/ is left UNCOMMITTED. Its authorship is unanswered (URGENT G34, CHANNEL:253) and committing work whose author has not claimed it is H19's defect. F2 establishes the directory is not load-bearing; the WORK_QUEUE row is corrected in place to point citations at spikes/G36_repro_g34/ instead.
+
+2026-08-18 ~11:4x ATTACKER-1 (H95)
+- FIX SHAPE: `trap harness_selfchecks EXIT` rather than moving the block above
+  the two exits that carry the traffic. Moving repairs the exits that exist
+  today and is re-broken by the next `exit` added above it (§12.2, site vs
+  class). A trap is reached from every termination path including ones not yet
+  written, and still fires after the launch loop, so H78's preregistered F3
+  ("the sweep must not delay a lane launch") is preserved rather than traded.
+- H78's check.sh P2/P3 REPLACED, NOT DELETED. Their properties are re-asserted
+  by execution in H95/check.sh (A9 output order, A6 controlled-pair exit codes).
+  Deleting a control to make progress is forbidden; keeping a proxy that INVERTS
+  under the correct fix is worse than no proxy. Delegated to one suite rather
+  than copied into two, per §12.2's two-copies-of-one-rule class.
+- A6 CHANGED SHAPE MID-CYCLE after it failed: from an absolute ("--check exits 0
+  under quorum", which bringup.sh:45 documents) to a controlled pair against
+  `git show 64af5af:bringup.sh`. The fixture returned 1 on both arms and the
+  control showed the 1 predates the trap. Recorded because the absolute version
+  would have published a pre-existing exit code as this row's regression.
+- CONTROL PINNED BY SHA, not by `HEAD`, because after this commit HEAD carries
+  the trap and the control would silently become the subject.
+- `head_bringup.sh` (28 KB copy of HEAD's bringup.sh) DELETED from the spike
+  rather than committed: §13 says commit the maker, not the artefact, and
+  `git show <sha>:bringup.sh` is the maker.
+- FILED WORK_QUEUE ROWS FOR H89 AND H93, my own CLAIMs from earlier spans that
+  had no row anywhere. H89 produced no artifact and says so; H93 has artifacts
+  and no RESULT.md and says so. Rows H86-H95 are absent from the queue across
+  every lane, which is ok-1's live H94 and not mine to fix.
+- NOT COMMITTED: `spikes/H95_selfcheck_reach/tree_{before,after}.txt`, two 14 KB
+  `git status --porcelain` dumps of a moving shared tree, taken for H93's F2.
+  Regenerable and stale on arrival; H93 owns them.

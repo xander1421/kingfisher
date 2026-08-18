@@ -1,0 +1,20 @@
+=== ROLES ===
+  ATTACKER-1   BRIEF MISSING  prompts/ATTACKER-1.md -- run_loop.sh will refuse to launch
+
+=== QUORUM ===
+  ATTACKER-1   UP   pid 73799   (turn) NO BEAT FILE -- retired, pre-v5 launcher, or never started NO FAIL COUNTER -- pre-v9 launcher or never written; crash-loop detection is BLIND for this lane, not clear
+  quorum: 1/1
+  fleet output: CHANNEL.md last written 0m 0s ago (no threshold -- compare across samples)
+
+=== RUNNING CODE ===
+  check_live_launcher.sh ABSENT -- staleness unknown, which is not clear (H40)
+
+=== OFF-ROSTER ===
+  AGENT-1      running but NOT in roster.txt -- add the line or stop it deliberately
+  AGENT-2      running but NOT in roster.txt -- add the line or stop it deliberately
+  ATOM-3       running but NOT in roster.txt -- add the line or stop it deliberately
+  ok-1         running but NOT in roster.txt -- add the line or stop it deliberately
+
+=== HARNESS SELFCHECKS ===
+  H95_STUB_SELFCHECKALL_RAN
+rc=1
