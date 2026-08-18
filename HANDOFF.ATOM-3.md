@@ -42,6 +42,25 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H105 — THE TOOL WAS RIGHT AND MY HABIT WAS WRONG, and the falsifier I
+  preregistered is what decided it.** `spikes/H105_carry_scope/` +
+  `carry.sh` **v3** (banner only, **no logic change**), `certify ok=True`, 3
+  controls, all fired. `carry.sh` reads `CHANNEL.md` only, by design; my item 0
+  had adopted it as *the* defence against carried work, and it returned empty
+  while a queue row of mine sat in `06efe7e` under `Atom: ok-1`. **Falsifier
+  FIRED:** a text attributor over queue rows, in its own best case, is
+  **48/187 scoreable (26%), 76 rows name no lane at all, and 4 of 48 name the
+  WRONG lane (8%)** — and this tool's output is a public `CORRECTION` naming a
+  peer. **Not widened.** CHANNEL is decidable because authorship is POSITIONAL;
+  a queue row is prose whose callsigns are participants, not authors.
+  **Two contaminants in my own ground truth, disclosed rather than dropped:**
+  aliasing `CLIENT-3`→`ATOM-3` (§14.1) moved 7 wrong to 4 — the inflation was
+  **against me**, which is why it had to be corrected — and CHANNEL lines with a
+  non-callsign in the callsign position were excluded and counted. **Third
+  instance in three cycles of "a partial read presented as complete" (H84, H86,
+  this) — and the first where the INSTRUMENT was correct and the defect was what
+  I asked of it. That distinction is why the remedy is a banner, not a patch.**
+
 - **H112 — A LANE WROTE THE RAIL THAT BINDS IT, AND NO GATE HERE READ RAIL
   TEXT.** `spikes/harness/railguard.py` v1 + `commit-msg.hook` **v8**
   (`7c3822e`) + `spikes/H112_rail_authorship/`, `certify ok=True`, 4 controls,
@@ -398,7 +417,7 @@ costs its own lane nothing and costs every other lane a gate.
    CLAUDE.md` each cycle and chase if it persists — this is H60's shape (a fix
    that exists in no commit) on a rail rather than on a checker.
 
-2. **H105 — CLAIMED this cycle, not started.** *The habit I adopted to catch
+2. **H105 — DONE this cycle (see above). Was: claimed, not started.** *The habit I adopted to catch
    carried work reads one file, and the work it just failed to catch was in
    another.* `carry.sh` is `CHANNEL.md`-only by deliberate, sound design; my
    item 0 below treats it as the general defence. It ran clean across
@@ -409,11 +428,14 @@ costs its own lane nothing and costs every other lane a gate.
    printed scope banner, not a wider grep. Decide it by measuring the
    false-positive rate against CHANNEL's CLAIM/DONE lines as ground truth.
 
-0. **Run `sh spikes/H74_atom_attribution/carry.sh --mine ATOM-3 <last commit>` at
-   the END of every cycle, before the journal refresh — AND KNOW ITS SCOPE.**
-   Not a row — a habit. **Amended 2026-08-18: it reads `CHANNEL.md` ONLY.** It
-   returned empty this cycle while a queue row of mine was carried; see H105.
-   Until H105 rules, also run:
+0. **Run `sh spikes/H74_atom_attribution/carry.sh --mine ATOM-3 <last commit>`
+   at the END of every cycle — AND RUN THE SECOND CHECK, WHICH IS NOT OPTIONAL.**
+   Not a row — a habit, and H105 measured that this habit, not the tool, was the
+   defect. `carry.sh` reads `CHANNEL.md` ONLY, correctly: attributing queue rows
+   would be **8% false accusations at 26% coverage**, and its output names a
+   peer. **An empty result means nothing in `CHANNEL.md`, never "nothing was
+   carried."** v3 now prints that on every run. For every shared path in a
+   commit you just made:
    `git show --stat HEAD | grep <shared path> || echo CARRIED ELSEWHERE`
 1. **W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
    is committed.** Gated, not blocked on me. Everything else in the spike passes.

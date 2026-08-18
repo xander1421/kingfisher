@@ -1,5 +1,33 @@
 #!/usr/bin/env bash
-# carry.sh — H74, ATOM-3, 2026-08-17. The generator for the number.
+# carry.sh v3 — H74 (v1/v2), H105 (v3). ATOM-3.
+#
+# ==== v3, 2026-08-18, H105. THE DEFECT REMOVED (§12.7) =====================
+# DEFECT REMOVED: **THE TOOL'S SCOPE WAS CORRECT AND SILENT, SO THE HABIT BUILT
+# ON IT OVERSTATED IT AND A CLEAN RUN READ AS "NOTHING WAS CARRIED".** On
+# 2026-08-18 this returned empty across `197502d..HEAD` while a `WORK_QUEUE.md`
+# row of its own author sat in `06efe7e` under `Atom: ok-1` and a `livechat.log`
+# block sat in `0c1b297`. Nothing was wrong with the tool. `HANDOFF.ATOM-3.md`
+# item 0 had adopted it as THE end-of-cycle defence against carried work, and
+# CHANNEL.md is not that.
+#
+# THE SCOPE IS NOT WIDENED, AND THAT IS A MEASUREMENT, NOT A PREFERENCE
+# (`spikes/H105_carry_scope/`, `certify ok=true`, 3 controls, falsifier FIRED):
+# attributing WORK_QUEUE rows by their text, IN ITS OWN BEST CASE -- rows naming
+# exactly one roster callsign, with roster ground truth in CHANNEL --
+#
+#     48 of 187 rows scoreable (26%)   76 rows name no lane at all
+#     4 of 48 name the WRONG lane      = 8% FALSE ACCUSATIONS
+#
+# and this tool's output is a public `CORRECTION` line naming a peer. A checker
+# that misnames a lane 1 time in 12 is worse than one that stays silent. The
+# reason CHANNEL works is positional -- `CLAIM <id> <callsign>` -- so authorship
+# is READ; a queue row is prose, and the callsigns in it are PARTICIPANTS
+# ("not taken by ATTACKER-1", "ok-1's module"), not authors.
+#
+# So v3 changes no logic at all. It PRINTS ITS OWN SCOPE on every run, because
+# the failure was a silence being read as coverage.
+# Cites: file:spikes/H105_carry_scope/RESULT.md "falsifier"
+# ===========================================================================
 #
 # D6: a number without its generator does not exist. This produces the whole of
 # H74's result and nothing else; there is deliberately NO checker and no gate
@@ -92,6 +120,13 @@ pairs() {
 if [ "${1:-}" = "--mine" ]; then
   me=$(printf '%s' "${2:?usage: --mine <CALLSIGN> <since-rev>}" | lower)
   since=${3:?usage: --mine <CALLSIGN> <since-rev>}
+  echo "SCOPE: CHANNEL.md ONLY. This reads no other file (H105). It cannot see a"
+  echo "  carried WORK_QUEUE.md row, journal or livechat.log block -- measured,"
+  echo "  those are 8% false accusations at 26% coverage, so widening it would"
+  echo "  misname a peer 1 time in 12. Empty below means NOTHING IN CHANNEL.md,"
+  echo "  never 'nothing was carried'. For a shared path you just committed:"
+  echo "      git show --stat HEAD | grep <path> || echo CARRIED ELSEWHERE"
+  echo
   echo "lines you wrote that landed under another atom, since $since:"
   n=0
   for h in $(git log --format='%h' "$since..HEAD" -- CHANNEL.md); do

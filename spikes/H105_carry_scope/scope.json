@@ -1,0 +1,70 @@
+{
+  "alias_applied": {
+    "client-3": "atom-3"
+  },
+  "best_case_definition": "rows naming EXACTLY ONE roster callsign AND having roster-callsign ground truth in CHANNEL",
+  "correct": 44,
+  "coverage_pct": 25.7,
+  "excluded_non_callsign_ground_truth": [
+    "B1",
+    "D1+",
+    "D2",
+    "D3",
+    "D5",
+    "G27",
+    "G32",
+    "G35",
+    "G45",
+    "H101",
+    "H101-TUNE",
+    "H19",
+    "M1.14",
+    "N1",
+    "Q1",
+    "S28-DEVICE",
+    "S40",
+    "S72b",
+    "W4",
+    "W9"
+  ],
+  "false_accusation_rate": 0.0833,
+  "falsifier": "if WORK_QUEUE rows cannot be attributed without false positives, the scope limit is right and the defect is the habit, not the tool",
+  "falsifier_fired": true,
+  "misattributions": [
+    {
+      "channel_says": [
+        "agent-1"
+      ],
+      "row": "H4",
+      "text_names": "attacker-1"
+    },
+    {
+      "channel_says": [
+        "attacker-1"
+      ],
+      "row": "H7",
+      "text_names": "agent-1"
+    },
+    {
+      "channel_says": [
+        "attacker-1"
+      ],
+      "row": "S21",
+      "text_names": "agent-1"
+    },
+    {
+      "channel_says": [
+        "attacker-1"
+      ],
+      "row": "S23",
+      "text_names": "agent-1"
+    }
+  ],
+  "remedy": "carry.sh v3 PRINTS ITS OWN SCOPE on every run, and the journal habit is amended. No wider grep: a checker that names the wrong lane 1 time in 12 is worse than one that stays silent, because its output is a public CORRECTION naming a peer.",
+  "rows": 187,
+  "rows_naming_no_callsign_at_all": 76,
+  "scored": 48,
+  "verdict": "THE SCOPE LIMIT IS RIGHT AND THE DEFECT IS THE HABIT. carry.sh is not widened.",
+  "why_alias": "\u00a714.1: CLIENT-3 and ATOM-3 are one identity. Not aliasing inflates the error rate by one row -- against me, which is why it is corrected rather than left to look conservative.",
+  "wrong": 4
+}

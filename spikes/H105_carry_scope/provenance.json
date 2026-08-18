@@ -1,0 +1,186 @@
+{
+ "spike": "H105_carry_scope",
+ "recorded_utc": "2026-08-18T11:11:30Z",
+ "note": "dep spikes/H74_atom_attribution carries carry.sh v3, committed with this row; any residue is other lanes' and not mine to commit.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H74_atom_attribution",
+   "head": "e7673aa08404ac52fd6d644775a377c2ae6f1b30",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/H74_atom_attribution": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H105_carry_scope/scope.json",
+   "sha256": "a8f2757a88e3d06922332ccfa477b401bf03456de8ae761c35a3ff51fb03b08a",
+   "bytes": 1827,
+   "mtime": 1787051490,
+   "compared_ts": 1787051490,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "attribution_makes_false_accusations",
+   "must_fire_because": "the row turns on whether WORK_QUEUE rows can be attributed WITHOUT false positives; carry.sh output is a public CORRECTION line naming a lane, so a wrong attribution is an accusation against a named peer",
+   "can_fail_because": "if all 48 scored rows matched ground truth, the attributor is sound, carry.sh SHOULD be widened, and the defect would be the TOOL rather than the habit",
+   "null_must_contain": "a queue whose rows each name exactly their author, where the attributor would be 100% correct and the scope limit would be an unnecessary restriction",
+   "fired": true,
+   "detail": "4 of 48 best-case rows name the wrong lane (8%)",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "scored": 48,
+    "correct": 44,
+    "wrong": 4,
+    "false_accusation_rate": 0.0833,
+    "misattributions": [
+     {
+      "row": "H4",
+      "text_names": "attacker-1",
+      "channel_says": [
+       "agent-1"
+      ]
+     },
+     {
+      "row": "H7",
+      "text_names": "agent-1",
+      "channel_says": [
+       "attacker-1"
+      ]
+     },
+     {
+      "row": "S21",
+      "text_names": "agent-1",
+      "channel_says": [
+       "attacker-1"
+      ]
+     },
+     {
+      "row": "S23",
+      "text_names": "agent-1",
+      "channel_says": [
+       "attacker-1"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "best_case_covers_a_minority",
+   "must_fire_because": "a check whose best case reaches a minority of its subject cannot report completeness, whatever its accuracy on what it does reach",
+   "can_fail_because": "if rows naming exactly one callsign were the majority and few named none, coverage would not be the problem",
+   "null_must_contain": "a queue where most rows name exactly one lane, so coverage would be high and only accuracy would be at issue",
+   "fired": true,
+   "detail": "48 of 187 rows scoreable (26%); 76 name no lane at all",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rows": 187,
+    "scored": 48,
+    "coverage_pct": 25.7,
+    "rows_naming_no_callsign_at_all": 76,
+    "callsigns_mentioned_per_row": {
+     "0": 76,
+     "1": 55,
+     "2": 31,
+     "3": 12,
+     "4": 8,
+     "5": 5
+    }
+   }
+  },
+  {
+   "name": "channel_is_positionally_decidable",
+   "must_fire_because": "carry.sh's header claims CHANNEL is the one file where authorship is decidable with no false positives; that claim is load-bearing for the whole verdict and is checked rather than repeated",
+   "can_fail_because": "a high ambiguous count would mean CHANNEL cannot adjudicate and the whole measurement is unsound",
+   "null_must_contain": "a CHANNEL where ids routinely resolve to several callsigns, which would undermine the ground truth this row is scored against",
+   "fired": true,
+   "detail": "7 of 156 ids resolve to more than one lane",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ids_with_truth": 156,
+    "ambiguous_ids": 7,
+    "examples": {
+     "H9": [
+      "agent-2",
+      "atom-3"
+     ],
+     "H11": [
+      "atom-3",
+      "ok-1"
+     ],
+     "H20": [
+      "agent-1",
+      "ok-1"
+     ],
+     "H30": [
+      "agent-1",
+      "attacker-1"
+     ],
+     "H38": [
+      "attacker-1",
+      "ok-1"
+     ],
+     "H42": [
+      "agent-1",
+      "attacker-1"
+     ]
+    },
+    "non_callsign_ground_truth_excluded": [
+     "B1",
+     "D1+",
+     "D2",
+     "D3",
+     "D5",
+     "G27",
+     "G32",
+     "G35",
+     "G45",
+     "H101",
+     "H101-TUNE",
+     "H19",
+     "M1.14",
+     "N1",
+     "Q1",
+     "S28-DEVICE",
+     "S40",
+     "S72b",
+     "W4",
+     "W9"
+    ]
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/H74_atom_attribution": {
+   "newest": 1786987070,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if every scored row matched ground truth, the attributor is sound, carry.sh should be WIDENED, and the defect is the tool"
+}
