@@ -470,6 +470,27 @@ if [ -r "$installed_pc" ]; then
     *recordloss.py*) ok "the record-loss gate (H94) is wired into pre-commit" ;;
     *) bad "the record-loss gate (H94) is NOT wired into pre-commit" ;;
   esac
+  # H108. THE BYPASS PATH MUST RUN WHAT THE GATE RUNS. `commit_scoped.sh` is the
+  # §13 escape hatch for H72 -- another lane's tree state refusing your commit --
+  # and it reaches the same commit through `--no-verify`, so every check it does
+  # NOT run is a check that any lane can miss by taking the documented route.
+  # It named three modules while the gate ran four, and the commit that shipped
+  # the fourth went through it unjudged (0871533). Two independently-maintained
+  # lists of one set, which is H39's class; this is the thing that compares them.
+  cs="$ROOT/spikes/harness/commit_scoped.sh"
+  if [ -r "$cs" ]; then
+    n_absent=0
+    for c in $pc_checks; do
+      case "$c" in */*.py) ;; *) continue ;; esac
+      # The RUN, not the mention: a module named only in a comment is H63's
+      # fixture-reads-as-coverage defect, which this suite has already paid for.
+      grep -q "python3 $c" "$cs" || { n_absent=$((n_absent+1))
+        printf '  info  commit_scoped.sh does not RUN %s\n' "$c"; }
+    done
+    check "the §13 bypass runs every check the gate runs (H108)" "$n_absent" "0"
+  else
+    bad "no commit_scoped.sh to compare the gate's CHECKS list against (H108)"
+  fi
 else
   bad "no installed pre-commit to read a CHECKS list from (sh spikes/harness/install_hooks.sh)"
 fi

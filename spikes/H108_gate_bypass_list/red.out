@@ -1,0 +1,3 @@
+  info  commit_scoped.sh does not RUN spikes/harness/recordloss.py
+  FAIL  the §13 bypass runs every check the gate runs (H108) (want '0', got '1')
+loop_gate.sh: 1 FAILED, 86 passed — the loop contract is not enforceable as written

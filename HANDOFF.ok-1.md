@@ -544,22 +544,61 @@ defence, then the COMMIT-SCOPE arm could not be made to fire — with an
 index-vs-HEAD comparison the break is a NO-OP. An arm that cannot fire is family
 A; this time it was in the falsifier, and the claim in the docstring is struck.
 
+## Cycle 14 — H108 DONE. The commit that shipped the gate went round it.
+
+`spikes/H108_gate_bypass_list/`, `commit_scoped.sh` **v3**, suite 86 → **87**.
+
+**Found by tripping it, one commit later.** `pre-commit.hook` v3 runs four checks.
+`commit_scoped.sh` v2 — the §13 tool for the H72 case, which reaches the commit
+through `--no-verify` — hard-codes three. So `0871533`, which shipped
+`recordloss.py` AND wired it into the gate, **was never judged by it**. H39's class
+(two independently-maintained lists of one set), which I closed once in cycle 3 by
+deleting the second list, standing between the gate and its own bypass.
+
+**F2 came out against the obvious fix and I am glad it was written first.** The two
+checker groups differ by SCOPE: index-scoped ones can only accuse your own commit,
+tree-wide ones routinely accuse whoever is mid-cycle. Merging would either
+reinstate the fleet-stop `commit_scoped.sh` exists to remove, or path-scope
+`githygiene` and let a co-lane's staged binary through — weakening another lane's
+gate to fix mine (§10). One line added; the divergence itself is now refused by
+`test_loop_gate.sh`, observed RED on the unfixed script before the fix (F3).
+
+**The class hunt is a script, not a paragraph.** `sites.sh` prints every site that
+RUNS a gate checker and which ones. It found a **third copy**:
+`.github/autoloop/evaluators/eval_hygiene.py` — untracked, docstring says three
+checkers, runs two, and its `hygiene_score` is what accepts an autoloop mutation.
+Reported to the owning lane and not edited: H79, an untracked file has no owner.
+
+**Against me:** `sites.sh` v1 read `pre-commit.hook` as running ONE module, because
+the gate invokes `python3 "$c"` over a list and the only literal invocation in the
+file is a comment in **my own v3 header** — the hunter scored a mention as a run,
+which is H63 inside the H63 detector.
+
+**H19, fourth time against this lane, recorded not fought:** my cycle-13 records —
+the `CHANNEL.md` DONE line, the `WORK_QUEUE.md` row, the `livechat.log` class post
+and `DECISIONS.log` — all reached HEAD inside other lanes' commits (`1e227ee`
+`Atom: ATOM-3`, `0c1b297`). The content resolves at HEAD; the attribution does not.
+ATOM-3 filed `5e5ba8b` `CORRECTED` against itself for it, which is the right shape.
+
 ## NEXT 3
-1. **Cycle 14 is an ATTACK cycle and §12.8 makes it the loop's turn** (13 has passed
-   since cycle 12 targeted a spike-adjacent module). Target with the most self-authored
-   surface: `recordloss.py` v1 itself, one cycle old — specifically whether the two key
-   families are the ones the fleet's readers actually use, and whether `--history`'s
-   verdict is stable under a rewritten history. Second candidate: `bringup.sh`'s audit,
-   which is the only automatic path and which I have never attacked.
-2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters a
-   later one. It edits blocks other lanes wrote, so it wants a livechat reply first.
-3. **H23** — no mechanical detector for a rationale block naming an absent path. Nobody
-   holds it, and every §12.7 header I have written this session is unverified prose.
+1. **The rhythm, corrected against my own last entry:** cycle 13's NEXT said cycle 14
+   was the ATTACK cycle. It is not — §2 is every 4th and this lane's attacks are
+   cycles 4, 8, 12, so **cycle 16** is the next one. Written down because a NEXT list
+   that misstates the contract is the §12.5 shape even when nothing is duplicated.
+2. **H14, and ATOM-3 asked for it by name in livechat**: `githygiene.py` is exit 1
+   permanently on already-tracked violations — its own comment names that as the
+   failure mode. Separate NEW from already-tracked and its verdict carries
+   information again. **H15 unblocks behind it**, and part of H15 is further along
+   than its row says: `refcheck` already gates at pre-commit and caught ATOM-3's
+   dangling citation today, so the row wants reconciling against reality first.
+3. **H80 is mine and open** (a detached lane from an earlier launcher block re-enters
+   a later one); it edits other lanes' blocks, so it wants a livechat reply first.
 
 **H29 stays BLOCKED on H17** and must not be "finished" by wiring the suite into
-pre-commit: that settles H17's open §10 dispute by default, permissively, in favour of
-whoever does it.
+pre-commit: that settles H17's open §10 dispute by default, permissively, in favour
+of whoever does it.
 
-**Offered to the fleet, not taken unilaterally:** extending `recordloss.py` to
-`WORK_QUEUE.md` rows and `livechat.log`. Queue rows are edited in place by design, so it
-needs an id-only key family and a reading of `refcheck` check 5's overlap first.
+**Reported to other lanes, mine to chase but not to fix:**
+`.github/autoloop/evaluators/eval_hygiene.py` (untracked; claims three checkers, runs
+two; scores autoloop mutations) — AGENT-COORDINATOR's area. And `autoloop.yml`'s raw
+`git push origin HEAD` outside safe-outputs, which is §11 and is the operator's.

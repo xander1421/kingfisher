@@ -1,0 +1,5 @@
+SITE                                                 RUNS
+.github/autoloop/evaluators/eval_hygiene.py          refcheck journalcheck untracked
+spikes/harness/commit_scoped.sh                      refcheck journalcheck githygiene recordloss 
+spikes/harness/headcheck.sh                          refcheck 
+spikes/harness/pre-commit.hook                       refcheck journalcheck githygiene recordloss 

@@ -69,6 +69,31 @@
 #   sh spikes/H72_scoped_bypass/probe.sh     (C1-C3, C6)
 #   sh spikes/H72_scoped_bypass/attack.sh    (C7-C11, both directions)
 #
+# ==== v3, H108 (ok-1, 2026-08-18) — ONE DEFECT REMOVED ======================
+# THE BYPASS RAN THREE CHECKS WHILE THE GATE RAN FOUR. `pre-commit.hook` v3
+# added `recordloss.py` (H94) and this script's list -- hard-coded at the two
+# `python3 spikes/harness/...` lines below -- did not move. Every lane taking the
+# documented H72 route therefore skipped it, and the proof is `0871533`: the
+# commit that SHIPPED recordloss.py and wired it into the gate was itself never
+# judged by it. CLASS: two independently-maintained lists of one set with nothing
+# comparing them (H39, closed once in cycle 3 by deleting the second list).
+#
+# THE LISTS ARE NOT MERGED, AND THAT WAS A PREREGISTERED DECISION, NOT A
+# PREFERENCE. F2 of the H108 claim: if deriving the list from `pre-commit.hook`
+# cannot preserve the split this script exists for, the fix is a CONSISTENCY
+# CHECK and not a merge. It cannot. The two groups differ by SCOPE --
+# `githygiene`/`recordloss` read the INDEX and can only accuse your own commit,
+# while `refcheck`/`journalcheck` read the shared TREE and routinely accuse
+# another lane -- and nothing in a module's name says which it is. Running the
+# tree-wide pair strictly would reinstate the fleet-stop this script removes;
+# running the index-scoped pair leniently would let a co-lane's staged binary
+# through under path-scoping, weakening someone else's gate to fix mine (§10).
+# So: one line added here, and `test_loop_gate.sh` now REFUSES if the installed
+# gate's CHECKS block names a module this script does not run. Written before
+# the fix and observed red on it (`spikes/H108_gate_bypass_list/red.out`).
+# Cites: file:MISSION_LOOP.md "12.2"
+# ===========================================================================
+#
 # usage: sh spikes/harness/commit_scoped.sh <msgfile> <path>...
 # ===========================================================================
 set -e
@@ -84,6 +109,9 @@ for p in "$@"; do echo "    $p"; done
 
 echo "== githygiene.py (index-scoped, already correct) =="
 python3 spikes/harness/githygiene.py || { echo "REFUSED by githygiene" >&2; exit 1; }
+
+echo "== recordloss.py (index-scoped: HEAD vs the index, your paths only) =="
+python3 spikes/harness/recordloss.py || { echo "REFUSED by recordloss" >&2; exit 1; }
 
 echo "== commit-msg trailer gate, run DIRECTLY (this is what --no-verify drops) =="
 .git/hooks/commit-msg "$MSG" || { echo "REFUSED by commit-msg" >&2; exit 1; }
