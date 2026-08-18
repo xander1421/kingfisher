@@ -32,13 +32,50 @@ import subprocess
 import sys
 
 SEP = "\x1e"
-TRAILER = re.compile(r'^(Signed-off-by|Reviewed-By|Reviewed-by|Acked-by|Tested-by|Co-developed-by):\s*(.+?)\s*<',
+# Capture the EMAIL inside <>, not the display name before it. Switching the
+# author field to %ae while leaving this on the name put ONE entity type into
+# TWO key spaces: the same human appeared as person:<email> when they authored
+# and person:<name> when they signed off, so every trailer edge pointed at a
+# node no author edge ever touched. Entity count went UP by 9 instead of down,
+# which is the only reason it was noticed -- the graph would have looked fine.
+TRAILER = re.compile(r'^(Signed-off-by|Reviewed-By|Reviewed-by|Acked-by|Tested-by|Co-developed-by):\s*.*?<([^>]+)>',
                      re.M)
 FIXES = re.compile(r'^\s*Fixes:\s*([0-9a-f]{7,40})', re.M | re.I)
 
 
 def norm_person(s):
-    return 'person:' + s.strip().lower().replace(' ', '_')
+    """Identity keyed on EMAIL, not display name.
+
+    MEASURED on 3000 commits of stable-diffusion-webui: 214 distinct names
+    against 217 distinct emails, and keying on the name got both directions
+    wrong at once --
+      6 emails carried MULTIPLE names, so one person became several nodes
+        (automatic / automatic1111, logan / loganbooker,
+         chengsong zhang / continue-revolution)
+      9 names carried MULTIPLE emails, which is either one person split or two
+        people silently merged, and the name alone cannot tell you which.
+    ~7% of identities wrong on a small repo. The author node is a HUB in this
+    graph, so a wrong identity does not corrupt one triple, it corrupts every
+    edge through that person -- and link prediction is scored on exactly those.
+    At kernel scale (decades, address changes, thousands of contributors) it is
+    worse, not better.
+
+    Email is not perfect either: one human with two addresses stays two nodes.
+    That is a residual, and it is the SAFE direction -- splitting one person is
+    a missing edge, merging two people is a fabricated one.
+    """
+    e = s.strip().lower()
+    # An identity that is not an address is not an identity. Found 5 of these
+    # after the switch to %ae, including a node literally named `person:` --
+    # an EMPTY capture minted as a graph node, which is the e3b0c442 class in
+    # a different file: nothing errored, the triple count did not move, and the
+    # graph gained a hub that every malformed record pointed at. The other four
+    # were bare usernames with no @, so they would also silently collide with
+    # each other. Return None and let the caller drop the edge; a missing edge
+    # is recoverable, a fabricated hub is not.
+    if not e or '@' not in e:
+        return None
+    return 'person:' + e
 
 
 def subsystem(path, depth=2):
@@ -58,7 +95,7 @@ def extract(repo, max_commits):
     # than after them. \x02 terminates the body so the file list is unambiguous.
     # Collapsing these into one marker gave `authored: 1`: the whole log parsed
     # as a single record, and the counter still looked like a plausible number.
-    fmt = '\x1d' + SEP.join(['%H', '%an', '%B']) + '\x02'
+    fmt = '\x1d' + SEP.join(['%H', '%ae', '%B']) + '\x02'
     cmd = ['git', '-C', repo, 'log', f'--pretty=format:{fmt}', '--name-only', '--no-merges']
     if max_commits:
         cmd.insert(4, f'-n{max_commits}')
@@ -76,12 +113,20 @@ def extract(repo, max_commits):
         files = [l.strip() for l in filesblock.split('\n') if l.strip()]
 
         c = 'commit:' + sha[:12]
-        triples.append((norm_person(author), 'authored', c)); stats['authored'] += 1
+        who_a = norm_person(author)
+        if who_a:
+            triples.append((who_a, 'authored', c)); stats['authored'] += 1
+        else:
+            stats['dropped_bad_identity'] += 1
         for f in set(files):
             triples.append((c, 'touches', 'file:' + f)); stats['touches'] += 1
             triples.append((('file:' + f), 'under', subsystem(f))); stats['under'] += 1
         for role, who in TRAILER.findall(body):
-            triples.append((c, role.lower().replace('-', '_'), norm_person(who)))
+            p = norm_person(who)
+            if not p:
+                stats['dropped_bad_identity'] += 1
+                continue
+            triples.append((c, role.lower().replace('-', '_'), p))
             stats[role.lower()] += 1
         for tgt in FIXES.findall(body):
             triples.append((c, 'fixes', 'commit:' + tgt[:12].lower())); stats['fixes'] += 1
