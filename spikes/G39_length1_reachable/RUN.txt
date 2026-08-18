@@ -1,0 +1,39 @@
+==============================================================================
+G39 — does reaching length-1 move the arm, or is the ceiling MAX_POP?
+==============================================================================
+
+baseline  G17 exhaustive 2-hop  3,198 rules   MRR 0.063112   (C1 ok)
+
+C3: of every top-level unit in evo.py, the AST differs in ['mutate'] -> ok
+    if len(body) <= 2:
+    if len(body) <= 1:      # G39: was `<= 2`. contract may now reach length 1.
+    if len(body) < 2:       # G39: `randrange(1, 1)` RAISES. Reachable only
+    return None         # once contract can produce a length-1 body, so
+    # this guard is a no-op for every body the
+    # unwidened evo.py can hold. C3 reports it as one
+    # of the three changed lines rather than hiding it
+    # inside "the guards".
+    if len(body) < 2 or r in body:
+    if len(body) < 1 or r in body:   # G39: was `< 2`. The universal reject.
+split  train 191730  dev 41367  test 40818
+A15 planted 238,239=>240  1250 train edges, 550 dev conclusions
+
+  orig   seed 777    rules  53  MRR 0.026511  vs mined@53 0.012619  (2.10x)  planted 73/150  lengths {2: 51, 3: 2}
+  orig   seed 1234   rules  53  MRR 0.028170  vs mined@53 0.012619  (2.23x)  planted 70/156  lengths {2: 48, 3: 5}
+  orig   seed 31337  rules  54  MRR 0.026695  vs mined@54 0.012632  (2.11x)  planted 46/142  lengths {2: 48, 3: 6}
+  -> orig: median MRR 0.026695 [0.026511, 0.028170], lengths [2, 3], 0 length-1 rule(s)
+     A25 ablation on the SAME population: drop length-1 -> 0.026695   length-1 alone -> n/a
+
+  wide   seed 777    rules  47  MRR 0.027874  vs mined@47 0.011880  (2.35x)  planted 95/185  lengths {1: 5, 2: 41, 3: 1}
+  wide   seed 1234   rules  56  MRR 0.038554  vs mined@56 0.012735  (3.03x)  planted 59/193  lengths {1: 13, 2: 41, 3: 2}
+  wide   seed 31337  rules  61  MRR 0.035937  vs mined@61 0.013615  (2.64x)  planted 69/177  lengths {1: 10, 2: 49, 3: 2}
+  -> wide: median MRR 0.035937 [0.027874, 0.038554], lengths [1, 2, 3], 28 length-1 rule(s)
+     A25 ablation on the SAME population: drop length-1 -> 0.027112   length-1 alone -> 0.015878
+
+==============================================================================
+C4 instrument identity : orig arm 0.026695 vs G38's 0.026695, rules [53, 53, 54] vs [53, 53, 54] -> ok
+F1 widening helps      : wide 0.035937 vs G38 full 0.026695 -> did not fire
+F2 the edit is live    : 28 length-1 rule(s) in the widened arm -> did not fire
+   for scale, G34's length-1 class alone: 0.1572
+
+D6 Provenance Certified: ok=True

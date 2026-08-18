@@ -1,0 +1,232 @@
+{
+  "arms": {
+    "orig": {
+      "body_lengths_seen": [
+        2,
+        3
+      ],
+      "evaluated_rules": [
+        53,
+        53,
+        54
+      ],
+      "length1_rules": 0,
+      "median_mrr": 0.02669542335020429,
+      "median_mrr_length1_only": null,
+      "median_mrr_without_length1": 0.02669542335020429,
+      "mrr_range": [
+        0.026510576429377476,
+        0.02817033043722353
+      ],
+      "per_seed": [
+        {
+          "ablate_drop_length1": {
+            "mrr": 0.026510576429377476,
+            "rules": 53
+          },
+          "ablate_only_length1": null,
+          "body_lengths": {
+            "2": 51,
+            "3": 2
+          },
+          "dropped_planted": 73,
+          "evaluated_rules": 53,
+          "evolve_sec": 57.1,
+          "hits1": 0.010497819589396835,
+          "hits10": 0.05752364153069724,
+          "hits3": 0.02674065363320104,
+          "mrr": 0.026510576429377476,
+          "pop_size": 150,
+          "ratio_vs_size_matched": 2.1007838788236572,
+          "rejected_capped": 234,
+          "seed": 777,
+          "size_matched_mrr": 0.012619373509388403,
+          "unscorable_below_min_pairs": 5
+        },
+        {
+          "ablate_drop_length1": {
+            "mrr": 0.02817033043722353,
+            "rules": 53
+          },
+          "ablate_only_length1": null,
+          "body_lengths": {
+            "2": 48,
+            "3": 5
+          },
+          "dropped_planted": 70,
+          "evaluated_rules": 53,
+          "evolve_sec": 58.2,
+          "hits1": 0.01210250379734431,
+          "hits10": 0.06024303003576854,
+          "hits3": 0.028688323778725072,
+          "mrr": 0.02817033043722353,
+          "pop_size": 156,
+          "ratio_vs_size_matched": 2.2323081582667887,
+          "rejected_capped": 260,
+          "seed": 1234,
+          "size_matched_mrr": 0.012619373509388403,
+          "unscorable_below_min_pairs": 2
+        },
+        {
+          "ablate_drop_length1": {
+            "mrr": 0.02669542335020429,
+            "rules": 54
+          },
+          "ablate_only_length1": null,
+          "body_lengths": {
+            "2": 48,
+            "3": 6
+          },
+          "dropped_planted": 46,
+          "evaluated_rules": 54,
+          "evolve_sec": 59.7,
+          "hits1": 0.012310745259444363,
+          "hits10": 0.05509824097212014,
+          "hits3": 0.027402126512812975,
+          "mrr": 0.02669542335020429,
+          "pop_size": 142,
+          "ratio_vs_size_matched": 2.1133390552416715,
+          "rejected_capped": 269,
+          "seed": 31337,
+          "size_matched_mrr": 0.012631869592336439,
+          "unscorable_below_min_pairs": 7
+        }
+      ]
+    },
+    "wide": {
+      "body_lengths_seen": [
+        1,
+        2,
+        3
+      ],
+      "evaluated_rules": [
+        47,
+        56,
+        61
+      ],
+      "length1_rules": 28,
+      "median_mrr": 0.035936695919013925,
+      "median_mrr_length1_only": 0.015877559260528352,
+      "median_mrr_without_length1": 0.027111527320727913,
+      "mrr_range": [
+        0.027874139256011753,
+        0.038554142400013904
+      ],
+      "per_seed": [
+        {
+          "ablate_drop_length1": {
+            "mrr": 0.02712135839018483,
+            "rules": 42
+          },
+          "ablate_only_length1": {
+            "mrr": 0.004648860032916675,
+            "rules": 5
+          },
+          "body_lengths": {
+            "1": 5,
+            "2": 41,
+            "3": 1
+          },
+          "dropped_planted": 95,
+          "evaluated_rules": 47,
+          "evolve_sec": 60.0,
+          "hits1": 0.012592483708167965,
+          "hits10": 0.058956832769856436,
+          "hits3": 0.028431084325542654,
+          "mrr": 0.027874139256011753,
+          "pop_size": 185,
+          "ratio_vs_size_matched": 2.346400096956297,
+          "rejected_capped": 254,
+          "seed": 777,
+          "size_matched_mrr": 0.011879533798251001,
+          "unscorable_below_min_pairs": 7
+        },
+        {
+          "ablate_drop_length1": {
+            "mrr": 0.023152643974093563,
+            "rules": 43
+          },
+          "ablate_only_length1": {
+            "mrr": 0.024224901476186573,
+            "rules": 13
+          },
+          "body_lengths": {
+            "1": 13,
+            "2": 41,
+            "3": 2
+          },
+          "dropped_planted": 59,
+          "evaluated_rules": 56,
+          "evolve_sec": 60.5,
+          "hits1": 0.018631486109069527,
+          "hits10": 0.06658826988093489,
+          "hits3": 0.046560341026017936,
+          "mrr": 0.038554142400013904,
+          "pop_size": 193,
+          "ratio_vs_size_matched": 3.027436955760747,
+          "rejected_capped": 233,
+          "seed": 1234,
+          "size_matched_mrr": 0.012734911730086172,
+          "unscorable_below_min_pairs": 7
+        },
+        {
+          "ablate_drop_length1": {
+            "mrr": 0.027111527320727913,
+            "rules": 51
+          },
+          "ablate_only_length1": {
+            "mrr": 0.015877559260528352,
+            "rules": 10
+          },
+          "body_lengths": {
+            "1": 10,
+            "2": 49,
+            "3": 2
+          },
+          "dropped_planted": 69,
+          "evaluated_rules": 61,
+          "evolve_sec": 223.1,
+          "hits1": 0.017235043363222107,
+          "hits10": 0.06528982311725219,
+          "hits3": 0.03982311725219266,
+          "mrr": 0.035936695919013925,
+          "pop_size": 177,
+          "ratio_vs_size_matched": 2.639478003206721,
+          "rejected_capped": 247,
+          "seed": 31337,
+          "size_matched_mrr": 0.013615076873288647,
+          "unscorable_below_min_pairs": 4
+        }
+      ]
+    }
+  },
+  "baseline_g17_2hop_mrr": 0.0631122756859102,
+  "baseline_rule_count": 3198,
+  "c1_baseline_reproduces_g30": true,
+  "c3_only_mutate_differs": true,
+  "c4_orig_arm_reproduces_g38": true,
+  "changed_code_lines": [
+    "        if len(body) <= 2:",
+    "        if len(body) <= 1:      # G39: was `<= 2`. contract may now reach length 1.",
+    "        if len(body) < 2:       # G39: `randrange(1, 1)` RAISES. Reachable only",
+    "            return None         # once contract can produce a length-1 body, so",
+    "                                # this guard is a no-op for every body the",
+    "                                # unwidened evo.py can hold. C3 reports it as one",
+    "                                # of the three changed lines rather than hiding it",
+    "                                # inside \"the guards\".",
+    "    if len(body) < 2 or r in body:",
+    "    if len(body) < 1 or r in body:   # G39: was `< 2`. The universal reject."
+  ],
+  "differing_ast_units": [
+    "mutate"
+  ],
+  "f1_widening_does_not_help": false,
+  "f2_edit_inert": false,
+  "g34_length1_only_mrr": 0.1572,
+  "g38_full_median": 0.02669542335020429,
+  "seeds": [
+    777,
+    1234,
+    31337
+  ]
+}

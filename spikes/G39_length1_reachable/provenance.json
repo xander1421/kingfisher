@@ -1,0 +1,278 @@
+{
+ "spike": "G39_length1_reachable",
+ "recorded_utc": "2026-08-17T16:45:37Z",
+ "note": "G39: is the machinery search-limited or selection-limited?",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick",
+   "head": "6874d3eda6dd73d4cab62228a2a79b459e454673",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G24_population",
+   "head": "6874d3eda6dd73d4cab62228a2a79b459e454673",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G37_varlen_bodies",
+   "head": "6874d3eda6dd73d4cab62228a2a79b459e454673",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G38_evolved_on_yardstick",
+   "head": "6874d3eda6dd73d4cab62228a2a79b459e454673",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G24_population": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G37_varlen_bodies": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G38_evolved_on_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G39_length1_reachable/wide.py",
+   "sha256": "35cf7d1133ead7f12cf94e1105f49f91d0b3214e83ba3f0c9add13a5a24b4d86",
+   "bytes": 19241,
+   "mtime": 1786984579,
+   "compared_ts": 1786984579,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G39_length1_reachable/evo_wide.py",
+   "sha256": "f6da687a86d16e23d4965a19d0792b9785d2f4c2eca5bdcb28c72b153aa92d3e",
+   "bytes": 33089,
+   "mtime": 1786983972,
+   "compared_ts": 1786983972,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G39_length1_reachable/wide.json",
+   "sha256": "b50d2e8568f4163d8916df9468f9087e74d7d42b40cddb69617f9684f49312b0",
+   "bytes": 6857,
+   "mtime": 1786985137,
+   "compared_ts": 1786985137,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_baseline_reproduces_G30_through_this_evaluator",
+   "must_fire_because": "if the baseline drifts, no arm number here means what it says",
+   "can_fail_because": "a different confidence basis, split or filter index would move it while both arms stayed self-consistent",
+   "null_must_contain": "a G17 exhaustive baseline differing from 0.063112",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "baseline_mrr": 0.0631122756859102,
+    "g30": 0.063112
+   }
+  },
+  {
+   "name": "C2_planted_control_excluded_from_both_arms",
+   "must_fire_because": "a rule that scored well by learning the A15 plant would be a finding about the plant, not about FB15k-237",
+   "can_fail_because": "evo.dataset() injects 600 planted edges into train, so both populations genuinely can carry them",
+   "null_must_contain": "a planted predicate id >= npred reaching the evaluator",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "planted_rules_reaching_evaluator": 0,
+    "dropped_per_arm": {
+     "orig": [
+      73,
+      70,
+      46
+     ],
+     "wide": [
+      95,
+      59,
+      69
+     ]
+    },
+    "rules_checked": 324
+   }
+  },
+  {
+   "name": "C3_mutate_is_the_only_unit_that_differs",
+   "must_fire_because": "an ablation that changes more than it names cannot measure the named part (A25, earned in this lane on G24's no_death arm)",
+   "can_fail_because": "the widened file is a full copy of a 600-line module with 18 top-level units, so an edit to any constant, any other function, or the module body would appear here",
+   "null_must_contain": "a top-level unit other than `mutate` whose AST differs",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "differing_ast_units": [
+     "mutate"
+    ],
+    "units_compared": 18,
+    "changed_source_lines": [
+     "        if len(body) <= 2:",
+     "        if len(body) <= 1:      # G39: was `<= 2`. contract may now reach length 1.",
+     "        if len(body) < 2:       # G39: `randrange(1, 1)` RAISES. Reachable only",
+     "            return None         # once contract can produce a length-1 body, so",
+     "                                # this guard is a no-op for every body the",
+     "                                # unwidened evo.py can hold. C3 reports it as one",
+     "                                # of the three changed lines rather than hiding it",
+     "                                # inside \"the guards\".",
+     "    if len(body) < 2 or r in body:",
+     "    if len(body) < 1 or r in body:   # G39: was `< 2`. The universal reject."
+    ]
+   }
+  },
+  {
+   "name": "C4_unwidened_arm_reproduces_G38_exactly",
+   "must_fire_because": "if the unwidened arm does not return G38's numbers, this script changed something other than the guards and no between-arm difference means anything",
+   "can_fail_because": "this script rebuilt the evaluation loop around G38's helpers, so a different dedupe, drop or min_pairs step would move it while both arms stayed comparable",
+   "null_must_contain": "an orig-arm median differing from G38's 0.02669542335020429",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "orig_median": 0.02669542335020429,
+    "g38_median": 0.02669542335020429,
+    "orig_rules": [
+     53,
+     53,
+     54
+    ],
+    "g38_rules": [
+     53,
+     53,
+     54
+    ]
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_widening_to_length1_does_not_help",
+   "must_fire_because": null,
+   "can_fail_because": "the widened arm's median filtered MRR is <= G38's full median",
+   "null_must_contain": "a widened arm exceeding 0.02669542335020429",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "wide_median": 0.035936695919013925,
+    "orig_median": 0.02669542335020429,
+    "g38_full_median": 0.02669542335020429,
+    "g34_length1_only": 0.1572,
+    "wide_median_without_length1": 0.027111527320727913,
+    "wide_median_length1_only": 0.015877559260528352,
+    "paired_seed_deltas": [
+     [
+      777,
+      0.001364
+     ],
+     [
+      1234,
+      0.010384
+     ],
+     [
+      31337,
+      0.009241
+     ]
+    ]
+   },
+   "refutes": "reaching length-1 bodies raises the evolved arm toward G34's 0.1572",
+   "fires_when": "the widened arm's median filtered MRR is <= G38's full median",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_the_guard_change_is_inert",
+   "must_fire_because": null,
+   "can_fail_because": "the widened populations contain no body of length 1",
+   "null_must_contain": "a scored rule whose body has length 1",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "length1_rules_wide": 28,
+    "length1_rules_orig": 0,
+    "body_lengths_wide": [
+     1,
+     2,
+     3
+    ],
+    "body_lengths_orig": [
+     2,
+     3
+    ]
+   },
+   "refutes": "the widened guards actually produce length-1 bodies in practice",
+   "fires_when": "the widened populations contain no body of length 1",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G30_external_yardstick": {
+   "newest": 1786979491,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G24_population": {
+   "newest": 1786961573,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G37_varlen_bodies": {
+   "newest": 1786980852,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G38_evolved_on_yardstick": {
+   "newest": 1786983523,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "The widened arm exceeds G38's full median, and it does so because length-1 bodies it could not previously express survive selection",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
