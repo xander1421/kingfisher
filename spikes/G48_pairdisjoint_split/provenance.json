@@ -1,0 +1,174 @@
+{
+ "spike": "G48_pairdisjoint_split",
+ "recorded_utc": "2026-08-18T11:20:18Z",
+ "note": "G48: a split that cannot leak by construction, and the honest filtered MRR that comes off it. No knob, no threshold, nothing fitted to the answer.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
+   "head": "69155edd2464ef0c47845a19e5cda768e7ee6c71",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G36_repro_g34/length1_constants.json"
+   ],
+   "diff_sha256": "d6798cea5ed28a8914d9bcc49f53d2312f3c584a811cf523949e4517c73a955f",
+   "diff_bytes": 2060
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split/split.py",
+   "sha256": "2c0383ec5c7da61debddfa1f1b462395d97740d0f09a2d0296693f1fb20b7c83",
+   "bytes": 12504,
+   "mtime": 1787051909,
+   "compared_ts": 1787051909,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split/split.json",
+   "sha256": "558aca6b4063c23630bf75d97d1fc03f50685d41d5cd882083745810078d7104",
+   "bytes": 3649,
+   "mtime": 1787052018,
+   "compared_ts": 1787052018,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_detector_still_fires_on_the_original_split",
+   "must_fire_because": "the same-pair detector must still report the original split's leakage, or F1's zero is a blind detector rather than a clean split",
+   "can_fail_because": "the detector reporting 0 on a split G46 measured at 30%",
+   "null_must_contain": "a non-zero count, which is what the original split produces",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the same-pair detector reporting 0 on the ORIGINAL split, which would satisfy F1 for the wrong reason -- a detector blind everywhere (A15)",
+    "original_leak": 12249,
+    "original_leak_pct": 30.01
+   }
+  },
+  {
+   "name": "C2_test_sets_are_comparable_in_size",
+   "must_fire_because": "the two test sets must be comparable, or F2 compares sample sizes",
+   "can_fail_because": "a pair-disjoint test set far from 40,818 triples",
+   "null_must_contain": "an out-of-tolerance ratio, which unequal pair sizes could produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a pair-disjoint test set far from 40,818, which would make F2 a comparison of two sample sizes",
+    "n_test_original": 40818,
+    "n_test_pair": 40817,
+    "ratio": 1.0,
+    "tolerance": 0.1
+   }
+  },
+  {
+   "name": "C3_instrument_unchanged_on_the_original_split",
+   "must_fire_because": "the original arm must return the published figure, or this is not the instrument G34, G46 and G47 used",
+   "can_fail_because": "the original arm returning anything but 0.2648 / 0.3929",
+   "null_must_contain": "a differing figure: the literals come from G34/RESULT.md",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the original arm returning anything but 0.2648 / 0.3929, which would mean this is not the instrument G34, G46 and G47 used",
+    "mrr": 0.2648,
+    "hits10": 0.3929,
+    "published_mrr": 0.2648,
+    "published_hits10": 0.3929
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_pair_disjoint_split_still_leaks",
+   "must_fire_because": null,
+   "can_fail_because": "one or more test triples have a same-pair train edge",
+   "null_must_contain": "a non-zero leak, which C1 shows the same detector reports",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0
+   },
+   "refutes": "the instrument itself: a gate that does not gate is withdrawn",
+   "fires_when": "one or more test triples have a same-pair train edge",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_leak_free_split_matches_the_headline",
+   "must_fire_because": null,
+   "can_fail_because": "the leak-free split lands within 0.002 of 0.2648",
+   "null_must_contain": "a matching figure, which the original arm produces on this same run",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_pair_disjoint": 0.1358,
+    "mrr_original": 0.2648,
+    "g46_no_same_pair_proxy": 0.1503
+   },
+   "refutes": "G46's mechanism: that same-pair leakage is what carried 0.2648",
+   "fires_when": "the leak-free split lands within 0.002 of 0.2648",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_train_volume_confound",
+   "must_fire_because": null,
+   "can_fail_because": "the pair-disjoint train set differs from the original by over 5%",
+   "null_must_contain": "an out-of-tolerance ratio, which greedy group fill could produce",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_train_original": 190480,
+    "n_train_pair": 190480,
+    "ratio": 1.0,
+    "tolerance": 0.05
+   },
+   "refutes": "the right to read the drop as leakage rather than training volume",
+   "fires_when": "the pair-disjoint train set differs from the original by over 5%",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "newest": 1787050131,
+   "from": "spikes/G36_repro_g34/length1_constants.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "any same-pair train edge surviving in the pair-disjoint test set, which would mean the constructor does not do what it claims and the instrument is fiction"
+}
