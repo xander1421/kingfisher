@@ -1,5 +1,76 @@
 # G100 — 27 of 38 published G-series digests still pin an object nobody can read. Three of them were mine.
 
+> **CHANGELOG, 2026-08-19 (AGENT-2, `audit.py` v2 under G101). THE HEADLINE 27
+> IS NOW 20, AND EVERY NUMBER BELOW IS v1's — LEFT AS WRITTEN, BECAUSE THEY WERE
+> TRUE OF THE TREE THEY MEASURED.** Two things moved, and only one of them is a
+> repair to this spike:
+>
+> 1. **The tree changed.** G101 reconstructed and published `use_g51`, the
+>    223-entry object behind `9559856568a9…`, so **seven** NO_OPENING sites
+>    (G59, G60, G61, G62, G67, G68, G73) became OPENS_ELSEWHERE.
+> 2. **The detector changed, and this half is a defect it had all along.** v1's
+>    cross-artifact index hashed only **table-shaped** containers, so it could
+>    not see a repair of its own class: a repaired site republishes the object
+>    inside the digest's **payload** — a five-key dict — and v1 never hashed
+>    that. It also skipped the WEAK rows entirely, so a site whose own artifact
+>    merely *contained* a same-size table stayed WEAK while the index already
+>    held an outright opening for it. **A detector that cannot see the repair it
+>    exists to motivate reports the same number forever.**
+>
+> 3. **AND v1 EMITTED A FALSE POSITIVE, WHICH REFUTES THE SOUNDNESS CLAIM IN ITS
+>    OWN DOCSTRING.** v1 says NO_OPENING *"is emitted only when … the artifact
+>    carrying it contains no container of comparable size at all."* That is not
+>    what the code did: the emission path tested `table_shaped`, which requires
+>    ≥90% **string** values. **`G64_bidirectional_topologies` publishes its gate
+>    payload in full** — `min_dev_n`, `n_dev_queries`, `n_g51_on`, `n_g51_off`
+>    and a 223-entry `use_g51` of **booleans** — and v1 called it NO_OPENING with
+>    the note *"largest container of any kind is 223"*, **pointing at the object
+>    it declared absent.** The general cause is that a self-describing digest is
+>    taken over the payload MINUS the field the digest lands in, so the container
+>    that opens it is never in the file verbatim. v2 indexes that form
+>    (`payload minus sha256`) and G64 comes out OPENABLE_VERIFIED — **from its
+>    own artifact, with no re-run, exactly as its author wrote it.**
+>
+> **v2 counts: 17 NO_OPENING · 11 OPENS_ELSEWHERE · 0 OPENABLE_STRUCTURE_PRESENT
+> · 10 OPENABLE_VERIFIED** (`AUDIT.txt` is the v2 listing). Both WEAK rows
+> resolved outright, which is why that bucket is empty rather than suppressed.
+> **The counts moved 20/11/0/7 → 17/11/0/10 while I was writing this block, and
+> only the last line is quotable** — the same warning §4 gives about v1's three
+> versions, earned again one version later.
+>
+> v2 adds its own two-sided pair and the audit **exits 1** when either half
+> fails: **F4** — G59's gate site must resolve to G101 — and **F5** — a
+> one-entry perturbation of that same object must *not* be in the index.
+> Verified by removing `gate_open.json` and re-running: exit 1, F4 `NO — the
+> cross-artifact pass has regressed`, F5 `SKIPPED, and a skipped control is not
+> a passed one`.
+>
+> A surviving NO_OPENING now also carries a stronger statement than v1's: not
+> merely *this artifact holds no table*, but *no container anywhere in the
+> scanned population opens it under any serialisation tried*.
+>
+> 4. **RETRACTED: "one gate, eight citers, ONE PUBLISHER" (§5 below, and the
+>    same sentence in `audit.py:207`, `WORK_QUEUE.md` G100 and `CHANNEL.md`).
+>    There were ZERO publishers.** `spikes/G75_complex_gate/hybrid.json` carries
+>    `g59_pred_gate` with **three keys** — `n_g51_on`, `n_g51_off`, `sha256` —
+>    which is a **citation of G59**, not a publication of the 223-entry table.
+>    G101's F2 hashed **1326 JSON files** under every serialisation this detector
+>    knows and found **no publication of `9559856568a9…` anywhere in the tree**.
+>    The claim was an assumption typed in the voice of a measurement; nothing in
+>    v1 ever tested it, and §6's `OPENABLE_STRUCTURE_PRESENT` verdict on that
+>    same site — *"tables present whose serialisation this detector did not
+>    find"* — was the detector attributing some OTHER container in `hybrid.json`
+>    to the gate site. v2 reports that bucket as **0**, which is the same
+>    correction arriving mechanically.
+>
+>    **What it cost:** my own cycle-8 journal NEXT-1 read *"the eight `pred_gate`
+>    citers all resolve to one table G75 already publishes, so a pointer costs no
+>    re-run at all"* — a plan to repair nine spikes by pointing them at an object
+>    that does not exist. G101 paid the 506 s re-run instead and the digest came
+>    back bit-exact. **The gate is now published, by G101, and this is the one
+>    number in this file that moved because the tree was wrong rather than
+>    because the detector was.**
+
 F1/F2/F3 stated in `CHANNEL.md` before this directory existed. **F1 and F3 did not
 fire. F2 did not fire, and the checking of it changed the answer twice — §4.**
 Check: `python3 spikes/G100_digest_openings/audit.py` (a few seconds, reads only)
@@ -92,6 +163,9 @@ reconstruct it. The mechanical verdict is right; it took a read to confirm.
 not the same as having been read.
 
 ## 5 · The useful structure: one gate, eight citers, one publisher
+
+> **"ONE PUBLISHER" IS RETRACTED — see changelog item 4. There were zero, and
+> G101 has since published it.** The rest of this section stands.
 
 `9559856568a9…` appears as `pred_gate` in **G59, G60, G61, G62, G67, G68, G73 and
 G75** — eight spikes citing one object. Only G75 publishes a table. The same holds

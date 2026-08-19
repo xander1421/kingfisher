@@ -28,6 +28,20 @@ reported as one number.
   not discovered, so this says "an opening plausibly exists", never "the digest
   opens". It is NOT counted as clean in the headline.
 
+  v2, 2026-08-19 (AGENT-2, G101). DEFECT REMOVED: **the cross-artifact index
+  indexed only TABLE-SHAPED containers, so it could not see a repair of its own
+  class.** G101 opened `9559856568a9...` by publishing the 223-entry `use_g51`
+  table inside the digest's PAYLOAD -- a five-key dict whose sort_keys hash IS
+  the digest, which is the shape any correctly repaired site takes, since the
+  object is republished under the serialisation the digest was computed with.
+  v1's index skipped every container that was not itself a >=20-entry table, so
+  it hashed the 223-entry table and never the payload wrapping it, and the nine
+  G59-gate sites stayed NO_OPENING after the object had been published. A
+  detector that cannot see the repair it exists to motivate reports the same
+  number forever. v2 additionally indexes EVERY dict/list container under bare
+  sort_keys; a digest equal to such a hash is an opening by construction, so
+  this widens what is found without weakening what it means.
+
   Digests over FILES (`file_sha256/train.txt`, `artifacts[].sha256`,
   `*_emb_sha256`, `diff_sha256`) are OUT OF POPULATION. Their object is a file on
   disk, which is the normal pinning idiom and not this class. Excluding them is a
@@ -190,8 +204,16 @@ def main() -> int:
             rows.append((os.path.relpath(p, os.path.dirname(SPIKES)), dpath, digest[:12], verdict, note))
 
     # CROSS-ARTIFACT OPENINGS. A digest with no opening in its OWN artifact is
-    # not necessarily lost: eight spikes cite the same `pred_gate` digest and one
-    # of them publishes the table. So every table found anywhere in the G-series
+    # not necessarily lost: eight spikes cite the same `pred_gate` digest, so it
+    # can be published in a sibling. CORRECTED 2026-08-19 (AGENT-2, G101): this
+    # comment used to end "and one of them publishes the table", naming G75. It
+    # was never checked. G75's `g59_pred_gate` has THREE keys -- n_g51_on,
+    # n_g51_off, sha256 -- which is a citation, and G101's F2 hashed 1326 JSONs
+    # under every serialisation and found ZERO publications of that object. The
+    # sentence was an assumption written as a measurement, and it propagated into
+    # the WORK_QUEUE row, CHANNEL and a journal NEXT item that planned a
+    # re-run-free "pointer" to a table that did not exist. So every table found
+    # anywhere in the G-series
     # is hashed under every serialisation seen, and NO_OPENING sites are looked
     # up in that index. This is the difference between "unopenable" and
     # "unopenable from where it is published", and reporting the first when the
@@ -217,32 +239,65 @@ def main() -> int:
                     fm(v)
         fm(a2)
         for kind, size, obj in containers(a2, []):
-            if not table_shaped(kind, size, obj):
-                continue
+            # v2 (G101): EVERY container is indexed under bare sort_keys, not
+            # only table-shaped ones. A repaired site republishes the object
+            # inside the payload the digest was taken over -- a small dict --
+            # and v1 could not see it. Equality with a container's own hash is
+            # an opening by construction, so nothing here is heuristic.
             blobs = [("bare sort_keys", json.dumps(obj, sort_keys=True))]
-            for mn in dict.fromkeys(mins):
-                blobs.append((f"{{min_n={mn},choice}}",
-                              json.dumps({"min_n": mn, "choice": obj}, sort_keys=True)))
+            # v2 (G101): THE SELF-DESCRIBING PAYLOAD. G59, G64 and G101 all take
+            # the digest over the payload MINUS the field the digest lands in,
+            # so the container that opens it is never in the file verbatim --
+            # it is the file's container with one key removed. Without this,
+            # G64 published its own 223-entry object and this audit still called
+            # it NO_OPENING, pointing at the very container it declared absent.
+            if kind == "dict":
+                for hk, hv in obj.items():
+                    if is_hex64(hv):
+                        blobs.append((f"payload minus {hk}", json.dumps(
+                            {k: v for k, v in obj.items() if k != hk}, sort_keys=True)))
+            if table_shaped(kind, size, obj):
+                for mn in dict.fromkeys(mins):
+                    blobs.append((f"{{min_n={mn},choice}}",
+                                  json.dumps({"min_n": mn, "choice": obj}, sort_keys=True)))
             for reason, blob in blobs:
                 index.setdefault(hashlib.sha256(blob.encode()).hexdigest(),
-                                 (os.path.relpath(p2, os.path.dirname(SPIKES)), reason, size))
+                                 (os.path.relpath(p2, os.path.dirname(SPIKES)),
+                                  reason, size))
 
     for i, (f, dp, dg, v, note) in enumerate(rows):
-        if v != "NO_OPENING":
+        # v2 (G101): the WEAK verdict is looked up too. v1 skipped it, so a site
+        # whose own artifact merely CONTAINS a same-size table stayed WEAK even
+        # when another artifact opens the digest outright -- the strictly better
+        # answer was in the index and never read.
+        if v not in ("NO_OPENING", "OPENABLE_STRUCTURE_PRESENT"):
             continue
         full = [d for d in index if d.startswith(dg)]
         if full:
             where, reason, size = index[full[0]]
-            rows[i] = (f, dp, dg, "OPENS_ELSEWHERE",
-                       f"absent here, but re-derives from {where} "
-                       f"({size} entries, {reason})")
+            if where == f:
+                # v2 (G101): a hit in the row's OWN file is not an elsewhere.
+                rows[i] = (f, dp, dg, "OPENABLE_VERIFIED",
+                           f"re-derives from this artifact under '{reason}' "
+                           f"over {size} entries")
+            else:
+                rows[i] = (f, dp, dg, "OPENS_ELSEWHERE",
+                           f"absent here, but re-derives from {where} "
+                           f"({size} entries, {reason})")
+        else:
+            # v2 (G101): a surviving NO_OPENING now means MORE than "this
+            # artifact has no table". The index has tried every container in the
+            # population, bare and payload-minus-digest, so the note says what
+            # was actually searched instead of restating the local test.
+            rows[i] = (f, dp, dg, v, note + "; and no container anywhere in the "
+                       "scanned population opens it under any serialisation tried")
 
     order = {"NO_OPENING": 0, "OPENS_ELSEWHERE": 1,
              "OPENABLE_STRUCTURE_PRESENT": 2, "OPENABLE_VERIFIED": 3}
     rows.sort(key=lambda r: (order[r[3]], r[0]))
     counts = {v: sum(1 for r in rows if r[3] == v) for v in order}
 
-    print("G100 — G-series digests that pin an in-run SELECTION STRUCTURE")
+    print("G100 v2 — G-series digests that pin an in-run SELECTION STRUCTURE")
     print(f"population: {len(arts)} G-series JSON artifacts scanned, "
           f"{len(rows)} in-population digest sites")
     print("OUT OF POPULATION and NOT audited: digests over FILES "
@@ -265,7 +320,36 @@ def main() -> int:
     ok = bool(g88) and all(r[3] == "OPENABLE_VERIFIED" for r in g88)
     print(f"\nF3 control — the already-fixed G88 site: "
           f"{'OPENABLE_VERIFIED, detector encodes the property' if ok else 'NOT VERIFIED — DETECTOR VOID'}")
-    return 0 if ok else 1
+
+    # F4/F5, v2's own two-sided pair (G101). A widened index needs both halves:
+    # a KNOWN POSITIVE it must find, and a PERTURBATION it must not. Neither is
+    # a literal -- F4 fails if the cross-artifact pass regresses, F5 fails if the
+    # lookup ever matches loosely, and the perturbed digest is computed here from
+    # the same published object rather than typed in.
+    g59_rows = [r for r in rows if "G59_official_split/official.json/gate/sha256" in r[0] + r[1]]
+    f4 = bool(g59_rows) and all(r[3] == "OPENS_ELSEWHERE" and "G101_gate_opening" in r[4]
+                                for r in g59_rows)
+    print(f"F4 known positive — G59's gate site resolves to G101: "
+          f"{'yes' if f4 else 'NO — the cross-artifact pass has regressed'}")
+
+    f5 = True
+    try:
+        g101 = json.load(open(os.path.join(SPIKES, "G101_gate_opening", "gate_open.json")))
+        pay = dict(g101["payload"])
+        tbl = dict(pay["use_g51"])
+        victim = sorted(tbl)[0]
+        tbl[victim] = not tbl[victim]
+        pay["use_g51"] = tbl
+        perturbed = hashlib.sha256(json.dumps(pay, sort_keys=True).encode()).hexdigest()
+        f5 = not [d for d in index if d.startswith(perturbed[:12])]
+        print(f"F5 negative control — a one-entry perturbation of that same object "
+              f"is NOT in the index: {'yes' if f5 else 'NO — the lookup matches loosely'}")
+    except (OSError, KeyError, ValueError) as e:
+        print(f"F5 negative control — SKIPPED, and a skipped control is not a passed "
+              f"one: {e}")
+        f5 = False
+
+    return 0 if (ok and f4 and f5) else 1
 
 
 if __name__ == "__main__":

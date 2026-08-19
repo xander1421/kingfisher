@@ -1,70 +1,70 @@
-G100 — G-series digests that pin an in-run SELECTION STRUCTURE
-population: 174 G-series JSON artifacts scanned, 38 in-population digest sites
+G100 v2 — G-series digests that pin an in-run SELECTION STRUCTURE
+population: 177 G-series JSON artifacts scanned, 38 in-population digest sites
 OUT OF POPULATION and NOT audited: digests over FILES (file_sha256/*, artifacts[].sha256, *_emb_sha256, diff_sha256) — their
 object is a file on disk. NOT audited at all: S-, H-, M-, W-series.
 
   NO_OPENING                   spikes/G54_slice_gated_lift/slice_gated.json/gate/sha256  56441adaa442
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G54_slice_gated_lift/slice_gated.json/controls/C5_gate_frozen_before_test/sha256  56441adaa442
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G54_slice_gated_lift/slice_gated.json/controls/C5_gate_frozen_before_test/recomputed  56441adaa442
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G56_gate_null/gate_null.json/gate/sha256  12a58f76160a
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 18
-  NO_OPENING                   spikes/G59_official_split/official.json/gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 26
-  NO_OPENING                   spikes/G60_direction_gate/dir_gate.json/pred_gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 20
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 18; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G60_direction_gate/dir_gate.json/dir_gate/sha256  748bde7f7b10
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 20
-  NO_OPENING                   spikes/G61_lift_cap/lift_cap.json/cap/sha256  cd8cfe45b1e2
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 18
-  NO_OPENING                   spikes/G61_lift_cap/lift_cap.json/pred_gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 18
-  NO_OPENING                   spikes/G61_lift_cap/lift_cap.json/controls/C5_cap_hashed/sha256  cd8cfe45b1e2
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 18
-  NO_OPENING                   spikes/G62_head_analog/head_analog.json/pred_gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 18
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 20; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G63_head_analog/head_analog.json/gate/sha256  1d43d4576138
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 16
-  NO_OPENING                   spikes/G64_bidirectional_topologies/g64_results.json/gate/sha256  43ed5fb549bb
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 223
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 16; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G65_head_replace/replace.json/pred_gate/sha256  1d43d4576138
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 15
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 15; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G65_head_replace/replace.json/head_choice/sha256  6670401bde8a
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 15
-  NO_OPENING                   spikes/G67_head_aa/aa.json/pred_gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 22
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 15; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G67_head_aa/aa.json/head_choice/sha256  3a68ff18f3e7
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 22
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 22; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G67_head_aa/aa.json/controls/C5_select_mask/sha256  3a68ff18f3e7
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 22
-  NO_OPENING                   spikes/G68_body_filter/body.json/gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
-  NO_OPENING                   spikes/G73_head_select4/select.json/pred_gate/sha256  9559856568a9
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 22; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G73_head_select4/select.json/head_choice/sha256  6b16b2d9ad6d
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G73_head_select4/select.json/controls/C5_select_mask/sha256  6b16b2d9ad6d
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G74_analog_only_slice/slice.json/reconstructed_choice/sha256  6670401bde8a
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G74_analog_only_slice/slice.json/reconstructed_choice/expected_sha256  6670401bde8a
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G74_analog_only_slice/slice.json/pred_gate/sha256  1d43d4576138
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G74_analog_only_slice/slice.json/controls/C1_choice_sha/expected  6670401bde8a
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
   NO_OPENING                   spikes/G74_analog_only_slice/slice.json/controls/C1_choice_sha/observed  6670401bde8a
-                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28
+                                 no TABLE-SHAPED container (dict of string values, or list of pairs, >= 20 entries); largest container of any kind is 28; and no container anywhere in the scanned population opens it under any serialisation tried
+  OPENS_ELSEWHERE              spikes/G59_official_split/official.json/gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G60_direction_gate/dir_gate.json/pred_gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G61_lift_cap/lift_cap.json/pred_gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G62_head_analog/head_analog.json/pred_gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G67_head_aa/aa.json/pred_gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G68_body_filter/body.json/gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G73_head_select4/select.json/pred_gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G75_complex_gate/hybrid.json/g59_pred_gate/sha256  9559856568a9
+                                 absent here, but re-derives from spikes/G101_gate_opening/gate_open.json (5 entries, bare sort_keys)
+  OPENS_ELSEWHERE              spikes/G77_distmult_select/select.json/valid_select_three/sha256  17509ac9df1e
+                                 absent here, but re-derives from spikes/G75_complex_gate/hybrid.json (446 entries, {min_n=20,choice})
   OPENS_ELSEWHERE              spikes/G95_selector_null/selector_null.json/selector_sha256  f2e8f705f91d
                                  absent here, but re-derives from spikes/G88_5way_hybrid/result.json (446 entries, {min_n=20,choice})
   OPENS_ELSEWHERE              spikes/G96_selector_stability/stability.json/full_selector_sha256  f2e8f705f91d
                                  absent here, but re-derives from spikes/G88_5way_hybrid/result.json (446 entries, {min_n=20,choice})
-  OPENABLE_STRUCTURE_PRESENT   spikes/G75_complex_gate/hybrid.json/g59_pred_gate/sha256  9559856568a9
-                                 a TABLE-SHAPED container of 446 entries exists; serialisation not discovered (WEAK)
-  OPENABLE_STRUCTURE_PRESENT   spikes/G77_distmult_select/select.json/valid_select_three/sha256  17509ac9df1e
-                                 a TABLE-SHAPED container of 446 entries exists; serialisation not discovered (WEAK)
+  OPENABLE_VERIFIED            spikes/G61_lift_cap/lift_cap.json/cap/sha256  cd8cfe45b1e2
+                                 re-derives from this artifact under 'payload minus sha256' over 7 entries
+  OPENABLE_VERIFIED            spikes/G61_lift_cap/lift_cap.json/controls/C5_cap_hashed/sha256  cd8cfe45b1e2
+                                 re-derives from this artifact under 'payload minus sha256' over 7 entries
+  OPENABLE_VERIFIED            spikes/G64_bidirectional_topologies/g64_results.json/gate/sha256  43ed5fb549bb
+                                 re-derives from this artifact under 'payload minus sha256' over 6 entries
   OPENABLE_VERIFIED            spikes/G75_complex_gate/hybrid.json/valid_select_dir/sha256  17509ac9df1e
                                  re-derives under mix.py {min_n=20,choice} over 446 entries
   OPENABLE_VERIFIED            spikes/G75_complex_gate/hybrid.json/valid_select_pred/sha256  91977b73dfb9
@@ -80,11 +80,13 @@ object is a file on disk. NOT audited at all: S-, H-, M-, W-series.
   OPENABLE_VERIFIED            spikes/G98_pairdisjoint_null/pairdisjoint_null.json/selector_sha256  835f496ac674
                                  re-derives under mix.py {min_n=20,choice} over 474 entries
 
-   27  NO_OPENING
-    2  OPENS_ELSEWHERE
-    2  OPENABLE_STRUCTURE_PRESENT
-    7  OPENABLE_VERIFIED
+   17  NO_OPENING
+   11  OPENS_ELSEWHERE
+    0  OPENABLE_STRUCTURE_PRESENT
+   10  OPENABLE_VERIFIED
 
 OPENABLE_STRUCTURE_PRESENT is a WEAK verdict and is NOT counted as clean: it says an opening plausibly exists, never that the digest opens.
 
 F3 control — the already-fixed G88 site: OPENABLE_VERIFIED, detector encodes the property
+F4 known positive — G59's gate site resolves to G101: yes
+F5 negative control — a one-entry perturbation of that same object is NOT in the index: yes
