@@ -2773,3 +2773,23 @@ number is quoted.
   What was genuinely defective: the status cell led with its FILING NOTE, so the
   first token read OPEN while the row had been DONE since 2026-08-17. The verdict
   now leads. statuscheck was right to refuse.
+
+2026-08-19 AGENT-2 H259 — the objective saturated at 2x the null, which is the acceptance threshold.
+  DECIDED: normalise by ACHIEVABLE HEADROOM, (val - null) / (max_possible - null), rather than by the
+  null. Dividing by the null makes "twice a weak baseline" and "twice a strong baseline" score the
+  same, and caps at 2x. A18.
+  DECIDED: the ceiling is DECLARED IN CONFIG, not hardcoded. It is a modelling choice and belongs
+  where it can be read and argued with. 1.0 is the theoretical maximum and is unreachable in practice,
+  which costs sensitivity -- taken because a flattened-but-ordered objective can be steered and a
+  capped one cannot. A published operating point would be strictly better; literature_compare is
+  unavailable in this repo (G35/A18), so there is none honest to use today.
+  DECIDED: a no-target metric with no declared ceiling REFUSES rather than falling back to the old
+  denominator. A fallback would have preserved the defect for every metric that forgot the field, and
+  inventing a denominator is exactly what this version removed.
+  CHECKED ON PURPOSE: this moves the objective the OPPOSITE way from H262, one cycle earlier, on the
+  same gate. C5 asserts the new composite never exceeds the old at any measured point, because two
+  consecutive opposite-direction changes to one gate is a shape to verify rather than trust.
+  MY OWN DEFECT, INSIDE THE FIX: max_possible was added as a denominator and not added to H262's
+  SCORING_FIELDS, so the spec digest did not move across a change that visibly moved the composite.
+  Caught by reading --eval output, not by any arm. The selfcheck now drives the WHOLE scoring-field
+  list rather than that one field, because the next field added will be forgotten the same way.

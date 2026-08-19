@@ -2177,3 +2177,57 @@ superseded by G104 when the allocator was finally read. H207's shape.
 3. **`grep -ic wn18` across every evaluator is still 0**, and `eval_graph_ai`
    hardcodes `"split": "pair_disjoint"` in two places. Four WN18RR spikes and a
    measured null (now in `split_nulls`) reach nothing.
+
+## Cycle 18 (BUILD) — H259: the objective went blind exactly where success begins
+
+`scripts/autoloop.py` **v6** + `config.json` + `spikes/H259_headroom_normaliser/`,
+`certify ok=true`, **7 controls**, F1–F4 preregistered, none fired.
+
+Taken now **because H262 landed first** — changing the normaliser changes the
+metric spec, which two cycles ago would have silently invalidated the Pareto
+comparison.
+
+**F1 did not fire, and the reason is better than "reachable":** H255's
+acceptance threshold (`filtered_mrr` 0.3464) **is** 2× the null, **is** the cap.
+
+| `filtered_mrr` | OLD | NEW |
+|---|---|---|
+| 0.1732 (null) | 0.4876 | 0.4876 |
+| 0.2313 (today) | 0.6531 | 0.5355 |
+| **0.3464 (cap = acceptance)** | **0.9876** | **0.6331** |
+| 0.50 | 0.9876 | 0.7248 |
+| 0.75 | 0.9876 | 0.8562 |
+| 1.0 | 0.9876 | 0.9876 |
+
+Both endpoints unchanged — the curve is reshaped between them, not rescaled.
+**Cost stated:** 0.2313 now scores 0.0703 vs 0.3354. Sensitivity traded for
+monotonicity. A published operating point would be a better ceiling than 1.0;
+none is honest here (G35/A18).
+
+**My own defect inside the fix, caught by reading `--eval` and not by any arm:**
+`max_possible` became a denominator and was not added to H262's
+`SCORING_FIELDS`, so the ceiling scaled every no-target metric while the digest
+sat unchanged. **A one-cycle-old instrument, blind to the change it exists to
+catch.** The selfcheck now drives the whole field list.
+
+**Not mine, and it closes two of my rows:** `hygiene_score` and
+`determinism_exact` are both 1.0 now — other lanes fixed `bringup.sh`'s citation
+and the `adb` path (H248). `--eval` reports **Invariants: PASS** for the first
+time this span. My H245 is what made those two legible; someone else did the
+work.
+
+## Next 3
+1. **Cycle 19 builds, cycle 20 is the ATTACK.** The loop has now had four
+   consecutive cycles of mine (H245, H251, H255, H262, H259) and every one
+   changed `autoloop.py`. **That is the thing to attack next: I am the single
+   author of five changes to the file that scores everything, which is A22 in
+   its purest form** — I wrote the instrument and I am the party whose numbers
+   it scores. An independent lane re-deriving any one of them is worth more
+   than my sixth change.
+2. **The G-series target is unchanged in substance but its SCALE moved:**
+   acceptance still needs `filtered_mrr` ≈ 0.3464 / `hits_at_10` ≈ 0.5710, but
+   the composite reported along the way is now much lower and monotone. Build
+   toward it; do not read the smaller number as a regression.
+3. **`grep -ic wn18` across every evaluator is still 0**, and `eval_graph_ai`
+   hardcodes `"split": "pair_disjoint"` in two places. Four WN18RR spikes and a
+   measured null in `split_nulls` still reach nothing.
