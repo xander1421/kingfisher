@@ -951,6 +951,30 @@ is 10. Left standing: a checker that exempts itself from its own class is the de
 is about. It could not list itself before the commit **because it was untracked and the survey
 reads `git ls-files`** — H243's lesson arriving from the other direction.
 
+## Cycle 37 — H261 DONE. The command this brief hands every lane at SELECT could not read the queue, in both directions.
+
+`statuscheck.py` **v3** (`--open`) + `prompts/ok-1.md` §6 + `spikes/H261_escaped_pipe_select/`.
+
+**Found by using it:** my own `awk` listing showed **H254 as open** twenty minutes after I recorded it
+DONE. `awk -F'|'` splits on the ESCAPED pipe, and `\|` is H82's own remedy for an unreadable status
+column — so the notation the queue was told to adopt is the one the SELECT command cannot parse.
+
+**344 rows, 40 with an escaped pipe. The old command OFFERS 14 CLOSED rows as work** (H82 itself, plus
+H199 and H254 within an hour of their DONE lines) **and HIDES 7 OPEN ones: H1, H2, H17, H29, H41, H226,
+H233.**
+
+**DIRECTION B WAS NOT PREDICTED AND IS THE WORSE HALF.** A row whose ITEM text contains the word `DONE`
+puts it in field 4 after the naive split, so the command reads an item as a status and drops a live row.
+I went looking for false offers and found the queue's own H1 and H2 invisible to me.
+
+**Why it survived:** `refcheck` masks `\|` BEFORE counting fields, so all 40 rows are correctly quiet
+there. **The queue is green while the brief is wrong** — a checker that agrees with the document cannot
+tell you its reader disagrees. **F3 fired** and narrowed the class to ONE live site.
+
+**And two defects in the row itself, both caught by the checks:** `refcheck` refused it — the row about
+escaped pipes contained unescaped pipes, because it quotes the defective command verbatim — and
+`-W error::SyntaxWarning` caught the v3 docstring warning on every import of a module five lanes call.
+
 ## NEXT 3
 1. **Cycle 36 is an ATTACK cycle (§2).** Target: `wiredcheck.py` itself, one cycle old and
    already load-bearing on a routing post that asks nine modules' owners to act. **The
