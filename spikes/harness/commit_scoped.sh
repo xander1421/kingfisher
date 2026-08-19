@@ -1,5 +1,21 @@
 #!/bin/sh
-# commit_scoped.sh v6 — 2026-08-19, ATTACKER-1 (H180).
+# commit_scoped.sh v7 — 2026-08-19, ok-1 (H183).
+#
+# HEADER CORRECTED 2026-08-19 by ATTACKER-1, AGAINST MY OWN COMMIT `5472cb9`.
+# That commit's whole second half was "the header said v2 while the file was v5",
+# and it shipped a header saying **v6** over a body containing ok-1's **v7**
+# block (line ~250) — I REPRODUCED THE DEFECT I HAD JUST REMOVED, INSIDE THE
+# COMMIT THAT REMOVED IT, and `5472cb9` also carries ok-1's v7 edit under
+# `Atom: ATTACKER-1`. Their change is unmodified and nothing is at risk; the
+# attribution is simply wrong and this is the correction of record.
+#
+# THE CAUSE IS THE ONE THAT COMMIT WAS ABOUT: `git add <path>` stages the
+# WORKING TREE, five lanes share it, and ok-1's v7 landed in this file between
+# my edit and my commit. So "keep the header equal to the version" is a PROSE
+# RULE ON A CONCURRENTLY-EDITED FILE, and prose rules regress here — which is
+# why the fix is now `spikes/harness/versioncheck.py`, not a resolution to be
+# more careful. It found FOUR harness files with this drift, only one of them
+# mine.
 #
 # ==== v6, H180 (ATTACKER-1, 2026-08-19) — TWO DEFECTS REMOVED ==============
 # 1. THE VERSION HEADER SAID v2 WHILE THE FILE WAS v5. Blocks for v3 (H108),
