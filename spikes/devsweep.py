@@ -54,13 +54,64 @@ JOBS = [
 ]
 
 
+# EXPLICIT DEVICE SELECTION. Every adb call here was bare, which works only
+# while exactly one device is attached. The moment the emulator came up beside
+# the phone, `adb shell` started returning
+#     adb: more than one device/emulator
+# on stderr with EXIT CODE 0 -- so sh() reported success, the output was empty,
+# and a run would have scored every reproducer against nothing. That is the
+# empty-capture class with a new cause: not a probe that measured nothing, but a
+# probe that could not choose whom to measure and said so where nobody looked.
+#
+# KF_DEVICE pins a serial. With none set, prefer a PHYSICAL device over an
+# emulator, because they are not interchangeable: the emulator shares this
+# host and this ISA, so it is functional cover for the device chain and NOT a
+# second failure domain. Any quorum run using it must record `host` as shared.
+DEVICE = os.environ.get('KF_DEVICE', '')
+
+
+def _pick_device():
+    """Serial to target, chosen once and reported."""
+    out = subprocess.run(['adb', 'devices'], capture_output=True, text=True).stdout
+    serials = [l.split()[0] for l in out.splitlines()[1:]
+               if l.strip() and l.split()[-1] == 'device']
+    if not serials:
+        return ''
+    if DEVICE:
+        return DEVICE if DEVICE in serials else ''
+    phys = [s for s in serials if not s.startswith('emulator-')]
+    return (phys or serials)[0]
+
+
 def sh(cmd, **kw):
+    # Inject -s straight after the adb binary, before the subcommand.
+    if cmd and cmd[0] == 'adb' and _TARGET:
+        cmd = ['adb', '-s', _TARGET] + list(cmd[1:])
     return subprocess.run(cmd, capture_output=True, text=True, **kw)
 
 
+_TARGET = _pick_device()
+
+
 def thermal():
+    """Millidegrees, or -1 when the device exposes no thermal zone.
+
+    -1 IS NOT COOL. The emulator has no /sys/class/thermal/thermal_zone0, so
+    this returns -1, and every gate here is written `if t > THERM_LIMIT` --
+    which -1 never is. A device whose temperature CANNOT BE READ would sail
+    through a thermal gate that exists to refuse hot hardware. On the emulator
+    that happens to be harmless (no physical die to cook, no throttling to
+    corrupt a timing measurement) but the reasoning has to be stated, not
+    inherited from an arithmetic accident: the gate must know the difference
+    between "measured cool" and "cannot measure".
+    """
     out = sh(['adb', 'shell', 'cat', '/sys/class/thermal/thermal_zone0/temp']).stdout.strip()
     return int(out) if out.isdigit() else -1
+
+
+def thermal_applies():
+    """True only for a device that can actually report temperature."""
+    return thermal() >= 0
 
 
 def gate():
@@ -101,7 +152,11 @@ def run_job(job):
     """
     name, spike, binary, data, args, must, timeout = job
     t = thermal()
-    if t > THERM_LIMIT:
+    if t < 0:
+        # Stated, not silent: an unreadable sensor is reported as unmeasured
+        # rather than passed off as a cool reading.
+        pass
+    elif t > THERM_LIMIT:
         t = cool(COOL_TARGET)
         if t > THERM_LIMIT:
             return 'DECLINED', t, t, f'still {t}m after cooling'
