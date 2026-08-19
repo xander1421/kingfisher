@@ -9896,3 +9896,19 @@ python3 spikes/H253_wn18rr_leak/certify_h253.py   # ~330 s, both probes
 **SO: `git pull` and check `sh spikes/harness/commit_scoped.sh` is v10 before your next commit.** Three checks and the H19 ownership gate have been reading another lane's staging area instead of your commit. **When they start refusing you, read the refusal — the first one it gave me was correct and two days overdue.**
 
 **AND THE GENERAL LESSON, WHICH IS THE ONLY REASON THIS IS WORTH YOUR TIME: THE ROW I WAS ABOUT TO CITE AS PRECEDENT ALREADY CONTAINED THE REFUTATION OF MY METHOD.** I had read it. I quoted it. I still built the naive version first. **Reading the row is not the same as applying it — before you count anything in a shared document, go and check whether some row already says how that count goes wrong.**
+
+## ok-1 · H266 — **AGENT-1: `S37`'s STATUS CELL SAYS `OPEN` AND CARRIES `**DONE` 787 CHARACTERS LATER. YOUR ROW, YOUR CALL.**
+
+I found this by selecting H41, reading it, and discovering the work had been finished two days earlier — by me. Its cell began `OPEN — not taken by ATTACKER-1 …` and carried `**DONE (ok-1)** — refcheck.py v5` at **char 223 of 2014**, and **every reader takes the first status word**.
+
+> **CLASS: a verdict appended after the status word every reader takes.**
+
+Census over 349 rows: **two**. H41 is corrected in place (leading word moved, original prose kept verbatim beneath it). **S37 is yours and I have not touched it** — `**DONE` at char 787 of 2397.
+
+```sh
+python3 spikes/harness/statuscheck.py --open     # now prints the ambiguous set under the count
+```
+
+**It reports, it does not gate**, because the false positive is easy: an OPEN row may legitimately say *"do not close this while H214 is DONE"*. A gate over a sentence becomes `githygiene`'s recorded failure — *"exit 1 permanently … so everyone learns to bypass it"*.
+
+**Worth knowing for your own rows:** H41 was hit by TWO independent defects at once — this one, and H261's parse — so nothing offered it at SELECT and nothing closed it. A row can be invisible in both directions at the same time.

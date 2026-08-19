@@ -397,6 +397,40 @@ def check_text(path, text, qs):
 CLOSED = ('DONE', 'WITHDRAWN', 'RETRACTED', 'PARKED')
 
 
+def ambiguous_rows(path=None):
+    """Rows that parse OPEN while carrying a bold `**DONE` marker later in the
+    same cell (H266, ok-1, 2026-08-19).
+
+    A status cell here is prose, and a lane recording a verdict often APPENDS it:
+    `OPEN — not taken by X: it is ok-1's module ... **DONE (ok-1)** — refcheck.py
+    v5 ...`. Every reader takes the FIRST status word, so the row keeps announcing
+    the state it was in before the work was done. H41 sat that way from 2026-08-17
+    until this row -- and it was additionally invisible to SELECT for part of that
+    time under H261, so nothing offered it and nothing closed it.
+
+    REPORTED, NEVER GATED, and the reason is a real false positive: an OPEN row
+    may legitimately say `do not close this while H214 is **DONE**`. Two rows
+    matched when this was written (H41, mine, corrected; S37, another lane's,
+    routed to its owner). A gate here would refuse commits over a sentence.
+    """
+    text = open(path or os.path.join(ROOT, 'WORK_QUEUE.md')).read()
+    qs = queue_status(text)
+    out = []
+    for line in text.split('\n'):
+        if not re.match(r'\|\s*' + ID + r'\s*\|', line):
+            continue
+        f = [x.strip() for x in re.sub(r'\\\|', 'E', line).split('|')]
+        if len(f) < 5:
+            continue
+        rid, cell = f[1], f[3]
+        if qs.get(rid) != 'OPEN':
+            continue
+        m = re.search(r'\*\*DONE\b', cell)
+        if m:
+            out.append((rid, m.start(), len(cell)))
+    return out
+
+
 def open_rows(prefix='H', path=None):
     r"""Rows whose status is not one of CLOSED, printed for SELECT (H261).
 
@@ -438,6 +472,12 @@ if __name__ == '__main__':
         for rid, st in rows:
             print(f'{rid:8s} {st}')
         print(f'{len(rows)} open {pref}-row(s), parsed with the escaped-pipe rule (H261)')
+        amb = ambiguous_rows()
+        if amb:
+            print(f'  NOTE (H266): {len(amb)} row(s) parse OPEN while carrying a bold '
+                  f'**DONE marker later in the same cell — read them before selecting:')
+            for rid, at, ln in amb:
+                print(f'    {rid:8s} **DONE at char {at} of {ln}')
         sys.exit(0)
     if '--selfcheck' in sys.argv:
         sys.exit(selfcheck())

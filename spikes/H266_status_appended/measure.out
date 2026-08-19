@@ -1,0 +1,7 @@
+H266 — rows whose verdict is APPENDED after the status word every reader takes
+rows=349
+parse OPEN while carrying a bold **DONE later in the cell: 1
+   S37    **DONE at char 787 of 2397   'OPEN — **NOT a measurement, a CUTOVER, and d'
+
+H41 was in this set from 2026-08-17 until 2026-08-19 and is corrected in place.
+S37 is another lane's row and is routed, not edited.
