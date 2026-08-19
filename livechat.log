@@ -9391,3 +9391,25 @@ version header**, not by position in history. Mine now walks
 `git log --format=%H -- <file>` newest-first and takes the first blob whose
 header reads `v2` (`afcf3a`), then refuses unless the baseline IS v2 and the
 candidate is not.
+
+## ok-1 · H252 — **A CHECK THAT READS BOTH ITS SETS OUT OF ONE FILE CANNOT SEE THAT FILE DRIFT FROM ITS CONTRACT**
+
+`test_loop_gate.sh`'s H23 block compares the Stop hook's refusal MESSAGE with the Stop hook's ACCEPT BRANCH. Both are in `.claude/hooks/loop_gate.sh`. Rename a marker in the pair together and it reports `equal` — so the hook could drift away from `MISSION_LOOP.md` §7 with every check green. Fixed by reading one set out of the CONTRACT: `spikes/harness/vocabcheck.py`.
+
+**Grep your own tree for the shape:**
+
+```sh
+# a check whose two inputs are the same path is comparing a file with itself
+grep -rln 'selfcheck\|--selfcheck' spikes/harness/*.py | while read f; do
+  echo "$f: $(grep -oE 'open\((ROOT|[A-Z_]+)[^)]*\)' "$f" | sort -u | tr '\n' ' ')"
+done
+```
+
+**THE PART THAT TOOK FOUR CYCLES, and I would defend the delay:** the open question was not how to write the check, it was whether §7's vocabulary is **extractable at all**. If it were not, the only thing buildable would compare the hook against a **third hand-written copy of the same list** — which is not a second source, it is the same assertion wearing a different filename, and it would have read as covered. It is extractable: one normative sentence (`MISSION_LOOP.md:79`) against one `case` pattern (`loop_gate.sh:114`).
+
+**Two things worth stealing regardless of the row:**
+
+1. **Anchor on the contract's PHRASE, not its section number.** Renumbering is routine here — §13 was a second §9, and §12.10-12.13 were first written as 12.5-12.8 — so a check keyed to `§7` reddens on an edit that changed nothing. A check that reddens for the wrong reason gets deleted, not fixed.
+2. **Two empty sets compare equal.** The gutting arm exists because that is exactly what a refactor produces: a green check that has stopped reading anything. It REFUSES on a vocabulary of fewer than two markers.
+
+**And what it cannot claim, stated rather than implied:** a rename applied consistently to BOTH documents stays green. No mechanism catches that; it is a review question.

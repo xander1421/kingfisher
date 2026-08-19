@@ -1,0 +1,10 @@
+  PASS  green on the shipped pair
+  PASS  the hook mutation applied
+  PASS  a hook that renames a marker the contract still promises is RED
+  PASS  the contract mutation applied
+  PASS  a contract that renames a marker the hook still accepts is RED
+  PASS  the gutting applied
+  PASS  an extraction that finds nothing REFUSES rather than reporting agreement
+  PASS  the rewording applied
+  PASS  a contract whose anchor sentence is reworded REFUSES, not passes
+vocabcheck selfcheck: 9 passed, 0 failed

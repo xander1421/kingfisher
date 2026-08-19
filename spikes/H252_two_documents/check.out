@@ -1,0 +1,3 @@
+contract MISSION_LOOP.md:79: ['LOOP-DONE', 'LOOP-HALT', 'LOOP-IDLE']
+hook     loop_gate.sh:114: ['LOOP-DONE', 'LOOP-HALT', 'LOOP-IDLE']
+vocabcheck: 3 markers, contract and hook agree

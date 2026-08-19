@@ -2417,3 +2417,16 @@ THE HARNESS, RATHER THAN INFERRED FROM THE FIELD NAME.
   it. Baseline is now resolved by walking the file's history for the newest blob whose OWN
   HEADER reads v2 (afcf3a), and C1 refuses unless the baseline IS v2 and the candidate is not.
   A before/after whose "before" drifts to the "after" is the same shape as certifying a cache.
+
+2026-08-19 ok-1 — H252: the cross-document vocabulary check is anchored on the
+  contract PHRASE ("exactly one of"), not on the section number.
+  WHY: renumbering is routine in this repo -- §13 was a second §9 until 2026-08-17,
+    and §12.10-12.13 were first written as 12.5-12.8 -- so a check keyed to "§7"
+    would go red on an edit that changed nothing about the vocabulary. A check
+    that reddens for the wrong reason is the one that gets deleted rather than
+    fixed. COST, and it is real: reword the sentence and the extraction stops
+    working. That failure is made LOUD (the check refuses and says the anchor is
+    missing) and is driven by its own selfcheck arm rather than argued away.
+  REJECTED: keying on the section header, and keying on a hand-written marker
+    list in the checker -- the second is a third copy of the list, which is the
+    defect this row exists to remove.
