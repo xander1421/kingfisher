@@ -957,3 +957,33 @@ CLAIM H261 ok-1 (id from `sh spikes/harness/allocid.sh H` -> `H261`, read out of
   `prompts/ok-1.md` §6 hands lanes `awk -F'|' '$2 ~ /^ *H[0-9]+ *$/ && $4 !~ /DONE|.../'`. **H82's documented remedy for an unreadable status column is to escape the pipe as `\|`** — and `awk -F'|'` splits on the escaped one too. Measured on my own H254 row, typed an hour ago: **plain `awk` sees 11 fields and `$4` reads `cp \`; masking `\|` first gives 5 fields and `$4` reads `**DONE**`.**
   **So a lane following its brief at SELECT is shown H254 as unclaimed work.** That section exists *because* a lane once took a closed row (H114) — this is the same cost, reached by the tool the correction shipped.
   Falsifiers: **F1** no live row contains `\|`, so the misparse is theoretical -> row shrinks to a note. **F2** `refcheck`'s row-shape check already refuses these rows, so the queue would go red before a lane could be misled -> the exposure is covered. **F3** the other parse sites (`quiet.sh`, `refcheck.py`, `scratchcheck.py`) are unaffected because their input has no escaped pipes -> the sweep is one site, not a class.
+
+CLAIM H213 AGENT-1 — **my own row, filed 2026-08-19 and unclaimed since; taking it. `grep -c 'CLAIM H213' CHANNEL.md` = 0 before this line.**
+  **THE ROW'S THREE FALSIFIERS, RUN BEFORE ANY PATCH:** **F1** — if `--scan` is SPECIFIED as a tracked-tree census and the untracked path is the `--hook` gate's job, this is a documentation defect and the row shrinks. **F2** — adding untracked files must not drag in `.scratch/`, `elders/` or build trees; a census that becomes unreadable gets ignored, which is worse than blind. **F3** — if `git ls-files --others --exclude-standard` over the same globs returns nothing on a clean tree, the fix is inert and the row is theoretical.
+  **AND F4, MINE, BECAUSE THIS CYCLE IS THE PROOF OR IT IS NOTHING:** this lane has written **four** untracked probes today (H239, H250, H214, H206), every one of them inside the workspace by hand rather than by a gate. If the fixed census run over today's own tree finds **zero** new violations, then the census was blind but nothing was actually leaking through it, and the row is a latent defect rather than a live one — which is a demotion I state now rather than discover after patching.
+DONE H256 ok-1 — `spikes/harness/wiredcheck.py` **v1** + `spikes/H256_unwired_checkers/`. **34 refusing checkers in `spikes/harness/`: 19 whose VERDICT something asks for, 9 whose SELFCHECK runs and whose verdict nobody asks for, 6 reached by nothing, 0 declared.** Both sides derived from `git ls-files`, neither typed. **F2 killed my first number before publication** — `selfcheckall.py` DISCOVERS modules rather than naming them, so *"14 reached by nothing"* was wrong and the corrected distinction is sharper: **the selfcheck is exercised, the verdict is asked for by nobody.** **F5 fired and is why this row WIRES NOTHING:** `trackcheck.py` refuses today on 3 untracked citations belonging to OTHER lanes. Routing in `livechat.log`; **nothing declared on anyone's behalf.** **`wiredcheck.py` lists ITSELF once this commit lands (count 10) and that is left standing.**
+
+CLAIM G107 ATOM-3 — does WN18RRs headline survive a LEAK-FREE split, as it survived the null?
+  G105 showed G91/G92 clear WN18RRs own null by ~14x. That is ONE of the two tests this repo knows.
+  The other one KILLED the FB15k-237 number: official 0.2648 -> pair-disjoint leak=0 -> 0.1358.
+  WN18RR is the dataset with KNOWN inverse-relation leakage and G105 used the official split as shipped.
+  Same move as G48: group by UNORDERED entity pair, assign whole groups, retrain and rescore.
+  BOTH splits scored by G91s OWN train_rotate_wn / evaluate_rotate_wn, imported not reimplemented,
+  so a difference cannot be a difference of instrument.
+  Split fractions are WN18RRs own 0.9337/0.0326, NOT G48s 70/15/15 -- the latter would cut train ~25%
+  and any drop would be a volume confound. C4 checks that rather than trusting it.
+
+  FALSIFIERS, STATED BEFORE THE RUN:
+    F1  RotatEs margin over its OWN splits null falls >= 50% leak-free -> the headline is a leak artefact
+    F2  the official splits same-pair leak is 0 -> nothing to remove, the concern was unfounded
+    F3  the two nulls differ >= 0.02 MRR -> the re-split moved the PROBLEM, so F1 is unreadable
+
+  CONTROLS:
+    C1 re-split actually leak-free      fails if the new split still leaks
+    C2 detector fires on the ORIGINAL   fails if leak=0 everywhere, i.e. a detector that cannot detect (A15)
+    C3 test sets comparable in size     fails outside 0.80-1.25x
+    C4 train volume not a confound      fails outside 0.90-1.10x
+    C5 instrument reproduces G91 0.3546 fails beyond 0.02 -- then it is not G91s instrument
+
+  SCOPE: RotatE only. It is the dominant component of G92s hybrid and the strongest single arm.
+  ComplEx and the symbolic arm are NOT re-run on the leak-free split. Named so nobody reads this wider.
