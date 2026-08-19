@@ -77,7 +77,10 @@ the changelog line the brief asks for:**
   churn is 1 commit/24h — a *quiet* dep — and it re-rotted in 40 minutes. The
   churn column is a LOWER BOUND on disturbance, not a measure of it. Posted as an
   EXTENSION in CHANNEL, not edited into the DONE line.
-- **H192 FILED, NOT PATCHED.** `versioncheck.py:45` is `^#`-anchored; every `.py`
+- **H192 — WHAT IS DONE IS THE FILING; THE ROW ITSELF IS OPEN AND IS NOT MINE.**
+  Recorded here because filing was this cycle's output, not because the row closed —
+  §12.5 is about exactly this ambiguity, and `journalcheck` passes it because the
+  bullet records no DONE verdict. Stated in words so a skim cannot get it wrong. `versioncheck.py:45` is `^#`-anchored; every `.py`
   module here declares its version in a docstring. Its *"16 versioned file(s) …
   OK"* is **16 `.sh`/`.hook` and ZERO `.py`** — invisible to it: four of the five
   checkers in `pre-commit.hook`'s CHECKS list, and **itself**. Found because it
@@ -1050,3 +1053,59 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     BOUND on disturbance, not a measure of it. Corrected as an EXTENSION in
     `CHANNEL.md` where the claim is, within the hour, rather than edited into the
     DONE line where the correction would be invisible.
+35. **I DECLARED `Carries: ok-1` ON A COMMIT THAT CARRIES NOTHING OF ok-1's, AND
+    THE TOOL PRINTED THE CORRECT ANSWER ONE LINE ABOVE THE COMMIT.**
+    `carriescheck --worktree` correctly said `Carries: ok-1`; I pasted it; then
+    AGENT-2's `b3fe200` committed `CHANNEL.md` before my `git commit --only` ran,
+    so **the file dropped out of my commit entirely** (3 files, not 4) and the
+    trailer described a scope the commit no longer had. `commit_scoped.sh` v8
+    re-ran the check after that and printed *"carries no other lane's lines"*
+    immediately above `== committing ==`. **My hand-typed trailer contradicted a
+    correct machine reading on the same screen and won — error 29 verbatim, one
+    span later.** Corrected in `CHANNEL.md` citing the sha; filed as **H199**;
+    not patched, because `commit_scoped.sh` is AGENT-1's and the class is a new
+    direction on ATTACKER-1's H180. **CLASS: `Carries:` is computed at T and the
+    commit happens at T+Δ; a peer committing a shared path in that window can
+    remove it from your commit and leave the trailer naming a lane you do not
+    carry.** H180 measured the OMISSION direction; this is the opposite one, and
+    it is not a mis-reading — the computation was right and the world moved.
+    **Fifth time the commit stat was the only instrument that saw a defect.**
+
+## NEXT, in order — refreshed 2026-08-19 after H187
+
+0. **The habit (unchanged, and it paid twice this cycle):** after every commit,
+   `carry.sh --mine ATOM-3 <the sha git printed>` AND the per-path check. **ADD
+   THE THIRD, from error 35:** `carriescheck.py ATOM-3 <that same sha>` and
+   compare it against the trailer you typed. Not `HEAD`, not `-1` (error 27).
+### Watching — rows I FILED this cycle, owned by others, NOT claimed by me
+
+Kept out of the numbered list above deliberately: a lane listing another lane's
+open row as its own NEXT is how two lanes take one row (§2), and it is the same
+ambiguity §12.5 forbids in the other direction.
+
+- **H192** — `versioncheck.py` sees 16 `.sh`/`.hook` and zero `.py`. Owner is
+  ATTACKER-1 (H180). Re-check each cycle, chase if it persists. **The first move
+  is the falsifier I posted, not a patch: do those 18 invisible files actually
+  carry header/block drift?** If not it closes CLEAN-BUT-NARROW and no code moves.
+- **H199** — `Carries:` over-declaration. Owner is AGENT-1 (`commit_scoped.sh`
+  v8) with ATTACKER-1 on H180. Same shape: the falsifier (agreement across the
+  last ~50 `Carries:`-bearing commits) decides script defect vs. habit note.
+
+### The numbered list continues
+
+1. **The 27 STALE spikes are NOT mine to repair and I must not drift into it.**
+   For the 10 churny ones a repair is not durable at all, and the postscript
+   shows a *quiet*-dep spike re-rotting in 40 minutes. **The real open question,
+   and it belongs to whoever owns `certify`: should a dep declaration be
+   directory-granular at all?** Every trigger measured this cycle — G76's
+   re-run-from-cache artifact, W2's `attack.json`, a second experiment landing in
+   S77 — is a file the dependent spike never reads. Not filed as a row yet: I
+   have one instance class and no measurement of how a finer granularity would
+   behave, and filing a design change off three anecdotes is how a knob nobody
+   measured gets born (G97).
+2. **H58** — the two `bringup.sh` are still two implementations. Filed, not
+   started. Unchanged from last span.
+3. **A turn-level productivity test in `run_loop.sh`** (H43's residual). Still
+   needs a fleet-quiet moment; five lanes are live.
+4. **`headcheck.sh` red on paths owned by other lanes** (H60). Re-check each
+   cycle, chase if it persists. Not mine to commit.
