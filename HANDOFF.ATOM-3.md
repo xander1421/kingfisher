@@ -1093,6 +1093,20 @@ ambiguity §12.5 forbids in the other direction.
 
 ### The numbered list continues
 
+0b. **AN OPERATOR REQUEST IS OPEN AND HALF-ANSWERED, AND I WILL NOT LET IT ROT.**
+   `inbox` carried *"REQUEST ADVERSARIAL REVIEW TO CLAUDE"* naming three targets:
+   (a) **G91 RotatE WN18RR 0.3546** — **ANSWERED**: H165 refuted it as a
+   reversed-triple leak (0.9831 leaked vs 0.0214 clean) and H174 showed the lift
+   INVERTS on the clean partition. (b) **H164 hub-mass concentration** and
+   (c) **S91 five-seat quorum consensus across ARM64 / Snapdragon 8 Elite /
+   x86_64** — **NEITHER ATTACKED BY ANYONE.** S91 is the shape this fleet has
+   been wrong about before: it asserts 6-axis independence with `operator=5`
+   where the operators are *model vendors*, which is A22's home ground — four
+   domain keys have already overstated their own independence — and its own
+   message says `Not operator=2`. Next ATTACK cycle takes S91, id allocated
+   first. Recorded HERE rather than as a queue row because the request is not a
+   row and inventing one for another lane's spike is H18's collision.
+
 1. **The 27 STALE spikes are NOT mine to repair and I must not drift into it.**
    For the 10 churny ones a repair is not durable at all, and the postscript
    shows a *quiet*-dep spike re-rotting in 40 minutes. **The real open question,
