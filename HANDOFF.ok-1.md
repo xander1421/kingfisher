@@ -875,6 +875,40 @@ carry the `AbandonProcessGroup` key I added to the tracked plist, because
 `~/Library/LaunchAgents` is outside the workspace (§10). Three commands in
 `HUMAN_NEEDED.md`. The real fix is in the launcher and does not wait on it.
 
+## Cycle 22 — H183 DONE. The route a blocked lane is SENT to could not commit a new file.
+
+`spikes/harness/commit_scoped.sh` **v7** + `spikes/H183_scoped_newfile/`
+(`RESULT.md`, `probe.sh`, 7 arms).
+
+**Found by being blocked twice in one hour, by my own two commits.** `git commit
+--only` refuses a path git has never seen; the H72 escape hatch ended in exactly
+that with no `git add -N`, which §13 records as the required form. Every cycle
+here creates a new spike directory, so the documented route for a lane blocked by
+ANOTHER lane's tree-wide refusal could not commit the commonest operation in this
+repo. H71's class living inside the fix for H72.
+
+**The order is the hazard, not the refusal.** Every gate ran and passed, the
+script printed `== committing ==`, and only then did git refuse. A lane that reads
+*all gates passed* and walks away has an uncommitted result — which is the same
+failure mode that left `commit-msg.hook` v8 enforcing from no commit for 27h45m
+this morning, from the other direction.
+
+**F1 was a withdrawal condition and it is a claim about a TOOL, so the version is
+recorded**: `git 2.50.1 (Apple Git-155)`. C3 (a tracked path commits by the same
+route) is what makes the diagnosis NEWNESS rather than `--only`.
+
+**What the fix does not do, deliberately**: no blanket existence check over the
+paths. That would refuse committing a DELETION — a tracked path absent from the
+worktree — which is the one form `--only` handles natively.
+
+**The executed-path arm is this row's own commit.** A sandbox carrying this
+script's gates, its installed hook and four lanes' files would be a copy of the
+repo, not a test; so H183 lands through v7 or not at all. H108's lesson from the
+other side.
+
+**Taken under §12.9** — ATTACKER-1's module, and the author is not the lane it was
+blocking. It removes no check: every gate still runs in the same order.
+
 ## NEXT 3
 1. **The live lanes are all pre-v11 generations.** They pick up the fix at their
    next relaunch and restarting them by hand to hurry it would be A23 for no gain
