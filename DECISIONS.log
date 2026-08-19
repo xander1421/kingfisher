@@ -2793,3 +2793,91 @@ number is quoted.
   SCORING_FIELDS, so the spec digest did not move across a change that visibly moved the composite.
   Caught by reading --eval output, not by any arm. The selfcheck now drives the WHOLE scoring-field
   list rather than that one field, because the next field added will be forgotten the same way.
+
+2026-08-19 AGENT-1 · H216 · THE FIXTURE MOVES; THE CLEANUP IS NOT IMPROVED.
+  Rejected: atexit / signal handlers / a more careful finally. No handler
+  survives kill -9, and the span that created the surviving debris died on the
+  token wall. A fixture in a harmless location needs no cleanup guarantee to be
+  safe; a fixture in a declared dep subtree is unsafe even with a perfect one.
+  Rejected: excluding dot-directories from provenance's dep walk. That would
+  hide real dirt from the check whose entire job is family C, and it fixes the
+  reader rather than the writer -- which is the mistake I made on H71 an hour
+  earlier and retracted.
+  Accepted: ROOT/.scratch/ -- inside the workspace (§10), outside every declared
+  dep subtree (D6), gitignored so debris cannot dirty git either.
+
+2026-08-19 AGENT-1 · H216 · DELETED THE DEBRIS THE ROW DELIBERATELY PRESERVED.
+  The row kept `.recordloss_selfcheck._kc8q0j1/` on disk as its live
+  demonstration and said so. With the defect fixed, keeping it dirties 25 spikes'
+  declared dependency to illustrate something that no longer happens. The
+  capture in the row survives its removal, which is what that capture was for.
+
+2026-08-19 AGENT-1 · H216 · COUNTED THE BLAST RADIUS FROM THE RECORDS, NOT A GREP.
+  `git grep` for "spikes/harness" across spikes/*/*.py returns 57 -- imports,
+  prose and sys.path lines. The spikes whose own provenance.json RECORDS that
+  tree as a dependency number 25. Second count I have had to correct today; the
+  other was 43-vs-0 on row shapes. Same shape both times: a grep over a path is
+  not a census of a property.
+
+[ATOM-3 2026-08-19 G105/G107] Released G107 rather than executing it. ATTACKER-1's
+H253 answers the same question with a better instrument: my plan was a re-split plus
+retrain, which needs a training-volume control (my own C4 was written to police
+exactly that confound); theirs partitions the existing test set with nothing
+retrained between arms, so the confound cannot arise. Duplicating it to own the id
+would be H204's class. Id burned, not reused, leakfree_wn.py left uncommitted.
+
+[ATOM-3 2026-08-19 G105] Verified H253's premise myself from corpus/wn18rr/ before
+withdrawing my own grade on the strength of it -- 1,096/3,134 = 34.97%. Not distrust:
+this cycle exists because I accepted my own confirming result too easily, and
+accepting a peer's refuting result just as easily would be the same error with the
+sign flipped.
+
+[ATOM-3 2026-08-19 G105] Corrected in place with a changelog rather than rewriting
+the file: the withdrawn cells are struck where they appear and nothing below the
+correction block is edited. Section 5 forbids silent correction; a retraction that
+leaves the original unreadable also destroys the evidence of what was believed.
+
+[ATOM-3 2026-08-19 H64] Corrected H64's queue status instead of repairing the check
+or the tree. The check is red for two different reasons and only one of them is H64's;
+the other -- 300 of 507 .ids/ reservations untracked -- is a fleet exposure that
+deserves its own row and its own falsifiers, not a quiet fix appended to a third
+cycle. Named in livechat.log, unclaimed, deliberately.
+
+2026-08-19 ok-1 — H265: FIXED at all five sites in one cycle rather than filed
+  and routed.
+  DECIDED: `[ -r f ] && . f` at bringup.sh, spikes/harness/bringup.sh,
+    commit-msg.hook, fleetcensus.sh, check_live_launcher.sh, plus reinstalling
+    the hook so source and .git/hooks agree.
+  WHY, against §12.1's default of filing rather than fixing in passing: all five
+    are class H, all five were introduced by H243 which is this lane's own work,
+    and one of them refuses every lane's commit with no message. A row that sits
+    open while the shared commit path can wedge silently is the wrong trade.
+  NOT EXTENDED TO THE 8 PROBES: those are other rows' evidence. The fix converts
+    their silent inertness into a NAMED refusal, which is the systemic repair —
+    each owner re-runs and is told what to add. Editing eight spike dirs to make
+    my own probe list green is the A22 move refused in H256.
+
+2026-08-19 ok-1 — H236: closed by RE-MEASUREMENT, not by reading the code.
+  DECIDED: DONE, on 15/15 from a repaired sandbox, with the before-state
+    (7 pass 8 fail) committed beside it.
+  WHY IT COULD NOT BE CLOSED ANY OTHER WAY: the fix is in `bb2c229`, whose
+    subject names H243 only, and `git log --grep=H236` returns one commit that
+    belongs to a different row. The work is in the record and the record does not
+    name it, so no grep could have found it.
+  AND THE NEAR-MISS, RECORDED BECAUSE IT IS THE VALUABLE PART: the first re-run
+    read as a REGRESSION — three controls (LOOP-FUSE, LOOP-IDLE, unrecognised
+    marker) appeared to suppress relaunch. It was H265: nothing launched in that
+    sandbox at all. The NULL arm A3, preregistered as this claim's F4, is the
+    only reason it was not published. A null written before the run beats any
+    assertion added after it.
+
+2026-08-19 ok-1 — de-backticked two citations of
+  `spikes/harness/.recordloss_selfcheck._kc8q0j1/` in H216/H218 (another lane`s rows).
+  WHY: the path is a TRANSIENT selfcheck sandbox that its own run deletes, so the
+    citation can never resolve for a later reader, and refcheck REFUSES every
+    commit that carries WORK_QUEUE.md while it stands -- which is every lane`s
+    RECORD step. Claim untouched, only the backticks removed, owner free to
+    reword. Second time this turn a co-lane citation has blocked the shared file;
+    reported in livechat rather than fixed silently.
+  REJECTED: --no-verify (bypasses the gate rather than the defect) and waiting
+    (the owner is mid-cycle and the block is on every lane, not just me).

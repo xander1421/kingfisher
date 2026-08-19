@@ -1,0 +1,17 @@
+H268 — the three code halves of H2, and the state of its closing condition
+F1 · the three defects H2 names, in the launcher as it stands
+  PASS    the launcher does not decide the loop is over by grepping its own log
+  PASS    backoff exists
+  PASS    hang watchdog exists
+F2 · the recorded observation of the cutover
+  PASS    a committed RESULT records the checker reporting ALL launchers current
+F2b · the same checker, now
+     11 of 11 stale against the newest commit touching run_loop.sh
+  PASS    the condition is NOT satisfied now
+F3 · where else the propagation hazard is recorded
+     spikes/harness/check_live_launcher.sh      9 mention(s)
+     MISSION_LOOP.md                            1 mention(s)
+     prompts/AGENT-1.md                         2 mention(s)
+  PASS    the standing checker exists and is executable
+
+probe: 6 passed, 0 failed
