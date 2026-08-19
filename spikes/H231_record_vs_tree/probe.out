@@ -1,0 +1,9 @@
+H231 probe — arms and their PREREGISTERED predictions in RESULT.md
+
+  FIRED         F1a real checker refuses with empty stdout: rc=2 stdout='' stderr[:40]='journalcheck: REFUSE -- no WORK_QUEUE.md'
+  FIRED         F1b v2 published CLEAN for it, v3 does not: v2=CLEAN v3=VIOLATED
+  did not fire  F3 githygiene had the hole too: v2 escalated it at the call site; v3 rule gives VIOLATED
+  did not fire  F4 refcheck gates on a marker v3 cannot parse: stdout markers=['KNOWN', 'UNRESOLVED'] unhandled=[]
+  did not fire  F5 v3 moved the live verdict: verdict=NOT_MEASURED score=0.0 dirty=1186 violations=[{'checker': 'refcheck', 'path': 'spikes/harness/bringup.sh', 'in_record': False}]
+
+summary: F1a=FIRED F1b=FIRED F3=no F4=no F5=no

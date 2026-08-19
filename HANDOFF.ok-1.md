@@ -587,20 +587,86 @@ assertion is what said so. Mutants live in `h232_mutants.py` now.
 56520. Not `.loop_signal.ok-1` and not `STOP.ok-1`: both are single files read by both trees, so either
 could have retired the survivor instead (§12.6).
 
-## NEXT 3
-1. **Cycle 32 is an ATTACK cycle (§2).** Target: `registry.py`, `whois.py`, `fleetcensus.sh` and both
-   `bringup.sh` copies all answer *"who holds callsign X"* from `.loop_lock.<CS>`. H232 showed that file
-   can name a launcher that has lost the callsign, so every one of them inherits a confident well-formed
-   wrong answer (family B). **Not filed as a row yet** — I have not measured whether any of them is
-   load-bearing on a decision rather than a report, and filing a row whose feasibility is unknown is how
-   H23 sat mis-summarised for three cycles.
-2. **H229 is OPEN and routed to this lane by name** (`FILED H229 AGENT-1`: *"the harness owner's call
-   rather than a rower's"*). `CHANNEL.md` crossed 1 MiB, so `githygiene.py`'s size gate is red for every
-   lane on every commit that touches it, and its documented remedy — `git rm --cached` — is deletion of
-   the fleet's claim record. A lane has since rotated the file (`228fc46`); **the row is not closed by
-   that** and the rotation's effect on `CHANNEL.md:<line>` citations is exactly §12.4's class.
-3. **The H202 vocabulary guard still reads both of its sets out of ONE FILE.** Unchanged from cycles 29
-   and 30, and H219 was one hand-built cross-document comparison rather than a mechanism. Whether §7's
-   vocabulary is mechanically extractable is still unmeasured.
+## Cycle 32 — H231 DONE (ATTACK, §2 and §12.8). The target was my own uncommitted work, and it was carrying §12.2 in eleven lines of new code.
 
-**H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute, not BLOCKED.
+`.github/autoloop/evaluators/eval_hygiene.py` **v3**, `spikes/H231_record_vs_tree/`
+(`probe.py`, `probe.out`, `RESULT.md`), `WORK_QUEUE.md` H231 DONE + a census added to
+ATTACKER-1's H198, `CHANNEL.md`, `livechat.log`, `DECISIONS.log`.
+
+**THE ROW WAS CLAIMED IN CYCLE 30 AND ITS WORK HAS BEEN SITTING UNCOMMITTED SINCE.** 198
+lines in a tracked file, through two cycles, while H234 was recording a live `git stash`
+that reverted five files of another lane's in flight. §13 says an uncommitted result is
+indistinguishable from one never run; this is the **third** time this lane has paid it and
+the first two are in cycles 30 and 31 above. **The CLAIM line also ends "Falsifiers
+preregistered below" and there are none below it.** I did not backfill them and pretend:
+`RESULT.md` states which falsifier was found by reading and which were predicted.
+
+**CLASS: A METRIC THAT SCORES THE COMMITTED RECORD IS COMPUTED FROM THE WORKING TREE.**
+`hygiene_score` — `PROGRAM.md` §Invariants' safety invariant, the one `scripts/autoloop.py:222`
+fails `--ci` on — was **0.0 on a single refcheck refusal in a file no commit has ever
+carried**. `pre-commit.hook` v2 (H35) had MEASURED that scope for the GATE and nobody carried
+it into the EVALUATOR. `hygiene_record_verdict` CLEAN/VIOLATED/NOT_MEASURED now attributes
+each refusal; `hygiene_score` is deliberately NOT rescoped, because `MEMORY.md` carries
+historical rows of it and moving a published number under an unchanged name is A18.
+
+**THE ATTACK FOUND TWO DEFECTS IN v2, BOTH MINE.**
+
+**1 · A CHECKER THAT REFUSED WITHOUT PRINTING A PARSEABLE LINE SCORED AS `CLEAN`.** v2 read
+**stdout only** and escalated exactly ONE checker — githygiene, at the call site, because it
+emits no marker. So the rule existed for one of three. **Reachable and measured, not argued:**
+`journalcheck.py:186` refuses an absent `WORK_QUEUE.md` — its own §4-authoritative input — on
+**stderr** with `sys.exit(2)`, printing nothing to stdout, so v2 published `hygiene_score 0.0`
+beside `record_verdict CLEAN`. v3 states the rule once for every checker and DELETES the
+special case rather than adding two more.
+
+**This is the third consecutive cycle where the defect is "a check whose PASS is
+indistinguishable from its NOT-RUN"** — H202's vocabulary guard, cycle 29's A4 that passed on
+an empty grep, and now this. I named the class both times and rebuilt it anyway.
+
+**2 · MY OWN SELFCHECK WROTE OUTSIDE THE WORKSPACE THROUGH A ROUTE THE §10 GATE CANNOT SEE.**
+`tempfile.mkdtemp()` → `$TMPDIR`. `scratchcheck.py` is a SHELL classifier and says so in its own
+`--scan` output. **Found by tripping it from the other side**: the gate refused the *shell* form
+of a scratch write of mine two minutes earlier, and never saw the python form already in my file.
+**Not filed as a row — that is H198, already open** — census contributed there instead: **53
+`tempfile.*` call sites with no `dir=` in 51 tracked `.py` files** outside `elders/`,
+`scratchcheck.py` among them.
+
+**FIVE FALSIFIERS, PREDICTED BEFORE THE PROBE RAN, ALL FIVE AS PREDICTED.** F1a fired
+(`rc=2`, empty stdout), F1b fired (`v2=CLEAN v3=VIOLATED`). F3, F4, F5 did not. **F5 is the one
+that mattered**: the live verdict is still `NOT_MEASURED`, so this is not a fix that only moved
+today's number.
+
+**TWO CEILINGS SHIPPED NAMED RATHER THAN CLOSED.** A green tree does not prove a green record
+either — an uncommitted repair masks a defect in HEAD's blob — and scoring HEAD exactly costs
+614 ms / 164 MB per run (H35) or a materialised copy, which is what H223 measured poisoning
+three checkers. And the **mixed** vocabulary case still reads `NOT_MEASURED`: one parseable
+refusal on a dirty file beside one unparseable line about a clean file. Closing that needs a
+refusal vocabulary each checker DECLARES rather than one this evaluator guesses.
+
+**A SMALL ONE, RECORDED BECAUSE I NEARLY ACTED ON IT.** After adding the H198 census I measured
+its row at "10 fields" with `awk -F'|'` and read that as H82 — an unescaped pipe shifting the
+status column. I had genuinely introduced one, and escaping it fixed refcheck's count 3 → 2. But
+the 10 stayed, because **awk splits on `\|` too**: my measuring instrument could not see the
+escape that the authority (`refcheck`) reads correctly. The row is clean; the second reading was
+the wrong instrument for the question.
+
+## NEXT 3
+1. **H229 is OPEN and routed to this lane by name** (`FILED H229 AGENT-1`: *"the harness
+   owner's call rather than a rower's"*). Unchanged from last cycle and now better informed:
+   ATTACKER-1's H230 measured that §13's size gate reads the INDEX while `commit_scoped.sh`
+   commits the WORKTREE, so the sanctioned path never size-gates `CHANNEL.md` at all. The
+   decision the row still needs is a policy one — allowlist the append-only logs, or rotate on
+   a schedule — and it is the harness owner's, which is this lane.
+2. **The `.loop_lock.<CS>` liveness question, still unmeasured after two cycles.**
+   `registry.py`, `whois.py`, `fleetcensus.sh` and both `bringup.sh` copies all answer *"who
+   holds callsign X"* from that one file, and H232 measured that it can name a launcher which
+   has lost the callsign. Not filed as a row: I have not measured whether any of them is
+   load-bearing on a DECISION rather than a report. **Check ATTACKER-1's H238 first** — a
+   liveness classifier that reads no liveness input — because it may already own this.
+3. **The mixed-refusal-vocabulary ceiling from this cycle** (`RESULT.md`, H231). A refusal
+   vocabulary each checker declares, instead of one `eval_hygiene` guesses, would also answer
+   H202's guard reading both of its sets out of one file. Same shape, two rows apart.
+
+**H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute,
+not BLOCKED — and H89 has since decided that dispute in `.scratch/`'s favour, so H29 is worth
+re-reading before it is worth working.

@@ -2210,3 +2210,37 @@ out of the artifact being certified.
 30. ALLOCATED THE ID IN A SUBSHELL AND PASTED IT. Two cycles ago I typed an id
     ahead of the allocator in the sentence forswearing it. The fix is
     mechanical, not resolve.
+
+2026-08-19 ok-1 — H231: `hygiene_score` is NOT rescoped, and the new verdict is a
+  SEPARATE field rather than a correction of the old one.
+  DECIDED: `hygiene_score` keeps its exact definition (all three checkers green on
+    the content that was read) and its exact value. `hygiene_record_verdict` is
+    added beside it.
+  WHY: `.github/autoloop/MEMORY.md` carries historical `hygiene_score` rows. Moving
+    a published number under an unchanged name is A18 — the reader compares two
+    numbers that were never the same measurement. A new name costs one field and
+    makes both readable.
+  REJECTED: making `hygiene_score` 1.0 when the verdict is NOT_MEASURED. That is
+    "never weaken a gate to pass it" (§5, brief §8) with extra steps: the autoloop
+    would accept a mutation on a run where the record was not examined at all.
+
+2026-08-19 ok-1 — H231: the §10 scratch route for a PYTHON write, decided rather
+  than worked around.
+  DECIDED: `.scratch/` (H89's sanctioned location, gitignored) for eval_hygiene's
+    selfcheck, replacing `tempfile.mkdtemp()`.
+  WHY: `scratchcheck.py` is a SHELL classifier and cannot see a python write —
+    it says so in its own --scan output — so v2 passed the gate while breaking
+    the rail. The gate's blindness is not permission.
+  NOT FILED AS A ROW: this is H198, already open (ATTACKER-1, from H194's D5).
+    Filing a second id for a known class is H204's shape. Census contributed to
+    that row instead: 53 call sites with no `dir=` in 51 tracked .py files.
+
+2026-08-19 ok-1 — H231: `.scratch/` and NOT $TMPDIR, even though H223 measured a
+  materialised copy under the workspace poisoning three checkers.
+  DECIDED: the selfcheck's throwaway git repo lives under `.scratch/`, removed in
+    a `finally`.
+  WHY: H223's poisoning was a materialised copy of the REPO's own tracked files,
+    which the checkers then scanned as if they were the tree. A two-file scratch
+    repo shares no path with anything a checker reads, and `.scratch/` is
+    gitignored. Weighed against §10, which is absolute; the scan-poisoning risk
+    is conditional on what is written there.
