@@ -1,0 +1,12 @@
+S20_verify_kinds/verify_kinds.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+S23_consumer_sweep/probe.py	rc=0	cert=none	problems=0	failtokens=0
+S24_range_crossover/range_crossover.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+S27_verify_floor/verify_floor.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+S36_witnessed_job/witnessed_job.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+S36_witnessed_job/attack.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+S80_completeness_bytes/completeness.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+S85_verify_vs_reexec/verify_vs_reexec.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+W2_witnessed_trie/attack.py	rc=0	cert=none	problems=0	failtokens=1
+W6_incremental_witness/incremental_verifier.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+W7_streaming_witness/streaming_verifier.py	rc=0	cert=ok=True,	problems=0	failtokens=0
+W9_bound_streaming_witness/bound_streaming_verifier.py	rc=0	cert=ok=True,	problems=0	failtokens=0

@@ -1,0 +1,29 @@
+{
+  "spike": "S37",
+  "n_jobs": 37,
+  "post_cutover": {
+    "honest_accepted": 37,
+    "replay_rejected": 37
+  },
+  "pre_cutover": {
+    "honest_accepted": 37,
+    "replay_accepted": 37
+  },
+  "exhibit": {
+    "q": "0000000200000004",
+    "q2": "0000000200000004000000",
+    "answers_true": 394,
+    "answers_claimed": 12,
+    "omitted": 382,
+    "pre_s37_accepts": true,
+    "post_s37_accepts": false,
+    "proof_is_unforged": true
+  },
+  "consumers": {
+    "n": 12,
+    "identical_across_cutover": true,
+    "resolve_live": 7,
+    "resolve_pinned_copy": 5
+  },
+  "pre_cutover_source": "git HEAD:spikes/W2_witnessed_trie/trie_witness.py"
+}

@@ -305,12 +305,59 @@ def prove_completeness(root, q):
     return {'steps': steps, 'kind': COVER, 'keys': keys_under(node, pre, []),
             'depth': x['depth'], 'extra': x}
 
+def path_prefix(steps):
+    """The key bytes the authentication path itself spells out.
+
+    This is the quantity `pf['depth']` CLAIMS to be, derived from the proof
+    instead of supplied beside it. Lifted from
+    `spikes/S36_witnessed_job/attack.py` by S37 together with the verifier that
+    uses it; the two are one change and splitting them would leave a helper
+    nothing calls.
+    """
+    return b''.join(prefix + bytes([b]) for (prefix, _t, _p), b in steps)
+
+
 def verify_completeness(root_hash, q, pf):
     """True iff the claimed key set is EXACTLY the keys under prefix q.
 
     An omitted key, an added key, or a tampered key all change the rebuilt
     subtrie digest, so the fold to the root fails. This is the anti-omission
     check; controls C_omit / C_add / C_tamper each drive it to False.
+
+    v3, 2026-08-19 (AGENT-1, S37). DEFECT REMOVED, AND IT IS A SOUNDNESS HOLE,
+    NOT A TIGHTENING: **the COVER branch authenticated the answer against the
+    ROOT and never bound it to the QUERY**, while `verify_membership` and
+    `verify_non_membership` both re-walk unconditionally, with the reason
+    written in their own source -- *"so a proof of a different key cannot be
+    replayed for this one."*
+
+    So a prover asked for prefix `q` could return the COMPLETE, UNFORGED,
+    BYTE-IDENTICAL honest proof for any strictly longer prefix `q2` it held, and
+    this function accepted it: the keys all start with `q` because they start
+    with `q2`, they are canonical, and the subtrie folds to the root because it
+    IS a real subtrie. Nothing is forged and no digest is flipped, which is why
+    the three tamper controls S36 shipped -- omit / add / alter, 37/37 each --
+    could not see it: all three rewrite `pf['keys']` and KEEP the honest path,
+    so they are one attack shape tested three ways.
+
+    MEASURED, on S36's own corpus (`spikes/S36_witnessed_job/attack.py`, and now
+    `spikes/S37_completeness_cutover/`): the worst job answered a query whose
+    true answer is **394 keys with a genuine proof of 12**, omitting 382, and v2
+    accepted it.
+
+    TWO PROVER-CONTROLLED DEGREES OF FREEDOM REMOVED:
+      1. the path must spell a PREFIX of `q` and must not overshoot it, and the
+         rebuilt node's own compressed prefix must carry the REST of `q`.
+         Together these pin the proof to the single node `walk(root, q)` reaches.
+      2. `pf['depth']` is NOT READ. The build depth is `len(path_prefix(steps))`,
+         which the steps already determine. A prover-supplied integer that the
+         verifier trusts is not evidence.
+
+    The non-COVER branch is unchanged -- it already re-walked.
+
+    WHY IT WAS LIFTED RATHER THAN LEFT IN THE ATTACK FILE: S21's class. A fix
+    that corrects the instrument and leaves every consumer importing the broken
+    one is not a fix, and 12 consumers imported this name.
     """
     if pf is None or not isinstance(pf, dict):
         return False
@@ -345,7 +392,14 @@ def verify_completeness(root_hash, q, pf):
             return False
         if list(ks) != sorted(set(ks)):
             return False                      # canonical, duplicate-free, or reject
-        rebuilt = build(sorted(ks), pf['depth'])
+        # v3, S37: bind the proof to THIS query, and stop reading the prover's
+        # own depth. See the rationale block on `path_prefix` below.
+        pre = path_prefix(pf['steps'])
+        if len(pre) > len(q) or q[:len(pre)] != pre:
+            return False                      # the path overshot or diverged from q
+        rebuilt = build(sorted(ks), len(pre))
+        if not (pre + rebuilt.prefix).startswith(q):
+            return False                      # the rebuilt node does not cover q
         return fold(pf['steps'], rebuilt.h) == root_hash
     except (KeyError, TypeError, ValueError, IndexError, AttributeError):
         return False

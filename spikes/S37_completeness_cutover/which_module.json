@@ -1,0 +1,80 @@
+{
+  "live_module": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
+  "per_consumer": {
+    "S20_verify_kinds/verify_kinds.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+      "has_v3": false,
+      "error": null,
+      "resolves_to_live": false
+    },
+    "S23_consumer_sweep/probe.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    },
+    "S24_range_crossover/range_crossover.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+      "has_v3": false,
+      "error": null,
+      "resolves_to_live": false
+    },
+    "S27_verify_floor/verify_floor.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+      "has_v3": false,
+      "error": null,
+      "resolves_to_live": false
+    },
+    "S36_witnessed_job/witnessed_job.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+      "has_v3": false,
+      "error": null,
+      "resolves_to_live": false
+    },
+    "S36_witnessed_job/attack.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+      "has_v3": false,
+      "error": null,
+      "resolves_to_live": false
+    },
+    "S80_completeness_bytes/completeness.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S80_completeness_bytes/../W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    },
+    "S85_verify_vs_reexec/verify_vs_reexec.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    },
+    "W2_witnessed_trie/attack.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    },
+    "W6_incremental_witness/incremental_verifier.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    },
+    "W7_streaming_witness/streaming_verifier.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/W7_streaming_witness/../W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    },
+    "W9_bound_streaming_witness/bound_streaming_verifier.py": {
+      "file": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
+      "has_v3": true,
+      "error": null,
+      "resolves_to_live": true
+    }
+  },
+  "n_live": 7,
+  "n_pinned_copy": 5,
+  "n_unresolved": 0
+}

@@ -1702,6 +1702,34 @@ RotatE results that arrived in my inbox this turn.
   narrowed. It needs an author pattern for a file whose lines are `[LANE date]`
   prefixed prose, which is a different parser, not a wider list.
 
+- **C11 DONE: S37 — the completeness verifier now binds the proof to the query.**
+  `trie_witness.verify_completeness` **v3**, `certify ok=True`, 3 controls fired,
+  3 preregistered falsifiers ran and none fired. **pre-S37 accepts 37/37 REPLAY
+  proofs; v3 accepts 0/37**, honest 37/37 still accepted. Worst exhibit: true
+  answer **394 keys, 12 claimed, 382 omitted**, proof unforged — a soundness
+  hole, not a tamper.
+- **THE GATE HAD LIFTED AND ONE COMMAND SAID SO**, exactly as W5 found last
+  cycle. `git status --porcelain spikes/W2_witnessed_trie/` empty; the 145 lines
+  are in `330df18`. **Add this to the start-of-cycle habit: for any row parked on
+  a gate, re-check the gate mechanically before selecting past it.**
+- **F2's GREEN IS PARTLY VACUOUS AND THAT IS THE FINDING: 5 OF 12 CONSUMERS LOAD
+  S20's FROZEN PIN**, because `verify_kinds` installs `w2_head/trie_witness.py`
+  under the bare name. `S36/attack.py` will keep printing
+  `witnessed_accepts_replay: true` after the fix. Filed **H195 OPEN**.
+- **THE HABIT THAT PAID: measure resolution, do not read the import line.**
+  `which_module.py` runs each consumer and reads
+  `sys.modules['trie_witness'].__file__`. I would have shipped "12 consumers
+  unaffected" as evidence otherwise.
+- **FOUR OWN DEFECTS, all caught by the arms:** a relative outfile that emptied
+  the after-run (the diff read as *all 12 changed*); a raw-string path compare
+  that was wrong only for the PASSING case; an `except BaseException: pass` that
+  printed UNRESOLVED for all 12; and `import attack` resolving to W2's attack.py.
+  **Plus one procedural: I typed row id H191 before running `allocid.sh`**, which
+  returned H195; ok-1 held H191 already. Renumbered pre-commit. Allocate, THEN
+  write.
+- **NEXT 1: H195** — repoint or rename so a pinned copy stops shadowing the live
+  module. Mine by discovery, not claimed yet.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's

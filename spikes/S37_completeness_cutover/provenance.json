@@ -1,0 +1,182 @@
+{
+ "spike": "S37_completeness_cutover",
+ "recorded_utc": "2026-08-19T16:36:20Z",
+ "note": "S37: lift verify_completeness_qbound into trie_witness (v3).",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie",
+   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W2_witnessed_trie/attack.json",
+    "spikes/W2_witnessed_trie/trie_witness.py",
+    "spikes/W2_witnessed_trie/witness.json"
+   ],
+   "diff_sha256": "365a8fecff769948b99205a1c805e985bbe309dd57eeaee5d51710d157e3146c",
+   "diff_bytes": 10864
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job",
+   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S36_witnessed_job/provenance.attack.json"
+   ],
+   "diff_sha256": "e08f896e006cb4c3f7f719ae228daeb6fa7aa5ebedaffa74403cabf17160283b",
+   "diff_bytes": 1871
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S37_completeness_cutover/result.json",
+   "sha256": "4ce97c65ab3e7095ef81b4e86c09a39f8ab57b0ecad8cd898358e307879c46fb",
+   "bytes": 640,
+   "mtime": 1787157380,
+   "compared_ts": 1787157380,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_corpus_is_the_S36_one",
+   "must_fire_because": "the cutover must be judged on the corpus that found the defect, not a fresh one",
+   "can_fail_because": "a different key file, PREFIX_LEN or JOBS would change the job count away from S36's 37",
+   "null_must_contain": "a job count that is not 37",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_jobs": 37,
+    "expected": 37,
+    "PREFIX_LEN": 8,
+    "JOBS": 40
+   }
+  },
+  {
+   "name": "C2_pre_module_is_the_replaced_one",
+   "must_fire_because": "F3 must compare against the EXACT version replaced, read from git",
+   "can_fail_because": "a pre module missing verify_completeness, or one that already carries the v3 marker, is the wrong artifact",
+   "null_must_contain": "a pre-cutover module that already has path_prefix",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "has_verify_completeness": true,
+    "has_path_prefix_v3_marker": false,
+    "source": "/Users/victorianikolenko/kingfisher/.scratch/trie_witness_pre_s37.py"
+   }
+  },
+  {
+   "name": "C3_live_module_is_live",
+   "must_fire_because": "every arm must run the module this cutover edited, not S20's frozen pin",
+   "can_fail_because": "sys.path order alone decides this, and 5 of 12 consumers get the pin instead",
+   "null_must_contain": "a LIVE handle resolving to w2_head",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "live": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
+    "pin": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
+    "consumers_on_pin": 5
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_cutover_is_not_free",
+   "must_fire_because": null,
+   "can_fail_because": "honest accepted != 37 or replay rejected != 37 through the LIVE module",
+   "null_must_contain": "an honest proof the lifted verifier rejects",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n": 37,
+    "honest_accepted": 37,
+    "replay_rejected": 37
+   },
+   "refutes": "that the lifted verifier keeps S36's measured behaviour",
+   "fires_when": "honest accepted != 37 or replay rejected != 37 through the LIVE module",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_a_consumer_changed",
+   "must_fire_because": null,
+   "can_fail_because": "any consumer's recorded verdict differs before vs after the lift",
+   "null_must_contain": "a consumer row differing across the two runs",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_consumers": 12,
+    "identical": true,
+    "resolve_live": 7,
+    "resolve_pinned_copy": 5
+   },
+   "refutes": "that the cutover is transparent to every consumer",
+   "fires_when": "any consumer's recorded verdict differs before vs after the lift",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_old_was_not_weaker",
+   "must_fire_because": null,
+   "can_fail_because": "no proof exists that the pre-cutover verifier accepts and the lifted one rejects",
+   "null_must_contain": "zero replay proofs accepted by the pre module",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "pre_accepts_replay": 37,
+    "n": 37,
+    "worst_omitted": 382
+   },
+   "refutes": "that the version bump removes a real soundness hole",
+   "fires_when": "no proof exists that the pre-cutover verifier accepts and the lifted one rejects",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie": {
+   "newest": 1787157124,
+   "from": "spikes/W2_witnessed_trie/attack.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job": {
+   "newest": 1787157164,
+   "from": "spikes/S36_witnessed_job/provenance.attack.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the lifted verifier rejects an honest proof, a consumer changes verdict, or the old verifier was already sound",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
