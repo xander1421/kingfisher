@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# githygiene.py v5 — H14 (v1,v2), H71 (v3), H224 sibling (v4), H229 (v5).
+# Duplicated from the docstring on purpose: versioncheck.py reads a `#`
+# comment and cannot see a version declared in a docstring (H193).
 """Git hygiene checker. The history is training data, so it is a deliverable.
 
 Measured on this repo 2026-08-17, before this checker existed:
@@ -61,6 +64,34 @@ reaching this file.
        If a future git accepts untracked paths under `--only`, case (a) goes red
        and §13's workaround paragraph can be deleted rather than left as
        folklore.
+
+  v5 · 2026-08-19, ok-1, H229. DEFECT REMOVED: **this module could not see the
+       object the sanctioned commit path actually commits.** `commit_scoped.sh:231`
+       runs it under the label *"(index-scoped, already correct)"* and then commits
+       with `git commit --only`, which by design IGNORES the index (§13, H19,
+       H190). So on the path every lane is told to use, the size gate's population
+       and the commit's population are disjoint by construction, and the label
+       asserting otherwise is why nobody questioned it. H230 (ATTACKER-1) measured
+       the consequence: the verdict on the fleet's largest file flips on whether
+       ANOTHER lane has `git add`ed it at that instant -- `1 ACTIONABLE` and
+       `clean` ten minutes apart with no edit between them.
+
+       `--only p1 p2 ...` gates exactly those paths at their WORKING-TREE bytes,
+       which is what `--only` carries. Under that flag the staged list is
+       REPORTED and does not gate: accusing this commit of what a co-lane staged
+       is H231's class, a verdict about one artifact taken from another, and the
+       selfcheck drives that direction as well as the refusal.
+
+       NOT AN EXEMPTION AND NOT A THRESHOLD CHANGE. `MAX_ADD` is untouched, the
+       index scope is unchanged when the flag is absent, and both are asserted.
+       H229 asked whether an append-only fleet log belongs in the size population
+       at all; the answer here is **yes, and no exemption is available**, because
+       the property is not derivable. MEASURED over full history, deletions per
+       addition: `CHANNEL.md` **0.594**, `HANDOFF.ok-1.md` 0.612, `WORK_QUEUE.md`
+       0.281 -- against `MISSION_LOOP.md` **0.059** and this file **0.038**. The
+       logs are LESS append-dominant than ordinary source, the wrong way round,
+       because rotation is a deletion. So "append-only" is a policy stated in the
+       briefs, not a shape in the data, and a checker cannot read it.
 
   v4 · 2026-08-19, ATOM-3, H224 sibling. DEFECT REMOVED: **this checker could
        refuse a file but never warn about one, so the only signal arrived at the
@@ -290,6 +321,11 @@ def main():
         print("not a git work tree")
         return 2
     do_all = "--all" in sys.argv
+    # v5, H229 (ok-1, 2026-08-19). `--only p1 p2 ...` gates THE PATHS A
+    # `git commit --only` WILL CARRY, sized from the WORKING TREE, because that
+    # is the object `--only` commits. See the v5 rationale in the docstring.
+    only = (sys.argv[sys.argv.index("--only") + 1:]
+            if "--only" in sys.argv else None)
     violations = []
 
     # --diff-filter=ACMR excludes DELETIONS. Without it, `git rm --cached` on
@@ -325,7 +361,18 @@ def main():
         print(f"\nNOTE: index size unreadable for {fellback} — "
               f"fell back to the working-tree size, which may not be what "
               f"you are committing")
-    if staged:
+    if only is not None:
+        # The index is NOT the object here, and accusing this commit of what a
+        # CO-LANE staged is H231's class -- a verdict about one artifact taken
+        # from another. So under `--only` the staged list is REPORTED and the
+        # `--only` paths are what gates.
+        if staged:
+            check_paths(staged, "STAGED (reported, NOT gating under --only: "
+                                "`--only` ignores the index)",
+                        sizes=staged_sizes)
+        violations += check_paths(
+            only, "COMMIT --only (working-tree bytes, the object --only carries)")
+    elif staged:
         violations += check_paths(staged, "STAGED", sizes=staged_sizes)
     else:
         print("nothing staged")
@@ -506,7 +553,7 @@ def selfcheck():
     ck("module imports in a fresh interpreter", r.returncode == 0,
        r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "")
 
-    def run_in(setup):
+    def run_in(setup, args=()):
         d = tempfile.mkdtemp(prefix="ghsc_")
         try:
             for c in (["git", "init", "-q"],
@@ -515,7 +562,8 @@ def selfcheck():
                 subprocess.run(c, cwd=d, check=True,
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             setup(d)
-            p = subprocess.run([sys.executable, os.path.join(here, "githygiene.py")],
+            p = subprocess.run([sys.executable, os.path.join(here, "githygiene.py"),
+                                *args],
                                cwd=d, capture_output=True, text=True)
             return p.returncode, p.stdout + p.stderr
         finally:
@@ -669,6 +717,55 @@ def selfcheck():
     ck("the real CHANNEL.md is no longer near the limit after rotation",
        approaching("CHANNEL.md", os.path.getsize("CHANNEL.md")) is None
        if os.path.exists("CHANNEL.md") else True)
+
+
+    # ---- v5, H229 (ok-1) · THE PATHS A `--only` COMMIT ACTUALLY CARRIES ----
+    # Measured, and it is why this mode exists: `commit_scoped.sh:231` runs this
+    # module labelled "(index-scoped, already correct)" and then commits with
+    # `git commit --only`, which by design IGNORES the index. On the sanctioned
+    # commit path, nothing this module gates is the object being committed.
+    # H230 (ATTACKER-1) measured the consequence: the verdict on the fleet's
+    # largest file flips on whether ANOTHER lane has `git add`ed it.
+    #
+    # Both directions, because a mode that always refuses and a mode that never
+    # refuses look identical from one green run.
+    def _tree_only(d):
+        stage(d, "seed.md", b"a finding\n")
+        git(d, "commit", "-q", "-m", "S1: a finding")
+        open(os.path.join(d, "log.md"), "wb").write(b"0" * (2 * 1024 * 1024))
+
+    rc, out = run_in(_tree_only)
+    ck("H229 · without --only, an UNSTAGED 2 MB file is invisible",
+       rc == 0, f"rc={rc}")
+
+    rc, out = run_in(_tree_only, args=("--only", "log.md"))
+    ck("H229 · with --only, that same file GATES",
+       rc == 1 and "COMMIT --only" in out and "2.0 MB exceeds" in out,
+       f"rc={rc}")
+
+    # A co-lane's staged oversize must NOT be attributed to this commit: under
+    # `--only` the index is not the object. That is H231's class -- a verdict
+    # about one artifact taken from another -- and refusing here would import it.
+    def _colane_staged(d):
+        stage(d, "seed.md", b"a finding\n")
+        git(d, "commit", "-q", "-m", "S1: a finding")
+        stage(d, "theirs.bin", b"0" * (2 * 1024 * 1024))
+        open(os.path.join(d, "mine.md"), "wb").write(b"a finding\n")
+
+    rc, out = run_in(_colane_staged, args=("--only", "mine.md"))
+    ck("H229 · a CO-LANE's staged 2 MB does not refuse my --only commit",
+       rc == 0 and "reported, NOT gating" in out, f"rc={rc}")
+
+    # ...and it is still SEEN. Reported-not-gating must not become silent: that
+    # is the difference between this and an exemption.
+    ck("H229 · but it is still REPORTED, not silenced",
+       "theirs.bin" in out, "co-lane's staged path absent from the report")
+
+    # Unchanged behaviour without the flag, so this mode ADDS a scope rather
+    # than replacing one.
+    rc, out = run_in(lambda d: stage(d, "big.bin", b"0" * (2 * 1024 * 1024)))
+    ck("H229 · the index scope is unchanged when --only is absent",
+       rc == 1, f"rc={rc}")
 
     print()
     if fails:

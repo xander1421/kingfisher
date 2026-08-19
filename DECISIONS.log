@@ -2275,3 +2275,58 @@ out of the artifact being certified.
   (deleted) and `spikes/harness/bringup.sh:246 -> test_loop_gate.sh §15` (that file's sections stop
   at 12). Both are in other lanes' UNCOMMITTED work; H19/H66 say do not touch it. Reported in
   livechat.log with the mechanical resolution instead of edited.
+
+2026-08-19 ok-1 — H229: NO EXEMPTION for the append-only fleet logs, and the
+  mechanism I had designed for one is deleted rather than shipped.
+  DECIDED: `CHANNEL.md`, `livechat.log`, `DECISIONS.log` and `HANDOFF*.md` stay
+    fully in `githygiene`'s size population. `MAX_ADD` unchanged. No allowlist,
+    no property-based exemption, no threshold move.
+  WHY: the row required any exemption to be a NAMED PROPERTY rather than a path
+    allowlist, "or the next such file is invisible". Measured, the obvious
+    property does not separate and fails backwards — deletions per addition is
+    0.594 for CHANNEL.md against 0.059 for MISSION_LOOP.md, because rotation is
+    a deletion. A property that ranks MISSION_LOOP.md as more append-only than
+    CHANNEL.md cannot carry an exemption. So append-only is policy in the briefs,
+    not a shape in the data.
+  REJECTED: a path allowlist (the row forbids it, and for the stated reason);
+    raising MAX_ADD (§5, weakening a gate to pass it); a self-declared marker in
+    the file (A22 — and it would have had to change the verdict to be worth
+    anything, which is the part that makes it a hole).
+
+2026-08-19 ok-1 — H229: the fix is a NEW SCOPE on githygiene, not a change to
+  `commit_scoped.sh`, and it ships UNWIRED on purpose.
+  DECIDED: `githygiene.py --only <paths>` added (v5); `commit_scoped.sh` not
+    touched; the one-line wiring posted to livechat.log for AGENT-1.
+  WHY: that file is AGENT-1's and their cycle is live. H199 set the precedent in
+    the same file for the same reason. The alternative — editing it mid-cycle —
+    is the shared-tree hazard H234 recorded from the other side.
+  COST, STATED IN THE ROW AND THE RESULT RATHER THAN LEFT FOR A READER: until it
+    is wired, `--only` is a capability and not a gate. "Shipped" and "in the
+    path" are different claims and the second is the one that matters.
+
+2026-08-19 ok-1 — H229: the citation breakage is SPLIT OUT as H246, not fixed.
+  DECIDED: filed with its measurement (93 citations, 37 dangling), unclaimed, and
+    deliberately not taken by this lane in this cycle.
+  WHY: §12.1 — a defect found while doing something else is a row, not a side
+    fix. And a resolver would arrive with 37 pre-existing failures, which is
+    githygiene's own H14 shape and this row's subject: a gate that is red before
+    you touch anything teaches everyone to bypass it. The likely right answer is
+    citation-by-content rather than by line, which changes how five lanes write
+    and is a policy call, so it is filed rather than decided in passing.
+
+2026-08-19 AGENT-2 H245 — the loop's runner read the exit code as a proxy for "a payload exists".
+  DECIDED: keep BOTH signals rather than replace one with the other. `run_evaluator` v2 returns the
+  payload AND the refusal; the payload is scored, the refusal stays in `errors`. The first draft
+  returned only the payload, which drops the refusal out of
+  `is_eligible = invariants and not errors and pareto` and would have moved an evaluator that refused
+  while emitting IN-BOUNDS metrics from REJECTED to ELIGIBLE. Found by reading the caller; no arm of
+  the probe caught it, because hygiene's 0.0 fails invariants anyway and hides the path. C6 now covers it.
+  DECIDED: the fix REFUSES to guess. A payload that does not parse, or parses to a non-dict, is an
+  error whatever the exit code — "parseable dict" is the whole test for "a measurement exists".
+  DECIDED: F4 fired and the row was NARROWED from a class to a site rather than left as claimed.
+  28 `returncode` call sites swept; every other one is correct. The RULE generalises, the defect does not.
+  NOT DONE, deliberately: `selfcheckall` was not widened to `scripts/` even though it is what would
+  make the new `--selfcheck` actually run (H249). It is already RED on another lane's `demo8.py`, and
+  widening a red shared gate mid-cycle is H72's failure mode. Filed instead of taken.
+  NOT DONE, deliberately: `eval_determinism.py`'s unguarded `adb` call (H248) — a different class,
+  filed rather than folded into this row.

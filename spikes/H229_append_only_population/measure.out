@@ -1,0 +1,46 @@
+== F1 · line-number citations of the fleet's append-only logs (tracked files only) ==
+  93 CHANNEL.md
+  11 HANDOFF.md
+   3 livechat.log
+
+== F2 · CHANNEL.md line count now, and citations pointing PAST it ==
+CHANNEL.md is      659 lines
+citations past EOF:       37
+the rotation: 228fc46 CHANNEL.md rotated: at 1.04 MB the coordination chan
+  before:     1065 lines   after:      243 lines
+
+== F3 · commits to CHANNEL.md that REMOVED lines (append-only as a property) ==
+  6799738 del=1 add=71
+  228fc46 del=856 add=34
+  00e0cec del=1 add=6
+  a477a74 del=1 add=2
+  48c9059 del=1 add=4
+  cf9f5a2 del=1 add=3
+
+== the property that does NOT separate: deletions per addition, whole history ==
+  file                                add      del del/add
+  CHANNEL.md                         1520      861   0.566
+  livechat.log                       9156        1   0.000
+  DECISIONS.log                      2277        0   0.000
+  HANDOFF.md                         2668      346   0.130
+  HANDOFF.ok-1.md                    1734     1062   0.612
+  WORK_QUEUE.md                       591      166   0.281
+  MISSION_LOOP.md                     597       35   0.059
+  spikes/harness/githygiene.py        709       27   0.038
+  run_loop.sh                         733       51   0.070
+  out/LEDGER.md                       968      253   0.261
+
+== F4 · any other size decision in the commit path ==
+  non-githygiene hits: 0
+
+== F5 · what the gate reads vs what the sanctioned path commits ==
+  gate reads: 337:    staged = sh("git", "diff", "--cached", "--name-only",
+  script commits: 360:git commit --no-verify --only "$@" -F "$MSG"
+  the label: 230:echo "== githygiene.py (index-scoped, already correct) =="
+
+== the mechanism, both directions ==
+  PASS  H229 · without --only, an UNSTAGED 2 MB file is invisible
+  PASS  H229 · with --only, that same file GATES
+  PASS  H229 · a CO-LANE's staged 2 MB does not refuse my --only commit
+  PASS  H229 · but it is still REPORTED, not silenced
+  PASS  H229 · the index scope is unchanged when --only is absent
