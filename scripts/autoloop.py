@@ -31,6 +31,39 @@ def load_config():
 
 
 def run_evaluator(name, cmd, cwd=REPO_ROOT, timeout=120):
+    """Run one evaluator and return (payload, error).
+
+    v2, H245. DEFECT REMOVED: this returned on `p.returncode != 0` BEFORE
+    `json.loads` was ever reached, so an evaluator that RAN AND REFUSED and one
+    that CRASHED were the same event -- and the scoring loop below then printed
+    `could not be checked` over a metric it had checked.
+
+    Live at the time, not latent: `eval_hygiene.main()` ends
+    `return 0 if all_ok else 1` and prints a complete payload either way, so
+    `--eval` reported `[ERROR] Exit 1:` with an EMPTY stderr followed by
+    `[MISSING METRIC] hygiene_score`, and the two refcheck violations it had
+    actually found were nowhere in the loop's output.
+
+    THE RULE, because the harness has now got this wrong in BOTH directions:
+    READ THE CHANNEL THE VERDICT IS ACTUALLY CARRIED ON. A selfcheck answers a
+    boolean, so its state is the EXIT CODE and its stdout is prose -- judging
+    the text there reads a crash as clean, which is H72, and
+    `spikes/harness/selfcheckall.py:122` says exactly that. An evaluator
+    answers with a NUMBER, which an exit code cannot carry, so its state is the
+    PAYLOAD. Ten lines below, this same function already applied that rule in
+    the exit-0 direction -- *"Treat a payload carrying `error` as an error
+    regardless of exit status"* -- and never in this one.
+
+    NOT A LOOSENING, and that is the arm to check first: a recovered payload is
+    gated on its own value like any other. `hygiene_score 0.0` now fails
+    invariants as an INVARIANT VIOLATION instead of vanishing as a MISSING
+    METRIC -- the same FAIL, for the true reason, and it costs the composite
+    MORE because a missing metric contributes no weight at all.
+
+    Also v2: a payload that parses but is not a dict (a list, a bare scalar) is
+    now an error. `results.update(data)` raises on a list, so the pre-v2 runner
+    handed the scoring loop something it could not consume.
+    """
     try:
         p = subprocess.run(
             cmd,
@@ -42,12 +75,16 @@ def run_evaluator(name, cmd, cwd=REPO_ROOT, timeout=120):
             timeout=timeout,
         )
         out = p.stdout.strip()
-        if p.returncode != 0:
-            return None, f"Exit {p.returncode}: {p.stderr.strip()}"
-        # Parse JSON from evaluator output
+        # PARSE FIRST. The exit code decides nothing on its own (H245).
         try:
             data = json.loads(out)
         except Exception:
+            data = None
+        if not isinstance(data, dict):
+            if p.returncode != 0:
+                return None, (f"Exit {p.returncode} and no parseable metric "
+                              f"payload on stdout -- this is a CRASH, not a "
+                              f"refusal: {p.stderr.strip() or out[:100]}")
             return None, f"Failed to parse JSON output: {out[:100]}"
         # An evaluator that FAILED still emits its metric keys, set to 0.0, next
         # to an "error" key. Checking only the exit code let that 0.0 be scored
@@ -59,8 +96,22 @@ def run_evaluator(name, cmd, cwd=REPO_ROOT, timeout=120):
         # is the difference between "we did not look" and "we looked and it is
         # broken". Treat a payload carrying `error` as an error regardless of
         # exit status.
-        if isinstance(data, dict) and data.get("error"):
+        if data.get("error"):
             return None, f"evaluator reported error: {data['error']}"
+        if p.returncode != 0:
+            # BOTH SIGNALS, NEVER ONE INSTEAD OF THE OTHER. The defect was that
+            # the MEASUREMENT was discarded, not that the exit code should be
+            # ignored -- so the payload is scored AND the refusal is still an
+            # error. Returning only the payload here would have been a real
+            # loosening on one path: `is_eligible` is
+            # `invariants and not errors and pareto`, so an evaluator that
+            # refused while emitting in-bounds metrics would have gone from
+            # REJECTED to ELIGIBLE. Caught by reading the caller, not by any
+            # arm of the probe.
+            return data, (f"Exit {p.returncode}: evaluator REFUSED, and its "
+                          f"payload was complete -- the measurement is kept "
+                          f"and scored on its own value, and this refusal is "
+                          f"still an error (H245)")
         return data, None
     except subprocess.TimeoutExpired:
         return None, f"Timeout after {timeout}s"
@@ -78,11 +129,18 @@ def evaluate_suite(config):
         timeout = spec.get("timeout_sec", 60)
         print(f"  -> Running evaluator '{name}': {cmd}", file=sys.stderr)
         data, err = run_evaluator(name, cmd, timeout=timeout)
-        if err:
+        # H245: "it errored" and "it produced no measurement" are INDEPENDENT.
+        # Collapsing them is the defect this whole change is about, so they are
+        # now read as two separate facts rather than as one if/else.
+        if err and data is not None:
+            print(f"     [REFUSED BUT MEASURED] {name}: {err}", file=sys.stderr)
+        elif err:
             print(f"     [ERROR] {err}", file=sys.stderr)
-            errors.append((name, err))
         else:
             print(f"     [OK] {name} completed", file=sys.stderr)
+        if err:
+            errors.append((name, err))
+        if data is not None:
             results.update(data)
 
     # Compute composite score
@@ -278,12 +336,97 @@ def record_memory(verdict, summary, delta_text):
             f.write(new_content)
 
 
+def selfcheck():
+    """§12.3. Drives the collapse this module was fixed for, in BOTH directions.
+
+    Self-contained -- the fixtures are `python3 -c` one-liners, not files in a
+    spike -- because a check that only runs when another directory is present is
+    a check that stops running. `spikes/H245_evaluator_refusal_vs_crash/` is the
+    wider probe; this is the one that ships with the component.
+    """
+    bad = []
+    PY = sys.executable
+
+    def ev(body):
+        return f'{PY} -c {json.dumps(body)}'
+
+    # (why, command, expect_payload, expect_error)
+    cases = [
+        ("ran and REFUSED: payload on stdout, exit 1 -- the measurement is real "
+         "and must be kept, and the refusal must still be an error",
+         ev('import json,sys; print(json.dumps({"m": 0.0})); sys.exit(1)'),
+         True, True),
+        ("CRASHED: nothing on stdout, non-zero exit -- no measurement exists",
+         ev('import sys; print("boom", file=sys.stderr); sys.exit(1)'),
+         False, True),
+        ("died MID-WRITE: half a JSON object -- parseable-ness is the test",
+         ev('import sys; sys.stdout.write(chr(123)+chr(34)+"m"); sys.exit(1)'),
+         False, True),
+        ("the EXIT-0-PLUS-ERROR lesson: zeroed metrics next to an `error` key",
+         ev('import json; print(json.dumps({"m": 0.0, "error": "no artifacts"}))'),
+         False, True),
+        ("ran and PASSED: payload, exit 0 -- the happy path is untouched",
+         ev('import json; print(json.dumps({"m": 1.0}))'),
+         True, False),
+        ("the DOCUMENTED exit-2 contract: refuses and emits NO metric",
+         ev('import sys; print("numpy absent", file=sys.stderr); sys.exit(2)'),
+         False, True),
+        ("well-formed JSON that is NOT a payload -- `results.update` raises on "
+         "a list",
+         ev('import json; print(json.dumps([1, 2, 3]))'),
+         False, True),
+    ]
+    for why, cmd, want_payload, want_error in cases:
+        data, err = run_evaluator("selfcheck", cmd, timeout=30)
+        if (data is not None) != want_payload:
+            bad.append(f"payload {'expected' if want_payload else 'refused'}: {why}")
+        if (err is not None) != want_error:
+            bad.append(f"error {'expected' if want_error else 'not expected'}: {why}")
+
+    # NOT A LOOSENING. The recovered payload is gated on its own value, and the
+    # run it came from is still an error, so `is_eligible` cannot improve.
+    cfg = {
+        "evaluators": {"e": {"command": cases[0][1], "timeout_sec": 30}},
+        "metrics": {"m": {"direction": "maximize", "target": 1.0,
+                          "min_acceptable": 1.0, "weight": 1.0}},
+    }
+    import contextlib
+    import io as _io
+    buf = _io.StringIO()
+    with contextlib.redirect_stderr(buf):
+        results, errors = evaluate_suite(cfg)
+    log = buf.getvalue()
+    if results.get("m") != 0.0:
+        bad.append(f"a refused payload must reach scoring, got m={results.get('m')}")
+    if results.get("_invariants_passed") is not False:
+        bad.append("0.0 below min_acceptable 1.0 must FAIL invariants")
+    if "[INVARIANT VIOLATION]" not in log:
+        bad.append("the failure must be reported as a VIOLATION")
+    if "[MISSING METRIC]" in log:
+        bad.append("a metric that WAS produced must not be reported missing")
+    if not errors:
+        bad.append("the refusal must remain in `errors`, or `is_eligible` loosens")
+
+    for b in bad:
+        print("  FAIL  " + b)
+    if not bad:
+        print("autoloop selfcheck: a refusal is kept and scored, a crash is "
+              "not, a truncated write is not, exit-0-plus-error is not, a "
+              "non-dict payload is not, the happy path is unchanged, and a "
+              "kept refusal still fails invariants AND stays in `errors`")
+    return 1 if bad else 0
+
+
 def main():
     parser = argparse.ArgumentParser(description="GitHub Next Autoloop Driver for Operation Kingfisher")
+    parser.add_argument("--selfcheck", action="store_true", help="§12.3 runnable check for this module")
     parser.add_argument("--eval", action="store_true", help="Run evaluation suite and display metrics")
     parser.add_argument("--step", action="store_true", help="Execute one optimization loop step")
     parser.add_argument("--ci", action="store_true", help="Run in CI mode with strict exit code")
     args = parser.parse_args()
+
+    if args.selfcheck:
+        return selfcheck()
 
     config = load_config()
     results, errors = evaluate_suite(config)

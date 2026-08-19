@@ -1,0 +1,230 @@
+{
+ "spike": "H245_evaluator_refusal_vs_crash",
+ "recorded_utc": "2026-08-19T21:56:52Z",
+ "note": "H245: the loop's runner returned on the exit code before parsing the payload, so a REFUSAL and a CRASH were one event and the loop reported `could not be checked` over a metric it checked.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/scripts",
+   "head": "6799738b61096c6d7d8734dffc138c6efec10e2b",
+   "clean": false,
+   "dirty_files": [
+    "scripts/autoloop.py"
+   ],
+   "diff_sha256": "a274982d223e7cc35851c07054971ca967f9ef1131e9092a84a921fc10036649",
+   "diff_bytes": 5736
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures",
+   "head": "6799738b61096c6d7d8734dffc138c6efec10e2b",
+   "clean": false,
+   "dirty_files": [
+    "spikes/H245_evaluator_refusal_vs_crash/fixtures/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/refusal_vs_crash.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/refusal_vs_crash.json",
+   "sha256": "f0195333eb51f544a124f53c3681219ee8ad949aa70117f4bc62a3016d943f92",
+   "bytes": 2856,
+   "mtime": 1787176612,
+   "repro_sha256": "f0195333eb51f544a124f53c3681219ee8ad949aa70117f4bc62a3016d943f92",
+   "repro_excluded": [],
+   "compared_ts": 1787176612,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_the_prefix_runner_really_does_discard_a_refusal",
+   "must_fire_because": "if it kept the payload there is no defect and the row is void; this is the arm that can retire the whole row",
+   "can_fail_because": "the pinned pre-fix runner returns the payload for `refuse_with_payload`",
+   "null_must_contain": "the pre-fix verdict for that shape",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "prefix_kept_it": false,
+    "prefix_err": "Exit 1: ",
+    "pinned_commit": "cb6264fdb1a1e72b7fef00e222d7e112a564c74a"
+   }
+  },
+  {
+   "name": "C2_the_fix_does_not_swallow_a_crash",
+   "must_fire_because": "the mirror collapse. Trading `refusal read as crash` for `crash read as measurement` is not a fix",
+   "can_fail_because": "the live runner keeps a payload for crash, truncated or refuse_no_payload",
+   "null_must_contain": "the live verdict for all three",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "crash": false,
+    "truncated": false,
+    "refuse_no_payload": false
+   }
+  },
+  {
+   "name": "C3_the_exit0_plus_error_lesson_survives",
+   "must_fire_because": "already learned once, in the opposite direction; a fix that regresses it re-opens the cold-start defect",
+   "can_fail_because": "the live runner keeps `error_payload_exit0`",
+   "null_must_contain": "its live verdict",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "live_kept_it": false,
+    "live_err": "evaluator reported error: artifacts do not exist yet"
+   }
+  },
+  {
+   "name": "C4_the_happy_path_is_untouched",
+   "must_fire_because": "a runner that broke exit-0 evaluators to fix exit-1 ones would trade the whole loop for one metric",
+   "can_fail_because": "the live runner drops `clean`",
+   "null_must_contain": "its live verdict",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "live_kept_it": true,
+    "live_err": ""
+   }
+  },
+  {
+   "name": "C6_NOT_A_LOOSENING_the_refusal_is_still_an_error",
+   "must_fire_because": "`is_eligible` is `invariants and not errors and pareto`. Returning only the payload would move an evaluator that refused while emitting IN-BOUNDS metrics from REJECTED to ELIGIBLE -- a path no other arm here touches, because hygiene's 0.0 fails invariants anyway and hides it",
+   "can_fail_because": "the refusal is dropped from `errors` once its payload is kept",
+   "null_must_contain": "the errors list from the end-to-end run",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "errors": [
+     "hygiene: Exit 1: evaluator REFUSED, and its payload was complete -- the measure"
+    ],
+    "n_errors": 1,
+    "why_it_matters": "is_eligible = invariants and not errors and pareto"
+   }
+  },
+  {
+   "name": "C5_NOT_A_LOOSENING_the_recovered_payload_still_fails",
+   "must_fire_because": "THE ARM THAT DECIDES fix vs loosening. hygiene_score 0.0 recovered from a refusal must FAIL invariants, and must fail as a VIOLATION, not as a MISSING METRIC",
+   "can_fail_because": "invariants pass with 0.0 present, or the run still reports the metric as missing",
+   "null_must_contain": "the recovered value, the invariant result and which of the two lines was printed",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "recovered_hygiene_score": 0.0,
+    "invariants_passed": false,
+    "printed_INVARIANT_VIOLATION": true,
+    "printed_MISSING_METRIC": false
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_the_fix_changes_no_verdict",
+   "must_fire_because": null,
+   "can_fail_because": "the live runner and the pinned pre-fix runner agree on every one of the seven shapes",
+   "null_must_contain": "the count of shapes they disagree on",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "shapes_they_disagree_on": [
+     "refuse_with_payload",
+     "json_list"
+    ],
+    "n_disagree": 2
+   },
+   "refutes": "that the defect is more than cosmetic",
+   "fires_when": "the live runner and the pinned pre-fix runner agree on every one of the seven shapes",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_the_fix_swallows_a_genuine_crash",
+   "must_fire_because": null,
+   "can_fail_because": "the live runner keeps a payload for any shape that carries no measurement",
+   "null_must_contain": "the shapes the live runner gets wrong",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "kept_without_measurement": [],
+    "live_wrong": []
+   },
+   "refutes": "that this is a fix rather than the mirror collapse",
+   "fires_when": "the live runner keeps a payload for any shape that carries no measurement",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_the_existing_exit0_error_lesson_regressed",
+   "must_fire_because": null,
+   "can_fail_because": "`error_payload_exit0` is kept by the live runner",
+   "null_must_contain": "its live verdict",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "live_kept_it": false
+   },
+   "refutes": "that the change is additive",
+   "fires_when": "`error_payload_exit0` is kept by the live runner",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "newest": 1787176598,
+   "from": "scripts/autoloop.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures": {
+   "newest": 1787176411,
+   "from": "spikes/H245_evaluator_refusal_vs_crash/fixtures/ev_json_list.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/scripts at 6799738b: 1 modified. The build is NOT 6799738b.",
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures at 6799738b: 1 modified. The build is NOT 6799738b."
+ ],
+ "ok": false,
+ "falsifier": "the pinned pre-fix runner turns out to keep the refusal payload (no defect), OR the live runner keeps a payload for a shape that carries no measurement (the mirror collapse)",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

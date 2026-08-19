@@ -1,0 +1,91 @@
+{
+ "elapsed_sec": 0.38,
+ "end_to_end": {
+  "errors": [
+   "hygiene: Exit 1: evaluator REFUSED, and its payload was complete -- t"
+  ],
+  "invariants_passed": false,
+  "printed_INVARIANT_VIOLATION": true,
+  "printed_MISSING_METRIC": false,
+  "recovered_hygiene_score": 0.0
+ },
+ "live_runner_gets_wrong": [],
+ "pinned_prefix_commit": "cb6264fdb1a1e72b7fef00e222d7e112a564c74a",
+ "prefix_runner_gets_wrong": [
+  "refuse_with_payload",
+  "json_list"
+ ],
+ "shapes": [
+  {
+   "a_measurement_exists": true,
+   "disagree": true,
+   "live_err": "Exit 1: evaluator REFUSED, and its payload was complete -- the measurement is ke",
+   "live_kept_it": true,
+   "prefix_err": "Exit 1: ",
+   "prefix_kept_it": false,
+   "shape": "refuse_with_payload",
+   "what_it_is": "ran and refused: full payload on stdout, exit 1"
+  },
+  {
+   "a_measurement_exists": false,
+   "disagree": false,
+   "live_err": "Exit 1 and no parseable metric payload on stdout -- this is a CRASH, not a refus",
+   "live_kept_it": false,
+   "prefix_err": "Exit 1: Traceback (most recent call last):\n  File \"/Users/victorianikolenko/king",
+   "prefix_kept_it": false,
+   "shape": "crash",
+   "what_it_is": "crashed: empty stdout, traceback on stderr, exit != 0"
+  },
+  {
+   "a_measurement_exists": false,
+   "disagree": false,
+   "live_err": "Exit 1 and no parseable metric payload on stdout -- this is a CRASH, not a refus",
+   "live_kept_it": false,
+   "prefix_err": "Exit 1: ",
+   "prefix_kept_it": false,
+   "shape": "truncated",
+   "what_it_is": "died mid-write: half a JSON object, exit 1"
+  },
+  {
+   "a_measurement_exists": false,
+   "disagree": false,
+   "live_err": "evaluator reported error: artifacts do not exist yet",
+   "live_kept_it": false,
+   "prefix_err": "evaluator reported error: artifacts do not exist yet",
+   "prefix_kept_it": false,
+   "shape": "error_payload_exit0",
+   "what_it_is": "the existing lesson: exit 0, zeroed metrics, `error` set"
+  },
+  {
+   "a_measurement_exists": true,
+   "disagree": false,
+   "live_err": "",
+   "live_kept_it": true,
+   "prefix_err": "",
+   "prefix_kept_it": true,
+   "shape": "clean",
+   "what_it_is": "ran and passed: payload, exit 0"
+  },
+  {
+   "a_measurement_exists": false,
+   "disagree": false,
+   "live_err": "Exit 2 and no parseable metric payload on stdout -- this is a CRASH, not a refus",
+   "live_kept_it": false,
+   "prefix_err": "Exit 2: numpy is absent; refusing",
+   "prefix_kept_it": false,
+   "shape": "refuse_no_payload",
+   "what_it_is": "the documented exit-2 contract: refuses, emits NO metric"
+  },
+  {
+   "a_measurement_exists": false,
+   "disagree": true,
+   "live_err": "Failed to parse JSON output: [1, 2, 3]",
+   "live_kept_it": false,
+   "prefix_err": "",
+   "prefix_kept_it": true,
+   "shape": "json_list",
+   "what_it_is": "well-formed JSON that is not a payload: a list, exit 0"
+  }
+ ],
+ "spike": "H245"
+}
