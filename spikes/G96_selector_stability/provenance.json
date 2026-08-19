@@ -1,11 +1,11 @@
 {
  "spike": "G96_selector_stability",
- "recorded_utc": "2026-08-19T15:56:07Z",
+ "recorded_utc": "2026-08-19T21:27:33Z",
  "note": "G96. G95 nulled the selector in AGGREGATE and G88 publishes it as a frozen PER-KEY table with a sha256. This fits the same selector independently on two disjoint shuffled halves of validation and measures how often they choose the same arm for the same key, against a chance rate computed from the observed marginals rather than assumed at 1/5.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid",
-   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "head": "1fc5c5652207cc1923d0a6a765acdb14404343fa",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,26 +13,26 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null",
-   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "head": "1fc5c5652207cc1923d0a6a765acdb14404343fa",
    "clean": false,
    "dirty_files": [
+    "spikes/G95_selector_null/null.py",
     "spikes/G95_selector_null/selector_null.json"
    ],
-   "diff_sha256": "9f5e3d4727641dbe9b8e1c241666d74bde234ac5c8222ff594edb4b54cfe937f",
-   "diff_bytes": 448
+   "diff_sha256": "f502c2ff156f405453bd72cd4edaab10a0cf5fff51c498bf1e8f467969e63e41",
+   "diff_bytes": 1759
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
-   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "head": "1fc5c5652207cc1923d0a6a765acdb14404343fa",
    "clean": false,
    "dirty_files": [
-    "spikes/harness/commit_scoped.sh",
-    "spikes/harness/registry.py",
-    "spikes/harness/fleetcensus.sh",
-    "spikes/harness/versioncheck.py"
+    "spikes/harness/constcheck.py",
+    "spikes/harness/opencheck.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
    ],
-   "diff_sha256": "f069f1faff15eae8285fcaac6fb16e452daadbe7317469c16866b1089bce2720",
-   "diff_bytes": 6848
+   "diff_sha256": "0ad68182a8e1999a1cc46e03fe2a77f13972e5df8094ef85b3d353658ee185ad",
+   "diff_bytes": 16437
   }
  ],
  "manifests": {
@@ -55,17 +55,17 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G96_selector_stability/stability.json",
-   "sha256": "322db2e73ba901f6339619ba5fa3b654a31d1466be95ca5a0ac90aff877ee9db",
-   "bytes": 1214,
-   "mtime": 1787154967,
-   "compared_ts": 1787154967,
+   "sha256": "8562b8486d8955b401f1108af2aad1801aa1e8be2f1d56694108201be317f4ad",
+   "bytes": 1298,
+   "mtime": 1787174853,
+   "compared_ts": 1787174853,
    "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
  "toolchain": {
-  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-  "cargo_ndk": "cargo-ndk 4.1.2",
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
@@ -191,22 +191,23 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
-   "newest": 1787152328,
+   "newest": 1787158311,
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null": {
-   "newest": 1787154633,
+   "newest": 1787174696,
    "from": "spikes/G95_selector_null/selector_null.json"
   },
   "/Users/victorianikolenko/kingfisher/spikes/harness": {
-   "newest": 1787154954,
-   "from": "spikes/harness/versioncheck.py"
+   "newest": 1787174738,
+   "from": "<HEAD commit>"
   }
  },
  "problems": [],
  "ok": true,
  "falsifier": "If the two halves agreed at or below the marginal chance rate, the per-key table would be validation noise and neither G88's choice_sha256 nor G95's aggregate verdict could be quoted about any individual key.",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

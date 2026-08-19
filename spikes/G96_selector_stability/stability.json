@@ -6,7 +6,7 @@
  "chance_either_left_default": 0.244501,
  "chance_from_marginals": 0.570037,
  "distmult_only_mrr": 0.2852,
- "elapsed_sec": 143.06,
+ "elapsed_sec": 153.21,
  "full_counts": {
   "complex": 39,
   "distmult": 279,
@@ -53,6 +53,9 @@
  "n_keys_either_left_default": 139,
  "n_shared_keys": 424,
  "n_valid_rows": 35070,
+ "opens_at": {
+  "full_selector_sha256": "spikes/G88_5way_hybrid/result.json#/"
+ },
  "reproduced_mrr": 0.3143,
  "seed": 12648430,
  "spike": "G96"

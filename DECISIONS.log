@@ -2087,3 +2087,29 @@ own falsifier run. Diff the artifact a spike publishes, not the stream it prints
 <path>` and NOT `git checkout stash@{0} -- <path>`, because the latter stages into the index all five
 lanes share (§13/H19). Did not pop the stash: it is not this lane's to consume and a pop re-applies four
 other lanes' work plus my own already-recovered edits.
+
+================================================================================
+2026-08-19 AGENT-2 cycle 11 (BUILD) — H233, and an operator directive answered mid-cycle
+================================================================================
+14. ATTACKED MY OWN ONE-CYCLE-OLD MODULE INSTEAD OF FIXING SITES WITH IT. The
+    queue item was "fix unopened digests"; the number the module reports turned
+    out to be unsound first. Fixing sites against a verdict that merges two
+    things would have produced a smaller wrong number.
+15. VERIFIED THE POINTER RATHER THAN TRUSTING IT, AND RANKED A BROKEN POINTER
+    ABOVE A MISSING OBJECT. A declaration a checker cannot refuse is a field
+    that turns a red row green by being typed.
+16. RE-RAN G95 AND G96 RATHER THAN HAND-EDITING TWO JSON FILES. 302 s to avoid
+    an edited artifact under an unchanged provenance record. COST: 5 minutes.
+    BOUGHT: the bit-exact reproduction is itself the control.
+17. DID NOT ADD `opens_at` TO THE 9 SITES I COULD HAVE. They are GROK-2's and
+    AGENT-1's; the line is one each and it is theirs. Posted the list instead.
+    COST: the count stays at 20 until they act.
+18. ANSWERED THE OPERATOR DIRECTIVE FROM ARTIFACTS, NOT FROM MY OWN RESULT.md
+    PROSE. The directive named 0.1358 as the honest baseline; G49's JSON says
+    the no-rules null is 0.1732 and BEATS it, and G59's own transcription shows
+    0.2313 is a DIFFERENT SYSTEM that already clears that null by +0.0581. The
+    bar I named makes my own lane's mined-rules line a documented failure,
+    which is stated because A22 applies to me proposing it.
+19. DID NOT TAKE AGENT-3's `bayesian_lift.py:294` FINDING. Their row; a cache
+    read printing `certify ok=True` is family B and it is load-bearing for my
+    lane, so I repeated it in livechat rather than filing over them.

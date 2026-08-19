@@ -1,9 +1,35 @@
 #!/usr/bin/env python3
-"""opencheck v2 — a digest you PUBLISH must be openable from the artifacts you publish.
+"""opencheck v3 — a digest you PUBLISH must be openable from the artifacts you publish.
 
   python3 spikes/harness/opencheck.py              # census over every spike
   python3 spikes/harness/opencheck.py --selfcheck  # two-sided, must exit 0
   python3 spikes/harness/opencheck.py <spike_dir>  # one spike
+
+v3 RATIONALE (§12.7) — THE DEFECT REMOVED: **v2's headline number collapsed two
+different things into one verdict, and it is the same collapse that made G100's
+"one gate, eight citers, ONE PUBLISHER" wrong — a sentence that could not tell a
+CITATION from a PUBLICATION — arriving one level up, inside the detector written
+to catch it.** v2 reported **22 NO_OPENING**; G100 v2 independently calls 11 of
+them `OPENS_ELSEWHERE`, meaning the object exists in a sibling spike and the
+citing site merely does not say where. Two of the 22 are mine and both cite
+`f2e8f705f91d`, which is G88's `choice_sha256` and opens perfectly in G88's own
+artifact — republishing a second copy of a 446-entry table into two more files
+would have been the wrong repair. **A number that merges a defect with a
+bookkeeping gap will be quoted as the defect.**
+
+v3 adds `"opens_at": "<repo-relative file>#<json/path>"` beside a digest, and
+**VERIFIES IT RATHER THAN TRUSTING IT** — reads the file, walks the path,
+re-derives the digest from the object found there. Verdicts:
+
+  CITED_VERIFIED   the pointer resolves and the object re-derives the digest
+  CITATION_BROKEN  a pointer that does NOT resolve or does not re-derive, and it
+                   is reported as WORSE than NO_OPENING: an unopenable digest is
+                   a gap, a false pointer is an ASSERTION that the gap is closed
+  NO_OPENING       no object here, and nothing claimed elsewhere
+
+Family D applied to the module's own new feature: **observe or attest, never
+declare.** A declaration this checker could not refuse would be a field that
+turns a red row green by being typed.
 
 v2 RATIONALE (§12.7) — THE DEFECT REMOVED: **TWO FALSE POSITIVES, BOTH FOUND BY
 CROSS-CHECKING AGAINST AN INDEPENDENTLY-WRITTEN DETECTOR RATHER THAN BY ANY ARM
@@ -256,6 +282,48 @@ def publish(payload, key="sha256"):
     return dict(payload, **{key: hashlib.sha256(blob).hexdigest()})
 
 
+def walk_path(doc, jpath):
+    """Walk `/a/b/c` through nested dicts/lists. None if it does not resolve."""
+    node = doc
+    for part in [p for p in jpath.split("/") if p]:
+        if isinstance(node, dict) and part in node:
+            node = node[part]
+        elif isinstance(node, list) and part.isdigit() and int(part) < len(node):
+            node = node[int(part)]
+        else:
+            return None
+    return node
+
+
+def verify_citation(decl, digest, mins=()):
+    """(verdict, reason) for an `opens_at` declaration. VERIFIED, not trusted.
+
+    A declaration a checker cannot refuse is a field that turns a red row green
+    by being typed. This one resolves the file, walks the path, and re-derives
+    the digest from whatever object it lands on; anything else is
+    CITATION_BROKEN, which is reported as worse than NO_OPENING because it
+    asserts that a gap is closed.
+    """
+    if not isinstance(decl, str) or "#" not in decl:
+        return "CITATION_BROKEN", f"opens_at is not '<file>#<path>': {decl!r}"
+    rel, jpath = decl.split("#", 1)
+    target = os.path.join(ROOT, rel)
+    try:
+        doc = json.load(open(target))
+    except (OSError, ValueError) as e:
+        return "CITATION_BROKEN", f"opens_at file unreadable: {rel} ({e.__class__.__name__})"
+    node = walk_path(doc, jpath)
+    if node is None:
+        return "CITATION_BROKEN", f"opens_at path does not resolve: {rel}#{jpath}"
+    for blob, label, size in openings([(("dict" if isinstance(node, dict)
+                                        else "list"), len(node) if hasattr(node, "__len__") else 0,
+                                       node)], list(mins) + min_ns(doc, [])):
+        if hashlib.sha256(blob.encode()).hexdigest() == digest:
+            return "CITED_VERIFIED", f"{rel}#{jpath} re-derives it under {label}"
+    return "CITATION_BROKEN", (f"opens_at resolves but the object at {rel}#{jpath} "
+                               f"does NOT re-derive the digest")
+
+
 def check_spike(spike_dir):
     """[(artifact, path, digest, verdict, reason)] for one spike directory."""
     arts = [os.path.join(spike_dir, f) for f in sorted(os.listdir(spike_dir))
@@ -284,6 +352,23 @@ def check_spike(spike_dir):
                 label, size = index[digest]
                 rows.append((p, dpath, digest, "OPENABLE",
                              f"{label} over {size} entries"))
+            elif isinstance(parent, dict) and "opens_at" in parent:
+                # `opens_at` may be a STRING (one digest in this dict) or a DICT
+                # keyed by the digest's key name. Without the second form a dict
+                # carrying two digests could only ever declare one of them, and
+                # the other would read as NO_OPENING while a pointer sat beside
+                # it -- the exact merge-two-things-into-one-verdict defect this
+                # version exists to remove, reintroduced by the fix for it.
+                decl = parent["opens_at"]
+                if isinstance(decl, dict):
+                    decl = decl.get(key)
+                if decl is None:
+                    rows.append((p, dpath, digest, "NO_OPENING",
+                                 "opens_at present but names no pointer for "
+                                 f"{key!r}"))
+                else:
+                    v, why = verify_citation(decl, digest, mins)
+                    rows.append((p, dpath, digest, v, why))
             else:
                 biggest = max([s for _, s, _ in objs] or [0])
                 rows.append((p, dpath, digest, "NO_OPENING",
@@ -384,6 +469,39 @@ def selfcheck():
         refuses = True
     arms.append(("A8 publish() output opens, and it refuses to re-hash itself",
                  round_trips and refuses))
+    # A9/A10 — the v3 declaration, both sides. A pointer that a checker cannot
+    # REFUSE is a field that turns a red row green by being typed, so the four
+    # ways it can lie are each constructed and each must come back BROKEN.
+    host = _fixture(tmp, "A9_host", {"gate": dict(payload, sha256=digest)})
+    hostrel = os.path.relpath(os.path.join(host, "result.json"), ROOT)
+    d = _fixture(tmp, "A9_citer",
+                 {"cite": {"sha256": digest,
+                           "opens_at": f"{hostrel}#/gate"}})
+    arms.append(("A9 a resolving opens_at is CITED_VERIFIED, not NO_OPENING",
+                 [r[3] for r in check_spike(d)] == ["CITED_VERIFIED"]))
+    broken = {
+        "no hash separator": "spikes/nowhere/result.json",
+        "file missing": "spikes/nowhere/result.json#/gate",
+        "path missing": f"{hostrel}#/not_a_key",
+        "wrong object": f"{hostrel}#/gate/use_gate",
+    }
+    got = {}
+    for label, decl in broken.items():
+        d = _fixture(tmp, "A10_" + label.replace(" ", "_"),
+                     {"cite": {"sha256": digest, "opens_at": decl}})
+        got[label] = [r[3] for r in check_spike(d)]
+    arms.append(("A10 all four ways a pointer can lie are CITATION_BROKEN",
+                 all(v == ["CITATION_BROKEN"] for v in got.values())))
+    # A11 — the KEYED form, and the case it exists for: two digests in one dict
+    # where only one has a pointer. Without it the second reads NO_OPENING while
+    # a pointer sits beside it.
+    other = hashlib.sha256(b"not the object").hexdigest()
+    d = _fixture(tmp, "A11_keyed",
+                 {"cite": {"gate_sha256": digest, "select_sha256": other,
+                           "opens_at": {"gate_sha256": f"{hostrel}#/gate"}}})
+    v = sorted(r[3] for r in check_spike(d))
+    arms.append(("A11 a keyed opens_at verifies one digest and does not cover "
+                 "the other", v == ["CITED_VERIFIED", "NO_OPENING"]))
     # A6 — a nested repo root is pruned rather than scanned.
     nested = os.path.join(tmp, "A6_copy", "fresh")
     os.makedirs(nested, exist_ok=True)
@@ -428,21 +546,24 @@ def main(argv):
     for label, rs in (("NARROW — the digest names an in-run structure", narrow),
                       ("BROAD — every published digest that is not control "
                        "evidence or a file hash", rows)):
-        n_open = sum(1 for r in rs if r[3] == "OPENABLE")
-        n_shut = len(rs) - n_open
+        tally = {}
+        for r in rs:
+            tally[r[3]] = tally.get(r[3], 0) + 1
         sp = sorted({os.path.basename(os.path.dirname(r[0]))
                      for r in rs if r[3] == "NO_OPENING"})
         if rs is narrow:
             for p, dpath, digest, verdict, reason in rs:
-                if verdict == "NO_OPENING":
-                    print(f"  {verdict:12} {os.path.relpath(p, ROOT)}{dpath}  "
-                          f"{digest[:12]}\n                 {reason}")
+                if verdict in ("NO_OPENING", "CITATION_BROKEN"):
+                    print(f"  {verdict:16} {os.path.relpath(p, ROOT)}{dpath}  "
+                          f"{digest[:12]}\n                     {reason}")
         print(f"\n{label}")
-        print(f"  {n_open:5}  OPENABLE from the spike's own artifacts")
-        print(f"  {n_shut:5}  NO_OPENING  in {len(sp)} spike(s)")
+        for v in ("OPENABLE", "CITED_VERIFIED", "NO_OPENING", "CITATION_BROKEN"):
+            if tally.get(v):
+                print(f"  {tally[v]:5}  {v}")
+        print(f"  {len(sp):5}  spike(s) with a NO_OPENING")
         if rs is narrow:
             print(f"         {' '.join(sp) if sp else '(none)'}")
-    print("\nreport-only in v1. Whether this becomes a certify refusal is decided"
+    print("\nreport-only (v3). Whether this becomes a certify refusal is decided"
           "\nby the number above, not by preference — see WORK_QUEUE.md H226.")
     return 0
 

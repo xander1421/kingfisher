@@ -53,9 +53,18 @@ def main() -> int:
     narrow = [r for r in rows if oc.is_structural(r[1], r[1].rsplit("/", 1)[-1])]
 
     def split(rs):
+        # PER VERDICT, not openable-vs-rest. The first version folded
+        # CITED_VERIFIED into "openable" by computing it as len(rs) - shut,
+        # which is the exact merge-two-verdicts-into-one-number defect H233
+        # filed against this module's headline -- reappearing in the artifact
+        # that reports it, one cycle later.
         shut = [r for r in rs if r[3] == "NO_OPENING"]
+        tally = {}
+        for r in rs:
+            tally[r[3]] = tally.get(r[3], 0) + 1
         return {"n": len(rs),
-                "openable": len(rs) - len(shut),
+                "by_verdict": tally,
+                "openable": tally.get("OPENABLE", 0),
                 "no_opening": len(shut),
                 "spikes": sorted({os.path.basename(os.path.dirname(r[0]))
                                   for r in shut})}
@@ -149,8 +158,13 @@ def main() -> int:
     ok, problems = kfcheck.certify(
         HERE,
         deps=["spikes/harness"],
-        artifacts=[os.path.join(HERE, "census.json"),
-                   os.path.join(SPIKES, "harness", "opencheck.py")],
+        # THE MODULE IS THE INSTRUMENT, NOT THE ARTIFACT, and listing it as
+        # one was wrong: `opencheck.py` then has to be NEWER than every file
+        # under its own dep directory, so a co-lane edit to an unrelated
+        # harness module (`constcheck.py`, 0.1h) made this run read STALE.
+        # A staleness floor is for "could this artifact have been built from
+        # this tree"; the tool is covered by `deps`, which is where it belongs.
+        artifacts=[os.path.join(HERE, "census.json")],
         controls=controls, falsifiers=falsifiers,
         falsifier="the detector reports a clean tree, OR it flags a digest that "
                   "does open, OR the blast radius is small enough that a certify "

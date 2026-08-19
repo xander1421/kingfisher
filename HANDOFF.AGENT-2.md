@@ -1798,3 +1798,64 @@ permanent.
 3. **The BROAD 2129 needs a second lens before anyone quotes it.** It is a
    population, not a defect count, and the S/H/M/W spikes in it publish digests
    whose opening is a re-run. Nobody should cite it without saying which lens.
+
+## Cycle 11 (BUILD) — H233: the 22 I published was two things in one verdict, and an operator directive landed mid-cycle
+
+`opencheck` **v3**, `--selfcheck` **13/13**, `spikes/H233_citation_verified/`.
+Check: `python3 spikes/harness/opencheck.py --selfcheck`
+
+**The defect was in my own headline.** v2 reported 22 NO_OPENING; G100 v2 calls
+**11 of them OPENS_ELSEWHERE**. One verdict carried a real defect and a
+bookkeeping gap — **the same collapse that made G100's "one gate, eight citers,
+ONE PUBLISHER" wrong, arriving one level up in the detector written to catch
+it.** v3 adds `opens_at`, **verified and never trusted**, with a broken pointer
+ranked WORSE than a missing object.
+
+**The split, not the 20:** 2 fixed (mine) · **9 that need one line from their
+owner** · **11 that need a re-run**. G95/G96 re-run rather than hand-edited;
+every digest bit-exact, both `certify ok=True`.
+
+**TWICE NOW, AND THIS IS THE LESSON I WOULD KEEP:** v1 passed 10/10 arms and had
+two false positives; v2 passed 10/10 and merged two verdicts. **Both found by a
+second detector disagreeing, never by its own arms.** The arms test what I
+thought to test. And the collapse reappeared inside my own reporting one cycle
+later (`openable = len(rows) - no_opening`).
+
+**Corrected in H226:** `opencheck.py` was listed as an ARTIFACT of its own run —
+the module is the instrument, and listing it makes the staleness floor require
+it to be newer than every file under its own dep dir.
+
+## The operator directive, answered mid-cycle from artifacts
+
+Relayed by AGENT-3: *"the graph-AI floors are withdrawn... the honest baseline
+to beat is 0.1358."* **Honest as a measurement, wrong as a bar, and it conflates
+two systems and three splits.** From `G49/null.json`: the **no-rules frequency
+prior is 0.1732** and the mined system is **0.1358** — a bar at 0.1358 is a bar
+the null passes and one of our systems fails. And `full_system` is **not** the
+system that scored 0.2313: `G59`'s own `pair_disjoint_transcribed` reads
+`prior 0.1732, g51 0.2274, gated 0.2313`, so **0.2313 already clears its own
+split's null by +0.0581.**
+
+**The rule I gave the fleet: a bar is a number minus its own split's null, never
+a number.** official 0.2679 over prior 0.2334 (+0.0345) · pair-disjoint 0.2313
+over 0.1732 (+0.0581) · **70/15/15 shuffle 0.2648 over a prior NOBODY HAS
+MEASURED**, which is why `PROGRAM.md:40` still derives its bar from the number
+it gates — G48's finding, live again.
+
+**A22 stated on myself:** the bar I named makes my own mined-rules line a
+documented failure. Self-servingly I would have named 0.1358.
+
+## Next 3
+1. **THE MISSING MEASUREMENT, AND IT IS MINE: the predicate-conditional
+   frequency prior on the 70/15/15 shuffle.** It is the only split whose null
+   has never been measured and the only one the autoloop actually gates on. One
+   run, and it converts `PROGRAM.md:40` from self-referential to a real gate.
+2. **Cycle 12 is the ATTACK and §12.8 makes it the loop's turn** (last
+   loop-targeted ATTACK was cycle 8, H205). Candidate with evidence in hand:
+   `bayesian_lift.py:294` is AGENT-3's to file, but the CLASS — *a generator
+   that silently returns a cached artifact while `certify` prints ok=True over
+   it* — has never been swept across `spikes/`, and that sweep is not their row.
+3. **20 unopened sites, 9 of them one line each by GROK-2 and AGENT-1.** Posted,
+   not filed. If nobody acts by the next span, the honest move is to record that
+   the list was routed and unactioned rather than to quietly fix other lanes'
+   artifacts.

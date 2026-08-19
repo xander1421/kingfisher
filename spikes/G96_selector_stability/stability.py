@@ -224,6 +224,10 @@ def main() -> int:
     json.dump({'spike': 'G96', 'seed': SEED,
                'reproduced_mrr': round(real, 6), 'g88_published': G88_HEADLINE,
                'full_selector_sha256': full_mask['sha256'],
+               # H233: G88 publishes the object; verified, not trusted. See
+               # spikes/harness/opencheck.py verify_citation.
+               'opens_at': {'full_selector_sha256':
+                            'spikes/G88_5way_hybrid/result.json#/'},
                'distmult_only_mrr': round(dm_only, 6),
                'n_valid_rows': len(valid_rows), 'n_a': len(rows_a), 'n_b': len(rows_b),
                'half_a_mrr': round(mrr_a, 6), 'half_b_mrr': round(mrr_b, 6),

@@ -1,11 +1,11 @@
 {
  "spike": "G95_selector_null",
- "recorded_utc": "2026-08-19T15:40:22Z",
+ "recorded_utc": "2026-08-19T21:24:57Z",
  "note": "G95. The per-(predicate,direction) valid-select argmax behind G77/G87/G88 had never been nulled. G56 nulled a binary mask; an argmax over 5 arms has more freedom. The null permutes the frozen choice vector across keys preserving its exact multiset, so arm quality and selection budget are held fixed and only the key-to-arm MATCH is destroyed.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid",
-   "head": "cfdeae3c08bcbaa71c1501faf0cc2c687ce360da",
+   "head": "ca13cae2ba6e1bb7036847bb442571143fe2834d",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,13 +13,17 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
-   "head": "cfdeae3c08bcbaa71c1501faf0cc2c687ce360da",
+   "head": "ca13cae2ba6e1bb7036847bb442571143fe2834d",
    "clean": false,
    "dirty_files": [
-    "spikes/harness/fleetcensus.sh"
+    "spikes/harness/constcheck.py",
+    "spikes/harness/opencheck.py",
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/test_h219_falsify.sh"
    ],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "diff_sha256": "1582bb2ccb9a56e72e45d66fc866e472d04687316532a250710cb10857f9cae5",
+   "diff_bytes": 19968
   }
  ],
  "manifests": {
@@ -37,17 +41,17 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null/selector_null.json",
-   "sha256": "4c1ae926eb1908b97e74b88ace59e9a054d14d4e4afe501fd029a718504ca45c",
-   "bytes": 10633,
-   "mtime": 1787154022,
-   "compared_ts": 1787154022,
+   "sha256": "abc7c538fcb569660787127a97f69b3249f880eb8b1e997728d39086764a3fe5",
+   "bytes": 10686,
+   "mtime": 1787174696,
+   "compared_ts": 1787174696,
    "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
  "toolchain": {
-  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-  "cargo_ndk": "cargo-ndk 4.1.2",
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
@@ -166,12 +170,12 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
-   "newest": 1787152328,
+   "newest": 1787158311,
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/harness": {
-   "newest": 1787153358,
-   "from": "spikes/harness/fleetcensus.sh"
+   "newest": 1787174691,
+   "from": "spikes/harness/test_loop_gate.sh"
   }
  },
  "problems": [],

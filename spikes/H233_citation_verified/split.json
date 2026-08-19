@@ -1,0 +1,52 @@
+{
+ "citation_broken": [],
+ "cited_verified": [
+  "spikes/G95_selector_null/selector_null.json/selector_sha256",
+  "spikes/G96_selector_stability/stability.json/full_selector_sha256"
+ ],
+ "needs_a_pointer_from_its_owner": [
+  "spikes/G59_official_split/official.json/gate/sha256",
+  "spikes/G60_direction_gate/dir_gate.json/pred_gate/sha256",
+  "spikes/G61_lift_cap/lift_cap.json/pred_gate/sha256",
+  "spikes/G62_head_analog/head_analog.json/pred_gate/sha256",
+  "spikes/G67_head_aa/aa.json/pred_gate/sha256",
+  "spikes/G68_body_filter/body.json/gate/sha256",
+  "spikes/G73_head_select4/select.json/pred_gate/sha256",
+  "spikes/G75_complex_gate/hybrid.json/g59_pred_gate/sha256",
+  "spikes/G77_distmult_select/select.json/valid_select_three/sha256"
+ ],
+ "needs_its_spike_re_run": [
+  "spikes/G54_slice_gated_lift/slice_gated.json/gate/sha256",
+  "spikes/G56_gate_null/gate_null.json/gate/sha256",
+  "spikes/G60_direction_gate/dir_gate.json/dir_gate/sha256",
+  "spikes/G63_head_analog/head_analog.json/gate/sha256",
+  "spikes/G65_head_replace/replace.json/head_choice/sha256",
+  "spikes/G65_head_replace/replace.json/pred_gate/sha256",
+  "spikes/G67_head_aa/aa.json/head_choice/sha256",
+  "spikes/G73_head_select4/select.json/head_choice/sha256",
+  "spikes/G74_analog_only_slice/slice.json/pred_gate/sha256",
+  "spikes/G74_analog_only_slice/slice.json/reconstructed_choice/expected_sha256",
+  "spikes/G74_analog_only_slice/slice.json/reconstructed_choice/sha256"
+ ],
+ "no_opening": 20,
+ "no_opening_before": 22,
+ "selfcheck": {
+  "arms": [
+   "ok    A1 a dropped object is FLAGGED",
+   "ok    A2 the same digest with its object is NOT flagged",
+   "ok    A3 an artifact with no digest produces no rows",
+   "ok    A4 a file digest is out of population",
+   "ok    A5 a one-entry perturbation does NOT open the digest",
+   "ok    A7 a mutated digest recorded under controls/ is NOT reported",
+   "ok    A8 publish() output opens, and it refuses to re-hash itself",
+   "ok    A9 a resolving opens_at is CITED_VERIFIED, not NO_OPENING",
+   "ok    A10 all four ways a pointer can lie are CITATION_BROKEN",
+   "ok    A11 a keyed opens_at verifies one digest and does not cover the other",
+   "ok    A6 a directory holding a repo root is pruned",
+   "ok    F4a G101 opens from its own artifacts",
+   "ok    F4b G59 does NOT open from its own artifacts"
+  ],
+  "returncode": 0
+ },
+ "spike": "H233"
+}

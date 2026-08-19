@@ -1,22 +1,19 @@
 {
  "spike": "H226_digest_self_containment",
- "recorded_utc": "2026-08-19T21:16:38Z",
+ "recorded_utc": "2026-08-19T21:29:13Z",
  "note": "H226: opencheck v1 -- self-containment census over every spike.",
  "repos": [
   {
    "path": "spikes/harness",
-   "head": "cf1dd13ef76a68227943b57e01361614ec62e0c8",
+   "head": "d50626d78be35ef9092825ae70cd468bed352974",
    "clean": false,
    "dirty_files": [
     "spikes/harness/constcheck.py",
-    "spikes/harness/fleetcensus.sh",
     "spikes/harness/opencheck.py",
-    "spikes/harness/test_loop_gate.sh",
-    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
-    "spikes/harness/test_h219_falsify.sh"
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
    ],
-   "diff_sha256": "c86a8a0ea134c3f24ee080b68f15014b1f9d960950bd8a464cf21e9646432cf9",
-   "diff_bytes": 21507
+   "diff_sha256": "0bcb9a6e916b03a9b80140ca9dc64d0d8d4c18aedd3d7730b7b730c410f7e8e1",
+   "diff_bytes": 16780
   }
  ],
  "manifests": {
@@ -29,18 +26,10 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/H226_digest_self_containment/census.json",
-   "sha256": "bd6fcd9375137f0c93d6d736178a93aff92b160dcd343b125f93d4fd4fd86f2f",
-   "bytes": 9831,
-   "mtime": 1787174198,
-   "compared_ts": 1787174198,
-   "compared_clock": "mtime"
-  },
-  {
-   "path": "/Users/victorianikolenko/kingfisher/spikes/harness/opencheck.py",
-   "sha256": "a24949aa7ab53c810476acd698d66797b5a5a15ba8f758db9ac15687854001a1",
-   "bytes": 20895,
-   "mtime": 1787174186,
-   "compared_ts": 1787174186,
+   "sha256": "98c0f8847a0e15faa6a72072a246b14bc75c84dcb59bccb9b9aa275ad4f140ba",
+   "bytes": 10112,
+   "mtime": 1787174953,
+   "compared_ts": 1787174953,
    "compared_clock": "mtime"
   }
  ],
@@ -72,6 +61,9 @@
      "ok    A5 a one-entry perturbation does NOT open the digest",
      "ok    A7 a mutated digest recorded under controls/ is NOT reported",
      "ok    A8 publish() output opens, and it refuses to re-hash itself",
+     "ok    A9 a resolving opens_at is CITED_VERIFIED, not NO_OPENING",
+     "ok    A10 all four ways a pointer can lie are CITATION_BROKEN",
+     "ok    A11 a keyed opens_at verifies one digest and does not cover the other",
      "ok    A6 a directory holding a repo root is pruned",
      "ok    F4a G101 opens from its own artifacts",
      "ok    F4b G59 does NOT open from its own artifacts"
@@ -107,7 +99,7 @@
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "broad": 2139,
+    "broad": 2141,
     "narrow": 30
    }
   }
@@ -123,7 +115,7 @@
    "kind": "falsifier",
    "constant_observations": false,
    "observations": {
-    "n_spikes_narrow": 16,
+    "n_spikes_narrow": 14,
     "threshold": 3
    },
    "refutes": "that a certify refusal cannot ship this cycle",
@@ -140,8 +132,8 @@
    "kind": "falsifier",
    "constant_observations": false,
    "observations": {
-    "n_spikes_narrow": 16,
-    "n_spikes_broad": 71
+    "n_spikes_narrow": 14,
+    "n_spikes_broad": 70
    },
    "refutes": "that the remedy is a gate",
    "fires_when": "> 3 spikes carry one",
@@ -154,12 +146,12 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "spikes/harness": {
-   "newest": 1787174161,
+   "newest": 1787174918,
    "from": "spikes/harness/constcheck.py"
   }
  },
  "problems": [
-  "DIRTY TREE spikes/harness at cf1dd13e: 6 modified. The build is NOT cf1dd13e."
+  "DIRTY TREE spikes/harness at d50626d7: 3 modified. The build is NOT d50626d7."
  ],
  "ok": false,
  "falsifier": "the detector reports a clean tree, OR it flags a digest that does open, OR the blast radius is small enough that a certify refusal ships without a fleet-stop risk",

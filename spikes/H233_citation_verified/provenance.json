@@ -1,0 +1,160 @@
+{
+ "spike": "H233_citation_verified",
+ "recorded_utc": "2026-08-19T21:28:53Z",
+ "note": "H233: opencheck v3 -- CITED_VERIFIED / CITATION_BROKEN, and the split of NO_OPENING into nowhere vs elsewhere-and-unsaid.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "ffd003055eec3c9a0d8482a9261071accbfcf9d1",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/constcheck.py",
+    "spikes/harness/opencheck.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
+   ],
+   "diff_sha256": "0bcb9a6e916b03a9b80140ca9dc64d0d8d4c18aedd3d7730b7b730c410f7e8e1",
+   "diff_bytes": 16780
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H233_citation_verified/split.json",
+   "sha256": "cfed37ce33bf3aed1e2946ed01b5b9961120f930d32aefc89235c7b30c839dac",
+   "bytes": 2390,
+   "mtime": 1787174933,
+   "compared_ts": 1787174933,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_selfcheck_covers_both_sides_of_the_declaration",
+   "must_fire_because": "a pointer a checker cannot refuse is a field that turns a red row green by being typed",
+   "can_fail_because": "any of the 13 arms fails, including the four constructed ways a pointer can lie",
+   "null_must_contain": "the arm list and the exit code",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "returncode": 0,
+    "arms": [
+     "ok    A1 a dropped object is FLAGGED",
+     "ok    A2 the same digest with its object is NOT flagged",
+     "ok    A3 an artifact with no digest produces no rows",
+     "ok    A4 a file digest is out of population",
+     "ok    A5 a one-entry perturbation does NOT open the digest",
+     "ok    A7 a mutated digest recorded under controls/ is NOT reported",
+     "ok    A8 publish() output opens, and it refuses to re-hash itself",
+     "ok    A9 a resolving opens_at is CITED_VERIFIED, not NO_OPENING",
+     "ok    A10 all four ways a pointer can lie are CITATION_BROKEN",
+     "ok    A11 a keyed opens_at verifies one digest and does not cover the other",
+     "ok    A6 a directory holding a repo root is pruned",
+     "ok    F4a G101 opens from its own artifacts",
+     "ok    F4b G59 does NOT open from its own artifacts"
+    ]
+   }
+  },
+  {
+   "name": "C2_the_two_repaired_sites_verify",
+   "must_fire_because": "the repair must be checked by the same instrument that reported the defect, on the live artifacts",
+   "can_fail_because": "G95 or G96 stops resolving to G88's object",
+   "null_must_contain": "the verdict for each",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "cited": [
+     "spikes/G95_selector_null/selector_null.json/selector_sha256",
+     "spikes/G96_selector_stability/stability.json/full_selector_sha256"
+    ],
+    "broken": []
+   }
+  },
+  {
+   "name": "C3_split_is_exhaustive",
+   "must_fire_because": "every NO_OPENING must land in exactly one bucket or the split is hiding a third case",
+   "can_fail_because": "elsewhere + nowhere != the NO_OPENING count",
+   "null_must_contain": "all three counts",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "elsewhere": 9,
+    "nowhere": 11,
+    "no_opening": 20
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_the_collapse_is_not_real",
+   "must_fire_because": null,
+   "can_fail_because": "fewer than 3 sites resolve to an object published elsewhere",
+   "null_must_contain": "the elsewhere count and the threshold",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "elsewhere_now": 9,
+    "repaired_by_this_row": 2,
+    "elsewhere_before_repair": 11,
+    "threshold": 3
+   },
+   "refutes": "that NO_OPENING was carrying two different things",
+   "fires_when": "fewer than 3 sites resolve to an object published elsewhere",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_the_count_did_not_move",
+   "must_fire_because": null,
+   "can_fail_because": "NO_OPENING is still 22 after v3 and the two re-runs",
+   "null_must_contain": "the before and after counts",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "before": 22,
+    "after": 20
+   },
+   "refutes": "that the vocabulary change bought anything measurable",
+   "fires_when": "NO_OPENING is still 22 after v3 and the two re-runs",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787174918,
+   "from": "spikes/harness/constcheck.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE spikes/harness at ffd00305: 3 modified. The build is NOT ffd00305."
+ ],
+ "ok": false,
+ "falsifier": "every NO_OPENING turns out to be a genuine missing object, OR the declaration cannot be refused by the checker, OR the two re-runs move a published digest",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

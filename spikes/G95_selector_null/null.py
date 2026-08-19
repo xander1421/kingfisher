@@ -286,6 +286,13 @@ def main() -> int:
                'reproduced_mrr': round(real, 6),
                'g88_published_mrr': G88_HEADLINE,
                'selector_sha256': mask['sha256'], 'counts': counts,
+               # H233: the object behind this digest is G88's 446-entry
+               # `choice` table, published there and NOT duplicated here. The
+               # pointer is VERIFIED by `spikes/harness/opencheck.py`, which
+               # reads that file and re-derives the digest -- a declaration a
+               # checker cannot refuse would be a field that turns a red row
+               # green by being typed.
+               'opens_at': 'spikes/G88_5way_hybrid/result.json#/',
                'n_keys': len(keys), 'n_test_triples': n_test,
                'single_arm_mrr': {k: round(v, 6) for k, v in singles.items()},
                'best_single_arm': best_single,

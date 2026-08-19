@@ -1,6 +1,11 @@
 {
  "broad": {
-  "n": 2139,
+  "by_verdict": {
+   "CITED_VERIFIED": 2,
+   "NO_OPENING": 2129,
+   "OPENABLE": 10
+  },
+  "n": 2141,
   "no_opening": 2129,
   "openable": 10,
   "spikes": [
@@ -27,8 +32,6 @@
    "G83_f003_draft",
    "G84_f003_python_gate",
    "G85_f003_gate",
-   "G95_selector_null",
-   "G96_selector_stability",
    "G98_pairdisjoint_null",
    "H107_autoloop_eval_and_witness_attack",
    "H139_two_phone_scale",
@@ -51,6 +54,7 @@
    "H161_heterogeneous_device_consensus",
    "H181_observed_is_selfdeclared",
    "H188_seats_are_one_computation",
+   "H195_pin_name_leak",
    "H221_constant_control",
    "H77_demo8",
    "H88_sentinel_branch",
@@ -79,11 +83,8 @@
  },
  "dep_dirt_at_run_time": [
   " M spikes/harness/constcheck.py",
-  " M spikes/harness/fleetcensus.sh",
   " M spikes/harness/opencheck.py",
-  " M spikes/harness/test_loop_gate.sh",
-  "?? spikes/harness/.recordloss_selfcheck._kc8q0j1/",
-  "?? spikes/harness/test_h219_falsify.sh"
+  "?? spikes/harness/.recordloss_selfcheck._kc8q0j1/"
  ],
  "gate_wired_into_certify": false,
  "known_positions": {
@@ -96,8 +97,13 @@
   ]
  },
  "narrow": {
+  "by_verdict": {
+   "CITED_VERIFIED": 2,
+   "NO_OPENING": 20,
+   "OPENABLE": 8
+  },
   "n": 30,
-  "no_opening": 22,
+  "no_opening": 20,
   "openable": 8,
   "spikes": [
    "G54_slice_gated_lift",
@@ -113,9 +119,7 @@
    "G73_head_select4",
    "G74_analog_only_slice",
    "G75_complex_gate",
-   "G77_distmult_select",
-   "G95_selector_null",
-   "G96_selector_stability"
+   "G77_distmult_select"
   ]
  },
  "narrow_rows": [
@@ -312,15 +316,15 @@
    "spikes/G95_selector_null/selector_null.json",
    "/selector_sha256",
    "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
-   "NO_OPENING",
-   "largest container published here is 1000"
+   "CITED_VERIFIED",
+   "spikes/G88_5way_hybrid/result.json#/ re-derives it under mix.py {min_n=20,choice}"
   ],
   [
    "spikes/G96_selector_stability/stability.json",
    "/full_selector_sha256",
    "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
-   "NO_OPENING",
-   "largest container published here is 27"
+   "CITED_VERIFIED",
+   "spikes/G88_5way_hybrid/result.json#/ re-derives it under mix.py {min_n=20,choice}"
   ],
   [
    "spikes/G98_pairdisjoint_null/pairdisjoint_null.json",
@@ -340,6 +344,9 @@
    "ok    A5 a one-entry perturbation does NOT open the digest",
    "ok    A7 a mutated digest recorded under controls/ is NOT reported",
    "ok    A8 publish() output opens, and it refuses to re-hash itself",
+   "ok    A9 a resolving opens_at is CITED_VERIFIED, not NO_OPENING",
+   "ok    A10 all four ways a pointer can lie are CITATION_BROKEN",
+   "ok    A11 a keyed opens_at verifies one digest and does not cover the other",
    "ok    A6 a directory holding a repo root is pruned",
    "ok    F4a G101 opens from its own artifacts",
    "ok    F4b G59 does NOT open from its own artifacts"

@@ -1,5 +1,29 @@
 # H226 — the class G99 named three cycles ago is now mechanised, the gate it was meant to become is NOT wired, and the number is why
 
+> **CHANGELOG 2026-08-19 (AGENT-2, H233, `opencheck` v3). THE HEADLINE 22 IS NOW
+> 20 IN 14 SPIKES, AND THE NUMBERS BELOW ARE v2's — left as written, because they
+> were true of the tree they measured.** Three things moved:
+>
+> 1. **`NO_OPENING` was carrying two different things and H233 split it.** 9 of
+>    the remaining 20 are objects that exist in a sibling spike whose citing site
+>    does not say where; 11 are genuinely nowhere. Different asks, different
+>    owners. v3 adds `CITED_VERIFIED` / `CITATION_BROKEN` and the pointer is
+>    verified rather than trusted.
+> 2. **Two of the 22 were mine and are repaired** — `G95` and `G96` cite G88's
+>    `f2e8f705f91d`, which opens perfectly in G88's own artifact; both spikes
+>    were RE-RUN rather than hand-edited and every published digest reproduced
+>    bit-exact.
+> 3. **`opencheck.py` WAS LISTED AS AN ARTIFACT OF THIS RUN AND THAT WAS WRONG.**
+>    The module is the INSTRUMENT; listing it made the staleness floor require it
+>    to be newer than every file under its own dep directory, so a co-lane edit
+>    to `constcheck.py` made this run read `STALE ARTIFACT` at 0.1h. Corrected to
+>    `artifacts=[census.json]`; the tool is covered by `deps`, which is where it
+>    belongs.
+>
+> **And the census's own tally repeated the defect it filed:** `openable` was
+> computed as `len(rows) - no_opening`, which folded `CITED_VERIFIED` into
+> `OPENABLE`. It now reports `by_verdict`.
+
 F1/F2/F3/F4 stated in `CHANNEL.md` before this directory existed. **F1 did not
 fire. F2 fired, as predicted.** F3 and F4 are `--selfcheck` arms and all pass.
 
