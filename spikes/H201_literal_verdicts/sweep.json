@@ -1,0 +1,279 @@
+{
+  "head": "503231f850cefb9392a45465f8767401d8332d71",
+  "stamp": 1787158659,
+  "py_files_scanned": 487,
+  "live_literal_verdicts": 31,
+  "fixtures_in_demo_or_selfcheck": 11,
+  "trees_skipped": 98,
+  "unparseable": [],
+  "pins_template_sites": [
+    {
+      "file": "spikes/G86_length1_lift_mining/run.py",
+      "line": 221
+    },
+    {
+      "file": "spikes/G87_bidirectional_neurosymbolic/mix.py",
+      "line": 220
+    },
+    {
+      "file": "spikes/G88_5way_hybrid/mix.py",
+      "line": 231
+    },
+    {
+      "file": "spikes/G89_wn18rr_symbolic_mining/run.py",
+      "line": 327
+    },
+    {
+      "file": "spikes/G90_complex_wn18rr/run.py",
+      "line": 303
+    },
+    {
+      "file": "spikes/G91_rotate_wn18rr/run.py",
+      "line": 323
+    },
+    {
+      "file": "spikes/G93_wn18rr_hybrid/run.py",
+      "line": 620
+    },
+    {
+      "file": "spikes/H157_f003_adversarial_audit/attack.py",
+      "line": 189
+    },
+    {
+      "file": "spikes/H158_g87_adversarial_audit/attack.py",
+      "line": 225
+    },
+    {
+      "file": "spikes/H159_phone_desktop_distributed/run.py",
+      "line": 221
+    },
+    {
+      "file": "spikes/H164_rotate_wn18rr_adversarial_audit/attack.py",
+      "line": 200
+    },
+    {
+      "file": "spikes/S91_multi_agent_quorum/run.py",
+      "line": 251
+    }
+  ],
+  "live": [
+    {
+      "file": "spikes/G52_dev_calibrated_manifest/run_g52.py",
+      "line": 250,
+      "receiver": "controls[0]",
+      "verdict": "True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G52_dev_calibrated_manifest/run_g52.py",
+      "line": 251,
+      "receiver": "controls[1]",
+      "verdict": "True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G52_dev_calibrated_manifest/run_g52.py",
+      "line": 252,
+      "receiver": "controls[2]",
+      "verdict": "True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G59_official_split/official.py",
+      "line": 358,
+      "receiver": "controls[4]",
+      "verdict": "c5_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G86_length1_lift_mining/run.py",
+      "line": 221,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G87_bidirectional_neurosymbolic/mix.py",
+      "line": 220,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G88_5way_hybrid/mix.py",
+      "line": 231,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G89_wn18rr_symbolic_mining/run.py",
+      "line": 327,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G90_complex_wn18rr/run.py",
+      "line": 303,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G91_rotate_wn18rr/run.py",
+      "line": 323,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/G93_wn18rr_hybrid/run.py",
+      "line": 620,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/H157_f003_adversarial_audit/attack.py",
+      "line": 189,
+      "receiver": "falsifiers[1]",
+      "verdict": "f2=False",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/H158_g87_adversarial_audit/attack.py",
+      "line": 225,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/H159_phone_desktop_distributed/run.py",
+      "line": 221,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/H164_rotate_wn18rr_adversarial_audit/attack.py",
+      "line": 200,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/H181_observed_is_selfdeclared/forge.py",
+      "line": 121,
+      "receiver": "controls[1]",
+      "verdict": "c2_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/H194_gate_recall/certify_run.py",
+      "line": 33,
+      "receiver": "c1",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H194_gate_recall/certify_run.py",
+      "line": 47,
+      "receiver": "c2",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H194_gate_recall/certify_run.py",
+      "line": 61,
+      "receiver": "c3",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H194_gate_recall/certify_run.py",
+      "line": 75,
+      "receiver": "c4",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H200_seat_is_a_string/certify_run.py",
+      "line": 34,
+      "receiver": "c1",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H200_seat_is_a_string/certify_run.py",
+      "line": 45,
+      "receiver": "c2",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H200_seat_is_a_string/certify_run.py",
+      "line": 61,
+      "receiver": "c3",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H200_seat_is_a_string/certify_run.py",
+      "line": 73,
+      "receiver": "c4",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H200_seat_is_a_string/certify_run.py",
+      "line": 85,
+      "receiver": "c5",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H89_workspace_rail/certify_run.py",
+      "line": 39,
+      "receiver": "c1",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H89_workspace_rail/certify_run.py",
+      "line": 57,
+      "receiver": "c2",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H89_workspace_rail/certify_run.py",
+      "line": 71,
+      "receiver": "c3",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/H89_workspace_rail/certify_run.py",
+      "line": 83,
+      "receiver": "c4",
+      "verdict": "True",
+      "scope": "<module>"
+    },
+    {
+      "file": "spikes/S91_multi_agent_quorum/run.py",
+      "line": 251,
+      "receiver": "controls[2]",
+      "verdict": "c3_ok=True",
+      "scope": "main"
+    },
+    {
+      "file": "spikes/W2_witnessed_trie/attack.py",
+      "line": 353,
+      "receiver": "c",
+      "verdict": "True",
+      "scope": "attack_a6"
+    }
+  ],
+  "note": "A literal verdict is not automatically a dead control. H89/H194/H200 transcribe a result whose discriminating VALUES are recorded beside it (`observe(True, [2, 0], ...)`), so a third party can recompute. The pins template is the pure form: the observation is the two pin constants and nothing in the program compares them to anything. Both are reported; only the second is called a dead control, and that reading is prose, not the tool."
+}

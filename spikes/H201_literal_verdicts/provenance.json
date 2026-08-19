@@ -1,0 +1,168 @@
+{
+ "spike": "H201_literal_verdicts",
+ "recorded_utc": "2026-08-19T16:57:41Z",
+ "note": "measurement only; no other lane's spike is modified",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "503231f850cefb9392a45465f8767401d8332d71",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/constcheck.py",
+    "spikes/harness/fleetcensus.sh"
+   ],
+   "diff_sha256": "131d9f5477a4ed640619f2659e2a5a3f185da876a4ff2c81ef795ea47d617529",
+   "diff_bytes": 5176
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H201_literal_verdicts/sweep.json",
+   "sha256": "31e3a15cfdddcd935b2c6eb22df0f9ad8fa2a24d0cd74b09cd5b025d94bcd4ec",
+   "bytes": 7044,
+   "mtime": 1787158661,
+   "compared_ts": 1787158661,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "detector_two_sided",
+   "must_fire_because": "S91's form is caught AND a derived verdict is not; a detector that only ever says yes measures nothing",
+   "can_fail_because": "the name-resolution branch misses `c3_ok = True`, or the rule widens and flags `len(R) == 5`",
+   "null_must_contain": "the DERIVED arm -- a rule that flagged every `.observe(` would pass the catching arm alone",
+   "fired": true,
+   "detail": "synthetic: S91 form -> 1 hit; derived comparison -> 0 hits",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    1,
+    0
+   ]
+  },
+  {
+   "name": "name_resolution_is_load_bearing",
+   "must_fire_because": "v1 flagged only a literal FIRST ARGUMENT and could not see the instance that motivated the row",
+   "can_fail_because": "S91 is reachable without resolving the binding, so removing the branch changes nothing",
+   "null_must_contain": "a mutant that still finds S91, which would mean the branch is decoration",
+   "fired": true,
+   "detail": "S91 hits with branch / without; total live with / without",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    1,
+    0,
+    31,
+    17
+   ]
+  },
+  {
+   "name": "fixture_split_two_sided",
+   "must_fire_because": "a control built dead ON PURPOSE inside demo() is not a defect, and a real one in main() must not be excused as a fixture",
+   "can_fail_because": "the enclosing-function chain is not recorded, so both cases classify the same way",
+   "null_must_contain": "a rule that calls everything a fixture, which would pass the demo arm alone",
+   "fired": true,
+   "detail": "demo() -> fixture; main() -> live",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    true,
+    false
+   ]
+  },
+  {
+   "name": "reporter_is_not_the_reported",
+   "must_fire_because": "a spike about dead controls that ships one is the failure it describes, and saying \"mine are derived\" is not checking it",
+   "can_fail_because": "any `.observe(` in this spike takes a literal or a constant-bound name as its verdict",
+   "null_must_contain": "a run in which this file DOES contain a literal verdict, which is what the sweep would print",
+   "fired": true,
+   "detail": "this spike, scanned by the module it ships",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    0
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "f1_existing_guard_already_catches",
+   "must_fire_because": null,
+   "can_fail_because": "observe(True, {two keys}) sets constant=True",
+   "null_must_contain": "a guard that does catch it, which is the state that would kill this row",
+   "fired": false,
+   "detail": "replaying S91's exact observe() shape",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    false
+   ],
+   "refutes": "if Control.observe's `constant` flag already catches S91's C3, the premise is false and this row closes WRONG",
+   "fires_when": "observe(True, {two keys}) sets constant=True",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "f2_s91_is_the_only_site",
+   "must_fire_because": null,
+   "can_fail_because": "the tree-wide sweep finds exactly one live hit",
+   "null_must_contain": "a tree with one site, which is the state that would close this as a spike bug",
+   "fired": false,
+   "detail": "live literal verdicts; of which the copied pins template",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    31,
+    12
+   ],
+   "refutes": "if S91 is the only site this is an S91 defect and not a class, and no checker should ship",
+   "fires_when": "the tree-wide sweep finds exactly one live hit",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "f3_detector_flags_derived",
+   "must_fire_because": null,
+   "can_fail_because": "a verdict computed from a comparison is reported",
+   "null_must_contain": "a derived verdict being flagged, which is the observation that would stop the ship",
+   "fired": false,
+   "detail": "derived comparison, synthetic",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0
+   ],
+   "refutes": "if the detector flags a DERIVED verdict it is not shippable and the false-positive rate is the result, not the count",
+   "fires_when": "a verdict computed from a comparison is reported",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787158646,
+   "from": "spikes/harness/test_loop_gate.sh"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Control.observe's existing constant flag already catches S91's C3, or S91 is the only site (F1/F2)",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

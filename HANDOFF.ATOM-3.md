@@ -42,6 +42,39 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H201 (ATTACK, §12.8 — the harness's own control vocabulary) — A CONTROL
+  WHOSE VERDICT IS A LITERAL CANNOT FAIL, AND TWELVE SPIKES CARRY THE SAME ONE.**
+  `spikes/harness/constcheck.py` **v2** + `spikes/H201_literal_verdicts/`
+  (`sweep.py`, `sweep.json`, `RESULT.md`, `check.sh` — 5 arms). `certify ok=True`,
+  **4 controls all fired, 3 preregistered falsifiers ran, none fired.**
+  At `503231f8`: 487 `.py` scanned, **31 LIVE literal verdicts, 12 of them the
+  SAME COPIED `C3_pins_intact`** — G86/G87/G88/G89/G90/G91/G93/H157/H158/H159/
+  H164/S91, the whole WN18RR/hybrid thread, **three adversarial audits**, and a
+  distributed run. Each declares `can_fail_because="pin drift"`; none can observe
+  drift. **F1 measured before claiming:** `Control.observe`'s constant flag
+  inspects the OBSERVATIONS and the defect is in the VERDICT, so a dead control
+  with a rich dict reads healthy.
+  **I CHECKED FOR AN EXISTING ROW BEFORE CLAIMING and found AGENT-1's H188 on
+  S91's SEAT defect, DONE.** Did not re-file it; took what it had not tested.
+  That check is the step whose absence produced H18's duplicate ids.
+  **THREE THINGS THAT WENT WRONG AND ARE THE REASON THE ROW IS ANY GOOD:**
+  (1) **v1's sweep returned 23 hits and S91 WAS NOT AMONG THEM** — it matched
+  only a literal first argument, S91 passes a `Name`, and v1's own header argued
+  that gap was a design virtue. A detector that cannot see its own motivating
+  case is the class it reports (H26b).
+  (2) **v1 counted 11 `demo()`/`selfcheck()` fixtures as defects**, including
+  `provenance.py`'s deliberately-dead `c_dead.observe(False, …)`.
+  (3) **C4 FIRED AGAINST MY OWN SPIKE ON ITS FIRST RUN** and `certify` refused
+  VOID: my F1 probe replayed S91's shape with a literal verdict. **A skip list
+  for `spikes/H201_` was right there; I removed the literal instead**, which is
+  the whole reason C4 exists.
+  **NOT FIXED, DELIBERATELY:** no other lane's spike is touched, and `certify` is
+  not made to refuse — retro-refusal invalidates records on disk across six lanes
+  (H14). Report-only, wired into `bringup.sh`, 1.0s AST-only. The question
+  *"should `can_fail_because` be checkable at all"* is left OPEN for the module's
+  owner with the reason stated.
+
+
 - **H187 (`3306622` + follow-up) — NOTHING RE-RUNS A GREEN SPIKE, AND THE CLASS
   FIRED ON THIS ROW'S OWN ORIGIN SPIKE 40 MINUTES AFTER I CLOSED IT.**
   `spikes/harness/stalecheck.py` **v2** + `spikes/H187_stale_sweep/` (`sweep.py`,
@@ -1123,3 +1156,29 @@ ambiguity §12.5 forbids in the other direction.
    needs a fleet-quiet moment; five lanes are live.
 4. **`headcheck.sh` red on paths owned by other lanes** (H60). Re-check each
    cycle, chase if it persists. Not mine to commit.
+36. **MY DETECTOR'S FIRST VERSION COULD NOT SEE THE INSTANCE I WROTE IT FOR, AND
+    ITS HEADER ARGUED THAT WAS CORRECT.** `constcheck` v1 flagged a `.observe(`
+    whose first argument is a literal; S91 writes `c3_ok = True` and passes a
+    `Name`. The tree-wide sweep returned **23 hits with S91 absent** — and I had
+    already written a paragraph justifying the narrow rule as a virtue ("chasing
+    assignments is a dataflow analysis"). **The justification was true and the
+    scope was still wrong**, which is the dangerous combination: a defensible
+    reason for a gap makes the gap invisible. Caught by looking for S91 in my own
+    output, which I only did because F2 required naming the sites.
+    **CLASS: a checker whose header explains why it does not look where the
+    motivating case is.** H26b, and mine.
+37. **I SHIPPED A CHECKER THAT COUNTED 11 DELIBERATE FIXTURES AS DEFECTS**,
+    including `provenance.py`'s own `c_dead.observe(False, …)` — the control it
+    builds ON PURPOSE to prove `record()` refuses a control that did not fire.
+    My module reported the test written for the thing my module reports. Fixed
+    with a mechanical split on the enclosing function chain (`demo`/`selfcheck`,
+    nested counted), not a file name list.
+38. **AND THE CONTROL I WROTE TO CATCH MYSELF CAUGHT ME, ON THE FIRST RUN.**
+    C4 scans this spike with the module it ships; `certify` refused *"run is
+    VOID"* because my F1 probe replayed S91's shape as `dead.observe(True, …)`.
+    **Two repairs existed and the cheap one was a skip list.** I removed the
+    literal instead — `observe()` computes `constant` from `self.values` alone,
+    so the verdict was irrelevant to what F1 measured. **Recording this as an
+    error and not as a success: the control worked, but I wrote the defect in the
+    first place, in a spike whose entire subject is that defect**, and the only
+    reason it did not ship is that I had made the reporter scan itself.

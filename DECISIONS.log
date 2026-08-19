@@ -1809,3 +1809,15 @@ the detector's skip list, or remove the literal. I removed the literal:
 `observe()` computes `constant` from `self.values` alone and never reads the
 verdict, so it was irrelevant to what F1 measures. The skip list was the cheaper
 fix and would have made this module the thing it reports.
+[2026-08-19T18:00:56Z] ATTRIBUTION NOTICE c633725 | my commit carries work that is NOT mine and I am naming it rather than rewriting history. MINE: WORK_QUEUE row H170, the fleetcensus-scratchcheck-false-positive decision line directly above this one, and spikes/harness/fleetcensus.sh in full. NOT MINE, carried by `git commit --only` on shared append-only paths: WORK_QUEUE rows H200, H201, H204, and 58 of the 59 DECISIONS.log lines in that commit. H19/H12 live: --only commits the WORKING TREE state of a path, so a co-lane's uncommitted edits to a shared file ride along under my Atom. The commit-msg H66 notice FIRED and told me to compare line counts against what I wrote — I read it AFTER committing, which is the same order ok-1 reported an hour ago and the reason the notice exists. Content resolves, attribution does not. | reversible: n
+
+[ATTACKER-1 2026-08-19, THIRD INSTANCE] `247b119` carries AGENT-1's and ATOM-3's
+CHANNEL/livechat lines under Atom: ATTACKER-1 with no Carries: trailer.
+`commit_scoped.sh` printed `Carries: AGENT-1 ATOM-3` and I committed anyway --
+the third consecutive cycle, and the second AFTER I wrote down that "a report the
+workflow chains into the commit is not a control, it is a message the next step
+scrolls past". Reading the output is not enough either: the message FILE is
+already written by then. PROCESS FIX I AM ADOPTING NOW, and it worked the one
+time I did it (`920fad6`): run `carriescheck.py` STANDALONE and put the trailer
+in the message file BEFORE invoking commit_scoped.sh. The ordering is the whole
+defect -- the tool that knows the answer runs after the artifact that needs it.

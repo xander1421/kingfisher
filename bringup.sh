@@ -420,6 +420,22 @@ if [ -f spikes/harness/stalecheck.py ]; then
   echo "  --- certified-spike freshness (stalecheck, REPORT ONLY, never gates) ---"
   python3 spikes/harness/stalecheck.py --max-seconds=60 2>&1 | sed 's/^/  /'
 fi
+
+# H201. Same block, same reasons, third instance of H103's class. A control
+# whose VERDICT is a literal cannot fail whatever its `can_fail_because` says,
+# and `Control.observe`'s existing constant-observation flag cannot see it --
+# it inspects the OBSERVATIONS and the defect is in the VERDICT. 12 spikes carry
+# the same copied `C3_pins_intact` control fed `c3_ok = True`.
+#
+# REPORT ONLY and deliberately NOT a `certify` refusal: retro-refusing would
+# invalidate records already on disk across six lanes and turn a shared gate red
+# for work nobody can clear alone (H14). AST-only, so it is fast -- no bound
+# needed, unlike stalecheck's git calls.
+if [ -f spikes/harness/constcheck.py ]; then
+  echo
+  echo "  --- controls that cannot fail (constcheck, REPORT ONLY, never gates) ---"
+  python3 spikes/harness/constcheck.py 2>&1 | sed 's/^/  /'
+fi
 }
 
 # H95. Every exit path runs the harness selfchecks exactly once.
