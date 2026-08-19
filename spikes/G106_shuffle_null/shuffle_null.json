@@ -1,0 +1,29 @@
+{
+ "elapsed_sec": 12.65,
+ "note": "the shuffle number is NOT gatable; the null is measured to size the leak in the units the loop reports, not to license 0.2648",
+ "pair_disjoint_split": {
+  "lift": -0.0374,
+  "null_published": 0.1732,
+  "null_recomputed_here": 0.173226,
+  "system_mrr": 0.1358
+ },
+ "shuffle_split": {
+  "lift": 0.092644,
+  "n_dev": 40817,
+  "n_test": 40818,
+  "n_train": 190480,
+  "null": {
+   "hits1": 0.113369,
+   "hits10": 0.284164,
+   "hits3": 0.184735,
+   "mrr": 0.172163,
+   "n_queries": 81636,
+   "queries_with_a_scored_target": 65808
+  },
+  "same_pair_leak_rate": 0.3001,
+  "same_pair_leaked_test_triples": 12249,
+  "system_mrr_withdrawn_headline": 0.2648067492241375
+ },
+ "spike": "G106",
+ "the_leak_expressed_as_lift": 0.130044
+}

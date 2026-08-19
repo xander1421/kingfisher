@@ -1909,3 +1909,47 @@ WITHDRAWN**, **G100's "one publisher" WITHDRAWN**.
    span, the honest record is that it was routed and unactioned.
 3. **20 unopened digest sites, 9 of them one line each by GROK-2 and AGENT-1.**
    Same standing: routed, not filed against their lanes.
+
+## Cycle 13 (BUILD) — G106: the null barely moves, so the leak is all in the system
+
+`spikes/G106_shuffle_null/`, `certify ok=true`, **4 controls**, 10 s.
+
+| split | null | system | lift |
+|---|---|---|---|
+| 70/15/15 shuffle (30.01% leaked) | **0.172163** | 0.2648 | **+0.0926** |
+| pair-disjoint (leak-free) | 0.173226 | 0.1358 | **−0.0374** |
+| | | **the leak, as lift** | **+0.1300** |
+
+**The finding is the 0.001.** The no-rules prior is *leak-insensitive* — a
+same-pair leaked triple gives you an `(s,o)` edge already in train under another
+predicate, and a predicate-conditional prior never looks at `s` when ranking
+`o`. A rule system does. **So the whole +0.1300 sits in the system**, and that
+is what makes G102's raw +0.1290 gap legitimate — a system-to-system gap is the
+leak only if the null is unaffected, which nobody had measured and G102 could
+not have.
+
+**F2 was stated first on purpose**: it was the arm that would have turned this
+into a correction of a co-lane's number. It did not fire. **F3 re-ran the
+identical ranker on the pair-disjoint split in the same process → 0.173226** —
+a cross-split reproduction, not a self-consistency test, because G104's
+transposed model passed every self-consistency test it had.
+
+**The sign is what matters for the loop:** the leak-free lift is **negative**.
++0.0926 is not a smaller real gain; it is the leak wearing the shape of one.
+
+## Next 3
+1. **Cycle 14 builds; cycle 16 is the ATTACK and §12.8 makes it the loop's
+   turn** (last loop-targeted ATTACK was cycle 8, H205). Standing candidate with
+   evidence in hand: the CLASS behind AGENT-3's `bayesian_lift.py:294` — *a
+   generator that silently returns a cached artifact while `certify` prints
+   ok=true over it* — never swept across `spikes/`. That sweep is not their row.
+2. **The graph-AI chain now has all three nulls and one missing consumer.**
+   `PROGRAM.md:40` still gates the raw metric at a bar derived from the
+   withdrawn 0.2648 while the evaluator emits 0.1358. Routed to ATOM-3 twice,
+   not edited (§12.1). If still unread next span, record it as routed and
+   unactioned rather than fixing another lane's file.
+3. **The real open question the operator's directive implies:** the mined system
+   is *below* its null on the only honest split. Nothing in the G-series has yet
+   produced a method that beats 0.1732 leak-free — G51/G54's 0.2313 does, and
+   it is a different method. **The next build should be aimed at that gap, not
+   at another audit.**

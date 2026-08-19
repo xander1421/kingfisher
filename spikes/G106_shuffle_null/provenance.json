@@ -1,0 +1,184 @@
+{
+ "spike": "G106_shuffle_null",
+ "recorded_utc": "2026-08-19T21:43:41Z",
+ "note": "G106: the null on the 70/15/15 shuffle, and the leak re-expressed as lift rather than as a raw MRR gap.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants",
+   "head": "8bdd2a8dffe91ee6c717d14d3db2d7ab379db068",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split",
+   "head": "8bdd2a8dffe91ee6c717d14d3db2d7ab379db068",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop",
+   "head": "8bdd2a8dffe91ee6c717d14d3db2d7ab379db068",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G106_shuffle_null/shuffle_null.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/G106_shuffle_null/shuffle_null.json",
+   "sha256": "240d2e75271bf104c94aea837ecea32ed81606b8e837519278f4c3159537ceb1",
+   "bytes": 757,
+   "mtime": 1787175821,
+   "compared_ts": 1787175821,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_split_is_the_one_the_headline_came_from",
+   "must_fire_because": "the null must be on the same split as 0.2648 or it bounds nothing; that split is L.load_dataset()'s own 70/15/15",
+   "can_fail_because": "the split is not 70/15/15, or n_test moves",
+   "null_must_contain": "the three split sizes",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_train": 190480,
+    "n_dev": 40817,
+    "n_test": 40818,
+    "n_total": 272115
+   }
+  },
+  {
+   "name": "C2_this_split_really_does_leak",
+   "must_fire_because": "the whole reason its number is not gatable; a null on a split that turned out clean would be a different row",
+   "can_fail_because": "same-pair leaked test triples == 0",
+   "null_must_contain": "the leak count and rate",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaked_test_triples": 12249,
+    "n_test": 40818,
+    "rate": 0.3001
+   }
+  },
+  {
+   "name": "C3_both_query_directions_scored",
+   "must_fire_because": "a half-scored null compared against a fully scored system is not a comparison",
+   "can_fail_because": "n_queries != 2 * n_test",
+   "null_must_contain": "n_queries and n_test",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 81636,
+    "n_test": 40818
+   }
+  },
+  {
+   "name": "C4_the_split_rebuilds_to_the_same_null",
+   "must_fire_because": "re-calling one scorer on one list is not a reproduction; the SPLIT is re-derived from the pinned seed",
+   "can_fail_because": "the rebuilt split gives a different null",
+   "null_must_contain": "both values",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "first": 0.17216282419416828,
+    "rebuilt": 0.17216282419416828
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F2_the_leak_does_not_survive_the_null_subtraction",
+   "must_fire_because": null,
+   "can_fail_because": "|shuffle lift - leak-free lift| <= 0.005",
+   "null_must_contain": "both lifts and their difference",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "shuffle_lift": 0.092644,
+    "leakfree_lift": -0.0374,
+    "leak_as_lift": 0.130044
+   },
+   "refutes": "that the leak inflated the LIFT and not merely both numbers equally",
+   "fires_when": "|shuffle lift - leak-free lift| <= 0.005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_the_ranker_disagrees_with_itself_across_splits",
+   "must_fire_because": null,
+   "can_fail_because": "|pair-disjoint null - 0.1732| > 0.0005",
+   "null_must_contain": "the recomputed value and the published one",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "recomputed": 0.173226,
+    "published": 0.1732
+   },
+   "refutes": "that the shuffle number is comparable to G49/G104",
+   "fires_when": "|pair-disjoint null - 0.1732| > 0.0005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop": {
+   "newest": 1787175714,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the shuffle null makes the leaky lift indistinguishable from the leak-free one, OR the ranker fails to reproduce the pair-disjoint null in this same process"
+}
