@@ -73,9 +73,9 @@ cd "$(cd "$(dirname "$0")/../.." && pwd)"
 # a tree with no roster.txt, and $LANES still overrides for tests.
 _ROSTER="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/roster.txt"
 if [ -z "${LANES:-}" ] && [ -f "$_ROSTER" ]; then
-  LANES="$(sed 's/#.*//' "$_ROSTER" | awk 'NF{print $1}' | tr '\n' ' ')"
+  LANES="$(sed 's/#.*//'"$_ROSTER" | awk 'NF{print $1}' | tr '\n' ' ')"
 fi
-LANES=${LANES:-"AGENT-1 AGENT-2 ATTACKER-1 ATOM-3 ok-1 GEMINI-1"}
+LANES=${LANES:-"AGENT-1 AGENT-2 ATTACKER-1 ATOM-3 ok-1"}
 CHECK_ONLY=no
 while [ $# -gt 0 ]; do
   case "$1" in

@@ -20,21 +20,6 @@ AGENT-2         # 3 commits
 ATTACKER-1      # 16 commits, 3 livechat posts
 ATOM-3          # elder candidate: does not row, reviews across lanes (MISSION_LOOP 14.1)
 ok-1            # harness lane, owns class H. See RE-ADDED note below.
-GEMINI-1        # cross-vendor review. NOT a Claude lane. run_loop.sh dispatches
-                # ANTIGRAVITY-*|GEMINI-* to the `gemini` CLI and GROK-* to `grok`.
-                # NAME NOTE (operator, 2026-08-19): Google ships this as
-                # ANTIGRAVITY while the executable on PATH is `gemini`. Both
-                # prefixes work, so nobody is wrong for using either word.
-                # BLOCKED ON CREDENTIALS, not on wiring:
-                #   gemini -> no auth method set (GEMINI_API_KEY /
-                #             GOOGLE_GENAI_USE_VERTEXAI / GOOGLE_GENAI_USE_GCA)
-                #   grok   -> HTTP 402, Grok Build usage balance exhausted
-                # run_loop.sh probes a non-claude CLI once at launch and refuses
-                # with the vendor's own message, because `command -v` passing is
-                # not the same as the lane working -- GEMINI-1 was reported
-                # LAUNCHED with no process and no log until that probe existed.
-
-# CORRECTED 2026-08-17. This file previously listed `ok-1` as the fourth lane,
 # citing the operator ("should be total 4 now"), and recorded ATOM-3 as
 # "HISTORICAL ... not to be restarted". Both were wrong, and the operator asked
 # for the evidence rather than a vote. Session transcripts settle it:
@@ -99,11 +84,40 @@ GEMINI-1        # cross-vendor review. NOT a Claude lane. run_loop.sh dispatches
 #    correlated-priors argument, it is an availability one, and it is the reason
 #    the fleet had no working lane at all that morning.
 #
-# LAUNCH: `CALLSIGN=GEMINI-1 ./run_loop.sh`. run_loop.sh dispatches on the callsign
-# PREFIX rather than a new roster column, because a schema change would need
-# rostercheck.py, send.sh and bringup.sh to move together — H38's class.
+# CORRECTED 2026-08-19, same hour, operator: "leave gemini cli talk via socket".
+# GEMINI-1 IS NOT A LAUNCHED LANE. It is a PEER SESSION addressed over the session
+# bus, like the other interactive sessions -- SendMessage to its socket under
+# /tmp/cc-socks/, discovered with ListAgents. bringup.sh does not start it and
+# should not report it DOWN as though it failed to launch.
 #
-# BLOCKED ON A HUMAN: the gemini CLI (0.55.1, installed) has no auth configured.
-# It needs GEMINI_API_KEY, or GOOGLE_GENAI_USE_VERTEXAI with a project, in the
-# environment or in ~/.gemini/settings.json. Credentials are §10 territory and an
-# operator action; no lane sets them.
+# The instruction this replaces read `CALLSIGN=GEMINI-1 ./run_loop.sh` and was
+# wrong within the hour of being written. A stale launch command in the SANCTION
+# FILE is the class this repo keeps paying for -- a document telling a reader to
+# do something that is no longer how it works.
+#
+# run_loop.sh's vendor dispatch (GEMINI-* -> gemini CLI) is left in place and is
+# now DORMANT. It is correct if a spawned non-Claude lane is ever wanted, it costs
+# nothing while unused, and removing it would re-hardcode `claude -p` -- the defect
+# that made a non-Claude lane unlaunchable in the first place. The gemini CLI's
+# missing auth is therefore NOT a blocker for anything.
+
+# GEMINI-1 RETIRED 2026-08-19, same day it was added. Operator: Gemini has no
+# tokens either, so the fleet is Claude-only.
+#
+# REMOVED FROM THE ROSTER RATHER THAN LEFT AS A DOWN LANE, and the reason is
+# mechanical, not tidiness: bringup.sh reports every rostered lane it cannot start,
+# so an un-startable entry makes "fleet NOT fully established" the PERMANENT
+# verdict. That is H14's class exactly -- githygiene's own comment, "a checker that
+# fires on known-accepted items every run is a checker everyone learns to ignore."
+# A quorum check that can never read green stops being read at all.
+#
+# WHAT SURVIVES AND SHOULD NOT BE REVERTED: run_loop.sh's vendor dispatch
+# (GEMINI-* -> gemini CLI). It is dormant and costs nothing, and removing it would
+# re-hardcode `claude -p`, which is the defect that made a non-Claude lane
+# unlaunchable in the first place. The capability stays; only the roster entry goes.
+#
+# AND THE FINDING STANDS, because it was measured rather than argued: on
+# 2026-08-19 a single vendor's weekly cap took ALL FIVE lanes down at once --
+# instant-exit 2-4s, every ~10 minutes, ZERO COMMITS IN TWELVE HOURS. This fleet
+# has one point of failure and it is not a hypothesis. Recorded so the next person
+# who can add a second vendor knows what it buys.
