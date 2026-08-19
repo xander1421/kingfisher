@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""statuscheck.py v3 — H114 (v1), H117 (v2), H261 (v3). A row's status is asserted in one place: the queue.
+r"""statuscheck.py v3 — H114 (v1), H117 (v2), H261 (v3). A row's status is asserted in one place: the queue.
 
 v3 RATIONALE (§12.7) — ok-1, H261, 2026-08-19. DEFECT REMOVED: **the SELECT
 command this module's own docstring quotes could not read the queue.**
