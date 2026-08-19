@@ -1,0 +1,15 @@
+== A0 · THE SEMANTICS, measured rather than recalled (§13.2) ==
+  PASS  sh: a failed `.` with `|| true` never reaches the next command
+  PASS  bash: the same line DOES reach it -- so this is shell-specific, not universal
+  PASS  sh: the guarded form reaches it
+  PASS  F5 CONTROL · the guarded form still SOURCES a file that is present
+== A1 · F1: H243's refusal must be REACHABLE when the module is absent ==
+  PASS  A1 the sandbox census still exits non-zero
+  PASS  A1 and it now SAYS WHY -- before the fix this was 0 bytes (probe.before.out)
+== A2 · F3: the commit path must stay FAIL-OPEN with the module absent (H9/H11) ==
+  PASS  A2 the commit LANDS with the module absent
+== A3 · CONTROL: with the module PRESENT the hook still works ==
+  PASS  A3 the commit lands with lanelive.sh present too
+  PASS  A3 CONTROL the arms differ in INPUT, not only in label
+
+9 pass, 0 fail

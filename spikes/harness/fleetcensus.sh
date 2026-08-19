@@ -29,7 +29,12 @@ cd "$(cd "$(dirname "$0")/../.." && pwd)"
 # this supervisor RELAUNCHES all of them onto held callsigns -- the exact defect
 # the lock exists to prevent, caused by the fix for it. A missing check must not
 # read as an answer (CLAUDE.md: certify refuses, it does not warn).
-. spikes/harness/lanelive.sh 2>/dev/null || true
+# H265: `[ -r f ] && . f`, NOT `. f 2>/dev/null || true`. Under /bin/sh a
+# failed `.` TERMINATES the shell, so the `|| true` is never reached and
+# neither is the refusal below it. Measured, not recalled:
+#   sh   -c '. ./absent 2>/dev/null || true; echo R'  ->  (nothing)
+#   bash -c '. ./absent 2>/dev/null || true; echo R'  ->  R
+[ -r spikes/harness/lanelive.sh ] && . spikes/harness/lanelive.sh
 command -v launcher_alive >/dev/null || {
   echo "$(basename "$0"): spikes/harness/lanelive.sh is missing or did not define launcher_alive (H243)" >&2
   exit 1; }

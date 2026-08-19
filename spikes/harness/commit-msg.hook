@@ -165,7 +165,12 @@ case "$(val Claude-Session)" in
       # undefined, `_lp` is dropped, and control falls to that argv fallback,
       # which is the stricter of the two. Missing module = stricter, never
       # looser, and the hook stays fail-open overall (H9/H11).
-      . "${ROOT:-.}/spikes/harness/lanelive.sh" 2>/dev/null || true
+      # H265: `[ -r f ] && . f`, NOT `. f 2>/dev/null || true`. Under /bin/sh a
+      # failed `.` TERMINATES the shell, so the `|| true` is never reached and
+      # neither is the refusal below it. Measured, not recalled:
+      #   sh   -c '. ./absent 2>/dev/null || true; echo R'  ->  (nothing)
+      #   bash -c '. ./absent 2>/dev/null || true; echo R'  ->  R
+      [ -r "${ROOT:-.}/spikes/harness/lanelive.sh" ] && . "${ROOT:-.}/spikes/harness/lanelive.sh"
       if [ -n "$_lp" ]; then
         if command -v launcher_alive >/dev/null 2>&1; then
           launcher_alive "$_lp" || _lp=''

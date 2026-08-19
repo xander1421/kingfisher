@@ -337,7 +337,12 @@ printf '           beater subshells and the claude turn whose brief quotes the l
 # required: with `lanelive.sh` absent the predicate is undefined and the control
 # falls back to `kill -0`, i.e. to its previous behaviour, so a missing module
 # cannot make this file fail to run.
-. "$ROOT/spikes/harness/lanelive.sh" 2>/dev/null || true
+# H265: `[ -r f ] && . f`, NOT `. f 2>/dev/null || true`. Under /bin/sh a
+# failed `.` TERMINATES the shell, so the `|| true` is never reached and
+# neither is the refusal below it. Measured, not recalled:
+#   sh   -c '. ./absent 2>/dev/null || true; echo R'  ->  (nothing)
+#   bash -c '. ./absent 2>/dev/null || true; echo R'  ->  R
+[ -r "$ROOT/spikes/harness/lanelive.sh" ] && . "$ROOT/spikes/harness/lanelive.sh"
 _locked=0
 if ! command -v launcher_alive >/dev/null 2>&1; then
   # NOT a fallback to `kill -0`. This control's output is a COUNT, and a count

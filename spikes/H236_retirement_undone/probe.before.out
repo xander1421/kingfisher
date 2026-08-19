@@ -1,0 +1,27 @@
+== A3 · NULL: no marker, no STOP -- the census must be able to LAUNCH (F4) ==
+PASS   A3 launched
+PASS   A3 classified
+== A2 · CONTROL: STOP.L1 -- the census must be able to SUPPRESS a launch ==
+PASS   A2 not launched
+PASS   A2 classified
+== A1 · THE FINDING: a lane that exited LOOP-DONE ==
+FAIL   A1 not relaunched: got [yes] want [no]
+spikes/H236_retirement_undone/probe.sh: line 55: /Users/victorianikolenko/kingfisher/spikes/H236_retirement_undone/sandbox/.loop_exit.L1: No such file or directory
+FAIL   A1 marker survives: got [GONE] want [LOOP-DONE]
+FAIL   A1 classified: got [DOWN] want [RETIRED]
+== A4 · THE VOCABULARY, not one member of it: LOOP-HALT ==
+FAIL   A4 not relaunched: got [yes] want [no]
+spikes/H236_retirement_undone/probe.sh: line 55: /Users/victorianikolenko/kingfisher/spikes/H236_retirement_undone/sandbox/.loop_exit.L1: No such file or directory
+FAIL   A4 marker survives: got [GONE] want [LOOP-HALT]
+FAIL   A4 classified: got [DOWN] want [RETIRED]
+== A5 · CONTROL: LOOP-FUSE is a span cap, NOT a retirement -- must launch ==
+PASS   A5 relaunched
+== A6 · CONTROL: LOOP-IDLE does not end the launcher either -- must launch ==
+PASS   A6 relaunched
+== A7 · CONTROL: an unrecognised marker is not a retirement -- must launch ==
+PASS   A7 relaunched
+== A8 · THE SECOND SITE: the PRE-FLIGHT sweeper, under --check (writes nothing) ==
+FAIL   A8 does not call the retirement record stale: got [1] want [0]
+FAIL   A8 names it as a retirement record: got [0] want [1]
+
+7 pass, 8 fail

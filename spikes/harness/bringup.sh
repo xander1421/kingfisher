@@ -53,6 +53,20 @@
 # exit 0 = every declared lane is up. non-zero = at least one is not, and why.
 set -u
 cd "$(cd "$(dirname "$0")/../.." && pwd)"
+# REFUSE, don't continue, if the predicate is missing. Without this guard a
+# partial checkout leaves `launcher_alive` undefined, every lane reads DOWN, and
+# this supervisor RELAUNCHES all of them onto held callsigns -- the exact defect
+# the lock exists to prevent, caused by the fix for it. A missing check must not
+# read as an answer (CLAUDE.md: certify refuses, it does not warn).
+# H265: `[ -r f ] && . f`, NOT `. f 2>/dev/null || true`. Under /bin/sh a
+# failed `.` TERMINATES the shell, so the `|| true` is never reached and
+# neither is the refusal below it. Measured, not recalled:
+#   sh   -c '. ./absent 2>/dev/null || true; echo R'  ->  (nothing)
+#   bash -c '. ./absent 2>/dev/null || true; echo R'  ->  R
+[ -r spikes/harness/lanelive.sh ] && . spikes/harness/lanelive.sh
+command -v launcher_alive >/dev/null || {
+  echo "$(basename "$0"): spikes/harness/lanelive.sh is missing or did not define launcher_alive (H243)" >&2
+  exit 1; }
 
 # FOUR declared lanes. `ok-1` was UNDECLARED for hours -- spawned by an ATOM-3
 # probe of this very launcher, killed at the child and respawned by its detached
@@ -234,7 +248,26 @@ for f in .loop_signal.* .loop_exit.*; do
   case "$f" in *'*'*) continue ;; esac
   case "$f" in *.last) continue ;; esac
   _cs=${f#*.}; _cs=${_cs#*.}
-  if [ -n "$(lane_pid "$_cs")" ] || { [ -f ".loop_lock.$_cs" ] && kill -0 "$(tr -dc '0-9' < ".loop_lock.$_cs")" 2>/dev/null; }; then
+  # H236: A RETIREMENT RECORD IS NOT A STALE SIGNAL. `.loop_exit.$lane` holding
+  # LOOP-DONE or LOOP-HALT is the surviving evidence that the lane exited under
+  # MISSION_LOOP §7 -- run_loop.sh:557 breaks on exactly those two and leaves the
+  # file behind (it clears $BEAT and not this). This loop's liveness guard cannot
+  # see the difference: a retired lane HAS no process by definition, so it took
+  # the not-live branch and its record was deleted -- and `bringup.sh` then read
+  # the absence as DOWN and started it again. Measured before the fix in
+  # `spikes/H236_retirement_undone/probe.before.out`, arm A8. The set is the
+  # launcher's `break` branch, NOT §7's vocabulary: LOOP-IDLE and LOOP-FUSE do
+  # not end a lane, so those two stay sweepable. Pinned by test_loop_gate.sh §15.
+  case "$f" in .loop_exit.*)
+    case "$(tr -d '[:space:]' < "$f" 2>/dev/null)" in
+      LOOP-DONE|LOOP-HALT)
+        note live "$f is a §7 RETIREMENT record ($(tr -d '[:space:]' < "$f")) -- the lane retired on purpose, left alone"
+        continue ;;
+    esac ;;
+  esac
+  # H243: pid+command, never `kill -0` alone -- a recycled pid otherwise reads as
+  # a live lane and this branch leaves a stale file in place forever.
+  if [ -n "$(lane_pid "$_cs")" ] || { [ -f ".loop_lock.$_cs" ] && launcher_alive "$(tr -dc '0-9' < ".loop_lock.$_cs")"; }; then
     note live "$f belongs to a LIVE lane ($_cs) -- NOT stale, left alone"
     continue
   fi

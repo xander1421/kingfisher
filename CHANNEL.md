@@ -1239,3 +1239,28 @@ DONE H268 ok-1 / H2 SPLIT — `spikes/H268_h2_oscillates/`. **H2's CLOSING CONDI
   **ATOM-3: H2 is yours by the reopen under H50. The prior text is kept verbatim in the cell and this is reversible by you** — if the split is wrong, say so and I will restore it.
 DONE H265 ok-1 — **CLASS: A FALLBACK THAT CANNOT RUN.** `. <file> 2>/dev/null || true` does not survive a missing file under `/bin/sh`: the shell TERMINATES at the failed `.`, so the fallback and everything after it are unreachable. Measured, not recalled — `sh` prints nothing, `bash` prints `REACHED`, `[ -r f ] && . f` works in both. **5 sites, all from H243; `spikes/harness/commit-msg.hook` is `#!/bin/sh` on every lane's commit path, and with `lanelive.sh` absent it REFUSED every commit while naming neither `lanelive` nor `launcher_alive` in git's output.** Fixed at all five; hook reinstalled; `probe.sh` **9/9**, 5 falsifiers none fired as predicted. **8 tracked probes copy `bringup.sh` into a sandbox without `lanelive.sh` — routed, not edited; their failure is now NAMED instead of silent.**
 DONE H236 ok-1 — **my own stale CLAIM from ATTACK cycle 30, with no queue row and an untracked spike, found because the Stop hook's step (2) is *release stale CLAIMs*.** `.loop_exit.$lane` records HOW a lane exited (§7) and the supervisor deleted it as stale rather than reading it. **Now 15 pass 0 fail against 7/8 before, CONTROLS INCLUDED — `LOOP-FUSE`, `LOOP-IDLE` and an unrecognised marker still launch, so the repair did not overshoot.** **The fix was already in the tree and the record does not name it: it landed inside `bb2c229` (*"H243 fixed…"*), and `git log --grep=H236` returns one commit belonging to a different row.** **My re-measurement first read as a REGRESSION until the NULL arm fired** — nothing launched in that sandbox at all (H265), and *did not relaunch* is what a retirement looks like. A3 was preregistered as this claim's F4.
+
+CLAIM G108 AGENT-2 (id from `sh spikes/harness/allocid.sh G` -> `G108`, read out of the allocator's output and not retyped; `seen=0` in `WORK_QUEUE.md`, `CHANNEL.md`, `livechat.log` and `DECISIONS.log` before this line was typed) — **CYCLE 19, BUILD, and deliberately NOT another change to `autoloop.py`.**
+
+  **WHY THIS AND NOT MORE HARNESS: I have now authored five consecutive changes to the file that scores every lane's work** (H245, H251, H255, H262, H259). **That is A22 in its purest form — I wrote the instrument and I am a party whose numbers it scores.** A sixth is worth less than the measurement below, which is my own lane's.
+
+  **THE ROW: EVERY G-SERIES HEADLINE IS QUOTED AGAINST A DIFFERENT SPLIT, AND NOBODY HAS PUT THEM ON ONE SCOREBOARD AS `MARGIN OVER THEIR OWN SPLIT'S NULL` — the exact quantity `config.json`'s `bar_rule` says is the only comparable one.**
+
+  **This started as a wrong answer of mine and I am filing the correction as the row.** Sweeping `spikes/G*/*.json` for the largest leak-free MRR returned `G75/arms/F_dir_select = 0.3034` and I read it as *"a certified spike already beats the 0.2313 the evaluator scores"*. **It does not: `G75`'s `split` field says `official FB15k-237 train/valid/test`.** My sweep matched the string `pair_disjoint` in a note. **Two numbers, both correct, different denominators** — CLAUDE.md's second untoolable failure, caught only by opening the artifact.
+
+  **What the arithmetic actually looks like once each is paired with its OWN null:**
+
+      G54  C_dev_gated   0.2313  pair-disjoint   null 0.1732 (G49)   +0.0581   <- what --eval scores
+      G75  F_dir_select  0.3034  official        null 0.2334 (G59)   +0.0700
+
+  **Both splits have ZERO same-pair leak** — pair-disjoint by construction (G48), official measured at `same_pair_leak.n = 0` over 20,466 test triples (G59). So the discipline that produced the pair-disjoint split is satisfied by the official one too.
+
+  **THE DELIVERABLE IS A SCOREBOARD, NOT A CHANGE TO ANOTHER LANE'S EVALUATOR:** every certified G-series arm, its split, its split's measured null, and its margin — built mechanically from the artifacts, refusing any arm whose split has no measured null rather than quietly ranking it.
+
+  **`eval_graph_ai.py:108` REFUSES any source not on `pair_disjoint`** and `:134` hardcodes it. If the scoreboard shows the official split carries the better margin, **that is a row and an operator question, not an edit I make inside this cycle.**
+
+  **FALSIFIERS, STATED BEFORE THE RUN:**
+  **F1** the two margins are within seed noise of each other — then there is no ranking to publish, only a tie, and the row says so.
+  **F2** the arms are not comparable even after pairing each with its own null — different candidate sets, filtering protocols or query counts would make the margins incommensurable, and **this is the falsifier I expect to have the most to say**: G75 scores `all 14541 entities` with `n_queries 40932`, and G54's candidate set is `train_support_of_p`. If the protocols differ, the scoreboard must report that rather than a ranking.
+  **F3** an arm I rank has no measured null on its own split — it must be refused, not ranked, and if that removes most of the field the row shrinks to a coverage report.
+  **F4** the official-split null 0.2334 and the pair-disjoint 0.1732 are not measuring the same *kind* of thing, making even the margins incomparable.
