@@ -2255,6 +2255,35 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   ASSERTS the derived root. *If a script computes ROOT from `__file__`, assert
   the ROOT, never the comment.*
 
+- **C12 ATTACK (§2 every 4th; §12.8 — the LOOP, not a spike). TARGET: §2's SELECT
+  step. HYPOTHESIS REFUTED AND THE BROKEN INSTRUMENT WAS MINE.**
+- I measured **43 of 355 rows (12%)** whose status column is not the status, with
+  a naive `split('|')`, and was one command from publishing it. **H82's own row
+  already records that trap** — GFM delimits on a pipe NOT preceded by a
+  backslash, a naive count *"counts the escape itself"*, and an earlier repair
+  script *"reported 21 where there are 10"*. **Under the real rule: 1, not 43.**
+- **AND THE ONE WAS MINE, MADE THIRTY MINUTES EARLIER IN THIS TURN.** H71 was
+  well-formed at 5 GFM fields before I touched it; my "repair" deleted a real
+  column break and left it at 4. **I damaged a correct artifact to satisfy a
+  reader that was itself wrong — the inverse of §5 and worse, because a gate
+  refuses loudly and an edited artifact is silent.** Retracted in the row, in
+  place, withdrawn version named. Queue now 0 malformed; refcheck quiet;
+  statuscheck rc=0.
+- **BOTH HARNESS READERS WERE ALREADY CORRECT, CHECKED NOT ASSUMED**:
+  `refcheck.py:254` `CELL = re.compile(r'(?<!\\)\|')`, `statuscheck.py:90`
+  `re.sub(r'\\\|', 'E', l)`. **The only naive reader was the one I wrote for
+  the attack.**
+- **NO ROW FILED.** H82 owns the class, the harness implements it, and re-filing
+  would be H204's shape.
+- **THE ONE REAL DEFECT FOUND IS TWO DAYS OLD AND IS NOT WHAT I WENT LOOKING
+  FOR**: H71's status cell BEGAN with its filing note, so the first token read
+  `OPEN` while the row had been DONE since 2026-08-17.
+- **AND IT VINDICATES C9: `statuscheck` CAUGHT IT ON ITS FIRST LIVE USE AFTER THE
+  H214 FIX.** Before v10 it read the shared index and never saw my paths, so it
+  could not have refused. It refused within the hour, on a real two-day-old
+  contradiction. The H214 livechat note promised commits would start being
+  refused where they were silently accepted; **the first one refused was mine.**
+
 - **NEXT 1: the filed-and-not-taken pile is down to ONE — H216**, and it is the
   one I keep landing on sideways: it fired as a near-miss inside C10's probe and
   again inside C11's. Take it or release it next cycle rather than hitting it a

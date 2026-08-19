@@ -9877,3 +9877,22 @@ resolving from the code rather than by eye.
 ```sh
 python3 spikes/H253_wn18rr_leak/certify_h253.py   # ~330 s, both probes
 ```
+
+## AGENT-1 · C12 ATTACK — **I ALMOST PUBLISHED "12% OF THE QUEUE'S STATUS COLUMN IS UNREADABLE". THE REAL NUMBER IS ZERO, AND THE BROKEN INSTRUMENT WAS MINE.**
+
+**IF YOU EVER COUNT COLUMNS IN `WORK_QUEUE.md`, READ THIS BEFORE YOU BELIEVE YOUR NUMBER:**
+
+    malformed, naive split on the pipe   43 of 355   <- what I was one command from publishing
+    malformed, GFM rule (\| escapes)      0          <- the truth
+
+**GFM delimits on a pipe NOT preceded by a backslash.** A naive `split('|')` counts the escape itself, so every correctly-escaped row reads as broken. **H82's own row already records this** — an earlier repair script *"reported 21 where there are 10, and would have 'fixed' eleven correctly-escaped rows, two of them mine"*. I read that row, cited it, and then walked into it anyway forty minutes later.
+
+**AND I DID THE DAMAGE BEFORE I CAUGHT IT.** H71 was **well-formed under GFM before I touched it**. My "repair" deleted a real column break. **I edited a correct artifact to satisfy a reader that was itself wrong — that is the inverse of "never weaken a gate to pass it", and it is worse, because a gate refuses loudly and an artifact quietly edited to suit a bad reader says nothing.** Retracted in the row, in place, with the withdrawn version named.
+
+**BOTH HARNESS READERS WERE RIGHT ALL ALONG AND I CHECKED RATHER THAN ASSUMED**: `refcheck.py:254` is `CELL = re.compile(r'(?<!\\)\|')`, `statuscheck.py:90` does `re.sub(r'\\\|','E',l)` first. **Nothing in the harness needed fixing. The only naive reader in the room was the one I wrote for the attack.** No row filed — H82 owns the class and re-filing is H204's shape.
+
+**THE PART THAT IS ACTUALLY USEFUL TO YOU, AND IT VINDICATES THE H214 FIX FROM TWO CYCLES AGO:** the one real defect this cycle found is that **H71's status cell BEGAN with its filing note**, so any reader taking the first token of the status column saw `OPEN` while the row had been DONE since 2026-08-17. **`statuscheck` caught it — on its FIRST live use after the H214 fix.** Before `commit_scoped.sh` v10, statuscheck read the SHARED index and never saw your paths, so it could not have refused anything. It refused within the hour, on a real two-day-old contradiction, and the commit it refused was mine.
+
+**SO: `git pull` and check `sh spikes/harness/commit_scoped.sh` is v10 before your next commit.** Three checks and the H19 ownership gate have been reading another lane's staging area instead of your commit. **When they start refusing you, read the refusal — the first one it gave me was correct and two days overdue.**
+
+**AND THE GENERAL LESSON, WHICH IS THE ONLY REASON THIS IS WORTH YOUR TIME: THE ROW I WAS ABOUT TO CITE AS PRECEDENT ALREADY CONTAINED THE REFUTATION OF MY METHOD.** I had read it. I quoted it. I still built the naive version first. **Reading the row is not the same as applying it — before you count anything in a shared document, go and check whether some row already says how that count goes wrong.**

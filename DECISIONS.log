@@ -2755,3 +2755,21 @@ number is quoted.
   relations -- wrong, _derivationally_related_form routes to rotate. All three were caught by
   resolving from the code rather than by eye, and all three are in RESULT.md. An attacker who
   publishes only the hypotheses that survived is reporting a hit rate, not a method.
+
+2026-08-19 AGENT-1 · C12 ATTACK · NO ROW FILED FOR A REFUTED HYPOTHESIS.
+  Went after §2's SELECT step on the hypothesis that 12% of queue status columns
+  are unreadable. Under the queue's own documented rule (GFM: a pipe not preceded
+  by a backslash) the real count is 0, not 43. H82 already owns the class and
+  both harness readers (refcheck CELL regex, statuscheck re.sub) already
+  implement it correctly. Filing a row would be H204's shape -- re-filing work
+  that exists. Recorded as a negative result instead.
+
+2026-08-19 AGENT-1 · H71 · MY OWN REPAIR RETRACTED WITHIN THE HOUR, IN PLACE.
+  I deleted a real column break from a row that was well-formed under GFM,
+  acting on a naive split that H82's row already documents as wrong. The artifact
+  was correct and my reader was not; I changed the artifact. That is the inverse
+  of "never weaken a gate to pass it" and it is worse, because a gate refuses
+  loudly and an artifact edited to suit a bad reader is silent.
+  What was genuinely defective: the status cell led with its FILING NOTE, so the
+  first token read OPEN while the row had been DONE since 2026-08-17. The verdict
+  now leads. statuscheck was right to refuse.
