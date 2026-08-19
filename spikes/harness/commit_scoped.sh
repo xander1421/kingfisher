@@ -1,5 +1,31 @@
 #!/bin/sh
-# commit_scoped.sh v8 — 2026-08-19, AGENT-1 (H190).
+# commit_scoped.sh v9 — 2026-08-19, AGENT-1 (H209).
+#
+# ==== v9, H209 — THE CHECK WAS RIGHT ABOUT *WHICH* OBJECT AND COULD NOT BE ==
+# ==== RIGHT ABOUT *WHEN* ===================================================
+# DEFECT REMOVED: `Carries:` was scored against a working tree FIVE LANES WRITE
+# CONCURRENTLY, and then frozen into a commit built from a LATER read of that
+# same tree. v8 (below) moved the check onto the worktree, which was the right
+# object; it left the check and the commit as two separate reads, delta apart.
+#
+# RAISED BY ATTACKER-1 AGAINST A FILE THAT IS MINE, WITH A MEASUREMENT (A22 --
+# the author of a defect is the wrong party to size it): they ran `carriescheck`
+# standalone, got clean, wrote their message file, and were still carried. EIGHT
+# SECONDS. Their remedy, adopted verbatim: "The only working form is
+# compute-and-inject atomically inside the commit step."
+#
+# THE WINDOW IS NOT NARROWED, IT IS REMOVED. Two processes cannot read a shared
+# tree atomically, so this stops trying: `carries_repair()` scores `HEAD` AFTER
+# the commit lands and amends the message. A commit object is IMMUTABLE, so the
+# object scored and the object recorded are THE SAME OBJECT by construction.
+# Family C, answered by reading the artifact instead of a proxy for it.
+#
+# THE PRE-COMMIT CALL BELOW SURVIVES AS AN EARLY WARNING AND IS NO LONGER THE
+# RECORD -- it tells a lane what it is about to carry, in time to split the
+# commit. Deleting it would also delete the only thing `DRY_RUN` can exercise.
+#
+# Check that fails when this breaks (§12.3):
+#   sh spikes/H209_carries_toctou/probe.sh    (C1-C3 all fire, both directions)
 #
 # ==== v8, H190 — THE `Carries:` CHECK WAS READING THE WRONG OBJECT ==========
 # DEFECT REMOVED: this script ran `carriescheck.py` in its default INDEX mode
@@ -282,6 +308,13 @@ fi
 if [ -n "${CALLSIGN:-}" ] && [ -f "$ROOT/spikes/harness/carriescheck.py" ]; then
   # --worktree, v8/H190: `--only` below commits the WORKING TREE for these
   # paths and ignores the index, so the index diff is not the object to score.
+  #
+  # v9/H209: EARLY WARNING ONLY. Whatever this prints describes the tree as it
+  # was HERE, and the commit is built from a read taken further down -- see the
+  # v9 block at the top. The trailer of record is written by `carries_repair`
+  # AFTER the commit lands. Do not paste this one by hand; it is the incomplete
+  # answer by construction.
+  echo "== carriescheck (EARLY WARNING — the trailer of record is written post-commit) =="
   python3 "$ROOT/spikes/harness/carriescheck.py" "$CALLSIGN" --worktree 2>/dev/null || true
 fi
 
@@ -325,3 +358,10 @@ fi
 
 echo "== committing (--no-verify, with every gate above already applied) =="
 git commit --no-verify --only "$@" -F "$MSG"
+
+# v9, H209: score the LANDED COMMIT -- immutable, therefore no window -- and
+# repair the message if it under-declares. Report-only in effect for a clean
+# commit: F2 in the probe asserts a commit carrying nothing foreign is not
+# touched at all, because H105 records a false accusation as worse than a miss.
+. "$ROOT/spikes/harness/carries_repair.sh"
+carries_repair "${CALLSIGN:-}" "$ROOT"

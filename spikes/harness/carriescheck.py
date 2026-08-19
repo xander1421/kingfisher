@@ -285,6 +285,13 @@ def main() -> int:
     if "--selfcheck" in sys.argv[1:]:
         return selfcheck()
     worktree = "--worktree" in sys.argv[1:]
+    # v3, H209: machine-readable mode. `carries_repair()` scores the LANDED
+    # commit and must INJECT the trailer rather than ask a lane to retype it --
+    # the prose report below is for a human and cannot be piped. Prints the
+    # trailer alone, or NOTHING when nothing is carried, so the caller's
+    # `[ -n "$t" ]` is the whole predicate. Exit 0 either way: "carries nothing"
+    # is a verdict, not a failure.
+    trailer_only = "--trailer" in sys.argv[1:]
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     atom = args[0] if args else _sh(["git", "config", "user.callsign"]).strip()
     if not atom:
@@ -292,11 +299,16 @@ def main() -> int:
         atom = os.environ.get("CALLSIGN", "")
     if not atom:
         sys.stderr.write("carriescheck: REFUSING — no atom given and CALLSIGN unset.\n"
-                         "  usage: python3 spikes/harness/carriescheck.py <YOUR-CALLSIGN> [rev] [--worktree|--selfcheck]\n")
+                         "  usage: python3 spikes/harness/carriescheck.py <YOUR-CALLSIGN> [rev] [--worktree|--trailer|--selfcheck]\n")
         return 3
     rev = args[1] if len(args) > 1 else None
 
     cm = carried(atom, rev, worktree=worktree)
+    if trailer_only:
+        t = trailer_for(cm)
+        if t:
+            print(t)
+        return 0
     where = rev[:8] if rev else ("the WORKING TREE (what `--only` commits)"
                                  if worktree else "the STAGED index")
     if not cm:
