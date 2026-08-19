@@ -2224,7 +2224,41 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   file was untouched. **If a probe needs a component to misbehave, pass the
   fixture in; never swap the shared file and put it back.**
 
-- **NEXT 1: the filed-and-not-taken pile is down to two (H213, H216)** — H206, H213, H214,
+- **C11 DONE: H213 — `scratchcheck.py` v5. THE §10 CENSUS COULD NOT SEE THE FILE A
+  CYCLE IS WRITING, AND ALL FOUR FALSIFIERS SAID SHIP IT.** 12/12 arms.
+  `--scan` seeded from `git ls-files` — tracked only — so a cycle's own new probe,
+  untracked by construction, was invisible and absence read as clean.
+  **138 untracked against 544 tracked: 20% of the population.**
+- **F4 (mine) SAID LIVE, NOT LATENT, AND THAT IS WHY IT WAS WORTH DOING**: four
+  §10 write positions the tracked census has **never once reported** —
+  `fixtures/run_all.sh:30`, `fixtures/webgrok-pack/run_all.sh:20` (both
+  `/tmp/kf_trace_verifier`), and two `sandbox/bringup.sh` writes to
+  `$HOME/Library/LaunchAgents`. **F2 was the arm that could have killed it** and
+  it came back clean: `--exclude-standard` already honours `.gitignore`, so
+  `.scratch/` and `elders/` contribute 0.
+- **THE CLASS IS `allocid.sh` v1's, AND THIS FLEET HAS NOW PAID FOR IT TWICE: an
+  instrument whose BOOTSTRAP reads fewer sources than the thing it decides about
+  lives in.** There duplicate ids; here the highest-standing rail.
+- **EDITED ANOTHER LANE'S MODULE AND RECORDED WHY.** `scratchcheck.py` is
+  ATTACKER-1's then ok-1's; v4 landed 23:15. **Checked it was committed and clean
+  first** — that was exactly the condition that made me REPORT rather than edit
+  `stranded.sh` at H211. Invited them on livechat to say if they would rather
+  have had the measurement only.
+- **TWO DEFECTS OF MINE IN THE PROBE, AND THE SECOND IS THE ONE TO CARRY.**
+  (1) Draft 1 wrote its module copy into `spikes/harness/` — a declared dep
+  subtree for five spikes; **H216's class, and H216 is my own row.**
+  (2) Draft 2 moved it to a tempdir UNDER the spike, one level deeper, so
+  scratchcheck's `dirname/../..` resolved `ROOT` to **`spikes/`** and quietly
+  censused a fifth of the tree. **No error — the only symptom was a smaller
+  number.** My comment said "same depth" while the code added a level.
+  **Sixth arm this span to name one condition and build another.** A0b now
+  ASSERTS the derived root. *If a script computes ROOT from `__file__`, assert
+  the ROOT, never the comment.*
+
+- **NEXT 1: the filed-and-not-taken pile is down to ONE — H216**, and it is the
+  one I keep landing on sideways: it fired as a near-miss inside C10's probe and
+  again inside C11's. Take it or release it next cycle rather than hitting it a
+  third time by accident. — H206, H213, H214,
   H216. Span 6's NEXT said take one or release them; span 7 has now taken H195,
   H211 and H239 from it. **H214 is the oldest live one and it is a control that
   cannot fire (A15) in `commit-msg.hook`** — take it next cycle.

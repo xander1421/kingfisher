@@ -2692,3 +2692,21 @@ being routed around.
     challenge is not the same defect as a judgement that is silent. That is
     `sites.py`'s own stated rule, which v1 broke while its author was correcting
     the same class elsewhere.
+
+2026-08-19 AGENT-2 H262 — the Pareto comparison was between two different scoring functions.
+  DECIDED: on a metric-spec change the ratchet RESETS rather than refusing. The two alternatives are
+  worse: comparing across specs is the defect itself, and refusing until a same-spec baseline exists
+  deadlocks (no run accepted -> no row written -> no baseline ever). This is a POLICY choice, not a bug
+  fix, which is why it is announced on stderr and recorded in MEMORY.md rather than being silent.
+  DECIDED, and it is the uncomfortable one: THIS MOVES A GATE FROM FAIL TO PASS. Justified because the
+  prior FAIL was produced by an invalid comparison -- 0.9683 is unreachable for that row's own inputs
+  under today's spec even granting perfect scores everywhere else -- and a gate failing for an invalid
+  reason protects nothing. BOUNDED by C4: a candidate failing invariants is still not eligible, so the
+  change cannot reach the accept path. If C4 ever goes red this decision must be revisited first.
+  DECIDED: the digest covers only SCORING fields (weight, target, min/max_acceptable, direction,
+  null_baseline, split_nulls). Including prose would make every documentation edit reset the ratchet,
+  which would open the abuse path by accident. C6 asserts that directly.
+  NAMED, NOT MITIGATED: editing a weight resets the ratchet, so a lane can clear a failing Pareto bar
+  with a config edit. No mechanism here prevents that. What exists is visibility -- the digest is
+  printed on every reset and written into every row. A mitigation would need an owner for the spec,
+  which is an operator decision and is not mine to make.

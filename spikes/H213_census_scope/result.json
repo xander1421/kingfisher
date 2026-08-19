@@ -1,0 +1,70 @@
+{
+  "arms": [
+    {
+      "detail": "5a4bfae",
+      "name": "A0 the PRE-FIX module is loadable and pinned",
+      "pass": true
+    },
+    {
+      "detail": "scratchcheck --scan: 0 write position(s) outside the workspace in 1 shell file(s)",
+      "name": "A0b the relocated copy derives THIS repo as its root, not `spikes/`",
+      "pass": true
+    },
+    {
+      "detail": "141 untracked vs 546 tracked",
+      "name": "A1 the untracked population is not empty \u2014 if it were, this fix would be inert and the row theoretical (its own F3)",
+      "pass": true
+    },
+    {
+      "detail": "0 noise paths",
+      "name": "A2 no `.scratch/` or `elders/` path enters the census \u2014 F2, the arm that could have killed the fix",
+      "pass": true
+    },
+    {
+      "detail": "1 vs 1 findings",
+      "name": "A5 the CLASSIFIER is untouched: same explicit path, same findings pre-fix and post-fix \u2014 the census was the defect, not the detector",
+      "pass": true
+    },
+    {
+      "detail": "git ls-files --error-unmatch: no match",
+      "name": "A6a the fixture really is UNTRACKED \u2014 the condition the row is about",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A6b PRE-FIX: a bare `--scan` does NOT see it (the defect, reproduced)",
+      "pass": true
+    },
+    {
+      "detail": "['spikes/H213_census_scope/.h213_fresh_probe.sh:3: redirect    /tmp/h213_violation_written_by_a_live_cycle']",
+      "name": "A6c POST-FIX: a bare `--scan` DOES see it",
+      "pass": true
+    },
+    {
+      "detail": "0 reported",
+      "name": "A3a PRE-FIX reported NONE of the four live untracked violations",
+      "pass": true
+    },
+    {
+      "detail": "4 of 4",
+      "name": "A3b POST-FIX reports all four",
+      "pass": true
+    },
+    {
+      "detail": "127 -> 143 shell files scanned",
+      "name": "A4 the census GREW rather than shifted \u2014 `-c -o` deduped, not doubled",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A7 this probe never wrote into `spikes/harness/`, a declared dep subtree for five spikes (H216's class, and its first draft did)",
+      "pass": true
+    }
+  ],
+  "checks_fail": 0,
+  "checks_pass": 12,
+  "pin_prefix": "5a4bfae",
+  "row": "H213",
+  "tracked": 546,
+  "untracked": 141
+}

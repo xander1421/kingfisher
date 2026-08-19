@@ -1,5 +1,44 @@
 #!/usr/bin/env python3
-# scratchcheck.py v4 — H89 (v1, v2), H194 (v3), H254 (v4). ATTACKER-1, then ok-1.
+# scratchcheck.py v5 — H89 (v1, v2), H194 (v3), H254 (v4), H213 (v5).
+# ATTACKER-1, then ok-1, then AGENT-1.
+#
+# ==== v5, H213 — THE CENSUS COULD NOT SEE THE ONE FILE A CYCLE IS WRITING =====
+# DEFECT REMOVED: `--scan` with no explicit targets seeded from
+# `git ls-files '*.sh' '*.py' '*.hook'` — TRACKED paths only. A cycle's own new
+# probe is UNTRACKED BY CONSTRUCTION until that cycle commits, so the file most
+# likely to be carrying a fresh §10 violation was the one file the census could
+# not look at, and its absence read as clean.
+#
+# MEASURED TWO-SIDED, and the classifier was never the problem — the census was:
+# `--scan` over the tracked tree reported no write position in
+# `spikes/H209_carries_toctou/probe.sh`; the IDENTICAL classifier handed that
+# path explicitly reported FOUR. `git ls-files --error-unmatch` on it: "did not
+# match any file(s) known to git".
+#
+# LIVE, NOT LATENT, AND THAT IS WHY v5 EXISTS. Run over the untracked half of
+# this tree the same classifier finds FOUR write positions in FOUR files that
+# the tracked census has never once reported:
+#   fixtures/run_all.sh:30                          /tmp/kf_trace_verifier
+#   fixtures/webgrok-pack/run_all.sh:20             /tmp/kf_trace_verifier
+#   spikes/H185_launcher_generation/sandbox/bringup.sh:418   $HOME/Library/...
+#   spikes/H236_retirement_undone/sandbox/bringup.sh:492     $HOME/Library/...
+# 138 untracked `.sh`/`.py`/`.hook` files against 544 tracked — 20% of the
+# population was invisible.
+#
+# THIS IS `allocid.sh` v1's CLASS IN A SECOND MODULE — an instrument whose
+# BOOTSTRAP reads fewer sources than the thing it is deciding about lives in.
+# There it cost duplicate ids; here it cost a rail.
+#
+# F2 WAS THE ONE THAT COULD HAVE KILLED THE FIX AND IT WAS RUN FIRST: adding
+# untracked files must not drag in `.scratch/`, `elders/` or build trees, or the
+# census becomes unreadable and gets ignored, which is worse than blind.
+# MEASURED: `--exclude-standard` already honours `.gitignore`, so `.scratch/`
+# contributes 0 and `elders/` contributes 0; the untracked set is 95 kitchen,
+# 21 fixtures, 18 spikes, 2 .github, 1 .codex, 1 root script — all real source.
+# The explicit `elders/` filter is kept anyway rather than trusted to
+# `.gitignore`, because a rail should not depend on a file any lane can edit.
+#
+# Check: python3 spikes/H213_census_scope/probe.py
 # ==== v4, H254 (ok-1, 2026-08-19) ====
 # DEFECT REMOVED: AN OPERATOR CHARACTER INSIDE QUOTES WAS READ AS AN OPERATOR, so
 # a word inside a SEARCH PATTERN was classified as a command. Measured, and it is
@@ -766,11 +805,21 @@ if __name__ == '__main__':
         targets = a[1:]
         if not targets:
             import subprocess
-            targets = [t for t in subprocess.run(
-                ['git', 'ls-files', '*.sh', '*.py', '*.hook'], cwd=ROOT,
-                capture_output=True, text=True).stdout.split()
-                if not t.startswith('elders/')]
-            targets = [os.path.join(ROOT, t) for t in targets]
+            # H213: `-c` AND `-o --exclude-standard` — tracked AND untracked.
+            # The cycle writing a new probe has not committed it yet, and that
+            # is exactly the file worth scanning. `--exclude-standard` honours
+            # .gitignore so `.scratch/` and build trees stay out; the `elders/`
+            # filter is kept explicitly because a rail must not depend on a
+            # file any lane can edit.
+            seen, targets = set(), []
+            for t in subprocess.run(
+                    ['git', 'ls-files', '-c', '-o', '--exclude-standard',
+                     '*.sh', '*.py', '*.hook'], cwd=ROOT,
+                    capture_output=True, text=True).stdout.split():
+                if t.startswith('elders/') or t in seen:
+                    continue
+                seen.add(t)
+                targets.append(os.path.join(ROOT, t))
         rows, skipped = scan_source_counted(targets)
         for fpath, ln, kind, tgt in rows:
             print('%s:%d: %-11s %s' % (os.path.relpath(fpath, ROOT), ln, kind, tgt))
