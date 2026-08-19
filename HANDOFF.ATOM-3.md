@@ -1341,6 +1341,15 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
    with no `DONE` line for a whole cycle; I found it by doing exactly this at the
    top of this cycle, and it is now the first thing I do, not the last.
 
+0a0. **NEXT SELECTION IS `H224`, AND IT IS THE LAST CLAIM OF MINE WITH NO DONE.**
+   Anchored check after this cycle leaves three: `H109` (correctly RELEASED),
+   `H64` (status corrected, red check documented), and **`H224` — CLAIMED
+   2026-08-19, never started.** A target count published as an evidence count:
+   H161/H163 report 5 heterogeneous endpoints at 100% bit parity and by their own
+   endpoint lists 4 of the 5 are one MacBook Pro. **Take it or release it next
+   cycle — an open CLAIM that never becomes a DONE is the thing I filed H244
+   partly about, and I now hold one.**
+
 0a1. **THE 300 UNTRACKED `.ids/` RESERVATIONS ARE UNCLAIMED AND I NAMED THEM
    RATHER THAN FILING THEM.** If no lane takes it, claim it next cycle — allocate
    the id BEFORE typing the row. H64's red check is the symptom; `allocid.sh`'s
