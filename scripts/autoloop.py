@@ -100,6 +100,17 @@ def evaluate_suite(config):
         direction = m_spec.get("direction", "maximize")
 
         if val is None:
+            # SAY SO. This silently set invariants=False and printed nothing:
+            # determinism_exact and cross_device_metta_fuel_match went missing
+            # from the evaluator output and the run reported
+            # `_invariants_passed: false` with no VIOLATION line anywhere, so
+            # there was no way to tell "a gate failed" from "a gate never ran".
+            # Those are opposite situations -- one is a real regression, the
+            # other is a broken measurement -- and the loop treated them as the
+            # same silent boolean.
+            print(f"     [MISSING METRIC] {m_name} was not produced by any "
+                  f"evaluator; invariants fail because it could not be checked, "
+                  f"NOT because it regressed", file=sys.stderr)
             passed_invariants = False
             continue
 
@@ -111,20 +122,66 @@ def evaluate_suite(config):
             print(f"     [INVARIANT VIOLATION] {m_name} = {val} > max {max_acc}", file=sys.stderr)
             passed_invariants = False
 
+        # Enforce null baseline rule: candidate must strictly beat null baseline
+        null_base = m_spec.get("null_baseline")
+        if null_base is not None:
+            if direction == "maximize" and val < null_base:
+                print(f"     [NULL BASELINE VIOLATION] {m_name} = {val} < null_baseline {null_base}", file=sys.stderr)
+                passed_invariants = False
+            elif direction == "minimize" and val > null_base:
+                print(f"     [NULL BASELINE VIOLATION] {m_name} = {val} > null_baseline {null_base}", file=sys.stderr)
+                passed_invariants = False
+
         # Normalize score contribution
         if direction == "maximize":
-            norm_val = min(1.0, val / target) if target > 0 else 1.0
+            # If null baseline is set, normalize progress between [null_baseline, target]
+            if null_base is not None and target > null_base:
+                effective_val = max(0.0, val - null_base)
+                norm_val = min(1.0, effective_val / (target - null_base))
+            else:
+                norm_val = min(1.0, val / target) if target > 0 else 1.0
         else:
             norm_val = min(1.0, target / max(1e-6, val))
         composite_score += norm_val * weight
         total_weight += weight
 
-    norm_composite = composite_score / total_weight if total_weight > 0 else 0.0
-    results["_composite_score"] = round(norm_composite, 4)
+    norm_composite = round(composite_score / total_weight, 4) if total_weight > 0 else 0.0
+    results["_composite_score"] = norm_composite
     results["_invariants_passed"] = passed_invariants
 
-    print(f"\n=== Composite Score: {norm_composite:.4f} (Invariants: {'PASS' if passed_invariants else 'FAIL'}) ===\n", file=sys.stderr)
+    # Check Pareto condition against stored baseline in MEMORY.md
+    baseline_score = get_baseline_composite()
+    pareto_passed = True
+    if baseline_score is not None:
+        if norm_composite < baseline_score:
+            print(f"     [PARETO VIOLATION] Candidate composite {norm_composite:.4f} < baseline {baseline_score:.4f} (Pareto regression)", file=sys.stderr)
+            pareto_passed = False
+        else:
+            print(f"     [PARETO PASS] Candidate composite {norm_composite:.4f} >= baseline {baseline_score:.4f}", file=sys.stderr)
+    results["_pareto_passed"] = pareto_passed
+    results["_baseline_score"] = baseline_score
+
+    print(f"\n=== Composite Score: {norm_composite:.4f} (Invariants: {'PASS' if passed_invariants else 'FAIL'}, Pareto: {'PASS' if pareto_passed else 'FAIL'}) ===\n", file=sys.stderr)
     return results, errors
+
+
+def get_baseline_composite():
+    """Reads the highest ACCEPTED composite score recorded in MEMORY_FILE."""
+    if not os.path.exists(MEMORY_FILE):
+        return None
+    best_score = None
+    try:
+        with open(MEMORY_FILE, "r") as f:
+            for line in f:
+                if "**ACCEPTED**" in line and "Composite score:" in line:
+                    parts = line.split("Composite score:")
+                    score_str = parts[1].strip().split()[0].rstrip("|").strip()
+                    score = float(score_str)
+                    if best_score is None or score > best_score:
+                        best_score = score
+    except Exception:
+        pass
+    return best_score
 
 
 def record_memory(verdict, summary, delta_text):
@@ -158,21 +215,24 @@ def main():
         print(json.dumps(results, indent=2))
         return 0 if not errors else 1
 
+    invariants = results.get("_invariants_passed", False)
+    pareto = results.get("_pareto_passed", True)
+    hygiene = results.get("hygiene_score", 0.0)
+
     if args.ci:
-        invariants = results.get("_invariants_passed", False)
-        hygiene = results.get("hygiene_score", 0.0)
-        if not invariants or hygiene < 1.0 or errors:
-            print("[CI FAIL] Invariants or hygiene failed.")
+        if not invariants or hygiene < 1.0 or errors or not pareto:
+            print("[CI FAIL] Invariants, hygiene, or Pareto condition failed.")
             return 1
-        print("[CI PASS] All Autoloop invariants and targets satisfied.")
+        print("[CI PASS] All Autoloop invariants, targets, and Pareto condition satisfied.")
         return 0
 
-    # Default step execution
-    verdict = "ACCEPTED" if results.get("_invariants_passed") else "REJECTED"
-    summary = f"Composite score: {results.get('_composite_score')}"
+    # Default step execution: candidate is KITCHEN-ELIGIBLE only if invariants pass, no errors, and Pareto condition satisfied
+    is_eligible = bool(invariants and not errors and pareto)
+    verdict = "KITCHEN_ELIGIBLE" if is_eligible else "KITCHEN_REJECTED"
+    summary = f"Kitchen Composite score: {results.get('_composite_score')}"
     delta = f"MRR: {results.get('filtered_mrr')}, H@10: {results.get('hits_at_10')}"
     record_memory(verdict, summary, delta)
-    print(f"[Autoloop Step Complete] Recorded verdict: {verdict}")
+    print(f"[Autoloop Kitchen Complete] Candidate Status: {verdict} (NOTE: Autoloop evaluates kitchen Pareto; mission consensus is gated exclusively by independent-device digest match)")
     return 0
 
 

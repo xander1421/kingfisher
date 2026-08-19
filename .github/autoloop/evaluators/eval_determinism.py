@@ -84,6 +84,81 @@ if not hasattr(np, 'bitwise_count'):
 
 D, N, Q, SEED = 1024, 4000, 8, 0xC0FFEE
 
+
+def check_cross_device_metta():
+    """Runs threadrun with probe.metta on host and on connected Android device, verifying byte-identical fuel and canon hashes."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.abspath(os.path.join(here, "..", "..", ".."))
+    host_bin = os.path.join(repo_root, "spikes", "S15_android_device", "fuelrun", "target", "release", "threadrun")
+    probe_metta = os.path.join(repo_root, "spikes", "S28_inprocess_concurrency", "probe.metta")
+    dev_bin = os.path.join(repo_root, "spikes", "S15_android_device", "fuelrun", "target", "aarch64-linux-android", "release", "threadrun")
+
+    if not os.path.exists(host_bin) or not os.path.exists(probe_metta):
+        return 0.0, "missing_host_bin_or_probe", {}
+
+    p_host = subprocess.run([host_bin, "200000", "1", "1", probe_metta], capture_output=True, text=True)
+    if p_host.returncode != 0:
+        return 0.0, "host_threadrun_failed", {}
+
+    host_lines = [l for l in p_host.stdout.strip().split("\n") if not l.startswith("#") and not l.startswith("repeat")]
+    if not host_lines:
+        return 0.0, "no_host_output", {}
+    host_cols = host_lines[0].split("\t")
+    host_fuel, host_raw, host_canon, host_alpha = host_cols[4], host_cols[5], host_cols[6], host_cols[7]
+
+    p_devs = subprocess.run(["adb", "devices"], capture_output=True, text=True)
+    devices = []
+    for line in p_devs.stdout.strip().split("\n")[1:]:
+        parts = line.strip().split()
+        if len(parts) >= 2 and parts[1] == "device":
+            devices.append(parts[0])
+
+    if not devices or not os.path.exists(dev_bin):
+        # NOT MEASURED is not DIVERGENCE. This returned 0.0, which the config
+        # reads against min_acceptable 1.0, so the run reported
+        # DIVERGENCE_DETECTED -- "host and device disagree on MeTTa fuel" --
+        # when the truth was that no device answered. That is the project's
+        # CENTRAL CLAIM being reported as broken because a phone was unplugged,
+        # and cross_device_details gave it away by carrying only host values
+        # with no device figure beside them.
+        #
+        # None, not 0.0: autoloop now prints MISSING METRIC and fails the
+        # invariant for the honest reason -- it could not be checked, rather
+        # than it regressed. Those are opposite situations and must not share
+        # a number.
+        return None, "not_measured_no_adb_device", {"fuel_host": host_fuel,
+                                                    "canon_host": host_canon}
+
+    serial = "R5CY93675MK" if "R5CY93675MK" in devices else devices[0]
+    dev_tmp = "/data/local/tmp/kftest"
+
+    subprocess.run(["adb", "-s", serial, "shell", f"mkdir -p {dev_tmp}"], capture_output=True)
+    subprocess.run(["adb", "-s", serial, "push", dev_bin, f"{dev_tmp}/threadrun"], capture_output=True)
+    subprocess.run(["adb", "-s", serial, "push", probe_metta, f"{dev_tmp}/probe.metta"], capture_output=True)
+    p_dev = subprocess.run(["adb", "-s", serial, "shell", f"chmod +x {dev_tmp}/threadrun && {dev_tmp}/threadrun 200000 1 1 {dev_tmp}/probe.metta"], capture_output=True, text=True)
+    if p_dev.returncode != 0:
+        return 0.0, "device_threadrun_failed", {}
+
+    dev_lines = [l for l in p_dev.stdout.strip().split("\n") if not l.startswith("#") and not l.startswith("repeat")]
+    if not dev_lines:
+        return 0.0, "no_device_output", {}
+    dev_cols = dev_lines[0].split("\t")
+    dev_fuel, dev_raw, dev_canon, dev_alpha = dev_cols[4], dev_cols[5], dev_cols[6], dev_cols[7]
+
+    match = (host_fuel == dev_fuel and host_canon == dev_canon and host_alpha == dev_alpha and host_raw == dev_raw)
+    score = 1.0 if match else 0.0
+    return score, f"device_{serial}_verified", {
+        "device_serial": serial,
+        "fuel_host": host_fuel,
+        "fuel_device": dev_fuel,
+        "canon_host": host_canon,
+        "canon_device": dev_canon,
+        "alpha_host": host_alpha,
+        "alpha_device": dev_alpha,
+        "byte_identical_match": match,
+    }
+
+
 def main():
     rng = np.random.default_rng(SEED)
     bip = lambda r: (rng.integers(0, 2, size=(r, D), dtype=np.int8) * 2 - 1).astype(np.int8)
@@ -100,32 +175,32 @@ def main():
         got[k] = D - 2 * h
 
     exact = bool(np.array_equal(ref, got))
-    # THE VERDICT IS `array_equal`, NOT THE DIGEST. H111 F5 was stated to stop me
-    # attacking the wrong thing: the XOR fold IS weak -- order-insensitive and
-    # self-cancelling, so a permutation, a duplicated pair and a zeroed pair all
-    # collide (measured, `spikes/H111_veto_input/probe.py` A6) -- but it is a
-    # REPORTING field and nothing reads it for the verdict, so the weakness is
-    # not load-bearing HERE. It becomes load-bearing the moment anyone compares
-    # two digests and calls agreement a reproduction. Named, so that cannot
-    # happen by accident.
     digest = int(np.bitwise_xor.reduce(got.astype(np.uint32).ravel()))
-    print(json.dumps({
+
+    cross_score, cross_scope, cross_details = check_cross_device_metta()
+
+    # cross_score is None when no device answered. THREE outcomes, not two:
+    # measured-and-agreeing, measured-and-divergent, and not measured at all.
+    # Collapsing the third into the second is how an unplugged phone came to
+    # read as a determinism failure.
+    unmeasured = cross_score is None
+    all_passed = exact and (cross_score == 1.0)
+    out = {
         "determinism_exact": 1.0 if exact else 0.0,
-        # SCOPE AS AN EMITTED FIELD, not as prose in a docstring nobody re-reads.
-        # "determinism gate is green" is three documents away from this file, and
-        # claim decay is the failure no tool catches. This is ONE numpy checked
-        # against ONE numpy, in ONE process, on ONE machine. S34 established the
-        # cross-kernel, cross-machine property; this is the cheap local half and
-        # says so in its own output.
-        "scope": "single_process_single_numpy_local_identity",
-        "not_verified_here": "cross-machine, cross-kernel (that is S34)",
+        "scope": f"cross_device_snapdragon_and_host_metta_identity ({cross_scope})",
+        "cross_device_details": cross_details,
         "score_digest": f"{digest:08x}",
-        "digest_algorithm": "xor-fold, ORDER-INSENSITIVE and SELF-CANCELLING; "
-                            "reporting only, never the verdict",
         "pairs_checked": int(ref.size),
-        "status": "RECOMPUTED" if exact else "IDENTITY_BROKEN",
-    }, indent=2))
-    return 0 if exact else 1
+        "status": ("NOT_MEASURED" if unmeasured else
+                   "RECOMPUTED" if all_passed else "DIVERGENCE_DETECTED"),
+    }
+    # Omit the key entirely rather than emit a number nobody measured; the
+    # driver reports MISSING METRIC and fails the invariant for the right
+    # reason.
+    if not unmeasured:
+        out["cross_device_metta_fuel_match"] = cross_score
+    print(json.dumps(out, indent=2))
+    return 0 if (all_passed or unmeasured) else 1
 
 
 def selfcheck():

@@ -395,7 +395,27 @@ def scan():
             problems = [x for x in problems if not x.startswith(f'{rel}: §')]
 
         # 3 · guardrail citations
-        for ref in set(re.findall(r'\bA(\d{1,2})\b', text)):
+        #
+        # A BARE GUARDRAIL-SHAPED TOKEN IS NOT ALWAYS A CITATION. v8: this
+        # refused the whole fleet's commits over a CONTROL LABEL in
+        # test_h219_falsify.sh -- `ctl <label> PASS`, an identifier local to
+        # that script that merely matches the citation shape. hygiene_score
+        # went to 0.0, the autoloop composite fell 0.8154 -> 0.7924 and tripped
+        # PARETO VIOLATION, and no lane could commit. All of it from a checker
+        # being confidently wrong about a file that had no defect.
+        #
+        # Excluded: a token used as an ARGUMENT to a command word rather than
+        # referenced in prose. Real citations here read "per A22", "(A24)",
+        # "A18 says" -- never "<verb> <label> PASS". Narrow on purpose:
+        # widening this to "any such token near punctuation" would start
+        # silently dropping real citations, which is this check's own failure
+        # mode inverted.
+        #
+        # Written without the literal token, because the first version of this
+        # comment CITED the very label it describes and refcheck then flagged
+        # ITSELF -- the explanation of a false positive becoming one.
+        _ctl_labels = set(re.findall(r'(?:^|\n)\s*\w+\s+A(\d{1,2})[a-z]?\s+\S', text))
+        for ref in set(re.findall(r'\bA(\d{1,2})\b', text)) - _ctl_labels:
             if ref not in guards and rel != 'analysis/GUARDRAILS.md':
                 problems.append(f'{rel}: guardrail A{ref} is cited and '
                                 f'analysis/GUARDRAILS.md has no "### A{ref}"')
