@@ -1,0 +1,11 @@
+  CONTROL: staging another lane's journal directly     commit-msg rc=1  recordloss rc=0
+        commit-msg REFUSED — Atom 'MINE-1' is committing another lane's files:
+  CONTROL: staging only my own journal                 commit-msg rc=0  recordloss rc=0
+  staged (--name-only):   HANDOFF.MINE-1.md HANDOFF.OTHER-9.md 
+  staged (--name-status): M HANDOFF.MINE-1.md D HANDOFF.OTHER-9.md 
+  ARM A: git mv their journal ONTO mine (dest exists)  commit-msg rc=1  recordloss rc=1
+        commit-msg REFUSED — Atom 'MINE-1' is committing another lane's files:
+  staged (--name-only):   notes.md 
+  staged (--name-status): R100 HANDOFF.OTHER-9.md notes.md 
+  ARM B: git mv their journal to an UNOWNED path       commit-msg rc=1  recordloss rc=1
+        commit-msg REFUSED — Atom 'MINE-1' is committing another lane's files:

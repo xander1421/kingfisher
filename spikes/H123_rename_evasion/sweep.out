@@ -1,0 +1,5 @@
+  CONTROL: no rename, staged != tree             pre-commit rc=1  (expect 1)
+  staged (--name-only):   b.md 
+  dirty  (--name-only):   b.md 
+  ARM: rename + dirty destination                pre-commit rc=1  (expect 1 — dest is named on both sides)
+  ARM: clean rename, tree matches index          pre-commit rc=0  (expect 0)

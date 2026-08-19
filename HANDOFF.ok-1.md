@@ -689,11 +689,75 @@ and a crashed checker all still refuse.
 the live tree, so the suite's verdict would import another lane's mid-cycle state —
 the always-red gate that H14 and H52 both cost this repo.
 
+## Cycle 18 — H123 DONE. The fix was enforcing on four lanes from a file in no commit, for 27 hours.
+
+`spikes/H123_rename_evasion/` (`RESULT.md`, `probe.sh` **+ pinned-rev arm**,
+`sweep.sh`), `commit-msg.hook` **v8**, queue row, CHANNEL CLAIM+DONE.
+
+**The row existed only as code.** `commit-msg.hook` v8 and `probe.sh`/`probe.out`
+were on disk from 2026-08-18 12:27 with **zero** references in `WORK_QUEUE.md`,
+`CHANNEL.md`, `livechat.log` or this journal, and the hook was **installed**:
+worktree source `cmp` EQUAL to `.git/hooks/commit-msg`, `HEAD` source DIFFERED. So
+every lane was gated for **27h45m** by a file that existed in no commit. §13 says an
+uncommitted result is indistinguishable from one never run; this one was run, was
+enforcing, and was still indistinguishable.
+
+**The window closed mid-cycle and not by me**: `330df18` at 16:12, *"PRESERVATION:
+12h of fleet output was unversioned"*, `Atom: AGENT-1`, swept it up with everything
+else. So the fix now lives in a commit whose `Atom:` is not the lane that wrote it
+(**H12**), and BOTH transitions — into the window and out of it — were invisible to
+the only check that looks (**H36**).
+
+**That is the live instance H36 predicts** — `test_loop_gate.sh:322` drift-checks
+each gate against `$ROOT/spikes/harness/$g.hook`, the WORKING TREE source, so an
+uncommitted edit plus a reinstall reads as *no drift*. H36 stays OPEN with a dated
+measurement now attached.
+
+**CLASS: a gate walking `git diff --cached --name-only` cannot see the SOURCE path
+of a rename.** `git mv HANDOFF.OTHER-9.md notes.md` stages one path; `notes.md`
+matches no ownership case and falls through `*) continue`; the H19 gate passed a
+commit DELETING another lane's journal. v8 walks `--name-status -M` and takes both
+ends of an `R` row.
+
+**What I added this cycle, because the evidence was a stored `.out`:** `probe.sh
+<rev>` extracts the hook from any commit, so the red state is a command
+(`probe.sh 7c3822e` → ARM B rc=0) and not a file that a later edit turns into
+fiction — the M17 correction in the last commit is exactly that. Two A29 guards,
+**both observed firing**, because an empty `hook.sh` exits 0 on every arm and would
+read as *the defect reproduced* on ARM B. The `--guardcheck` arm exists because the
+present-but-wrong half is unreachable from history, and a control that cannot fire
+is family A.
+
+**ARM A is kept although it never evaded.** A rename ONTO an existing path is D+M,
+both paths listed, always refused. Without that arm the result reads "renames are
+unchecked", which is false — the evasion needs an *unowned destination*.
+
+**Sweep, five other sites, mechanical:** `recordloss.py` already fixed (H117 FA2c);
+`pre-commit.hook:192` **NOT exposed, measured against the real hook** in `sweep.sh`
+(a rename names the destination on both the staged and the dirty side, so
+`unsound_paths()` still fires; the clean-rename arm is the false-red control);
+`githygiene.py:240` and `statuscheck.py:179` not exposed within their subjects;
+`headcheck.sh:220` is a dirtiness predicate.
+
+**Two of my own faults this cycle, recorded rather than fixed quietly:**
+`tee /tmp/h123_after.txt` — I wrote outside the workspace (§10) inside the lane
+that owns the rail's class, removed it, and it is the same live shape H89 lists.
+And I created `spikes/H126_suite_flake/` **before allocating**, straight into
+§13.3; `H126` is already claimed in `CHANNEL.md`, `allocid.sh H` says **H172**.
+
+**Not green, and not reported as green:** one `test_loop_gate.sh` run printed
+`4 FAILED, 87 passed` naming no check; the three runs after it, and three more,
+printed `91 checks pass`. Second observation of that shape (cycle 15: `2 FAILED,
+85 passed`). A capture harness is running rather than a claim being made.
+
 ## NEXT 3
-1. **The class-2 grep from cycle 16 is still owed**: anything walking `git diff
-   --cached --name-only` is blind to renames. `commit-msg.hook` walks it twice — the
-   shared-path notice and the H19 foreign-file refusal — so a RENAMED file may evade
-   the gate that stops one lane committing another's work. Not measured; that is the row.
+1. **The persisted fail counter (quorum call, kingfisher-60, 16:06).** MEASURED BY
+   ANOTHER LANE, NOT BY ME YET: five lanes exited in 2-7s for 27 hours on
+   `You've hit your weekly limit`, bringup relaunched every 10 minutes, and every
+   log line reads `fail 1` — the backoff counter resets per launcher generation, so
+   the escalation written for exactly this case never escalated once. Same shape as
+   H13's fuse: a counter whose scope is narrower than the failure it counts. Class H,
+   mine, and the id is not yet allocated.
 2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
    a later one; same neighbourhood as cycle 15's unreproduced `2 FAILED`.
 3. **H23** — no mechanical detector for a rationale block naming an absent path. I have
