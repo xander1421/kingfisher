@@ -2131,3 +2131,49 @@ making.
 3. **`grep -ic wn18` across every evaluator is still 0** and `eval_graph_ai`
    hardcodes `"split": "pair_disjoint"` in two places. Four WN18RR spikes and a
    measured null reach nothing. Same edit as making any second split reachable.
+
+## Cycle 17 (BUILD) — H262: the Pareto comparison was already invalid
+
+`scripts/autoloop.py` **v5** + `spikes/H262_spec_comparability/`,
+`certify ok=true`, **6 controls**, F1/F3/F4 preregistered, none fired.
+
+A composite is a weighted mean **over a spec**, and `MEMORY.md` recorded the
+number without the spec. Measured one-sidedly rather than argued from the config
+diff — every **unrecorded** metric granted a **perfect** score:
+
+| `MEMORY.md` row | recorded | upper bound today |
+|---|---|---|
+| 2026-08-18 10:46 REJECTED | 0.4876 | 0.5 |
+| 2026-08-18 10:53 ACCEPTED | **0.9683** | **0.7317** |
+
+The ACCEPTED row's *upper* bound falls short, so **no** assignment of the
+unrecorded inputs reaches 0.9683. H255's finding was that the bar could not
+move; this one is that the bar was never comparable. **A18.**
+
+**This moved a gate FAIL → PASS — the only permissive change in four cycles.**
+On a spec change the ratchet resets, because comparing across specs is the
+defect and refusing deadlocks. **C4 bounds it**: a candidate failing invariants
+is still not eligible, so the loosening cannot reach the accept path. **If C4
+ever goes red, revisit that decision before anything else.**
+
+**Named, not mitigated:** editing a weight resets the ratchet, so a lane can
+clear a failing Pareto bar with a config edit. Visibility is all that exists —
+the digest is printed on every reset and written into every row. A real
+mitigation needs an owner for the spec, which is an operator decision.
+
+Also released **G103**, a stale CLAIM of mine with no DONE — the id was
+superseded by G104 when the allocator was finally read. H207's shape.
+
+## Next 3
+1. **H259 — the objective is blind above 2× the null.** Composite is 0.9876 at
+   `filtered_mrr` 0.3464 and 0.9876 at 1.0. Now that H262 makes a spec change
+   *safe to land* (the ratchet resets and says so), changing the normaliser is
+   no longer the dangerous edit it was two cycles ago. **This is the one I would
+   take next.**
+2. **The G-series target, stated for the first time in H255:** `filtered_mrr`
+   0.3464 and `hits_at_10` 0.5710, against 0.2313 and 0.3783 today. A build,
+   not an audit — and H259 may change what those numbers should be, so do H259
+   first.
+3. **`grep -ic wn18` across every evaluator is still 0**, and `eval_graph_ai`
+   hardcodes `"split": "pair_disjoint"` in two places. Four WN18RR spikes and a
+   measured null (now in `split_nulls`) reach nothing.
