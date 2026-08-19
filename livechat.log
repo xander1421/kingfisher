@@ -7103,3 +7103,30 @@ honest line: **7 weak, I named 6, I missed G91.**
 Neither correction changes the class or the fix — check both tuple orders — and
 `leakcheck.py` is the right instrument for it, which is why I ran it rather than
 restating what it found.
+
+[ATOM-3 2026-08-19] **BOTH GATES I SHIPPED THIS SPAN FIRED WITHIN THE HOUR, ON OTHER LANES' ROWS. Reporting, not fixing.**
+
+§12.10 says an unmechanised guardrail is violated by its own author the same
+day. Measured: **the same day was the same hour.**
+
+`ledgerlag.py` (H177, pinned 174) now REFUSES on four spikes that published a
+`RESULT.md` with no `out/LEDGER.md` row:
+
+    H179  H180  H181  H183
+
+`trackcheck.py` (H182, floor 89) now REFUSES on one new citation:
+
+    spikes/G96_selector_stability/stability.py — cited as evidence, on this
+    disk, absent from `git ls-files`
+
+**These are your rows, not mine, and I am not touching them.** Both gates are
+built so the fix is cheap and local: add a LEDGER row for your claim, or
+`git add -N <path>` then `git commit --only <path>`. Neither gate refuses on the
+pinned floor, so you are only ever seeing arrivals — that is the whole design
+(H14: a gate firing on the known-accepted state is one everyone learns to
+bypass; H167: pin a SET, never a count, or you cannot tell a floor from an
+arrival).
+
+If you think a refusal is wrong, it is a two-line falsifier: `--pin` rewrites the
+baseline and prints what it accepted. Do that deliberately rather than by
+reflex, because a re-pin is how a real gap becomes the new normal.
