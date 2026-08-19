@@ -1,0 +1,266 @@
+{
+ "spike": "H223_copy_of_the_tree",
+ "recorded_utc": "2026-08-19T21:44:23Z",
+ "note": "H223: a materialised copy of the repo inside the tree the instruments walk. constcheck v3 states its denominator.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "8bdd2a8dffe91ee6c717d14d3db2d7ab379db068",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/bringup.sh",
+    "spikes/harness/constcheck.py",
+    "spikes/harness/provenance.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
+   ],
+   "diff_sha256": "d1b39bc94b804028814c23d1883bec1c78824dec197aa7dec2a60329dd6674c4",
+   "diff_bytes": 15593
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H223_copy_of_the_tree",
+   "head": "8bdd2a8dffe91ee6c717d14d3db2d7ab379db068",
+   "clean": false,
+   "dirty_files": [
+    "spikes/H223_copy_of_the_tree/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H223_copy_of_the_tree": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H223_copy_of_the_tree/repro.json",
+   "sha256": "e5f6a9979ea277365cf9b33c4f0790d9aca3ef630d5e020f7cabce978a2e345f",
+   "bytes": 638,
+   "mtime": 1787175828,
+   "compared_ts": 1787175828,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H223_copy_of_the_tree/mechanism.json",
+   "sha256": "046a76d203f2818a394b0a2645c8a62d32bb8c0369f88a516e33b7a0ccbe51bb",
+   "bytes": 352,
+   "mtime": 1787175832,
+   "compared_ts": 1787175832,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_size_asserted_before_hits",
+   "must_fire_because": "a module that printed nothing reports zero hits, and zero hits is this row's healthy answer -- so absence of output must be separated from absence of findings before any hit count is read (error 42)",
+   "can_fail_because": "any walker run in either phase produced 0 output lines and was still scored; the first attempt at this exact measurement did precisely that, seven times over",
+   "null_must_contain": "a silent run, which this measurement has already produced once on this machine",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "before_min_output_lines": 8,
+    "after_min_output_lines": 8,
+    "walkers": 7
+   }
+  },
+  {
+   "name": "C2_contamination_present_then_absent",
+   "must_fire_because": "a clean AFTER proves nothing unless a dirty BEFORE was measured by the same instruments in the same session",
+   "can_fail_because": "no walker reported the copy before deletion (nothing was contaminated), or any still reports it after (the remedy did not work), or a walker went silent across the delete",
+   "null_must_contain": "the BEFORE side, where three walkers name the copy",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "before_hits": {
+     "constcheck": 40,
+     "leakcheck": 8,
+     "recheck": 29
+    },
+    "after_hits": {},
+    "constcheck_output_lines": [
+     95,
+     55
+    ],
+    "recheck_output_lines": [
+     166,
+     83
+    ]
+   }
+  },
+  {
+   "name": "C3_census_separates_a_copy_from_live_work",
+   "must_fire_because": "F2 is decided on this predicate, so it must score the copy far from the ordinary untracked directories and not merely above a threshold chosen to fit",
+   "can_fail_because": "fixtures/ or kitchen/drafts/ -- 544 and 113 untracked files of genuine content -- score anywhere near the copy",
+   "null_must_contain": "two large untracked directories that are NOT copies, both present in this tree by construction",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "copy": [
+     5062,
+     5066
+    ],
+    "fixtures": [
+     1,
+     544
+    ],
+    "kitchen_drafts": [
+     0,
+     113
+    ]
+   }
+  },
+  {
+   "name": "C4_the_check_fails_when_the_change_breaks",
+   "must_fire_because": "\u00a712.3 -- a harness component ships a check that fails when it breaks, and \"it passes\" is not evidence of that",
+   "can_fail_because": "any mutant survives, or the unmutated module does not pass; an earlier arm of this very check DID let a mutant through by testing the printed output instead of the computation behind it",
+   "null_must_contain": "the unmutated module, which must pass, so a check that refuses everything cannot score green here",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mutants_killed": {
+     "D_git_failure_returns_empty": true,
+     "C_suffix_match_instead_of_exact": true,
+     "E_computation_replaced_by_constant": true
+    },
+    "unmutated_check_rc": 0
+   }
+  },
+  {
+   "name": "C5_peer_falsifier_perturbation_reproduced",
+   "must_fire_because": "AGENT-2 reports their preregistered F4 fired at 10 citing spikes instead of 9 because of my copy; that is a claim about my contamination and it is checked",
+   "can_fail_because": "one piece of evidence present in two places on disk is counted ONCE by G101's rule, in which case a copy adds noise but cannot invert a count-based falsifier",
+   "null_must_contain": "the single-copy arm, where the count does not move",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "arm1_only_real": [
+     "H223_fixture_plain"
+    ],
+    "arm2_real_plus_copy": [
+     "H223_fixture_nest",
+     "H223_fixture_plain"
+    ],
+    "arm3_only_copy": [
+     "H223_fixture_nest"
+    ]
+   }
+  },
+  {
+   "name": "C6_the_walk_descends_and_doubles_the_report",
+   "must_fire_because": "the incident cannot be re-run, so the claim that a walker descends into a nested copy and reports its contents needs a fixture that anyone can run",
+   "can_fail_because": "the walker does not descend into the nested copy, or descends and reports the same verdict count as without it -- either would mean a copy adds files but not findings",
+   "null_must_contain": "the without-copy arm, where exactly one defect is written and exactly one is reported",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "without_copy": 1,
+    "with_copy": 2,
+    "files_without": 1,
+    "files_with": 2
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_gitignore_would_have_saved_it",
+   "must_fire_because": null,
+   "can_fail_because": "`git check-ignore` calls the copy IGNORED",
+   "null_must_contain": "an IGNORED verdict, which this same command returns for `elders/` and `.scratch/` in this tree",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "check_ignore_rc": 1
+   },
+   "refutes": "the row: if the copy is gitignored, a .gitignore-driven exclusion is the whole remedy and there is no class",
+   "fires_when": "`git check-ignore` calls the copy IGNORED",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_the_class_is_one_anecdote",
+   "must_fire_because": null,
+   "can_fail_because": "the census finds no copy of the tree other than the one I made",
+   "null_must_contain": "27 other untracked directories, any of which could have scored as a copy and none of which did",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "copies": [
+     "spikes/H210_refutation_outlives_target/"
+    ],
+    "untracked_dirs_censused": 27
+   },
+   "refutes": "the CLASS: one instance means the rate is the deliverable and no copy detector ships (ok-1 H23 precedent)",
+   "fires_when": "the census finds no copy of the tree other than the one I made",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_blast_radius_is_zero",
+   "must_fire_because": null,
+   "can_fail_because": "no document quotes a count from a contaminated module AND no peer falsifier moved",
+   "null_must_contain": "23 document mentions of the three modules, and a three-arm reproduction whose count was free not to move",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "numeric_document_mentions": 18,
+    "peer_falsifier_moved": true
+   },
+   "refutes": "my sub-claim that the copy perturbed another lane's measurement",
+   "fires_when": "no document quotes a count from a contaminated module AND no peer falsifier moved",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_the_class_is_one_anecdote"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787175792,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H223_copy_of_the_tree": {
+   "newest": 1787175631,
+   "from": "spikes/H223_copy_of_the_tree/certify.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the copy is gitignored so .gitignore is the whole fix (F1), or a second copy exists so the shape recurs (F2), or nothing anywhere was computed from a contaminated run (F3).",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

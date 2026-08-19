@@ -1,0 +1,16 @@
+{
+  "a_count_based_falsifier_inverts": true,
+  "arm1_only_the_real_spike": [
+    "H223_fixture_plain"
+  ],
+  "arm2_real_plus_its_copy": [
+    "H223_fixture_nest",
+    "H223_fixture_plain"
+  ],
+  "arm3_only_the_copy": [
+    "H223_fixture_nest"
+  ],
+  "copy_wears_the_enclosing_name": true,
+  "fixtures_removed": true,
+  "one_citer_counted_twice": true
+}

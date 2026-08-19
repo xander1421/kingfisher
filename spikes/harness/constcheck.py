@@ -1,5 +1,38 @@
 #!/usr/bin/env python3
-"""constcheck.py v2 — H201. A control whose VERDICT is a literal cannot fail.
+"""constcheck.py v3 — H223. A control whose VERDICT is a literal cannot fail.
+
+v3 (H223, ATOM-3) — DEFECT REMOVED: THIS MODULE REPORTED A POPULATION AND NEVER
+SAID WHICH TREE THE POPULATION CAME FROM. It `os.walk`s the workspace and prints
+"N .py file(s) scanned"; nothing distinguished a file the repository has from a
+file only this disk has. MEASURED: I materialised HEAD with `git archive` into a directory named
+H210_refutation_outlives_target — 5,066 files — and this module walked
+it and published **40 output lines naming that copy**, each one individually
+plausible because it named a real path. `leakcheck.py` took 8, `recheck.py` 29;
+AGENT-2 hit the same tree from a G-series falsifier and measured recheck at
+**154 of 316 records inside the copy**, i.e. 51% of its population absent from
+the repository, with no line of output saying so.
+
+THE SKIP LIST IS NOT THE FIX AND `.gitignore` IS NOT EITHER. v2's `SKIP_DIRS`
+names the PROPERTY in its comment ("gitignored scratch is not this fleet's
+evidence") and implements a NAME LIST (H93's class). But `git check-ignore` on
+that copy returns NOT IGNORED, so a `.gitignore`-driven exclusion would have
+walked it too. Every number in this block is recorded in
+`spikes/H223_copy_of_the_tree/incident.json`, INCLUDING the copy's full path —
+which is deliberately not written here as a path, because this row DELETED it and
+`refcheck` is right to refuse a citation that no longer resolves. It refused this
+very block first, which is the note four lines up in `refcheck.py` itself landing
+on its next reader.
+
+NOR IS PRUNING THE FIX, AND THAT IS THE PART WORTH READING. After the copy was
+deleted, 6 records remained on disk that the repository does not have — and they
+are not residue, they are LIVE IN-FLIGHT SPIKES (`G101`, `G93` x2, `G97`, `H219`,
+`S91`). A pruner cannot tell a lane's uncommitted work from a copy of the tree,
+and pruning would have hidden the work. Only a STATED denominator distinguishes
+them, and it costs one line: the reader sees 505 scanned, 6 not in the
+repository, and knows which object was measured.
+
+Check that fails when this breaks (§12.3):
+  sh spikes/H223_copy_of_the_tree/check.sh
 
 THE DEFECT MEASURED
 -------------------
@@ -84,6 +117,7 @@ set the exit code; fixtures are printed and counted separately, never hidden.
 """
 import ast
 import os
+import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -202,7 +236,11 @@ def is_fixture(chain):
     return any(c in FIXTURE_FUNCS for c in chain)
 
 
-def scan(root):
+def scan(root, scanned_out=None):
+    # `scanned_out` is an OUT-PARAMETER and not a sixth return value on purpose:
+    # `spikes/H201_literal_verdicts/check.sh` unpacks scan() into exactly five
+    # names, and widening the tuple would break another row's runnable check to
+    # add a line of output here (v3, H223).
     live, fixture, skipped, unparseable, files = [], [], set(), [], 0
     for dirpath, dirnames, filenames in os.walk(root):
         for d in list(dirnames):
@@ -214,6 +252,8 @@ def scan(root):
                 continue
             p = os.path.join(dirpath, fn)
             files += 1
+            if scanned_out is not None:
+                scanned_out.append(os.path.relpath(p, root))
             try:
                 src = open(p, encoding='utf-8', errors='replace').read()
             except OSError:
@@ -231,8 +271,27 @@ def scan(root):
     return live, fixture, sorted(skipped), unparseable, files
 
 
+def untracked_scanned(root, scanned_rels):
+    """Which of the files we just scanned is the repository missing? (v3, H223)
+
+    Not a defect on its own -- an in-flight spike is untracked by construction
+    and is exactly what its author wants scanned. It is the DENOMINATOR'S
+    PROVENANCE: without it, a copy of the tree and a lane's live work are the
+    same number. Reads git's own answer rather than reimplementing .gitignore,
+    and REFUSES to guess when git fails, because a silent empty set here would
+    report "all tracked" for the one case this exists to catch (error 42).
+    """
+    pr = subprocess.run(['git', 'ls-files'], cwd=root,
+                        capture_output=True, text=True)
+    if pr.returncode != 0:
+        return None
+    tracked = set(pr.stdout.splitlines())
+    return sorted(r for r in scanned_rels if r not in tracked)
+
+
 def main():
-    live, fixture, skipped, unparseable, files = scan(ROOT)
+    scanned = []
+    live, fixture, skipped, unparseable, files = scan(ROOT, scanned)
     for path, line, recv, lit, where in sorted(live):
         print(f'  LITERAL VERDICT  {path}:{line}  {recv}.observe({lit}, ...)  in {where}')
     for path, line, recv, lit, where in sorted(fixture):
@@ -242,6 +301,22 @@ def main():
     print(f'\nconstcheck: {files} .py file(s) scanned · {len(live)} LIVE literal '
           f'verdict(s) · {len(fixture)} fixture(s) in demo/selfcheck · '
           f'{len(unparseable)} unparseable · {len(skipped)} tree(s) skipped')
+    # v3, H223: the denominator names the tree it came from. Without this line a
+    # copy of the repository and a lane's live in-flight spike are one number.
+    ut = untracked_scanned(ROOT, scanned)
+    if ut is None:
+        print('  population: git ls-files FAILED — this scan cannot say which of '
+              'the files it read are in the repository, and does not guess')
+    elif ut:
+        print(f'  population: {files - len(ut)} of {files} scanned .py file(s) are '
+              f'in this repository; {len(ut)} are NOT and a clone would not see them:')
+        show = ut if '--list-untracked' in sys.argv else ut[:12]
+        for x in show:
+            print(f'    not in the repository: {x}')
+        if len(show) < len(ut):
+            print(f'    ... and {len(ut) - len(show)} more (--list-untracked for all)')
+    else:
+        print(f'  population: all {files} scanned .py file(s) are in this repository')
     if skipped:
         print(f'  skipped trees are NAMED, never implied — run with --list-skipped '
               f'for all {len(skipped)}')

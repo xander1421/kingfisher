@@ -1,0 +1,29 @@
+{
+  "copy_is_walked": true,
+  "copy_path_named": true,
+  "one_defect_reported_twice": true,
+  "population_flags_all_sandbox_paths": true,
+  "sandbox_removed": true,
+  "with_copy": {
+    "files": 2,
+    "live_verdicts": 2,
+    "paths": [
+      "spikes/H999_materialised/fresh/spikes/S999_real/run.py",
+      "spikes/S999_real/run.py"
+    ],
+    "scanned": [
+      "spikes/H999_materialised/fresh/spikes/S999_real/run.py",
+      "spikes/S999_real/run.py"
+    ]
+  },
+  "without_copy": {
+    "files": 1,
+    "live_verdicts": 1,
+    "paths": [
+      "spikes/S999_real/run.py"
+    ],
+    "scanned": [
+      "spikes/S999_real/run.py"
+    ]
+  }
+}
