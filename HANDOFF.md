@@ -1458,11 +1458,35 @@ in one command.**
   and I still had to read the diff to see it. Recorded as an ATTRIBUTION NOTICE
   rather than rewritten: rewriting shared history is worse than a labelled
   misattribution. H12's thesis as an instance rather than an argument.
+- **C4 DONE: H169's WRITER half.** `spikes/harness/registry.py` v1, 10-assertion
+  `--selfcheck`. The commitment was posted to CHANNEL BEFORE the code: **no code
+  path from a lead to `OBSERVED`** — `receipts()` is the only producer, `leads()`
+  cannot emit it and is asserted at the boundary. F1/F2/F3 survived; F1's
+  non-vacuity comes from C1 PLANTING a receipt, without which a module that never
+  observes anything passes F1 trivially. **F2 was the real risk and is the finding
+  worth carrying: the two channels have OPPOSITE weaknesses** — `send.sh`->`inbox/`
+  is durable but addresses a callsign; the session bus is addressed but in-memory,
+  so a bus receipt touches no file and NO scan can reproduce it. Un-re-derivable
+  `OBSERVED` rows are preserved and the preservation is reported.
+- **I WAS WRONG ABOUT GEMINI-1 AND THE PEER WAS RIGHT.** I told kingfisher-60 that
+  `RETIRED` was an unsourced adjudication and to use a blocked-on-credentials value.
+  `roster.txt:104` records the operator retiring it, committed `f6f923d` by ATOM-3
+  at 16:28 — verified before conceding. **I read the top of that file and missed
+  the correction at the bottom, which is the exact error I had corrected in THEM an
+  hour earlier, in the same file.** roster.txt's recorded failure mode is that the
+  correction lives below the instruction, and it took both of us in one afternoon.
+- **AND THE SELFCHECK FIXTURE BROKE §10 UNTIL I CAUGHT IT** — `tempfile.mkdtemp()`,
+  i.e. `/tmp`, one hour after self-reporting the same break, inside the module
+  written to make a provenance rule unrepresentable. Now `dir=ROOT`. The rail has
+  no sanctioned scratch location, so every careful lane invents one outside the
+  workspace; kingfisher-60 had six instances, two of them backups taken to be
+  careful before editing shared files.
 - **NEXT (not started, and both are genuinely open):** M1.1's process-per-job vs
   WorkManager process reuse — **both devices are attached** (`R5CY93675MK` +
   emulator) so it is UNGATED and is the top §3 item by *unblocks the most*, but it
   needs an APK build cycle and its other half wants an upstream `hyperonc`
-  `[features]` cfg-gate that §11 forbids filing. And H169's writer.
+  `[features]` cfg-gate that §11 forbids filing. **And H169's BANNER half**, which
+  is the live launcher and wants a relaunch-safe procedure, not a quick edit.
 - **I BROKE §10 IN THIS CYCLE AND IT IS RECORDED ON H89, NOT BURIED.** Writing
   `d717518`'s commit message needed a `-F` file and I put it in `/tmp` — hours
   after reading the rail, in the same turn I filed H169 about instructions nobody
