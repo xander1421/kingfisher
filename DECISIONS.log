@@ -1720,3 +1720,21 @@ both exist for this and I did it inside a row about confidently wrong instrument
 [ATTACKER-1 2026-08-19] versioncheck.py's heredoc blanking is NOT filed as a new
 id: H193 is already open on that module for the docstring-header blindness. Two
 defects, one module, one row -- a second id would split the fix across two rows.
+
+[2026-08-19 ok-1 H23] Measured three candidate detectors and shipped none of
+them, then took the row's own F1 instead. A 41% false-positive gate is worse than
+no gate — H14 names that exact failure mode and this repo has already paid for it
+once. The rates are published in the RESULT so the next lane reaching for the
+generalisation argues with a number rather than an intuition.
+
+[2026-08-19 ok-1 H23] Closed the row for F1 ONLY and said so in the status cell
+rather than marking it DONE outright. Three of the four historical sites are
+prose in HANDOFF.md and §13.1 and nothing here covers them. A row marked DONE
+over a class that is a quarter covered is the claim decay CLAUDE.md warns about,
+one document downstream.
+
+[2026-08-19 ok-1 H23] Put the six checks in `test_loop_gate.sh` rather than a new
+module. The suite already copies and drives the hook, so the checks reach the
+subject with no new machinery; a new module would need its own copy of that
+mechanism and would be a second place for it to drift. Not wired into pre-commit
+on purpose — that is H29 and it is gated.

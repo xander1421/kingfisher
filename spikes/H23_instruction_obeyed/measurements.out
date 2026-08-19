@@ -1,0 +1,41 @@
+===== measure1_any_path =====
+repo paths inside EMITTED strings: 32
+  naming a path that does NOT exist: 13
+   MISSING spikes/harness/allocid.sh:178 spikes/Z7_on_disk_only
+   MISSING spikes/harness/autoloop_local.sh:217 proposed/autoloop-
+   MISSING spikes/harness/scratchcheck.py:520 out/y
+   MISSING spikes/harness/test_h57_falsify.sh:74 spikes/Z7_on_disk_only
+   MISSING spikes/harness/test_h57_falsify.sh:93 analysis/NOTES.md
+   MISSING spikes/harness/test_loop_gate.sh:445 prompts/L8.md
+   MISSING spikes/harness/test_loop_gate.sh:727 prompts/L
+   MISSING spikes/harness/test_loop_gate.sh:939 prompts/RACE-1.md
+   MISSING spikes/harness/test_loop_gate.sh:1014 prompts/RACE-2.md
+   MISSING spikes/harness/test_loop_gate.sh:1086 prompts/FUSE-1.md
+   MISSING spikes/harness/test_pre_push.sh:46 .github/workflows/x.yml
+   MISSING spikes/harness/test_pre_push.sh:71 .github/workflows/y.yaml
+   MISSING spikes/harness/trackcheck.py:179 kitchen/test_b.py
+
+  by file: [('spikes/harness/test_loop_gate.sh', 6), ('spikes/harness/commit_scoped.sh', 5), ('spikes/harness/test_pre_push.sh', 5), ('run_loop.sh', 3), ('spikes/harness/autoloop_local.sh', 2), ('spikes/harness/test_h57_falsify.sh', 2), ('spikes/harness/allocid.sh', 1), ('spikes/harness/bringup.sh', 1)]
+===== measure2_grammar_and_markers =====
+A) emitted '<interpreter> <repo path>' instructions: 8
+   naming a path that does NOT exist: 1
+     MISSING spikes/harness/test_loop_gate.sh:636 ./hook.sh
+
+B) markers named in emitted strings: 107
+   NOT present in any non-message line of the same file: 29
+     ORPHAN .claude/hooks/loop_gate.sh:155 LOOP-FUSE
+     ORPHAN .claude/hooks/loop_gate.sh:172 MISSION_LOOP
+     ORPHAN .claude/hooks/loop_gate.sh:172 WORK_QUEUE
+     ORPHAN spikes/harness/check_live_launcher.sh:314 PRE-FIX
+     ORPHAN spikes/harness/githygiene.py:374 SELF-REVIEW
+     ORPHAN spikes/harness/headcheck.sh:105 CHECKER-UNCOMMITTED
+     ORPHAN spikes/harness/headcheck.sh:108 TRACKED-BUT-STALE
+     ORPHAN spikes/harness/headcheck.sh:210 CHECKER-BROKEN
+     ORPHAN spikes/harness/refcheck.py:726 FALSE-POSITIVE
+     ORPHAN spikes/harness/reprocheck.py:59 NON-RUNNABLE
+     ORPHAN spikes/harness/stranded.sh:183 MISSION_LOOP
+     ORPHAN spikes/harness/test_h57_falsify.sh:44 WORK_QUEUE
+     ORPHAN spikes/harness/test_h66.sh:79 WORK_QUEUE
+     ORPHAN spikes/harness/test_loop_gate.sh:1206 LIVE-TREE
+===== measure3_run_grammar =====
+instructions checked: 3   unresolved: 0

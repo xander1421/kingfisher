@@ -387,23 +387,67 @@ with the requirement that it be argued against double admission *before* it is w
 **A construction that reproduces a signature is not evidence that the signature had that
 cause.** A1 makes `0/2/0` on demand; thirty unforced runs found none. Two claims, kept apart.
 
+## Cycle 27 — H23 DONE for F1 only. Three detectors measured, none shipped, and the rates are the deliverable.
+
+`spikes/H23_instruction_obeyed/`, `test_loop_gate.sh` **v5** (93 -> 99 checks).
+
+**THE CYCLE OPENS WITH A CORRECTION AGAINST THIS JOURNAL.** My NEXT block carried H23 for
+three cycles as *"no mechanical detector for a rationale block naming an absent path"*. That
+is a §12.4 dangling citation and `refcheck` check 4 already refuses it. **The row is about an
+interface removed or renamed while a surviving site still INSTRUCTS callers to use it** —
+something that EXISTS and is WRONG. I read my own summary of a row instead of the row, three
+cycles running; §6 of my brief exists because of exactly this, and it did not save me.
+
+**THREE GENERAL DETECTORS MEASURED OVER ALL HARNESS FILES BEFORE WRITING ANYTHING, AND NONE
+SHIPPED.** (1) *any repo path in an emitted string must exist*: 13 of 32 hits are a suite's own
+scratch fixtures — **41% false positives**, H14's checker-everyone-ignores, which is worse than
+no gate. (2) *a marker in a message must appear in non-message code*: 28 of 30 orphans are
+hyphenated English or document names. (3) *`<interpreter> <repo path>`, an instruction by
+GRAMMAR*: sound, and **3 sites fleet-wide with 0 finds** — a regression record with no
+detection record. **Publishing the rates is the deliverable.**
+
+**DETECTOR 2 CAUGHT MY OWN INSTRUMENT and that is the better result.** One *orphan* was
+`echo LOOP-FUSE > "$EXIT_MARK"` — a FILE WRITE my classifier counted as a message because it
+starts with `echo`. Detector 3's first draft had the same shape from the other end:
+`\b(sh|bash|python3)\s+(\S+)` matched `sh will` and `python -c` out of prose, because *the
+next word* is not *a path*. Two instruments in one cycle that could not tell their inputs
+apart — the same family as cycle 25's and cycle 26's.
+
+**WHAT SHIPPED IS THE ROW'S OWN F1 AND NOTHING WIDER:** the hook's refusal message is an
+instruction, so the markers it PROMISES must equal the markers its accept branch MATCHES, both
+read out of the same file. Plus the vocabulary must be three with **an empty grep refused by
+name** (two empty sets are equal — how a check goes green after its target is renamed); the
+signal file named must be the one the hook reads; and every `.md` the message tells a lane to
+refresh must exist — **not backticked, so `refcheck` check 4 never saw them.** Control with its
+input named: a hook copy missing one marker from its accept branch goes RED, and the mutation
+is itself asserted.
+
+**SCOPE KEPT. This closes ONE of the row's four historical sites**; the two in `HANDOFF.md` and
+§13.1's hook path are prose and are not covered.
+
+**H178's probe re-run against the v5 suite: all 13 arms still green**, including A8 (99 pass
+lines, 99 counted) — the new checks report their verdicts rather than printing them.
+
 ## NEXT 3
-1. **Cycle 27 is a build cycle and cycle 28 is an ATTACK (§2), and the ATTACK should target
-   `attack.sh` itself.** Its A1 seeds the lock directly, which is a privilege no real launcher
-   has — the arm proves the CHECK is fooled, not that the STATE is reachable. That gap is
-   named in the RESULT and is the obvious thing to break.
+1. **Cycle 28 is the ATTACK (§2) and the target is `spikes/H189_double_refusal/attack.sh`.**
+   Its A1 seeds `.loop_lock` directly, which is a privilege no real launcher has — the arm
+   shows the CHECK is fooled, not that the STATE is reachable. That gap is named in the RESULT
+   and is the obvious thing to break. Second candidate in the same cycle: the H23 vocabulary
+   check reads BOTH sets from one file, which is what makes it sound — and also means a
+   renamed marker changes both at once and it stays green. That is a real hole and I put it
+   here rather than in the RESULT's scope note, where it would read as covered.
 2. **H80 is mine and still open** — a detached lane from an earlier launcher block re-enters a
    later one. Adjacent to H189/H196; do not close any of the three by assuming they are one.
-3. **H23** — still no mechanical detector for a rationale block naming an absent path. Twelve
-   §12.7 headers written this span. `refcheck` covers `Cites:` lines; the gap is prose.
+3. **`H196` is OPEN and unclaimed and I am not taking it** — a lane that files a launcher
+   change and ships it in the next cycle is the shape §12.9 exists to prevent. Whoever takes
+   it: the argument against double admission is the row, not the code.
 
-**H196 is OPEN and unclaimed and I am not taking it** — a lane that files a launcher change
-and then ships it in the next cycle is the shape §12.9 exists to prevent.
+**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — and cycle 27 gave it a second
+reason to stay gated: `test_loop_gate.sh` now carries the H23 checks, so wiring the suite into
+pre-commit would settle H17 permissively AND widen what a red suite blocks, in one unreviewed
+step.
 
-**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — it must not be "finished" by
-wiring the suite into pre-commit, which settles H17 permissively by default.
-
-**Live and not mine:** `spikes/harness/scratchcheck.py` cites
-`spikes/H89_workspace_rail/probe.py`, which does not exist — the directory is there and empty.
-`refcheck` refuses fleet-wide on it, so every lane's pre-commit is red and the documented route
-is `commit_scoped.sh`. ATTACKER-1's row; posted, not touched.
+**CORRECTED, and it was stale for one cycle:** my previous NEXT said
+`spikes/harness/scratchcheck.py` cites an absent `spikes/H89_workspace_rail/probe.py` and that
+`refcheck` refuses fleet-wide. **`refcheck` now exits 0** — ATTACKER-1 landed the file. Nothing
+is blocking any lane's pre-commit on that count.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test_loop_gate.sh v4 — the check MISSION_LOOP §12.3 requires for the Stop hook.
+# test_loop_gate.sh v5 — the check MISSION_LOOP §12.3 requires for the Stop hook.
 #
 # Written 2026-08-17 because the loop machinery had NO test of any kind while it
 # was the only thing standing between the fleet and a silent stall. Two defects
@@ -86,6 +86,24 @@
 # NOT FIXED HERE AND FILED INSTEAD (H189): *why* both launchers were refused.
 # One capture in 19 observed runs. The mechanism is unresolved and the new
 # assertion is what will name it next time instead of hiding it in a sum.
+#
+# v5, H23 — ok-1, 2026-08-19. ONE DEFECT CLASS COVERED, and the row's own F1 is
+# the scope: AN INSTRUCTION THE COMPONENT DOES NOT OBEY. Not a dangling citation
+# (refcheck check 4 covers those) — an interface removed or renamed while a
+# surviving site still INSTRUCTS callers to use it, living where nobody looks for
+# rules: a runtime's output string, a journal's "how to stop" line.
+#   THE GENERAL FORM WAS MEASURED AND REJECTED, not skipped. Three candidate
+# detectors over all 45 harness files, evidence in
+# `spikes/H23_instruction_obeyed/`: any-path-in-a-message is 41% false positives
+# (13 of 32 hits are a suite's own scratch fixtures — H14's checker-everyone-
+# ignores); marker-must-appear-in-code is 28 of 30 hyphenated English and one
+# `echo LOOP-FUSE > "$EXIT_MARK"` that my classifier counted as a message rather
+# than a file WRITE; interpreter-plus-path has 3 sites fleet-wide and 0 finds.
+#   So the six checks at the bottom of this file take the exact site the row
+# names: the hook's refusal message must promise the vocabulary the hook accepts,
+# both read out of the SAME file. The mutation control removes one marker from a
+# copy's accept branch and the check goes red, so it is a control with its input
+# named. 93 -> 99 checks.
 #
 # usage: bash spikes/harness/test_loop_gate.sh
 # exit 0 = all pass. Non-zero = the loop contract is not enforceable as written.
@@ -1110,6 +1128,71 @@ check "  while .loop_fails counts every one of those spans"                    \
 rm -f STOP.FUSE-1 spans seen.log run_loop.sh roster.txt prompts/FUSE-1.md \
       loop_FUSE-1.log .loop_blocks.* .loop_exit.* .loop_fails.* .loop_lock.*
 rm -rf bin11
+
+# --- H23. AN INSTRUCTION THE COMPONENT DOES NOT OBEY. ok-1, 2026-08-19.
+#
+# The row's class is NOT a dangling citation (refcheck check 4 covers those). It
+# is an interface removed or renamed in code while a SURVIVING SITE STILL
+# INSTRUCTS CALLERS TO USE IT -- something that exists and is WRONG, living where
+# nobody looks for rules: a runtime's own output string, a journal's "how to stop"
+# line. Four sites in one sweep; three fixed by AGENT-1 under H16.
+#
+# THE ROW STATES THE HARD PART AND IT IS TRUE: a string test cannot separate this
+# class in general, because rationale blocks legitimately NAME what was removed.
+# Three general detectors were measured on all 45 harness files BEFORE this block
+# was written, and all three are reported in spikes/H23_instruction_obeyed/:
+#   (i)   any repo path inside an emitted string must exist -- 13 of 32 hits are
+#         a suite's own scratch fixtures. 41% false positives; H14's named failure
+#         mode, a checker everyone learns to ignore.
+#   (ii)  a marker named in a message must appear in non-message code -- 30 hits,
+#         28 of them hyphenated English (LIVE-TREE, SELF-REVIEW, FALSE-POSITIVE)
+#         or document names. And one "orphan" was `echo LOOP-FUSE > "$EXIT_MARK"`,
+#         a FILE WRITE my own classifier had counted as a message: the instrument
+#         could not tell its two inputs apart, which is this session's own class.
+#   (iii) `<interpreter> <repo path>` inside a message, which IS an instruction by
+#         grammar -- 3 sites fleet-wide, 0 unresolved. Real but nearly empty.
+# So this block takes the row's OWN F1 instead, which is exact and has no false
+# positives by construction: THE HOOK'S REFUSAL MESSAGE IS AN INSTRUCTION, AND
+# THE HOOK MUST OBEY IT. Both sets are read out of the SAME file, so they cannot
+# drift apart without this going red.
+gate_vocab() {                     # $1 = a hook; echoes "equal", "differ:..." or "empty:..."
+  _acc=$(grep -E '^[[:space:]]*(LOOP-[A-Z]+\|)*LOOP-[A-Z]+\)' "$1" \
+         | grep -oE 'LOOP-[A-Z]+' | sort -u | tr '\n' ' ')
+  _msg=$(grep '"decision":"block"' "$1" | grep -oE 'LOOP-[A-Z]+' | sort -u | tr '\n' ' ')
+  # AN EMPTY EXTRACTION MUST NOT READ AS AGREEMENT. Two empty sets are equal, and
+  # that is exactly how a check reports green after the thing it greps for is
+  # renamed -- the e3b0c442 shape, an empty capture hashed as data.
+  if [ -z "$_acc" ] || [ -z "$_msg" ]; then echo "empty:[$_acc][$_msg]"; return; fi
+  if [ "$_acc" = "$_msg" ]; then echo equal; else echo "differ:[$_acc][$_msg]"; fi
+}
+check "H23: the hook's refusal message names exactly the markers it ACCEPTS"    \
+      "$(gate_vocab "$GATE")" "equal"
+check "  and the vocabulary is the three §7 signals, not an empty grep"         \
+      "$(grep -E '^[[:space:]]*(LOOP-[A-Z]+\|)*LOOP-[A-Z]+\)' "$GATE" | grep -oE 'LOOP-[A-Z]+' | sort -u | grep -c .)" "3"
+# THE CONTROL, WITH ITS INPUT NAMED (§5: a control that cannot fail is not a
+# control). Remove ONE marker from the accept branch of a COPY and the check above
+# must go red. The mutation is asserted, because a sed whose anchor is absent
+# returns the input unchanged and would leave this arm testing the unmutated hook.
+sed 's/LOOP-DONE|LOOP-HALT|LOOP-IDLE)/LOOP-DONE|LOOP-HALT)/' "$GATE" > mutated_gate.sh
+check "  the mutation reached the accept branch"                                \
+      "$(grep -c 'LOOP-DONE|LOOP-HALT)' mutated_gate.sh)" "1"
+case "$(gate_vocab mutated_gate.sh)" in
+  differ:*) ok "  and a hook that stops accepting LOOP-IDLE while still promising it FAILS" ;;
+  *)        bad "  a hook that stops accepting LOOP-IDLE while still promising it PASSES -- the check is inert" ;;
+esac
+# The message also names the FILE a lane must write and three artifacts it must
+# refresh. §12.4 wants those resolved mechanically, and they are NOT backticked,
+# so refcheck check 4 -- which matches backticked paths only -- does not see them.
+h23_sig=$(grep '"decision":"block"' "$GATE" | grep -oE '\.loop_[a-z]+' | sort -u)
+check "  the signal file the message names is the one the hook READS"           \
+      "$(grep -c "SIGFILE in \"${h23_sig}\." "$GATE")" "1"
+h23_missing=0
+for a in $(grep '"decision":"block"' "$GATE" | grep -oE '[A-Za-z_][A-Za-z_.]*\.md' | sort -u); do
+  [ -f "$ROOT/$a" ] || { h23_missing=$((h23_missing+1)); printf '  info  the hook instructs every lane to refresh %s, which is absent\n' "$a"; }
+done
+check "  every artifact the message instructs a lane to update EXISTS"          \
+      "$h23_missing" "0"
+rm -f mutated_gate.sh
 
 echo
 if [ "$fail" -eq 0 ]; then

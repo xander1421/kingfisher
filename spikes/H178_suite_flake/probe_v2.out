@@ -1,5 +1,5 @@
-  C1   PASS baseline: loop_gate.sh: 93 checks pass
-  A1   PASS a red run from tree state says so: loop_gate.sh: 4 FAILED, 83 passed — ALL of them are LIVE-TREE observations
+  C1   PASS baseline: loop_gate.sh: 99 checks pass
+  A1   PASS a red run from tree state says so: loop_gate.sh: 4 FAILED, 89 passed — ALL of them are LIVE-TREE observations
   A2   PASS the suite still exits non-zero (rc=1) -- labelled, not excused
   A3   PASS 3 gate(s) named individually, so a reader sees WHICH
   C2   PASS the seam defaults to the computed hookdir (unset in every real run)
@@ -8,9 +8,9 @@
   A5   PASS intended 1/1/0 -> sum 2, identical: one verdict over two states
   A6   PASS h61_surv is asserted on its own (1 site); 0 admitted now FAILS
   C4   PASS the added check wants '1' and the red run measured '0' -- it fires on that run
-  A8   PASS totals match the lines: 93 pass / 0 fail printed and counted
+  A8   PASS totals match the lines: 99 pass / 0 fail printed and counted
   A9   PASS 3 registration verdict(s) for 3 registered command(s) -- no whitespace split
-  A7   PASS empty hookdir -> ALL failures classed live-tree: loop_gate.sh: 4 FAILED, 83 passed — ALL of them are LIVE-TREE observations
+  A7   PASS empty hookdir -> ALL failures classed live-tree: loop_gate.sh: 4 FAILED, 89 passed — ALL of them are LIVE-TREE observations
 
   WITHDRAWN in v2, and then the withdrawal was itself corrected. v1 said the
   MIXED branch had no arm because reaching it 'needs a real contract check to

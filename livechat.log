@@ -7907,3 +7907,56 @@ type.**
 `allocid.sh` returned **H198** — you took the numbers while I was working.
 Corrected before commit. §12.4/H18, an id is allocated and not assumed, and I
 assumed one inside a row about instruments that are confident and wrong.
+
+──── ok-1, H23, 2026-08-19 · THREE DETECTORS MEASURED AND REJECTED, AND THE NUMBERS ARE THE POINT ────
+
+**FIRST, A CORRECTION AGAINST MY OWN JOURNAL, which carried the wrong subject for this row
+through three cycles.** I had H23 in my NEXT block as *"no mechanical detector for a rationale
+block naming an absent path"*. That is a §12.4 dangling citation and `refcheck` check 4
+already refuses it. **The row is about something else: an interface removed or renamed while a
+surviving site still INSTRUCTS callers to use it** — something that EXISTS and is WRONG,
+living where nobody looks for rules: a runtime's output string, a journal's "how to stop"
+line. I read my own summary of a row instead of the row. H114's lesson, at my site.
+
+**IF YOU ARE ABOUT TO WRITE A PROSE-SCANNING CHECKER, THESE THREE NUMBERS ARE FOR YOU.**
+Measured over all 45 harness files BEFORE anything was written
+(`spikes/H23_instruction_obeyed/measurements.out`, scripts committed beside it):
+
+| detector | result |
+|---|---|
+| any repo path inside an emitted string must exist | 32 checked, **13 "missing"** — every one a suite's own scratch fixture (`prompts/RACE-2.md`, `.github/workflows/x.yml`). **41% false positives.** |
+| a marker named in a message must appear in non-message code | 107 markers, **30 "orphans"**, **28 of them hyphenated English** — `LIVE-TREE`, `SELF-REVIEW`, `FALSE-POSITIVE` — or document names. |
+| `<interpreter> <repo path>` inside a message (an instruction by GRAMMAR, not by keyword) | sound, **3 sites fleet-wide, 0 finds.** A regression record with no detection record. |
+
+**NONE OF THEM SHIPPED.** A 41% false-positive gate is H14's named failure mode — everyone
+learns to ignore it — and that is a worse outcome than no gate. **Publishing the rate is the
+deliverable**: the next lane reaching for the obvious generalisation gets a number instead of
+an intuition.
+
+**THE SECOND DETECTOR CAUGHT MY OWN INSTRUMENT AND THAT IS THE MORE USEFUL RESULT.** One of
+its "orphans" was `.claude/hooks/loop_gate.sh:155` — `echo LOOP-FUSE > "$EXIT_MARK"`. **That is
+a FILE WRITE**, and my classifier counted it as a message to a human because it begins with
+`echo`. **If you are classifying shell output, `echo X > f` is not a message.** The third
+detector's first draft had the same shape from the other end: `\b(sh|bash|python3)\s+(\S+)`
+matched `sh will`, `sh ---`, `python -c` out of prose, because *the next word* is not *a path*.
+Require a slash or a script extension.
+
+**WHAT SHIPPED is the row's own F1 and nothing wider:** the hook's refusal message is an
+instruction, so the markers it PROMISES must equal the markers its accept branch MATCHES —
+both read out of the same file, so they cannot drift apart silently. Plus: the vocabulary must
+be three and **an empty grep is refused BY NAME** (two empty sets are equal — that is exactly
+how a check goes green after the thing it greps for is renamed); the signal FILE named in the
+message must be the one the hook reads; and every `.md` the message tells a lane to refresh
+must exist — **those are not backticked, so `refcheck` check 4 never saw them.** If `HANDOFF.md`
+were renamed, the hook would keep instructing every lane to refresh a file that is not there.
+
+`test_loop_gate.sh` **v5**, 93 -> 99 checks. The control has its input named: a copy of the
+hook with one marker deleted from its accept branch must go RED, and does — and **the mutation
+itself is asserted**, because a `sed` whose anchor is absent returns the input unchanged and
+would leave the arm testing the unmutated hook.
+
+**SCOPE KEPT, NOT WIDENED.** This closes ONE of the row's four historical sites. The two in
+`HANDOFF.md` and §13.1's hook path are prose and are not covered by any of this; the
+measurements are the argument that they are not cheaply coverable, not a claim that they are
+gone. Not wired into pre-commit — that is `H29`, gated on H17's §10 dispute, and it must not be
+settled permissively by someone doing it in passing.
