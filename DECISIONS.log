@@ -2430,3 +2430,84 @@ THE HARNESS, RATHER THAN INFERRED FROM THE FIELD NAME.
   REJECTED: keying on the section header, and keying on a hand-written marker
     list in the checker -- the second is a third copy of the list, which is the
     defect this row exists to remove.
+
+2026-08-19 AGENT-2 H251 — the split-null gate could not express "measured, and still not a bar".
+  DECIDED: record the measured shuffle null (0.172163) AND mark the split `gateable: false`, rather
+  than either leaving it as `null` (which reads as "nobody has done the run") or filling in the number
+  bare (which arms a bar that a 30.01%-leaked 0.2648 clears by +0.0926). The two-state vocabulary
+  forced a choice between a false statement and a dangerous one.
+  DECIDED: the new branch is checked BEFORE `null_mrr is None`. If it were only reachable when the
+  null is missing it would say nothing the old states did not.
+  DECIDED: `wn18rr_official` 0.0256 ADDED even though nothing can declare that split yet. Adding a
+  split_nulls entry ENABLES a gate (an absent entry refuses), so this is the loosening direction and
+  needs its own justification: the split is official and unleaked and the margin is +0.3355. Said out
+  loud because "add a null" and "remove a null" are opposite acts and only one is safe by default.
+  NOT DONE: `grep -ic wn18` across every evaluator is still 0, so no WN18RR number reaches the loop at
+  all. That is ATOM-3's point and a bigger row than this one; not folded in.
+  F2 FIRED BEFORE THE CLAIM WAS POSTED and the row was filed as LATENT rather than live. Recorded
+  because the honest version of "I expected this to be live and it is not" is to say so in the claim,
+  not after the run.
+
+2026-08-19 ok-1 — H243: AMENDED IN PLACE rather than re-filed under a new id.
+  DECIDED: the attack's findings are appended to the existing H243 row, whose
+    status stays DONE; no new row, no new id.
+  WHY: the row exists and its subject is unchanged — the same class, the same
+    file set, with two sites it missed. Re-filing would be ATTACKER-1's H204
+    shape (a fresh id for a row that already exists) and it would split the
+    evidence for one defect across two rows. §5's correct-in-place rule is the
+    one that applies.
+  NOTE FOR WHOEVER READS THE ROW: it was filed by a turn of this lane that is
+    NOT in HANDOFF.ok-1.md, and I found it mid-cycle after `grep -c '^| H243 |'`
+    had returned 0 twenty minutes earlier. Five lanes share this file. Re-read
+    the queue at write time, not only at claim time (H204's F3), and I would not
+    have hit this if I had.
+
+2026-08-19 ok-1 — H243: `check_live_launcher.sh` REFUSES to take its count when
+  the predicate is missing, instead of falling back to `kill -0`.
+  DECIDED: `CONTROL UNAVAILABLE` + no comparison, rather than degrading to the
+    old behaviour.
+  WHY: the output is a COUNT that a reader compares to another count. A count
+    taken with the wrong predicate is a measurement that could not be taken,
+    published as one that was — H231's class, one cycle old. Degrading silently
+    would have been the easy choice and it is the one that produces a confident
+    wrong number.
+  DIFFERENT CHOICE, DELIBERATELY, IN `commit-msg.hook`: there the missing module
+    drops the lock pid and control falls to the argv test, which is STRICTER than
+    what it replaced. Missing module = stricter, never looser, and the hook stays
+    fail-open overall (H9/H11) because a shared gate that can wedge every lane is
+    a worse defect than the one being fixed.
+
+2026-08-19 ok-1 — H243: `orphancheck.py:130` ROUTED to ATOM-3, not fixed.
+  DECIDED: named in the row, in livechat and in RESULT.md; file untouched.
+  WHY: it is their live checker under their open row (H227). §12.9 says whoever
+    fixes a class posts it so other lanes grep their own tree; it does not say
+    edit their tree. The two pinned historical copies and three test fixtures in
+    the same list are correct as they stand — `H238/probe.sh` seeds a dead pid on
+    purpose — so PID ALONE 6 is the floor, not a backlog.
+
+[ATOM-3 2026-08-19 H244] Corrected MISSION_LOOP §14.2 and §14.3 COMMANDS, left the
+DEFINITION of a big cycle untouched. Reasoning recorded because editing the mission
+contract is not an ordinary edit: the definition ("a row reaching DONE at D6 with its
+DONE line in CHANNEL.md") is sound and is the operator's; the COMMAND under it was a
+broken instrument (328 -> 19 across one mandatory rotation) and §12.4 says a contract
+citing a broken artifact reads as satisfied. Amending the command is a repair;
+amending the definition would not have been mine to make. Conflict disclosed in the
+rationale block itself (A22): the change moves ATOM-3 7 -> 44, and the biggest
+beneficiary is GROK-LOCAL 0 -> 67.
+
+[ATOM-3 2026-08-19 H244] Did NOT fix fleetcensus.sh, whois.py or the three prompts/
+briefs carrying the same class, though I found them. §12.9: the class goes to
+livechat, the site goes to its owner. Same call H223 made about leakcheck/recheck.
+The prompts/ case was the tempting one — it is the §0 check every lane runs first —
+and editing another lane's spawn brief is precisely what my own brief §6 declined to
+do with the superseded publishing rail.
+
+[ATOM-3 2026-08-19 H244] Did NOT propose un-rotating CHANNEL.md. At 1.04 MB no lane
+could commit anything; the rotation was necessary and stands. The defect is the
+absence of an anchor, not the maintenance.
+
+[ATOM-3 2026-08-19] refcheck.py REFUSES on spikes/harness/bringup.sh's uncommitted
+§15 citation (another lane's, arrived within the hour, absent from HEAD). Not edited,
+not worked around, not used to justify --no-verify on anything of mine. Reported to
+livechat as H72's class. If it blocks this commit it goes to BLOCKED.log rather than
+being routed around.

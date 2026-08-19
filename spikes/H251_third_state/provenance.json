@@ -1,11 +1,11 @@
 {
  "spike": "H251_third_state",
- "recorded_utc": "2026-08-19T22:10:50Z",
+ "recorded_utc": "2026-08-19T22:11:16Z",
  "note": "H251: a split whose null is MEASURED and which is still not a valid bar, and the gate vocabulary that could not say so.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G106_shuffle_null",
-   "head": "93bad4f17baf4f330750363c3c2d74a1e1c56416",
+   "head": "58f0d91aa39f13e21f66b4e5c1fa48e6ffba6aec",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,13 +13,11 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/scripts",
-   "head": "93bad4f17baf4f330750363c3c2d74a1e1c56416",
-   "clean": false,
-   "dirty_files": [
-    "scripts/autoloop.py"
-   ],
-   "diff_sha256": "ef0a43bee1a1e4e54ed91d543f2be03a2781fcc3ae11b28710cbd8dd0dd2a733",
-   "diff_bytes": 5967
+   "head": "58f0d91aa39f13e21f66b4e5c1fa48e6ffba6aec",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -40,11 +38,11 @@
    "resolved": "/Users/victorianikolenko/kingfisher/spikes/H251_third_state/third_state.json",
    "sha256": "f08df2287f096a4ccfad8e3752e4dfa8396236cb2821486f091885c343428d4e",
    "bytes": 660,
-   "mtime": 1787177450,
+   "mtime": 1787177476,
    "repro_sha256": "f08df2287f096a4ccfad8e3752e4dfa8396236cb2821486f091885c343428d4e",
    "repro_excluded": [],
-   "compared_ts": 1787177450,
-   "compared_clock": "mtime"
+   "compared_ts": 1787177471,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -181,13 +179,14 @@
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/scripts": {
-   "newest": 1787177381,
-   "from": "scripts/autoloop.py"
+   "newest": 1787177471,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/scripts at 93bad4f1: 1 modified. The build is NOT 93bad4f1."
- ],
- "ok": false,
- "falsifier": "the shuffle split's own null absorbs its leak, making bar_rule sufficient and `gateable:false` wrong"
+ "problems": [],
+ "ok": true,
+ "falsifier": "the shuffle split's own null absorbs its leak, making bar_rule sufficient and `gateable:false` wrong",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }
