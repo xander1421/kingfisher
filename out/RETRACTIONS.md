@@ -274,3 +274,80 @@ unmechanisable mode, caught the only way it can be.
 hardcoded `False` — a constant in the shape of a measurement, inside the audit
 written to catch exactly that. Now read from `yardstick.py`'s AST. Caught by
 re-reading my own output, which is the weakest way to catch anything.
+
+## 2026-08-19, G94 — AGENT-2 withdraws the comparison its own leak-free spike was built to make
+
+**WITHDRAWN: `G51 symbolic 0.2473` on the pair-disjoint split, and with it G94's
+headline *"remove the leak and the ordering inverts"*.**
+
+G94 exists to re-run the FB15k-237 ensemble WITHOUT the entity-pair leak G48
+measured (30.0% of official test has a train edge on the same unordered pair,
+scoring 0.5318 against 0.1503 for the rest). It reported, from one run on one
+split:
+
+```
+prior 0.1999    G51 symbolic 0.2473    DistMult 0.2422
+```
+
+and concluded that on a leak-free split the symbolic arm overtakes DistMult, so
+the embedding advantage is substantially leak-dependent.
+
+**The symbolic arm was not leak-free.** `spikes/G94_ensemble_pairdisjoint/rules_cache.json`
+is byte-identical (`c083dd1e9fd2…`) to the copies in G65, G66, G67, G72, G73,
+G75, G76, G77 and G79. `load_or_mine_rules` walks
+`((RULES_CACHE, "local"), (G72_RULES, "G72"))`, found G72's, `shutil.copy2`'d it
+in, and G94's own log records **`loaded 2201 rules (G72)`** — not `mined`. Those
+2,201 rules are mined on the **official** train set, which carries edges on
+entity pairs that sit in the pair-disjoint **test** set. The rules therefore see
+exactly the structure the split was constructed to remove, and 0.2473 is
+expected to be **inflated** by an unmeasured amount.
+
+**What is withdrawn and what is not.**
+
+| | |
+|---|---|
+| `DistMult 0.2422` on pair-disjoint | **STANDS.** Trained in G94's own directory on `corpus_pd`; its `distmult_emb.npz` differs by hash from G76's. G98 reproduces it. |
+| `DistMult 0.2852 official -> 0.2422 pair-disjoint`, leak cost -0.0430 | **STANDS.** Both arms honest, and it is the finding G94 is worth reading for. |
+| `prior 0.1999` | **STANDS.** Computed from train frequencies, no rule cache. |
+| `G51 symbolic 0.2473` | **WITHDRAWN.** Leaked rules. |
+| *"remove the leak and the ordering inverts"* | **WITHDRAWN**, because its evidence is the comparison above. Not replaced by its negation: the honest ordering is **unmeasured** by G94, and is measured in G98. |
+
+**The class, and it is the reason this is here rather than fixed in passing:**
+*a cache keyed on a PATH and not on the DATA it was derived from.* Swap the
+corpus underneath it and the cache is unaware — it answers the OLD question and
+the run reports the answer as the new one, in a line that reads `loaded`. Family
+C. The other nine copies are on the split they were mined for and are **not**
+wrong; the defect is that no copy records which corpus produced it, so the moment
+one corpus moves, nothing on disk can tell.
+
+**A second, unfired instance in a TRAINER, found in the same grep.**
+`G79_rotate_all_entity/rotate.py` sets `EMB_PATH = os.path.join(HERE, "rotate_emb.npz")`
+and `train_or_load` returns the cached file when present — and it is present,
+because it is the file `G88_5way_hybrid/mix.py:71` loads. G94's `run_arm.py`
+`os.chdir`s into each arm's own spike directory before importing its trainer, so
+`run_arm.py rotate` would have **loaded the official-split RotatE, scored it
+against the pair-disjoint test set and reported it as the pair-disjoint arm**.
+G94 ran only `distmult`, whose trainer is a copy inside its own directory, so
+this instance never fired. G98 trains ComplEx and RotatE into its own directory
+and gates it with a control (C4: every arm's sha256 differs from its
+official-split counterpart) that fires on exactly this.
+
+**A third instance, in the guard against the class.** `pdsplit._materialise()`
+asserts `leak == 0` and `1.20 < triples/group < 1.40` — both **after**
+`if os.path.isfile(test.txt): return`. On an already-materialised corpus neither
+assert runs. G98's C1 recomputes both from the files on disk: leak 0,
+**1.2474** triples/group against G48's published 1.283.
+
+**The mechanism to catch it existed and was not pointed at this.**
+`certify(deps=[<corpus>], artifacts=[<cache>])` is the staleness path, and
+G94's `rules_cache.json` is stamped 05:00 against a `corpus_pd/` stamped 16:28 —
+an artifact predating its own input, which is A28 and which `provenance` already
+refuses. G94's `certify` did not declare the corpus as a dep. This is §12.10 in
+its usual form: the guardrail was written and mechanised, and was violated by
+not being invoked.
+
+**Found by:** me, reading `ls -la` on G94's directory before building G98 on top
+of it — the rules cache is stamped 05:00 and the corpus it is supposed to
+describe is stamped 16:28. Not by any gate, and not by G94's own `certify`,
+which refused for two unrelated reasons and would have refused identically with
+the rules mined correctly.

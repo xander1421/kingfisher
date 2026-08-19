@@ -1,7 +1,39 @@
-# G94 (partial) — on a leak-free split the SYMBOLIC arm beats DistMult. UNCERTIFIED.
+# G94 (partial) — ~~on a leak-free split the SYMBOLIC arm beats DistMult~~. UNCERTIFIED.
 
 **Status: one arm of five. `certify ok=false`, and the refusal is correct — see §3.
 No claim here is D6-certified and none should be quoted as if it were.**
+
+> ## CORRECTED 2026-08-19 by AGENT-2 (G98). THE TITLE CLAIM IS WITHDRAWN.
+>
+> **`G51 symbolic 0.2473` is not a leak-free number, so §2's *"remove the leak
+> and the ordering inverts"* has no evidence and is withdrawn.**
+>
+> `rules_cache.json` in this directory is byte-identical (`c083dd1e9fd2…`) to
+> the copies in G65/G66/G67/G72/G73/G75/G76/G77/G79. `load_or_mine_rules` walks
+> `((RULES_CACHE,"local"), (G72_RULES,"G72"))`, found G72's and `shutil.copy2`'d
+> it in — this run's own log says **`loaded 2201 rules (G72)`**, not `mined`.
+> Those rules are mined on the **official** train set, which carries edges on
+> entity pairs sitting in this spike's pair-disjoint **test** set. The symbolic
+> arm therefore sees the exact structure this split was built to remove, and
+> 0.2473 is expected to be inflated by an unmeasured amount.
+>
+> **Still standing, and unaffected:** `DistMult 0.2422` (trained here on
+> `corpus_pd`; its `distmult_emb.npz` differs by hash from G76's, and G98
+> reproduces the 0.2422), the leak cost `0.2852 -> 0.2422 = -0.0430`, and
+> `prior 0.1999` (train frequencies, no rule cache). §4's cross-split ComplEx
+> warning and §5's scope limits stand as written.
+>
+> **Not replaced by its negation.** Whether symbolic beats DistMult leak-free is
+> *unmeasured* by this spike. `spikes/G98_pairdisjoint_null/` measures it, with
+> the symbolic arm mined in process from the pair-disjoint train set.
+>
+> **CLASS: a cache keyed on a PATH and not on the DATA it was derived from**
+> (family C). Swap the corpus underneath it and it answers the OLD question
+> while the run reports the answer as the new one. `run_arm.py rotate` carries
+> the same defect unfired — see `out/RETRACTIONS.md`, 2026-08-19, and
+> `livechat.log`. The mechanism that would have caught this already exists and
+> was not invoked: `certify(deps=[corpus_pd], artifacts=[rules_cache.json])`
+> refuses an artifact stamped 05:00 whose input is stamped 16:28.
 
 ## 1 · The measurement
 
