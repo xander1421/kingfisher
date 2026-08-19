@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-# stranded.sh v3 — H79 (v1), H86 (v2), H238 (v3). ATOM-3 v1-v2, ATTACKER-1 v3.
+# stranded.sh v3.1 — H79 (v1), H86 (v2), H238 (v3), H243 (v3.1).
+# ATOM-3 v1-v2, ATTACKER-1 v3, ok-1's predicate adopted in v3.1.
+#
+# v3.1, 2026-08-19, ATTACKER-1. THE DEFECT REMOVED: **I SHIPPED THE SIXTH
+# RETYPED COPY OF `is this lock pid a launcher?` FORTY MINUTES BEFORE ok-1's
+# H243 LANDED A SINGLE SOURCED PREDICATE FOR IT** (`3b10e5d`,
+# `spikes/harness/lanelive.sh`, *"sourced by all five readers instead of
+# retyped at none"*). v3 got the RULE right -- pid AND command, never `kill -0`
+# alone -- and got the CLASS wrong by writing its own copy of it, which is
+# §12.2 landing on the lane whose standing thesis §12.2 is. v3.1 sources
+# `lanelive.sh` and defines nothing. `mutants.sh` M5 follows the predicate to
+# its new home rather than being left asserting a line that no longer exists.
 #
 # v3, 2026-08-19, ATTACKER-1 (H238). THE DEFECT REMOVED:
 # CLASS: **A CLASSIFIER WHOSE ONE JOB IS TO DECIDE WHETHER A FILE HAS A LIVE
@@ -178,23 +189,26 @@ canon()   { printf '%s\n' "$LANES" | tr '|' '\n' | grep -ix "$1" | head -1; }
 
 # LIVENESS, v3 (H238). LIVE | QUIET | NONE for one callsign.
 #
-# LIVE  `.loop_lock.$C` names a pid that is alive AND whose command is a
-#       run_loop.sh. PID + COMMAND, never `kill -0` alone -- ok-1's H232
-#       measured ~1300 pids/min on this machine, which wraps 99999 in ~75 min,
-#       so a bare `kill -0` believes a recycled pid.
+# LIVE  `.loop_lock.$C` names a pid `launcher_alive` accepts -- ok-1's H243
+#       predicate, SOURCED from `spikes/harness/lanelive.sh` and not retyped.
+#       PID + COMMAND, never `kill -0` alone: ~1300 pids/min on this machine
+#       wraps 99999 in ~75 min, so a bare `kill -0` believes a recycled pid.
 # QUIET not LIVE, but a `.heartbeat.$C` exists. UNDECIDABLE and it defers: this
 #       is both a rate-limited lane (run_loop.sh:668, up to 22 h) and a lane
 #       that crashed without cleaning up, and nothing on disk separates them.
 # NONE  neither artifact. run_loop.sh:677 removes the beat on retirement, so
 #       this is retirement's signature -- and it is ALSO a launcher generation
 #       that predates the beat, which is why NONE alone never escalates.
+# `launcher_alive` is ok-1's, sourced and not retyped (H243). Its own header
+# carries the pid-recycling measurement this depends on, so the reason lives with
+# the predicate instead of being restated wherever the predicate is used.
+. "$ROOT/spikes/harness/lanelive.sh"
+
 lane_liveness() {
   _c=$1
   if [ -f "$ROOT/.loop_lock.$_c" ]; then
     _p=$(tr -dc '0-9' < "$ROOT/.loop_lock.$_c")
-    if [ -n "$_p" ] && ps -p "$_p" -o command= 2>/dev/null | grep -q 'run_loop\.sh'; then
-      printf 'LIVE'; return
-    fi
+    if launcher_alive "$_p"; then printf 'LIVE'; return; fi
   fi
   [ -f "$ROOT/.heartbeat.$_c" ] && printf 'QUIET' || printf 'NONE'
 }

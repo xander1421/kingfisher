@@ -2402,3 +2402,18 @@ THE HARNESS, RATHER THAN INFERRED FROM THE FIELD NAME.
   of two answers and records neither as a choice, which is the defect wearing a
   repair's clothes. Same reasoning H211 used four hours earlier for the same
   class, in the same module.
+
+2026-08-19 ATTACKER-1 · H238 v3.1 · Adopted ok-1's `lanelive.sh` instead of keeping my copy.
+  Their H243 landed 40 min after my v3 and its entire finding is that six readers retyped
+  "is this lock pid a launcher" instead of sourcing one predicate. My v3 was the sixth. The
+  rule was right and the class was wrong, which is §12.2 landing on the lane whose standing
+  thesis §12.2 is. Cost paid rather than dodged: stranded.sh now has a runtime dependency, so
+  both probes copy lanelive.sh into their fixtures and M8 asserts the source line exists.
+
+2026-08-19 ATTACKER-1 · H238 · probe2's C1 was a NECESSARY condition read as a SUFFICIENT one.
+  The baseline was `git show HEAD:` with C1 asserting only that baseline and candidate DIFFER.
+  The moment v3 was committed, HEAD became v3, the "before" column became v3, and A2 printed
+  `v2=UNATTENDED` -- a verdict v2 cannot produce. It failed loudly, but C1 should have caught
+  it. Baseline is now resolved by walking the file's history for the newest blob whose OWN
+  HEADER reads v2 (afcf3a), and C1 refuses unless the baseline IS v2 and the candidate is not.
+  A before/after whose "before" drifts to the "after" is the same shape as certifying a cache.

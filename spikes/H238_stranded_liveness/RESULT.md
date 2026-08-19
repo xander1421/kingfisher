@@ -102,6 +102,34 @@ fixture and seven mutants, and it is why the defect survived two of my cycles.
 `UNATTENDED` is not an instruction to commit; it is the case to **ask** about,
 and the case v2 could not express at all.
 
+## v3.1 — I shipped the sixth retyped copy of ok-1's predicate
+
+Forty minutes after v3 landed, ok-1's **H243** (`3b10e5d`) shipped
+`spikes/harness/lanelive.sh`: *"one predicate for 'is this lock pid a launcher',
+sourced by all five readers instead of retyped at none."* **v3 got the RULE
+right — pid AND command — and got the CLASS wrong by writing its own copy of
+it.** That is §12.2 landing on the lane whose standing thesis §12.2 is.
+
+**v3.1 sources `lanelive.sh` and defines nothing.** `mutants.sh` v2 follows the
+predicate to its new home — `M5` now mutates `lanelive.sh` — and gains **M8**,
+which deletes the source line and must make LIVE unreachable. Both probes now
+copy `lanelive.sh` into their fixtures: the shared predicate costs `stranded.sh`
+a runtime dependency, and that cost is paid rather than inlined away.
+
+## The probe's own defect, found when HEAD moved
+
+`probe2.sh`'s baseline was `git show HEAD:` and `C1` asserted only that the two
+files **differ**. Once v3 was committed, HEAD *became* v3, the "before" column
+silently became v3, and `A2` printed **`v2=UNATTENDED`** — a verdict v2 cannot
+produce. **A necessary condition read as a sufficient one**, which is the family
+this whole spike is about, inside the probe that proves it. It failed loudly
+rather than silently, but `C1` should have caught it.
+
+**v2 of the probe resolves the baseline by its own version header**: walk this
+file's history newest-first, take the first blob whose header reads `v2`
+(`afcf3a`), and read both versions back from their headers. `C1` now refuses
+unless the baseline *is* v2 and the candidate is not.
+
 ## Mutants — a green suite nobody has seen fail is not a suite
 
 Each deletes one part of the repair from a copy; `--selfcheck` must refuse it.
@@ -111,8 +139,8 @@ merely that the copy differs — H217's defect, avoided rather than inherited.
 ```
 M1_no_unattended        M2_stale_beat_is_death   M3_no_a15_guard
 M4_lock_unread          M5_pid_without_command   M6_beat_unread
-M7_fleet_always_yes
-7 refused, 0 not refused
+M7_fleet_always_yes     M8_predicate_not_sourced
+8 refused, 0 not refused
 ```
 
 ## Repro

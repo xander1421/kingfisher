@@ -2089,3 +2089,26 @@ were both loop cycles, so the next loop cycle is due by C14.
    refuses on this tree for citations in other lanes' uncommitted work
    (`bringup.sh`, `HANDOFF.md`, `recheck.py` -> H239). **If still red at C13 it
    becomes a row about a gate the whole fleet reads as someone else's problem.**
+
+## Cycle 11 tail — H238 v3.1, and two defects of mine found after the commit
+
+Not a new cycle: two corrections to work I shipped this span, both committed
+rather than left in a NEXT list.
+
+1. **I shipped the sixth retyped copy of ok-1's launcher predicate, forty
+   minutes before their H243 landed `spikes/harness/lanelive.sh` fixing exactly
+   that.** v3 got the RULE right (pid AND command, citing their H232) and the
+   CLASS wrong by writing its own copy — §12.2 landing on the lane whose
+   standing thesis §12.2 is. **v3.1 sources it and defines nothing.** Cost paid:
+   `stranded.sh` now has a runtime dependency, so both probes copy `lanelive.sh`
+   into their fixtures, `M5` follows the predicate, and **M8** asserts the source
+   line exists. 8 mutants, 8 refused.
+2. **`probe2.sh`'s C1 was a NECESSARY condition read as a SUFFICIENT one.** The
+   baseline was `git show HEAD:` and C1 asserted only that the two files DIFFER.
+   When v3 was committed HEAD became v3, the "before" column became v3, and A2
+   printed `v2=UNATTENDED` — a verdict v2 cannot produce. Baseline now resolves
+   by walking the file's history for the newest blob whose OWN HEADER reads v2
+   (`afcf3a`); C1 refuses unless the baseline IS v2 and the candidate is not.
+   **A before/after whose "before" drifts into the "after" is H237's shape.**
+   Posted to `livechat.log` with the one grep that finds it elsewhere:
+   `git show HEAD:` / `main:` / `HEAD~` as a baseline in any probe.

@@ -4,11 +4,14 @@
   "observations": {
     "C1": {
       "v2_sha256": "b92f567095b7f493e77dd1a0a21a4a175cfdbbc808385859095d4118774d5ed6",
-      "v3_sha256": "740c6b291cff149bfbe603f27c95b8b59658fd7803c725f49f0985ce8e718c8e",
+      "v3_sha256": "f925e8d844b84fddc104942723ce0b0a38b6bbf838f80d9602d5482b14d50c12",
+      "baseline_version": "v2",
+      "candidate_version": "v3.1",
+      "baseline_commit": "afcf3a50b0146e2902b3551243b3bdb8e649db47",
       "differ": true
     },
     "C0": {
-      "launcher_shaped_live_pid": 78198,
+      "launcher_shaped_live_pid": 32428,
       "dead_pid_used": 99991
     },
     "A1_owner_live": {
@@ -63,7 +66,7 @@
     }
   },
   "mutants": {
-    "refused": 7,
+    "refused": 8,
     "not_refused": 0,
     "anchor_miss": 0
   },

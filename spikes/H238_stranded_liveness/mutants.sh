@@ -18,13 +18,18 @@ SB="$ROOT/.scratch/h238m.$$"
 trap 'rm -rf "$SB"' EXIT
 mkdir -p "$SB/spikes/harness"
 cp "$ROOT/roster.txt" "$SB/roster.txt"
+# v2 (H243): the launcher predicate now lives in ok-1's sourced `lanelive.sh`,
+# so the sandbox needs it too and M5 mutates it THERE. A mutant left asserting
+# a line that moved would report ANCHOR-MISS, which this driver scores as NOT
+# REFUSED rather than letting it pass quietly.
 
 pass=0; fail=0
 # mutate <name> <python-anchor> <python-replacement> <why>
-mutate() {
-  name=$1; anchor=$2; repl=$3; why=$4
+mutate() {   # <name> <anchor> <repl> <why> [target-basename, default stranded.sh]
+  name=$1; anchor=$2; repl=$3; why=$4; tgt=${5:-stranded.sh}
   cp "$SRC" "$SB/spikes/harness/stranded.sh"
-  applied=$(ANCHOR="$anchor" REPL="$repl" TGT="$SB/spikes/harness/stranded.sh" python3 - <<'PY'
+  cp "$ROOT/spikes/harness/lanelive.sh" "$SB/spikes/harness/lanelive.sh"
+  applied=$(ANCHOR="$anchor" REPL="$repl" TGT="$SB/spikes/harness/$tgt" python3 - <<'PY'
 import os
 p, a, r = os.environ['TGT'], os.environ['ANCHOR'], os.environ['REPL']
 s = open(p).read()
@@ -48,7 +53,7 @@ PY
   fi
 }
 
-echo "H238 mutants — each removes one part of the v3 repair; --selfcheck must refuse:"
+echo "H238 mutants v2 — each removes one part of the v3/v3.1 repair; --selfcheck must refuse:"
 
 # M1 · the whole fourth branch: revert classify to v2's comparison.
 mutate M1_no_unattended \
@@ -76,9 +81,17 @@ mutate M4_lock_unread \
 
 # M5 · H232's rule dropped: pid believed without its command.
 mutate M5_pid_without_command \
-  "if [ -n \"\$_p\" ] && ps -p \"\$_p\" -o command= 2>/dev/null | grep -q 'run_loop\\.sh'; then" \
-  "if [ -n \"\$_p\" ] && kill -0 \"\$_p\" 2>/dev/null; then" \
-  "a recycled pid is believed to be a launcher"
+  "  ps -p \"\$1\" -o command= 2>/dev/null | grep -q 'run_loop\\.sh'" \
+  "  kill -0 \"\$1\" 2>/dev/null" \
+  "a recycled pid is believed to be a launcher" \
+  lanelive.sh
+
+# M8 (v2, H243) -- the SOURCE line itself. If stranded.sh stops sourcing the
+# shared predicate, `launcher_alive` is undefined and LIVE can never be reached.
+mutate M8_predicate_not_sourced \
+  ". \"\$ROOT/spikes/harness/lanelive.sh\"" \
+  ": # not sourced" \
+  "the shared predicate is dropped and LIVE becomes unreachable"
 
 # M6 · lane_liveness stops reading the heartbeat: QUIET collapses into NONE.
 mutate M6_beat_unread \

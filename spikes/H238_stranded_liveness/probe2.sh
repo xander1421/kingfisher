@@ -18,8 +18,25 @@ NEW="$ROOT/spikes/harness/stranded.sh"
 SB="$ROOT/.scratch/h238b.$$"
 mkdir -p "$SB"
 OLD="$SB/stranded_v2.sh"
-git -C "$ROOT" show HEAD:spikes/harness/stranded.sh > "$OLD" 2>/dev/null || {
-  echo "probe2: HEAD has no stranded.sh -- no baseline, refusing to report a delta" >&2; exit 2; }
+# v2 OF THE PROBE (H243 cycle). THE DEFECT REMOVED: the baseline used to be
+# `git show HEAD:`, and C1 only asserted the two files DIFFER. Once the v3 repair
+# LANDED, HEAD became v3, the "before" column silently became v3 too, and A2
+# printed `v2=UNATTENDED` -- a verdict v2 cannot produce. **A control that checks
+# a NECESSARY condition and is read as a SUFFICIENT one**, which is the family of
+# the defect this whole spike is about, in the probe that proves it. Caught
+# because the arm failed loudly; it should have been caught by C1.
+#
+# The baseline is now RESOLVED BY ITS OWN VERSION HEADER: walk this file's
+# history newest-first and take the first blob whose header says v2.
+BASE_REF=""
+for _c in $(git -C "$ROOT" log --format=%H -- spikes/harness/stranded.sh); do
+  if git -C "$ROOT" show "$_c:spikes/harness/stranded.sh" 2>/dev/null \
+       | head -3 | grep -q 'stranded\.sh v2 '; then BASE_REF=$_c; break; fi
+done
+[ -n "$BASE_REF" ] || {
+  echo "probe2: no commit of stranded.sh carries a v2 header -- refusing to report a delta against an unidentified baseline" >&2; exit 2; }
+git -C "$ROOT" show "$BASE_REF:spikes/harness/stranded.sh" > "$OLD" 2>/dev/null || {
+  echo "probe2: baseline blob unreadable" >&2; exit 2; }
 
 sha() { shasum -a 256 "$1" | awk '{print $1}'; }
 OLD_SHA=$(sha "$OLD"); NEW_SHA=$(sha "$NEW")
@@ -49,6 +66,7 @@ for c in 99991 99992 99993 65533; do kill -0 "$c" 2>/dev/null || { dead=$c; brea
 build() {
   d=$1; tc=$2; te=$3; extra=$4; ost=$5; third=$6
   mkdir -p "$d/spikes/harness" "$d/work"
+  cp "$ROOT/spikes/harness/lanelive.sh" "$d/spikes/harness/lanelive.sh" 2>/dev/null
   printf '.heartbeat.*\n.loop_lock.*\n' > "$d/.gitignore"
   printf 'AGENT-1\nATTACKER-1\nok-1\n' > "$d/roster.txt"
   ( cd "$d" || exit 1
@@ -84,6 +102,10 @@ Atom: AGENT-1"
 # verdict for work/f.txt under a given stranded.sh
 verdict() {  # $1 fixture dir  $2 script
   cp "$2" "$1/spikes/harness/stranded.sh"
+  # v3.1 SOURCES `lanelive.sh` (H243); v2 does not and ignores the extra file.
+  # Copied for BOTH columns so the arms differ by the script under test and not
+  # by what its sandbox contains.
+  cp "$ROOT/spikes/harness/lanelive.sh" "$1/spikes/harness/lanelive.sh" 2>/dev/null
   ( cd "$1" && sh spikes/harness/stranded.sh 2>&1 ) \
     | awk '/owner-by-history/ && /work$/ {print $1; exit}'
 }
@@ -102,15 +124,18 @@ FAILED=0
 tc=$((now - 3600)); te=$((now - 1800))
 
 echo "H238 acceptance — the SAME arms as probe.sh v1, run against both versions."
-echo "v2 sha256 $OLD_SHA (HEAD)"
-echo "v3 sha256 $NEW_SHA (working tree)"
-if [ "$OLD_SHA" = "$NEW_SHA" ]; then
-  echo "C1 *** THE TWO COLUMNS ARE THE SAME FILE — HEAD already contains the repair,"
-  echo "   so nothing below is a before/after and no delta may be published from it."
+OLD_V=$(head -3 "$OLD" | sed -n 's/.*stranded\.sh \(v[0-9.]*\).*/\1/p' | head -1)
+NEW_V=$(head -3 "$NEW" | sed -n 's/.*stranded\.sh \(v[0-9.]*\).*/\1/p' | head -1)
+echo "baseline  $OLD_V  sha256 $OLD_SHA  (commit ${BASE_REF%%??????????????????????????????????})"
+echo "candidate $NEW_V  sha256 $NEW_SHA  (working tree)"
+if [ "$OLD_V" != v2 ] || [ "$NEW_V" = v2 ] || [ "$OLD_SHA" = "$NEW_SHA" ]; then
+  echo "C1 *** THE BASELINE IS NOT v2 (or the candidate still is). Nothing below is"
+  echo "   a before/after and no delta may be published from it."
   exit 2
 fi
-echo "C1 baseline and candidate differ, so the columns below are a real before/after"
-printf 'OBS C1 {"v2_sha256": "%s", "v3_sha256": "%s", "differ": true}\n' "$OLD_SHA" "$NEW_SHA"
+echo "C1 baseline reads $OLD_V from its own header and the candidate reads $NEW_V, so the columns are a real before/after"
+printf 'OBS C1 {"v2_sha256": "%s", "v3_sha256": "%s", "baseline_version": "%s", "candidate_version": "%s", "baseline_commit": "%s", "differ": true}\n' \
+  "$OLD_SHA" "$NEW_SHA" "$OLD_V" "$NEW_V" "$BASE_REF"
 printf 'OBS C0 {"launcher_shaped_live_pid": %d, "dead_pid_used": %d}\n' "$FAKE" "$dead"
 echo
 

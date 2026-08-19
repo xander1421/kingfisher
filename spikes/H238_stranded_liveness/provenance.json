@@ -1,19 +1,26 @@
 {
  "spike": "H238_stranded_liveness",
- "recorded_utc": "2026-08-19T21:50:18Z",
+ "recorded_utc": "2026-08-19T22:08:14Z",
  "note": "H238: stranded.sh v2 decided whether a file had a LIVE EDITOR without reading any liveness input, and IN-FLIGHT -- the verdict that tells the fleet to stand off -- was the absorbing state for a dead lane. v3 reads .loop_lock/.heartbeat and adds UNATTENDED. THE REPAIR IS SILENT ON TODAY'S TREE (UNATTENDED 0, every rostered lane beating), which is exactly why the defect survived unmeasured.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
-   "head": "7f512e83642ea8f14397b24e3459774439958ff8",
+   "head": "a2954c49bdf1adc56c1ff164205ba97b7c0a5282",
    "clean": false,
    "dirty_files": [
     "spikes/harness/bringup.sh",
+    "spikes/harness/check_live_launcher.sh",
+    "spikes/harness/commit-msg.hook",
+    "spikes/harness/provenance.py",
+    "spikes/harness/recheck.py",
     "spikes/harness/stranded.sh",
-    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
+    "spikes/harness/test_commit_msg.sh",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/channelcount.sh",
+    "spikes/harness/channelcount_selfcheck.sh"
    ],
-   "diff_sha256": "53de75c5b8087eea808eab5e1d285154ad7fae3c0cf4438e72df3ad089f5e9a3",
-   "diff_bytes": 17960
+   "diff_sha256": "45e6bd698c5f0a409062455af6844d53d487e76770239363e92926268d185389",
+   "diff_bytes": 21843
   }
  ],
  "manifests": {
@@ -27,10 +34,12 @@
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/H238_stranded_liveness/result.json",
    "resolved": "/Users/victorianikolenko/kingfisher/spikes/H238_stranded_liveness/result.json",
-   "sha256": "da3d9d1d57a759788892bf4d8ba86bab1bddc6cd93483e0b2e6b77f332917373",
-   "bytes": 1866,
-   "mtime": 1787176218,
-   "compared_ts": 1787176218,
+   "sha256": "438ec4f6fdd055e7cf563c57ba0968298d13e56f466e5db082820302cf316514",
+   "bytes": 2002,
+   "mtime": 1787177294,
+   "repro_sha256": "438ec4f6fdd055e7cf563c57ba0968298d13e56f466e5db082820302cf316514",
+   "repro_excluded": [],
+   "compared_ts": 1787177294,
    "compared_clock": "mtime"
   }
  ],
@@ -44,17 +53,20 @@
  "device": null,
  "controls": [
   {
-   "name": "C1_baseline_is_not_the_candidate",
-   "must_fire_because": "v2 is read with `git show HEAD:` and its sha256 compared with the working tree, so the two columns are provably different files rather than the same file printed twice",
-   "can_fail_because": "HEAD already contains the repair, in which case probe2 exits 2 and publishes no delta",
-   "null_must_contain": "same file",
+   "name": "C1_baseline_really_is_v2",
+   "must_fire_because": "the baseline is resolved by walking this file s history for the newest blob whose OWN HEADER says v2, and both versions are read back from their headers. The first draft compared sha256s only: once the repair LANDED, `git show HEAD:` returned v3, the \"before\" column became v3 and A2 printed a verdict v2 cannot produce -- a NECESSARY condition read as a SUFFICIENT one",
+   "can_fail_because": "no commit carries a v2 header, or the candidate still does; probe2 exits 2 and publishes no delta",
+   "null_must_contain": "not v2",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
     "v2_sha256": "b92f567095b7f493e77dd1a0a21a4a175cfdbbc808385859095d4118774d5ed6",
-    "v3_sha256": "740c6b291cff149bfbe603f27c95b8b59658fd7803c725f49f0985ce8e718c8e",
+    "v3_sha256": "f925e8d844b84fddc104942723ce0b0a38b6bbf838f80d9602d5482b14d50c12",
+    "baseline_version": "v2",
+    "candidate_version": "v3.1",
+    "baseline_commit": "afcf3a50b0146e2902b3551243b3bdb8e649db47",
     "differ": true
    }
   },
@@ -95,7 +107,7 @@
   },
   {
    "name": "C4_suite_can_go_red",
-   "must_fire_because": "7 mutants each delete one part of the repair and --selfcheck must refuse each; a check nobody has seen fail is not a check",
+   "must_fire_because": "8 mutants each delete one part of the repair and --selfcheck must refuse each; a check nobody has seen fail is not a check. M8 (v3.1/H243) is the source line for the shared predicate: drop it and LIVE becomes unreachable",
    "can_fail_because": "a mutant stays green, naming an inert assertion",
    "null_must_contain": "stayed green",
    "fired": true,
@@ -103,7 +115,7 @@
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "refused": 7,
+    "refused": 8,
     "not_refused": 0,
     "anchor_miss": 0,
     "rc": 0
@@ -206,11 +218,14 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/harness": {
-   "newest": 1787175987,
-   "from": "spikes/harness/stranded.sh"
+   "newest": 1787177270,
+   "from": "spikes/harness/test_commit_msg.sh"
   }
  },
  "problems": [],
  "ok": true,
- "falsifier": "the retired-owner arm staying IN-FLIGHT under v3, or the stale-beat arm escalating, or a mutant of the repair passing --selfcheck"
+ "falsifier": "the retired-owner arm staying IN-FLIGHT under v3, or the stale-beat arm escalating, or a mutant of the repair passing --selfcheck",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }

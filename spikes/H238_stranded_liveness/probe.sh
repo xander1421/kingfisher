@@ -56,6 +56,11 @@ build_repo() {
   d=$1; tc=$2; te=$3; extra=$4; live=$5
   mkdir -p "$d/spikes/harness" "$d/work"
   cp "$SRC" "$d/spikes/harness/stranded.sh"
+  # v3.1/H243: stranded.sh now SOURCES ok-1's `lanelive.sh` instead of retyping
+  # the launcher predicate, so a fixture that copies the script alone no longer
+  # runs. That is a real cost of the shared predicate and it is paid here rather
+  # than by inlining the copy back.
+  cp "$ROOT/spikes/harness/lanelive.sh" "$d/spikes/harness/lanelive.sh" 2>/dev/null
   [ "$(sha "$d/spikes/harness/stranded.sh")" = "$SRC_SHA" ] || copy_ok=0
 
   # The liveness artifacts are gitignored ON PURPOSE. The comparison must vary

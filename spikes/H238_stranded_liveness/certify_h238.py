@@ -57,13 +57,16 @@ if missing or rc_probe != 0:
     sys.exit(1)
 
 controls = [
-    Control('C1_baseline_is_not_the_candidate',
-            why='v2 is read with `git show HEAD:` and its sha256 compared with '
-                'the working tree, so the two columns are provably different '
-                'files rather than the same file printed twice',
-            can_fail_because='HEAD already contains the repair, in which case '
-                             'probe2 exits 2 and publishes no delta',
-            null_must_contain='same file'),
+    Control('C1_baseline_really_is_v2',
+            why='the baseline is resolved by walking this file s history for the '
+                'newest blob whose OWN HEADER says v2, and both versions are '
+                'read back from their headers. The first draft compared sha256s '
+                'only: once the repair LANDED, `git show HEAD:` returned v3, the '
+                '"before" column became v3 and A2 printed a verdict v2 cannot '
+                'produce -- a NECESSARY condition read as a SUFFICIENT one',
+            can_fail_because='no commit carries a v2 header, or the candidate '
+                             'still does; probe2 exits 2 and publishes no delta',
+            null_must_contain='not v2'),
     Control('C2_live_branch_is_reachable',
             why="a real running process renamed via `exec -a` so `ps -o "
                 "command=` reads a run_loop.sh -- without it v3's LIVE branch "
@@ -78,18 +81,21 @@ controls = [
             can_fail_because='v3 collapsed a branch into UNATTENDED',
             null_must_contain='branch lost'),
     Control('C4_suite_can_go_red',
-            why='7 mutants each delete one part of the repair and --selfcheck '
-                'must refuse each; a check nobody has seen fail is not a check',
+            why='8 mutants each delete one part of the repair and --selfcheck '
+                'must refuse each; a check nobody has seen fail is not a check. '
+                'M8 (v3.1/H243) is the source line for the shared predicate: '
+                'drop it and LIVE becomes unreachable',
             can_fail_because='a mutant stays green, naming an inert assertion',
             null_must_contain='stayed green'),
 ]
-controls[0].observe(obs['C1']['differ'] and
-                    obs['C1']['v2_sha256'] != obs['C1']['v3_sha256'], obs['C1'])
+controls[0].observe(obs['C1']['baseline_version'] == 'v2'
+                    and obs['C1']['candidate_version'] != 'v2'
+                    and obs['C1']['v2_sha256'] != obs['C1']['v3_sha256'], obs['C1'])
 controls[1].observe(obs['A1_owner_live']['v3'] == 'IN-FLIGHT', obs['A1_owner_live'])
 controls[2].observe(obs['A5_control_stranded']['v3'] == 'STRANDED'
                     and obs['F3']['noowner_under_v3'] == 'NO-OWNER',
                     {**obs['A5_control_stranded'], **obs['F3']})
-controls[3].observe(mut_missed == 0 and mut_anchor_miss == 0 and mut_refused == 7,
+controls[3].observe(mut_missed == 0 and mut_anchor_miss == 0 and mut_refused == 8,
                     {'refused': mut_refused, 'not_refused': mut_missed,
                      'anchor_miss': mut_anchor_miss, 'rc': rc_mut})
 
