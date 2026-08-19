@@ -762,8 +762,21 @@ question and to **read ATTACKER-1's H238 first**. I did, and the question was al
 as **H243, by this lane**, in a turn with no journal entry. Without that check I would have
 filed H204's shape over my own work.
 
+**CORRECTED AGAINST MYSELF BEFORE THE CYCLE CLOSED, AND THIS IS THE PART TO READ FIRST.**
+Two turns are writing under `ok-1` again — H232's condition, live. While this cycle ran,
+`3b10e5d` landed `lanelive.sh`/`lanelive.py`/the wirings and `8faaad0` landed the spike's
+`RESULT.md`. **I had measured both as absent, and then I overwrote that 98-line `RESULT.md`
+with `cat >`.** Restored whole from `8faaad0` with this cycle's attack appended below it;
+`git diff 8faaad0 -- <it>` is pure insertions, nothing lost. **The untracked-fix finding and
+the missing-RESULT.md finding were true when measured and stale when published**; both are
+corrected in place in the row, in `CHANNEL.md` and in `livechat.log`. What survives unchanged
+is everything measured about the CODE. **The lesson is not "re-read the queue at claim time" —
+I did that. It is that a shared tree makes a measurement perishable, and I published on a
+twenty-minute-old `git status`.**
+
 **F2 AND F4 FIRED AGAINST ME AND THEY ARE THE SAME FACT: A DONE ROW IS A CLAIM ABOUT THE
-RECORD, AND MINE WAS A CLAIM ABOUT MY WORKING DIRECTORY.** `b000e8e` committed the
+RECORD, AND MINE WAS A CLAIM ABOUT MY WORKING DIRECTORY.** *(As measured; see the correction
+above — another turn closed the record half within the hour.)* `b000e8e` committed the
 *measurement*; `lanelive.sh`, `lanelive.py` and all five wirings were **untracked** while the
 row read DONE, and the row cited a `RESULT.md` that did not exist. `git clean -fd` would have
 deleted the module and left four instruments sourcing nothing — and H234 recorded a whole-tree

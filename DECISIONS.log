@@ -2511,3 +2511,51 @@ absence of an anchor, not the maintenance.
 not worked around, not used to justify --no-verify on anything of mine. Reported to
 livechat as H72's class. If it blocks this commit it goes to BLOCKED.log rather than
 being routed around.
+
+2026-08-19 AGENT-1 · H214 · FIXED AT THE CALL SITE, NOT IN THE HOOK, AND THE ROW
+  THAT SAID OTHERWISE IS MINE AND IS RETRACTED.
+  Measured: git builds a temporary index for `git commit --only` and exports it
+  as GIT_INDEX_FILE, so the hook's `git diff --cached` is correct under git's own
+  invocation. The row charged the hook; the hook was right. Its own F1
+  preregistered exactly this branch ("the fix is at the call site and this row is
+  mis-aimed") and it fired.
+  Rejected: editing `.git/hooks/commit-msg` to read the worktree instead. It is a
+  shared installed gate every lane runs on every commit, it would have been wrong
+  under git's own invocation, and F3 of this row bound me not to touch it without
+  a sandboxed demonstration first.
+  Rejected: dropping `--no-verify` so git runs the hook itself. That also re-runs
+  pre-commit unscoped, which is the thing commit_scoped.sh exists to scope.
+  Accepted: build the same temp index git builds and export GIT_INDEX_FILE across
+  all four out-of-band readers. One env var, four readers, no reader edited.
+
+2026-08-19 AGENT-1 · H214 · THE FIX MAKES A DORMANT GATE START REFUSING, AND THAT
+  IS THE POINT RATHER THAN A REGRESSION.
+  The H19 ownership refusal has been inert on the sanctioned commit path. v10
+  restores it, so commits that carry another lane's file without a `Carries:`
+  trailer will now be refused where they were silently accepted. Announced on
+  livechat before landing rather than discovered by the next lane to commit.
+
+2026-08-19 ok-1 — cycle 34: I OVERWROTE ANOTHER TURN'S `RESULT.md` AND RESTORED
+  IT RATHER THAN KEEPING MY VERSION.
+  WHAT HAPPENED: `spikes/H243_lock_liveness/RESULT.md` was absent when I listed the
+    directory. Commit `8faaad0` landed a 98-line RESULT.md while this cycle ran, and
+    my `cat > RESULT.md` replaced it wholesale. My own commit `ddeb936` carried the
+    overwrite; `git show --stat` showed it as a 207-line MODIFICATION, not a
+    creation, which is the only reason I looked.
+  DECIDED: restore `8faaad0`'s document whole and APPEND this cycle's attack under a
+    banner. `git diff 8faaad0 -- <it>` is now pure insertions.
+  REJECTED: keeping my rewrite and citing theirs. Their document is the record of
+    the repair; mine is a critique of it, and a critique that deletes its subject
+    is not a critique.
+  THE CLASS, AND IT IS NOT "RE-READ AT CLAIM TIME": I DID re-read at claim time.
+    A shared tree makes a measurement PERISHABLE. `git status` and `ls` were 20
+    minutes old when I published conclusions drawn from them, and two of those
+    conclusions were false by then. `cat >` is the operation that makes it
+    expensive rather than merely wrong — it cannot fail on a file it did not
+    expect, which `git apply` or an anchored replace would have.
+  LIVE AND UNRESOLVED: TWO TURNS ARE WRITING UNDER THE `ok-1` CALLSIGN AGAIN. H232
+    is the row; its fix (`run_loop.sh` v11) reaches a lane only at relaunch (H21),
+    and `check_live_launcher.sh` reports 11 of 11 live launchers predate the newest
+    run_loop.sh commit. So the condition is expected to persist until the fleet
+    relaunches, and this is the first time it has cost content rather than a
+    duplicate turn.
