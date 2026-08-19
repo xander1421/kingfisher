@@ -122,8 +122,59 @@ def evaluate_suite(config):
             print(f"     [INVARIANT VIOLATION] {m_name} = {val} > max {max_acc}", file=sys.stderr)
             passed_invariants = False
 
-        # Enforce null baseline rule: candidate must strictly beat null baseline
+        # Enforce null baseline rule: candidate must strictly beat null baseline.
+        #
+        # THE NULL IS SELECTED BY THE SPLIT THE EVALUATOR DECLARES, not by a
+        # constant. AGENT-2's catch, and it was against my own work: `config.json`
+        # grew a `split_nulls` table recording the measured no-rules prior for
+        # each split, and `grep -rn split_nulls` found NO CONSUMER anywhere --
+        # three nulls recorded as data and nothing read them. *A check that
+        # reports but does not gate is prose with extra steps.*
+        #
+        # Why per-split and not one number: a bar is a MARGIN OVER ITS OWN
+        # SPLIT'S NULL, never a bare value. The same system scores 0.2648 on the
+        # 70/15/15 shuffle and 0.1358 on the leak-free pair-disjoint split, and
+        # the shuffle's own null is 0.172163 (G106) against pair-disjoint's
+        # 0.173226 (G104, reproducing G49's 0.1732 from scratch). The null is
+        # leak-INSENSITIVE -- so on the shuffle the system reads +0.0926 and on
+        # the honest split it reads -0.0374. Comparing a shuffle number to a
+        # pair-disjoint null would score the leak as if it were a gain.
+        #
+        # A SPLIT WITH NO MEASURED NULL CANNOT BE GATED AND MUST NOT PASS. That
+        # is the state `shuffle_70_15_15` was in when this was written, and the
+        # whole failure being fixed is a gate that passed because its bar came
+        # from the number it gated.
         null_base = m_spec.get("null_baseline")
+        split_nulls = m_spec.get("split_nulls")
+        declared_split = results.get("split")
+        if split_nulls:
+            if declared_split is None:
+                print(f"     [UNGATEABLE] {m_name} has per-split nulls but the "
+                      f"evaluator declared no `split`; a number without its split "
+                      f"is not a number and cannot be gated", file=sys.stderr)
+                passed_invariants = False
+                null_base = None
+            elif declared_split not in split_nulls:
+                print(f"     [UNGATEABLE] {m_name} was measured on split "
+                      f"'{declared_split}', which has no entry in split_nulls; "
+                      f"its null has never been measured", file=sys.stderr)
+                passed_invariants = False
+                null_base = None
+            else:
+                entry = split_nulls[declared_split]
+                measured = entry.get("null_mrr") if isinstance(entry, dict) else entry
+                if measured is None:
+                    print(f"     [UNGATEABLE] {m_name} on split "
+                          f"'{declared_split}': null_mrr is NEVER MEASURED, so "
+                          f"no margin can be computed and this cannot pass",
+                          file=sys.stderr)
+                    passed_invariants = False
+                    null_base = None
+                else:
+                    null_base = measured
+                    print(f"     [SPLIT NULL] {m_name} gated against "
+                          f"'{declared_split}' null {measured} "
+                          f"(margin {val - measured:+.4f})", file=sys.stderr)
         if null_base is not None:
             if direction == "maximize" and val < null_base:
                 print(f"     [NULL BASELINE VIOLATION] {m_name} = {val} < null_baseline {null_base}", file=sys.stderr)
