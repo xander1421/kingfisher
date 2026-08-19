@@ -43,7 +43,11 @@ S76 = os.path.join(HERE, '..', 'S76_interned_keys')
 sys.path.insert(0, S20)
 # S20's pin of the COMMITTED trie_witness, inherited by importing it, so these
 # numbers stay comparable to S20's and S24's rather than to whatever is on disk.
-import verify_kinds as S20M                                               # noqa: E402
+# DECLARED, not merely commented (H195). This spike is the one that PROVED the
+# inheritance is load-bearing: releasing the name moved `verifier_hash_bytes`
+# 22900.15 -> 0, because the counter is patched onto the pinned module.
+import verify_kinds as S20M
+USES_S20_PIN = True   # H195: deliberate, and machine-readable                                               # noqa: E402
 from trie_witness import build, prove_completeness, verify_completeness    # noqa: E402
 sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
 from kfcheck import certify                                               # noqa: E402

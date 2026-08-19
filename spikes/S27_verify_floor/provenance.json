@@ -1,15 +1,17 @@
 {
  "spike": "S27_verify_floor",
- "recorded_utc": "2026-08-17T15:46:27Z",
+ "recorded_utc": "2026-08-19T21:23:35Z",
  "note": "",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/../S20_verify_kinds",
-   "head": "821b8c8e52009c029ecfb60aff0995c13e8f9d64",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "4bb361156f336e07d3470843a7868b37aad78efe",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S20_verify_kinds/verify_kinds.py"
+   ],
+   "diff_sha256": "6a60358674d35c856f8b03a71e12f38bfe3eea9d9a931dc35ea64682c272bd2c",
+   "diff_bytes": 3087
   }
  ],
  "manifests": {
@@ -24,26 +26,19 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/verify_floor.json",
    "sha256": "1c1bc27a3d47ec13922812b77b3c348991e7168d0f777f963683f43f229e2e6a",
    "bytes": 1354,
-   "mtime": 1786981587,
-   "compared_ts": 1786981587,
-   "compared_clock": "mtime"
+   "mtime": 1787174615,
+   "compared_ts": 1786981700,
+   "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
  ],
  "missing_artifacts": [],
  "toolchain": {
-  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-  "cargo_ndk": "cargo-ndk 4.1.2",
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
-  "ro.build.id": "BP4A.251205.006",
-  "ro.product.model": "SM-S938B",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "sun",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C_model_is_not_the_measurement",
@@ -154,14 +149,17 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/../S20_verify_kinds": {
-   "newest": 1786979862,
-   "from": "<HEAD commit>"
+   "newest": 1787174444,
+   "from": "spikes/S20_verify_kinds/verify_kinds.py"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S27_verify_floor/../S20_verify_kinds at 4bb36115: 1 modified. The build is NOT 4bb36115."
+ ],
+ "ok": false,
  "falsifier": "verifier bytes exceeding the answer subtrie's descriptor sum by more than 1.0%, which would make the 2-4x constant implementation slack rather than the commitment format",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

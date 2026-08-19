@@ -52,7 +52,10 @@ sys.path.insert(0, S20)
 # S20 pins the COMMITTED trie_witness (blob 57d1a481) because the working-tree
 # copy was uncommitted-modified; importing S20 inherits that pin, so this spike
 # measures the same verifier S20 did rather than whatever is on disk now.
-import verify_kinds as S20M                                               # noqa: E402
+# DECLARED, not merely commented (H195): the flag is what `which_module.py`
+# reads to tell a deliberate inheritance from a silent one.
+import verify_kinds as S20M
+USES_S20_PIN = True   # H195: deliberate, and machine-readable                                               # noqa: E402
 from trie_witness import build, prove_completeness, verify_completeness    # noqa: E402
 sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
 from kfcheck import certify                                               # noqa: E402

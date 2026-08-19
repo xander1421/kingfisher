@@ -1,23 +1,27 @@
 {
  "spike": "S36_witnessed_job",
- "recorded_utc": "2026-08-17T16:00:29Z",
+ "recorded_utc": "2026-08-19T21:23:35Z",
  "note": "",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds",
-   "head": "29fa8864b77cef7ebb2b7a59f867fd1efe767dbb",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "4bb361156f336e07d3470843a7868b37aad78efe",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S20_verify_kinds/verify_kinds.py"
+   ],
+   "diff_sha256": "6a60358674d35c856f8b03a71e12f38bfe3eea9d9a931dc35ea64682c272bd2c",
+   "diff_bytes": 3087
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S24_range_crossover",
-   "head": "29fa8864b77cef7ebb2b7a59f867fd1efe767dbb",
-   "clean": true,
-   "dirty_files": [],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "head": "4bb361156f336e07d3470843a7868b37aad78efe",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S24_range_crossover/range_crossover.py"
+   ],
+   "diff_sha256": "cac04fd5ab2aca6c49d7823095b92b4c61e032e7c6032372149eb2397d4d2441",
+   "diff_bytes": 1131
   }
  ],
  "manifests": {
@@ -37,26 +41,19 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/witnessed_job.json",
    "sha256": "3da634cab1425618f07d62e54984c2394bededc72b4b06973b3803d3adbf7f44",
    "bytes": 1190,
-   "mtime": 1786982429,
-   "compared_ts": 1786982429,
-   "compared_clock": "mtime"
+   "mtime": 1787174615,
+   "compared_ts": 1786982543,
+   "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
  ],
  "missing_artifacts": [],
  "toolchain": {
-  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-  "cargo_ndk": "cargo-ndk 4.1.2",
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
-  "ro.build.id": "BP4A.251205.006",
-  "ro.product.model": "SM-S938B",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "sun",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C_honest_jobs_accepted_by_both",
@@ -187,18 +184,22 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds": {
-   "newest": 1786981983,
-   "from": "<HEAD commit>"
+   "newest": 1787174444,
+   "from": "spikes/S20_verify_kinds/verify_kinds.py"
   },
   "/Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S24_range_crossover": {
-   "newest": 1786981020,
-   "from": "<HEAD commit>"
+   "newest": 1787174444,
+   "from": "spikes/S24_range_crossover/range_crossover.py"
   }
  },
- "problems": [],
- "ok": true,
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S20_verify_kinds at 4bb36115: 1 modified. The build is NOT 4bb36115.",
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/S36_witnessed_job/../S24_range_crossover at 4bb36115: 1 modified. The build is NOT 4bb36115."
+ ],
+ "ok": false,
  "falsifier": "a single witnessed verifier failing to reject a cheat that 2-of-2 replication catches, which would make the witnessed route redundant for this job class",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

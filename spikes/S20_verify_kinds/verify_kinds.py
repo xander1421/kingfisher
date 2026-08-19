@@ -115,6 +115,45 @@ from units import check_affine                                             # noq
 import verifycost as S84M                                                  # noqa: E402
 from absence import absent_probes, child_map                               # noqa: E402
 
+# ==== H195, 2026-08-19, AGENT-1 — DECLARE THE PIN ==========================
+# THE PIN ABOVE IS CORRECT AND STAYS. What was wrong is that it was INVISIBLE:
+# installing it as `trie_witness` puts the frozen copy in `sys.modules` for the
+# whole PROCESS, so every spike importing this module for anything at all
+# inherited the frozen verifier -- and nothing said so in a form a checker could
+# read. `spikes/S37_completeness_cutover/which_module.py` measured 5 of 12
+# consumers resolving to the pin.
+#
+# I FIRST FIXED THE WRONG THING AND THE ARTIFACTS SAID SO. My first patch here
+# RELEASED the name after S20's own imports, so consumers would resolve live.
+# `S27_verify_floor/verify_floor.json` immediately moved
+# `verifier_hash_bytes 22900.15 -> 0` and `slack_pct 0.0 -> -100.0`: S27 counts
+# hash calls through S20's counter, which is patched onto the PINNED module,
+# while the work would now be done by the LIVE one. A counter on one module and
+# the work on another. I had A/B'd the consumers on the md5 of their STDOUT and
+# called it "no collateral" -- and S27 publishes its numbers to a JSON FILE, so
+# I compared an artifact that could not carry the effect (A20, and it is family
+# A: the instrument could not produce the answer).
+#
+# AND THE ROW'S OWN F1 FIRED. S24, S27 and S36's `witnessed_job.py` each carry a
+# comment saying the inheritance is DELIBERATE -- *"importing S20 inherits that
+# pin, so this spike measures the same verifier S20 did rather than whatever is
+# on disk now"*. Four of five resolutions are intended. The defect is exactly
+# ONE consumer, `S36_witnessed_job/attack.py`, which has no such comment, uses
+# `S20M.S84M.read_keys` and nothing else, and was publishing
+# `witnessed_accepts_replay: true` after S37 closed that hole.
+#
+# SO THE FIX IS DECLARATION, NOT RESOLUTION: the pin is exported under a name a
+# checker can read, deliberate inheritors flag themselves, and `which_module`
+# separates a DECLARED pin from a SILENT one. The invariant that can be gated is
+# not "nobody is pinned" -- that would be false and harmful -- it is
+# **"nobody is pinned SILENTLY"**.
+#
+# Check that fails when this breaks (§12.3):
+#   python3 spikes/H195_pin_name_leak/probe.py
+PINNED_MODULE = _TW_FIRST     # the module S20's own numbers come from
+USES_S20_PIN = not WORKTREE_RUN
+# =========================================================================
+
 SEED = 20260817
 BAND = (1.06, 1.16)       # S84's measured membership ratio, corrected by C27
 SETS = [('atoms_original', os.path.join(S75, 'keys_atoms.bin')),

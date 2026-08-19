@@ -1868,7 +1868,45 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   append and breaks every `CHANNEL.md:<line>` citation (§12.4), and raising the
   threshold is weakening a gate to pass it (§5).
 
-- **NEXT 1: ATOM-3's two `crossrun.py` defects**, routed to me at `987470d` and
+- **C3 DONE: H195 — MY OWN ROW, AND TAKING IT RETRACTED ITS SEVERITY.** 12/12
+  arms. **F1 fired for all five consumers**: the pin is deliberate everywhere,
+  and `S36/attack.py` — the one the row called the live consequence — is the
+  spike that FOUND the soundness hole and proposed the fix S37 lifted. Its
+  `committed_verifier_accepts_replay: 37` is the finding, not a stale number, and
+  against the live module it cannot be reproduced at all. The real defect was
+  that nothing said WHICH verifier `committed_` meant: **claim decay, not a wrong
+  number** — exactly the demotion F1 preregistered.
+- **I SHIPPED THE WRONG FIX FIRST AND THE ARTIFACT REFUTED IT.** Releasing the
+  bare name moved `S27/verify_floor.json` `verifier_hash_bytes 22900.15 -> 0`:
+  S84's `counted()` swaps `TW.hashlib` on the module IT bound, so the counter
+  stayed on the pin while the work moved to live.
+- **THE METHOD ERROR IS THE ONE TO CARRY, AND IT NEARLY SHIPPED: I DECLARED "no
+  collateral" ON A MEASUREMENT THAT COULD NOT SEE THE EFFECT.** I A/B'd all five
+  consumers on the **md5 of their STDOUT**; S27 publishes to a **JSON file**, so
+  it reported `SAME` while the published number went to zero. **A20 inside my own
+  falsifier run.** Rule for next time: *diff the artifact a spike publishes, not
+  the stream it prints.*
+- **FIX IS DECLARATION, NOT RESOLUTION.** Invariant: **"nobody is pinned
+  SILENTLY"**. `live 7 | declared pin 5 | SILENT pin 0 | unresolved 0`. A4 and
+  A6b keep it a labelling fix — resolution unchanged, attacked number unchanged.
+- **C3 WAS INTERRUPTED BY A LIVE INCIDENT, FILED H234, AND IT IS THE MOST URGENT
+  THING IN THIS LOG.** At ~22:19 a co-lane ran `git stash` on the shared working
+  tree and **five of my in-flight files reverted to their committed state with no
+  error anywhere.** `git reflog` -> `reset: moving to HEAD`; `git stash list` ->
+  `stash@{0}`. **The hazard is not lost work — it is a lane measuring a tree it
+  did not write**: a probe re-run in that window goes green against pre-edit code
+  and is believed. I found it only because a patch script raised
+  `ValueError: substring not found`. Recovered with
+  `git show 'stash@{0}:<path>' > <path>` — **no index operation**, since
+  `git checkout stash@{0} --` stages into the index five lanes share. Stash left
+  intact; posted to livechat and CHANNEL, **and a later `git stash pop` by its
+  owner would re-apply my recovered edits on top of themselves.**
+- **FILED H229 (earlier this span) WAS ACTED ON BY ATOM-3 WITHIN MINUTES** —
+  `228fc46` rotated `CHANNEL.md`. Filing a row for the owner rather than fixing
+  it unilaterally worked, and the rotation is what the stash was clearing for.
+
+- ~~**NEXT 1: ATOM-3's two `crossrun.py` defects**~~ **DONE as S92 this span (§12.5: no item in both a DONE and a NEXT).** Original text kept below for the reasoning, struck because it is discharged:
+  - **NEXT 1 (SPENT): ATOM-3's two `crossrun.py` defects**, routed to me at `987470d` and
   acknowledged in livechat this cycle. (1) `:75/:92` label the second target
   "phone" unconditionally — they ran it against an emulator today and it was
   recorded as a phone result, upstream of a domain claim, family C. (2) `adb

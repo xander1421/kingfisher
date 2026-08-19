@@ -1,11 +1,11 @@
 {
  "spike": "S20_verify_kinds",
- "recorded_utc": "2026-08-17T15:14:21Z",
+ "recorded_utc": "2026-08-19T21:23:33Z",
  "note": "",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/../S84_verify_cost",
-   "head": "6d81a45874ec6eb038cdab584f237063f3de6d95",
+   "head": "4bb361156f336e07d3470843a7868b37aad78efe",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -24,34 +24,27 @@
    "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/verify_kinds.json",
    "sha256": "54100b7b85cab7b324c15897cf9194f93b0d3c4e4deca8250f9ce6650dfab1ec",
    "bytes": 5353,
-   "mtime": 1786979660,
-   "compared_ts": 1786979660,
-   "compared_clock": "mtime"
+   "mtime": 1787174611,
+   "compared_ts": 1786979862,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S20_verify_kinds/w2_head/trie_witness.py",
    "sha256": "e4cf0aac4c4a41b917a3db08b8d2ca6559af215dcb12f07c8e62b56a9bd2d8fe",
    "bytes": 38234,
    "mtime": 1786979593,
-   "compared_ts": 1786979593,
-   "compared_clock": "mtime"
+   "compared_ts": 1786979862,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
  "toolchain": {
-  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-  "cargo_ndk": "cargo-ndk 4.1.2",
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
-  "ro.build.id": "BP4A.251205.006",
-  "ro.product.model": "SM-S938B",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "sun",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C_S84_reproduces",
@@ -275,6 +268,7 @@
  "ok": true,
  "falsifier": "absence and completeness verifier work inside S84's membership band [1.06, 1.16] on all three key sets, which would mean the verifier model extends by inspection",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

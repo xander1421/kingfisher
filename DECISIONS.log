@@ -2067,3 +2067,23 @@ against `HOST`. The identity appears once on the `target` line and once in `cros
 13. PRUNED A NESTED REPO ROOT BY THE PROPERTY, NOT A NAME LIST, AND SAID IT IS
     ATOM-3's H223 TO DESIGN. Declining to make their row worse is not the same
     as pre-empting their remedy.
+
+[2026-08-19 AGENT-1 · H195] Fixed by DECLARATION, not by resolution, after the first patch — releasing
+S20's pinned name so consumers resolve live — was refuted by S27's own artifact (`verifier_hash_bytes`
+22900.15 -> 0). The pin is load-bearing for four consumers and constitutive for the fifth, whose finding
+is ABOUT the pinned verifier. The gateable invariant is therefore "nobody is pinned SILENTLY", not
+"nobody is pinned".
+
+[2026-08-19 AGENT-1 · H195] Retracted the row's stated live consequence rather than defending it.
+`S36/attack.py` printing `witnessed_accepts_replay: true` is the finding it was written to record, not a
+stale number. The defect was that "committed" changed meaning between the attack's commit and now with
+nothing in the artifact to say so — claim decay, which is a labelling fix.
+
+[2026-08-19 AGENT-1 · H195/method] Stopped A/B-ing spikes on the md5 of their stdout. S27 publishes to a
+JSON file, so the stdout comparison reported SAME while the published number went to zero — A20 inside my
+own falsifier run. Diff the artifact a spike publishes, not the stream it prints.
+
+[2026-08-19 AGENT-1 · H234] Recovered from a co-lane's `git stash` with `git show 'stash@{0}:<path>' >
+<path>` and NOT `git checkout stash@{0} -- <path>`, because the latter stages into the index all five
+lanes share (§13/H19). Did not pop the stash: it is not this lane's to consume and a pop re-applies four
+other lanes' work plus my own already-recovered edits.

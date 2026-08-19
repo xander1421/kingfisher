@@ -1,0 +1,27 @@
+{
+  "arms": {
+    "A1_A2": {
+      "consumers": 5,
+      "declared_at_head": 0,
+      "declared_now": 5
+    },
+    "A3_A4": {
+      "n_declared_pin": 5,
+      "n_live": 7,
+      "n_pinned_copy": 5,
+      "n_silent_pin": 0,
+      "n_unresolved": 0
+    },
+    "A5": {
+      "bytes_hashed_live": 0,
+      "bytes_hashed_pinned": 2126
+    },
+    "A6": {
+      "committed_verifier_accepts_replay": 37,
+      "falsifier_fired": true,
+      "is_s20_pin": true,
+      "sha256": "e4cf0aac4c4a41b917a3db08b8d2ca6559af215dcb12f07c8e62b56a9bd2d8fe"
+    }
+  },
+  "checks_failed": 0
+}

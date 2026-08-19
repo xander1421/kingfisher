@@ -49,7 +49,9 @@ S24 = os.path.join(HERE, '..', 'S24_range_crossover')
 S75 = os.path.join(HERE, '..', 'S75_pathmap_check')
 sys.path.insert(0, S20)
 # S20's pin of the COMMITTED trie_witness, inherited by importing it.
-import verify_kinds as S20M                                               # noqa: E402
+# DECLARED, not merely commented (H195).
+import verify_kinds as S20M
+USES_S20_PIN = True   # H195: deliberate, and machine-readable                                               # noqa: E402
 from trie_witness import build, prove_completeness, verify_completeness    # noqa: E402
 sys.path.insert(0, os.path.join(HERE, '..', 'harness'))
 from kfcheck import certify                                               # noqa: E402

@@ -61,7 +61,17 @@ S20 = os.path.join(HERE, '..', 'S20_verify_kinds')
 S75 = os.path.join(HERE, '..', 'S75_pathmap_check')
 sys.path.insert(0, S20)
 sys.path.insert(0, HERE)
+# H195: THE PIN IS DELIBERATE HERE TOO, AND THE ROW THAT SAID OTHERWISE WAS MINE.
+# `verify_kinds` installs S20's byte-pin of the COMMITTED `trie_witness` under the
+# bare name, so everything below attacks THAT verifier. That is exactly right for
+# this file: the soundness finding it records is ABOUT that verifier, and against
+# the live module (post-S37) the replay is rejected and the finding cannot be
+# reproduced at all. What was actually wrong is that the artifact never said WHICH
+# verifier `committed_` referred to, so a reader after S37 could not tell "the fix
+# never landed" from "this measures the code the fix replaced" -- claim decay, not
+# a wrong number. `verifier_identity` in the output now answers it.
 import verify_kinds as S20M                                               # noqa: E402
+USES_S20_PIN = True   # H195: deliberate, and machine-readable
 from trie_witness import (build, prove_completeness, verify_completeness,  # noqa: E402
                           prove_membership, verify_membership,
                           prove_non_membership, verify_non_membership,
@@ -246,7 +256,23 @@ def main():
         sib['absence_replayed'] += 1 if verify_non_membership(rh, a2, pf_a) else 0
 
     fired = accepted > 0
+    # WHICH verifier every `committed_` field below is about. Read off the loaded
+    # module rather than typed, so it cannot drift from what actually ran.
+    import trie_witness as _tw_loaded
+    _tw_path = os.path.abspath(_tw_loaded.__file__)
+    verifier_identity = {
+        'module_path': os.path.relpath(_tw_path, os.path.join(HERE, '..', '..')),
+        'sha256': hashlib.sha256(open(_tw_path, 'rb').read()).hexdigest(),
+        'is_s20_pin': os.path.realpath(_tw_path) == os.path.realpath(
+            os.path.join(S20, 'w2_head', 'trie_witness.py')),
+        'note': ('`committed_` here means the verifier THIS FILE ATTACKED, which '
+                 'is S20\'s byte-pin of trie_witness at the time the finding was '
+                 'made -- NOT whatever is at HEAD now. Against the live module '
+                 'post-S37 the replay is rejected, which is the fix working and '
+                 'not this measurement changing.'),
+    }
     out = {'seed': SEED, 'prefix_len': PREFIX_LEN, 'jobs_attacked': n,
+           'verifier_identity': verifier_identity,
            'jobs_with_no_deeper_node': n_no_deeper,
            'committed_verifier_accepts_replay': accepted,
            'committed_verifier_accepts_replay_rate': round(accepted / n, 4) if n else None,
