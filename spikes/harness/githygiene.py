@@ -61,6 +61,28 @@ reaching this file.
        If a future git accepts untracked paths under `--only`, case (a) goes red
        and §13's workaround paragraph can be deleted rather than left as
        folklore.
+
+  v4 · 2026-08-19, ATOM-3, H224 sibling. DEFECT REMOVED: **this checker could
+       refuse a file but never warn about one, so the only signal arrived at the
+       moment the situation became unrecoverable.** `CHANNEL.md` -- the file five
+       lanes append to on every RECORD step -- went 0.89 -> 1.04 MB across 40
+       commits and crossed `MAX_ADD`. From that moment every lane's RECORD was
+       going to fail at the last gate, and the refusal prints
+
+           1 ACTIONABLE violation(s) in what you are about to commit.
+
+       without naming the file or the reason, so it reads as a generic hygiene
+       failure rather than as a fleet-wide stall. It was found only because one
+       lane's own commit happened to hit it.
+
+       There were DAYS of runway and no signal in any of them. `approaching()`
+       adds a NON-GATING `info` line from `RUNWAY` (75%) of `MAX_ADD`, so a lane
+       can rotate before it refuses instead of after. `MAX_ADD` is unchanged and
+       the exit code is unchanged -- `selfcheck` asserts BOTH, because a warning
+       that quietly gated would be worse than no warning, and a warning that can
+       never fire is the A15 defect this whole file exists to avoid. Its four
+       checks cover fires-under, silent-well-under, silent-over (violation
+       territory), and the boundary itself.
 """
 
 import os
@@ -74,6 +96,7 @@ import sys         # `python3 githygiene.py` -- which §13 puts in every lane's
                    # runnable check. See selfcheck() at the bottom.
 
 MAX_ADD = 1_048_576          # 1 MB
+RUNWAY  = 0.75               # warn (never gate) from 75% of MAX_ADD — H224 sibling
 
 BAD_EXT = {
     # compiled
@@ -183,8 +206,35 @@ def classify(path, size):
     return None
 
 
+def approaching(path, size):
+    """NON-GATING runway warning: a text file inside RUNWAY of MAX_ADD.
+
+    v4, H224 sibling (ATOM-3, 2026-08-19). `CHANNEL.md` crossed 1 MB while five
+    lanes were appending to it on every RECORD step, and this checker's only
+    response was to refuse -- at which point the coordination channel is the one
+    file nobody can commit, and the refusal reads `1 ACTIONABLE violation(s)`
+    without naming the file or the reason. Measured: 0.89 -> 1.04 MB across 40
+    commits, so there were DAYS of runway and no signal in any of them.
+
+    A gate that fires only once the situation is unrecoverable is a gate with no
+    runway, not a strict gate. This does NOT relax MAX_ADD and does not affect
+    the exit code -- `git grep -n "return violations"` -- it only makes the last
+    stretch visible while a lane can still act on it.
+    """
+    if path in ALLOW or size is None or size > MAX_ADD:
+        return None                      # over the line is a VIOLATION, not a warning
+    if os.path.splitext(path)[1].lower() in BAD_EXT:
+        return None                      # extension rule already speaks for these
+    if size < MAX_ADD * RUNWAY:
+        return None
+    pct = 100.0 * size / MAX_ADD
+    return (f"{size / 1048576:.2f} MB is {pct:.0f}% of the {MAX_ADD / 1048576:.0f} MB "
+            f"limit — rotate it BEFORE it refuses, not after")
+
+
 def check_paths(paths, label, sizes=None):
     bad = []
+    near = []
     for p in paths:
         if not p:
             continue
@@ -193,10 +243,21 @@ def check_paths(paths, label, sizes=None):
         why = classify(p, size)
         if why:
             bad.append((p, why))
+        else:
+            soon = approaching(p, size)
+            if soon:
+                near.append((p, soon))
     if bad:
         print(f"\n{label}: {len(bad)} violation(s)")
         for p, why in sorted(bad, key=lambda x: x[0]):
             print(f"   {p}\n      -> {why}")
+    if near:
+        # Printed, NOT gating. `commit_scoped.sh` v5 strips lines matching
+        # `^\s*info ` from the set it attributes, so this cannot refuse a
+        # commit the way the baselined KNOWN ROW SHAPE lines once did (H119).
+        print(f"\n{label}: {len(near)} approaching the size limit (NOT gating)")
+        for p, soon in sorted(near, key=lambda x: x[0]):
+            print(f"   info {p}\n      -> {soon}")
     return bad
 
 
@@ -589,6 +650,25 @@ def selfcheck():
     ck("topic label rejected as a callsign", check_callsign("mutation-detection") is None)
     ck("callsign accepted and case-folded", check_callsign("agent-1") == "AGENT-1")
     ck("'self' is not a reviewer", "SELF" in NOT_A_REVIEWER)
+
+    # v4, H224 sibling. BOTH directions, because the defect being removed is a
+    # warning that never fires -- CHANNEL.md sat between 0.89 and 1.04 MB for 40
+    # commits and nothing said a word until it refused.
+    ck("runway warning FIRES just under the limit",
+       approaching("CHANNEL.md", int(MAX_ADD * 0.95)) is not None)
+    ck("runway warning is SILENT well under the limit",
+       approaching("CHANNEL.md", int(MAX_ADD * 0.50)) is None)
+    ck("runway warning is SILENT over the limit, where it is a violation instead",
+       approaching("CHANNEL.md", MAX_ADD + 1) is None
+       and classify("CHANNEL.md", MAX_ADD + 1) is not None)
+    ck("the boundary itself warns, so RUNWAY is not off by one",
+       approaching("CHANNEL.md", int(MAX_ADD * RUNWAY) + 1) is not None)
+    ck("a warned file does not change the exit code",
+       check_paths(["CHANNEL.md"], "SELFCHECK",
+                   sizes={"CHANNEL.md": int(MAX_ADD * 0.95)}) == [])
+    ck("the real CHANNEL.md is no longer near the limit after rotation",
+       approaching("CHANNEL.md", os.path.getsize("CHANNEL.md")) is None
+       if os.path.exists("CHANNEL.md") else True)
 
     print()
     if fails:
