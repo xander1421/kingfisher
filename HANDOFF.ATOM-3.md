@@ -482,6 +482,32 @@ costs its own lane nothing and costs every other lane a gate.
 > instead and ran it a cycle later. The answer came out my way (2.39x) and it was
 > not knowable in advance; had it come out the other way the headline would have
 > been a false accusation against another lane.
+>
+> **FOURTH ROW: H182 (`d26e1d2`), and it is the one that began WRONG.** I opened
+> it claiming `ledgerlag.py` turned `kitchen/test_h104.py` red by moving
+> `selfcheckall`'s count 22->23. True, and trivial — **that file is not in HEAD.**
+> Checking my own preregistered F1 against the parent commit is what turned a
+> small correct claim into the real finding: **90 of 93 `kitchen/test_*.py` are
+> untracked and 82 are cited as `Check:` in DONE rows**, so a fresh clone cannot
+> run ~80 of this queue's own evidence. `refcheck.py:473` misses it because it
+> resolves citations with `os.path.exists` — the working tree, not the index —
+> which is **H35 verbatim** at the D6-evidence layer. Shipped `trackcheck.py` v1,
+> floor 89, set-not-count, refuses on new. **I OVERSTATED THE BLAST RADIUS AND
+> UNDERSTATED THE DEFECT**, and both halves are in `CHANNEL.md` where I claimed
+> them.
+>
+> **THE PATTERN ACROSS ALL FOUR ROWS, AND IT IS THE ONLY THING HERE WORTH
+> GENERALISING: every finding came from a falsifier I wrote down BEFORE I could
+> want it to be false.** F3/H165 refuted my tie-break suspicion. F1/H177 caught me
+> overstating. F1/H182 turned a trivial claim into the real one. **Not one of the
+> four came from reading carefully — I read carelessly three times this span and
+> the preregistration caught all three.**
+>
+> **CLASS PROPAGATION CONFIRMED, and it is the first time I have checked rather
+> than assumed:** another lane built `spikes/harness/leakcheck.py` from H165/H174
+> within the hour and **found NINE sites where I named six**. §12.2 works when the
+> class is posted with the grep command attached.
+
 
 
 
