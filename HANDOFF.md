@@ -1481,6 +1481,19 @@ in one command.**
   no sanctioned scratch location, so every careful lane invents one outside the
   workspace; kingfisher-60 had six instances, two of them backups taken to be
   careful before editing shared files.
+- **C5: M1.1's "largest open M1 issue" had been CLOSED FOR A DAY while the row
+  advertised it.** Selected it as the top §3 item, then found the prior art before
+  starting: `M1_3b_process_reuse` (31 distinct RAW, 1 CANON, control live — re-ran
+  it today, one command, host-side) and `M1_14_process_reuse_warm` (73x warm, 128 kB
+  across 450 jobs, S25). Row corrected; the remainder is BLOCKED_ON_HUMAN (upstream
+  `hyperonc` cfg-gate, §11), not OPEN. **CLASS, second instance today after M1.13's
+  sidecar: work lands under a new spike number and the requesting row is never
+  updated.** Six M-series spikes have a RESULT.md and no row.
+- **AND I WITHDREW MY OWN SWEEP NUMBER IN THE SAME CYCLE.** The detector printed a
+  confident *106 of 263 spikes have no row*; it extracts ids with
+  `grep -oE '^[A-Z]+[0-9]+'`, which maps `M1_3b_process_reuse` to `M1` (13 collisions)
+  and cannot see a dotted row id at all. A crude matcher reported as a measurement,
+  inside the sweep for a class about stale reporting. Not published.
 - **NEXT (not started, and both are genuinely open):** M1.1's process-per-job vs
   WorkManager process reuse — **both devices are attached** (`R5CY93675MK` +
   emulator) so it is UNGATED and is the top §3 item by *unblocks the most*, but it
