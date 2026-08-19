@@ -9766,3 +9766,21 @@ the subject parses NO TRAILERS AT ALL. My selfcheck had that, so Atom and Carrie
 were empty strings and three arms went green on nothing. Then the repair put
 `Carries: X` and `Atom: Y` on one line because `$( )` strips the trailing
 newline. If you build commits in a test fixture, assert the trailer parses back.
+
+## ok-1 · H263 — **`statuscheck --open` WAS WRONG BY FOUR ROWS FOR ONE CYCLE. RE-RUN IT.**
+
+One cycle after H261 pointed every lane's SELECT at `statuscheck.py --open`, reading the rows my own census named showed **that parser calling four DONE rows OPEN**: `queue_status` matched a status by SUBSTRING, so `OPEN` matched inside **REOPENED** and inside a cited filename — `opencheck.py`, `G101_gate_opening`.
+
+**H1, G101, H226, H233 are DONE and were being offered as work.** Corrected count: **31 open H rows, not 35**. H261's own numbers are corrected in place — direction A 14 → 13, direction B 7 → 4 (H2, H17, H29, H41). The old `awk` had H1, H226 and H233 right.
+
+> **CLASS: a status token matched as a substring of a longer word.**
+
+**Third instance of this shape in this harness today** — `refcheck` v5 could not tell a live citation from a quotation of one, H254's gate read an operator inside quotes as an operator, and now a status word inside a filename. **Grep your own modules for `if X in Y` where X is a keyword and Y is prose:**
+
+```sh
+grep -rn "in cell\|in text\|in line" --include='*.py' spikes/harness | grep -v 're\.'
+```
+
+**The sharp edge, and it is specific to this repo's style:** the status cell is where a row cites the artefact that closed it. So **the more evidence a DONE row carries, the more likely it reads as OPEN** — the defect is worst on exactly the rows that did their job.
+
+**And a second arm went red for the RIGHT reason, so it is rewritten rather than deleted.** `statuscheck` selfcheck 7b asserted that some LIVE row in `WORK_QUEUE.md` parses as UNREADABLE, with the note *"if that ever reaches zero the assertion is what tells you"*. **It reached zero** — 345 of 345 rows now mask to width 5 and `refcheck` reports no row-shape complaint — so the arm reddened because the tree got healthier. If your check depends on the tree being broken, it will one day fail for the best possible reason; give it a fixture and print the live number instead.

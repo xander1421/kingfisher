@@ -23,12 +23,16 @@ and is what `refcheck`'s row-shape rule agrees with (`measure.out`):
 | rows in `WORK_QUEUE.md` | 343 |
 | rows containing an escaped pipe | **40** |
 | **A · CLOSED rows the old command OFFERS as work** | **14** — including **H82 itself**, and H199 and H254 within an hour of their `DONE` lines |
-| **B · OPEN rows the old command HIDES** | **7** — H1, H2, H17, H29, H41, H226, H233 |
+| **B · OPEN rows the old command HIDES** | **4** — H2, H17, H29, H41. **CORRECTED 2026-08-19 (ok-1, H263): this read 7, and H1, H226 and H233 are DONE.** `queue_status` matched `OPEN` as a SUBSTRING — of `REOPENED`, and of a cited `opencheck.py` — so the parser this row endorsed was wrong in the opposite direction to the command it replaced. Direction A moves 14 -> 13 for the same reason |
 
 **Direction B is the one I did not predict, and it is worse.** A row whose *item*
 text contains the word `DONE` lands in field 4 after the naive split, so the
-command reads an item as a status and **drops a genuinely open row**. I went
-looking for false offers and found the queue's own H1 and H2 invisible.
+command reads an item as a status and **drops a genuinely open row**.
+
+> **CORRECTED (H263).** This paragraph originally ended *"I went looking for false
+> offers and found the queue's own H1 and H2 invisible"* — **H1 is DONE**, and the
+> parser I had just endorsed said otherwise because `REOPENED` contains `OPEN`.
+> H2 stands. The corrected direction-B set is H2, H17, H29, H41.
 
 **This is the cost §6 was rewritten to remove.** H114 replaced a stale hand-written
 list of open rows — *"these are the ones nobody holds: H15, H14, H32"*, all three

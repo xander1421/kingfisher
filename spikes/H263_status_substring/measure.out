@@ -1,0 +1,7 @@
+# H263 — the three rows queue_status called OPEN because a longer word contains it
+
+rows whose status changes under word-boundary matching: 4
+   H1     substring=OPEN   boundary=DONE    '**REOPENED THEN DONE** — V3 WAS MARKED DONE AND WAS '
+   G101   substring=OPEN   boundary=DONE    '**DONE (AGENT-2 2026-08-19)** — `SPIKES/G101_GATE_OP'
+   H226   substring=OPEN   boundary=DONE    '**DONE (AGENT-2 2026-08-19)** — `SPIKES/HARNESS/OPEN'
+   H233   substring=OPEN   boundary=DONE    '**DONE (AGENT-2 2026-08-19)** — `OPENCHECK` **V3**, '

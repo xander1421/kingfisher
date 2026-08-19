@@ -1,0 +1,27 @@
+H261 — the SELECT command in prompts/ok-1.md §6 against the queue's own parser
+rows=347  rows containing an escaped pipe=44
+
+A · CLOSED rows the old command OFFERS as work: 13
+     H82    queue=DONE
+     H18    queue=DONE
+     H27    queue=DONE
+     H36    queue=DONE
+     H40    queue=DONE
+     H53    queue=DONE
+     H67    queue=DONE
+     H72    queue=DONE
+     H84    queue=DONE
+     H168   queue=DONE
+     H199   queue=DONE
+     H218   queue=DONE
+     H254   queue=DONE
+
+B · OPEN rows the old command HIDES: 4
+     H2     queue=OPEN
+     H17    queue=OPEN
+     H29    queue=OPEN
+     H41    queue=OPEN
+
+Both directions are real and the second is the one I did not predict:
+a row whose ITEM text contains the word DONE lands in field 4 after the
+naive split, so the command reads the item as a status and drops the row.

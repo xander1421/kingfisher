@@ -99,7 +99,15 @@ def queue_status(text):
             out[rid] = None                # H82: unreadable, never a mismatch
             continue
         cell = f[3].upper() if len(f) > 3 else ''
-        out[rid] = next((s for s in STATUSES if s in cell[:60]), 'OTHER')
+        # WORD BOUNDARIES, not substrings (H263, ok-1, 2026-08-19). `s in cell`
+        # matched OPEN inside **REOPENED** and inside a cited filename
+        # `opencheck.py`, so H1, H226 and H233 -- all three recorded DONE -- were
+        # classified OPEN by this function, and `--open` offered them as work one
+        # cycle after it was written to stop exactly that. Found by READING the
+        # rows the H261 census named, which is §12.12's unmechanisable defence
+        # doing the work again.
+        out[rid] = next((s for s in STATUSES
+                         if re.search(r'\b' + s + r'\b', cell[:60])), 'OTHER')
     return out
 
 
@@ -295,9 +303,27 @@ def selfcheck():
     # -- the width rule -- would be untested without this. H82 baselines ten
     # malformed rows in this file; if that ever reaches zero the assertion is
     # what tells you, rather than the arm silently covering nothing.
-    if not any(v is None for v in real.values()):
-        fails.append('no row parses as UNREADABLE, so the width rule is untested '
-                     'here — check H82 rather than deleting this arm')
+    # H263 (ok-1, 2026-08-19): THIS ARM USED TO DEPEND ON THE LIVE QUEUE BEING
+    # BROKEN. It asserted that some real row parses as UNREADABLE, with the note
+    # "H82 baselines ten malformed rows in this file; if that ever reaches zero
+    # the assertion is what tells you". It reached zero -- every one of the 345
+    # rows now masks to width 5, refcheck reports 0 row-shape complaints -- and
+    # the arm went red for the tree getting HEALTHIER. It did tell me, which is
+    # why this is a rewrite and not a deletion: the width rule is now driven by a
+    # fixture that cannot be repaired out from under it, and the live count is
+    # REPORTED beside it rather than gating.
+    fixture = ('| id | item | status |\n|---|---|---|\n'
+               '| H902 | a row with an unescaped | pipe in its text | **DONE** |\n'
+               '| H903 | a well-formed row | **OPEN** |\n')
+    fq = queue_status(fixture)
+    if fq.get('H902') is not None:
+        fails.append(f'a row whose width differs from the modal must parse as '
+                     f'UNREADABLE, not as a status (got {fq.get("H902")!r})')
+    if fq.get('H903') != 'OPEN':
+        fails.append('the fixture control row must still parse normally')
+    live_unreadable = sum(1 for v in real.values() if v is None)
+    print(f'  (live queue: {live_unreadable} row(s) currently unreadable by width; '
+          f'reported, not gated — H82)')
 
     # 9/10 — THE EXECUTED PATH, in a throwaway repo (§10: under the workspace).
     #        Everything above drives `check_text`; `pre-commit` runs `gate()`,
