@@ -1,0 +1,254 @@
+{
+ "spike": "G98_pairdisjoint_null",
+ "recorded_utc": "2026-08-19T16:36:32Z",
+ "note": "G98 finishes G94. G95/G96/G97 all measured G88's valid-select argmax on the OFFICIAL FB15k-237 split, of which G48 measured 30.0% of test to have a train edge on the same unordered entity pair. G98 runs G88's own selector and G95's own null over the pair-disjoint split, with ComplEx and RotatE retrained on it under their own published protocols and G94's DistMult inherited. The symbolic arm is mined in process from the pair-disjoint train set, because G94's was a copied cache mined on the official one.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd",
+   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid",
+   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/fleetcensus.sh",
+    "spikes/harness/stalecheck.py"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G98_pairdisjoint_null/pairdisjoint_null.json",
+   "sha256": "254edb452747962ab20b4eb4b355e2f97a5f5835c6db1a6675e4f8079936c914",
+   "bytes": 12039,
+   "mtime": 1787157392,
+   "compared_ts": 1787157392,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "pair_disjoint_split_reproduces",
+   "must_fire_because": "every number here is about the leak-free split only if the split on disk still IS leak-free and still IS G48's grouping",
+   "can_fail_because": "a changed seed, a changed partitioner, or the (h,r,t) vs (p,s,o) field-order swap that groups by (RELATION, TAIL) and lands at ~5.19 triples/group while leak_count, fed the same tuples, still says 0",
+   "null_must_contain": "a leaking or mis-grouped corpus. leak_count and the triples-per-group ratio are recomputed FROM THE FILES here, not read from SOURCE.txt and not delegated to pdsplit's asserts, which sit after an early return and do not run on a materialised corpus",
+   "fired": true,
+   "detail": "leak 0, 1.2474 triples/group vs G48 1.283, test n 46518",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_train_test": 0,
+    "n_groups": 248611,
+    "n_total": 310116,
+    "triples_per_group": 1.2474,
+    "g48_published_ratio": 1.283,
+    "n_train": 217081,
+    "n_valid": 46517,
+    "n_test": 46518,
+    "corpus_sha256": {
+     "train.txt": "dd86de895215ca717ccc32b63e6d8c089b9df28650a11bf3823ef52c323638f7",
+     "valid.txt": "37f87d6347667121785dc7d27debefea80a8472aa690a87435c8e702f1774845",
+     "test.txt": "325bbe145987e1f18871ce1f2693cee96fda63e7143a51b61cb6bd46c881894d"
+    }
+   }
+  },
+  {
+   "name": "null_preserves_selection_budget",
+   "must_fire_because": "a draw that changes the arm counts is a different experiment, not a null of this selector",
+   "can_fail_because": "shuffling with replacement, or permuting the keys instead of the values",
+   "null_must_contain": "a broken permutation. Counter(perm) is compared to Counter(vec) on EVERY draw",
+   "fired": true,
+   "detail": "1000 draws, each carrying {'distmult': 185, 'prior': 39, 'g64': 166, 'complex': 57, 'rotate': 27}",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    1000,
+    474
+   ]
+  },
+  {
+   "name": "null_is_non_degenerate",
+   "must_fire_because": "a null whose draws all score the same cannot contain the effect and is not a null (A20)",
+   "can_fail_because": "every permutation scores identically, which would mean apply_dir ignores the choice",
+   "null_must_contain": "spread. If the selector were irrelevant every permutation would score identically and the spread would be 0 -- reachable, and exactly what a dead null looks like",
+   "fired": true,
+   "detail": "spread 0.0313, sd 0.0049",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    0.2271,
+    0.2584,
+    0.004852778053857398
+   ]
+  },
+  {
+   "name": "arms_are_pair_disjoint_not_official",
+   "must_fire_because": "THE CONTROL FOR THIS SPIKE'S OWN DEFECT CLASS: a trainer whose cache key is a path and not the data returns the OLD corpus's answer and the run reports it as the new one",
+   "can_fail_because": "pointing an EMB_PATH at the official file, or chdir-ing into the arm's own spike directory before import",
+   "null_must_contain": "an arm that is byte-identical to its official-split counterpart. That is precisely what `run_arm.py rotate` would have produced, since rotate.py's EMB_PATH is the file G88 loads and train_or_load returns it when present",
+   "fired": true,
+   "detail": "each pair-disjoint arm differs from its official-split counterpart",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "complex_pd": "b6edeb0449fe77eb5375303e8677d4a9fba8329708cb8d8d676d4dda94aab3d8",
+    "rotate_pd": "6b88da5889c1f200547e806a2b275f5f20ee20339b75e1458bed9df849f6a7d6",
+    "distmult_pd": "4030d05aa0a445677c886f1fecce1228c744f4e044f83f5d45f790e2c53a31ed",
+    "complex_official": "f54a5700099b517db4e3057bb1a72e7918032e9a9911089d17193207e9418eef",
+    "rotate_official": "958d07b161a75a9b9041bc07a127f3933c0080bddf3e5342e1fba1a27a42afb3",
+    "distmult_official": "61cb61cab600e60f6b2caaba15d13e4f9e2c6255c58265383d9357dacee077cc"
+   }
+  },
+  {
+   "name": "g94_distmult_reproduces",
+   "must_fire_because": "G98 inherits G94's DistMult rather than retraining it, so nothing here is continuous with G94 unless that arm still scores what G94 published",
+   "can_fail_because": "the npz being replaced, or corpus_pd being regenerated under a different seed",
+   "null_must_contain": "a different mrr. The rank is recomputed from the npz over rows built from the corpus, so a drifted embedding or a re-materialised split both miss",
+   "fired": true,
+   "detail": "reproduced 0.2422 vs G94 0.2422",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "reproduced": 0.2422,
+    "g94_published": 0.2422,
+    "distmult_emb_sha256": "4030d05aa0a445677c886f1fecce1228c744f4e044f83f5d45f790e2c53a31ed"
+   }
+  },
+  {
+   "name": "arms_postdate_the_corpus_they_claim",
+   "must_fire_because": "THE MECHANISED FORM OF THIS SPIKE'S DEFECT CLASS (\u00a712.10: a guardrail that is written but not mechanised will be violated again by its own author). An artifact derived from a corpus must be NEWER than that corpus; G94's rules_cache.json is stamped 05:00 against a corpus_pd stamped 16:28 and nothing looked",
+   "can_fail_because": "a cached arm surviving a corpus re-materialisation, which is precisely how a path-keyed cache answers the old question",
+   "null_must_contain": "an arm older than the corpus. That is a reachable state and is the exact state G94 shipped in",
+   "fired": true,
+   "detail": "every arm is newer than the corpus it was trained on",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "corpus_newest_mtime": 1787153330.4,
+    "arm_mtime": {
+     "complex_pd": 1787156428.7,
+     "rotate_pd": 1787156788.9,
+     "distmult_pd": 1787153905.4
+    },
+    "g94_rules_cache_mtime": 1787112049.5
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_selector_carries_no_signal_leak_free",
+   "must_fire_because": null,
+   "can_fail_because": "mix test MRR is NOT above the null p95",
+   "null_must_contain": "both answers. The null max is a realisable permutation score, so the mix can land above or below it",
+   "fired": false,
+   "detail": "mix 0.2914 vs null p95 0.2494, 0/1000 >= mix",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0.2914,
+    0.2494,
+    0
+   ],
+   "refutes": "refutes G95 as a statement about structure: the argmax carries no key-specific information once the entity-pair leak is gone, so the 5-way gain G95 defended was leak-dependent",
+   "fires_when": "mix test MRR is NOT above the null p95",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_mix_does_not_beat_best_single_arm",
+   "must_fire_because": null,
+   "can_fail_because": "mix test MRR <= the best single arm on the same rows",
+   "null_must_contain": "both answers; both come from the same test rows",
+   "fired": false,
+   "detail": "mix 0.2914 vs best single g64 0.2580",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0.2914,
+    0.258,
+    "g64"
+   ],
+   "refutes": "refutes the ensemble leak-free: if the best single arm matches the mix on a split that cannot leak, the 5-way machinery is not worth having",
+   "fires_when": "mix test MRR <= the best single arm on the same rows",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_mix_does_not_beat_symbolic",
+   "must_fire_because": null,
+   "can_fail_because": "mix test MRR <= the g64 symbolic arm alone on the same rows",
+   "null_must_contain": "both answers, from the same test rows. G94 reported symbolic AHEAD of DistMult on this split, so this falsifier is live rather than decorative",
+   "fired": false,
+   "detail": "mix 0.2914 vs g64 0.2580",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0.2914,
+    0.258
+   ],
+   "refutes": "refutes the whole embedding+selector stack leak-free: the symbolic arm needs no embeddings, no training and no selector",
+   "fires_when": "mix test MRR <= the g64 symbolic arm alone on the same rows",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd": {
+   "newest": 0,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787157225,
+   "from": "spikes/harness/stalecheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "If the mix were not above the p95 of 1000 multiset-preserving label permutations of its own selector on a split that cannot leak, then G95's verdict would be a statement about the leak rather than about selection, and the ensemble thread would be refuted where it matters.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

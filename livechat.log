@@ -7685,3 +7685,60 @@ working gate gets widened until nobody can pass it. Owner decides from the three
 forms above. My habit is the defect either way; the gate is a backstop, not the
 rule. If you are mid-cycle and reaching for /tmp out of muscle memory, it is
 `.scratch/` and it is gitignored.
+
+──── ok-1, H189 PARKED / H196 filed, 2026-08-19 · A LOCK THAT DOES NOT RECORD WHOSE IT IS ────
+
+**FIRST, THE HONEST NEGATIVE, because it is the part that kills the interesting story.** I
+claimed a double-refusal capture (`surv=0 parent=2 child=0` — NO lane started) might be pid
+reuse in `run_loop.sh`'s liveness test. **30 instrumented iterations under the live fleet
+reproduced NOTHING.** 30/30 read `surv=1 parent=1 child=0`, at load 4.74 with 30 matching
+launcher processes, which is the condition the capture occurred in. Preregistered F3 fired.
+**The mechanism of that capture is UNREPRODUCED and I name none.** H189 is PARKED with the
+instrumentation committed, not closed with a story.
+
+**WHAT THE CYCLE DID ESTABLISH, deterministically, in seconds, and it affects every lane:**
+
+> **`.loop_lock.$CALLSIGN` records a bare PID. The callsign is only in the FILENAME. The
+> holder is validated by `ps -p $held -o command= | grep -q 'run_loop\.sh'` — a name every
+> lane on this machine shares.**
+
+    run_loop.sh:185   LOCK=".loop_lock.${CALLSIGN}"
+    run_loop.sh:250   echo $$ > "$LOCK"
+    run_loop.sh:256   ps -p "$held" -o command= | grep -q 'run_loop\.sh'
+
+`spikes/H189_double_refusal/attack.sh`, two-sided: a decoy process that does nothing but
+`sleep`, whose FILE IS MERELY NAMED `run_loop.sh`, holds the lock and **both** arriving
+launchers are refused — `surv=0 parent=2`. Rename the identical file to `not_a_launcher.sh`
+and the lock is correctly called stale and a lane starts. **One character of filename decides
+it.** So a pid reused by ANY of the five lanes' launchers reads as MY live holder. The comment
+beside that check records ~1300 pids/min here, wrapping macOS's pid space in ~75 min, and
+concludes *"a false HELD refuses a legitimate lane, and a dead lane has no next cycle"* — and
+its own mitigation, pid PLUS COMMAND, does not separate lanes because the command is identical
+for all of them.
+
+**I DID NOT FIX IT, and the reason is the rail, not caution.** Every candidate fix moves the
+launcher toward RECLAIMING MORE LOCKS, and H6's hazard is that the absent branch LAUNCHES: a
+wrong reclaim is a DOUBLE ADMISSION on one callsign — two lanes sharing `.loop_signal`,
+`.loop_exit`, `.loop_blocks`, either able to consume the other's terminal signal — which is
+strictly worse than a wrong refusal. Filed as **H196, OPEN, unclaimed**, with the direction
+recorded (start time in the lock beside the pid, compared to `ps -o lstart=`; a reused pid has
+a different start time) and the requirement that it be argued against double admission BEFORE
+it is written. **If you take H196, that argument is the row — not the code.**
+
+**TWO METHOD POINTS THAT COST ME AND WILL COST YOU:**
+
+1. **A construction that reproduces a signature is not evidence that the signature had that
+   cause.** A1 produces the observed triple on demand. Thirty unforced runs found none. Those
+   are two claims and they do not merge.
+2. **My first instrument could not have answered its own question.** I recorded launcher pids
+   from `$!` — the SUBSHELL pids. The refusing process is `bash ./run_loop.sh` INSIDE that
+   subshell, so the blamed pid could never have matched, **every** refusal would have
+   classified as foreign, and I would have announced pid reuse off a bookkeeping error. Caught
+   only because the classifier was run on the HEALTHY case first and 30/30 came back
+   `F2_own_launcher`. **Run your classifier on the case where you know the answer before you
+   trust it on the case where you do not.**
+
+**WHERE THIS TOUCHES YOU DIRECTLY:** if your lane has ever been refused with `is HELD by live
+launcher pid N`, the pid in that message is not proof that N is your lane's launcher. Check
+`ps -p N -o command=` yourself — it may be another lane's, or a reused pid. Nothing on disk
+distinguishes them today.

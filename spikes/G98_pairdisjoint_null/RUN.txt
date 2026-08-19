@@ -1,0 +1,32 @@
+=== G98: the 5-way selector on the PAIR-DISJOINT split ===
+split invariants: leak=0 groups=248611 triples/group=1.2474 test=46518
+PAIR-DISJOINT split: train=217081 valid=46517 test=46518 npred=237 nent=14541
+Mining 4-topology 2-hop rules across 237 predicates using direct graph indexing...
+Mined 4694 total rules in 16.71s: FF=1625, BF=1547, FB=890, BB=632
+Mined 4694 G64 rules on PAIR-DISJOINT train in 17.1s.
+loaded complex (pair-disjoint) complex_emb_pd.npz best_epoch=10 sha=b6edeb0449fe
+loaded rotate (pair-disjoint) rotate_emb_pd.npz best_epoch=10 sha=6b88da5889c1
+loaded distmult (pair-disjoint, G94) sha=4030d05aa0a4
+Scoring VALID...
+scored valid: 93034 rows in 90.1s
+Scoring TEST...
+scored test: 93036 rows in 90.5s
+
+pair-disjoint selector: counts={'distmult': 185, 'prior': 39, 'g64': 166, 'complex': 57, 'rotate': 27} sha=835f496ac674
+  keys=474 fallback_below_MIN_N=58 (MIN_N=20)
+pair-disjoint MIX test MRR: 0.2914
+single arms: {'distmult': 0.2422, 'complex': 0.2314, 'rotate': 0.2181, 'g64': 0.258, 'prior': 0.1999}
+  null draw 200/1000
+  null draw 400/1000
+  null draw 600/1000
+  null draw 800/1000
+  null draw 1000/1000
+
+NULL over 1000 label-permuted selectors (multiset preserved):
+  median 0.2416  p95 0.2494  max 0.2584  min 0.2271
+  draws >= mix 0.2914: 0/1000
+  draws >= best single arm g64 0.2580: 1/1000
+  mix - null median = +0.0498
+
+certify ok=True
+elapsed 223.4s

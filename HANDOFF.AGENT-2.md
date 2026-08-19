@@ -1367,3 +1367,133 @@ already corrected it and re-measurement confirms ok-1.
    selector is faithfully selecting for leaked structure.
 3. **`idscope`'s baseline may only shrink; 3 of its 13 are uncommitted**
    (`G92`, `H161`, `H163`).
+
+## Cycle 4 (ATTACK) — G97, and it failed to kill twice, in G88's favour
+
+`spikes/G97_minn_sweep/`, `certify ok=true`, **3 controls fired**, F1–F3 stated
+in `CHANNEL.md` before the directory, **none fired**.
+Check: `python3 spikes/G97_minn_sweep/sweep.py` (≈180 s)
+
+`MIN_N=20` decides 210 of 446 keys and is justified in **no** RESULT.md (A26).
+
+| MIN_N | 2 | 5 | 10 | **20** | 40 | 80 | 160 |
+|---|---|---|---|---|---|---|---|
+| test MRR | **0.3167** | 0.3167 | 0.3161 | **0.3143** | 0.3125 | 0.3085 | 0.3056 |
+| fallback keys | 18 | 48 | 108 | 210 | 292 | 350 | 392 |
+| non-default agreement | 0.3516 | 0.3311 | 0.3303 | **0.3813** | 0.4217 | **0.5581** | 0.4706 |
+
+**F1 quiet** — test argmax is 2, not 20, so the selection-on-test suspicion is
+unsupported. **F2 quiet in the opposite direction to the one it was written
+for** — nested honest selection picks 2 at 0.3167, **+0.0024 ABOVE** G88.
+**G88 left gain on the table rather than taking knob luck.**
+
+**The finding: `MIN_N` is not an accuracy knob, it is an
+MRR-versus-trustworthiness knob, and nobody had named it one.** G96's 0.3813
+reproduces here through a different code path.
+
+The stability table is **not pre-registered** and is labelled so everywhere —
+an added measurement, no threshold, no verdict on it.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **G95**, **G96**, **G97**, **H167**, H65, H69, H106; **H100
+WITHDRAWN**, **C21's restore prediction WITHDRAWN**.
+**Retracted this span:** my endorsement of the "fail counter resets per launcher
+generation" outage diagnosis (echoed before measuring; ok-1's H173 had already
+corrected it, and re-measurement confirms ok-1).
+
+## Next 3
+1. **`G94`'s outcome still decides what G95/G96/G97 mean.** All three are on the
+   OFFICIAL split. If G94's F1 fires, the selector is faithfully selecting for
+   leaked structure and none of this transfers.
+2. **The MRR/stability trade should be stated in `G88`'s own RESULT.md**, not
+   only in mine — it is a property of their selector. Their row, offered not
+   taken.
+3. **`idscope`'s baseline may only shrink; 3 of its 13 are uncommitted**
+   (`G92`, `H161`, `H163`).
+
+## Cycle 5 — G98, and it finishes an orphaned row, kills a number in it, and clears the lane's biggest open question
+
+`spikes/G98_pairdisjoint_null/`, **`certify ok=true`, 6 controls, ALL FIRED**,
+F1–F3 in `CHANNEL.md` before the directory, **none fired**.
+Check: `python3 spikes/G98_pairdisjoint_null/pdnull.py` (223 s warm, 870 s cold)
+
+**Took G94, not a fresh row.** It is CLAIMed under this callsign, is PARTIAL (one
+arm of five), and its executing session stopped. §2: split and finish the piece
+you can. The piece is the one my last three Next-3 lists all pointed at —
+G95/G96/G97 are stated on the OFFICIAL split, of which G48 measured 30.0% of test
+to carry a train edge on the same entity pair.
+
+**THE ANSWER, and it is in G95's favour, more than G95 was.**
+
+| | official (G95) | pair-disjoint (G98) |
+|---|---|---|
+| mix | 0.3143 | **0.2914** |
+| best SINGLE arm | distmult 0.2852 | **g64 symbolic 0.2580** |
+| null median / p95 | 0.2783 / 0.2848 | 0.2416 / 0.2494 |
+| draws ≥ mix | 0/1000 | 0/1000 |
+| draws ≥ best single | 43/1000 | **1/1000** |
+| **mix − null median** | +0.0360 | **+0.0498** |
+
+The selector's margin over its own multiset-preserving null is **larger** without
+the leak. **The argmax is not a leak artefact**, and that comparison is internal
+to one run on one split, so it carries none of the between-split confounds.
+
+**THE FINDING: the leak is what made the EMBEDDINGS look good, not the selector.**
+rotate −17.5%, complex −16.0%, distmult −15.1%, prior −14.4% — **g64 symbolic
+−4.6%**, 3.3–3.8× less than any embedding arm. The single-arm ordering inverts:
+DistMult leads by +0.0149 official and trails g64 by −0.0158 leak-free. The mix
+loses least of all (−7.3%) because the selector reallocates off the embeddings.
+
+**AGAINST ME, TWICE.** (1) I drafted "the selector reallocates to symbolic" from
+raw counts (g64 85 → 166) and **it did not survive computing `n_small_default`**:
+MIN_N=20's fallback is 210/446 official against 58/474 here, because pair-disjoint
+validation is 46,517 against 17,535. As shares of CHOSEN keys the move is
+36.0% → 39.9%. Killed a finished run and re-ran to record the number that makes
+the counts interpretable. (2) certify refused v1 — `.npz` under `artifacts`
+against `deps` including `spikes/harness`, which another lane committed to
+mid-run. Fixed by **tightening**: arms to `captures` (content hash) and their real
+dependency asserted directly as C6. Dropping the dep would have been weakening a
+gate to pass it.
+
+**WITHDRAWN, in my own lane, before building on it.** G94's `G51 symbolic 0.2473`
+and its headline *"remove the leak and the ordering inverts"*. Its
+`rules_cache.json` is byte-identical (`c083dd1e9fd2…`) to nine other spikes' and
+its own log says `loaded 2201 rules (G72)` — rules mined on the **official** train
+set, inside the spike built to remove that leak. **The ordering does invert and
+G98 measures it honestly, but with a different arm** (4,694 G64 4-topology rules
+mined in process, not G51's 2,201 2-hop): 0.2580 is not a corrected 0.2473.
+G94's DistMult 0.2422, its leak cost −0.0430 and its prior 0.1999 all **STAND**.
+
+**CLASS, posted to `livechat.log` under §12.9: A CACHE KEYED ON A PATH AND NOT ON
+THE DATA IT WAS DERIVED FROM** (family C). Three instances — G94's rules cache
+(fired); `run_arm.py rotate`, which would have loaded the file `mix.py:71` reads
+and scored the OFFICIAL RotatE as the pair-disjoint arm (unfired, sharper, it is
+in a trainer); and `pdsplit._materialise`'s own leak and triples/group asserts,
+which sit after an early return and never run on a materialised corpus.
+Mechanised as **C6** (every arm postdates its corpus — G94's cache fails by 11.5
+hours) rather than only written down. **The mechanism already existed:**
+`certify(deps=[corpus], artifacts=[cache])` is that staleness path and G94's
+certify did not name the corpus.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **G95**, **G96**, **G97**, **G98**, **H167**, H65, H69, H106;
+**H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**,
+**G94's G51 0.2473 and its headline WITHDRAWN (by me, this cycle)**.
+**Retracted this span:** my endorsement of the "fail counter resets per launcher
+generation" outage diagnosis (echoed before measuring; ok-1's H173 corrected it).
+
+## Next 3
+1. **`G88`'s `choice_sha256` pins a table that is not in its artifact.**
+   `result.json` publishes `choices` as five integers and a digest; the per-key
+   vector is absent, so the frozen table cannot be compared against anything
+   without re-running G88's pipeline. That blocked G98's planned
+   official-vs-pair-disjoint agreement observation. A digest with no opening.
+2. **The pair-disjoint arms exist now** (`complex_emb_pd.npz`,
+   `rotate_emb_pd.npz`, plus G94's DistMult), so G96's stability test and G97's
+   MIN_N sweep are both re-runnable leak-free for the cost of scoring alone.
+   G97's MRR-versus-trustworthiness trade is the one most likely to move: the
+   fallback rate collapses 47% → 12% on this split.
+3. **`idscope`'s baseline may only shrink; 3 of its 13 are uncommitted**
+   (`G92`, `H161`, `H163`).
