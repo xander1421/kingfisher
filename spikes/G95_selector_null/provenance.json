@@ -1,0 +1,184 @@
+{
+ "spike": "G95_selector_null",
+ "recorded_utc": "2026-08-19T15:40:22Z",
+ "note": "G95. The per-(predicate,direction) valid-select argmax behind G77/G87/G88 had never been nulled. G56 nulled a binary mask; an argmax over 5 arms has more freedom. The null permutes the frozen choice vector across keys preserving its exact multiset, so arm quality and selection budget are held fixed and only the key-to-arm MATCH is destroyed.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid",
+   "head": "cfdeae3c08bcbaa71c1501faf0cc2c687ce360da",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "cfdeae3c08bcbaa71c1501faf0cc2c687ce360da",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/fleetcensus.sh"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null/selector_null.json",
+   "sha256": "4c1ae926eb1908b97e74b88ace59e9a054d14d4e4afe501fd029a718504ca45c",
+   "bytes": 10633,
+   "mtime": 1787154022,
+   "compared_ts": 1787154022,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "reproduces_g88",
+   "must_fire_because": "nothing downstream is about G88 unless its headline reproduces from its own instrument",
+   "can_fail_because": "any divergence in the arms, the corpus or the selector moves the 4th decimal",
+   "null_must_contain": "a DIFFERENT mrr. The pipeline is re-run from corpus and saved embeddings rather than read from result.json, so a drifted embedding, a changed rule miner or a moved split all produce a number that misses",
+   "fired": true,
+   "detail": "reproduced 0.3143 vs published 0.3143",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "reproduced_mrr": 0.3143,
+    "published_mrr": 0.3143,
+    "reproduced_selector_sha256": "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
+    "reproduced_counts": {
+     "distmult": 279,
+     "g64": 85,
+     "rotate": 26,
+     "prior": 17,
+     "complex": 39
+    },
+    "n_test_triples": 20466
+   }
+  },
+  {
+   "name": "null_preserves_selection_budget",
+   "must_fire_because": "a draw that changes the arm counts is a different experiment, not a null of this selector",
+   "can_fail_because": "shuffling with replacement, or permuting the keys instead of the values",
+   "null_must_contain": "a broken permutation. Counter(perm) is compared to Counter(vec) on EVERY draw, so a sampler that drew with replacement would be caught rather than assumed away",
+   "fired": true,
+   "detail": "1000 draws, each carrying {'distmult': 279, 'g64': 85, 'rotate': 26, 'prior': 17, 'complex': 39}",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    1000,
+    446
+   ]
+  },
+  {
+   "name": "null_is_non_degenerate",
+   "must_fire_because": "a null whose draws all score the same cannot contain the effect and is not a null (A20)",
+   "can_fail_because": "every permutation scores identically, which would mean apply_dir ignores the choice",
+   "null_must_contain": "spread. If the selector were irrelevant every permutation would score identically and the spread would be 0 -- that outcome is reachable and is exactly what a dead null looks like",
+   "fired": true,
+   "detail": "spread 0.0294, sd 0.0041",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    0.2637,
+    0.2931,
+    0.004141345307988698
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_selector_carries_no_signal",
+   "must_fire_because": null,
+   "can_fail_because": "real MRR is NOT above the null p95",
+   "null_must_contain": "both answers. The null max is a realisable permutation score, so real can land above or below it",
+   "fired": false,
+   "detail": "real 0.3143 vs null p95 0.2848, 0/1000 >= real",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0.3143,
+    0.2848,
+    0
+   ],
+   "refutes": "refutes the ensemble thread: the argmax carries no key-specific information and the 5-way gain is selection freedom",
+   "fires_when": "real MRR is NOT above the null p95",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_random_assignment_beats_best_arm",
+   "must_fire_because": null,
+   "can_fail_because": "null MEDIAN >= the best single-arm test MRR",
+   "null_must_contain": "both answers -- the median is a measured quantity and the single-arm scores come from the same rows",
+   "fired": false,
+   "detail": "null median 0.2783 vs best single arm distmult 0.2852",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0.2783,
+    0.2852
+   ],
+   "refutes": "refutes every mix row that argued from \"beats DistMult\": if a RANDOM assignment of these arms already beats the best single arm, that comparison was never about selection",
+   "fires_when": "null MEDIAN >= the best single-arm test MRR",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_g88_not_reproduced",
+   "must_fire_because": null,
+   "can_fail_because": "reproduced mrr != 0.3143 to 4 dp",
+   "null_must_contain": "both answers; C1 records the same comparison as a gating control",
+   "fired": false,
+   "detail": "reproduced 0.3143",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "reproduced_mrr": 0.3143,
+    "published_mrr": 0.3143,
+    "selector_sha256": "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
+    "delta": 0.0
+   },
+   "refutes": "refutes the whole run: if G88 does not reproduce, nothing measured here is about G88",
+   "fires_when": "reproduced mrr != 0.3143 to 4 dp",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787153358,
+   "from": "spikes/harness/fleetcensus.sh"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "If G88's 0.3143 were not above the p95 of 1000 multiset-preserving label permutations of its own selector, the 5-way gain would be selection freedom rather than a mechanism, and the ensemble thread would be refuted.",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

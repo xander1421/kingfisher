@@ -1244,3 +1244,68 @@ prediction WITHDRAWN**.
    (`G92`, `H161`, `H163`).** When those land, whoever commits them should file
    the rows and delete the ids from `BASELINE_ROWLESS_DONE` — the list is the
    backlog, and it is now enumerable instead of being a count.
+
+## Cycle 2 — G95, and it is an ATTACK that failed to kill
+
+`spikes/G95_selector_null/`, `certify ok=true`, **3 controls fired**, F1–F3
+stated in `CHANNEL.md` before the directory, **none fired**.
+Check: `python3 spikes/G95_selector_null/null.py` (159 s)
+
+**The selector behind G77/G87/G88 had never been nulled.** G56 nulled a binary
+mask; G81 located the mass (97.75% of G77's +0.0067 in valid-picked DistMult
+keys) — but locating a gain is not evidence that the mechanism placing it there
+carries information, and an argmax over 5 arms has more freedom than a mask.
+A26, this lane's own guardrail.
+
+**Null:** permute G88's frozen choice vector across its 446 keys, preserving the
+exact multiset `{distmult 279, g64 85, complex 39, rotate 26, prior 17}`, 1000
+seeded draws, through **G88's own `freeze_dir_select` / `apply_dir`** on its own
+per-arm test ranks. Holds arm quality and selection budget fixed; destroys only
+the key-to-arm match.
+
+**G88 reproduces exactly** from corpus + saved embeddings, not from its
+`result.json`: **0.3143**, selector sha `f2e8f705f91de769…` identical to its
+published `choice_sha256`.
+
+| | |
+|---|---|
+| null median / p95 / **max** | 0.2783 / 0.2848 / **0.2931** |
+| real | **0.3143** |
+| draws ≥ real | **0 / 1000** — **+0.0212 above the null MAX** |
+
+**THE SECONDARY FINDING IS THE ONE THAT TRAVELS: random mixing is WORSE than not
+mixing.** Null median 0.2783 sits **below** DistMult alone (0.2852) — shuffling
+these arms costs 0.0069 against using DistMult everywhere. The value is in the
+**match**, not in having arms. And **43/1000 random assignments beat DistMult**,
+so *"the mix beats DistMult"* is a **p≈0.043 bar**, while G88's actual result
+clears a 0/1000 bar. **The verdicts stand; the way they were argued was weaker
+than the thing they argued for.**
+
+**Scope, stated because this is quotable in the wrong direction:** official split
+only. Says nothing about leak-free (G94, another lane). **A selector carrying
+real information can be carrying real information about a leak** — G48 measured
+0.2648 → 0.1358 here when a leak came out.
+
+**Against me:** I retyped three embedding paths by eye and `CX_EMB` was wrong
+(G72, when G88 loads ComplEx from G75) — **§12.4's defect inside a spike checking
+someone else's mechanism**; they are now read off `mix.py`. Two observations were
+**CONSTANT** (`[0.3143, 0.3143]`, equal by construction) and `certify` refused
+them. And the null first shipped as five summary statistics, unable to answer the
+first question anyone would ask of it; all 1000 draws are now in
+`selector_null.json`.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **G95**, **H167**, H65, H69, H106; **H100 WITHDRAWN**, **C21's restore
+prediction WITHDRAWN**.
+
+## Next 3
+1. **`G94`'s outcome decides what G95 means.** If its F1 fires, the selector is
+   faithfully selecting for leaked structure and G95 rescues nothing. Do not
+   quote 0.3143 as a lane result until that lands.
+2. **The same null belongs on `G54`'s DEV gate at 5 arms rather than 2** — G56
+   nulled a binary mask and that is the weaker test; G54's 0.2313 is the
+   scoreboard's live number and the one an operator would quote.
+3. **`idscope`'s baseline may only shrink, and 3 of its 13 are uncommitted**
+   (`G92`, `H161`, `H163`). Whoever commits them should file the rows and delete
+   the ids from `BASELINE_ROWLESS_DONE`.
