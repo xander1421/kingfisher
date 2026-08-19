@@ -1,0 +1,287 @@
+{
+ "spike": "G101_gate_opening",
+ "recorded_utc": "2026-08-19T20:21:59Z",
+ "note": "G101: reconstructs and publishes use_g51, the 223-entry object behind G59's gate.sha256.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "110da4a202f736b7dca8431840be5b6f206aed66",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "110da4a202f736b7dca8431840be5b6f206aed66",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift",
+   "head": "110da4a202f736b7dca8431840be5b6f206aed66",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "110da4a202f736b7dca8431840be5b6f206aed66",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G101_gate_opening/reopen.py",
+   "sha256": "61bc2955871fd97882294fc4115f9976a150296ec4318e4c3d10c4a11e4ea506",
+   "bytes": 16212,
+   "mtime": 1787159556,
+   "compared_ts": 1787159556,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G101_gate_opening/gate_open.json",
+   "sha256": "003382be18eb661844bb6a2912a3d5741ecfa16e5d57b9cfe0a0c4cb19cdf1a4",
+   "bytes": 10082,
+   "mtime": 1787170919,
+   "compared_ts": 1787170919,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_inputs_match_g59",
+   "must_fire_because": "the reconstruction must run on the files G59 recorded, not on whatever is in corpus/ today",
+   "can_fail_because": "corpus/fb15k237 replaced or re-fetched",
+   "null_must_contain": "a file sha256 differing from official.json's",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pairs": {
+     "test.txt": [
+      "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574",
+      "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574"
+     ],
+     "train.txt": [
+      "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+      "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae"
+     ],
+     "valid.txt": [
+      "cf6309010852f6a8d47a45df830a426415d1ee6f7a3970a8376ff1fb81db4a5c",
+      "cf6309010852f6a8d47a45df830a426415d1ee6f7a3970a8376ff1fb81db4a5c"
+     ]
+    },
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_counts_derive_from_table",
+   "must_fire_because": "G59 published 157/66; if the rebuilt table does not yield them, table and integers are two records that can drift",
+   "can_fail_because": "a table of the wrong size, or a gate fitted on different rows",
+   "null_must_contain": "on/off pair != 157/66",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "on": 157,
+    "off": 66,
+    "published": [
+     157,
+     66
+    ],
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_digest_pins_the_table",
+   "must_fire_because": "a digest invariant to its object pins nothing and publishing the object proves nothing",
+   "can_fail_because": "a serialisation that drops use_g51 -- which is exactly what official.json does",
+   "null_must_contain": "mutated digest equal to the original",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "victim_key": "0",
+    "mutated_sha256": "7906bcaeb4356c3552c967b08fafa4a7b7bd20313ed886f531d71658bd009b46",
+    "original_sha256": "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_opens_from_artifact_alone",
+   "must_fire_because": "the deliverable is an artifact a third party can open with no re-run; re-reading it from disk is that test",
+   "can_fail_because": "serialisation not recorded, or json round-trip changing key order/types",
+   "null_must_contain": "re-read digest != pinned",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_reconstruction_does_not_reproduce_digest",
+   "must_fire_because": null,
+   "can_fail_because": "reconstructed sha256 != the published 9559856568a9...",
+   "null_must_contain": "both digests, so a mismatch is readable",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "reconstructed": "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+    "pinned": "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+    "fired": false
+   },
+   "refutes": "that G59's gate is recoverable from the committed tree",
+   "fires_when": "reconstructed sha256 != the published 9559856568a9...",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_object_already_published_elsewhere",
+   "must_fire_because": null,
+   "can_fail_because": "any JSON in spikes/ carries a >=100-entry bool table re-deriving the digest",
+   "null_must_contain": "the candidate list, empty or not",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_json_scanned": 1326,
+    "candidates": [
+     [
+      "spikes/G64_bidirectional_topologies/g64_results.json/gate/use_g51",
+      223,
+      false
+     ],
+     [
+      "spikes/H210_refutation_outlives_target/fresh/spikes/G64_bidirectional_topologies/g64_results.json/gate/use_g51",
+      223,
+      false
+     ]
+    ],
+    "fired": false
+   },
+   "refutes": "G100's NO_OPENING verdict at these sites, and this row's premise",
+   "fires_when": "any JSON in spikes/ carries a >=100-entry bool table re-deriving the digest",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_digest_does_not_pin_the_table",
+   "must_fire_because": null,
+   "can_fail_because": "flipping one entry leaves the digest unchanged",
+   "null_must_contain": "the mutated digest",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "victim_key": "0",
+    "mutated_sha256": "7906bcaeb4356c3552c967b08fafa4a7b7bd20313ed886f531d71658bd009b46",
+    "fired": false
+   },
+   "refutes": "that opening the digest tells anyone what G59 ran",
+   "fires_when": "flipping one entry leaves the digest unchanged",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_citing_spike_count_is_not_nine",
+   "must_fire_because": null,
+   "can_fail_because": "the mechanical count of citing spikes != 9",
+   "null_must_contain": "the count and the list",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n": 10,
+    "spikes": [
+     "G100_digest_openings",
+     "G59_official_split",
+     "G60_direction_gate",
+     "G61_lift_cap",
+     "G62_head_analog",
+     "G67_head_aa",
+     "G68_body_filter",
+     "G73_head_select4",
+     "G75_complex_gate",
+     "H210_refutation_outlives_target"
+    ],
+    "fired": true
+   },
+   "refutes": "the 'most-cited digest in the G-series' framing",
+   "fires_when": "the mechanical count of citing spikes != 9",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F4_citing_spike_count_is_not_nine"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the reconstruction moves the digest, OR the object was published all along, OR the digest does not pin the table"
+}
