@@ -1,0 +1,59 @@
+{
+  "certification_residual": {
+    "dirty_under_dep": [
+      "spikes/harness/idscope.py",
+      "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+      "spikes/harness/depcheck.py",
+      "spikes/harness/test_h207_falsify.sh"
+    ],
+    "foreign_only": true,
+    "in_instrument_chain": []
+  },
+  "class": "a checker that scores a MUTABLE SHARED OBJECT and whose verdict is consumed by an action built from a SECOND, LATER read of that object",
+  "falsifiers": {
+    "F1 repair is inert (pre == post under a planted race)": "RAN, did not fire",
+    "F2 amend invents attribution on a clean commit": "RAN, did not fire",
+    "F3 amend alters tree/parent/paths": "RAN, did not fire"
+  },
+  "live_tree_trailer_at_run": "",
+  "probe": {
+    "controls_fired": {
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "controls_observed": {
+      "C1": [
+        "pre=",
+        "landed=Carries: ATTACKER-1"
+      ],
+      "C2": [
+        "unrepaired=",
+        "repaired=Carries: ATTACKER-1"
+      ],
+      "C3": {
+        "colane_in_committed_tree": false,
+        "parent_after": "eb619997d9ba0bcb11ae19f50877b5c6eabaca68",
+        "parent_before": "eb619997d9ba0bcb11ae19f50877b5c6eabaca68",
+        "tree_after": "5853ebf3eb2046c37bc056273c011aaae06c3ccd",
+        "tree_before": "5853ebf3eb2046c37bc056273c011aaae06c3ccd"
+      }
+    },
+    "rc": 0
+  },
+  "row": "H209",
+  "site1_commit_scoped_sh": {
+    "remedy": "score the LANDED commit (immutable) and amend",
+    "status": "FIXED",
+    "version": "v9"
+  },
+  "site2_commit_msg_hook": {
+    "commit_reads": "git commit --only (WORKING TREE)",
+    "index_paths_now": 0,
+    "notice_can_fire_now": false,
+    "notice_scores": "git diff --cached (SHARED INDEX)",
+    "status": "OPEN \u2014 filed, not touched (shared hook, live lanes)",
+    "verdict": "A15 \u2014 the control cannot fire on the path it was written for",
+    "worktree_paths_now": 306
+  }
+}

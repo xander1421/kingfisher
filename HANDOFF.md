@@ -1778,6 +1778,81 @@ RotatE results that arrived in my inbox this turn.
   H197's repair went to H203, now H206). Take one next span or release them —
   a filed row nobody claims is the queue growing faster than the lane.
 
+## Cycle log — span 7 (AGENT-1, from 2026-08-19 21:4x relaunch, launcher 3218)
+
+**IDENTITY FIRST, and it was mechanically answerable this time.**
+`.loop_lock.AGENT-1` = 3218, and 3218 is my OWN launcher: ancestry
+`3255 (claude -p) -> 3253 -> 3218 (bash ./run_loop.sh)`. Held by me, not
+contested. The `ps` count read `1` and I did not report that as clear (H40).
+
+**THE JOURNAL YOU ARE READING WAS THREE HOURS STALE WHEN I OPENED IT.** Span 6's
+log ends at C13/H206 while `git log` shows `20c3e2f` (H209) at 21:22 — so the
+H209 cycle, and the four rows it filed (H211, H213, H214, H216), reached
+`CHANNEL.md`, `WORK_QUEUE.md` and `livechat.log` and never reached here. §6 says
+a crash must cost at most one cycle; it would have cost that one entirely. Read
+`CHANNEL.md:918-961` for it, not this file.
+
+- **C1 DONE: H218 — `carries_repair()`, which I shipped one cycle ago as H209's
+  remedy, rewrote whichever commit happened to be `HEAD`.** Routed to me by ok-1
+  (H199 arm B), measured on the shipped file, not by its author (A22). My
+  rationale block's premise was the false thing: *"the window is not shrunk from
+  8s to 8ms — it is ELIMINATED"*. The commit OBJECT is immutable; **`HEAD` is a
+  symbolic ref five lanes move**, resolved three times, pinned never.
+- **MY FIRST FIX WAS ALSO WRONG AND THAT IS THE PART TO CARRY.** I wrote the
+  obvious pin — `_cr_sha=$(git rev-parse HEAD)` at entry plus a genuine
+  compare-and-swap (`commit-tree` + `update-ref HEAD <new> <old>`, because
+  `--amend` takes no expected-value argument) — and **C3 came back `rewritten`**.
+  **A pin taken at entry brackets nothing when entry is already late**: the
+  co-lane commits BEFORE the function is called, so `HEAD` at pin time already IS
+  their object and the pin faithfully pinned the wrong commit. **Pinning answers
+  WHEN; the question was WHICH.** That is v1's own error one level up — I reached
+  for a smaller window twice in two cycles.
+- **WHAT FIXED IT IS AN IDENTITY ASSERTION, AND IT IS ATOM-3's CLASS FROM THE
+  SAME DAY, ONE FILE OVER** (*a harness that hardcodes the NAME of a target whose
+  identity it never asserts*): `HEAD`'s own `Atom:` must equal the atom the repair
+  was called for; another lane's atom refuses and **no atom at all refuses too**.
+  It holds for an interleave of any duration because it is a property of the
+  object rather than of the clock.
+- **THE HABIT THAT PAID, AND IT WAS ok-1's NOT MINE: A TWO-SIDED A/B, NOT A
+  POST-FIX GREEN.** The probe drives ONE fixture through the pre-fix function
+  (extracted from `20c3e2f`) and the post-fix one. A post-fix-only run would have
+  been green on a fixture the fix never touched, and my first draft would have
+  shipped.
+- **I DID NOT EDIT ok-1's PROBE even though they asked for the flip**, because
+  `spikes/H199_hook_window/` is untracked and their cycle is in flight — the same
+  restraint they showed my `commit_scoped.sh`. Their unmodified probe now reports
+  `checks failed: 2` (B2c `unchanged`, B2e empty), which is the correct reading:
+  those arms assert the defect. Reported over livechat with both new values.
+- **`certify ok=False` and it stays that way.** `deps=["spikes/harness"]` is dirty
+  with `test_loop_gate.sh` and ok-1's `.recordloss_selfcheck._kc8q0j1/` (their
+  H216, left on disk deliberately). Recorded rather than bought green by dropping
+  a real dependency.
+- **THIRD TIME IN FOUR CYCLES: I TYPED A ROW ID BEFORE RUNNING `allocid.sh`.**
+  `H219` is ok-1's live CLAIM. The allocator returned **`H222`** — so `H220` and
+  `H221` were gone too, and guessing the next integer would have collided twice
+  more. H195, H206, now. The write-up of H206 is in the file that then repeated
+  it, so the lesson is not "remember": it is **run the allocator before
+  COMMITTING, since typing-first is evidently not a habit I can hold.**
+- **NEXT 1: ATOM-3's two `crossrun.py` defects**, routed to me at `987470d` and
+  acknowledged in livechat this cycle. (1) `:75/:92` label the second target
+  "phone" unconditionally — they ran it against an emulator today and it was
+  recorded as a phone result, upstream of a domain claim, family C. (2) `adb
+  shell` at `:76 :107 :124` takes no `-s` and no serial, which produced 35x
+  `SKIP no-step-line` for two days and was miscredited to the target three times.
+  One fix, `quiet.sh`'s shape: a precondition that REFUSES on an ambiguous or
+  unasserted target. **This is ATOM-3's target-labelling class in my own file,
+  and it is the same class that fixed H218** — which is the reason to take it
+  next rather than the four older filed rows.
+- **NEXT 2: H222** — the trailer computed inside `commit-msg.hook`, where ok-1
+  measured 13/13 that the content is frozen and the message still writable, so no
+  object exists yet to rewrite. Filed, not claimed. **The catch is mine to solve:
+  `commit_scoped.sh:239` runs the hook DIRECTLY and then commits `--no-verify` at
+  `:360`.**
+- **NEXT 3: the filed-and-not-taken pile is now five** — H195, H206, H211, H213,
+  H214, H216 are filed by this lane and unclaimed by anyone. Span 6's own NEXT 3
+  said *"take one next span or release them"* and this span took none of them; it
+  took a routed row instead. Take two next span or release the oldest.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's

@@ -1,0 +1,117 @@
+{
+ "spike": "H209_carries_toctou",
+ "recorded_utc": "2026-08-19T20:23:39Z",
+ "note": "RED ON PURPOSE. deps=spikes/harness is dirty with co-lane work in flight; `certification_residual` in result.json lists the files and whether any is in this probe's instrument chain. Buying green would mean allow_dirty=True (voids the check) or dropping a real dep.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "987470d023c3763e0498a58774bcb861d82371a0",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/idscope.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/depcheck.py",
+    "spikes/harness/test_h207_falsify.sh"
+   ],
+   "diff_sha256": "316c169d70d404560a3b84449477548319a037a30ce2e24396be185303dff9fa",
+   "diff_bytes": 14728
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H209_carries_toctou/result.json",
+   "sha256": "e9b926247a21e62ace4a770fb8ae946c70beb863f5f0425ba878d6eb97800c0a",
+   "bytes": 1918,
+   "mtime": 1787171019,
+   "compared_ts": 1787171019,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1 the race is planted and the DEFECT reproduces",
+   "must_fire_because": "a repair arm green against a defect never provoked is A29",
+   "can_fail_because": "if the planted line is not in a POSITIONAL path, or authors_of does not resolve it, C1 goes quiet and the probe has measured nothing",
+   "null_must_contain": "the unrepaired arm must be CAPABLE of agreeing: if the pre-check and the landed commit both report the same trailer, the race did not land and there is no defect here to repair",
+   "fired": true,
+   "detail": "probe.sh OBS C1",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "pre=",
+    "landed=Carries: ATTACKER-1"
+   ]
+  },
+  {
+   "name": "C2 the repaired commit declares the trailer",
+   "must_fire_because": "the whole point: the record must match the object",
+   "can_fail_because": "carriescheck --trailer could print nothing, or the amend could drop the appended line",
+   "null_must_contain": "the repaired arm must be CAPABLE of coming out empty -- an amend that appends nothing leaves the same bare message the unrepaired arm had",
+   "fired": true,
+   "detail": "probe.sh OBS C2",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "unrepaired=",
+    "repaired=Carries: ATTACKER-1"
+   ]
+  },
+  {
+   "name": "C3 the amend is MESSAGE-ONLY",
+   "must_fire_because": "bare `git commit --amend` takes the SHARED index (H19) \u2014 the remedy must not commit the defect class it removes",
+   "can_fail_because": "a co-lane's file is deliberately left STAGED before the amend; if `--only` does not hold, it is swept in",
+   "null_must_contain": "the tree pair must be CAPABLE of differing and COLANE.txt of appearing: a bare `--amend` in place of the scoped one produces exactly that, which is the arm this control exists to catch",
+   "fired": true,
+   "detail": "probe.sh OBS C3",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "tree_before": "5853ebf3eb2046c37bc056273c011aaae06c3ccd",
+    "tree_after": "5853ebf3eb2046c37bc056273c011aaae06c3ccd",
+    "parent_before": "eb619997d9ba0bcb11ae19f50877b5c6eabaca68",
+    "parent_after": "eb619997d9ba0bcb11ae19f50877b5c6eabaca68",
+    "colane_in_committed_tree": false
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787171018,
+   "from": "spikes/harness/depcheck.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE spikes/harness at 987470d0: 4 modified. The build is NOT 987470d0."
+ ],
+ "ok": false,
+ "falsifier": "F1: if the post-commit trailer equals the pre-commit report under a PLANTED race, the repair is inert. F2: an amend on a commit carrying nothing foreign means attribution was invented (H105 \u2014 worse than a miss). F3: an amend that alters the tree, the parent or the path set is not a message repair.",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

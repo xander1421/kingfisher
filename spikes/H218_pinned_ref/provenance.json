@@ -1,0 +1,118 @@
+{
+ "spike": "H218_pinned_ref",
+ "recorded_utc": "2026-08-19T20:57:56Z",
+ "note": "The dep subtree `spikes/harness` carries this row's own edit to `carries_repair.sh` plus co-lane work. If certify refuses on a dirty dep the refusal is CORRECT and stays recorded: this run is not the commit it names. Re-run after the commit lands for a clean record.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "936ecac08c09fa4f14bf43b7ae3b89d21dbc4637",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/carries_repair.sh",
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
+   ],
+   "diff_sha256": "eb59099c4ce5c1efc4123a1e203a643ade63286c0897fdcd60e76d07407b44bf",
+   "diff_bytes": 15884
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H218_pinned_ref/result.json",
+   "sha256": "0f54ee6cc78c64687740ff69b4967aab52cbcdf2368ac14c707820d604572aa9",
+   "bytes": 221,
+   "mtime": 1787173076,
+   "compared_ts": 1787173076,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_healthy_case_still_fires",
+   "must_fire_because": "the whole fix could be obtained by making the function do nothing at all, and every interleaved arm would then be green on a corpse",
+   "can_fail_because": "a refusal placed too early \u2014 before the trailer is computed \u2014 leaves an own-lane commit with no `Carries:` and C1 goes red",
+   "null_must_contain": "a healthy own-lane run producing no trailer",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "trailer_on_own_commit": "ATTACKER-1",
+    "atom_at_head": "AGENT-1"
+   }
+  },
+  {
+   "name": "C2_defect_reproduces_pre_fix",
+   "must_fire_because": "the fixture must actually stage the interleave. If the PRE-FIX function leaves lane B's commit alone here, the defect was never reproduced and the post-fix green measures nothing",
+   "can_fail_because": "a fixture whose second commit lands after the repair, or one whose foreign lines are absent so the trailer is empty and v1 returns early, would show `unchanged`",
+   "null_must_contain": "a pre-fix run leaving HEAD equal to lane B's sha",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pre_fix_head": "6f2294fce0fa7c77526417e90a1925f97357b94e",
+    "lane_b_sha": "b5c7182ce51ab67905b62ab5cc6fd8a729b97a59",
+    "outcome": "rewritten"
+   }
+  },
+  {
+   "name": "C3_post_fix_leaves_colane_commit_alone",
+   "must_fire_because": "the claim of this row is exactly this and nothing wider",
+   "can_fail_because": "dropping the identity assertion \u2014 the first v2 draft did, and this arm came back `rewritten`, which is how that draft was refuted",
+   "null_must_contain": "a post-fix run whose HEAD differs from lane B's sha",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "post_fix_head": "b5c7182ce51ab67905b62ab5cc6fd8a729b97a59",
+    "lane_b_sha": "b5c7182ce51ab67905b62ab5cc6fd8a729b97a59",
+    "outcome": "unchanged"
+   }
+  },
+  {
+   "name": "C7_compare_and_swap_primitive",
+   "must_fire_because": "`the function refused` can be true for the wrong reason. The swap rests on `git update-ref <ref> <new> <old>` rejecting a stale <old>, so that primitive is asserted directly, in BOTH directions",
+   "can_fail_because": "a git that ignored the expected-value argument would accept the stale one, and a broken invocation would refuse both \u2014 the second arm separates those",
+   "null_must_contain": "update-ref accepting a stale expected value",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "stale_expected_value": "refused",
+    "current_expected_value": "accepted"
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787173027,
+   "from": "spikes/harness/test_loop_gate.sh"
+  }
+ },
+ "problems": [
+  "DIRTY TREE spikes/harness at 936ecac0: 3 modified. The build is NOT 936ecac0."
+ ],
+ "ok": false,
+ "falsifier": "Either of two results would have refuted this row's claim, and both are arms rather than prose: (a) the post-fix run still rewriting the co-lane commit \u2014 C3 `rewritten`, which is what the FIRST v2 draft actually returned and why the identity assertion exists; or (b) the post-fix run refusing everything, including its own lane's commit \u2014 C1 empty, the fix obtained by killing the function. Stated before the run; both ran."
+}
