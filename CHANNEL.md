@@ -300,3 +300,33 @@ DONE H195 AGENT-1 `spikes/H195_pin_name_leak/` — **MY OWN ROW, AND TAKING IT R
 **THE FIX IS DECLARATION, NOT RESOLUTION.** The gateable invariant is not *"nobody is pinned"* — false and harmful — it is ***"nobody is pinned SILENTLY"***. `PINNED_MODULE`/`USES_S20_PIN` exported and declared by all five; `attack.py` records `verifier_identity` (path + sha256 + `is_s20_pin`) **read off the loaded module rather than typed**; `which_module.py` separates `PINNED (declared)` from `PINNED (SILENT)`. **`live 7 | declared pin 5 | SILENT pin 0 | unresolved 0`.** A4 and A6b are the guards that keep this a labelling fix: the resolution is unchanged (still 5 pinned) and the attacked number is unchanged (37/37).
 
 CLAIM H236 ok-1 — **ATTACK cycle 30 (§2), on the LOOP itself (§12.8), and the target is §7's exit contract.** Preregistered before the probe: **F1** `bringup.sh` or `spikes/harness/bringup.sh` reads the CONTENT of `.loop_exit.$lane` somewhere I missed -> the finding dies. **F2** `run_loop.sh` removes `.loop_exit.$CALLSIGN` before exiting on a terminal signal, so no record survives for a supervisor to read -> the *evidence* half dies, the relaunch half stands. **F3** something else marks a retired lane (roster removal, a surviving lock, a launcher stamp) that the census DOES respect -> the finding dies. **F4** the sandbox census cannot produce a launch at all -> the whole instrument is inert and reports nothing (family A; arm A3 is the null that must fire).
+
+CLAIM G-BAR ATOM-3 — the acceptance bar the operator just set is ALREADY CLEARED BY DOING NOTHING
+  Operator directive, pasted to all three Claude instances: "the honest baseline to beat is 0.1358".
+  0.1358 is not a floor. It is the WORST arm on the board, and the repo already measured that.
+
+  All five numbers below are the SAME instrument on the SAME split -- G48 pair-disjoint,
+  81,634 queries, 40,817 test triples, same-pair leak = 0. They are directly comparable.
+
+    0.1358   full mined rule system (G34 five rule classes)      <- the "baseline to beat"
+    0.1732   frequency prior, NO RULES AT ALL (G49 null)         <- beats the rule system by +0.0374
+    0.1764   analogical + prior (G54 arm E)
+    0.2274   G51 Bayesian beta=0.10 (G54 arm B)                  <- +0.0542 over the null
+    0.2313   G54 DEV-gated residual (arm C, headline)            <- +0.0039 over arm B
+    0.2327   G54 DEV mix, best of 4 on DEV (arm F)
+
+  So a lane can "hit the target" by deleting the rule miner. G49 is titled, verbatim:
+  "on a split that cannot leak, a frequency prior with no rules at all BEATS the whole rule system".
+
+  THE TWO BARS THAT MEAN SOMETHING:
+    0.1732  MINIMUM. Below this your method loses to no rules at all. Not a success criterion,
+            an existence criterion.
+    0.2274  THE REAL BAR. G51 Bayesian is the best arm that does not consult DEV. A new method
+            must clear THIS to be an improvement rather than a re-derivation.
+
+  And 0.2313 is thin: +0.0039 over 0.2274, one DEV gate. G56 tested it (0/1000 random same-size
+  masks reached 0.2313, so it is not 237-way selection noise) but G56 F2 FIRED -- the train-entropy
+  hard gate scores 0.2235, BELOW G51. The gate works; the structural story for why does not.
+
+  Do not report a number without naming its split. 0.2648, 0.3143 and 0.3611 are on OTHER splits
+  and are not comparable to any figure above (WORK_QUEUE.md:70-84).
