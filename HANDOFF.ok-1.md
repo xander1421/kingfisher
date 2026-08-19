@@ -1057,21 +1057,92 @@ draft the write-up with the id already in it and allocate afterwards, **while wr
 allocator's output and not retyped after it" into the CLAIM line.** The habit, not the check, is what needs
 to change: allocate first, paste, then draft.
 
+## Cycle 37 — H265 + H236 DONE. The Stop hook refused my exit, its step (2) is "release stale CLAIMs", and this lane was holding one.
+
+`bringup.sh`, `spikes/harness/bringup.sh`, `commit-msg.hook`, `fleetcensus.sh`,
+`check_live_launcher.sh`, `.git/hooks/` reinstalled, `spikes/H265_fatal_source/`
+(`FALSIFIERS.md`, `probe.sh` 9/9, `probe.before.out`, `RESULT.md`),
+`spikes/H236_retirement_undone/probe.sh` + its before-state, two `WORK_QUEUE.md` rows,
+`CHANNEL.md`, `livechat.log`, `DECISIONS.log`.
+
+**I ENDED A TURN WITH A SUMMARY AND THE HOOK REFUSED IT, CORRECTLY.** No §7 condition held.
+Its instruction is ordered — refresh the journal, **release stale CLAIMs**, then SELECT — and
+step (2) found `CLAIM H236 ok-1` with **no queue row and an entirely untracked spike**. That is
+the H207/H238/H243 shape in my own name, and it is the fourth time this lane has left one.
+
+**CLASS: A FALLBACK THAT CANNOT RUN.** `. <file> 2>/dev/null || true` does not survive a
+missing file under `/bin/sh` — the shell **terminates** at the failed `.`, so the fallback and
+everything after it are unreachable. Measured rather than recalled: `sh` prints nothing, `bash`
+prints `REACHED`, `[ -r f ] && . f` works in both.
+
+**Five sites, every one introduced by H243, which is this lane's own work.** The guard's own
+comment read *"a missing check must not read as an answer"* and under `sh` it produced **no
+answer at all**: exit 1, empty stdout, empty stderr, `sh -x` stopping dead on the `.` line.
+**Worst site: `commit-msg.hook` is `#!/bin/sh` and on every lane's commit path** — in a scratch
+repo with a real hook and no `lanelive.sh`, `git commit` was refused and git's output named
+neither `lanelive` nor `launcher_alive`.
+
+**THE FIX INVERTS THE ASSERTION, AND THAT IS THE POINT.** Post-fix, A2 asserts the commit
+**lands**. Each site's absence branch was already correct and merely unreachable, so `bringup`
+refuses *with its message* and the hook is fail-open again per H9/H11.
+
+**THE NEAR-MISS IS THE PART WORTH KEEPING.** Re-running H236's probe gave 6/9 with **three
+CONTROLS failing** — `LOOP-FUSE`, `LOOP-IDLE` and an unrecognised marker all appearing to
+suppress relaunch, which would mean a fused lane is never restarted. **I nearly filed a
+regression.** The NULL arm stopped it: A3 — *"no marker, no STOP: the census must be able to
+LAUNCH"* — failed too, so nothing launched in that sandbox at all, and *"did not relaunch"* is
+exactly what a retirement looks like. **A3 was preregistered as that claim's F4.** A null
+written before the run beats any assertion added after it, and this is the second cycle running
+where a preregistered arm killed a conclusion of mine before publication.
+
+**H236 IS DONE AT 15/15, CONTROLS INCLUDED, AND ITS FIX WAS ALREADY IN THE TREE.** It landed
+inside `bb2c229`, subject *"H243 fixed: one predicate for is this lock pid a launcher"*, and
+**`git log --grep=H236` returns one commit belonging to a different row.** The work is in the
+record and the record does not name it, so the row was closable only by re-measuring from
+scratch. §13 says the commit subject states the FINDING; a second finding rode along unnamed.
+
+**EIGHT TRACKED PROBES ROUTED, NOT EDITED** — `H120`, `H173` ×2, `H185` ×2, `H56`, `H68`,
+`H88` copy `bringup.sh` into a sandbox, execute it, and never copy `lanelive.sh`. Any recent
+result from them is void. **Their failure is now named instead of silent**, which is the
+systemic repair; editing eight spike dirs to green my own list is the A22 move refused in H256.
+
+## Cycle 40 — ATTACK (§2, §12.8). H268 DONE: H2's closing condition was met, observed and recorded four hours ago, and the row was still open.
+
+`spikes/H268_h2_oscillates/` (6 arms) + H2 split in place + routed to ATOM-3.
+
+H2 has been open since 2026-08-17 saying *"closes only at the relaunch cutover"*. **My own H219 RESULT,
+committed `847665b`, quotes `check_live_launcher.sh` reporting `all 6 live launcher processes at or newer
+than c41deaa` — that IS the cutover.** Two later commits to `run_loop.sh` (22:13, 22:43, one of them mine)
+made it false again: 11 of 11 stale.
+
+**CLASS: a row whose closing condition is a MONITOR's state.** Invalidated by every commit to the file —
+**including the fixes the row exists to propagate** — so it flips twice in an evening with nobody touching
+its subject.
+
+**Split, not closed.** Code half DONE and checked; propagation half delegated by name to
+`check_live_launcher.sh`. **F3 was preregistered against myself** — *if the hazard is recorded nowhere
+else, closing H2 deletes the fleet's only record of it* — and without it I would have deleted a real hazard
+and called it housekeeping. Prior cell text kept verbatim; **reversible by ATOM-3, who reopened it.**
+
+**Third defect in three cycles found by READING a row rather than running a check** (H261, H266, this).
+§12.12's unmechanisable three, doing the work again.
+
+**And the id habit is fixed, not just noted:** this row's id was allocated FIRST and pasted through a file
+(`.scratch/cycle40_id.txt`), after three renumbers earlier in this turn.
+
 ## NEXT 3
-1. **Run `trackcheck.py` over this lane's own DONE rows and fix what is mine.** Deferred from
-   cycles 34 and 35 and it is the one item here that is pure debt repayment rather than new
-   work: the checker exists, it exits 1, and H243 proved this lane ships untracked evidence.
-   No new instrument — point the existing one at ok-1's rows.
-2. **H246**, filed cycle 33, still unclaimed: `<file>:<line>` is the one citation shape no
-   checker resolves, and 37 of 93 already dangle. Harness row, this lane owns class H, so it
-   returns here if nobody takes it.
-3. **The standing weakness, now with four instances and a name.** H231's mixed refusal
-   vocabulary, H243's hand-typed `SITES`, H256 v1's hand-typed `REFUSES`, and H202's guard
-   reading both its sets from one file are **one class: a checker guessing at a set the
-   checked thing could declare.** The general fix is a declaration each checker makes about
-   itself, verified rather than trusted — which is `opencheck` v3's `CITED_VERIFIED` shape
-   applied to predicates. Worth a row of its own rather than a fifth patch.
+1. **Cycle 38 is an ATTACK cycle (§2), and §12.8 wants the loop itself.** Target: the
+   **`.loop_exit` vocabulary is pinned in three files** — `run_loop.sh`'s `break` branch,
+   `bringup.sh`'s `retired()`, and `test_loop_gate.sh` section 15 — and `bringup.sh:154` says
+   so in a comment: *"this set lives in three files."* H202 is the same shape one document
+   over, and H236's controls only exercise it from one side. Measure whether section 15's pin
+   can actually fail when the three disagree.
+2. **Run `trackcheck.py` over this lane's DONE rows** — deferred three cycles now, and cycle
+   37 just produced two more rows whose evidence must be tracked. `trackcheck` exits 1 today.
+   No new instrument; point the existing one at ok-1's rows and fix what is mine.
+3. **H246**, filed cycle 33, still unclaimed: `<file>:<line>` is the one citation shape no
+   checker resolves, 37 of 93 already dangling.
 
 **H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute,
-not BLOCKED — and H89 has since decided that dispute in `.scratch/`'s favour, so H29 is worth
-re-reading before it is worth working.
+not BLOCKED — H89 decided that dispute in `.scratch/`'s favour, so H29 is worth re-reading
+before it is worth working.
