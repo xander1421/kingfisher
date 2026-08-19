@@ -22,8 +22,8 @@
     },
     "filtered_mrr": {
       "direction": "maximize",
-      "target": 0.2274,
-      "min_acceptable": 0.1732,
+      "target": null,
+      "min_acceptable": null,
       "weight": 2.0,
       "gate_status": "WITHDRAWN_NOT_MET",
       "withdrawn_because": "PROGRAM.md:40 gates `filtered_mrr >= 0.2500 (Current: 0.2648)` — the bar is derived from the number it gates (ATOM-3's finding, AGENT-2's G48 row), and the evaluator reads spikes/G34_length1_and_constants/, the 70/15/15 SHUFFLE spike, which reports exactly 0.2648. So the gate compared the leak to itself and passed. Operator 2026-08-19: 'the graph-AI floors are withdrawn, not met.'",
@@ -68,15 +68,18 @@
         "0.2274": "G51 Bayesian beta=0.10 (G54 arm B) -- THE BAR",
         "0.2313": "DEV-gated residual (G54 arm C)",
         "0.2327": "DEV mix, best of 4 on DEV (G54 arm F)"
-      },
-      "why": "G102, ATOM-3 2026-08-19. BOTH numbers are on the LEAK-FREE G48 pair-disjoint split (81,634 queries, same_pair_leak=0), which is what eval_graph_ai.py now scores. They are NOT comparable to 0.2648/0.3143/0.3611, which are other splits. min_acceptable 0.1732 = the G49 frequency prior, a null with NO RULES AT ALL, on this exact split. It is an EXISTENCE criterion, not a success one: below it the mined system loses to having no rules. target 0.2274 = G54 arm B (G51 Bayesian beta=0.10), the best arm that never consults DEV, so a candidate must clear it to be an improvement rather than a re-derivation. THE CURRENT SYSTEM SCORES 0.1358 AND THEREFORE FAILS THIS GATE, BY DESIGN -- it passed before only because the evaluator was reading a leaked number (0.2648) that is 0.1358 honestly measured. Bars derived by ATOM-3, who also wrote the evaluator they gate: A22 says that is one party on both sides, so these want a second lane's eyes before anyone treats a PASS here as evidence."
+      }
     },
     "hits_at_10": {
       "direction": "maximize",
-      "target": 0.3662,
-      "min_acceptable": 0.2855,
+      "target": null,
+      "min_acceptable": null,
       "weight": 1.5,
-      "why": "G102, ATOM-3 2026-08-19. WAS 0.4/0.35, derived from the leaky 0.3929 -- the same provenance as the filtered_mrr floors the operator withdrew, left armed on this metric when they were removed from its sibling. Fixing the class, not the site (MISSION_LOOP 12.2). min_acceptable 0.2855 = G49 frequency null Hits@10 on the leak-free split. target 0.3662 = G54 arm B. Current system scores 0.2061 there and fails, which is the honest state. Same A22 caveat as filtered_mrr: one party wrote the evaluator and the bar."
+      "why": "G102, ATOM-3 2026-08-19. WAS 0.4/0.35, derived from the leaky 0.3929 -- the same provenance as the filtered_mrr floors the operator withdrew, left armed on this metric when they were removed from its sibling. Fixing the class, not the site (MISSION_LOOP 12.2). min_acceptable 0.2855 = G49 frequency null Hits@10 on the leak-free split. target 0.3662 = G54 arm B. Current system scores 0.2061 there and fails, which is the honest state. Same A22 caveat as filtered_mrr: one party wrote the evaluator and the bar.",
+      "gate_status": "WITHDRAWN_NOT_MET",
+      "withdrawn_because": "G102, ATOM-3 2026-08-19. Was 0.4 / 0.35, derived from the leaky 0.3929 — the same provenance as the filtered_mrr floors AGENT-2/AGENT-3 withdrew, and left ARMED on this metric when they were removed from its sibling. Withdrawn on the same grounds rather than re-set: fix the class, not the site (MISSION_LOOP 12.2). Its split null is 0.2855 (G49 frequency_null hits10, pair-disjoint) and the bar_rule on filtered_mrr applies unchanged — a bar is a margin over its own split's null, never a bare number.",
+      "null_baseline": 0.2855,
+      "null_baseline_source": "spikes/G49_frequency_null/null.json arms.frequency_null hits10"
     },
     "witness_bandwidth_savings_pct": {
       "direction": "maximize",
