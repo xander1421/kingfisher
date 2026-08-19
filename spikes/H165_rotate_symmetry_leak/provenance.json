@@ -1,0 +1,172 @@
+{
+ "spike": "H165_rotate_symmetry_leak",
+ "recorded_utc": "2026-08-19T15:30:04Z",
+ "note": "H165: cross-lane ATTACK on G91/H164 \u2014 reversed-triple leak vs geometric generalisation.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "17f827a35edd20a40fcafd64319299258b5b5b0e",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr",
+   "head": "17f827a35edd20a40fcafd64319299258b5b5b0e",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H165_rotate_symmetry_leak/result.json",
+   "sha256": "02a36f84a55a33b8781840083a4c654f58aa0774d9c407197ac69592d4a074c1",
+   "bytes": 3596,
+   "mtime": 1787153404,
+   "compared_ts": 1787153404,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_reproduces_G91",
+   "must_fire_because": "my re-run of G91's own train_rotate_wn must land on G91's published 0.3546 or nothing measured here is about G91",
+   "can_fail_because": "a different MRR, i.e. G91 is not deterministic under its own pinned seed and its number cannot be attacked or defended at all",
+   "null_must_contain": "mrr != 0.3546",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "my_mrr": 0.3546,
+    "g91_mrr": 0.3546
+   }
+  },
+  {
+   "name": "C2_partition_is_exhaustive",
+   "must_fire_because": "leaked + clean must cover all 6,268 queries, and a leaked TRIPLE must contribute exactly 2 leaked QUERIES (head and tail)",
+   "can_fail_because": "an off-by-one in the leak flag or a query dropped by the eval loop",
+   "null_must_contain": "partition sizes not summing to 6268",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "queries": 6268,
+    "leaked_q": 2172,
+    "clean_q": 4096,
+    "leaked_triples": 1086
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001/F002 digests unchanged from G91",
+   "can_fail_because": "a pin of the wrong length, i.e. edited",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_clean_drf_still_strong",
+   "must_fire_because": null,
+   "can_fail_because": "MRR on non-leaked _derivationally_related_form queries >= 0.50",
+   "null_must_contain": "clean _drf MRR >= 0.50",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "drf_clean_mrr": 0.0014,
+    "drf_leaked_mrr": 0.9998,
+    "n_clean": 126
+   },
+   "refutes": "that _derivationally_related_form's 0.9412 MRR is reversed-triple memorisation",
+   "fires_when": "MRR on non-leaked _derivationally_related_form queries >= 0.50",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_partition_explains_nothing",
+   "must_fire_because": null,
+   "can_fail_because": "MRR(leaked) - MRR(clean) < 0.10",
+   "null_must_contain": "gap < 0.10",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_leaked": 0.9831,
+    "mrr_clean": 0.0214,
+    "gap": 0.9617
+   },
+   "refutes": "that the leaked/clean split accounts for RotatE's WN18RR score",
+   "fires_when": "MRR(leaked) - MRR(clean) < 0.10",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_tie_breaking_also_inflates",
+   "must_fire_because": null,
+   "can_fail_because": "|MRR_optimistic - MRR_pessimistic| >= 0.01",
+   "null_must_contain": "tie-rule swing >= 0.01",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_optimistic": 0.3546,
+    "mrr_pessimistic": 0.3546,
+    "tied_competitors": 30
+   },
+   "refutes": "that G91's optimistic tie rule is immaterial to its headline number",
+   "fires_when": "|MRR_optimistic - MRR_pessimistic| >= 0.01",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if non-leaked _derivationally_related_form queries score as well as leaked ones, RotatE's WN18RR result is geometry and this attack is withdrawn"
+}

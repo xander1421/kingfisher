@@ -1,0 +1,161 @@
+{
+  "spike": "H165",
+  "attacks": [
+    "G91",
+    "H164"
+  ],
+  "timestamp": "2026-08-19 16:30:04",
+  "elapsed_sec": 853.67,
+  "reproduction": {
+    "my_mrr_optimistic": 0.3546,
+    "g91_published_mrr": 0.3546,
+    "reproduced": true
+  },
+  "leak_partition": {
+    "definition": "test triple (s,p,o) is LEAKED iff (o,p,s) is in train.txt",
+    "leaked_triples": 1086,
+    "test_triples": 3134,
+    "leaked_queries": 2172,
+    "clean_queries": 4096,
+    "mrr_leaked": 0.9831,
+    "mrr_clean": 0.0214,
+    "gap": 0.9617,
+    "hits1_leaked": 0.9774,
+    "hits1_clean": 0.0146
+  },
+  "derivationally_related_form": {
+    "queries_leaked": 2022,
+    "queries_clean": 126,
+    "mrr_leaked": 0.9998,
+    "mrr_clean": 0.0014
+  },
+  "tie_breaking": {
+    "mrr_optimistic_G91_rule": 0.3546,
+    "mrr_pessimistic": 0.3546,
+    "swing": 0.0,
+    "tied_competitors_total": 30
+  },
+  "per_relation": {
+    "_hypernym": {
+      "test_triples": 1251,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 2502,
+      "mrr": 0.0122,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0122
+    },
+    "_derivationally_related_form": {
+      "test_triples": 1074,
+      "reverse_in_train": 1011,
+      "leak_rate": 0.9413,
+      "queries": 2148,
+      "mrr": 0.9412,
+      "mrr_leaked": 0.9998,
+      "mrr_clean": 0.0014
+    },
+    "_instance_hypernym": {
+      "test_triples": 122,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 244,
+      "mrr": 0.0959,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0959
+    },
+    "_also_see": {
+      "test_triples": 56,
+      "reverse_in_train": 34,
+      "leak_rate": 0.6071,
+      "queries": 112,
+      "mrr": 0.4027,
+      "mrr_leaked": 0.6628,
+      "mrr_clean": 0.0006
+    },
+    "_member_meronym": {
+      "test_triples": 253,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 506,
+      "mrr": 0.0404,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0404
+    },
+    "_synset_domain_topic_of": {
+      "test_triples": 114,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 228,
+      "mrr": 0.0265,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0265
+    },
+    "_has_part": {
+      "test_triples": 172,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 344,
+      "mrr": 0.0178,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0178
+    },
+    "_member_of_domain_usage": {
+      "test_triples": 24,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 48,
+      "mrr": 0.0082,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0082
+    },
+    "_member_of_domain_region": {
+      "test_triples": 26,
+      "reverse_in_train": 0,
+      "leak_rate": 0.0,
+      "queries": 52,
+      "mrr": 0.0105,
+      "mrr_leaked": null,
+      "mrr_clean": 0.0105
+    },
+    "_verb_group": {
+      "test_triples": 39,
+      "reverse_in_train": 38,
+      "leak_rate": 0.9744,
+      "queries": 78,
+      "mrr": 0.8799,
+      "mrr_leaked": 0.903,
+      "mrr_clean": 0.0001
+    },
+    "_similar_to": {
+      "test_triples": 3,
+      "reverse_in_train": 3,
+      "leak_rate": 1.0,
+      "queries": 6,
+      "mrr": 0.0171,
+      "mrr_leaked": 0.0171,
+      "mrr_clean": null
+    }
+  },
+  "controls": {
+    "C1_reproduces_G91": {
+      "ok": true
+    },
+    "C2_partition_is_exhaustive": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_clean_drf_still_strong": {
+      "fired": false
+    },
+    "F2_partition_explains_nothing": {
+      "fired": false
+    },
+    "F3_tie_breaking_also_inflates": {
+      "fired": false
+    }
+  }
+}
