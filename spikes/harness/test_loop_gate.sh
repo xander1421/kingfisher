@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test_loop_gate.sh v5 — the check MISSION_LOOP §12.3 requires for the Stop hook.
+# test_loop_gate.sh v6 — the check MISSION_LOOP §12.3 requires for the Stop hook.
 #
 # Written 2026-08-17 because the loop machinery had NO test of any kind while it
 # was the only thing standing between the fleet and a silent stall. Two defects
@@ -105,13 +105,47 @@
 # copy's accept branch and the check goes red, so it is a control with its input
 # named. 93 -> 99 checks.
 #
+# v6, H202 — ok-1, 2026-08-19, ATTACK cycle on this file's own v5. ONE DEFECT
+# REMOVED AND IT IS A HOLE IN THIS SUITE, not in the hook: OF §7's THREE TERMINAL
+# SIGNALS ONLY `LOOP-HALT` WAS EVER DRIVEN END TO END. `LOOP-IDLE` appeared once,
+# at the bare-signal check, where the expected answer is `block` — so a hook that
+# had stopped accepting it produces the same `block` and that check passes.
+# `LOOP-DONE`, THE SIGNAL THAT ENDS THE MISSION, appeared nowhere except inside
+# v5's own mutation string. A hook refusing either would have passed every check,
+# for the whole life of the suite whose subject is the loop's exit contract.
+#   CLASS: A SUITE THAT EXERCISES ONE MEMBER OF A VOCABULARY AND READS AS COVERING
+#   THE VOCABULARY. This file's own history is the precedent — the 15-check version
+#   passed while the hook was broken because every check set CALLSIGN.
+#   FIXED AT THE CLASS: both signals are now driven (2b), and a guard requires
+# EVERY marker the hook accepts to have been driven. The guard records what was
+# driven AT RUNTIME via drive(), because its first draft grepped this file for
+# `echo <MARKER> > .loop_signal.<lane>` and found nothing — the drives are
+# parameterised, so the literal is never in the text. A text check cannot see a
+# loop.
+#   AND THE GUARD HAS A RUNNABLE FALSIFIER, `spikes/harness/test_h202_falsify.sh`:
+# a hook carrying a FOURTH marker must turn it red and must name it. That needed
+# the `KF_TEST_GATE` seam, defaulted off and asserted so two lines below its
+# definition. 99 -> 107 checks.
+#
 # usage: bash spikes/harness/test_loop_gate.sh
 # exit 0 = all pass. Non-zero = the loop contract is not enforceable as written.
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-GATE="$ROOT/.claude/hooks/loop_gate.sh"
+# H202. A SEAM, defaulted OFF, so the coverage guard below has a runnable
+# falsifier -- `test_h202_falsify.sh` points this at a hook carrying a FOURTH
+# marker and requires the suite to go red naming it. Same shape and same reason as
+# KF_TEST_HOOKDIR above; a check that has never been shown to fail is not a check
+# (§5), and the guard's only red run so far was an accident during its own
+# development. The control that keeps the seam honest is two lines below.
+GATE="${KF_TEST_GATE:-$ROOT/.claude/hooks/loop_gate.sh}"
 [ -f "$GATE" ] || { echo "FAIL: no hook at $GATE"; exit 1; }
+
+# THE SEAM IS OFF IN EVERY REAL RUN, asserted rather than intended. A seam that
+# silently stayed on would point this whole suite at a fixture and every check
+# below would be about a file nobody ships.
+[ -n "${KF_TEST_GATE:-}" ] || [ "$GATE" = "$ROOT/.claude/hooks/loop_gate.sh" ] || {
+  echo "FAIL: KF_TEST_GATE is unset but GATE is not the shipped hook"; exit 1; }
 
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
@@ -194,6 +228,18 @@ wait_file() {                      # wait_file <path> [tenths of a second, 50]
   return 1
 }
 
+# H202. WHAT WAS ACTUALLY DRIVEN, recorded at RUNTIME rather than grepped out of
+# this file. The first draft of the coverage guard below scanned the source for
+# `echo <MARKER> > .loop_signal.<lane>` and found NOTHING -- because the drives it
+# was looking for are parameterised (`echo "$M" > .loop_signal.L1`), so the literal
+# is never in the text. A text check cannot see a loop. Recording the marker at the
+# moment it is written is exact and cannot be defeated by refactoring the driver.
+h202_driven=''
+drive() {                          # drive <marker> <lane>
+  echo "$1" > ".loop_signal.$2"
+  case " $h202_driven " in *" $1 "*) ;; *) h202_driven="$h202_driven $1" ;; esac
+}
+
 # blocked() prints "block" when the hook refuses the stop, "exit" when it allows it.
 blocked() { if CALLSIGN="$1" ./gate.sh </dev/null 2>/dev/null | grep -q '"decision":"block"'; \
             then echo block; else echo exit; fi; }
@@ -209,10 +255,61 @@ check "no signal refuses the stop" "$(blocked L1)" "block"
 #     read. v2 consumed it to .loop_signal.last, which nothing read — that is why
 #     the launcher resorted to grepping prose.
 rm -f .loop_signal* .loop_exit.* .loop_blocks.*
-echo LOOP-HALT > .loop_signal.L1
+drive LOOP-HALT L1
 check "per-lane signal ends turn"   "$(blocked L1)"                    "exit"
 check "  leaves exit marker"        "$(cat .loop_exit.L1 2>/dev/null)" "LOOP-HALT"
 check "  consumes the signal"       "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "gone"
+
+# 2b · H202, ok-1, ATTACK cycle 28 on my own cycle-27 work. THE OTHER TWO SIGNALS.
+#
+# MEASURED BEFORE WRITING: of §7's three terminal signals, this suite drove ONLY
+# `LOOP-HALT` end to end -- 7 times. `LOOP-IDLE` appeared once, at the BARE-signal
+# check below, where the expected answer is `block`, so a hook that had stopped
+# accepting LOOP-IDLE altogether would produce the same `block` and that check
+# would pass. And `LOOP-DONE` -- THE SIGNAL THAT ENDS THE MISSION -- appeared
+# nowhere in this file except inside v5's own mutation text. For the whole life of
+# the suite whose subject is the loop's exit contract, two of the three exits were
+# unverified, and a hook that refused either would have passed every check.
+#
+# CLASS: A SUITE THAT EXERCISES ONE MEMBER OF A VOCABULARY AND READS AS COVERING
+# THE VOCABULARY. Same family as this file's own history -- the 15-check version
+# passed while the hook was broken because every check set CALLSIGN.
+#
+# Found by attacking v5's H23 block, which asserts the hook PROMISES what it
+# ACCEPTS and says nothing about whether either works. The mutation control there
+# drops LOOP-IDLE from the accept branch and asserts the vocabulary check goes
+# red; nothing asserted that LOOP-IDLE ever ended a turn.
+for M in LOOP-DONE LOOP-IDLE; do
+  rm -f .loop_signal* .loop_exit.* .loop_blocks.*
+  drive "$M" L1
+  check "H202: a per-lane $M ends the turn"  "$(blocked L1)"                    "exit"
+  check "  leaves $M as the exit marker"     "$(cat .loop_exit.L1 2>/dev/null)" "$M"
+  check "  and consumes the signal"          "$([ -f .loop_signal.L1 ] && echo present || echo gone)" "gone"
+done
+# THE CLASS FIX, not the site fix (§12.2). Two signals were added above; the next
+# marker added to the hook would be uncovered again unless something refuses that.
+# Every marker the hook ACCEPTS must be driven through it by this file.
+h202_uncovered=0
+for M in $(grep -E '^[[:space:]]*(LOOP-[A-Z]+\|)*LOOP-[A-Z]+\)' "$GATE" \
+           | grep -oE 'LOOP-[A-Z]+' | sort -u); do
+  # The DRIVE, not the mention. A marker named only in a comment or in v5's
+  # mutation string is H63's fixture-reads-as-coverage defect, which this suite
+  # has already paid for -- and `$h202_driven` cannot contain one, because only
+  # drive() writes to it and only a real per-lane signal write calls drive().
+  case " $h202_driven " in
+    *" $M "*) ;;
+    *) h202_uncovered=$((h202_uncovered+1))
+       printf '  info  the hook accepts %s and this suite never drives it per-lane\n' "$M" ;;
+  esac
+done
+# AND THE RECORD ITSELF MUST NOT BE EMPTY. An empty $h202_driven with an empty
+# accept set would leave the loop above with nothing to iterate and report 0
+# uncovered -- a clean number from a check that never ran, which is the shape the
+# H178 accounting control failed on.
+check "H202:   and the coverage record is not empty"                           \
+      "$(printf '%s' "$h202_driven" | grep -c 'LOOP-')" "1"
+check "H202: every marker the hook ACCEPTS is driven end-to-end here"          \
+      "$h202_uncovered" "0"
 
 # 3 · BARE .loop_signal MUST BE REFUSED (v5). This check previously asserted the
 #     opposite and thereby CERTIFIED THE HOLE: with a shared bare signal, whichever

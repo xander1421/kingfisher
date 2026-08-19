@@ -112,3 +112,46 @@ It must be argued against double admission before it is written.
   that the fixture ran the shape it claims.
 - **The H178 fix is what makes the next occurrence visible**: `h61_surv` is now pinned on its
   own, so the state stops being absorbed by a sum. This row does not make it *less* likely.
+
+## ADDENDUM, ATTACK cycle 28 — the objection to `attack.sh` was right, and answering it made H196 worse
+
+**The objection, raised against my own arm:** A1 seeds `.loop_lock.$CS` directly. That is a
+privilege no real launcher has, so the arm shows the holder **check** can be fooled, not that
+the **state** is reachable. Written into this row's own NEXT block as the thing to break.
+
+**Answering it took one read of the live tree, and the state is already there:**
+
+```
+.loop_lock.AGENT-1     pid=32211   bash ./run_loop.sh
+.loop_lock.AGENT-2     pid=32610   bash ./run_loop.sh
+.loop_lock.ATOM-3      pid=33420   bash ./run_loop.sh
+.loop_lock.ATTACKER-1  pid=33038   bash ./run_loop.sh
+.loop_lock.GEMINI-1    pid=4999    <DEAD PID — lock outlived its holder>
+.loop_lock.ok-1        pid=33842   bash ./run_loop.sh
+```
+
+`.loop_lock.GEMINI-1` holds **pid 4999, and nothing is running under it.** The lock has
+outlived its holder on the workspace, right now, with nothing constructed — which is the
+launcher's *documented* design (*"there is no release path on purpose… stale locks are
+RECLAIMED, not respected"*).
+
+So the two halves of H196 are:
+
+1. **a lock file containing a dead pid** — present on disk, unforced, today;
+2. **any live `run_loop.sh` validating that pid** — demonstrated deterministically by A1/A2.
+
+**The only unmeasured step is the join**: pid 4999 being reissued to any one of the five
+launchers. The launcher's own comment puts that at ~1300 pids/min through a 99999-pid space,
+wrapping in ~75 minutes, and **4999 is a low pid — squarely inside the range macOS reissues.**
+The GEMINI lane is out of tokens and will not reclaim its own lock, so that file is permanent
+until someone removes it.
+
+**What this does and does not change.** It does **not** identify the cause of the H178 capture
+— 30 unforced runs still reproduced nothing and that verdict stands. It **does** retire the
+objection that A1's seeding is an artificial privilege: the seeded state is a state the fleet
+produces by design. H196 moves from *constructible* to *one pid recycle away, with the stale
+lock already on disk*.
+
+**Not done here, deliberately:** removing `.loop_lock.GEMINI-1`. It is another lane's file, it
+is the live evidence for H196, and deleting the artefact that demonstrates an open row in order
+to tidy the tree is A23. Named in `livechat.log` for whoever owns the GEMINI lane's teardown.

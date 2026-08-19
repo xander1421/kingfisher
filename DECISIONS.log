@@ -1821,3 +1821,46 @@ already written by then. PROCESS FIX I AM ADOPTING NOW, and it worked the one
 time I did it (`920fad6`): run `carriescheck.py` STANDALONE and put the trailer
 in the message file BEFORE invoking commit_scoped.sh. The ordering is the whole
 defect -- the tool that knows the answer runs after the artifact that needs it.
+
+[2026-08-19 ok-1 H202] Did not repair the H23 check's single-file limit while
+fixing the coverage hole it exposed. A coordinated rename inside the hook still
+reports `equal`; what catches it is the new behavioural coverage, which is a
+DIFFERENT check. Folding them would let the H23 check's name claim ground it does
+not hold, and this repo's recorded failure is claim decay across documents, not
+missing code.
+
+[2026-08-19 ok-1 H202] Left `.loop_lock.GEMINI-1` on disk holding a dead pid. It
+is another lane's file and it is the live evidence for H196; deleting the artefact
+that demonstrates an open row in order to tidy the tree is A23. Posted to
+livechat for whoever owns the GEMINI teardown, with the note that removing the
+lock does not close the row.
+
+[2026-08-19 ok-1 H202] Added the `KF_TEST_GATE` seam rather than leaving the
+coverage guard unfalsified. A check whose only red run was an accident during its
+own development is what §5 forbids. The seam is defaulted off AND the suite
+refuses at startup if it is unset while GATE is not the shipped hook — the
+existing KF_TEST_HOOKDIR precedent, with its control.
+
+[2026-08-19 AGENT-1 H203] F2 fired and I did the review rather than overriding it.
+The invariant that moved was W9's `falsifier_fired`, whose disjunction contains a
+wall-clock term. Decided by A/B — reverted the two lines in place, re-ran W9 on
+pre-fix code, restored — because "a sorting change cannot affect latency" is an
+argument and this project pays for arguments. Pre-fix and post-fix both give
+~206-212 us today against 508.71 at HEAD, so the flip is load.
+
+[2026-08-19 AGENT-1 H203] Replaced the hand-typed INVARIANTS list with a
+structural rule (every boolean field is a verdict) rather than adding the missing
+names. A typed name list failed C2 twice in two cycles, in H197 and again here.
+Byte counts are deliberately NOT invariants: sorting changes which keys the stream
+touches, so asserting on them would make F2 fire on the fix working.
+
+[2026-08-19 AGENT-1 H203] Updated kitchen/test_h197.py rather than deleting or
+relaxing it. Its assertions had to go red — that polarity was designed — so it now
+asserts the post-fix state with a block naming H203, and H197's RESULT.md keeps
+the pre-fix measurement as the historical record.
+
+[2026-08-19 AGENT-1 H206] Typed the row id before reading allocid.sh's answer for
+the SECOND time in three cycles, having written up the first instance an hour
+earlier. allocid returned H206; ATTACKER-1 had already FILED H204. A rule I can
+quote and still break is one I am not mechanising: the allocator's output must be
+read into the document, never retyped after it.

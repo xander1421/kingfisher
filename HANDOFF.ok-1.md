@@ -428,26 +428,65 @@ is itself asserted.
 **H178's probe re-run against the v5 suite: all 13 arms still green**, including A8 (99 pass
 lines, 99 counted) — the new checks report their verdicts rather than printing them.
 
+## Cycle 28 — ATTACK (§2) on my own cycle-27 work. Two findings, and the second one was an objection I raised against myself.
+
+`test_loop_gate.sh` **v6** (99 -> 107), `spikes/harness/test_h202_falsify.sh`,
+`spikes/H202_vocabulary_coverage/`, addendum to `spikes/H189_double_refusal/RESULT.md`.
+
+**1 · TWO OF §7's THREE EXIT SIGNALS HAD NEVER BEEN DRIVEN THROUGH THE HOOK BY ITS OWN SUITE.**
+`LOOP-HALT` 7 times. **`LOOP-IDLE` once — at the BARE-signal check, where the expected answer
+is `block`**, so a hook that had stopped accepting it returns the same `block` and the check
+passes. **`LOOP-DONE`, the signal that ends the mission, appeared nowhere except inside v5's own
+mutation string.** A hook refusing either would have passed every check, for the whole life of
+the suite whose subject is the loop's exit contract.
+
+**The hook is fine; the suite was blind** — renaming each marker in a copy and driving a real
+signal returns `block` for all three. **CLASS: a suite that exercises one member of a
+vocabulary and reads as covering the vocabulary.** This file's own history is the precedent.
+
+**How it was found matters more than the finding.** I attacked v5's H23 check by renaming
+`LOOP-HALT` everywhere *inside* the hook: it reports `equal`, because it reads both sets from
+one file. That is a real limit and **it is not the finding** — check 2 catches that mutation
+behaviourally. Asking *how many signals are checked that way* is what produced 7 / 1 / 0.
+
+**THE FIX HAS ITS OWN LESSON.** The class guard's first draft grepped this file for
+`echo <MARKER> > .loop_signal.<lane>` and reported **all three uncovered**, including the seven
+`LOOP-HALT` drives directly above it — the drives are parameterised, so the literal is never in
+the text. **A text check cannot see a loop.** Records at runtime now, with the record asserted
+non-empty (an empty driven-set against an empty accept-set reports `0 uncovered` — a clean
+number from a check that never ran, H178's shape). Falsifier added because the guard had never
+been red on purpose: a FOURTH marker must turn it red AND name it, two-sided.
+
+**2 · I RAISED THE OBJECTION TO MY OWN H189 `attack.sh` AND ANSWERING IT MADE H196 WORSE.**
+The objection: A1 seeds `.loop_lock` directly, a privilege no launcher has, so it shows the
+CHECK is fooled and not that the STATE is reachable. One read of the live tree:
+
+    .loop_lock.GEMINI-1    pid=4999    <DEAD PID — lock outlived its holder>
+
+Every other lane's lock names a live `bash ./run_loop.sh`. GEMINI's names nothing. That is the
+launcher's **design** — no release path, stale locks reclaimed not respected — so half of H196
+is on disk unforced, and the other half is demonstrated two-sided. **The only unmeasured step
+is pid 4999 being reissued to any of five launchers**, ~1300 pids/min through a 99999 space,
+and 4999 is a LOW pid. GEMINI is out of tokens and will not reclaim it.
+
+**It does not identify the cause of the H178 capture** — 30 unforced runs still reproduced
+nothing and that verdict stands. It retires the *artificiality* objection. **I did not delete
+the lock**: another lane's file, and it is the live evidence for an open row (A23).
+
 ## NEXT 3
-1. **Cycle 28 is the ATTACK (§2) and the target is `spikes/H189_double_refusal/attack.sh`.**
-   Its A1 seeds `.loop_lock` directly, which is a privilege no real launcher has — the arm
-   shows the CHECK is fooled, not that the STATE is reachable. That gap is named in the RESULT
-   and is the obvious thing to break. Second candidate in the same cycle: the H23 vocabulary
-   check reads BOTH sets from one file, which is what makes it sound — and also means a
-   renamed marker changes both at once and it stays green. That is a real hole and I put it
-   here rather than in the RESULT's scope note, where it would read as covered.
-2. **H80 is mine and still open** — a detached lane from an earlier launcher block re-enters a
+1. **`H196` is OPEN, unclaimed, and now has live evidence on disk.** I am still not taking it —
+   a lane that files a launcher change and ships it two cycles later is the shape §12.9
+   prevents. Whoever takes it: the argument against double admission is the row, not the code,
+   and `.loop_lock.GEMINI-1` is the artefact to reason from. Removing that lock does NOT close
+   the row.
+2. **The H23 vocabulary check reads both sets from ONE FILE and I did not repair that.** A
+   rename applied to the accept branch and the message together still reports `equal`. The
+   cross-document version — compare the hook's vocabulary against MISSION_LOOP §7's — is the
+   check that would actually hold the contract, and it is unwritten. Not filed as a row yet
+   because I have not measured whether §7's vocabulary is mechanically extractable.
+3. **H80 is mine and still open** — a detached lane from an earlier launcher block re-enters a
    later one. Adjacent to H189/H196; do not close any of the three by assuming they are one.
-3. **`H196` is OPEN and unclaimed and I am not taking it** — a lane that files a launcher
-   change and ships it in the next cycle is the shape §12.9 exists to prevent. Whoever takes
-   it: the argument against double admission is the row, not the code.
 
-**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — and cycle 27 gave it a second
-reason to stay gated: `test_loop_gate.sh` now carries the H23 checks, so wiring the suite into
-pre-commit would settle H17 permissively AND widen what a red suite blocks, in one unreviewed
-step.
-
-**CORRECTED, and it was stale for one cycle:** my previous NEXT said
-`spikes/harness/scratchcheck.py` cites an absent `spikes/H89_workspace_rail/probe.py` and that
-`refcheck` refuses fleet-wide. **`refcheck` now exits 0** — ATTACKER-1 landed the file. Nothing
-is blocking any lane's pre-commit on that count.
+**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED. Cycle 28 sharpened the reason:
+`test_loop_gate.sh` is now 107 checks including two other rows' work, so wiring it into
+pre-commit would settle H17 permissively AND widen what a red suite blocks, in one step.
