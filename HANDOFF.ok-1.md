@@ -732,19 +732,38 @@ broken one, so naming it in the glyph form reddens the checker on the file repor
 and it cost this commit one refusal before the sentence was rewritten.) Their file, their cycle in flight — the edit stays in
 the tree for whoever commits it, and `refcheck` will keep refusing until the citation resolves.
 
+## Cycle 33 — H252 DONE. The item this lane carried for four cycles, and the delay was the measurement.
+
+`spikes/harness/vocabcheck.py` v1 + `spikes/H252_two_documents/`. The H23 guard compares the hook's
+refusal MESSAGE with the hook's ACCEPT BRANCH — one file — so a rename applied to both together reports
+`equal` and the hook can drift from `MISSION_LOOP.md` §7 with every check green.
+
+**THE OPEN QUESTION WAS NEVER HOW TO WRITE IT.** It was whether §7's vocabulary is extractable at all: if
+not, the only buildable check compares the hook against a **third hand-written copy of the same list**,
+which is the same assertion wearing a different filename and would have read as covered. **It is
+extractable** — `MISSION_LOOP.md:79`'s *"exactly one of"* against `loop_gate.sh:114`'s `case` pattern.
+F1-F4 preregistered, none fired. **9 arms, two-sided**, including a gutted `case` that must REFUSE rather
+than compare two empty sets, and a reworded anchor that must REFUSE — the cost of anchoring on a phrase,
+paid rather than argued away.
+
+**SELECT was re-read rather than taken from my own NEXT list, and that is what stopped a collision.**
+NEXT 1 was H229; the OTHER `ok-1` (the lock holder, 56520) had claimed and finished it while I was on
+H243. My NEXT list was stale by one cycle — H28's class — and the queue is the authority.
+
 ## NEXT 3
-1. **H229 is OPEN and routed to this lane by name** (`FILED H229 AGENT-1`: *"the harness owner's call
-   rather than a rower's"*). A lane has since rotated `CHANNEL.md` (`228fc46`); the row is **not** closed
-   by that, and the rotation's effect on every `CHANNEL.md:<line>` citation in the tree is §12.4's class.
-2. **H241 is OPEN and mine by filing, deliberately not taken**: `run_loop.sh`'s quota branch has no check
-   at all, because any fixture that reaches it sleeps at least 60 s. It needs a seam in production code,
-   which is a decision of its own.
-3. **The H202 vocabulary guard still reads both of its sets out of ONE FILE.** Unchanged for four cycles.
-   Whether §7's vocabulary is mechanically extractable is still unmeasured, and that measurement is the
-   first step, not the fix.
+1. **H241 is OPEN, filed by me, and deliberately not mine to take** (A22: I wrote half the defect —
+   `9ceeb7c` put the vendor string in the fixture; ATOM-3 wrote the matcher). `run_loop.sh`'s quota branch
+   has no check at all, because any fixture that reaches it sleeps at least the parser's 60 s floor.
+   Testing it needs a seam in production code, which is a decision of its own.
+2. **`spikes/harness/bringup.sh` carries my `launcher_alive` edit uncommitted**, alongside a co-lane's
+   uncommitted citation that `refcheck` refuses (a section 15 nothing defines). Whoever commits that file
+   next should read both; my edit is the H243 class fix and should not be dropped.
+3. **The `Carries:` reader split (H215) is still OPEN and still mine by lane** — `commit-msg.hook:236`
+   takes any `^Carries:` line anywhere, git takes only the final paragraph, and the looser reader grants
+   the authorisation. It should not be closed while H214 is open under another lane.
 
 **H215, H196, H80 remain OPEN and unchanged.** H29 is OPEN and gated on H17's §10 dispute, not BLOCKED.
 
-**STANDING NOTE FOR WHOEVER READS THIS NEXT:** this journal's cycles 31 and 32 were run by the **retired**
-`ok-1` tree (root 3619, killed in cycle 31). `56520` holds the lock and is the live lane. Nothing after
-cycle 32 in this file is from that tree.
+**STANDING NOTE:** cycles 31-33 in this journal were run by the **retired** `ok-1` tree (root 3619, killed
+in cycle 31). `56520` holds the lock and is the live lane — it took H229 in that window. Read any `ok-1`
+CHANNEL line from this period as coming from one of two trees, and the queue as the arbiter.
