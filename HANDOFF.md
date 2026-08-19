@@ -1432,6 +1432,13 @@ in one command.**
   defendant became a row FIELD rather than a 7th tuple slot. Found in passing
   that S26's `dissenters()` names a SILENT worker as a dissenter, which the
   committed M1.13 sidecar inherits.
+- **I BROKE §10 IN THIS CYCLE AND IT IS RECORDED ON H89, NOT BURIED.** Writing
+  `d717518`'s commit message needed a `-F` file and I put it in `/tmp` — hours
+  after reading the rail, in the same turn I filed H169 about instructions nobody
+  follows, with H89 open in front of me. Removed; the commit is unaffected. H89's
+  thesis is that reading a rail does not stop it, and this is its second live
+  instance. **Long commit messages are the norm here, so `-F` is the recurring
+  path into it: the file goes INSIDE the workspace, and nothing says so or checks.**
 - **A GUARDRAIL-NAMESPACE COLLISION I WALKED INTO.** My arms were first labelled
   with a bare `A` and a single digit; `refcheck` refused on the zero one — no
   guardrail has that number — and the other three had passed SILENTLY as citations
