@@ -909,12 +909,37 @@ other side.
 **Taken under §12.9** — ATTACKER-1's module, and the author is not the lane it was
 blocking. It removes no check: every gate still runs in the same order.
 
+## Cycle 23 — H185 DONE. The census could not see which launcher a lane was running.
+
+`run_loop.sh` **v12** (producer), `bringup.sh` **v7** (consumer),
+`spikes/H185_launcher_generation/`, 8 arms.
+
+**The premise was measured, not assumed:** the hour v11 landed, all five lanes
+were pre-v11 generations — up since 16:07, still carrying the process-group defect
+H179 had just fixed — and the census printed all five `UP`. A generation runs the
+code it was STARTED with.
+
+**Content, not path**: every lane runs the same `./run_loop.sh` and the file is
+edited in place, so a path proves nothing. The stamp is a sha256 prefix of the
+launcher as it was at start, and it is an approximation by construction — `sh` may
+re-read an edited script mid-run — which is the honest reading of the question.
+
+**C1 is H88's defect used as a control, one function away from where it happened.**
+ABSENT must not print what CURRENT prints; `unrecorded` is a named state.
+
+**F3 is the rail and it is the reason this is a report and not a trigger.** A
+stale launcher never adds a lane to MISSING and never refuses quorum — H6's
+*absent branch LAUNCHES* hazard is worse than the number it reports.
+
+**All five lanes now read `LAUNCHER UNRECORDED`, which is correct**: they predate
+the stamp. Restarting them to make the column tidy would be A23, so nothing does.
+
 ## NEXT 3
-1. **The live lanes are all pre-v11 generations.** They pick up the fix at their
-   next relaunch and restarting them by hand to hurry it would be A23 for no gain
-   — but nothing yet OBSERVES which launcher version a live lane is running, and
-   `bringup.sh` reports them all as UP. That is the next row: a lane's own
-   generation should be visible in the census, not inferred.
+1. **`H178_suite_flake` is untracked evidence and that is my own lesson unlearned.**
+   Two observations of `test_loop_gate.sh` printing `N FAILED` naming no check
+   (cycle 15: `2 FAILED, 85 passed`; cycle 18: `4 FAILED, 87 passed`), six clean
+   runs in a hunt afterwards. The hunt log sits in an untracked directory, which is
+   exactly what H123 was about.
 2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
    a later one; same neighbourhood as cycle 15's unreproduced `2 FAILED`.
 3. **H23** — no mechanical detector for a rationale block naming an absent path. I have

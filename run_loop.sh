@@ -364,6 +364,7 @@ LOG="loop_${CALLSIGN}.log"
 EXIT_MARK=".loop_exit.${CALLSIGN}"        # written by the hook, cleared only here
 BEAT=".heartbeat.${CALLSIGN}"             # refreshed every BEAT_EVERY s WHILE a turn runs
 FAILFILE=".loop_fails.${CALLSIGN}"        # consecutive failed turns, on disk (H56)
+GENFILE=".loop_launcher.${CALLSIGN}"      # WHICH launcher this generation runs (H185)
 MAX_TURN=${MAX_TURN:-3600}                # seconds before a turn is called wedged
 BEAT_EVERY=${BEAT_EVERY:-30}              # heartbeat refresh interval (H48)
 BACKOFF_STEP=${BACKOFF_STEP:-30}          # backoff = fails * this, capped 900 (H56: testable)
@@ -375,6 +376,26 @@ command -v claude >/dev/null || { echo "claude CLI not found"; exit 1; }
 # AGENT-2's lane definition lived only inside HANDOFF.md, which is contested by
 # two writers, and a lane was spawned onto an already-held callsign because
 # nothing at launch said who was live.
+
+# 15. A LANE RUNS THE LAUNCHER IT WAS STARTED WITH, AND NOTHING RECORDED WHICH
+#     ONE (v12, 2026-08-19, H185, ok-1). Measured on the live fleet the hour v11
+#     landed: all five lanes were pre-v11 generations -- carrying the
+#     process-group defect H179 had just fixed -- and `bringup.sh` printed all
+#     five UP with turn ages and CHANNEL distances, because it has no column for
+#     this. Same family as H21, *a wrapper still running a generation that
+#     predates the beat*, which was recorded as prose and never made observable.
+#
+#     CONTENT, NOT PATH. Every lane runs the same `./run_loop.sh` and the file is
+#     edited in place, so a path proves nothing; the stamp is a sha256 prefix of
+#     the launcher AS IT WAS WHEN THIS GENERATION STARTED. It is an approximation
+#     by construction -- `sh` may re-read an edited script mid-run -- and that is
+#     the honest reading: what the generation was STARTED with.
+#
+#     REPORTED, NEVER ACTED ON. `bringup.sh` v7 names the state and must not add
+#     a stale lane to MISSING: relaunching a healthy lane because its launcher is
+#     old is H6's "absent branch LAUNCHES" hazard, worse than the number it
+#     reports.
+printf '%s %s\n' "$(shasum -a 256 "$0" 2>/dev/null | cut -c1-16)" "$(date +%s)" > "$GENFILE"
 
 fails=0
 # 12. THE ONE VARIABLE THAT KNEW THE FLEET WAS DEAD LIVED IN MEMORY ONLY (v9,

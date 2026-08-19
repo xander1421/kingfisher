@@ -223,6 +223,28 @@ lane_launches() {                  # launches of $1 within FLAP_WINDOW
   done < "$f"
   echo "$n"
 }
+# v7 (H185, ok-1, 2026-08-19). WHICH LAUNCHER IS THIS LANE RUNNING? A generation
+# runs the code it was STARTED with, so a fix to run_loop.sh reaches a live lane
+# only at its next relaunch -- and nothing here could see that. Measured the hour
+# run_loop.sh v11 landed: all five lanes were pre-v11 generations, carrying the
+# process-group defect H179 had just fixed, and every one of them printed UP.
+#
+# THREE STATES AND EACH IS NAMED, which is H88's rule: ABSENT is not CURRENT.
+# A lane started before the stamp existed reads `LAUNCHER UNRECORDED`, never
+# silence -- H88's defect was exactly ABSENT and HEALTHY printing byte-identical
+# lines, in this file, and it is not to be re-earned one function down.
+#
+# REPORTED, NEVER ACTED ON: no lane is added to MISSING and no quorum is refused
+# for this. Relaunching a healthy lane because its launcher is old is H6's
+# "absent branch LAUNCHES" hazard and worse than the number it reports.
+lane_launcher() {                  # echoes: current | stale <had> <now> | unrecorded
+  local f=".loop_launcher.${1}" had now
+  [ -f "$f" ] || { echo unrecorded; return; }
+  had=$(awk '{print $1}' "$f" 2>/dev/null)
+  now=$(shasum -a 256 ./run_loop.sh 2>/dev/null | cut -c1-16)
+  [ -n "$had" ] && [ -n "$now" ] || { echo unrecorded; return; }
+  [ "$had" = "$now" ] && echo current || echo "stale $had $now"
+}
 lane_launch_record() {             # called ONLY where this file actually launches
   local f=".loop_launches.${1}"
   date +%s >> "$f"
@@ -511,12 +533,21 @@ for lane in "${ROSTER[@]}"; do
       # it: turn age says the supervisor is alive, this says the lane has
       # produced something. Both, because either alone was the 5/5 lie.
       w=$(lane_lastwork "$lane")
+      # H185: WHICH launcher, appended to the same line rather than a new column,
+      # so a lane that is up-to-date costs no extra output and the two states
+      # that are not `current` are impossible to skim past.
+      case "$(lane_launcher "$lane")" in
+        current)      lnote='' ;;
+        unrecorded)   lnote=' LAUNCHER UNRECORDED -- generation predates the stamp (H185); not stale, UNKNOWN' ;;
+        stale\ *)     set -- $(lane_launcher "$lane")
+                      lnote=" LAUNCHER STALE -- started with ${2}, tree has ${3}; picks up the fix at its next relaunch" ;;
+      esac
       if [ "$w" -lt 0 ]; then
-        printf '  %-12s UP   pid %-7s (%s) turn age %ss, NO CHANNEL LINE EVER -- nothing observed of this lane%s\n' \
-          "$lane" "$pid" "$src" "$age" "$fnote"
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, NO CHANNEL LINE EVER -- nothing observed of this lane%s%s\n' \
+          "$lane" "$pid" "$src" "$age" "$fnote" "$lnote"
       else
-        printf '  %-12s UP   pid %-7s (%s) turn age %ss, last CHANNEL line %s back%s\n' \
-          "$lane" "$pid" "$src" "$age" "$w" "$fnote"
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, last CHANNEL line %s back%s%s\n' \
+          "$lane" "$pid" "$src" "$age" "$w" "$fnote" "$lnote"
       fi
     fi
   elif [ -f STOP ] || [ -f "STOP.$lane" ]; then
