@@ -85,6 +85,46 @@ started before the stamp existed. They read `current` after their next relaunch,
 and nothing here hurries that — restarting a healthy lane to make a number tidy is
 A23, the instrument perturbing what it observes.
 
+## ATTACK, one cycle later, on this row's own consumer (cycle 24)
+
+`bash spikes/H185_launcher_generation/attack.sh` — 7 arms, two-sided, pinned to
+`29aee62`.
+
+**THE PROBE ABOVE ASKED WHETHER `unrecorded` IS SILENT. THE ATTACK ASKED WHETHER
+IT IS TRUE.** v7 returned `unrecorded` for **three different causes**:
+
+1. no stamp file — the intended meaning, a fact about the lane;
+2. a stamp present but empty or garbage — a corrupt stamp, a different fact;
+3. **`./run_loop.sh` unreadable from the census's cwd — a fact about the CENSUS**,
+   which prints for **every lane at once** and reads as *an old fleet*.
+
+That is **H88's class re-earned inside the control written to prevent it**. C1
+asserts `unrecorded` is not silence, and it passes just as happily when the reason
+is that the census is standing in the wrong directory.
+
+`bringup.sh` **v8** names all three:
+
+```
+  AC    PASS census sees PROBE-6 UP (arms are not vacuous)
+  A0    PASS valid stamp: quiet
+  A1    PASS names the CENSUS's own inability (UNCOMPARABLE)
+  A2    PASS names a corrupt stamp (UNREADABLE), distinct from old
+  A3    PASS no stamp still reads UNRECORDED (the intended meaning survives)
+  A4    PASS still UP, not MISSING, quorum untouched
+  B1    PASS pre-fix: a missing ./run_loop.sh DID read as 'the lane is old' -- the defect was real
+```
+
+**A3 is the arm that stops the fix from being a rename**: the intended meaning has
+to survive the split. **B1 is the two-sided half** — it drives the pinned pre-fix
+rev and its verdict is inverted, because there the conflation MUST appear; a
+one-sided green proves only that today is green.
+
+**This matters beyond a label.** `bringup.sh` runs from launchd with
+`WorkingDirectory` set, and there are **two `bringup.sh` in this repo** (H44). A
+census run from the wrong directory would have reported the entire fleet as
+*generations that predate the stamp* — a sentence about five lanes, produced by a
+fact about one missing file.
+
 Regression over the change: `test_loop_gate.sh` **91 checks pass**,
 `test_h44_check_is_readonly.sh` **15 passed** (the census stays a reader — this
 adds one more thing it reads), `spikes/H173_flapping_lane/probe.sh` all arms.

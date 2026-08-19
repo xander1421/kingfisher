@@ -237,12 +237,27 @@ lane_launches() {                  # launches of $1 within FLAP_WINDOW
 # REPORTED, NEVER ACTED ON: no lane is added to MISSING and no quorum is refused
 # for this. Relaunching a healthy lane because its launcher is old is H6's
 # "absent branch LAUNCHES" hazard and worse than the number it reports.
-lane_launcher() {                  # echoes: current | stale <had> <now> | unrecorded
+# v8 (H185 ATTACK, ok-1, 2026-08-19, on my own v7 from one cycle earlier).
+# DEFECT REMOVED: THREE CAUSES PRINTED ONE NAME, AND ONE OF THEM WAS NOT ABOUT
+# THE LANE AT ALL. v7 returned `unrecorded` when the stamp file was missing (the
+# intended meaning), when the stamp was empty or garbage, AND when
+# `./run_loop.sh` could not be read from the census's cwd -- the last of which is
+# a fact about THIS SCRIPT, would print for EVERY lane at once, and reads as
+# "an old fleet" instead of "the instrument cannot answer".
+#
+# That is H88's class re-earned INSIDE the control written to prevent it: v7's
+# probe asserts `unrecorded` is not silence, and the arm passes just as happily
+# when the reason is that the census is standing in the wrong directory.
+# spikes/H185_launcher_generation/attack.sh drives all three, two-sided.
+lane_launcher() {   # current | stale <had> <now> | unrecorded | unreadable | uncomparable
   local f=".loop_launcher.${1}" had now
-  [ -f "$f" ] || { echo unrecorded; return; }
-  had=$(awk '{print $1}' "$f" 2>/dev/null)
   now=$(shasum -a 256 ./run_loop.sh 2>/dev/null | cut -c1-16)
-  [ -n "$had" ] && [ -n "$now" ] || { echo unrecorded; return; }
+  [ -n "$now" ] || { echo uncomparable; return; }   # about the CENSUS, not the lane
+  [ -f "$f" ] || { echo unrecorded; return; }
+  had=$(awk 'NR==1{print $1}' "$f" 2>/dev/null)
+  case "$had" in
+    '' | *[!0-9a-f]* ) echo unreadable; return ;;
+  esac
   [ "$had" = "$now" ] && echo current || echo "stale $had $now"
 }
 lane_launch_record() {             # called ONLY where this file actually launches
@@ -539,6 +554,8 @@ for lane in "${ROSTER[@]}"; do
       case "$(lane_launcher "$lane")" in
         current)      lnote='' ;;
         unrecorded)   lnote=' LAUNCHER UNRECORDED -- generation predates the stamp (H185); not stale, UNKNOWN' ;;
+        unreadable)   lnote=' LAUNCHER UNREADABLE -- .loop_launcher exists and carries no hash; the stamp is corrupt, not old' ;;
+        uncomparable) lnote=' LAUNCHER UNCOMPARABLE -- ./run_loop.sh is not readable FROM THIS CENSUS CWD; this says nothing about the lane' ;;
         stale\ *)     set -- $(lane_launcher "$lane")
                       lnote=" LAUNCHER STALE -- started with ${2}, tree has ${3}; picks up the fix at its next relaunch" ;;
       esac

@@ -934,6 +934,32 @@ stale launcher never adds a lane to MISSING and never refuses quorum — H6's
 **All five lanes now read `LAUNCHER UNRECORDED`, which is correct**: they predate
 the stamp. Restarting them to make the column tidy would be A23, so nothing does.
 
+## Cycle 24 — ATTACK (§2 every 4th) on my own H185 consumer. It found a real defect.
+
+`bringup.sh` **v8** + `spikes/H185_launcher_generation/attack.sh`, 7 arms,
+two-sided, pinned to `29aee62`.
+
+**The probe asked whether `unrecorded` is SILENT. The attack asked whether it is
+TRUE.** v7 returned `unrecorded` for three causes: no stamp (the intended
+meaning), a corrupt stamp, and **`./run_loop.sh` unreadable from the census's own
+cwd** — which is a fact about the census, prints for EVERY lane at once, and reads
+as *an old fleet*.
+
+**H88's class re-earned inside the control I wrote to prevent it.** My C1 asserts
+ABSENT is not silence; it passes just as happily when the reason is that the
+census is standing in the wrong directory. And there are two `bringup.sh` in this
+repo (H44), with this one run by launchd under a `WorkingDirectory` — so the wrong
+one, or the right one from the wrong cwd, would have printed a sentence about five
+lanes produced by a fact about one missing file.
+
+**A3 is the arm that keeps a fix from being a rename**: the intended meaning has
+to survive the split. **B1 inverts its verdict on the pinned pre-fix rev**,
+because the defect must appear there or the row is describing something else.
+
+Third cycle in a row where the attack found the CHECK rather than the code
+(H173: `--check` never reaches the launch path; H183: the banner printed before
+the operation that fails; here: a control that cannot tell what it is measuring).
+
 ## NEXT 3
 1. **`H178_suite_flake` is untracked evidence and that is my own lesson unlearned.**
    Two observations of `test_loop_gate.sh` printing `N FAILED` naming no check
