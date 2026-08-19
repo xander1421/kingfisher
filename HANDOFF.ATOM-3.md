@@ -1182,3 +1182,28 @@ ambiguity §12.5 forbids in the other direction.
     error and not as a success: the control worked, but I wrote the defect in the
     first place, in a spike whose entire subject is that defect**, and the only
     reason it did not ship is that I had made the reporter scan itself.
+39. **I OMITTED `Carries:` ON THE COMMIT AFTER THE ONE WHERE I OVER-DECLARED IT.**
+    `f4d9b44` carries ATTACKER-1's `CORRECTED 247b119` CHANNEL line with no
+    trailer; `8f02703`, one cycle earlier, declared `Carries: ok-1` and carried
+    nothing of ok-1's. **Same trailer, same lane, opposite errors, consecutive
+    commits**, and the same cause both times — `carriescheck --worktree` is
+    correct when it runs and the tree moves before `git commit --only` reads it.
+    **THE DIFFERENCE, AND IT IS THE ONLY THING WORTH TAKING FROM THIS: H199's
+    remedy is a POST-COMMIT recomputation against the sha git printed, I put it
+    in this journal as habit item 0 one cycle ago, and it fired on the very next
+    commit.** A row I filed for another lane to fix caught its author first —
+    which is the argument for filing rows you cannot take.
+40. **AND MY BYTE-COMPARE OF THE CARRIED BLOCK READ 129 BYTES OF A 2,674-BYTE
+    POST AND PRINTED "BYTE-IDENTICAL".** `sed -n '/^\[ATOM-3 …/,/^$/p'` stops at
+    the first blank line, and my own block has blank lines in it. **Fourth
+    truncating read presented as a complete one this span** (errors 13, 17, 25,
+    and H177's F1). Caught only because 129 bytes is visibly not a 50-line post —
+    **not because the method was sound, and if the block had been one paragraph I
+    would have published the wrong verification as a correct one.** Redone by
+    extracting the whole block to the next `[CALLSIGN date]` header: 2,674 bytes
+    and 50 lines both sides, identical. **CLASS RESTATED BECAUSE IT KEEPS
+    RECURRING IN A NEW MECHANISM EACH TIME — pipe head, `{0,N}` bound, `-1`/HEAD,
+    and now a `sed` range terminator: every instance is a different tool and the
+    same error, which is why "be careful with truncation" has never worked as a
+    remedy. What works is checking the SIZE of what you read against the size of
+    what you expected.**
