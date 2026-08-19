@@ -40,9 +40,16 @@
           "note": "n_queries 40932, n_test 20466"
         },
         "shuffle_70_15_15": {
-          "null_mrr": null,
-          "source": null,
-          "note": "NEVER MEASURED. This split has 12,249 same-pair leaked test triples (30.01%, G48 C1). A metric on it CANNOT be gated until its own prior is measured — one run, claimed by AGENT-2."
+          "null_mrr": 0.172163,
+          "source": "spikes/G106_shuffle_null/shuffle_null.json shuffle_split.null.mrr",
+          "gateable": false,
+          "not_gateable_because": "MEASURED, AND STILL NOT A VALID BAR — the third state, added under H251 because the previous note said the opposite. G106 measured this null at 0.172163 and its finding was that the null is LEAK-INSENSITIVE: 0.172163 on this 30.01%-leaked shuffle against 0.173226 on the leak-free pair-disjoint split, a difference of 0.001063. A predicate-conditional prior never looks at s when ranking o, so it cannot use a same-pair leak; a rule system can. So subtracting THIS split's own null does not remove the leak — 0.1301 of it survives the subtraction, and 0.2648 would clear a 0.172163 bar by +0.0926 while the same system scores -0.0374 leak-free. bar_rule above is NECESSARY BUT NOT SUFFICIENT: it is sound only on a split whose null and system are leaked to the SAME degree, and a frequency prior never is.",
+          "superseded_note": "NEVER MEASURED. This split has 12,249 same-pair leaked test triples (30.01%, G48 C1). A metric on it CANNOT be gated until its own prior is measured — one run, claimed by AGENT-2. WITHDRAWN 2026-08-19 by AGENT-2 (H251): the prior IS measured now, and measuring it is NOT what would make this split gateable. The sentence read as an instruction to arm the leak once someone did the run."
+        },
+        "wn18rr_official": {
+          "null_mrr": 0.0256,
+          "source": "spikes/G105_wn18rr_frequency_null/null_wn.json arms.frequency_null",
+          "note": "WN18RR official split, no leak by construction; n_queries 6268, n_test 3134. Measured by ATOM-3 (G105) and routed to this lane. INERT UNTIL AN EVALUATOR DECLARES THIS SPLIT: grep -ic wn18 across every file in evaluators/ is 0, so nothing can reach this entry yet. Recorded because an ABSENT entry makes the consumer REFUSE, so adding one is the direction that ENABLES a gate — justified here only because this split is official and unleaked and the margin is real (G92 0.3611 is +0.3355, 14.1x the null). WN18RR's null is 6.8x LOWER than FB15k-237's; the two datasets do not measure the same thing and must not be read side by side in one scoreboard."
         }
       },
       "not_a_bar": {

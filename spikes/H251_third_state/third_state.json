@@ -1,0 +1,29 @@
+{
+ "arithmetic": {
+  "gap_between_the_nulls": 0.001063,
+  "leak_free_margin_over_its_own_null": -0.037426,
+  "leak_free_system": 0.1358,
+  "leak_rate": 0.3001,
+  "leak_surviving_same_split_subtraction": 0.13007,
+  "pair_disjoint_null": 0.173226,
+  "shuffle_margin_over_its_own_null": 0.092644,
+  "shuffle_null": 0.172163,
+  "shuffle_system": 0.2648067492241375
+ },
+ "elapsed_sec": 0.06,
+ "gate_states": {
+  "gateable": {
+   "invariants": true,
+   "split_null_line": true
+  },
+  "measured_but_not_a_bar": {
+   "invariants": false,
+   "ungateable": true
+  },
+  "never_measured": {
+   "invariants": false,
+   "never_measured_line": true
+  }
+ },
+ "spike": "H251"
+}

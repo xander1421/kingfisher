@@ -221,7 +221,38 @@ def evaluate_suite(config):
             else:
                 entry = split_nulls[declared_split]
                 measured = entry.get("null_mrr") if isinstance(entry, dict) else entry
-                if measured is None:
+                # v3, H251. THE THIRD STATE: "measured, and still not a valid
+                # bar". Checked BEFORE `measured is None`, because the whole
+                # point is that having the number is not what makes a split
+                # gateable -- and this branch must not be reachable only when
+                # the null is missing, or it says nothing the old two states
+                # did not.
+                #
+                # `shuffle_70_15_15` is the case that forced it. G106 measured
+                # its null at 0.172163 and found the null LEAK-INSENSITIVE:
+                # 0.001063 away from the leak-free split's 0.173226, on a split
+                # with 30.01% same-pair leakage. A predicate-conditional prior
+                # never looks at `s` when ranking `o` so it cannot use the
+                # leak; a rule system can. 0.1301 of the leak therefore SURVIVES
+                # subtracting the split's own null, and 0.2648 would clear that
+                # bar by +0.0926 while scoring -0.0374 leak-free.
+                #
+                # So `bar_rule` -- "a bar is a number minus its own split's
+                # null" -- is NECESSARY BUT NOT SUFFICIENT. It is sound only
+                # where the null and the system are leaked to the same degree,
+                # and a frequency prior never is. Before this branch existed,
+                # the only way to record the measured null was to arm a gate
+                # over it, and the config note actively invited that.
+                if isinstance(entry, dict) and entry.get("gateable") is False:
+                    print(f"     [UNGATEABLE] {m_name} on split "
+                          f"'{declared_split}': the null IS measured "
+                          f"({measured}) and this split is still not a valid "
+                          f"bar -- "
+                          f"{entry.get('not_gateable_because', 'no reason given')}",
+                          file=sys.stderr)
+                    passed_invariants = False
+                    null_base = None
+                elif measured is None:
                     print(f"     [UNGATEABLE] {m_name} on split "
                           f"'{declared_split}': null_mrr is NEVER MEASURED, so "
                           f"no margin can be computed and this cannot pass",
@@ -407,13 +438,61 @@ def selfcheck():
     if not errors:
         bad.append("the refusal must remain in `errors`, or `is_eligible` loosens")
 
+    # ---- H251: the split-null gate's THIRD state, driven in both directions.
+    # A branch that only ever refuses is worth as little as one that only ever
+    # passes, so the gateable case is asserted in the same loop.
+    def gate(split_nulls, declared, val=0.2648):
+        cfg = {
+            "evaluators": {"e": {"command": ev(
+                'import json; print(json.dumps(%s))'
+                % json.dumps({"m": val, "split": declared})), "timeout_sec": 30}},
+            "metrics": {"m": {"direction": "maximize", "target": None,
+                              "min_acceptable": None, "weight": 1.0,
+                              "split_nulls": split_nulls}},
+        }
+        b = _io.StringIO()
+        with contextlib.redirect_stderr(b):
+            r, _e = evaluate_suite(cfg)
+        return r, b.getvalue()
+
+    LEAKED = {"leaky": {"null_mrr": 0.172163, "gateable": False,
+                        "not_gateable_because": "the null is leak-insensitive"}}
+    HONEST = {"honest": {"null_mrr": 0.1732}}
+    UNMEASURED = {"never": {"null_mrr": None}}
+
+    r, log = gate(LEAKED, "leaky")
+    if r.get("_invariants_passed") is not False:
+        bad.append("a split marked gateable:false must FAIL invariants even "
+                   "though its null IS measured")
+    if "[UNGATEABLE]" not in log or "the null IS measured" not in log:
+        bad.append("the third state must say the null was measured, or it is "
+                   "indistinguishable from NEVER MEASURED")
+    if "the null is leak-insensitive" not in log:
+        bad.append("the third state must print WHY, or it is an unexplained veto")
+
+    # ANTI-INVERSION. Without this, "refuse every split" passes the arm above.
+    r2, log2 = gate(HONEST, "honest")
+    if r2.get("_invariants_passed") is not True:
+        bad.append("a gateable split clearing its own null must still PASS")
+    if "[SPLIT NULL]" not in log2:
+        bad.append("a gateable split must still be gated against its null")
+
+    # And the ORIGINAL never-measured state must survive the new branch.
+    r3, log3 = gate(UNMEASURED, "never")
+    if r3.get("_invariants_passed") is not False:
+        bad.append("null_mrr None must still FAIL invariants")
+    if "NEVER MEASURED" not in log3:
+        bad.append("the never-measured state must keep its own distinct message")
+
     for b in bad:
         print("  FAIL  " + b)
     if not bad:
         print("autoloop selfcheck: a refusal is kept and scored, a crash is "
               "not, a truncated write is not, exit-0-plus-error is not, a "
-              "non-dict payload is not, the happy path is unchanged, and a "
-              "kept refusal still fails invariants AND stays in `errors`")
+              "non-dict payload is not, the happy path is unchanged, a kept "
+              "refusal still fails invariants AND stays in `errors`, and the "
+              "split-null gate distinguishes MEASURED-BUT-NOT-A-BAR from "
+              "NEVER-MEASURED from GATEABLE in both directions")
     return 1 if bad else 0
 
 
