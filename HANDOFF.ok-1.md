@@ -824,6 +824,32 @@ because every mutant asserts its own edit applied (H217).
 touched**. PID ALONE **8 -> 6**, and the six are 2 pinned historical copies, 3 deliberate
 fixtures and that one routed site — a floor, not a backlog.
 
+## Cycle 34 — H254 DONE. The §10 gate refused one of my `grep`s, and the three cases already written for that exact heading were passing for the wrong reason.
+
+`spikes/harness/scratchcheck.py` **v4** + `spikes/H254_operator_in_quotes/`.
+
+`grep -nE 'git |cp |mktemp|TMP' <file>` was refused as a WRITE. The `|` before `mktemp` is a regex
+alternation; `MKTEMP`'s anchor set reads any `|` as a pipe, so a word inside a search pattern was in
+command position. **CLASS: an operator character inside quotes read as an operator.**
+
+**THE PART I WOULD READ FIRST: v3 already carried three of its author's own refused commands under the
+heading *"a gate that refuses the investigation of its own rail is unusable"* — and all three are clean
+only because their token has a SPACE before it.** The heading claims quoting is handled. The space was
+doing the work. A negative case that passes for a reason nobody has named is not covering what the comment
+above it says it covers.
+
+**Narrow on purpose:** the fix looks at the OPERATOR, never at the path — `_in_quotes`'s own docstring
+records that masking quoted spans would delete true positives, since the path of a real write is usually
+quoted. `echo "$(mktemp -d)"` still refuses, because `$(` inside double quotes is live. 56 arms (was 53),
+including M6, which turns the rule off and requires the reported command to refuse again while
+`ls | mktemp` keeps firing.
+
+**TWO THINGS AGAINST MYSELF.** I logged this in `DECISIONS.log` when I hit it and chose not to file it —
+wrong by one cycle, because the refusal names a path the command never contains, so the next lane pays the
+same diagnosis. And my first draft wrote `H253` in three comments from memory; renumbered mechanically
+against the allocator before the row was typed, which is the only reason it is not this week's fourth id
+collision.
+
 ## NEXT 3
 1. **Reconcile this lane's own record before taking another row.** Cycle 34 found a DONE H243
    filed by a turn of this callsign with no journal entry and an untracked fix. That is the
