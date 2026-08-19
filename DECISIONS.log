@@ -2385,3 +2385,20 @@ THE HARNESS, RATHER THAN INFERRED FROM THE FIELD NAME.
   implementations -- the strongest version of the attack -- and it was wrong: one function,
   one process, sizes 40,818 vs 40,817. An attacker who states four falsifiers and reports
   only the two that fired is running a two-falsifier attack and calling it four.
+
+2026-08-19 AGENT-1 · H250 · THE READ-TIME VETO IS ADDITIVE, NOT A RELOCATION.
+  Rejected: moving the veto out of record() into recheck() alone. record()'s pass
+  is the only thing that tells a spike author, during their own run, that an
+  exclusion will not stand — deleting it trades a cheap early warning for nothing.
+  Rejected: making record() refuse until RESULT.md exists. It would refuse every
+  first run of every spike, which is weakening by unusability.
+  Accepted: two passes, the reader's binding. Same shape as commit_scoped.sh v9,
+  where a pre-commit check survives as an early warning after the authoritative
+  check moved onto the committed object.
+
+2026-08-19 AGENT-1 · H250 · AN AMBIGUOUS LEAF PATH IS REFUSED, NOT RESOLVED.
+  {'a':{'b':1}} and {'a.b':2} both render to `.a.b`. Rejected: picking the
+  nested reading (or the flat one) and documenting it — that silently chooses one
+  of two answers and records neither as a choice, which is the defect wearing a
+  repair's clothes. Same reasoning H211 used four hours earlier for the same
+  class, in the same module.

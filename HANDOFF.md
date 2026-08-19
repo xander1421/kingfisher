@@ -2111,6 +2111,39 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   `4bb36115`. Checked mechanically before writing it down — last cycle I invented
   a structural excuse for a red gate and the real cause was one file.
   32 of 33 harness selfchecks green.
+- **C8 ATTACK (§2 every 4th, self-authored data first) — TARGET: `provenance.py`
+  v5, WHICH I SHIPPED TWENTY MINUTES EARLIER IN C7. DONE as H250, 10/10 arms,
+  `provenance.py` v6 + `recheck.py` v3.** Two defects, both live.
+- **D1: THE VETO'S PROSE ARM WAS EVALUATED BEFORE THE PROSE EXISTED.** `record()`
+  runs inside the spike's own run; `RESULT.md` lands after it. **105 of 172
+  spikes on disk write the write-up AFTER the record; 9 have none.** And it is
+  not hypothetical: **S84's `.wall_us_citable`, one of the three real
+  measurements the veto exists to protect, is REFUSED with the prose and ALLOWED
+  without it.** A15 inside the mitigation for an A22.
+- **MY OWN H239 PROBE MEASURED THE WRONG STATE — FOURTH TIME THIS SPAN, AND THIS
+  ONE WAS INSIDE THE PROBE I WROTE TO CATCH THAT.** Its veto arm reads MATURE
+  spikes with prose on disk; production runs against an IMMATURE one. H211's A6,
+  H237's two, now this. **The rule I am taking forward: when an arm reads a real
+  spike off disk, ask whether the spike is in the state the code under test will
+  MEET, or in the state it ends up in.**
+- **D2: `{'a':{'b':1}}` AND `{'a.b':2}` RENDER TO THE SAME DOTTED PATH.**
+  `dict(json_leaves)` kept the last, `_leaf_drop` removed the first — the record
+  described one field while the hash was taken over the removal of another.
+  **The correct hash of the wrong field (A24): that is H211, four hours later,
+  inside the module I wrote to close H211.** 119 artifacts carry a dot or bracket
+  in a key.
+- **BOTH FIXES REFUSE RATHER THAN RESOLVE, AND D1's IS ADDITIVE RATHER THAN A
+  RELOCATION**: the veto is not moved, it is run AGAIN at read time where the
+  write-up is guaranteed to exist. Record-time pass survives as an early warning.
+  `commit_scoped.sh` v9's shape, one module over.
+- **NOT A WIDER HOLE, MEASURED**: G54 still `REPRODUCED`, a real
+  `arms.A_prior.mrr` change still `DRIFTED`, 176 records `OK 156 · DRIFTED 17 ·
+  MISSING 3` under both v1 and v3, **zero verdicts moved**. Pre-fix arm pinned to
+  `82e635b` and guarded so it VOIDS once the fix lands.
+- **RESIDUAL RESTATED, NOT DROPPED: this closed the TIMING hole, not the COVERAGE
+  one.** A load-bearing leaf cited nowhere is still allowed at both moments.
+  The veto is a gate, never an oracle, and a cycle of fixing has not changed that.
+
 - **NEXT 1: the filed-and-not-taken pile is down to four** — H206, H213, H214,
   H216. Span 6's NEXT said take one or release them; span 7 has now taken H195,
   H211 and H239 from it. **H214 is the oldest live one and it is a control that

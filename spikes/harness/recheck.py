@@ -66,6 +66,18 @@ IT IS NOT A WEAKER GATE (5). REPRODUCED requires the whole artifact minus the
 named leaves to hash identically, so a change to ANY other field still reads
 DRIFTED -- asserted on 302 real mutations of G54's own artifact in
 `spikes/H239_wallclock_reproduction/probe.py`.
+
+v3, 2026-08-19 (H250). DEFECT REMOVED: THE VETO THAT GUARDS THE EXCLUSION RAN
+ONLY AT RECORD TIME, WHICH IS BEFORE THE EVIDENCE IT READS IS WRITTEN. A spike
+declares its exclusions inside its own run; its `RESULT.md` lands afterwards.
+Measured: 105 of 172 spikes on disk write the write-up AFTER the record, 9 have
+none, and S84's `.wall_us_citable` flips REFUSE -> allow when the prose is
+missing. So an exclusion could be declared in the window where nothing could
+refuse it and would then be honoured forever. This module now re-runs the veto
+against the COMPLETE haystack at the moment the question is actually asked --
+which is the only moment the write-up is guaranteed to exist, because somebody is
+reading the spike. A refused exclusion reads DRIFTED and names the reason.
+The record-time pass is kept as an early warning and is no longer the answer.
 """
 import hashlib
 import json
@@ -75,7 +87,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import provenance as _prov   # noqa: E402  (json_leaves / _leaf_drop, one source)
 
-VERSION = 2
+VERSION = 3
 
 OK, DRIFTED, MISSING, UNREADABLE, NO_ARTIFACTS, REPRODUCED = (
     "OK", "DRIFTED", "MISSING", "UNREADABLE", "NO_ARTIFACTS", "REPRODUCED")
@@ -152,7 +164,8 @@ def check_record(rec_path):
             # before answering: is this a change, or a reproduction? Only a
             # record that DECLARED exclusions can answer, and for every record
             # without them repro_sha256 == sha256, so this branch cannot fire.
-            st, why = _reproduction_verdict(a, path, actual, recorded)
+            st, why = _reproduction_verdict(a, path, actual, recorded,
+                                            rec_path, rec)
             rows.append((st, path, why))
             if st == REPRODUCED:
                 if worst == OK:
@@ -165,7 +178,7 @@ def check_record(rec_path):
             "artifacts": rows}
 
 
-def _reproduction_verdict(a, path, actual, recorded):
+def _reproduction_verdict(a, path, actual, recorded, rec_path=None, rec=None):
     """DRIFTED unless the declared-excluded leaves are the ONLY difference.
 
     Returns (status, why). Refuses in every ambiguous direction: a record with
@@ -183,13 +196,30 @@ def _reproduction_verdict(a, path, actual, recorded):
             doc = json.load(f)
     except (OSError, ValueError):
         return DRIFTED, drift + " (declares reproduction exclusions but is not readable JSON)"
-    leaves = dict(_prov.json_leaves(doc))
+    pairs = list(_prov.json_leaves(doc))
+    # H250. THE VETO IS RE-RUN HERE, AND THIS IS THE BINDING ONE. At record time
+    # it reads a spike's prose that USUALLY DOES NOT EXIST YET -- measured, 105
+    # of 172 spikes on disk write RESULT.md AFTER provenance.json, and S84's
+    # `.wall_us_citable` flips REFUSE -> allow when the prose is absent. A veto
+    # evaluated before the evidence it reads is written is A15, and the record
+    # is exactly the wrong moment for it. By the time anyone ASKS "did this
+    # reproduce", the write-up exists; so the record-time pass stays as an early
+    # warning and the answer is decided here, against the complete haystack.
+    spike_dir = os.path.dirname(os.path.abspath(rec_path))
+    hay = _prov._citation_haystack(spike_dir, rec)
     kept, moved = doc, []
     for e in excluded:
         p = e.get("path")
-        if p not in leaves:
-            return DRIFTED, drift + f" (declared-excluded leaf {p!r} is gone from the artifact)"
-        moved.append(f"{p} {e.get('value')!r} -> {leaves[p]!r}")
+        hits = [v for k, v in pairs if k == p]
+        if len(hits) != 1:
+            return DRIFTED, drift + (
+                f" (declared-excluded leaf {p!r} is {'ambiguous' if hits else 'gone'} "
+                f"in the artifact: {len(hits)} leaves render to that path)")
+        why = _prov._repro_veto(p, hits[0], hay)
+        if why:
+            return DRIFTED, drift + (
+                f" (the exclusion of {p!r} is REFUSED at read time: {why.split(': ', 1)[-1]})")
+        moved.append(f"{p} {e.get('value')!r} -> {hits[0]!r}")
         kept = _prov._leaf_drop(kept, p)
     blob = json.dumps(kept, sort_keys=True, separators=(",", ":")).encode()
     if hashlib.sha256(blob).hexdigest() != rec_repro:

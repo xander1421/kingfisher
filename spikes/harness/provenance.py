@@ -124,6 +124,36 @@ excluded: every record already on disk keeps a `repro_sha256` equal to its
 Check: `python3 spikes/H239_wallclock_reproduction/probe.py`, two-sided -- an
 honest re-run must stop reading DRIFTED and a change to any one of G54's other
 302 leaf fields must still read DRIFTED.
+
+v6, 2026-08-19 (H250). DEFECTS REMOVED, BOTH MINE, BOTH SHIPPED IN v5 TWENTY
+MINUTES EARLIER AND FOUND BY ATTACKING IT (2, self-authored data first).
+(1) TWO DIFFERENT LEAVES CAN RENDER TO ONE DOTTED PATH, AND `dict(json_leaves)`
+KEPT THE LAST WHILE `_leaf_drop` REMOVED THE FIRST. `{'a': {'b': 1}}` and
+`{'a.b': 2}` are both `.a.b`. So `repro_excluded` recorded one leaf's value while
+the reproduction hash was taken over the artifact with the OTHER leaf removed:
+the correct hash of the wrong field. That is A24 -- and it is H211's defect,
+which this lane closed four hours earlier, reappearing inside the module written
+to close it. 119 artifacts on disk carry a dot or a bracket in a key, mostly
+manifest blocks keyed by file path. Fixed by REFUSING the ambiguous path rather
+than resolving it, which is the choice H211 made for the same reason: resolving
+it silently picks one of two answers and records neither as a choice.
+(2) THE VETO'S PROSE ARM WAS EVALUATED BEFORE THE PROSE EXISTED. `record()` runs
+inside the spike's own run and `RESULT.md` is written afterwards -- measured, 105
+of 172 spikes on disk write their write-up AFTER their provenance record and 9
+have none at all. S84's `.wall_us_citable` flips REFUSE -> allow when the prose is
+absent, so on the majority of runs the veto scored a haystack missing half its
+evidence: A15, a control that cannot fire, sitting inside the mitigation for an
+A22. NOT FIXED BY MOVING THE VETO -- it is fixed by running it AGAIN at read
+time, in `recheck` v3, where the write-up always exists by construction because
+somebody is asking about it. The record-time pass survives as an early warning
+and is no longer the binding answer, which is `commit_scoped.sh` v9's shape.
+AND THE H239 PROBE MEASURED THE WRONG STATE: its A4 arm reads MATURE spikes with
+their prose on disk, which is not the state a production `record()` runs in. That
+is the fourth arm this span to name one condition and test another, and this one
+was inside the probe written to catch exactly that.
+Check: `python3 spikes/H250_veto_timing_and_paths/probe.py`, pre-fix arm pinned
+to `82e635b` and guarded, so it VOIDS rather than silently passing once the fix
+is in.
 """
 import hashlib, json, os, re, subprocess, sys, time
 
@@ -666,16 +696,33 @@ def reproduction_hash(artifact_path, excludes, hay):
         return None, [], [f'REPRO: {artifact_path} declares reproduction '
                           f'exclusions but is not readable JSON ({e}); the '
                           f'reproduction hash is not computed']
-    leaves = dict(json_leaves(doc))
+    # H250. A LIST, NOT A DICT. `dict(json_leaves(doc))` silently keeps the LAST
+    # of two leaves sharing a dotted path -- and two DO share one whenever a key
+    # contains a dot: {'a': {'b': 1}} and {'a.b': 2} both render as `.a.b`. The
+    # dict form recorded one leaf's value while `_leaf_drop` removed the OTHER
+    # leaf. That is the correct hash of the wrong field (A24), which is H211's
+    # defect four hours later in the module I wrote to close it. Manifest blocks
+    # keyed by file path put dots in keys all over this tree.
+    pairs = list(json_leaves(doc))
     kept, dropped, problems = doc, [], []
     for p in excludes:
-        if p not in leaves:
+        hits = [v for k, v in pairs if k == p]
+        if len(hits) > 1:
+            problems.append(f'REPRO: {p!r} is AMBIGUOUS in '
+                            f'{os.path.basename(artifact_path)} -- {len(hits)} '
+                            f'distinct leaves render to that same path (a key '
+                            f'containing "." or "[" collides with a nesting). '
+                            f'REFUSED rather than resolved: dropping either one '
+                            f'is the correct hash of the wrong field (A24)')
+            continue
+        if not hits:
             problems.append(f'REPRO: {p!r} is declared excluded from '
                             f'{os.path.basename(artifact_path)} but is not a '
                             f'leaf of it -- a declaration that matches nothing '
                             f'reads as satisfied (12.4)')
             continue
-        why = _repro_veto(p, leaves[p], hay)
+        leaves = {p: hits[0]}
+        why = _repro_veto(p, leaves[p], hay)  # noqa: F821 (set just above)
         if why:
             problems.append('REPRO: ' + why)
             continue

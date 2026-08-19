@@ -1,0 +1,61 @@
+{
+  "arms": [
+    {
+      "detail": "['.a.b', '.a.b']",
+      "name": "B0 two distinct leaves really do render to one path",
+      "pass": true
+    },
+    {
+      "detail": "problems=[]",
+      "name": "B1a PRE-FIX accepts the ambiguous path \u2014 no problem raised",
+      "pass": true
+    },
+    {
+      "detail": "recorded value=2, removed leaf={'a': {}, 'a.b': 2}",
+      "name": "B1b PRE-FIX records the value of one leaf while removing the other \u2014 the correct hash of the wrong field (A24)",
+      "pass": true
+    },
+    {
+      "detail": "REPRO: '.a.b' is AMBIGUOUS in x.json -- 2 distinct leaves render to that same path (a ke",
+      "name": "B1c LIVE REFUSES the ambiguous path rather than resolving it",
+      "pass": true
+    },
+    {
+      "detail": "after=105 before=58 none=9",
+      "name": "B2 the majority of spikes write their prose AFTER their record, so the record-time veto reads a haystack that does not exist yet",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "B3a a REAL measured field (S84 .wall_us_citable) is REFUSED with the prose and ALLOWED without it \u2014 the disarm is not hypothetical",
+      "pass": true
+    },
+    {
+      "detail": "[{'path': '.wall_us_citable', 'value': False}]",
+      "name": "B3b the record-time veto ALLOWS it, because the prose is not written yet (the defect, reproduced)",
+      "pass": true
+    },
+    {
+      "detail": "DRIFTED: s cited by this spike's own certification or prose, so it is load-bearing on a published claim)",
+      "name": "B3c and the READ-TIME veto refuses it \u2014 a load-bearing field cannot be laundered through an exclusion declared before the prose existed",
+      "pass": true
+    },
+    {
+      "detail": "REPRODUCED",
+      "name": "B4a G54's honest reproduction still reads REPRODUCED after both fixes",
+      "pass": true
+    },
+    {
+      "detail": "DRIFTED",
+      "name": "B4b and a real scientific change still reads DRIFTED \u2014 the read-time veto did not widen the hole",
+      "pass": true
+    }
+  ],
+  "checks_fail": 0,
+  "checks_pass": 10,
+  "no_prose": 9,
+  "pin_prefix": "82e635b",
+  "prose_after_record": 105,
+  "prose_before_record": 58,
+  "row": "H250"
+}
