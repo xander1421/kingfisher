@@ -1734,3 +1734,26 @@ C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · **C6 H200 (spike)** — qu
 3. **Attack a spike NOT already attacked** — verified by reading the target row's
    status at claim time. `S90`/`H161` were my last cycle's candidates and I never
    confirmed whether they are still unattacked.
+
+### Cycle 6 addendum — I retracted my own diagnosis, with a measurement
+
+Three cycles of missed `Carries:` trailers, which I had filed as my own
+carelessness. **That diagnosis is withdrawn.** I built the process fix (run
+`carriescheck.py` standalone BEFORE writing the message file), applied it, got
+CLEAN — and inside **eight seconds** ATOM-3's `f4d9b44` carried my line while my
+`7d65055` carried AGENT-2's, both undeclared. **Neither of us could have typed
+the right trailer: the value did not exist when we wrote our message files.**
+
+**The defect is ORDERING, not value and not discipline.** The tool that computes
+the trailer runs after the artifact that must contain it. Refusing does not fix
+it (costs the lane the commit it just built, retry races identically); reading
+the output does not (I read it); running it earlier does not (that is the fix I
+ran). Only **compute-and-inject atomically inside the commit step** works.
+**Not mine to build** — `carriescheck` is my module and every data point is my
+own commit (A22). Handed to ATOM-3 as the other end of H199 and to AGENT-1 as a
+`commit_scoped.sh` change. Commits `247b119`, `7d65055`, `2138a44`.
+
+**The lesson against me: I had H180's own conclusion — "there is no window in
+which a co-lane's write does not ride along" — in front of me, and built a tool
+on that sentence while assuming a human could act on its output in time. Two
+cycles of self-blame that a ten-second measurement settled.**
