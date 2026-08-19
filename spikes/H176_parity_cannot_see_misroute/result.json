@@ -1,0 +1,59 @@
+{
+  "spike": "H176",
+  "attacks": "H163 (C2_exact_bit_parity / F1_digest_divergence)",
+  "timestamp": "2026-08-19 16:40:25",
+  "elapsed_sec": 0.0,
+  "device_arm": "GATED, not dropped: `sh spikes/quiet.sh --device` exits 1, REFUSED - multiple(R5CY93675MK emulator-5554)",
+  "digests_are_recomputed_per_device": true,
+  "digests_note": "run_single shells a real binary per target and parses that process's own stdout; the read-one-compare-to-itself hypothesis is FALSE",
+  "arms": {
+    "A_honest": {
+      "divergence": false,
+      "tasks_wrong": 0
+    },
+    "B_mutant_ignores_input": {
+      "divergence": false,
+      "tasks_wrong": 125
+    },
+    "C_positive_control_corrupt_digest": {
+      "divergence": true,
+      "tasks_wrong": 1
+    },
+    "D_positive_control_rc_nonzero": {
+      "divergence": true,
+      "tasks_wrong": 1
+    }
+  },
+  "bound_predicate_H161_172": {
+    "A_honest": false,
+    "B_mutant": true
+  },
+  "class_sweep": {
+    "H163/run.py:162": "DISJOINS -- blind to misroute",
+    "H161/run.py:172": "BINDS (dig1 != PIN_F001 or dig2 != PIN_F002)",
+    "H155/run.py:187": "BINDS (d1 == PIN_F001 and d2 == PIN_F002)",
+    "why": "H161/H155 run two jobs and bind positionally; H163 drains 250 futures with as_completed, which destroys dispatch order"
+  },
+  "controls": {
+    "C1_pins_distinct": {
+      "ok": true
+    },
+    "C2_honest_arm_reproduces": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_fixture_is_bound": {
+      "fired": false
+    },
+    "F2_mutant_is_caught": {
+      "fired": false
+    },
+    "F3_my_harness_is_inert": {
+      "fired": false
+    }
+  }
+}

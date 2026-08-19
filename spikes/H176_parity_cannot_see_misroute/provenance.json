@@ -1,0 +1,147 @@
+{
+ "spike": "H176_parity_cannot_see_misroute",
+ "recorded_utc": "2026-08-19T15:40:25Z",
+ "note": "H176: H163's parity control accepts either pin for every task.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H163_tri_device_p2p_swarm",
+   "head": "cfdeae3c08bcbaa71c1501faf0cc2c687ce360da",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/H163_tri_device_p2p_swarm": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H176_parity_cannot_see_misroute/result.json",
+   "sha256": "06023f2f86218419bcbc56f86d77601aa68004b66dcc02aab925c5ec72410e2d",
+   "bytes": 1650,
+   "mtime": 1787154025,
+   "compared_ts": 1787154025,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_pins_distinct",
+   "must_fire_because": "if the two pins were equal, 'either pin accepted' would not be a weakening and there is no finding",
+   "can_fail_because": "the two fixtures could hash to the same digest",
+   "null_must_contain": "pins identical",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba",
+    "f002": "c43b1eab9db84338"
+   }
+  },
+  {
+   "name": "C2_honest_arm_reproduces",
+   "must_fire_because": "the honest arm must report 250/250 so the mutant arm changes ONE variable and not my harness",
+   "can_fail_because": "my reconstruction of H163's dispatch is wrong",
+   "null_must_contain": "honest arm diverges",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "honest_divergence": false,
+    "n": 250
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001/F002 unchanged",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_fixture_is_bound",
+   "must_fire_because": null,
+   "can_fail_because": "H163/run.py no longer contains the disjoining predicate",
+   "null_must_contain": "predicate bound",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "source_pinned": true
+   },
+   "refutes": "my claim that H163's verdict path never binds the fixture to the digest",
+   "fires_when": "H163/run.py no longer contains the disjoining predicate",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_mutant_is_caught",
+   "must_fire_because": null,
+   "can_fail_because": "H163's predicate reports divergence on arm B",
+   "null_must_contain": "mutant caught",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "arm_b_divergence": false,
+    "tasks_misrouted": 125
+   },
+   "refutes": "my claim that a worker ignoring its input passes",
+   "fires_when": "H163's predicate reports divergence on arm B",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_my_harness_is_inert",
+   "must_fire_because": null,
+   "can_fail_because": "arm C or arm D fails to report divergence",
+   "null_must_contain": "positive control did not fire",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "arm_c": true,
+    "arm_d": true
+   },
+   "refutes": "that a green arm B means anything at all",
+   "fires_when": "arm C or arm D fails to report divergence",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/H163_tri_device_p2p_swarm": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "H163's parity predicate binds each digest to the fixture that was requested, so a worker ignoring its input is caught"
+}
