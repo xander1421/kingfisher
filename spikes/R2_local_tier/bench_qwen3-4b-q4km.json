@@ -1,0 +1,24 @@
+{
+ "trailer": {
+  "pass": true,
+  "tps": 78.4,
+  "secs": 3.7
+ },
+ "triage": {
+  "pass": true,
+  "tps": 67.9,
+  "secs": 5.7
+ },
+ "classify": {
+  "pass": true,
+  "tps": 69.7,
+  "secs": 5.0
+ },
+ "_summary": {
+  "passed": 3,
+  "of": 3,
+  "median_tps": 69.7,
+  "lanes_resident": 7,
+  "model": "qwen3-4b-q4km.gguf"
+ }
+}
