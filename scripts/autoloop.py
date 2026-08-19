@@ -291,15 +291,59 @@ def evaluate_suite(config):
         # bar nobody has set. Scored against its null instead when one exists,
         # which is the only honest anchor left, and 0.0 when it does not.
         if target is None:
-            if null_base is not None and null_base > 0:
-                # progress is a MARGIN OVER THE NULL, capped -- never a fraction
-                # of a target that does not exist.
-                if direction == "maximize":
-                    norm_val = min(1.0, max(0.0, (val - null_base) / null_base))
-                else:
-                    norm_val = min(1.0, max(0.0, (null_base - val) / null_base))
-            else:
+            # v6, H259. DEFECT REMOVED: this divided the margin by the NULL, so
+            # it reached 1.0 at exactly 2x null and was FLAT above it. Measured
+            # under H255's F3: composite 0.9876 at filtered_mrr 0.3464 and
+            # 0.9876 at 1.0 -- a candidate that doubles a weak baseline and one
+            # that ranks every true target first were INDISTINGUISHABLE to the
+            # gate that decides acceptance, on the two metrics carrying 3.5 of
+            # the 7.0 total weight.
+            #
+            # The denominator was the deeper half: `/ null_base` normalises
+            # progress by the MAGNITUDE OF THE NULL, which is not a scale of
+            # anything -- "twice a weak baseline" and "twice a strong baseline"
+            # scored identically while meaning different things. A18, a ratio
+            # without its operating point.
+            #
+            # Progress is now the fraction of the ACHIEVABLE HEADROOM captured:
+            #
+            #     (val - null) / (max_possible - null)
+            #
+            # monotone over the whole range, 0.0 at the null and 1.0 at the
+            # ceiling. `max_possible` is DECLARED IN config.json, not hardcoded,
+            # because the ceiling is a modelling choice and belongs where it can
+            # be read and argued with.
+            #
+            # THE COST, STATED RATHER THAN HIDDEN: 1.0 is unreachable for MRR in
+            # practice, so real progress now looks small -- filtered_mrr 0.2313
+            # scores 0.0703 where it used to score 0.3354. That is a loss of
+            # SENSITIVITY bought with MONOTONICITY, and it is the right trade
+            # because a flattened-but-ordered objective can still be steered and
+            # a capped one cannot. Weights are the instrument for sensitivity. A
+            # published operating point would be a better ceiling than 1.0;
+            # `literature_compare` is `unavailable` here by G35/A18, so there is
+            # no honest one to use, and adopting one later is a config edit.
+            ceiling = m_spec.get("max_possible")
+            if null_base is None or null_base <= 0:
                 norm_val = 0.0
+            elif ceiling is None:
+                # A metric with no target AND no declared ceiling cannot be
+                # normalised honestly. Refusing beats inventing a denominator --
+                # inventing one is precisely what this version removed.
+                print(f"     [UNSCORABLE] {m_name} has no `target` and no "
+                      f"`max_possible`, so a margin over its null has no scale "
+                      f"to be a fraction OF; declare max_possible in "
+                      f"config.json", file=sys.stderr)
+                passed_invariants = False
+                norm_val = 0.0
+            elif direction == "maximize":
+                headroom = ceiling - null_base
+                norm_val = (0.0 if headroom <= 0 else
+                            min(1.0, max(0.0, (val - null_base) / headroom)))
+            else:
+                headroom = null_base - ceiling
+                norm_val = (0.0 if headroom <= 0 else
+                            min(1.0, max(0.0, (null_base - val) / headroom)))
         elif direction == "maximize":
             # If null baseline is set, normalize progress between [null_baseline, target]
             if null_base is not None and target > null_base:
@@ -386,7 +430,15 @@ ACCEPTED_VERDICTS = ("**ACCEPTED**", "**KITCHEN_ELIGIBLE**")
 # alters the weighted mean, so two composites computed under different values
 # are two different functions' outputs and are not comparable.
 SCORING_FIELDS = ("weight", "target", "min_acceptable", "max_acceptable",
-                  "direction", "null_baseline", "split_nulls")
+                  "direction", "null_baseline", "split_nulls",
+                  # H259 added `max_possible` as the no-target normaliser's
+                  # denominator and I did NOT add it here in the same edit --
+                  # so the ceiling, which directly scales every no-target
+                  # metric, moved without moving the digest. Caught by reading
+                  # `--eval` and seeing 3df7bc4b430d unchanged across a change
+                  # that visibly moved the composite. The digest's whole job is
+                  # to notice exactly this, and it was one cycle old.
+                  "max_possible")
 
 
 def metric_spec_digest(metrics_spec):
@@ -568,6 +620,48 @@ def selfcheck():
     if not errors:
         bad.append("the refusal must remain in `errors`, or `is_eligible` loosens")
 
+    # ---- H259: the no-target normaliser must be MONOTONE, not capped.
+    def score_one(val, spec):
+        cfg = {"evaluators": {"e": {"command": ev(
+                   'import json; print(json.dumps({"m": %r, "split": "s"}))' % val),
+                   "timeout_sec": 30}},
+               "metrics": {"m": spec}}
+        b = _io.StringIO()
+        with contextlib.redirect_stderr(b):
+            r, _e = evaluate_suite(cfg)
+        return r["_composite_score"], b.getvalue()
+
+    HEAD = {"direction": "maximize", "target": None, "min_acceptable": None,
+            "weight": 1.0, "null_baseline": 0.2, "max_possible": 1.0}
+    at_null, _ = score_one(0.2, HEAD)
+    at_2x, _ = score_one(0.4, HEAD)
+    at_ceiling, _ = score_one(1.0, HEAD)
+    if not (at_null < at_2x < at_ceiling):
+        bad.append(f"the no-target normaliser must be MONOTONE across 2x null: "
+                   f"{at_null} {at_2x} {at_ceiling}")
+    if abs(at_null - 0.0) > 1e-9:
+        bad.append(f"a value AT the null must score 0.0, got {at_null}")
+    if abs(at_ceiling - 1.0) > 1e-9:
+        bad.append(f"a value AT the ceiling must score 1.0, got {at_ceiling}")
+    below, _ = score_one(0.1, HEAD)
+    if abs(below - 0.0) > 1e-9:
+        bad.append(f"a value BELOW the null must floor at 0.0, got {below}")
+
+    # F4's arm: no target AND no ceiling must REFUSE, not invent a denominator.
+    NOCEIL = {k: v for k, v in HEAD.items() if k != "max_possible"}
+    cfgn = {"evaluators": {"e": {"command": ev(
+                'import json; print(json.dumps({"m": 0.4, "split": "s"}))'),
+                "timeout_sec": 30}},
+            "metrics": {"m": NOCEIL}}
+    b = _io.StringIO()
+    with contextlib.redirect_stderr(b):
+        rn, _e = evaluate_suite(cfgn)
+    logn = b.getvalue()
+    if "[UNSCORABLE]" not in logn:
+        bad.append("no target and no max_possible must be REPORTED as unscorable")
+    if rn.get("_invariants_passed") is not False:
+        bad.append("an unscorable metric must FAIL invariants, not score silently")
+
     # ---- H262: the metric-spec digest and the ratchet reset.
     md = os.path.join(REPO_ROOT, ".scratch", "autoloop_selfcheck")
     os.makedirs(md, exist_ok=True)
@@ -582,6 +676,18 @@ def selfcheck():
         bad.append("changing a WEIGHT must change the spec digest")
     if metric_spec_digest({"m": dict(m_a["m"], why="prose only")}) != metric_spec_digest(m_a):
         bad.append("a non-scoring field must NOT change the digest")
+    # EVERY scoring field must move the digest. H259 added `max_possible` as the
+    # no-target denominator and did not add it to SCORING_FIELDS in the same
+    # edit, so the ceiling scaled every no-target metric while the digest sat
+    # still. This drives the whole list rather than that one field, because the
+    # next field added will be forgotten the same way.
+    for f, v in (("weight", 9.0), ("target", 0.5), ("min_acceptable", 0.1),
+                 ("max_acceptable", 0.9), ("direction", "minimize"),
+                 ("null_baseline", 0.3), ("max_possible", 2.0),
+                 ("split_nulls", {"s": {"null_mrr": 0.1}})):
+        moved = metric_spec_digest({"m": dict(m_a["m"], **{f: v})})
+        if moved == metric_spec_digest(m_a):
+            bad.append(f"changing the scoring field `{f}` must move the spec digest")
 
     def pareto(rows, spec):
         globals()["MEMORY_FILE"] = mem
@@ -665,8 +771,12 @@ def selfcheck():
             "evaluators": {"e": {"command": ev(
                 'import json; print(json.dumps(%s))'
                 % json.dumps({"m": val, "split": declared})), "timeout_sec": 30}},
+            # max_possible declared: H259 makes a no-target metric without a
+            # ceiling UNSCORABLE, and this fixture is about the SPLIT-NULL
+            # gate, so it must not trip the other refusal.
             "metrics": {"m": {"direction": "maximize", "target": None,
                               "min_acceptable": None, "weight": 1.0,
+                              "max_possible": 1.0,
                               "split_nulls": split_nulls}},
         }
         b = _io.StringIO()
@@ -713,7 +823,9 @@ def selfcheck():
               "split-null gate distinguishes MEASURED-BUT-NOT-A-BAR from "
               "NEVER-MEASURED from GATEABLE in both directions, and a metric "
               "spec change RESETS the Pareto ratchet loudly while a same-spec "
-              "baseline still bites in both directions")
+              "baseline still bites in both directions, and the no-target "
+              "normaliser is monotone from null to ceiling and refuses a "
+              "metric that declares neither")
     return 1 if bad else 0
 
 

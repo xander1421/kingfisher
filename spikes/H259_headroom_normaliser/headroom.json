@@ -1,0 +1,59 @@
+{
+ "acceptance_threshold_H255": 0.3464,
+ "cap_equals_acceptance_threshold": true,
+ "curve": [
+  {
+   "filtered_mrr": 0.1732,
+   "hits_at_10": 0.2855,
+   "new": 0.4876,
+   "old": 0.4876
+  },
+  {
+   "filtered_mrr": 0.2313,
+   "hits_at_10": 0.3783,
+   "new": 0.5355,
+   "old": 0.6531
+  },
+  {
+   "filtered_mrr": 0.3464,
+   "hits_at_10": 0.571,
+   "new": 0.6331,
+   "old": 0.9876
+  },
+  {
+   "filtered_mrr": 0.5,
+   "hits_at_10": 0.7,
+   "new": 0.7248,
+   "old": 0.9876
+  },
+  {
+   "filtered_mrr": 0.75,
+   "hits_at_10": 0.85,
+   "new": 0.8562,
+   "old": 0.9876
+  },
+  {
+   "filtered_mrr": 1.0,
+   "hits_at_10": 1.0,
+   "new": 0.9876,
+   "old": 0.9876
+  }
+ ],
+ "elapsed_sec": 0.18,
+ "new_is_monotone": true,
+ "new_never_exceeds_old": true,
+ "nulls": {
+  "filtered_mrr": 0.1732,
+  "hits_at_10": 0.2855
+ },
+ "old_cap_at": {
+  "filtered_mrr": 0.3464,
+  "hits_at_10": 0.571
+ },
+ "old_is_flat_above_the_cap": true,
+ "spec_digest": {
+  "with_ceilings": "f19634cc41ee",
+  "without_ceilings": "3df7bc4b430d"
+ },
+ "spike": "H259"
+}

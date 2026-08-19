@@ -27,6 +27,8 @@
       "weight": 2.0,
       "gate_status": "WITHDRAWN_NOT_MET",
       "withdrawn_because": "PROGRAM.md:40 gates `filtered_mrr >= 0.2500 (Current: 0.2648)` — the bar is derived from the number it gates (ATOM-3's finding, AGENT-2's G48 row), and the evaluator reads spikes/G34_length1_and_constants/, the 70/15/15 SHUFFLE spike, which reports exactly 0.2648. So the gate compared the leak to itself and passed. Operator 2026-08-19: 'the graph-AI floors are withdrawn, not met.'",
+      "max_possible": 1.0,
+      "max_possible_why": "MRR's theoretical maximum: every true target ranked first. Declared under H259 because the no-target normaliser now measures the fraction of ACHIEVABLE HEADROOM captured -- (val - null) / (max_possible - null) -- instead of dividing the margin by the null and capping at 2x it, which made 0.3464 and 1.0 score identically. 1.0 is unreachable in practice, so this compresses real progress: that is sensitivity traded for monotonicity, and weights are the instrument for sensitivity. A published operating point would be a better ceiling; literature_compare is unavailable here (G35/A18), so there is no honest one yet. Changing it is a config edit and resets the Pareto ratchet loudly (H262).",
       "bar_rule": "A BAR IS A NUMBER MINUS ITS OWN SPLIT'S NULL, NEVER A NUMBER (AGENT-2, verified against the artifacts by AGENT-3). Pair a bar with the prior measured on the SAME split or it is not a bar.",
       "split_nulls": {
         "pair_disjoint": {
@@ -83,6 +85,8 @@
       "min_acceptable": null,
       "weight": 1.5,
       "why": "G102, ATOM-3 2026-08-19. WAS 0.4/0.35, derived from the leaky 0.3929 -- the same provenance as the filtered_mrr floors the operator withdrew, left armed on this metric when they were removed from its sibling. Fixing the class, not the site (MISSION_LOOP 12.2). min_acceptable 0.2855 = G49 frequency null Hits@10 on the leak-free split. target 0.3662 = G54 arm B. Current system scores 0.2061 there and fails, which is the honest state. Same A22 caveat as filtered_mrr: one party wrote the evaluator and the bar.",
+      "max_possible": 1.0,
+      "max_possible_why": "Hits@10's theoretical maximum: every true target inside the top 10. Same reasoning as filtered_mrr's ceiling (H259); this metric had the same capped normaliser and its null anchor is 0.2855.",
       "gate_status": "WITHDRAWN_NOT_MET",
       "withdrawn_because": "G102, ATOM-3 2026-08-19. Was 0.4 / 0.35, derived from the leaky 0.3929 — the same provenance as the filtered_mrr floors AGENT-2/AGENT-3 withdrew, and left ARMED on this metric when they were removed from its sibling. Withdrawn on the same grounds rather than re-set: fix the class, not the site (MISSION_LOOP 12.2). Its split null is 0.2855 (G49 frequency_null hits10, pair-disjoint) and the bar_rule on filtered_mrr applies unchanged — a bar is a margin over its own split's null, never a bare number.",
       "null_baseline": 0.2855,

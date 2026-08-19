@@ -1,0 +1,290 @@
+{
+ "spike": "H259_headroom_normaliser",
+ "recorded_utc": "2026-08-19T22:34:03Z",
+ "note": "H259: the objective saturated at 2x the null, which is exactly the value H255 measured as the acceptance threshold.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/scripts",
+   "head": "143b386e22c396e8abe91ce4435bfd9e3d08c589",
+   "clean": false,
+   "dirty_files": [
+    "scripts/autoloop.py"
+   ],
+   "diff_sha256": "8db4f34d9eaedd2dcc137b302fb009d8a7eb1d7ffc064c1aa5799b916616d189",
+   "diff_bytes": 10190
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H259_headroom_normaliser/headroom.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H259_headroom_normaliser/headroom.json",
+   "sha256": "0040552c5b909df199d667f2f6649dbf5f511342acb013461593ccf500efe9bd",
+   "bytes": 1018,
+   "mtime": 1787178843,
+   "repro_sha256": "0040552c5b909df199d667f2f6649dbf5f511342acb013461593ccf500efe9bd",
+   "repro_excluded": [],
+   "compared_ts": 1787178843,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_the_OLD_objective_was_FLAT_across_the_whole_upper_range",
+   "must_fire_because": "this is the defect. If the old formula distinguished 2x null from a perfect score there is nothing here",
+   "can_fail_because": "the old composite differs between the cap and the maximum",
+   "null_must_contain": "both old values",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "old_at_cap": 0.9876,
+    "old_at_maximum": 0.9876,
+    "cap_is": "2 x null = 0.3464"
+   }
+  },
+  {
+   "name": "C2_the_NEW_objective_moves_across_that_same_range",
+   "must_fire_because": "a fix that left the two indistinguishable would not be one",
+   "can_fail_because": "the new composite is equal at the cap and the maximum",
+   "null_must_contain": "both new values",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "new_at_cap": 0.6331,
+    "new_at_maximum": 0.9876
+   }
+  },
+  {
+   "name": "C3_the_new_objective_is_MONOTONE_over_every_point",
+   "must_fire_because": "the point is orderability, not a bigger number. A fix that moved but non-monotonically would be worse than the cap it replaced",
+   "can_fail_because": "any adjacent pair decreases",
+   "null_must_contain": "the ordered series",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "series": [
+     [
+      0.1732,
+      0.4876
+     ],
+     [
+      0.2313,
+      0.5355
+     ],
+     [
+      0.3464,
+      0.6331
+     ],
+     [
+      0.5,
+      0.7248
+     ],
+     [
+      0.75,
+      0.8562
+     ],
+     [
+      1.0,
+      0.9876
+     ]
+    ]
+   }
+  },
+  {
+   "name": "C4_BOTH_FORMULAE_AGREE_AT_THE_NULL_AND_AT_THE_CEILING",
+   "must_fire_because": "the old arithmetic is REIMPLEMENTED here, so it needs an anchor. Both are defined to give 0 at the null and 1 at the ceiling; if the reimplementation disagreed there, the whole comparison would be against a straw formula",
+   "can_fail_because": "old and new disagree at either endpoint",
+   "null_must_contain": "both endpoints under both formulae",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "at_null": {
+     "old": 0.4876,
+     "new": 0.4876
+    },
+    "at_ceiling": {
+     "old": 0.9876,
+     "new": 0.9876
+    }
+   }
+  },
+  {
+   "name": "C5_NOT_A_LOOSENING_at_any_measured_point",
+   "must_fire_because": "this cycle moves the objective the OPPOSITE way from H262 one cycle earlier, and two consecutive changes to one gate in opposite directions should be checked rather than trusted",
+   "can_fail_because": "the new composite exceeds the old anywhere",
+   "null_must_contain": "every point's old and new values",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "points": [
+     {
+      "mrr": 0.1732,
+      "old": 0.4876,
+      "new": 0.4876
+     },
+     {
+      "mrr": 0.2313,
+      "old": 0.6531,
+      "new": 0.5355
+     },
+     {
+      "mrr": 0.3464,
+      "old": 0.9876,
+      "new": 0.6331
+     },
+     {
+      "mrr": 0.5,
+      "old": 0.9876,
+      "new": 0.7248
+     },
+     {
+      "mrr": 0.75,
+      "old": 0.9876,
+      "new": 0.8562
+     },
+     {
+      "mrr": 1.0,
+      "old": 0.9876,
+      "new": 0.9876
+     }
+    ]
+   }
+  },
+  {
+   "name": "C6_a_metric_with_NEITHER_target_NOR_ceiling_REFUSES",
+   "must_fire_because": "the fix must not replace one unstated denominator with another; a metric that cannot be normalised honestly has to say so",
+   "can_fail_because": "it scores silently instead of refusing",
+   "null_must_contain": "the printed line and the invariant result",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "printed_UNSCORABLE": true,
+    "invariants_passed": false
+   }
+  },
+  {
+   "name": "C7_the_CEILING_moves_the_metric_spec_digest",
+   "must_fire_because": "H259 added `max_possible` as a denominator and did NOT add it to SCORING_FIELDS in the same edit, so the ceiling scaled every no-target metric while H262's digest sat still. Caught by reading --eval, not by any arm",
+   "can_fail_because": "removing the ceilings leaves the digest unchanged",
+   "null_must_contain": "both digests",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "with_ceilings": "f19634cc41ee",
+    "without_ceilings": "3df7bc4b430d"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_the_cap_is_unreachable_so_the_blindness_is_latent",
+   "must_fire_because": null,
+   "can_fail_because": "no plausible value exceeds 2x its null",
+   "null_must_contain": "the cap and the acceptance threshold",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "cap": 0.3464,
+    "acceptance_threshold_measured_in_H255": 0.3464,
+    "they_are_the_same_value": true,
+    "note": "not latent -- the flat region begins exactly at the value the lane is aiming at"
+   },
+   "refutes": "that the defect is live",
+   "fires_when": "no plausible value exceeds 2x its null",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_the_new_normaliser_is_still_flat_across_the_old_cap",
+   "must_fire_because": null,
+   "can_fail_because": "the new composite is equal at the cap and the maximum",
+   "null_must_contain": "both values",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "new_at_cap": 0.6331,
+    "new_at_maximum": 0.9876
+   },
+   "refutes": "that this fixes what it was written for",
+   "fires_when": "the new composite is equal at the cap and the maximum",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_the_change_is_a_LOOSENING_somewhere",
+   "must_fire_because": null,
+   "can_fail_because": "the new composite exceeds the old at any point",
+   "null_must_contain": "the offending points",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "looser_points": []
+   },
+   "refutes": "the claim that this tightens the objective",
+   "fires_when": "the new composite exceeds the old at any point",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_a_metric_with_no_target_and_no_ceiling_scores_silently",
+   "must_fire_because": null,
+   "can_fail_because": "no UNSCORABLE line and invariants still pass",
+   "null_must_contain": "the log and the invariant result",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "printed_UNSCORABLE": true,
+    "invariants_passed": false
+   },
+   "refutes": "that the refusal replaced the invented denominator",
+   "fires_when": "no UNSCORABLE line and invariants still pass",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "newest": 1787178782,
+   "from": "scripts/autoloop.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/scripts at 143b386e: 1 modified. The build is NOT 143b386e."
+ ],
+ "ok": false,
+ "falsifier": "the new normaliser is still flat across the old cap, OR it scores any candidate HIGHER than the capped one did"
+}
