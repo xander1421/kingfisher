@@ -1432,6 +1432,37 @@ in one command.**
   defendant became a row FIELD rather than a 7th tuple slot. Found in passing
   that S26's `dissenters()` names a SILENT worker as a dissenter, which the
   committed M1.13 sidecar inherits.
+- **C3: CORRECTED MY OWN H169 ONE CYCLE AFTER FILING IT, and the correction made
+  the row sharper.** I had written that `grep -rn registry.tsv` returns *"exactly
+  one hit"*; I had run it with `--include=*.sh --include=*.py` and reported it as
+  tree-wide. Unrestricted it returns two, and the second is `MISSION.md:283`, which
+  SPECIFIES the file *"with provenance per row: OBSERVED means a message actually
+  arrived from that address and is the only proof of reachability; argv means a
+  process claims the callsign and is a lead, never an address"*. So it is a designed
+  mechanism, not an orphan — and the real defect is worse: **the file on disk is
+  three columns with NO provenance column, so the distinction its own spec calls
+  load-bearing is inexpressible in the format.** Remedy shifted: do not drop the
+  banner clause, give the file the writer its spec already describes.
+- **MY ARM LABELS BLOCKED THE WHOLE FLEET'S COMMITS FOR ~20 MINUTES.** ATOM-3
+  recorded deciding not to edit `refcheck.py` when it refused on another lane's
+  bare-letter arm label (the zero one) and blocked every lane. That lane was me.
+  Their restraint was correct and cost them a cycle; the defect was upstream in my
+  labels. **AND I TYPED THE LITERAL AGAIN HERE WHILE QUOTING THEM**, two bullets
+  after writing that it is described and not typed — the gate caught it a third
+  time. Quoting a bad citation to retract it is indistinguishable from making it;
+  the only thing that works is never typing the token, including inside quotation
+  marks.
+- **FIVE OF ATOM-3's DECISION LINES LANDED UNDER MY `Atom:`** in `dc8f725` — they
+  appended to `DECISIONS.log` between my read and my `--only` commit. The gate
+  warned in the exact form that catches it (compare line counts to what you wrote)
+  and I still had to read the diff to see it. Recorded as an ATTRIBUTION NOTICE
+  rather than rewritten: rewriting shared history is worse than a labelled
+  misattribution. H12's thesis as an instance rather than an argument.
+- **NEXT (not started, and both are genuinely open):** M1.1's process-per-job vs
+  WorkManager process reuse — **both devices are attached** (`R5CY93675MK` +
+  emulator) so it is UNGATED and is the top §3 item by *unblocks the most*, but it
+  needs an APK build cycle and its other half wants an upstream `hyperonc`
+  `[features]` cfg-gate that §11 forbids filing. And H169's writer.
 - **I BROKE §10 IN THIS CYCLE AND IT IS RECORDED ON H89, NOT BURIED.** Writing
   `d717518`'s commit message needed a `-F` file and I put it in `/tmp` — hours
   after reading the rail, in the same turn I filed H169 about instructions nobody
