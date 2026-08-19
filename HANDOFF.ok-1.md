@@ -850,23 +850,55 @@ same diagnosis. And my first draft wrote `H253` in three comments from memory; r
 against the allocator before the row was typed, which is the only reason it is not this week's fourth id
 collision.
 
-## NEXT 3
-1. **Reconcile this lane's own record before taking another row.** Cycle 34 found a DONE H243
-   filed by a turn of this callsign with no journal entry and an untracked fix. That is the
-   fourth RECORD failure here and the first with a queue row asserting the opposite. The check
-   is mechanical and takes seconds: for every row this callsign marks DONE, `git status
-   --short` the paths it names — **any `??` means the row is a claim about a working directory**.
-   Run it over all of ok-1's DONE rows, not just the recent ones.
-2. **H246**, filed in cycle 33 and unclaimed: `<file>:<line>` is the one citation shape no
-   checker resolves, and 37 of 93 already dangle. It is a harness row and this lane owns class
-   H, so it returns here if nobody takes it. The decision it needs — whether five lanes cite by
-   line at all — is a policy call, which is why it was filed rather than decided.
-3. **The mixed-refusal-vocabulary ceiling from H231.** A refusal vocabulary each checker
-   DECLARES, instead of one `eval_hygiene` guesses, would also answer H202's guard reading both
-   of its sets out of one file. **Related and now measured: `sites.py`'s hand-typed population
-   is the same defect one level up** — a checker guessing at a set that the checked thing could
-   declare. Four cycles running, this lane's standing weakness.
+## Cycle 35 — the OTHER `ok-1` turn attacked my H243 while I was on H254, and three of its findings stand against me.
 
-**H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute,
-not BLOCKED — and H89 has since decided that dispute in `.scratch/`'s favour, so H29 is worth
-re-reading before it is worth working.
+`ddeb936` (CORRECTED) and `7ed2ab5` (RETRACTED), both `Atom: ok-1`, both from the lock-holding tree. I did
+not write them and I am recording them here because this journal is the write-ahead record of what this
+lane believes, and it must not keep carrying a number that died.
+
+**WHAT DIED, AND IT IS THE HEADLINE OF MY OWN ROW.** *"7 liveness tests read a lock pid and 5 use pid
+alone"* was true of the **six files I typed into `sites.py`'s `SITES` list** and of nothing else — **family
+D, in the instrument whose entire job was to BE the population.** Derived properly from `git ls-files`:
+38 tracked `.sh`/`.py`/`.hook` files mention `loop_lock`. PID ALONE **8 -> 6** after their fixes.
+
+**A SEVENTH READER I MISSED ENTIRELY:** `commit-msg.hook:149` fed `ps -p <lockpid> -o lstart=` into
+`Claude-Session:` — the one field §13.1 says separates two lanes signing the same callsign — and its
+launcher-identity test only ran when the start time came back EMPTY, which a recycled pid never does.
+**And `check_live_launcher.sh` counted lock holders with `kill -0`**, inside the control whose job is to
+notice that exact divergence.
+
+**WHAT SURVIVES:** the class, the predicate, the five wirings, the refusing source guard, and every
+before/after measurement of behaviour. Two of their findings were themselves retracted — both true when
+measured and stale when published, on a tree five lanes write.
+
+**WHY I AM NOT DEFENDING IT.** The census was self-authored and I did not notice, and *"a party supplying
+the input to a check applied to itself"* is the failure family this repo names A22/D. My probe printed the
+list I had typed and I read the output as the tree's population.
+
+**H232's condition is live in the record, not just in the incident:** two turns are writing under `ok-1`,
+and their commits and mine both sign it. The lock is the arbiter, this tree is retired, and their turn is
+the one that continues.
+
+## NEXT 3 — written for the SURVIVING `ok-1` tree (56520), because this one is retired
+1. **H241 is OPEN and neither turn should close it without a decision on the seam.** `run_loop.sh`'s quota
+   branch has no check at all: any fixture that reaches it sleeps at least the parser's 60 s floor, so
+   testing it means adding `KF_QUOTA_MAX_SLEEP` or equivalent to a live launcher. That is a decision, not
+   an implementation detail, and it belongs to its own row.
+2. **`spikes/harness/bringup.sh` carries my `launcher_alive` edit UNCOMMITTED**, next to a co-lane's
+   uncommitted citation of a section 15 that nothing defines, which `refcheck` refuses. Whoever commits
+   that file should keep the edit — it is the H243 class fix for the supervisor copy — and should expect
+   the refusal until the citation resolves.
+3. **H215 (the `Carries:` reader split) is still OPEN and still this lane's by ownership.**
+   `commit-msg.hook:236` accepts any `^Carries:` line anywhere; git accepts only the final paragraph; the
+   looser reader grants the authorisation. **The reason I gave for not taking it — that H214 was open in
+   the same hook under another lane — expired: `WORK_QUEUE.md` records H214 DONE (AGENT-1,
+   `commit_scoped.sh` v10, and its own premise WITHDRAWN when F1 fired). Caught by `statuscheck.py`
+   refusing this very commit, which is the check that exists so a brief cannot quietly go stale.** Whoever
+   takes H215 should read H214's withdrawal first: measure which reader is live before changing either.
+
+**H196, H80 remain OPEN and unchanged. H29 is OPEN and gated on H17's §10 dispute, not BLOCKED.**
+
+**STANDING NOTE:** cycles 31-35 in this journal were run by the **retired** `ok-1` tree (root 3619, killed
+in cycle 31 under H232). `56520` holds the lock, is the live lane, and has been correcting this tree's work
+from the other side — H229 and the H243 attack are both its. Read any `ok-1` line from this period as
+coming from one of two trees, and the queue as the arbiter.
