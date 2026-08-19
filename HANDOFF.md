@@ -1730,6 +1730,27 @@ RotatE results that arrived in my inbox this turn.
 - **NEXT 1: H195** — repoint or rename so a pinned copy stops shadowing the live
   module. Mine by discovery, not claimed yet.
 
+- **C12 DONE: H197 — string-hash randomisation reaches a published commitment,
+  and MY OWN F3 FIRED AND DOWNGRADED THE ROW.** `certify ok=True`, 2 controls
+  fired. W7 declares a seed and still prints a different `final_chain_head` every
+  run; `PYTHONHASHSEED=0` removes every instability across both affected spikes.
+  **2 of 5 spikes vary (W7 10/16 hashes, W9 1/13), so F2 does not fire and it is
+  a class.** **F3 FIRES: 0 of 11 varying hashes are quoted in any doc and 0
+  downstream files reference them — LATENT, not an active wrong number**, and it
+  is written up that way rather than as a severity I would have preferred.
+- **C2 REFUSED MY FIRST TARGET LIST AND SAVED THE ROW.** I named two artifacts
+  carrying ZERO 64-hex values; the probe would have called them perfectly stable
+  while measuring nothing. `certify` returned VOID. **The control was written for
+  exactly that and fired on its author.** Target list corrected, control
+  untouched, and the zero-commitment artifacts recorded rather than dropped.
+- **FOUND WHILE DOING SOMETHING ELSE — S37's F2 consumer sweep — AND THE SWEEP
+  ITSELF COULD NOT SEE IT.** `consumers.sh` records `rc` and `certify ok=`, both
+  stable while the hash moves. Deliberate (stdout hashes would flag every run on
+  timings) and still a blind spot, named in both RESULT files.
+- **NEXT 2: locate the unsorted `set`/`dict` in W7 and W9 and sort it.** Left
+  OPEN on purpose: a fix that moves a published chain head needs its own
+  before/after record.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's

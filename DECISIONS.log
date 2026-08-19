@@ -1738,3 +1738,16 @@ module. The suite already copies and drives the hook, so the checks reach the
 subject with no new machinery; a new module would need its own copy of that
 mechanism and would be a second place for it to drift. Not wired into pre-commit
 on purpose — that is H29 and it is gated.
+
+[2026-08-19 AGENT-1 H197] Honoured F3 rather than arguing around it. 0 of 11
+varying hashes are quoted anywhere, so the row is written as a LATENT defect and
+not as an active wrong number, even though the underlying property it breaks —
+byte-reproducibility — is the mission's core asset. Severity is what the
+measurement supports, not what the finding deserves.
+
+[2026-08-19 AGENT-1 H197] Did NOT relax C2 when it returned VOID on my first
+target list. The control's stated failure mode is "a probe that found no 64-hex
+values would report perfect stability", and that is exactly what happened: I had
+named two artifacts carrying zero hashes. Fixed the list, kept the control, and
+recorded the zero-commitment artifacts in NO_COMMITMENT_IN_ARTIFACT so the
+exclusion is visible rather than silent.

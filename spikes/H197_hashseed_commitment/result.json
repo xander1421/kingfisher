@@ -1,0 +1,68 @@
+{
+  "spike": "H197",
+  "targets": 5,
+  "ran": 5,
+  "excluded_no_commitment_in_artifact": {
+    "S80_completeness_bytes/completeness.json": 0,
+    "S27_verify_floor/verify_floor.json": 0,
+    "S24_range_crossover/range_crossover.json": 0,
+    "W2_witnessed_trie/attack.json": 0
+  },
+  "n_spikes_with_unstable_hashes": 2,
+  "n_explained_by_hash_order": 2,
+  "per_spike": {
+    "W7_streaming_witness": {
+      "n_hashes": 16,
+      "unstable_default": [
+        "/streaming_benchmark/final_chain_head",
+        "/streaming_benchmark/final_record/chain_head",
+        "/streaming_benchmark/final_record/root",
+        "/streaming_benchmark/final_root",
+        "/streaming_benchmark/sampled_records[3]/chain_head",
+        "/streaming_benchmark/sampled_records[3]/root",
+        "/streaming_benchmark/sampled_records[4]/chain_head",
+        "/streaming_benchmark/sampled_records[4]/root",
+        "/streaming_benchmark/sampled_records[5]/chain_head",
+        "/streaming_benchmark/sampled_records[5]/root"
+      ],
+      "n_unstable_default": 10,
+      "unstable_hashseed0": [],
+      "n_unstable_hashseed0": 0,
+      "explained_by_hash_order": true
+    },
+    "W9_bound_streaming_witness": {
+      "n_hashes": 13,
+      "unstable_default": [
+        "/continuous_reduction_stream/final_root"
+      ],
+      "n_unstable_default": 1,
+      "unstable_hashseed0": [],
+      "n_unstable_hashseed0": 0,
+      "explained_by_hash_order": true
+    },
+    "W6_incremental_witness": {
+      "n_hashes": 134,
+      "unstable_default": [],
+      "n_unstable_default": 0,
+      "unstable_hashseed0": [],
+      "n_unstable_hashseed0": 0,
+      "explained_by_hash_order": false
+    },
+    "W2_witnessed_trie": {
+      "n_hashes": 1,
+      "unstable_default": [],
+      "n_unstable_default": 0,
+      "unstable_hashseed0": [],
+      "n_unstable_hashseed0": 0,
+      "explained_by_hash_order": false
+    },
+    "S85_verify_vs_reexec": {
+      "n_hashes": 15,
+      "unstable_default": [],
+      "n_unstable_default": 0,
+      "unstable_hashseed0": [],
+      "n_unstable_hashseed0": 0,
+      "explained_by_hash_order": false
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+ "spike": "H197_hashseed_commitment",
+ "recorded_utc": "2026-08-19T16:53:36Z",
+ "note": "H197: string-hash randomisation reaching a published commitment.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W7_streaming_witness",
+   "head": "f0a8c26c3bc6816687f6c35316f8c79734fa03ad",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W7_streaming_witness/streaming.json"
+   ],
+   "diff_sha256": "7c809aed784fa3bb378f9df7bb6c5d2784700a0caf6a0e48bc2a0bb05a8eda4b",
+   "diff_bytes": 7913
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/W7_streaming_witness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H197_hashseed_commitment/result.json",
+   "sha256": "19090a5d725be1215255c79833f04af9f91eddd8f86519a3c0224544b39a7d08",
+   "bytes": 2114,
+   "mtime": 1787158416,
+   "compared_ts": 1787158416,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_probe_sees_stability",
+   "must_fire_because": "at least one measured spike must come out STABLE, or the probe is calling everything unstable",
+   "can_fail_because": "a probe comparing timestamps as hashes would report every spike unstable and distinguish nothing",
+   "null_must_contain": "every spike reported unstable",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ran": 5,
+    "unstable": 2,
+    "stable": 3
+   }
+  },
+  {
+   "name": "C2_hashes_were_found",
+   "must_fire_because": "a probe that found no 64-hex values would report perfect stability",
+   "can_fail_because": "a wrong artifact filename yields an empty hash set and a vacuous green",
+   "null_must_contain": "a spike with n_hashes = 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "W7_streaming_witness": 16,
+    "W9_bound_streaming_witness": 13,
+    "W6_incremental_witness": 134,
+    "W2_witnessed_trie": 1,
+    "S85_verify_vs_reexec": 15
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_not_hash_order",
+   "must_fire_because": null,
+   "can_fail_because": "a PYTHONHASHSEED=0 pair also diverges",
+   "null_must_contain": "an unstable hash that survives PYTHONHASHSEED=0",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "W7_streaming_witness": 0,
+    "W9_bound_streaming_witness": 0,
+    "W6_incremental_witness": 0,
+    "W2_witnessed_trie": 0,
+    "S85_verify_vs_reexec": 0
+   },
+   "refutes": "that string-hash randomisation is the cause",
+   "fires_when": "a PYTHONHASHSEED=0 pair also diverges",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_only_one_spike",
+   "must_fire_because": null,
+   "can_fail_because": "exactly one measured spike publishes an unstable hash",
+   "null_must_contain": "a single varying spike",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "varying": [
+     "W7_streaming_witness",
+     "W9_bound_streaming_witness"
+    ],
+    "ran": 5
+   },
+   "refutes": "that this is a CLASS rather than one spike's defect",
+   "fires_when": "exactly one measured spike publishes an unstable hash",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/W7_streaming_witness": {
+   "newest": 1787158237,
+   "from": "spikes/W7_streaming_witness/streaming.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "PYTHONHASHSEED=0 does not stabilise the hashes, or only one spike varies",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
