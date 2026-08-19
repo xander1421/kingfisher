@@ -1,5 +1,36 @@
 #!/usr/bin/env python3
-"""carriescheck.py v1 — H180. Compute the `Carries:` trailer instead of typing it.
+"""carriescheck.py v2 — H190. Compute the `Carries:` trailer instead of typing it.
+
+v2, H190 (AGENT-1, 2026-08-19). DEFECT REMOVED: THIS MODULE WAS READING AN
+OBJECT THE COMMIT IT GATES NEVER USES, SO ON ITS ONLY WIRED CALL SITE IT COULD
+ONLY EVER PRINT "clean".
+
+  `commit_scoped.sh` invoked this in its default INDEX mode (`git diff --cached`)
+  and then committed with `git commit --only "$@"`, whose entire purpose (§13,
+  H19) is that it IGNORES THE INDEX. MEASURED IN A SCRATCH REPO rather than read
+  off a man page (`spikes/H190_scope_of_the_check/probe.sh`): with one foreign
+  line STAGED and a second foreign line UNSTAGED, `git commit --only CHANNEL.md`
+  committed BOTH and left a staged sibling file OUT. So the index diff omits
+  exactly the lines `--only` picks up.
+
+  Reproduced on a real commit before the fix: `a3ea072` passed this check in
+  index mode and `carriescheck.py AGENT-1 a3ea072` reports
+  `Carries: AGENT-2 ATTACKER-1`. Same tool, same commit, opposite verdicts.
+
+  That is A15 -- a control that cannot fire -- inside the module written to end
+  hand-typed attribution. v1 diagnosed the cause correctly (*"`git add <path>`
+  commits the WORKING TREE of an append-only shared document"*) and then wired
+  itself to the index.
+
+  WHAT IS NOT FIXED AND IS NOT SILENTLY NARROWED: `POSITIONAL` still scores
+  `CHANNEL.md` and `DECISIONS.log` only. `livechat.log` remains OUT OF SCOPE, so
+  the two foreign posts `a3ea072` carried there would still not be named. v1's
+  own measured 26%-scoreable limit stands.
+
+  `--selfcheck` is new and is the point of the version: v1 shipped with its
+  checks in `test_carriescheck.sh`, a SHELL file, which H186 measured is
+  INVISIBLE to `selfcheckall.py` -- the only automatic runner here. A module
+  whose source HANDLES `--selfcheck` is discovered; a shell sibling is not.
 
 CLASS OF DEFECT REMOVED
 -----------------------
@@ -150,16 +181,32 @@ def added_staged(path: str):
     return [l[1:] for l in d.splitlines() if l.startswith("+") and not l.startswith("+++")]
 
 
+def added_worktree(path: str):
+    """WORKING TREE vs HEAD -- the object `git commit --only <path>` commits.
+
+    NOT `git diff` (worktree vs index): that omits a line the lane has already
+    staged, and `--only` commits those too. HEAD is the right base because HEAD
+    is what the new commit's parent is.
+    """
+    d = _sh(["git", "diff", "HEAD", "--unified=0", "--", path])
+    return [l[1:] for l in d.splitlines() if l.startswith("+") and not l.startswith("+++")]
+
+
 def added_rev(rev: str, path: str):
     d = _sh(["git", "show", "--format=", "--unified=0", rev, "--", path])
     return [l[1:] for l in d.splitlines() if l.startswith("+") and not l.startswith("+++")]
 
 
-def carried(atom: str, rev: str = None) -> dict:
-    """Foreign lanes whose lines this commit (or the staged index) carries."""
+def carried(atom: str, rev: str = None, worktree: bool = False) -> dict:
+    """Foreign lanes whose lines this commit / index / working tree carries."""
     out = {}
     for path in POSITIONAL:
-        lines = added_rev(rev, path) if rev else added_staged(path)
+        if rev:
+            lines = added_rev(rev, path)
+        elif worktree:
+            lines = added_worktree(path)
+        else:
+            lines = added_staged(path)
         foreign = authors_of(path, lines) - {canon(atom)}
         if foreign:
             out[path] = sorted(foreign)
@@ -171,7 +218,73 @@ def trailer_for(carried_map: dict) -> str:
     return ("Carries: " + " ".join(lanes)) if lanes else ""
 
 
+def selfcheck() -> int:
+    """Two-sided, in a scratch repo, and it FAILS IF THE FIX REGRESSES.
+
+    The whole finding is that index mode and worktree mode disagree on a tree
+    where a foreign line is unstaged. So the check asserts BOTH directions:
+    worktree mode must NAME the foreign lane, and index mode must MISS it. An
+    assertion that only checked the new mode would still pass if someone quietly
+    made both modes read the index again.
+    """
+    import os, shutil, subprocess as sp, tempfile
+    # H89/§10: inside the workspace. tempfile defaults to /tmp, which is not.
+    _root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    _scratch = os.path.join(_root, ".scratch")
+    os.makedirs(_scratch, exist_ok=True)
+    d = tempfile.mkdtemp(prefix="carriescheck_sc_", dir=_scratch)
+    cwd = os.getcwd()
+    try:
+        os.chdir(d)
+        for c in (["git", "init", "-q", "."],
+                  ["git", "config", "user.email", "t@t"],
+                  ["git", "config", "user.name", "t"]):
+            sp.run(c, check=True, capture_output=True)
+        # REAL callsigns, deliberately. `CALLSIGNS` is a CLOSED ENUMERATION,
+        # so a synthetic `LANE-2` matches nothing and this check would pass
+        # vacuously -- my first draft did exactly that and asserted `{}`. And
+        # ADDING a fixture callsign to that list is H64's class: a test id
+        # sharing the namespace with real allocations. So the fixture uses two
+        # real lanes inside a throwaway scratch repo, which pollutes nothing.
+        open("CHANNEL.md", "w").write("base\n")
+        sp.run(["git", "add", "CHANNEL.md"], check=True, capture_output=True)
+        sp.run(["git", "commit", "-qm", "base"], check=True, capture_output=True)
+
+        with open("CHANNEL.md", "a") as f:
+            f.write("DONE X1 AGENT-2 staged foreign line\n")
+        sp.run(["git", "add", "CHANNEL.md"], check=True, capture_output=True)
+        with open("CHANNEL.md", "a") as f:
+            f.write("DONE X2 AGENT-2 UNSTAGED foreign line\n")
+
+        wt = carried("AGENT-1", worktree=True)
+        ix = carried("AGENT-1")
+        assert "CHANNEL.md" in wt and wt["CHANNEL.md"] == ["AGENT-2"], wt
+        assert len(added_worktree("CHANNEL.md")) == 2, added_worktree("CHANNEL.md")
+        assert len(added_staged("CHANNEL.md")) == 1, added_staged("CHANNEL.md")
+
+        # NEGATIVE CONTROL: with NOTHING unstaged the two modes must AGREE, or
+        # worktree mode is inventing foreign lines rather than seeing more.
+        sp.run(["git", "add", "CHANNEL.md"], check=True, capture_output=True)
+        assert carried("AGENT-1", worktree=True) == carried("AGENT-1"), \
+            "modes disagree with nothing unstaged -- worktree mode is inventing lines"
+
+        # and a lane carrying only ITS OWN lines is named by neither mode.
+        sp.run(["git", "commit", "-qm", "x"], check=True, capture_output=True)
+        with open("CHANNEL.md", "a") as f:
+            f.write("DONE X3 AGENT-1 own line\n")
+        assert carried("AGENT-1", worktree=True) == {}, carried("AGENT-1", worktree=True)
+    finally:
+        os.chdir(cwd)
+        shutil.rmtree(d, ignore_errors=True)
+    print("carriescheck --selfcheck: ok -- 6 assertions, both modes exercised, "
+          "worktree sees the unstaged foreign line and the index does not")
+    return 0
+
+
 def main() -> int:
+    if "--selfcheck" in sys.argv[1:]:
+        return selfcheck()
+    worktree = "--worktree" in sys.argv[1:]
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     atom = args[0] if args else _sh(["git", "config", "user.callsign"]).strip()
     if not atom:
@@ -179,12 +292,13 @@ def main() -> int:
         atom = os.environ.get("CALLSIGN", "")
     if not atom:
         sys.stderr.write("carriescheck: REFUSING — no atom given and CALLSIGN unset.\n"
-                         "  usage: python3 spikes/harness/carriescheck.py <YOUR-CALLSIGN> [rev]\n")
+                         "  usage: python3 spikes/harness/carriescheck.py <YOUR-CALLSIGN> [rev] [--worktree|--selfcheck]\n")
         return 3
     rev = args[1] if len(args) > 1 else None
 
-    cm = carried(atom, rev)
-    where = rev[:8] if rev else "the STAGED index"
+    cm = carried(atom, rev, worktree=worktree)
+    where = rev[:8] if rev else ("the WORKING TREE (what `--only` commits)"
+                                 if worktree else "the STAGED index")
     if not cm:
         print(f"carriescheck: {where} carries no other lane's lines under Atom: {atom}")
         return 0
@@ -192,7 +306,8 @@ def main() -> int:
     print(f"carriescheck — {where} carries ANOTHER LANE'S LINES under Atom: {atom}\n")
     for path, lanes in sorted(cm.items()):
         print(f"  {path}: {' '.join(lanes)}")
-        lines = added_rev(rev, path) if rev else added_staged(path)
+        lines = (added_rev(rev, path) if rev
+                 else added_worktree(path) if worktree else added_staged(path))
         for ln in lines:
             a = authors_of(path, [ln])
             if a and not a <= {canon(atom)}:

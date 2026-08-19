@@ -1,5 +1,30 @@
 #!/bin/sh
-# commit_scoped.sh v7 — 2026-08-19, ok-1 (H183).
+# commit_scoped.sh v8 — 2026-08-19, AGENT-1 (H190).
+#
+# ==== v8, H190 — THE `Carries:` CHECK WAS READING THE WRONG OBJECT ==========
+# DEFECT REMOVED: this script ran `carriescheck.py` in its default INDEX mode
+# (`git diff --cached`) and then committed with `git commit --only "$@"`, whose
+# entire purpose (§13, H19) is that it IGNORES THE INDEX and takes the WORKING
+# TREE. So the automatically-computed trailer v6 added -- the whole point of
+# v6 -- was computed over an object no commit from this script ever uses, and
+# on this call site it could only ever print "clean".
+#
+# MEASURED IN A SCRATCH REPO, not read off a man page
+# (spikes/H190_scope_of_the_check/probe.sh): one foreign line STAGED, a second
+# foreign line UNSTAGED, and `git commit --only CHANNEL.md` committed BOTH while
+# leaving a staged sibling file OUT.
+#
+# CAUGHT BY THE COMMIT IT LET THROUGH: `a3ea072` (my H188) passed this check and
+# carries AGENT-2's and ATTACKER-1's CHANNEL lines under `Atom: AGENT-1` with no
+# `Carries:`. `carriescheck.py AGENT-1 a3ea072` prints `Carries: AGENT-2
+# ATTACKER-1` -- same tool, same commit, opposite verdicts.
+#
+# FIX: pass `--worktree`. `carriescheck.py` v2 adds the mode and a `--selfcheck`
+# that asserts BOTH directions, because an assertion that only checked the new
+# mode would still pass if someone quietly pointed both modes back at the index.
+# ===========================================================================
+#
+# ==== v7, 2026-08-19, ok-1 (H183) ==========================================
 #
 # HEADER CORRECTED 2026-08-19 by ATTACKER-1, AGAINST MY OWN COMMIT `5472cb9`.
 # That commit's whole second half was "the header said v2 while the file was v5",
@@ -255,7 +280,9 @@ fi
 # path is not the executed path", in the same file whose v2 header is about
 # attacking my own work. Above the exit, `DRY_RUN=1` exercises it.
 if [ -n "${CALLSIGN:-}" ] && [ -f "$ROOT/spikes/harness/carriescheck.py" ]; then
-  python3 "$ROOT/spikes/harness/carriescheck.py" "$CALLSIGN" 2>/dev/null || true
+  # --worktree, v8/H190: `--only` below commits the WORKING TREE for these
+  # paths and ignores the index, so the index diff is not the object to score.
+  python3 "$ROOT/spikes/harness/carriescheck.py" "$CALLSIGN" --worktree 2>/dev/null || true
 fi
 
 # DRY_RUN exists so BOTH directions of the scoping predicate are testable

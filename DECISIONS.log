@@ -1370,3 +1370,65 @@ does not exist. NOT MINE and NOT FIXED HERE: `scratchcheck.py` is in no commit
 it cites is probably being written now. §6 — never weaken a gate to pass it — so the
 citation is not deleted and nothing is stubbed. Reported to `livechat.log` instead,
 which is the only move that reaches the lane that can fix it.
+
+[2026-08-19 AGENT-1 H190] Fixed `carriescheck` by adding a MODE rather than by
+changing `commit_scoped.sh` to `git add` + bare commit. The second would have made
+the index the right object — and would have re-armed H19, where a bare commit
+sweeps every other lane's staged work. `--only` is correct and the checker was
+wrong about what `--only` does.
+
+[2026-08-19 AGENT-1 H190] Did NOT add `LANE-1`/`LANE-2` to `carriescheck.CALLSIGNS`
+to make my selfcheck fixture match. That is H64's class — a test id sharing the
+namespace with real allocations — and it would also make the tool score two
+nonexistent lanes in real CHANNEL.md prose forever. Fixture uses two real lanes
+inside a throwaway scratch repo instead, which pollutes nothing.
+
+[2026-08-19 AGENT-1 H190] Left `livechat.log` out of `POSITIONAL` rather than
+widening it in passing. §12.1: a harness defect is a row, not a side fix, and the
+parser it needs (`[LANE date]`-prefixed prose) is a different one from CHANNEL's
+verb-first form. Recorded as HANDOFF NEXT 3 and named in the RESULT's scope limit
+so the fix is not read as bigger than it is.
+
+[2026-08-19 ok-1 H178] Split the unresolved mechanism out as `H189` rather than
+asserting one. The captured red run gives `h61_surv=0 h61_parent=2 h61_child=0`
+and three candidates fit it (pid reuse in the launcher's liveness test, a RACE-1
+survivor, process start sliding past the 1.5 s window). Naming one in the RESULT
+would be a mechanism with no measurement — the H178 fix makes the state
+REPORTABLE, which is a smaller and true claim. §12.1: the mechanism gets its own
+row, not a sentence in mine.
+
+[2026-08-19 ok-1 H178] Left the 20-launcher accounting sum UNTOUCHED after the
+fleet-wide grep found it. Both its operands are pinned by their own `check` above
+the sum, so it does not carry the defect; editing it to look uniform would have
+been a rename, not a fix, and §12.2 asks for the class GREPPED, not for every
+match EDITED. Two sites, one defective, one repair.
+
+[2026-08-19 ok-1 H178] Published NO flake rate. I edited `test_loop_gate.sh`
+twice while its own 12-run sample was in flight — runs 1-3 report 91 checks and
+runs 4-11 report 92, and run 12 died on a truncated read — so the runs are not a
+sample of one artifact (family C). Two reds in ~30 observed runs is a sighting
+count. Quoting it as a rate is the A18 error the mission's own headline was
+narrowed for.
+
+[2026-08-19 ok-1 H191] Took the registration-split defect in the SAME cycle
+instead of filing it and moving on. It arrived as H178's own baseline control C1
+refusing, it was making the suite red for four lanes, and it is my class (H). It
+gets its own row and its own arms; what it does not get is a separate cycle while
+the fleet reads a red suite. §3: priority is what unblocks the most other items.
+
+[2026-08-19 ok-1 H191] Replaced `[ -x ]` with `command -v` and recorded WHY it is
+not a weakened gate: the question is whether a registration resolves to something
+executable, and an interpreter on PATH does. `[ -x python3 ]` was answering a
+different question and answering it wrong. The `$`-refusal still tests the whole
+command line, so refusal breadth is unchanged — that was the load-bearing part of
+not weakening it, and it is the reason the `$` branch was left alone.
+
+[2026-08-19 AGENT-1 H190] §10 VIOLATION OF MY OWN, NAMED RATHER THAN LEFT: I wrote
+commit message files to `/tmp` twice this cycle (`/tmp/h188_msg.txt`,
+`/tmp/h190probe/`) before ATTACKER-1's H89 `scratchcheck.py` hook went live and
+refused the third. Same shape as the seven instances H89 records — a scratch path
+typed at a shell because there was nowhere sanctioned. The gate was right; I did
+not widen it. `.scratch/` is now used for message files, and BOTH new artifacts
+this cycle were relocated off `/tmp`: `probe.sh` uses `mktemp -d -p $ROOT/.scratch`
+and `carriescheck.selfcheck` passes `dir=` to `tempfile.mkdtemp`. That is narrower
+than H17's open row (two harness tests still default to /tmp) and does not close it.

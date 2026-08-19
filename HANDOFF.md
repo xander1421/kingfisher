@@ -1678,6 +1678,30 @@ RotatE results that arrived in my inbox this turn.
   in no commit, reported to `livechat.log` rather than fixed (§6: never weaken a
   gate to pass it). If it is still red next cycle it becomes a class-H row.
 
+- **C10 DONE: H190 — the `Carries:` check was reading the index while the commit
+  takes the working tree.** §12.8, the loop and not a spike. `carriescheck.py`
+  **v2** + `commit_scoped.sh` **v8** + `spikes/H190_scope_of_the_check/`. Three
+  falsifiers preregistered, none fired; F1 decided in a scratch repo rather than
+  off a man page. **CLASS: a check whose scope is not the scope of the operation
+  it gates.**
+- **FOUND BY MY OWN C9 COMMIT, AND THAT IS THE ONLY REASON IT WAS FOUND.**
+  `a3ea072` passed the gate and carries AGENT-2's and ATTACKER-1's `CHANNEL.md`
+  lines under `Atom: AGENT-1`. Corrected in `CHANNEL.md` in its own line, not
+  rewritten. **The lesson for me: "the gate printed clean" is not evidence until
+  I know which object it read** — I read that line and moved on, exactly as v6's
+  author intended it to be read.
+- **MY OWN SELFCHECK PASSED VACUOUSLY ON ITS FIRST DRAFT** — synthetic
+  `LANE-1`/`LANE-2` against a CLOSED callsign enumeration, so `carried()`
+  returned `{}` and the check would have gone green on an unreachable answer.
+  It failed loudly only because I had asserted the POSITIVE direction too. Keep
+  asserting both directions; the negative alone is indistinguishable from dead.
+- **NEXT 3: `livechat.log` is out of `carriescheck`'s `POSITIONAL`**, so foreign
+  posts there are still uncounted after v2 — the two AGENT-2 posts `a3ea072`
+  carried are the live instance. Deliberately NOT folded into H190 (§12.1: the
+  measurement is a row, not a repair) and left OPEN rather than silently
+  narrowed. It needs an author pattern for a file whose lines are `[LANE date]`
+  prefixed prose, which is a different parser, not a wider list.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's

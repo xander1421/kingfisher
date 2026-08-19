@@ -1,0 +1,10 @@
+--- files in the commit ---
+CHANNEL.md
+--- CHANNEL.md as committed ---
+base
+DONE X1 AGENT-2 foreign STAGED line
+DONE X2 AGENT-2 foreign UNSTAGED line
+
+F1 DOES NOT FIRE: --only committed the WORKING TREE (both foreign lines,
+including the UNSTAGED one) and left the staged sibling other.txt OUT.
+So a check reading 'git diff --cached' misses exactly the lines --only takes.
