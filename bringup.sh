@@ -398,15 +398,30 @@ done
 
 echo
 echo "=== QUORUM ==="
-UP=0; STALLED=0; MISSING=()
+UP=0; STALLED=0; ORPHAN=0; MISSING=()
 for lane in "${ROSTER[@]}"; do
   # TWO SOURCES, because neither alone can answer it (H6). A turn in flight is
   # visible to ps and vanishes between turns; the loop lock survives between
-  # turns and does not exist for lanes started before run_loop.sh v6. UP on
-  # either, and SAY WHICH -- a lane held only by its lock has not been observed
-  # doing anything, and reporting that as plain UP is the empty-input floor.
-  pid=$(lane_pid "$lane"); src="turn"
-  if [ -z "$pid" ]; then pid=$(lane_lock_pid "$lane"); src="loop"; fi
+  # turns and does not exist for lanes started before run_loop.sh v6.
+  # H120: UP is SUPERVISOR-BACKED. Prefer the lock. A turn with no live
+  # supervisor is ORPHAN — one turn from gone — and must not count as quorum.
+  # Not added to MISSING: launching a second supervisor over a live orphan is
+  # H8 (two holders of one callsign). H121 is the watchdog that reaps it.
+  # Pre-v6 launchers have no lock: a mid-turn pre-v6 lane now reads ORPHAN
+  # rather than UP. That is the honest state; the lock is what H8 made the
+  # holder of record.
+  lock=$(lane_lock_pid "$lane")
+  turn=$(lane_pid "$lane")
+  if [ -n "$lock" ]; then
+    pid=$lock; src="loop"
+  elif [ -n "$turn" ]; then
+    printf '  %-12s ORPHAN pid %-7s (turn) -- supervisor gone; not counted up\n' \
+      "$lane" "$turn"
+    ORPHAN=$((ORPHAN+1))
+    continue
+  else
+    pid=""; src=""
+  fi
   age=$(beat_age "$lane")
   nfail=$(lane_fails "$lane")
   # H88. -1 is "no counter on disk", which is NOT the same observation as "the
@@ -468,7 +483,7 @@ for lane in "${ROSTER[@]}"; do
     MISSING+=("$lane")
   fi
 done
-echo "  quorum: ${UP}/${#ROSTER[@]}$([ "$STALLED" -gt 0 ] && printf ' (%s STALLED, NOT counted up)' "$STALLED")"
+echo "  quorum: ${UP}/${#ROSTER[@]}$([ "$STALLED" -gt 0 ] && printf ' (%s STALLED, NOT counted up)' "$STALLED")$([ "$ORPHAN" -gt 0 ] && printf ' (%s ORPHAN, NOT counted up)' "$ORPHAN")"
 
 # FLEET OUTPUT AGE (H43), and this line exists because MY OWN FIRST FIX COULD NOT
 # HAVE CAUGHT THE FAILURE IT WAS BUILT FOR. The per-lane column above reports a
@@ -602,6 +617,22 @@ for lane in "${MISSING[@]}"; do
     echo "  $lane SKIPPED -- no brief; write prompts/${lane}.md first (run_loop.sh refuses without one)"
     continue
   fi
+  # CLEAR STALE STATE FOR THIS LANE, GUARDED BY LIVENESS. A dead lane leaves
+  # .loop_lock / .loop_blocks / .loop_exit behind, and every one of them makes
+  # the NEXT launch exit silently: run_loop sees a held callsign or a blown fuse
+  # and prints `loop stopped`. On 08-18 that cost an hour -- bringup reported
+  # "3 launched" four times in a row while starting nothing, because the
+  # launcher refused and the supervisor never contradicted itself. A human
+  # cleared the files by hand each time, which is precisely the hand-holding
+  # this loop is supposed to remove.
+  #
+  # ONLY for a lane with no live process. A lock whose pid is alive is a real
+  # lock and removing it would authorise two lanes on one callsign, which is the
+  # defect the lock exists to prevent. Absence of a process is checked here, not
+  # assumed, and the lane is in MISSING precisely because that check already ran.
+  for _f in ".loop_lock.$lane" ".loop_blocks.$lane" ".loop_exit.$lane"; do
+    [ -e "$_f" ] && { rm -f "$_f"; echo "  $lane cleared stale $(basename "$_f")"; }
+  done
   CALLSIGN="$lane" ./run_loop.sh &
   echo "  $lane launched"
   sleep 2      # stagger: four lanes racing the same git index is H19
