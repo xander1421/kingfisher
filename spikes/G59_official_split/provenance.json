@@ -1,0 +1,235 @@
+{
+ "spike": "G59_official_split",
+ "recorded_utc": "2026-08-19T01:37:07Z",
+ "note": "G59: official FB15k-237 valid/test from git; G51 + valid-fitted gate; no literature MRR.",
+ "repos": [
+  {
+   "path": "spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "spikes/G59_official_split/official.py",
+   "sha256": "7e8667b06015f4db752fb1511d41c2cfb42276ba5cbe147383a44a3949b444af",
+   "bytes": 16158,
+   "mtime": 1787102947,
+   "compared_ts": 1787102947,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/G59_official_split/official.json",
+   "sha256": "38af68b0bde0fdafe8631df6586415e8da7fbf7b5a3ddd1fb9347900e70daf80",
+   "bytes": 4019,
+   "mtime": 1787102949,
+   "compared_ts": 1787102949,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_train_count_and_hash",
+   "must_fire_because": "official train is 272115 and the pinned sha256",
+   "can_fail_because": "wrong file fetched",
+   "null_must_contain": "count or hash mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 272115,
+    "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_test_count_and_hash",
+   "must_fire_because": "official test is 20466 and the pinned sha256",
+   "can_fail_because": "wrong test file",
+   "null_must_contain": "count or hash mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "sha256": "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574",
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_valid_count",
+   "must_fire_because": "official valid is 17535",
+   "can_fail_because": "wrong valid file",
+   "null_must_contain": "n!=17535",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 17535,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_237_relations",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "truncated relations.dict",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "npred": 237,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_filter_is_train_valid_test",
+   "must_fire_because": "filtered protocol uses all three splits",
+   "can_fail_because": "filter built on train only",
+   "null_must_contain": "n_filter < n_all",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_filter_triples": 310116,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_train_is_not_triples_bin",
+   "must_fire_because": null,
+   "can_fail_because": "sorted predicate-count bags differ",
+   "null_must_contain": "count mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "counts_match": true,
+    "fired": false,
+    "description": "Fires if official train predicate-count bag != triples.bin"
+   },
+   "refutes": "that triples.bin is FB15k-237 official train",
+   "fires_when": "sorted predicate-count bags differ",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_official_test_has_zero_same_pair_leak",
+   "must_fire_because": null,
+   "can_fail_because": "leak==0",
+   "null_must_contain": "nonzero leak",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "frac": 0.0,
+    "fired": true,
+    "description": "Fires if official test same-pair leak with train is 0"
+   },
+   "refutes": "that official cut still has G46-style same-pair leak",
+   "fires_when": "leak==0",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_valid_gated_does_not_beat_official_g51",
+   "must_fire_because": null,
+   "can_fail_because": "gated_mrr <= official G51",
+   "null_must_contain": "signed delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "gated_mrr": 0.2679,
+    "g51_mrr": 0.2585,
+    "delta": 0.0094,
+    "fired": false,
+    "description": "Fires if valid-fitted gate MRR <= official G51. Signed."
+   },
+   "refutes": "that G54 DEV-gate transfers",
+   "fires_when": "gated_mrr <= official G51",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_official_test_has_zero_same_pair_leak"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "official train \u2260 triples.bin OR gate does not transfer OR leak is already zero",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

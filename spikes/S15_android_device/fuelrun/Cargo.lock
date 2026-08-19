@@ -302,6 +302,8 @@ dependencies = [
  "hyperon",
  "hyperon-atom",
  "hyperon-space",
+ "serde",
+ "serde_json",
  "sha2",
 ]
 

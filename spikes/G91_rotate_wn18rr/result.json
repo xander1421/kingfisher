@@ -1,0 +1,43 @@
+{
+  "spike": "G91",
+  "timestamp": "2026-08-19 15:59:09",
+  "elapsed_sec": 179.06,
+  "dataset": "WN18RR (WordNet hierarchical semantic graph)",
+  "model": "RotatE (dim=64, Relational Rotation, 1-N Softmax AdaGrad)",
+  "training": {
+    "epochs": 8,
+    "lr": 0.1,
+    "batch_size": 1024,
+    "initial_loss": 12.536,
+    "final_loss": 1.569
+  },
+  "metrics": {
+    "mrr": 0.3546,
+    "hits1": 0.3483,
+    "hits3": 0.3571,
+    "hits10": 0.3655,
+    "lift_over_symbolic_mrr": 0.3191
+  },
+  "controls": {
+    "C1_test_size": {
+      "ok": true
+    },
+    "C2_zero_leak": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_wrong_query_count": {
+      "fired": false
+    },
+    "F2_fails_symbolic_baseline": {
+      "fired": false
+    },
+    "F3_loss_not_decreasing": {
+      "fired": false
+    }
+  }
+}

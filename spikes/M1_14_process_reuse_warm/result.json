@@ -1,0 +1,467 @@
+{
+  "spike": "M1.14",
+  "title": "WorkManager Process-Reuse & In-Process Warm Execution on Samsung Galaxy S25 Ultra",
+  "target_silicon": "Snapdragon 8 Elite (SM-S938B / arm64-v8a)",
+  "preflight": {
+    "battery_level": 67,
+    "battery_temp_c": 40.4,
+    "thermal_zone0_m": 57100,
+    "dumpsys_battery_raw": "Current Battery Service state:\n  AC powered: false\n  USB powered: true\n  Wireless powered: false\n  Dock powered: false\n  Max charging current: 0\n Time when the latest updated value of the Max charging current was sent via battery changed broadcast: 0\n  Max charging voltage: 0\n  Charge counter: 3322200\n  status: 2\n  health: 2\n  present: true\n  level: 67\n  scale: 100\n  voltage: 4066\n Time when the latest updated value of the voltage was sent via battery changed broadcast: 0\n The last voltage value sent via the battery changed broadcast: 4100\n  temperature: 404\n  technology: Li-ion\n  Charging state: 0\n  Charging policy: 0\n  Capacity level: -1\n  batteryMiscEvent: 268500992\n  batteryCurrentEvent: 32768\n  mSecPlugTypeSummary: 2\n  LED Charging: true\n  LED Low Battery: true\n  current now: 239843\n  charge counter: 3322200\n  Adaptive Fast Charging Settings: true\n  Super Fast Charging Settings: false\nFEATURE_WIRELESS_FAST_CHARGER_CONTROL: true\n  mWasUsedWirelessFastChargerPreviously: false\n  mWirelessFastChargingSettingsEnable: false\nLLB CAL: 20250924\nLLB MAN: \nLLB CURRENT: YEAR2026M8D11\nLLB DIFF: 46\nSEC_FEATURE_BATTERY_FULL_CAPACITY: true\n  mFullCapacityEnable: false\nFEATURE_HICCUP_CONTROL: true\nFEATURE_SUPPORTED_DAILY_BOARD: false\nSEC_FEATURE_BATTERY_LIFE_EXTENDER: false\nSEC_FEATURE_USE_WIRELESS_POWER_SHARING: true\n mProtectBatteryMode: 0\n mProtectionThreshold: 80\n mMaximumProtectionThreshold: 80\n mLtcHighThreshold: 95\n mLtcHighSocDuration: 10080\n mLtcReleaseThreshold: 75\n[Not Battery Adaptive Protect Mode]\n  FEATURE_SAVE_BATTERY_CYCLE: true\n  FEATURE_FULL_BATTERY_CYCLE: true\n  battery IcAuthenticationResults: [true]\n  battery FirstUseDate: [20251202]\n  mSavedBatteryAsoc: [99]\n  mSavedBatteryUsage: [10677]\n  mSavedFullStatusDuration: [3110]\n\n[EventLogBuffer]\n08-15 22:43:37.872  android.intent.action.ACTION_POWER_DISCONNECTED\n08-15 22:43:39.808  android.intent.action.ACTION_POWER_CONNECTED\n08-15 23:22:09.710  android.intent.action.ACTION_POWER_DISCONNECTED\n08-15 23:22:10.690  android.intent.action.ACTION_POWER_CONNECTED\n08-16 01:37:09.494  android.intent.action.ACTION_POWER_DISCONNECTED\n08-16 01:48:31.119  android.intent.action.ACTION_POWER_CONNECTED\n08-16 02:47:14.189  android.intent.action.ACTION_POWER_DISCONNECTED\n08-16 02:47:15.331  android.intent.action.ACTION_POWER_CONNECTED\n08-16 04:22:59.690  android.intent.action.ACTION_POWER_DISCONNECTED\n08-16 15:15:37.906  android.intent.action.ACTION_POWER_CONNECTED\n08-16 16:28:42.171  android.intent.action.ACTION_POWER_DISCONNECTED\n08-16 16:28:43.307  android.intent.action.ACTION_POWER_CONNECTED\n08-16 16:59:31.527  android.intent.action.ACTION_POWER_DISCONNECTED\n08-16 16:59:35.474  android.intent.action.ACTION_POWER_CONNECTED\n08-16 19:16:07.049  android.intent.action.ACTION_POWER_DISCONNECTED\n08-17 09:05:01.245  android.intent.action.ACTION_POWER_CONNECTED\n08-17 13:22:28.798  android.intent.action.ACTION_POWER_DISCONNECTED\n08-17 15:29:00.265  android.intent.action.ACTION_POWER_CONNECTED\n08-17 17:45:34.665  android.intent.action.ACTION_POWER_DISCONNECTED\n08-18 11:35:54.371  android.intent.action.ACTION_POWER_CONNECTED\n\n[SleepChargingLogBuffer]\n\n[BattInfoLogBuffer]\n08-11 09:12:42.489  mBatteryType:1 ,mBatteryCount:1\n08-11 09:12:45.493  Final IcAuthenticationResults:[true]\n08-11 09:12:45.494  [SS][BattInfo]QrData efsValue:GH43-05242B+DL1Y823AS+61871NWN00 ,authValue:GH43-05242B+DL1Y823AS+61871NWN00    \n08-11 09:12:45.495  [SS][BattInfo]FirstUseDateData efsValue:20251202 ,authValue:20251202    \n08-11 09:12:45.496  [SS][BattInfo]AsocData efsValue:99 ,authValue:99    \n08-11 09:12:45.582  [SS][BattInfo]AsocData efsValue:99 ,authValue:99    \n08-11 09:12:45.583  [SS][BattInfo]DischargeLevelData efsValue:10107 ,authValue:10107    \n08-11 09:12:45.584  [SS][BattInfo]FullStatusUsageData efsValue:1030 ,authValue:1030    \n\n[BattActionChangedLogBuffer]\n08-18 11:35:54.865  Sending ACTION_BATTERY_CHANGED: level:60, status:2, health:2, remain:3266, ac:false, usb:true, wireless:false, pogo:false, misc:0x10000, charge_type:1, charger_type:1, voltage:3898, temperature:319, online:19, charging_status:0, cycle_count:0, current_avg:-227343, ps:false, hvc:true, current_event:0x4, mcc:0, mcv:0, cc:2944900, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:35:56.384  Sending ACTION_BATTERY_CHANGED: level:60, status:2, health:2, remain:3266, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4001, temperature:319, online:19, charging_status:0, cycle_count:0, current_avg:-34375, ps:false, hvc:true, current_event:0x8004, mcc:0, mcv:0, cc:2944900, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:35:56.899  Sending ACTION_BATTERY_CHANGED: level:60, status:2, health:2, remain:3266, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4001, temperature:319, online:19, charging_status:0, cycle_count:0, current_avg:13281, ps:false, hvc:true, current_event:0x40000004, mcc:0, mcv:0, cc:2944900, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:35:56.971  Sending ACTION_BATTERY_CHANGED: level:60, status:2, health:2, remain:3266, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4001, temperature:319, online:19, charging_status:0, cycle_count:0, current_avg:3906, ps:false, hvc:true, current_event:0x4, mcc:0, mcv:0, cc:2944900, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:36:06.442  Sending ACTION_BATTERY_CHANGED: level:60, status:2, health:2, remain:4615, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4018, temperature:317, online:19, charging_status:0, cycle_count:0, current_avg:860937, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:2944900, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:38:48.710  Sending ACTION_BATTERY_CHANGED: level:61, status:2, health:2, remain:4525, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4067, temperature:319, online:19, charging_status:0, cycle_count:0, current_avg:1657812, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:2984100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:40:50.490  Sending ACTION_BATTERY_CHANGED: level:62, status:2, health:2, remain:4420, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4077, temperature:320, online:19, charging_status:0, cycle_count:0, current_avg:1604687, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3033100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:42:42.084  Sending ACTION_BATTERY_CHANGED: level:63, status:2, health:2, remain:4316, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4090, temperature:322, online:19, charging_status:0, cycle_count:0, current_avg:1617187, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3082100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:44:33.666  Sending ACTION_BATTERY_CHANGED: level:64, status:2, health:2, remain:4211, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4102, temperature:323, online:19, charging_status:0, cycle_count:0, current_avg:1627343, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3131100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:45:44.698  Sending ACTION_BATTERY_CHANGED: level:64, status:2, health:2, remain:4172, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4026, temperature:328, online:19, charging_status:0, cycle_count:0, current_avg:476562, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3155600, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:46:15.124  Sending ACTION_BATTERY_CHANGED: level:64, status:2, health:2, remain:4161, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4052, temperature:340, online:19, charging_status:0, cycle_count:0, current_avg:226562, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3160500, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:47:16.155  Sending ACTION_BATTERY_CHANGED: level:64, status:2, health:2, remain:4150, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4034, temperature:352, online:19, charging_status:0, cycle_count:0, current_avg:146093, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3165400, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:49:58.604  Sending ACTION_BATTERY_CHANGED: level:64, status:2, health:2, remain:4118, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4043, temperature:364, online:19, charging_status:0, cycle_count:0, current_avg:187500, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3180100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:50:39.218  Sending ACTION_BATTERY_CHANGED: level:65, status:2, health:2, remain:4107, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4044, temperature:369, online:19, charging_status:0, cycle_count:0, current_avg:398437, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3180100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:55:53.979  Sending ACTION_BATTERY_CHANGED: level:66, status:2, health:2, remain:4003, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4045, temperature:375, online:19, charging_status:0, cycle_count:0, current_avg:204687, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3229100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 11:57:55.796  Sending ACTION_BATTERY_CHANGED: level:66, status:2, health:2, remain:3995, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4058, temperature:387, online:19, charging_status:0, cycle_count:0, current_avg:467968, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3238900, present:true, scale:100, technology:Li-ion, protection:0\n08-18 12:00:28.174  Sending ACTION_BATTERY_CHANGED: level:66, status:2, health:2, remain:3963, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4053, temperature:399, online:19, charging_status:0, cycle_count:0, current_avg:219531, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3253600, present:true, scale:100, technology:Li-ion, protection:0\n08-18 12:04:30.983  Sending ACTION_BATTERY_CHANGED: level:66, status:2, health:2, remain:3909, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4069, temperature:411, online:19, charging_status:0, cycle_count:0, current_avg:489843, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3278100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 12:04:51.213  Sending ACTION_BATTERY_CHANGED: level:67, status:2, health:2, remain:3902, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4071, temperature:411, online:19, charging_status:0, cycle_count:0, current_avg:559375, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3278100, present:true, scale:100, technology:Li-ion, protection:0\n08-18 12:07:23.304  Sending ACTION_BATTERY_CHANGED: level:67, status:2, health:2, remain:3826, ac:false, usb:true, wireless:false, pogo:false, misc:0x10010000, charge_type:1, charger_type:1, voltage:4100, temperature:399, online:19, charging_status:0, cycle_count:0, current_avg:1034375, ps:false, hvc:true, current_event:0x8000, mcc:0, mcv:0, cc:3317300, present:true, scale:100, technology:Li-ion, protection:0\n\nmBatteryChangedConditionCounts:[98, 5, 1, 1183, 67, 272, 790, 0, 0, 92, 88, 0, 61, 0, 0, 26, 272, 77, 0, 0, 0, 1]\nBatteryInfoBackUp\n  mSavedBatteryMaxTemp: 483\n  mSavedBatteryMaxCurrent: 9131250\n  mSavedBatteryBsoh: 100\n",
+    "dumpsys_thermalservice_raw": "IsStatusOverride: false\nThermalEventListeners:\n\tcallbacks: 3\n\tkilled: false\n\tbroadcasts count: -1\nThermalStatusListeners:\n\tcallbacks: 8\n\tkilled: false\n\tbroadcasts count: -1\nThermal Status: 1\nCached temperatures:\n\tTemperature{mValue=0.0, mType=2, mName=SUBBAT, mStatus=0}\n\tTemperature{mValue=52.2, mType=0, mName=AP, mStatus=0}\n\tTemperature{mValue=52.5, mType=5, mName=PA, mStatus=0}\n\tTemperature{mValue=34.6, mType=2, mName=BAT, mStatus=0}\n\tTemperature{mValue=32.2, mType=4, mName=USB, mStatus=0}\n\tTe"
+  },
+  "cold_instantiation": {
+    "reps": 25,
+    "mean_ms": 47.09325172007084,
+    "p50_ms": 47.47283400138258,
+    "p95_ms": 50.50279200077057,
+    "min_ms": 42.53274999791756,
+    "max_ms": 50.764457999321166,
+    "raw_latencies_ms": [
+      47.47283400138258,
+      50.50279200077057,
+      47.95679200105951,
+      47.14316699755727,
+      47.66166700210306,
+      45.84087499824818,
+      42.692999999417225,
+      45.31449999922188,
+      44.978833000641316,
+      45.67337500338908,
+      50.764457999321166,
+      45.52875000081258,
+      47.509374999208376,
+      46.720250000362284,
+      49.10462499901769,
+      48.94533300102921,
+      49.15991699817823,
+      46.91974999877857,
+      46.91287500099861,
+      48.16025000036461,
+      46.560417002183385,
+      47.92041600012453,
+      47.68612499901792,
+      47.66816700066556,
+      42.53274999791756
+    ]
+  },
+  "warm_soak_100": {
+    "device_target": "Samsung Galaxy S25 Ultra (SM-S938B / Snapdragon 8 Elite)",
+    "runner_init_us": 21028.697,
+    "total_iterations": 100,
+    "total_jobs_executed": 500,
+    "initial_memory": {
+      "vm_rss_kb": 4008,
+      "vm_size_kb": 10790276,
+      "vm_data_kb": 2480,
+      "vm_peak_kb": 10790468
+    },
+    "post_warm_memory": {
+      "vm_rss_kb": 11496,
+      "vm_size_kb": 10791828,
+      "vm_data_kb": 12128,
+      "vm_peak_kb": 10791828
+    },
+    "warmup_memory_iter10": {
+      "vm_rss_kb": 11752,
+      "vm_size_kb": 10791828,
+      "vm_data_kb": 12128,
+      "vm_peak_kb": 10791828
+    },
+    "final_memory": {
+      "vm_rss_kb": 11880,
+      "vm_size_kb": 10791828,
+      "vm_data_kb": 12384,
+      "vm_peak_kb": 10791828
+    },
+    "delta_rss_kb_10_to_end": 128,
+    "delta_rss_kb_0_to_end": 384,
+    "zero_leak_certified": true,
+    "memory_checkpoints": [
+      {
+        "iteration": 0,
+        "vm_rss_kb": 11752,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12128
+      },
+      {
+        "iteration": 10,
+        "vm_rss_kb": 11752,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12128
+      },
+      {
+        "iteration": 20,
+        "vm_rss_kb": 11752,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 30,
+        "vm_rss_kb": 11752,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 40,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 50,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 60,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 70,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 80,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 90,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      },
+      {
+        "iteration": 99,
+        "vm_rss_kb": 11880,
+        "vm_size_kb": 10791828,
+        "vm_data_kb": 12384
+      }
+    ],
+    "program_stats": [
+      {
+        "name": "P1_arith_ctl",
+        "runs": 100,
+        "distinct_raw": 1,
+        "distinct_canon": 1,
+        "distinct_alpha": 1,
+        "expected_canon_hash": "a14026e294e8de05",
+        "all_canon_match": true,
+        "mean_eval_us": 1169.6973999999998,
+        "p50_eval_us": 1168.281,
+        "p95_eval_us": 1193.282,
+        "p99_eval_us": 1231.25,
+        "min_eval_us": 1122.656,
+        "max_eval_us": 1352.968
+      },
+      {
+        "name": "P2_logic_rules",
+        "runs": 100,
+        "distinct_raw": 1,
+        "distinct_canon": 1,
+        "distinct_alpha": 1,
+        "expected_canon_hash": "40651027eff58eb9",
+        "all_canon_match": true,
+        "mean_eval_us": 544.9431900000001,
+        "p50_eval_us": 545.208,
+        "p95_eval_us": 562.656,
+        "p99_eval_us": 579.375,
+        "min_eval_us": 522.083,
+        "max_eval_us": 604.74
+      },
+      {
+        "name": "P3_set_ops",
+        "runs": 100,
+        "distinct_raw": 1,
+        "distinct_canon": 1,
+        "distinct_alpha": 1,
+        "expected_canon_hash": "bbdfed850ca973c4",
+        "all_canon_match": true,
+        "mean_eval_us": 415.15887,
+        "p50_eval_us": 414.375,
+        "p95_eval_us": 427.552,
+        "p99_eval_us": 439.532,
+        "min_eval_us": 399.531,
+        "max_eval_us": 439.687
+      },
+      {
+        "name": "P4_kb_chain",
+        "runs": 100,
+        "distinct_raw": 1,
+        "distinct_canon": 1,
+        "distinct_alpha": 1,
+        "expected_canon_hash": "439f6079b5f2b539",
+        "all_canon_match": true,
+        "mean_eval_us": 410.42341,
+        "p50_eval_us": 409.74,
+        "p95_eval_us": 428.958,
+        "p99_eval_us": 430.312,
+        "min_eval_us": 392.239,
+        "max_eval_us": 439.062
+      },
+      {
+        "name": "P5_var_alias_probe",
+        "runs": 100,
+        "distinct_raw": 100,
+        "distinct_canon": 1,
+        "distinct_alpha": 1,
+        "expected_canon_hash": "113b4f0011965e8b",
+        "all_canon_match": true,
+        "mean_eval_us": 716.4432300000002,
+        "p50_eval_us": 711.927,
+        "p95_eval_us": 743.958,
+        "p99_eval_us": 749.114,
+        "min_eval_us": 693.489,
+        "max_eval_us": 808.542
+      }
+    ],
+    "sample_runs": [
+      {
+        "iteration": 0,
+        "job_index": 0,
+        "job_name": "P1_arith_ctl",
+        "fuel_used": 696,
+        "eval_us": 1352.968,
+        "raw_hash": "a14026e294e8de05",
+        "canon_hash": "a14026e294e8de05",
+        "alpha_hash": "a14026e294e8de05",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 0,
+        "job_index": 1,
+        "job_name": "P2_logic_rules",
+        "fuel_used": 400,
+        "eval_us": 562.656,
+        "raw_hash": "40651027eff58eb9",
+        "canon_hash": "40651027eff58eb9",
+        "alpha_hash": "40651027eff58eb9",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 0,
+        "job_index": 2,
+        "job_name": "P3_set_ops",
+        "fuel_used": 229,
+        "eval_us": 439.532,
+        "raw_hash": "bbdfed850ca973c4",
+        "canon_hash": "bbdfed850ca973c4",
+        "alpha_hash": "bbdfed850ca973c4",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 0,
+        "job_index": 3,
+        "job_name": "P4_kb_chain",
+        "fuel_used": 297,
+        "eval_us": 414.531,
+        "raw_hash": "439f6079b5f2b539",
+        "canon_hash": "439f6079b5f2b539",
+        "alpha_hash": "439f6079b5f2b539",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 0,
+        "job_index": 4,
+        "job_name": "P5_var_alias_probe",
+        "fuel_used": 400,
+        "eval_us": 729.792,
+        "raw_hash": "474b95118ba32eb9",
+        "canon_hash": "113b4f0011965e8b",
+        "alpha_hash": "aadc571320e8f55b",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 9,
+        "job_index": 0,
+        "job_name": "P1_arith_ctl",
+        "fuel_used": 696,
+        "eval_us": 1193.282,
+        "raw_hash": "a14026e294e8de05",
+        "canon_hash": "a14026e294e8de05",
+        "alpha_hash": "a14026e294e8de05",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 9,
+        "job_index": 1,
+        "job_name": "P2_logic_rules",
+        "fuel_used": 400,
+        "eval_us": 546.094,
+        "raw_hash": "40651027eff58eb9",
+        "canon_hash": "40651027eff58eb9",
+        "alpha_hash": "40651027eff58eb9",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 9,
+        "job_index": 2,
+        "job_name": "P3_set_ops",
+        "fuel_used": 229,
+        "eval_us": 416.458,
+        "raw_hash": "bbdfed850ca973c4",
+        "canon_hash": "bbdfed850ca973c4",
+        "alpha_hash": "bbdfed850ca973c4",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 9,
+        "job_index": 3,
+        "job_name": "P4_kb_chain",
+        "fuel_used": 297,
+        "eval_us": 409.844,
+        "raw_hash": "439f6079b5f2b539",
+        "canon_hash": "439f6079b5f2b539",
+        "alpha_hash": "439f6079b5f2b539",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 9,
+        "job_index": 4,
+        "job_name": "P5_var_alias_probe",
+        "fuel_used": 400,
+        "eval_us": 711.407,
+        "raw_hash": "f212598a3f1ae403",
+        "canon_hash": "113b4f0011965e8b",
+        "alpha_hash": "aadc571320e8f55b",
+        "vm_rss_kb": 11752
+      },
+      {
+        "iteration": 49,
+        "job_index": 0,
+        "job_name": "P1_arith_ctl",
+        "fuel_used": 696,
+        "eval_us": 1161.614,
+        "raw_hash": "a14026e294e8de05",
+        "canon_hash": "a14026e294e8de05",
+        "alpha_hash": "a14026e294e8de05",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 49,
+        "job_index": 1,
+        "job_name": "P2_logic_rules",
+        "fuel_used": 400,
+        "eval_us": 546.51,
+        "raw_hash": "40651027eff58eb9",
+        "canon_hash": "40651027eff58eb9",
+        "alpha_hash": "40651027eff58eb9",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 49,
+        "job_index": 2,
+        "job_name": "P3_set_ops",
+        "fuel_used": 229,
+        "eval_us": 414.688,
+        "raw_hash": "bbdfed850ca973c4",
+        "canon_hash": "bbdfed850ca973c4",
+        "alpha_hash": "bbdfed850ca973c4",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 49,
+        "job_index": 3,
+        "job_name": "P4_kb_chain",
+        "fuel_used": 297,
+        "eval_us": 428.958,
+        "raw_hash": "439f6079b5f2b539",
+        "canon_hash": "439f6079b5f2b539",
+        "alpha_hash": "439f6079b5f2b539",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 49,
+        "job_index": 4,
+        "job_name": "P5_var_alias_probe",
+        "fuel_used": 400,
+        "eval_us": 701.459,
+        "raw_hash": "caabda2ebac438e9",
+        "canon_hash": "113b4f0011965e8b",
+        "alpha_hash": "aadc571320e8f55b",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 99,
+        "job_index": 0,
+        "job_name": "P1_arith_ctl",
+        "fuel_used": 696,
+        "eval_us": 1190.365,
+        "raw_hash": "a14026e294e8de05",
+        "canon_hash": "a14026e294e8de05",
+        "alpha_hash": "a14026e294e8de05",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 99,
+        "job_index": 1,
+        "job_name": "P2_logic_rules",
+        "fuel_used": 400,
+        "eval_us": 544.375,
+        "raw_hash": "40651027eff58eb9",
+        "canon_hash": "40651027eff58eb9",
+        "alpha_hash": "40651027eff58eb9",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 99,
+        "job_index": 2,
+        "job_name": "P3_set_ops",
+        "fuel_used": 229,
+        "eval_us": 411.771,
+        "raw_hash": "bbdfed850ca973c4",
+        "canon_hash": "bbdfed850ca973c4",
+        "alpha_hash": "bbdfed850ca973c4",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 99,
+        "job_index": 3,
+        "job_name": "P4_kb_chain",
+        "fuel_used": 297,
+        "eval_us": 407.396,
+        "raw_hash": "439f6079b5f2b539",
+        "canon_hash": "439f6079b5f2b539",
+        "alpha_hash": "439f6079b5f2b539",
+        "vm_rss_kb": 11880
+      },
+      {
+        "iteration": 99,
+        "job_index": 4,
+        "job_name": "P5_var_alias_probe",
+        "fuel_used": 400,
+        "eval_us": 710.625,
+        "raw_hash": "33641a3156a7b041",
+        "canon_hash": "113b4f0011965e8b",
+        "alpha_hash": "aadc571320e8f55b",
+        "vm_rss_kb": 11880
+      }
+    ]
+  },
+  "app_workmanager": {
+    "app_metta_ok": true,
+    "app_preflight_ok": true,
+    "logcat_snippet": "--------- beginning of main\n08-18 12:08:36.959  9134  9134 I KFPREFLIGHT: libhyperonc.so load: OK 4.767343 ms\n08-18 12:08:36.959  9134  9134 I KFPREFLIGHT: thermalStatus=1 capacity=67%\n08-18 12:08:37.076  9134  9134 I KFPREFLIGHT: BENCH getCurrentThermalStatus()               52.41 us\n08-18 12:08:37.247  9134  9134 I KFPREFLIGHT: BENCH BATTERY_PROPERTY_CAPACITY               77.42 us\n08-18 12:08:37.249  9134  9134 I KFPREFLIGHT: BENCH ACTION_BATTERY_CHANGED sticky            4.18 us\n08-18 12:08:37.255  9134  9134 I KFPREFLIGHT: BENCH StatFs availableBytes                    2.87 us\n08-18 12:08:37.542  9134  9134 I KFPREFLIGHT: BENCH FULL PREFLIGHT (spec path)             129.94 us\n08-18 12:08:37.542  9134  9134 I KFPREFLIGHT: SUMMARY thermal=52.41 cap=77.42 sticky=4.18 space=2.87 full=129.94 us | adb+dumpsys was 35100 us -> 270x | vs 68.8 ms job = 0.001889x\n08-18 12:08:37.559  9134  9134 I KFPREFLIGHT: METTA in-process OK in 16.60 ms\n08-18 12:08:37.559  9134  9134 I KFPREFLIGHT: METTA RESULT| 3\n08-18 12:08:37.559  9134  9134 I KFPREFLIGHT: METTA RESULT| yes\n08-18 12:08:37.559  9134  9134 I KFPREFLIGHT: METTA RESULT| (B C)\n08-18 12:08:37.564  9134  9134 I KFPREFLIGHT: enqueued kf-spec: 5 constraints, NO backoff (rules 4+5 are exclusive)\n08-18 12:08:37.564  9134  9134 I KFPREFLIGHT: enqueued kf-now without idle constraint\n08-18 12:08:37.564  9134  9134 I KFPREFLIGHT: enqueued kf-refuse with an unsatisfiable 101% floor"
+  },
+  "metrics": {
+    "warm_overall_p50_us": 649.9062,
+    "warm_overall_mean_us": 651.33322,
+    "cold_p50_ms": 47.47283400138258,
+    "cold_mean_ms": 47.09325172007084,
+    "speedup_ratio_p50": 73.04567028500817,
+    "speedup_ratio_mean": 72.30285554922386,
+    "delta_rss_kb_10_to_end": 128,
+    "delta_rss_kb_0_to_end": 384,
+    "zero_leak_certified": true
+  },
+  "post_thermals": {
+    "thermal_zone0_m": 58700,
+    "dumpsys_battery_raw": "Current Battery Service state:\n  AC powered: false\n  USB powered: true\n  Wireless powered: false\n  Dock powered: false\n  Max charging current: 0\n Time when the latest updated value of the Max charging current was sent via battery changed broadcast: 0\n  Max charging voltage: 0\n  Charge counter: 3327100\n  status: 2\n  health: 2\n  present: true\n  level: 67\n  scale: 100\n  voltage: 4065\n Time when the l"
+  }
+}

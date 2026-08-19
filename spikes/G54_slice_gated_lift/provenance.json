@@ -1,0 +1,241 @@
+{
+ "spike": "G54_slice_gated_lift",
+ "recorded_utc": "2026-08-19T00:50:00Z",
+ "note": "G54: slice G51 lift; DEV-gated residual; type-signature and analogical priors on pair-disjoint split.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift/slice_gated.py",
+   "sha256": "b2b31d7593dc09da34fc98a91d42bd7203272361bf5a839bf9f7d92c2483efbe",
+   "bytes": 28154,
+   "mtime": 1787099776,
+   "compared_ts": 1787099776,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift/slice_gated.json",
+   "sha256": "67a5de046597b0f105f046ad13bb7256b448e8b4bed5cc6eafe92147a3c5e784",
+   "bytes": 8648,
+   "mtime": 1787100600,
+   "compared_ts": 1787100600,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_prior_reproduction",
+   "must_fire_because": "imported G51 prior must reproduce 0.1732",
+   "can_fail_because": "split or rank convention drifted",
+   "null_must_contain": "an unexpected prior MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.1732,
+    "observed_mrr": 0.1732,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_g51_reproduction",
+   "must_fire_because": "imported G51 bayesian \u03b2=0.10 must reproduce 0.2274",
+   "can_fail_because": "rule miner or lift formula drifted",
+   "null_must_contain": "an unexpected G51 MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.2274,
+    "observed_mrr": 0.2274,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_leak_free",
+   "must_fire_because": "0 same-pair triples between train and test",
+   "can_fail_because": "partition logic broken",
+   "null_must_contain": "leak_triples > 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_triples": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "triples.bin unpacked as (p,s,o); max(p)<npred",
+   "can_fail_because": "G52-style (s,p,o) swap, max first-field >= 237",
+   "null_must_contain": "max_p >= npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504,
+    "swap_would_fail": true
+   }
+  },
+  {
+   "name": "C5_gate_frozen_before_test",
+   "must_fire_because": "DEV mask hashed before TEST scoring",
+   "can_fail_because": "gate computed from test rows",
+   "null_must_contain": "missing sha256",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sha256": "56441adaa4427b6725be11fb186157d84e72203d1f55f0a43a745a08097cf261",
+    "recomputed": "56441adaa4427b6725be11fb186157d84e72203d1f55f0a43a745a08097cf261",
+    "n_dev_queries": 81636,
+    "len_dev_rows": 81636,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_per_query_matches_g51_eval",
+   "must_fire_because": "per-query prior/g51 MRR match imported evaluator",
+   "can_fail_because": "slice scorer is a different instrument",
+   "null_must_contain": "aggregate mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "prior_mrr": 0.1732,
+    "g51_mrr": 0.2274,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_lift_is_uniform",
+   "must_fire_because": null,
+   "can_fail_because": "max|slice_\u0394-agg_\u0394|<0.02 AND n_hurting==0",
+   "null_must_contain": "uniform lift",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "slice_shift_max": 0.0542,
+    "slice_shift_where": "rule_fired:silent",
+    "n_hurting": 36,
+    "agg_delta": 0.0542,
+    "bar": 0.02,
+    "fired": false,
+    "description": "Fires if lift is uniform: max|slice_\u0394-agg_\u0394|<0.02 AND zero hurting predicates n>=50"
+   },
+   "refutes": "that G51's +0.0542 is a blend hiding inverted slices",
+   "fires_when": "max|slice_\u0394-agg_\u0394|<0.02 AND n_hurting==0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_gated_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "gated_mrr <= g51_mrr",
+   "null_must_contain": "gated loss or tie, signed",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "gated_mrr": 0.2313,
+    "g51_mrr": 0.2274,
+    "delta": 0.0039,
+    "fired": false,
+    "description": "Fires if DEV-gated MRR <= G51 MRR (turning lift off does not help). Signed."
+   },
+   "refutes": "that turning lift off on DEV-hurt predicates raises test MRR",
+   "fires_when": "gated_mrr <= g51_mrr",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_new_architectures_have_no_signal",
+   "must_fire_because": null,
+   "can_fail_because": "type_\u0394<0.005 AND analog_\u0394<0.005",
+   "null_must_contain": "signed deltas, including losses",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "type_minus_prior": -0.0001,
+    "analog_minus_prior": 0.0032,
+    "fired": true,
+    "description": "Fires if type and analogical both fail to beat prior by +0.005. Signed so a LOSS is visible."
+   },
+   "refutes": "that type-signature or analogical residuals beat the frequency prior",
+   "fires_when": "type_\u0394<0.005 AND analog_\u0394<0.005",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F3_new_architectures_have_no_signal"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "G51 lift uniform across slices AND DEV-gated fails to beat G51 AND type/analog both fail to beat the prior by +0.005"
+}

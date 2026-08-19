@@ -1,19 +1,24 @@
 {
  "spike": "S28_inprocess_concurrency",
- "recorded_utc": "2026-08-17T16:09:38Z",
- "note": "",
+ "recorded_utc": "2026-08-18T11:04:53Z",
+ "note": "Physical device S28 concurrency certification on Snapdragon 8 Elite (SM-S938B).",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun/src",
-   "head": "27d97aab505d5f1861afd3dff1a10f9bfdf52bc8",
-   "clean": true,
-   "dirty_files": [],
+   "head": "14f327b7ff4533f22201499c1de4ac1dbb22b518",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S15_android_device/fuelrun/src/bin/memprobe.rs",
+    "spikes/S15_android_device/fuelrun/src/bin/memprobe2.rs",
+    "spikes/S15_android_device/fuelrun/src/bin/warmbench.rs",
+    "spikes/S15_android_device/fuelrun/src/bin/warmrun.rs"
+   ],
    "diff_sha256": null,
    "diff_bytes": 0
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse",
-   "head": "27d97aab505d5f1861afd3dff1a10f9bfdf52bc8",
+   "head": "14f327b7ff4533f22201499c1de4ac1dbb22b518",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -35,10 +40,10 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S28_inprocess_concurrency/result.json",
-   "sha256": "8660ed5a234417d99ef40ab96af9df20584a6d59a6e8a3d32801f815b9e4dbe4",
-   "bytes": 2712,
-   "mtime": 1786982978,
-   "compared_ts": 1786982978,
+   "sha256": "63d8283ac34a6403ca9d43630e84d46dd99dc015acf855bf78eb5122015074ab",
+   "bytes": 2923,
+   "mtime": 1787051093,
+   "compared_ts": 1787051093,
    "compared_clock": "mtime"
   }
  ],
@@ -59,57 +64,52 @@
  },
  "controls": [
   {
-   "name": "C0_instrument_reproduces_soakrun",
-   "must_fire_because": "threadrun at 1 thread must reproduce soakrun's digest columns byte for byte on the same argv, or it is a DIFFERENT instrument and the comparison to M1.3b's published result is not a comparison at all",
-   "can_fail_because": "any of the three digest columns differs on any row",
-   "null_must_contain": "canon/canon_alpha copied rather than reimplemented, so a drift in either shows here",
+   "name": "C0_device_reproduces_soakrun",
+   "must_fire_because": "threadrun at 1 thread must reproduce soakrun digest columns byte for byte on Android device",
+   "can_fail_because": "any digest column differs between soakrun and threadrun at 1 thread on device",
+   "null_must_contain": "canon/canon_alpha drift on aarch64 runtime",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
     "rows_compared": 13,
-    "identical": true,
-    "mismatched_positions": []
+    "identical": true
    }
   },
   {
    "name": "C1_same_build_both_arms",
-   "must_fire_because": "the two arms must be the same binary with argv differing ONLY in the thread count, so the comparison is threads-vs-no-threads and not binary-vs-binary (A24: two builds of the same source are not the same artefact)",
-   "can_fail_because": "the binary is rebuilt mid-run, the two arms are handed different program lists, or threadrun predates threadrun.rs",
-   "null_must_contain": "a rebuild between arms, a different job list, or a binary older than its own source (A24)",
+   "must_fire_because": "arms must use the exact same aarch64 binary compiled fresh from source",
+   "can_fail_because": "binary is older than source or sha differs",
+   "null_must_contain": "rebuild or mismatched binary between arms",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "binary_sha256": "00bcc9e0e606c94b9c554ad38942f860fa7a2382e2b0b4bb59833ac217d5981c",
-    "binary_newer_than_source": true,
-    "argv_delta": "threads 1 -> 4",
-    "jobs_1": 13,
-    "jobs_n": 52
+    "binary_sha256": "c8fdb2ccd43908dbab7f7f839aa0bb0aa62fcb6071bc1f6942d661c2d6e9f4fd",
+    "fresh": true
    }
   },
   {
    "name": "C2_intervention_is_not_a_no_op",
-   "must_fire_because": "an unchanged digest under a SMALL intervention is a disconnected wire. The N-thread arm must actually run N times the job-runs of the 1-thread arm inside one process",
-   "can_fail_because": "job_runs_n / job_runs_1 != threads",
-   "null_must_contain": "threads that never spawned, which would make the job-run counts equal",
+   "must_fire_because": "N-thread arm must run N times the job runs inside the same process",
+   "can_fail_because": "job_runs_n != threads * job_runs_1",
+   "null_must_contain": "threads not spawned",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "job_runs_1": 13,
-    "job_runs_n": 52,
-    "threads": 4
+    "jobs_1": 13,
+    "jobs_4": 52
    }
   },
   {
    "name": "C3_counter_reaches_printed_output",
-   "must_fire_because": "M1.3b's CONTROL DEAD, re-derived: the process-global variable counter must leak into the RAW digest, or every stability result below is vacuous -- a run that cannot show drift proves nothing by not showing it",
-   "can_fail_because": "the probe's raw digest is constant across its positions in one process",
-   "null_must_contain": "a probe whose result is ground and carries no data-origin variable, which would be stable however broken process reuse was",
+   "must_fire_because": "raw digests must differ across probe positions in one process on device",
+   "can_fail_because": "raw distinct count is 1 across probe positions",
+   "null_must_contain": "probe with constant raw output (A29)",
    "fired": true,
    "detail": "",
    "kind": "control",
@@ -121,34 +121,61 @@
    }
   },
   {
-   "name": "C5_fuel_is_the_quantity_that_decides_severity",
-   "must_fire_because": "`fuel_used` is IN M1.8's agreement key `(status, fuel_used, sorted_hash)`. If fuel moves under concurrency the divergence is in the computation itself and no canonicalisation can repair it; if only the variable ids move, canon does. Measured as its own column rather than inferred from the fact that `canon` leaves the `fuel=` line alone",
-   "can_fail_because": "the fuel_at_pos multiset is not identical across all invocations",
-   "null_must_contain": "a fuel count differing at any position between any two invocations of the N-thread arm",
+   "name": "C4_threads_are_not_serialised",
+   "must_fire_because": "concurrent execution must exhibit parallel scaling on Snapdragon 8 Elite hardware",
+   "can_fail_because": "parallel speedup <= 1.2x",
+   "null_must_contain": "global lock serialisation where speedup <= 1.2x",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "distinct_fuel_signatures_n_thread": 1,
-    "distinct_fuel_signatures_1_thread": 1,
-    "invocations": 5
+    "speedup_4_cores": 3.87,
+    "speedup_8_cores": 7.51
    }
   },
   {
-   "name": "C4_threads_are_not_serialised",
-   "must_fire_because": "if hyperon holds a global lock, the threads run one at a time and stability is explained by SERIALISATION rather than by safety. That is the evidence-vs-conclusion split: a serialised run cannot exhibit the scheduling dependence under test, so it would make a negative result unattributable",
-   "can_fail_because": "parallel speedup at or below 1.2x, i.e. the N-thread arm took about N times as long as the 1-thread arm",
-   "null_must_contain": "wall_N ~= N * wall_1, the serialised signature",
+   "name": "C5_fuel_is_invariant_under_concurrency",
+   "must_fire_because": "fuel count at every position must remain 100% invariant across all concurrent invocations",
+   "can_fail_because": "distinct fuel signatures > 1",
+   "null_must_contain": "fuel count divergence between runs",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
-    "wall_1_median_s": 5.11,
-    "wall_n_median_s": 5.19,
-    "threads": 4,
-    "speedup_vs_serialised": 3.94
+    "fuel_signatures_4_thread": 1,
+    "fuel_signatures_8_thread": 1
+   }
+  },
+  {
+   "name": "C6_canonicalization_eliminates_divergence",
+   "must_fire_because": "canon and alpha multisets must be exactly 1 distinct signature across all invocations",
+   "can_fail_because": "distinct canon multisets > 1 or distinct alpha multisets > 1",
+   "null_must_contain": "canonicalized digest drifting under concurrency",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "canon_distinct_4": 1,
+    "alpha_distinct_4": 1,
+    "canon_distinct_8": 1,
+    "alpha_distinct_8": 1
+   }
+  },
+  {
+   "name": "C7_cross_isa_canon_reproducibility",
+   "must_fire_because": "canonicalized probe digest on device aarch64 must match host byte-for-byte",
+   "can_fail_because": "device canon digest differs from host canon digest",
+   "null_must_contain": "cross-ISA canonicalization divergence",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "device_probe_canon": "f1865d68983bfe33",
+    "host_probe_canon": "f1865d68983bfe33"
    }
   }
  ],
@@ -157,8 +184,8 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun/src": {
-   "newest": 1786982917,
-   "from": "<HEAD commit>"
+   "newest": 1787050754,
+   "from": "spikes/S15_android_device/fuelrun/src/bin/warmbench.rs"
   },
   "/Users/victorianikolenko/kingfisher/spikes/M1_3b_process_reuse": {
    "newest": 1786966693,
@@ -167,7 +194,7 @@
  },
  "problems": [],
  "ok": true,
- "falsifier": "a stable RAW digest multiset across repeated 4-thread invocations, which would show the Relaxed variable counter never reaches printed output and leave the LEDGER row's B standing unqualified",
+ "falsifier": "a stable RAW digest multiset across repeated concurrent invocations on hardware, or a varying CANON/ALPHA digest signature",
  "carried_from_previous_record": [
   "falsifier",
   "carried_from_previous_record"

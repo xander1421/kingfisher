@@ -1,0 +1,216 @@
+{
+ "spike": "G50_prior_plus_rules",
+ "recorded_utc": "2026-08-18T11:34:15Z",
+ "note": "G50: does anything here beat 0.1732? Prior orders, rule confidence breaks ties, no mixing weight to fit.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G36_repro_g34/length1_constants.json"
+   ],
+   "diff_sha256": "d6798cea5ed28a8914d9bcc49f53d2312f3c584a811cf523949e4517c73a955f",
+   "diff_bytes": 2060
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G48_pairdisjoint_split/split.out"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G49_frequency_null",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G49_frequency_null/null.out"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G49_frequency_null": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G50_prior_plus_rules/combine.py",
+   "sha256": "48a08095f9bb2a471927d30b559699e0ae1a8251e767cb2953a3ba7140ad1eed",
+   "bytes": 14132,
+   "mtime": 1787052774,
+   "compared_ts": 1787052774,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G50_prior_plus_rules/combine.json",
+   "sha256": "ebcbafab3a1780466b836339c762cfe2a9da427eb9886bf563bd60a69d59a967",
+   "bytes": 3078,
+   "mtime": 1787052855,
+   "compared_ts": 1787052855,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_rule_side_matches_G49",
+   "must_fire_because": "the rule side must be G49's rule side, or no comparison holds",
+   "can_fail_because": "the 2-hop arm returning anything but 0.0572",
+   "null_must_contain": "a differing figure: the literal is transcribed from G49/RESULT.md",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the 2-hop-only arm returning anything but G49's 0.0572, which would mean a different rule side and no comparison here would hold",
+    "mrr": 0.0572,
+    "g49_two_hop_mrr": 0.0572
+   }
+  },
+  {
+   "name": "C2_combination_actually_reorders",
+   "must_fire_because": "the rules must change some candidate score, or every combined arm is the prior with extra steps and F1 measures nothing",
+   "can_fail_because": "zero reordered queries in either combined arm",
+   "null_must_contain": "a zero, which an inert combination would produce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "the rules changing no candidate score, which would make every combined arm the prior with extra steps and F1 a measurement of nothing",
+    "A_reordered": 60310,
+    "B_reordered": 53651,
+    "n_queries": 81634
+   }
+  },
+  {
+   "name": "C3_same_rank_convention",
+   "must_fire_because": "one rank rule and one filter index across G48, G49 and this row",
+   "can_fail_because": "a different convention, making this a protocol comparison",
+   "null_must_contain": "both: the function is imported, not reimplemented",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "what_would_fail_it": "a different rank rule or filter from G48/G49",
+    "how": "rank_from_scores imported from G49, which lifted G34's 1 + higher + equal/2 verbatim; same true_sp / true_po index"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_nothing_beats_the_prior",
+   "must_fire_because": null,
+   "can_fail_because": "no combined arm exceeds the prior by more than 0.002 -- and the verdict field states separately whether the rules were INERT or HARMFUL, because a two-arm falsifier must say which arm winning refutes what (G49's F1 could not)",
+   "null_must_contain": "an arm above the prior, which the same harness would report",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "prior_mrr": 0.1732,
+    "A_mrr": 0.1736,
+    "B_mrr": 0.174,
+    "best_combined": 0.174,
+    "delta_vs_prior": 0.0008,
+    "threshold": 0.002,
+    "verdict": "rules INERT -- refuted as useless"
+   },
+   "refutes": "that anything mined in this lane adds to counting on an honest split",
+   "fires_when": "no combined arm exceeds the prior by more than 0.002 -- and the verdict field states separately whether the rules were INERT or HARMFUL, because a two-arm falsifier must say which arm winning refutes what (G49's F1 could not)",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_prior_is_not_the_same_prior",
+   "must_fire_because": null,
+   "can_fail_because": "arm C fails to reproduce G49's 0.1732 / 0.2855",
+   "null_must_contain": "a differing figure: the literals come from G49/RESULT.md",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.1732,
+    "hits10": 0.2855,
+    "g49_mrr": 0.1732,
+    "g49_hits10": 0.2855
+   },
+   "refutes": "the comparability of every number in this row",
+   "fires_when": "arm C fails to reproduce G49's 0.1732 / 0.2855",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_length1_families_are_not_harmful",
+   "must_fire_because": null,
+   "can_fail_because": "dropping them does not beat keeping them",
+   "null_must_contain": "both orderings: the ablation is free to come out either way",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "A_with_length1": 0.1736,
+    "B_without": 0.174,
+    "delta": 0.0004
+   },
+   "refutes": "G49's reading that the length-1 families are actively harmful",
+   "fires_when": "dropping them does not beat keeping them",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_nothing_beats_the_prior"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34": {
+   "newest": 1787050131,
+   "from": "spikes/G36_repro_g34/length1_constants.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "newest": 1787052151,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G49_frequency_null": {
+   "newest": 1787052665,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "no combined arm exceeding the frequency prior by more than 0.002, which would mean nothing mined in this lane adds to counting on a split that cannot leak"
+}

@@ -1,0 +1,127 @@
+{
+ "spike": "L1_offline_logits",
+ "recorded_utc": "2026-08-18T19:29:52Z",
+ "note": "L1: On-device neural logits & token stream byte-level determinism on Snapdragon 8 Elite.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S62_llm_backend_determinism",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S62_llm_backend_determinism": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/L1_offline_logits/bench_l1.py",
+   "sha256": "55ee8834ab23f2dd5594e095fac76d9e23c85f1c5e828d38478bd41b321dd361",
+   "bytes": 4629,
+   "mtime": 1787081298,
+   "compared_ts": 1787081298,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/L1_offline_logits/result.json",
+   "sha256": "a07d48ba28769f4c3835e664cc19af9893aacce4ccdf7bb06685627ea8f26b9d",
+   "bytes": 429,
+   "mtime": 1787081392,
+   "compared_ts": 1787081392,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_nonzero_generation_length",
+   "must_fire_because": "Inference produced non-empty generation",
+   "can_fail_because": "early abort",
+   "null_must_contain": "empty output",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "length": 52
+   }
+  },
+  {
+   "name": "C2_fixed_extractor_pipeline",
+   "must_fire_because": "Prompt stripper tr/awk pipeline is deterministic",
+   "can_fail_because": "unstable extraction",
+   "null_must_contain": "pipeline drift",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "lengths": [
+     52,
+     52,
+     52,
+     52
+    ]
+   }
+  },
+  {
+   "name": "C3_bit_identical_invariance",
+   "must_fire_because": "Discrete launches yield distinct=1",
+   "can_fail_because": "floating point drift",
+   "null_must_contain": "hash divergence",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "distinct": 1,
+    "hash": "6aacbbad02c5"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_cross_run_hash_divergence",
+   "must_fire_because": null,
+   "can_fail_because": "distinct_hashes > 1",
+   "null_must_contain": "hash divergence across runs",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "distinct": 1
+   },
+   "refutes": "that discrete launches produce divergent token streams",
+   "fires_when": "distinct_hashes > 1",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S62_llm_backend_determinism": {
+   "newest": 1786919342,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Discrete launches of Q4_0 on Hexagon NPU producing divergent token hashes",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

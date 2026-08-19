@@ -1,0 +1,148 @@
+{
+ "spike": "H160_rotate_adversarial_audit",
+ "recorded_utc": "2026-08-19T14:20:48Z",
+ "note": "H160: Adversarial Audit & RotatE Boundary Ablation on G88 5-Way Hybrid.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H160_rotate_adversarial_audit/result.json",
+   "sha256": "7c6366640c132b46f82b8bed79e003af8a85af1441c986fae06e5c2e6f13f8f5",
+   "bytes": 837,
+   "mtime": 1787149248,
+   "compared_ts": 1787149248,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_size",
+   "must_fire_because": "20,466 test triples",
+   "can_fail_because": "corrupted split",
+   "null_must_contain": "wrong size",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "test_len": 20466
+   }
+  },
+  {
+   "name": "C2_rotate_keys_count",
+   "must_fire_because": "Exactly 26 RotatE-selected keys from validation",
+   "can_fail_because": "selection drift",
+   "null_must_contain": "key count mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_rotate_keys": 26
+   }
+  },
+  {
+   "name": "C3_zero_leak",
+   "must_fire_because": "Zero leak between train and test",
+   "can_fail_because": "data leakage",
+   "null_must_contain": "leakage",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_count": 0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_rotate_vs_distmult_delta",
+   "must_fire_because": null,
+   "can_fail_because": "delta_vs_dm <= 0",
+   "null_must_contain": "no gain over distmult",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_rot": 0.2258825930523591,
+    "mrr_dm": 0.2129306479534531,
+    "delta": 0.012951945098906015
+   },
+   "refutes": "that RotatE outperforms DistMult on RotatE-selected test queries",
+   "fires_when": "delta_vs_dm <= 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_rotate_vs_complex_delta",
+   "must_fire_because": null,
+   "can_fail_because": "delta_vs_cx <= 0",
+   "null_must_contain": "no gain over complex",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_rot": 0.2258825930523591,
+    "mrr_cx": 0.20656085543293795,
+    "delta": 0.01932173761942116
+   },
+   "refutes": "that RotatE outperforms ComplEx on RotatE-selected test queries",
+   "fires_when": "delta_vs_cx <= 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_zero_test_queries",
+   "must_fire_because": null,
+   "can_fail_because": "n_rot_test == 0",
+   "null_must_contain": "zero test queries",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_rot_test": 2412
+   },
+   "refutes": "that RotatE-selected keys match any test queries",
+   "fires_when": "n_rot_test == 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "RotatE fails to demonstrate positive MRR delta on selected test relations"
+}

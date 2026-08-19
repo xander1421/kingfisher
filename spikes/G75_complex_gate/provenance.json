@@ -1,0 +1,306 @@
+{
+ "spike": "G75_complex_gate",
+ "recorded_utc": "2026-08-19T04:24:47Z",
+ "note": "G75: valid-select {ComplEx, G51, prior} per (p, dir) on official all-entity protocol. No stack. No literature MRR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G72_complex_all_entity/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate/hybrid.py",
+   "sha256": "26269a733c9d1b38b8b9d96aae09dd977791af9e53d141b74ec9904ef7dd39cb",
+   "bytes": 26922,
+   "mtime": 1787113420,
+   "compared_ts": 1787113420,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate/hybrid.json",
+   "sha256": "41ec2d06ca2907c16e76144a16a74b22024229417fca892643e593d3be109f51",
+   "bytes": 29136,
+   "mtime": 1787113487,
+   "compared_ts": 1787113487,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test is 20466",
+   "can_fail_because": "wrong test.txt",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "expected": 20466,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "official test same-pair leak with train is 0",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_nent",
+   "must_fire_because": "14541 entities / 237 relations",
+   "can_fail_because": "pack_ids over train only",
+   "null_must_contain": "nent!=14541",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "nent": 14541,
+    "npred": 237,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_complex_identity",
+   "must_fire_because": "G72 ComplEx 0.2755 \u00b1 0.002",
+   "can_fail_because": "different seed / min_epoch / dim",
+   "null_must_contain": "complex far from 0.2755",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "complex_mrr": 0.2755,
+    "expected": 0.2755,
+    "tol": 0.002,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_g51_prior_identity",
+   "must_fire_because": "G72/G59 prior 0.2334 G51 0.2585",
+   "can_fail_because": "score_split drift",
+   "null_must_contain": "prior/G51 not reproduced",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "g51": 0.2585,
+    "g51_ref": 0.2585,
+    "prior": 0.2334,
+    "prior_ref": 0.2334,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_g59_gate",
+   "must_fire_because": "pred-gate 0.2679",
+   "can_fail_because": "freeze_gate drift",
+   "null_must_contain": "gated!=0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "gated": 0.2679,
+    "ref": 0.2679,
+    "ok": true
+   }
+  },
+  {
+   "name": "C7_mask_hashed_before_test",
+   "must_fire_because": "dir-select hashed after valid, before test aggregates",
+   "can_fail_because": "test-grid choice",
+   "null_must_contain": "missing sha256",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sha256": "17509ac9df1ea03725161559a59c22764e4b0cc7a44d19f980dfbdbba1063cae",
+    "used_complex": true,
+    "ok": true
+   }
+  },
+  {
+   "name": "C8_literature_compare",
+   "must_fire_because": "no RotatE excerpt under corpus/",
+   "can_fail_because": "invented literature MRR",
+   "null_must_contain": "a literature MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "value": "unavailable",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_not_a_new_latent_high",
+   "must_fire_because": null,
+   "can_fail_because": "hybrid - complex < 0.005",
+   "null_must_contain": "a signed delta vs ComplEx, including a loss",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hybrid_mrr": 0.3034,
+    "complex_mrr": 0.2755,
+    "delta": 0.0279,
+    "bar": 0.005,
+    "fired": false,
+    "fires_when": "hybrid - complex < 0.005",
+    "description": "Fires if dir-select does not beat ComplEx by >= +0.005"
+   },
+   "refutes": "that mixing G51/prior into ComplEx is a +0.005 latent high",
+   "fires_when": "hybrid - complex < 0.005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_selection_hurts",
+   "must_fire_because": null,
+   "can_fail_because": "hybrid < complex",
+   "null_must_contain": "hybrid on either side of ComplEx",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hybrid_mrr": 0.3034,
+    "complex_mrr": 0.2755,
+    "fired": false,
+    "fires_when": "hybrid < complex",
+    "description": "Fires if picking G51/prior on some keys loses to ComplEx-only"
+   },
+   "refutes": "that the valid-selected mix is at least ComplEx",
+   "fires_when": "hybrid < complex",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_g51_picks_do_not_transfer",
+   "must_fire_because": null,
+   "can_fail_because": "median(TEST G51 \u2212 TEST ComplEx | valid picked G51) <= 0",
+   "null_must_contain": "a signed per-key test delta, including G51 loss",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "median_delta": 0.0287,
+    "frac_g51_le_complex": 0.2268,
+    "n_keys": 97,
+    "fired": false,
+    "fires_when": "median(TEST G51 \u2212 TEST ComplEx | valid picked G51) <= 0",
+    "description": "Fires if G51-chosen keys do not stay G51-better on test"
+   },
+   "refutes": "that G51-chosen (p,dir) keys stay G51-better on test",
+   "fires_when": "median(TEST G51 \u2212 TEST ComplEx | valid picked G51) <= 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity": {
+   "newest": 1787112085,
+   "from": "spikes/G72_complex_all_entity/complex.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "dir-select hybrid does not beat ComplEx 0.2755 by +0.005, OR hybrid < ComplEx, OR G51-chosen keys lose on test"
+}

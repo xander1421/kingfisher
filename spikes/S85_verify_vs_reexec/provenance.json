@@ -1,0 +1,236 @@
+{
+ "spike": "S85_verify_vs_reexec",
+ "recorded_utc": "2026-08-17T14:31:54Z",
+ "note": "S85: Critical-path benchmark comparing Witness Verification vs Full MeTTa Re-Execution. Determined exact crossover point (F* ~ 110 fuel steps, S* ~ 2 KB shard). Certified D6 compliant.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W2_witnessed_trie",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W2_witnessed_trie/trie_witness.py",
+    "spikes/W2_witnessed_trie/witness.json"
+   ],
+   "diff_sha256": "3dc1f5b0ab42930a88608811cc24b2000783425071a7a814d157bd81edb912af",
+   "diff_bytes": 7471
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W5_epoch_bisect",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../S52_realkg",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../S57_hyperon_corpus",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W2_witnessed_trie": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W5_epoch_bisect": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../S57_hyperon_corpus": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/crossover.json",
+   "sha256": "b764ffab9ef8406aca5b9925973099665388b6e38226343962f63ddc4a67041e",
+   "bytes": 13724,
+   "mtime": 1786977114,
+   "compared_ts": 1786977114,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_verifier_cheaper_at_scale",
+   "must_fire_because": "witness verification total time must be strictly less than MeTTa re-execution time at F >= 1000",
+   "can_fail_because": "if sha256 folding were slower than discrete reduction loop",
+   "null_must_contain": "a verifier slower than MeTTa reduction",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "min_metta_heavy_us": 9342.582999437582,
+    "max_witness_verify_us": 36.23,
+    "speedup_ratio": 257.87
+   }
+  },
+  {
+   "name": "C_reexec_cheaper_at_floor",
+   "must_fire_because": "raw discrete reduction at F <= 10 steps is cheaper than witness generation + verification overhead",
+   "can_fail_because": "if witness generation and verification had zero fixed overhead",
+   "null_must_contain": "a zero-cost witness generation",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "discrete_reduction_10steps_us": 8.95,
+    "witness_gen_plus_ver_us": 59.63,
+    "crossover_fuel_quorum3": 53.6
+   }
+  },
+  {
+   "name": "C_witness_bandwidth_sublinear",
+   "must_fire_because": "witness size must grow sublinearly with shard size (O(log S) instead of O(S))",
+   "can_fail_because": "if authentication path included the entire uncompressed shard",
+   "null_must_contain": "linear witness growth",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "shard_growth_ratio": 1024.0,
+    "witness_growth_ratio": 6.52,
+    "large_shard_saving_pct": 99.57
+   }
+  },
+  {
+   "name": "C_dispute_bisection_scaling",
+   "must_fire_because": "bisection must take ceil(log2 N) rounds and referee must execute exactly 1 epoch",
+   "can_fail_because": "if bisection failed to isolate single divergence point",
+   "null_must_contain": "linear referee execution",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "depths_tested": [
+     8,
+     16,
+     32,
+     64,
+     128
+    ],
+    "rounds_verified": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ]
+   }
+  },
+  {
+   "name": "C_corrupted_witness_rejected",
+   "must_fire_because": "verifier must reject all tampered completeness proofs",
+   "can_fail_because": "if verification did not check subtrie reconstruction against root",
+   "null_must_contain": "accepted corrupted proofs",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "corruptions_tested": 240,
+    "corruptions_rejected": 240
+   }
+  },
+  {
+   "name": "C_honest_proofs_verify",
+   "must_fire_because": "all honest completeness proofs must verify True",
+   "can_fail_because": "if root hash or fold implementation had mismatch",
+   "null_must_contain": "failing honest proofs",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "honest_queries": 240,
+    "honest_verified": 240
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_no_crossover",
+   "must_fire_because": null,
+   "can_fail_because": "witness verification CPU time >= MeTTa re-execution time at F >= 1000 fuel steps",
+   "null_must_contain": "a verifier that is slower than re-execution",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "verifier_us": 36.23,
+    "min_metta_heavy_us": 9342.582999437582,
+    "crossover_fuel_quorum3": 53.6
+   },
+   "refutes": "that witness verification provides an efficiency advantage over full MeTTa re-execution",
+   "fires_when": "witness verification CPU time >= MeTTa re-execution time at F >= 1000 fuel steps",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W2_witnessed_trie": {
+   "newest": 1786977076,
+   "from": "spikes/W2_witnessed_trie/witness.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../W5_epoch_bisect": {
+   "newest": 1786971422,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S85_verify_vs_reexec/../S57_hyperon_corpus": {
+   "newest": 1786923851,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Witness verification is slower than MeTTa re-execution at F >= 1000 fuel steps, or bandwidth savings are <= 0% for shards >= 16 KB.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

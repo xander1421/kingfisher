@@ -1,0 +1,264 @@
+{
+ "spike": "G74_analog_only_slice",
+ "recorded_utc": "2026-08-19T03:54:02Z",
+ "note": "G74: slice G65 analog_only 28; do not move official 0.2679.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G65_head_replace",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G65_head_replace/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G65_head_replace": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G74_analog_only_slice/slice.py",
+   "sha256": "62879751d9aa27e110b7bae60d19bab2adbd6591cbb13943c1825dff0f6041fd",
+   "bytes": 16318,
+   "mtime": 1787111251,
+   "compared_ts": 1787111251,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G74_analog_only_slice/slice.json",
+   "sha256": "296dea21e5b8424cdbdca585552ccb123e27bd437eaa76041fa87a3fe424d48d",
+   "bytes": 18459,
+   "mtime": 1787111642,
+   "compared_ts": 1787111642,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_choice_sha",
+   "must_fire_because": "reconstruct G65 head-choice bytes",
+   "can_fail_because": "scoring drifted",
+   "null_must_contain": "sha mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": "6670401bde8a44a6dca1ba4d610672313219cf6a2cb0e8283a9027d903cb7603",
+    "observed": "6670401bde8a44a6dca1ba4d610672313219cf6a2cb0e8283a9027d903cb7603",
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_counts",
+   "must_fire_because": "172/28/14/9",
+   "can_fail_because": "choice function drifted",
+   "null_must_contain": "counts differ",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": {
+     "g51": 172,
+     "analog_only": 28,
+     "prior": 14,
+     "analog": 9
+    },
+    "observed": {
+     "g51": 172,
+     "analog_only": 28,
+     "prior": 14,
+     "analog": 9
+    },
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_test_leak",
+   "must_fire_because": "official test 20466 leak 0",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "n!=20466 or leak",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_pred_gate_repro",
+   "must_fire_because": "G59 pred-gate 0.2679",
+   "can_fail_because": "scorer drifted",
+   "null_must_contain": "mrr!=0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.2679,
+    "observed": 0.2679,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_train_hash",
+   "must_fire_because": "same official train as G59",
+   "can_fail_because": "corpus swapped",
+   "null_must_contain": "hash miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_no_transfer",
+   "must_fire_because": null,
+   "can_fail_because": "TEST analog_only \u2264 gated-head on the 28",
+   "null_must_contain": "transfer fails",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "ao_test": 0.2371,
+    "gated_test": 0.2257,
+    "delta": 0.0114,
+    "fired": false,
+    "description": "Fires if analog_only \u2264 gated-head on the 28 at TEST"
+   },
+   "refutes": "that analog_only still wins on the 28 at test",
+   "fires_when": "TEST analog_only \u2264 gated-head on the 28",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_not_rare",
+   "must_fire_because": null,
+   "can_fail_because": "median n_train(ao) >= median n_train(g51)",
+   "null_must_contain": "not rarer",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "median_n_train_ao": 819.5,
+    "median_n_train_g51": 339.0,
+    "fired": true,
+    "description": "Fires if analog_only preds are not rarer than g51 preds"
+   },
+   "refutes": "that analog_only wins because those preds are rare",
+   "fires_when": "median n_train(ao) >= median n_train(g51)",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_not_abandoned",
+   "must_fire_because": null,
+   "can_fail_because": "P(OFF|ao) <= P(OFF|g51)",
+   "null_must_contain": "not more often OFF",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "p_off_ao": 0.4286,
+    "p_off_g51": 0.1919,
+    "fired": false,
+    "description": "Fires if analog_only is not more often pred-gate OFF than g51"
+   },
+   "refutes": "that analog_only is the pred-gate-OFF set",
+   "fires_when": "P(OFF|ao) <= P(OFF|g51)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_not_rare"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G65_head_replace": {
+   "newest": 1787108085,
+   "from": "spikes/G65_head_replace/replace.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "analog_only does not transfer on the 28, or they are not rare, or they are not gate-OFF"
+}

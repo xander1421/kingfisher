@@ -126,5 +126,41 @@ done
 kill "$_holder" 2>/dev/null; rm -rf "$_fakedir"
 rm -f "$S"
 
+# --- v8, H123: OWNERSHIP MUST SEE THE RENAME SOURCE ---------------------------
+# `git diff --cached --name-only` reports a rename as the DESTINATION alone, so
+# `git mv HANDOFF.OTHER-9.md notes.md` staged one unowned path and this gate
+# passed a commit DELETING another lane's journal. Driven in a throwaway repo,
+# because the property is "the hook refuses this staged set" and the staged set
+# is the whole point. Both arms: the evasion must refuse, and a lane renaming its
+# OWN journal must still pass, or the fix would wedge a legitimate operation.
+_rr="$(git rev-parse --git-path hooks)/_cm_rename.$$"
+_habs="$(cd "$(dirname "$H")" && pwd)/$(basename "$H")"
+rm -rf "$_rr"; mkdir -p "$_rr"
+(
+  cd "$_rr" || exit 1
+  git init -q .; git config user.email t@t; git config user.name t
+  printf '# theirs\n' > HANDOFF.OTHER-9.md; printf '# mine\n' > HANDOFF.MINE-1.md
+  git add HANDOFF.OTHER-9.md HANDOFF.MINE-1.md; git commit -q -m base
+  printf 'subject\n\nAtom: MINE-1\nClaude-Session: x\nReviewed-By: unreviewed\n' > m
+  git mv HANDOFF.OTHER-9.md notes.md
+  sh "$_habs" m >/dev/null 2>&1 && exit 3   # must REFUSE
+  git reset -q --hard
+  # The control is an ORDINARY rename, not a self-rename of a journal: a journal
+  # renamed to any other name has a DIFFERENT inferred owner and was already
+  # refused before v8, so asserting otherwise would be asserting a property this
+  # gate has never had. Found by this arm failing on its first run.
+  printf 'x\n' > a.md; git add a.md; git commit -q -m a
+  git mv a.md b.md
+  sh "$_habs" m >/dev/null 2>&1 || exit 4   # unowned rename: must PASS
+  exit 0
+)
+case $? in
+  0) pass=$((pass+2)) ;;
+  3) fail=$((fail+1)); echo "  FAIL  a rename of ANOTHER lane's journal to an unowned path must REFUSE (H123)" ;;
+  4) fail=$((fail+1)); echo "  FAIL  renaming your OWN journal must still pass" ;;
+  *) fail=$((fail+1)); echo "  FAIL  H123 rename fixture did not run" ;;
+esac
+rm -rf "$_rr"
+
 echo "commit-msg gate: $pass passed, $fail failed"
 [ "$fail" = 0 ]

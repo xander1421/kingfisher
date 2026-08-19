@@ -1,0 +1,8 @@
+{
+  "A1_sybil_vrf": true,
+  "A2_colluding_operator": true,
+  "A3_fuel_tampering": true,
+  "A4_forged_range_proof": true,
+  "A5_duty_cycle_capture": true,
+  "all_defended": true
+}

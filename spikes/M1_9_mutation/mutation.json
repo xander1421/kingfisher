@@ -26,7 +26,11 @@
    "python__tests__scripts__d4_type_prop.metta"
   ],
   "total": 4,
-  "n": 64
+  "n": 64,
+  "void": false,
+  "probe": "!(- 5 3)",
+  "probe_base": "0\t2",
+  "probe_mut": "0\t8"
  },
  "less-is-lesseq": {
   "desc": "comparison: (< a a) becomes True -- an off-by-one at every boundary",
@@ -50,7 +54,11 @@
   },
   "detectors": [],
   "total": 0,
-  "n": 64
+  "n": 64,
+  "void": false,
+  "probe": "!(< 1 1)",
+  "probe_base": "0\tFalse",
+  "probe_mut": "0\tTrue"
  },
  "resolver-message": {
   "desc": "module resolver: the failure text a missing import! produces",
@@ -99,7 +107,11 @@
    "python__tests__scripts__f1_moduleB.metta"
   ],
   "total": 24,
-  "n": 64
+  "n": 64,
+  "void": false,
+  "probe": "!(import! &self kf_no_such_module)",
+  "probe_base": "0\t(Error (import! ModuleSpace(GroundingSpace-top) kf_no_such_module) Failed to resolve module top:kf_no_such_module)",
+  "probe_mut": "0\t(Error (import! ModuleSpace(GroundingSpace-top) kf_no_such_module) Cannot resolve module top:kf_no_such_module)"
  },
  "stdlib-if": {
   "desc": "stdlib: (if True a b) returns b -- an INVOKED rule, unlike stdlib-init",
@@ -129,7 +141,11 @@
    "python__tests__scripts__e3_match_states.metta"
   ],
   "total": 5,
-  "n": 64
+  "n": 64,
+  "void": false,
+  "probe": "!(if True yes no)",
+  "probe_base": "0\tyes",
+  "probe_mut": "0\tno"
  },
  "stdlib-init": {
   "desc": "stdlib init: one extra rule, which shifts fuel_used for EVERY program",
@@ -153,7 +169,11 @@
   },
   "detectors": [],
   "total": 0,
-  "n": 64
+  "n": 64,
+  "void": false,
+  "probe": "!(kf-canary)",
+  "probe_base": "0\t(kf-canary)",
+  "probe_mut": "0\t1"
  },
  "_tree": {
   "elders_head": "3f76dc4\n",

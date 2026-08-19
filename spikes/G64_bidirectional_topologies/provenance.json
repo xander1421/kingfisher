@@ -1,0 +1,138 @@
+{
+ "spike": "G64_bidirectional_topologies",
+ "recorded_utc": "2026-08-19T02:49:58Z",
+ "note": "G64: 4-topology bidirectional 2-hop rule mining on official FB15k-237.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G64_bidirectional_topologies/run_g64.py",
+   "sha256": "42a43b75506ebeede3bf19e848931c5fbeca03fad7b748517fab3c49ef5bcda5",
+   "bytes": 14200,
+   "mtime": 1787107535,
+   "compared_ts": 1787107535,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G64_bidirectional_topologies/g64_results.json",
+   "sha256": "018c5274003573b8817b918375ed10a3a4544d6711adb8eba5b7641a921dd55d",
+   "bytes": 5292,
+   "mtime": 1787107798,
+   "compared_ts": 1787107798,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_size",
+   "must_fire_because": "Test split must have exactly 20,466 triples",
+   "can_fail_because": "corrupted split",
+   "null_must_contain": "wrong query count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_test": 20466
+   }
+  },
+  {
+   "name": "C2_leak_free",
+   "must_fire_because": "0 same-pair triples with train",
+   "can_fail_because": "train/test leakage",
+   "null_must_contain": "leak > 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaks": 0
+   }
+  },
+  {
+   "name": "C3_field_order",
+   "must_fire_because": "triples are (p,s,o)",
+   "can_fail_because": "transposed fields",
+   "null_must_contain": "wrong relation max",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "npred": 237
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_beats_g59_gated",
+   "must_fire_because": null,
+   "can_fail_because": "gated_mrr <= 0.2679",
+   "null_must_contain": "sub-baseline result",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "g64_gated_mrr": 0.2778,
+    "g59_mrr": 0.2679
+   },
+   "refutes": "that 4-topology rule mining fails to outperform G59 FWD_FWD baseline",
+   "fires_when": "gated_mrr <= 0.2679",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_closes_head_gap",
+   "must_fire_because": null,
+   "can_fail_because": "head_mrr <= 0.1703",
+   "null_must_contain": "no head query improvement",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "g64_head_mrr": 0.1794,
+    "g59_head_mrr": 0.1703
+   },
+   "refutes": "that 4-topology rules fail to improve head queries over G59 (0.1703)",
+   "fires_when": "head_mrr <= 0.1703",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "4-topology rule mining failing to beat G59 baseline on official FB15k-237"
+}

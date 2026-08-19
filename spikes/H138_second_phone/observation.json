@@ -1,0 +1,19 @@
+{
+  "when": "2026-08-18",
+  "adb_devices": [
+    {"serial": "R5CX508MPRZ", "model": "SM-S926B", "codename": "e2s", "soc": "s5e9945", "abi": "arm64-v8a", "android": "16"},
+    {"serial": "R5CY93675MK", "model": "SM-S938B", "codename": "pa3q", "soc": "qcom", "abi": "arm64-v8a", "android": "16"},
+    {"serial": "emulator-5554", "model": "sdk_gphone64_arm64", "note": "not a physical phone"}
+  ],
+  "s24_gate": "thermal-UNREADABLE",
+  "s24_sysfs_zone0": "Permission denied",
+  "s24_battery_temperature_tenths_C": 340,
+  "s25_sysfs_zone0_mC": 44000,
+  "s25_battery_temperature_tenths_C": 369,
+  "battery_vs_soc_gap_C_on_s25": 7.1,
+  "did_not_use_battery_temp_as_thermal_fallback": true,
+  "why": "battery.temperature under-reports SoC heat; fallback would pass a hot SoC",
+  "not_a_new_operator_domain": true,
+  "not_a_new_isa": true,
+  "isa_note": "both arm64-v8a; microarchitecture (Exynos vs Snapdragon) is not isa"
+}

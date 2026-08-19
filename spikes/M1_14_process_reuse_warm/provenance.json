@@ -1,0 +1,186 @@
+{
+ "spike": "M1_14_process_reuse_warm",
+ "recorded_utc": "2026-08-18T11:08:37Z",
+ "note": "Spike M1.14: WorkManager process reuse and in-process warm execution benchmark certified on Samsung Galaxy S25 Ultra",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun",
+   "head": "9fe73d16e6858a3fe50a91c23a11d12e6f6f3487",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S15_android_device/fuelrun/Cargo.lock",
+    "spikes/S15_android_device/fuelrun/Cargo.toml",
+    "spikes/S15_android_device/fuelrun/src/bin/warmbench.rs",
+    "spikes/S15_android_device/fuelrun/src/bin/warmrun.rs"
+   ],
+   "diff_sha256": "584a9aa7b7d6218c495ab95e836bfbdb943a8cbce15ab0d469da0a34c403088a",
+   "diff_bytes": 988
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
+   "files": 2,
+   "combined_sha256": "b1065d9c5d2cd4b6",
+   "per_file": {
+    "Cargo.toml": "9c9aebdeb2a87331",
+    "Cargo.lock": "ca244c5f568625fd"
+   }
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_14_process_reuse_warm/result.json",
+   "sha256": "e7e1a95f3f54b3dc3a832a21a1b0fa998f3e1603668174da633f321661c57ab7",
+   "bytes": 27358,
+   "mtime": 1787051317,
+   "compared_ts": 1787051317,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_14_process_reuse_warm/device_soak.tsv",
+   "sha256": "0c1cf3b5e1c8b18bab641bfc0f9e6ee0d718bc8ceddee6cec1e8b470ab7b32b6",
+   "bytes": 1822,
+   "mtime": 1787051317,
+   "compared_ts": 1787051317,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_raw_counter_drifts_under_reuse",
+   "must_fire_because": "In-process reuse must advance NEXT_VARIABLE_ID across iterations, producing distinct raw hashes for variable probes",
+   "can_fail_because": "a cold restart per job would reset NEXT_VARIABLE_ID to 1 on every iteration",
+   "null_must_contain": "1 distinct raw hash across 100 runs, which would indicate cold process restart rather than reuse",
+   "fired": true,
+   "detail": "P5 variable probe produced 100 distinct raw hashes across 100 iterations",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "raw_distinct_100_of_100"
+   ]
+  },
+  {
+   "name": "C_canonical_digest_invariant",
+   "must_fire_because": "Canonicalisation must collapse process-global variable counter drift into exactly 1 bit-identical digest",
+   "can_fail_because": "canon could fail to renumber variables in first-appearance order",
+   "null_must_contain": "multiple distinct canon hashes, indicating history dependence leaking through canon",
+   "fired": true,
+   "detail": "All 5 program suites produced exactly 1 distinct canonical digest across 100 iterations",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "P1_arith_ctl=1",
+    "P2_logic_rules=1",
+    "P3_set_ops=1",
+    "P4_kb_chain=1",
+    "P5_var_alias_probe=1"
+   ]
+  },
+  {
+   "name": "C_zero_memory_leakage",
+   "must_fire_because": "Long-lived process reuse must not leak memory across sequential discrete job evaluations",
+   "can_fail_because": "retaining ASTs, spaces, or cyclic closure references would increase VmRSS",
+   "null_must_contain": "linearly growing RSS (>5 MB) across 100 iterations",
+   "fired": true,
+   "detail": "Memory delta from iteration 10 to 100 was 128 kB over 450 jobs (VmRSS: 11880 kB constant, <=0.3 kB/job arena page alignment)",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "iter0=11752kB",
+    "iter10=11752kB",
+    "iter20=11752kB",
+    "iter30=11752kB",
+    "iter40=11880kB",
+    "iter50=11880kB",
+    "iter60=11880kB",
+    "iter70=11880kB",
+    "iter80=11880kB",
+    "iter90=11880kB",
+    "iter99=11880kB"
+   ]
+  },
+  {
+   "name": "C_inprocess_warm_speedup",
+   "must_fire_because": "In-process warm execution must demonstrate >20x speedup over cold-start process spawn on Snapdragon 8 Elite",
+   "can_fail_because": "in-process overhead or lock contention could exceed process spawn",
+   "null_must_contain": "speedup ratio < 1.0x (warm slower than cold)",
+   "fired": true,
+   "detail": "Warm in-process execution achieved 73.0x speedup over cold process spawn",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "cold_p50=47.47ms",
+    "warm_p50=0.650ms",
+    "speedup=73.0x"
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_linear_memory_growth",
+   "must_fire_because": null,
+   "can_fail_because": "Delta RSS between iteration 10 and 100 exceeds 5000 kB (>50 kB/iter linear leak)",
+   "null_must_contain": "non-zero memory growth across 100 iterations",
+   "fired": false,
+   "detail": "Delta RSS was 128 kB (falsifier did NOT fire, memory is bounded)",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "delta_rss=128kB"
+   ],
+   "refutes": "Process-reuse memory stability claim: if fired, memory leaks linearly per job making WorkManager reuse unviable",
+   "fires_when": "Delta RSS between iteration 10 and 100 exceeds 5000 kB (>50 kB/iter linear leak)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F_canonical_divergence",
+   "must_fire_because": null,
+   "can_fail_because": "Any program exhibits more than 1 distinct canonical digest across 100 iterations",
+   "null_must_contain": "multiple distinct canon hashes across iterations",
+   "fired": false,
+   "detail": "Canonical digests remained 100% bit-identical (distinct=1 for all suites; falsifier did NOT fire)",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "P1_arith_ctl=1",
+    "P2_logic_rules=1",
+    "P3_set_ops=1",
+    "P4_kb_chain=1",
+    "P5_var_alias_probe=1"
+   ],
+   "refutes": "Bit-identical canonical digest invariance across process reuse: if fired, position in process alters canonical output",
+   "fires_when": "Any program exhibits more than 1 distinct canonical digest across 100 iterations",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S15_android_device/fuelrun": {
+   "newest": 1787051309,
+   "from": "spikes/S15_android_device/fuelrun/src/bin/warmbench.rs"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "If canonical digests diverge across positions in a single process or memory grows unbounded, the process-reuse claim is refuted",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

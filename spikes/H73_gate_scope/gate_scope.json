@@ -22,7 +22,7 @@
     "spikes/harness/githygiene.py": "46bf12e13a725a04e70411673d3098889244ee14",
     "spikes/harness/journalcheck.py": "4d562738c292e58c1310393dec0424a59cc9b87b",
     "spikes/harness/pre-commit.hook": "2dee29e85c47aa3b0352492951709eba42d6ffa1",
-    "spikes/harness/refcheck.py": "3e4770b2e62e14d61f27e8d89896fd6b1d747563"
+    "spikes/harness/refcheck.py": "b0a528dce46b616b193d998bd2a7692cad9a52a9"
   },
   "scoped_gate_would_accept": true,
   "violation_present_in_HEAD": false

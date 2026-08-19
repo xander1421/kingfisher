@@ -1,0 +1,160 @@
+{
+ "spike": "S87_content_addressed_corpus",
+ "recorded_utc": "2026-08-19T13:37:17Z",
+ "note": "S87: Content-addressed shard ingestion for FB15k-237 train (272,115 triples). Satisfies \u00a78 item 2.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/result.json",
+   "sha256": "ccc2e0c463942c4256095551eef0e0159f1a4eeb11c5714e7425c4cd1095d7ca",
+   "bytes": 1006,
+   "mtime": 1787146637,
+   "compared_ts": 1787146637,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_triple_count",
+   "must_fire_because": "Corpus must have exactly 272,115 triples",
+   "can_fail_because": "corrupted corpus",
+   "null_must_contain": "wrong count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_triples": 272115,
+    "expected": 272115
+   }
+  },
+  {
+   "name": "C2_roundtrip_parity",
+   "must_fire_because": "100% triple parity on content-addressed roundtrip",
+   "can_fail_because": "shard data loss",
+   "null_must_contain": "mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "parity_ok": true,
+    "mismatches": 0
+   }
+  },
+  {
+   "name": "C3_unique_cids",
+   "must_fire_because": "All predicate shards produce distinct valid CIDs",
+   "can_fail_because": "hash collision",
+   "null_must_contain": "collision",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_cids": 237,
+    "n_preds": 237
+   }
+  },
+  {
+   "name": "C4_footprint",
+   "must_fire_because": "Total sharded corpus footprint <= 32MB",
+   "can_fail_because": "bloated encoding",
+   "null_must_contain": "too large",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "total_bytes": 21004940
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_data_loss",
+   "must_fire_because": null,
+   "can_fail_because": "recovered != 272115",
+   "null_must_contain": "data loss",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "recovered": 272115
+   },
+   "refutes": "that shard store preserves 272,115 triples exactly",
+   "fires_when": "recovered != 272115",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_cid_mismatch",
+   "must_fire_because": null,
+   "can_fail_because": "mismatch > 0",
+   "null_must_contain": "cid mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mismatches": 0
+   },
+   "refutes": "that shard retrieval verifies multihash integrity",
+   "fires_when": "mismatch > 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_retrieval_latency",
+   "must_fire_because": null,
+   "can_fail_because": "avg_ms > 1.0",
+   "null_must_contain": "slow read",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "avg_read_lat_ms": 0.520252380050531
+   },
+   "refutes": "that shard retrieval is low-latency (<= 1.0 ms)",
+   "fires_when": "avg_ms > 1.0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "FB15k-237 content-addressed sharding data loss or integrity failure"
+}

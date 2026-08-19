@@ -1,0 +1,219 @@
+{
+ "spike": "G81_g77_default",
+ "recorded_utc": "2026-08-19T12:35:54Z",
+ "note": "G81: split G77 +0.0067 into small-n DistMult default vs valid-picked. Do not quote SOTA.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G77_distmult_select/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G78_g77_slice",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G78_g77_slice/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G78_g77_slice": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G81_g77_default/split.py",
+   "sha256": "23767fda6b2195866cc03e88171aeaa81f994778233b1bb651c99dc34f2e7051",
+   "bytes": 8807,
+   "mtime": 1787142901,
+   "compared_ts": 1787142901,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G81_g77_default/split.json",
+   "sha256": "f9c7e6c2293af703f96b5b52915eadc5ea94b4c8f833bdf1605c387a2a47adb6",
+   "bytes": 1557,
+   "mtime": 1787142954,
+   "compared_ts": 1787142954,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_n_small",
+   "must_fire_because": "G77 210 small-n keys",
+   "can_fail_because": "valid counts drifted",
+   "null_must_contain": "n!=210",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 210,
+    "file": 210,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_four_sha",
+   "must_fire_because": "G77 mask db2e8614dbe9",
+   "can_fail_because": "choice rewritten",
+   "null_must_contain": "sha mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+    "observed": "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_delta",
+   "must_fire_because": "G78 contribs sum to +0.0067",
+   "can_fail_because": "G78 keys missing",
+   "null_must_contain": "sum!=0.0067",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sum_contrib": 0.006729,
+    "ref": 0.0067,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_g78_arms",
+   "must_fire_because": "G78 4-way 0.3101 leak 0",
+   "can_fail_because": "wrong G78 file",
+   "null_must_contain": "mrr/leak",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "four": 0.3101,
+    "three": 0.3034,
+    "leak": 0,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_default_is_headline",
+   "must_fire_because": null,
+   "can_fail_because": "defaulted share >= 0.50",
+   "null_must_contain": "default share",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "default_share": 0.0285,
+    "fired": false,
+    "description": "Fires if defaulted share of +0.0067 >= 0.50"
+   },
+   "refutes": "that +0.0067 is mostly type predicates not the default",
+   "fires_when": "defaulted share >= 0.50",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_leftover_is_default",
+   "must_fire_because": null,
+   "can_fail_because": "defaulted share >= 0.216",
+   "null_must_contain": "leftover vs default",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "default_share": 0.0285,
+    "leftover": 0.2158,
+    "fired": false,
+    "description": "Fires if defaulted share >= G78 leftover 0.216"
+   },
+   "refutes": "that G78 leftover 21.6% is not the 210-key default",
+   "fires_when": "defaulted share >= 0.216",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_top10_are_defaults",
+   "must_fire_because": null,
+   "can_fail_because": "a top-10 key has n_valid < 20",
+   "null_must_contain": "top10 n_valid",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_top10_small": 0,
+    "fired": false,
+    "description": "Fires if a G78 top-10 key has n_valid < 20"
+   },
+   "refutes": "that G78 top-10 are high-mass valid-picked keys",
+   "fires_when": "a top-10 key has n_valid < 20",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select": {
+   "newest": 1787114197,
+   "from": "spikes/G77_distmult_select/select.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G78_g77_slice": {
+   "newest": 1787130384,
+   "from": "spikes/G78_g77_slice/slice.json"
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the 210-key default is the headline, or the leftover, or the top-10"
+}

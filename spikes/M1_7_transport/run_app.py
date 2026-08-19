@@ -16,7 +16,11 @@ import bansurface, server
 
 PORT = 18080
 CORPUS = os.path.join(HERE, '..', 'S57_hyperon_corpus', 'corpus')
-def sh(*a): return subprocess.run(a, capture_output=True, text=True)
+def sh(*a):
+    if a and a[0] == 'adb' and '-s' not in a and 'ANDROID_SERIAL' not in os.environ:
+        # Scope to physical phone by default
+        a = ('adb', '-s', 'R5CY93675MK') + a[1:]
+    return subprocess.run(a, capture_output=True, text=True)
 
 n = int(sys.argv[1]) if len(sys.argv) > 1 else 10
 progs = sorted(f for f in os.listdir(CORPUS) if f.endswith('.metta'))

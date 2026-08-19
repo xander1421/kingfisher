@@ -1,0 +1,371 @@
+ D .loop_signal.AGENT-1
+ M CHANNEL.md
+ M HANDOFF.AGENT-2.md
+ M HANDOFF.ok-1.md
+ D STOP
+ M bringup.sh
+ M corpus/graph.tsv
+ M loop_AGENT-1.log
+ M loop_AGENT-2.log
+ M spikes/G32_isurp_baseline/RUN.txt
+ M spikes/G32_isurp_baseline/isurp.py
+ M spikes/H73_gate_scope/gate_scope.json
+ M spikes/H77_demo8/attack.json
+ M spikes/M1_7_transport/result.json
+ M spikes/M1_8_quorum3/RESULT.md
+ M spikes/M1_8_quorum3/provenance.json
+ M spikes/M1_8_quorum3/q3.py
+ M spikes/M1_8_quorum3/result.json
+ M spikes/M1_8_quorum3/run/host-a/out/j0000.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0001.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0002.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0003.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0004.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0005.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0006.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0008.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0009.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0010.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0011.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0012.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0013.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0014.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0015.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0016.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0017.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0018.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0019.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0020.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0021.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0022.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0023.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0024.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0025.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0026.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0027.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0028.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0029.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0030.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0031.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0032.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0033.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0034.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0035.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0036.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0037.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0038.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0039.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0040.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0041.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0042.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0043.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0044.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0045.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0046.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0047.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0048.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0049.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0050.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0051.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0052.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0053.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0054.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0055.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0056.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0057.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0058.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0059.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0060.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0061.env
+ M spikes/M1_8_quorum3/run/host-a/out/j0062.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0000.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0001.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0002.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0003.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0004.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0005.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0006.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0007.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0008.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0009.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0010.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0011.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0012.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0013.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0014.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0015.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0016.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0017.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0018.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0019.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0020.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0021.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0022.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0023.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0024.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0025.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0026.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0027.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0028.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0029.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0030.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0031.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0033.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0034.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0035.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0036.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0037.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0038.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0039.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0040.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0041.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0042.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0043.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0044.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0045.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0046.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0047.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0048.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0049.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0050.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0051.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0052.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0053.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0054.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0055.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0056.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0057.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0058.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0059.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0060.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0061.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0062.env
+ M spikes/M1_8_quorum3/run/host-min/out/j0063.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0000.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0001.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0002.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0003.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0004.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0005.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0006.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0007.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0008.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0009.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0010.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0011.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0012.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0013.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0014.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0015.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0016.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0017.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0018.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0019.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0020.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0021.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0022.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0023.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0024.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0025.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0026.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0027.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0028.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0029.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0030.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0031.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0032.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0033.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0034.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0035.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0036.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0037.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0038.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0039.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0040.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0041.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0042.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0043.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0044.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0045.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0046.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0047.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0048.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0049.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0050.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0051.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0052.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0053.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0054.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0055.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0056.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0057.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0058.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0059.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0060.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0061.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0062.env
+ M spikes/M1_8_quorum3/run/host-x86/out/j0063.env
+ M spikes/M1_8_quorum3/run/phone/out/j0000.env
+ M spikes/M1_8_quorum3/run/phone/out/j0001.env
+ M spikes/M1_8_quorum3/run/phone/out/j0002.env
+ M spikes/M1_8_quorum3/run/phone/out/j0003.env
+ M spikes/M1_8_quorum3/run/phone/out/j0004.env
+ M spikes/M1_8_quorum3/run/phone/out/j0005.env
+ M spikes/M1_8_quorum3/run/phone/out/j0006.env
+ M spikes/M1_8_quorum3/run/phone/out/j0007.env
+ M spikes/M1_8_quorum3/run/phone/out/j0008.env
+ M spikes/M1_8_quorum3/run/phone/out/j0009.env
+ M spikes/M1_8_quorum3/run/phone/out/j0010.env
+ M spikes/M1_8_quorum3/run/phone/out/j0011.env
+ M spikes/M1_8_quorum3/run/phone/out/j0012.env
+ M spikes/M1_8_quorum3/run/phone/out/j0013.env
+ M spikes/M1_8_quorum3/run/phone/out/j0014.env
+ M spikes/M1_8_quorum3/run/phone/out/j0015.env
+ M spikes/M1_8_quorum3/run/phone/out/j0016.env
+ M spikes/M1_8_quorum3/run/phone/out/j0017.env
+ M spikes/M1_8_quorum3/run/phone/out/j0018.env
+ M spikes/M1_8_quorum3/run/phone/out/j0019.env
+ M spikes/M1_8_quorum3/run/phone/out/j0020.env
+ M spikes/M1_8_quorum3/run/phone/out/j0021.env
+ M spikes/M1_8_quorum3/run/phone/out/j0022.env
+ M spikes/M1_8_quorum3/run/phone/out/j0023.env
+ M spikes/M1_8_quorum3/run/phone/out/j0024.env
+ M spikes/M1_8_quorum3/run/phone/out/j0025.env
+ M spikes/M1_8_quorum3/run/phone/out/j0026.env
+ M spikes/M1_8_quorum3/run/phone/out/j0027.env
+ M spikes/M1_8_quorum3/run/phone/out/j0028.env
+ M spikes/M1_8_quorum3/run/phone/out/j0029.env
+ M spikes/M1_8_quorum3/run/phone/out/j0030.env
+ M spikes/M1_8_quorum3/run/phone/out/j0031.env
+ M spikes/M1_8_quorum3/run/phone/out/j0032.env
+ M spikes/M1_8_quorum3/run/phone/out/j0033.env
+ M spikes/M1_8_quorum3/run/phone/out/j0034.env
+ M spikes/M1_8_quorum3/run/phone/out/j0035.env
+ M spikes/M1_8_quorum3/run/phone/out/j0036.env
+ M spikes/M1_8_quorum3/run/phone/out/j0037.env
+ M spikes/M1_8_quorum3/run/phone/out/j0038.env
+ M spikes/M1_8_quorum3/run/phone/out/j0039.env
+ M spikes/M1_8_quorum3/run/phone/out/j0040.env
+ M spikes/M1_8_quorum3/run/phone/out/j0041.env
+ M spikes/M1_8_quorum3/run/phone/out/j0042.env
+ M spikes/M1_8_quorum3/run/phone/out/j0043.env
+ M spikes/M1_8_quorum3/run/phone/out/j0044.env
+ M spikes/M1_8_quorum3/run/phone/out/j0045.env
+ M spikes/M1_8_quorum3/run/phone/out/j0046.env
+ M spikes/M1_8_quorum3/run/phone/out/j0047.env
+ M spikes/M1_8_quorum3/run/phone/out/j0048.env
+ M spikes/M1_8_quorum3/run/phone/out/j0049.env
+ M spikes/M1_8_quorum3/run/phone/out/j0050.env
+ M spikes/M1_8_quorum3/run/phone/out/j0051.env
+ M spikes/M1_8_quorum3/run/phone/out/j0052.env
+ M spikes/M1_8_quorum3/run/phone/out/j0053.env
+ M spikes/M1_8_quorum3/run/phone/out/j0054.env
+ M spikes/M1_8_quorum3/run/phone/out/j0055.env
+ M spikes/M1_8_quorum3/run/phone/out/j0056.env
+ M spikes/M1_8_quorum3/run/phone/out/j0057.env
+ M spikes/M1_8_quorum3/run/phone/out/j0058.env
+ M spikes/M1_8_quorum3/run/phone/out/j0059.env
+ M spikes/M1_8_quorum3/run/phone/out/j0060.env
+ M spikes/M1_8_quorum3/run/phone/out/j0061.env
+ M spikes/M1_8_quorum3/run/phone/out/j0062.env
+ M spikes/M1_8_quorum3/run/phone/out/j0063.env
+ M spikes/M1_8_quorum3/run/store/index.db
+ M spikes/S30_speed_duel/duel.json
+ M spikes/S38_runbook/provenance.json
+ M spikes/S38_runbook/runbook_check.json
+ M spikes/S77_proof_bytes/attack.json
+ M spikes/W2_witnessed_trie/provenance.json
+ M spikes/W2_witnessed_trie/trie_witness.py
+ M spikes/W2_witnessed_trie/witness.json
+ M spikes/harness/retrofit_d6.py
+ M spikes/harness/stranded.sh
+?? .heartbeat.AGENT-1
+?? .heartbeat.AGENT-2
+?? .heartbeat.ATOM-3
+?? .heartbeat.ATTACKER-1
+?? .heartbeat.ok-1
+?? .ids/G10
+?? .ids/G12
+?? .ids/G13
+?? .ids/G14
+?? .ids/G20
+?? .ids/G33
+?? .ids/G34
+?? .ids/G35
+?? .ids/G36
+?? .ids/G37
+?? .ids/G38
+?? .ids/G39
+?? .ids/G4
+?? .ids/G40
+?? .ids/G41
+?? .ids/G42
+?? .ids/G43
+?? .ids/G44
+?? .ids/G6
+?? .ids/G7
+?? .ids/G9
+?? .ids/H69
+?? .ids/H70
+?? .ids/H71
+?? .ids/H72
+?? .ids/H73
+?? .ids/H74
+?? .ids/H75
+?? .ids/H76
+?? .ids/H77
+?? .ids/H78
+?? .ids/H79
+?? .ids/H80
+?? .ids/H81
+?? .ids/H82
+?? .ids/H83
+?? .ids/H84
+?? .ids/H86
+?? .ids/H87
+?? .ids/H88
+?? .ids/H89
+?? .ids/H90
+?? .ids/H92
+?? .ids/H93
+?? .ids/H94
+?? .ids/H95
+?? .ids/H96
+?? .ids/H97
+?? .ids/S28
+?? .ids/S36
+?? .ids/S37
+?? .ids/S38
+?? .ids/Z0
+?? .ids/Z1
+?? .ids/Z10
+?? .ids/Z2
+?? .ids/Z6
+?? .ids/Z7
+?? .ids/Z8
+?? .kf_v2out
+?? com.kingfisher.bringup.plist
+?? detach_AGENT-1.log
+?? detach_AGENT-2.log
+?? detach_ATOM-3.log
+?? detach_ATTACKER-1.log
+?? detach_ok-1.log
+?? inbox/
+?? loop_ATOM-3.log
+?? loop_ATTACKER-1.log
+?? loop_ok-1.log
+?? proposed/D14_6_runoff_election.md
+?? spikes/G32_isurp_baseline/RUN2.txt
+?? spikes/G32_isurp_baseline/isurp.json
+?? spikes/G32_isurp_baseline/isurp_rows.json
+?? spikes/G32_isurp_baseline/provenance.json
+?? spikes/G34_length1_and_constants/
+?? spikes/G43_repro_provenance/
+?? spikes/H13_fuse_race/
+?? spikes/H86_stranded_cost/
+?? spikes/H88_sentinel_branch/
+?? spikes/H93_selfcheck_blast/
+?? spikes/H95_selfcheck_reach/
+?? spikes/S85_verify_vs_reexec/
+?? spikes/W6_incremental_witness/
+?? spikes/devsweep.json

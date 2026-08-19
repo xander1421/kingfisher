@@ -1,0 +1,253 @@
+{
+ "spike": "G34_length1_and_constants",
+ "recorded_utc": "2026-08-18T10:47:23Z",
+ "note": "G34: Length-1 rules and constant grounding on FB15k-237 test split",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../G17_composition_redo",
+   "head": "63aec9cb89a9c84beab71576a67a174a0e553f12",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../G30_external_yardstick",
+   "head": "63aec9cb89a9c84beab71576a67a174a0e553f12",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../S52_realkg",
+   "head": "63aec9cb89a9c84beab71576a67a174a0e553f12",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../G30_external_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/length1_constants.py",
+   "sha256": "2955ff29946ee8a4b5dc93f93f6ff1f4e6dae8434ead97beb4390b0928447377",
+   "bytes": 27305,
+   "mtime": 1786979564,
+   "compared_ts": 1786979564,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/length1_constants.json",
+   "sha256": "e2691ac4ec1d28ea149f4595f98bcd2851e925d468e04486ca14b69fbf99bc34",
+   "bytes": 3901,
+   "mtime": 1787050043,
+   "compared_ts": 1787050043,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_planted_composition_upper_bound",
+   "must_fire_because": "a rule engine with valid inference must achieve MRR=1.0 on a planted composition",
+   "can_fail_because": "inference walk could miss multi-hop paths or fail filter verification",
+   "null_must_contain": "an unpredicted or incorrectly ranked query on a deterministic planted relation",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.9888888888888889,
+    "hits1": 0.9666666666666667,
+    "hits10": 1.0
+   }
+  },
+  {
+   "name": "C2_empty_rule_lower_bound",
+   "must_fire_because": "an empty rule set must yield zero hits and MRR near random entity expectation",
+   "can_fail_because": "tie-breaking bug could assign rank 1 to unpredicted entities",
+   "null_must_contain": "non-zero hits when zero rules are provided",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.00013946353058580304,
+    "hits10": 0.0
+   }
+  },
+  {
+   "name": "C3_metric_monotonicity",
+   "must_fire_because": "Hits@1 <= Hits@3 <= Hits@10 must strictly hold across all models",
+   "can_fail_because": "metric calculation bug across different thresholds",
+   "null_must_contain": "a strict violation of Hits@K monotonicity",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "G17_2hop_only": [
+     0.031064726346219804,
+     0.06622078494781714,
+     0.12294820912342594
+    ],
+    "Length1_only": [
+     0.09140575236415308,
+     0.19653094223136852,
+     0.23953892890391493
+    ],
+    "G17_plus_Length1": [
+     0.1088980351805576,
+     0.2262114753295115,
+     0.2931672301435641
+    ],
+    "Constants_only": [
+     0.100911362634132,
+     0.138835807731883,
+     0.15117105198686853
+    ],
+    "G34_Full_System (G17+L1+Const)": [
+     0.17480033318633936,
+     0.3168577588318879,
+     0.39292713998726053
+    ],
+    "Empty_baseline": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "C1_planted_control": [
+     0.9666666666666667,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "C4_strict_additivity",
+   "must_fire_because": "combined rule system must strictly exceed individual sub-models on Filtered MRR",
+   "can_fail_because": "rule conflict or confidence calibration degradation",
+   "null_must_contain": "combined system scoring lower MRR than 2-hop baseline",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "2hop": 0.0631122756859102,
+    "g17_l1": 0.1869768341949883,
+    "full": 0.2648067492241375
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_length1_lift",
+   "must_fire_because": null,
+   "can_fail_because": "Length-1 rules fail to add at least +0.03 Filtered MRR over pure 2-hop rules",
+   "null_must_contain": "a marginal or zero MRR gain from length-1 rules",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_2hop": 0.0631122756859102,
+    "mrr_g17_l1": 0.1869768341949883,
+    "gain": 0.12386455850907811
+   },
+   "refutes": "Length-1 inverse and subsumption rules provide substantial link prediction gains over 2-hop rules",
+   "fires_when": "Length-1 rules fail to add at least +0.03 Filtered MRR over pure 2-hop rules",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_constants_lift",
+   "must_fire_because": null,
+   "can_fail_because": "Constant grounding fails to improve Filtered MRR by at least +25% over (G17+L1)",
+   "null_must_contain": "a constant grounding gain below +25%",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_g17_l1": 0.1869768341949883,
+    "mrr_full": 0.2648067492241375,
+    "gain_pct": 41.62543202971576
+   },
+   "refutes": "Constant-grounded rules provide substantial link prediction gains over variable-only rules",
+   "fires_when": "Constant grounding fails to improve Filtered MRR by at least +25% over (G17+L1)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_literature_parity",
+   "must_fire_because": null,
+   "can_fail_because": "Full G34 rule engine fails to achieve Filtered MRR >= 0.1980 on FB15k-237",
+   "null_must_contain": "Filtered MRR below 0.1980",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_full": 0.2648067492241375,
+    "amie_mrr": 0.198,
+    "anyburl_len2_mrr": 0.245
+   },
+   "refutes": "Kingfisher rule engine reaches benchmark parity with standard length<=2 rule baselines (AMIE+)",
+   "fires_when": "Full G34 rule engine fails to achieve Filtered MRR >= 0.1980 on FB15k-237",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../G30_external_yardstick": {
+   "newest": 1786979491,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants/../S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Length-1 rules fail to add +0.03 MRR, constant grounding fails +25% lift, or full system fails AMIE+ parity (0.1980 MRR)",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

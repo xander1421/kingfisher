@@ -1,11 +1,11 @@
 {
  "spike": "W2_witnessed_trie",
- "recorded_utc": "2026-08-17T13:12:49Z",
+ "recorded_utc": "2026-08-17T14:31:16Z",
  "note": "W2 witnessed re-exec on a Merkle-committed radix trie; membership + non-membership + completeness, real verifier. Scaling rows are MEASURED POINTS, not a rate: units.check_affine refuses an affine fit on them.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/../S52_realkg",
-   "head": "31bfd2b294f2f2610093426a3f7c474d8a448ad6",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -22,19 +22,19 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/trie_witness.py",
-   "sha256": "e4cf0aac4c4a41b917a3db08b8d2ca6559af215dcb12f07c8e62b56a9bd2d8fe",
-   "bytes": 38234,
-   "mtime": 1786972333,
-   "compared_ts": 1786972333,
+   "sha256": "1ace38affd68ffa973d18d1eb28c6436e51d52ac9f383f0b277ae272337e8784",
+   "bytes": 38910,
+   "mtime": 1786977071,
+   "compared_ts": 1786977071,
    "compared_clock": "mtime"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W2_witnessed_trie/witness.json",
-   "sha256": "5f4cb5542c2a41d60bc1f74a9a9a8d1d486ac8800f9ac79284f3cb9ccf52573c",
-   "bytes": 5102,
-   "mtime": 1786972369,
-   "compared_ts": 1786959236,
-   "compared_clock": "last-commit"
+   "sha256": "3e947c0254457872573b7922d4fa404812b2843418c184a4a1696a9bcb31d766",
+   "bytes": 5106,
+   "mtime": 1786977076,
+   "compared_ts": 1786977076,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],

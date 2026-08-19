@@ -1,0 +1,81 @@
+{
+ "spike": "H150_d1_draw",
+ "recorded_utc": "2026-08-18T23:49:37Z",
+ "note": "H150: R2 tracks stake; R4 accepted seats match the online set",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H150_d1_draw/draw.json",
+   "sha256": "ca27d702a2e390836915391077819f651cf64ee2566bc4e6b584c28cd2ce68e6",
+   "bytes": 1688,
+   "mtime": 1787096977
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "first_offer_tracks_stake",
+   "must_fire_because": "R2 first offers must sit within 3pp of stake at every honest duty",
+   "can_fail_because": "first_offer_adv more than 3pp from 0.20",
+   "null_must_contain": "an online-set draw that can exceed stake by duty capture",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f1": true,
+    "null_captures": true,
+    "d05_first": 0.20258333333333334,
+    "d05_online": 0.8556666666666667
+   }
+  },
+  {
+   "name": "decliner_gets_zero",
+   "must_fire_because": "never-ack adversary accepted share ~0",
+   "can_fail_because": "decliner_accepted_adv > 0.01",
+   "null_must_contain": "an accepted-share counter that can be zero or positive",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "decliner": 0.0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "accepted_tracks_online_set",
+   "must_fire_because": null,
+   "can_fail_because": "accepted_adv > stake_share + 0.05 at any honest duty",
+   "null_must_contain": "accepted shares that can sit at stake or at online-set",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "d05_accepted": 0.8555833333333334,
+    "d05_online": 0.8556666666666667,
+    "stake": 0.2
+   },
+   "refutes": "R4 redraw-until-ack restores S69 duty capture on ACCEPTED seats",
+   "fires_when": "accepted_adv > stake_share + 0.05 at any honest duty",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "accepted_tracks_online_set"
+ ],
+ "no_deps_reason": "coordinator-emulated D1; no elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "always-on accepted share exceeds stake because R4 redraws on silence"
+}

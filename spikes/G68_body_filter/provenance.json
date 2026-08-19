@@ -1,0 +1,274 @@
+{
+ "spike": "G68_body_filter",
+ "recorded_utc": "2026-08-19T03:22:13Z",
+ "note": "G68: body-side spray filters (hub p95, last-hop mincount=2) on official FB15k-237. Literature unavailable.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G54_slice_gated_lift",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G54_slice_gated_lift/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G54_slice_gated_lift": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G68_body_filter/body.py",
+   "sha256": "4fb6da65f793a4635eb3a33bddb364066dc0a759d400e8f770c95aadf2ce9cc0",
+   "bytes": 22343,
+   "mtime": 1787109412,
+   "compared_ts": 1787109412,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G68_body_filter/body.json",
+   "sha256": "59eb7bdd9ff34f37e55064e98fabf4f320d91f357a77e29528762942788c60f0",
+   "bytes": 6814,
+   "mtime": 1787109733,
+   "compared_ts": 1787109733,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong file",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "n": 20466
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "leak 0",
+   "can_fail_because": "loader mix",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "leak": 0
+   }
+  },
+  {
+   "name": "C3_g51",
+   "must_fire_because": "official G51 0.2585",
+   "can_fail_because": "scorer drifted",
+   "null_must_contain": "G51 != 0.2585",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2585,
+    "expected": 0.2585
+   }
+  },
+  {
+   "name": "C4_gated",
+   "must_fire_because": "valid-gated 0.2679",
+   "can_fail_because": "gate drifted",
+   "null_must_contain": "gated != 0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2679,
+    "expected": 0.2679
+   }
+  },
+  {
+   "name": "C5_npred",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "vocab broken",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "npred": 237
+   }
+  },
+  {
+   "name": "C6_firings_identity",
+   "must_fire_because": "unfiltered collect_firings matches G54",
+   "can_fail_because": "wrapper is a different instrument",
+   "null_must_contain": "identity mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "valid": "200/200",
+    "test": "200/200"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_hub_filter_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "hub-filter G51 <= 0.2585",
+   "null_must_contain": "signed hub-G51 delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hub_mrr": 0.2489,
+    "g51_mrr": 0.2585,
+    "delta": -0.0096,
+    "fired": true,
+    "description": "Fires if hub-filter G51 <= unfiltered G51 0.2585. Signed."
+   },
+   "refutes": "that skipping hub intermediates raises official G51",
+   "fires_when": "hub-filter G51 <= 0.2585",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_mincount_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "mincount-2 G51 <= 0.2585",
+   "null_must_contain": "signed mincount-G51 delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mincount_mrr": 0.2334,
+    "g51_mrr": 0.2585,
+    "delta": -0.0251,
+    "fired": true,
+    "description": "Fires if mincount-2 G51 <= 0.2585. Signed."
+   },
+   "refutes": "that last-hop mincount=2 raises official G51",
+   "fires_when": "mincount-2 G51 <= 0.2585",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_gated_filter_does_not_beat_gated",
+   "must_fire_because": null,
+   "can_fail_because": "gated+filter <= 0.2679",
+   "null_must_contain": "signed gated_filter-gated delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "gated_filter_mrr": 0.2656,
+    "gated_mrr": 0.2679,
+    "best_filter": "D_g51_hub",
+    "delta": -0.0023,
+    "fired": true,
+    "description": "Fires if gated+filter <= 0.2679. Signed."
+   },
+   "refutes": "that a body filter under the G59 gate raises 0.2679",
+   "fires_when": "gated+filter <= 0.2679",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_hub_filter_does_not_beat_g51",
+  "F2_mincount_does_not_beat_g51",
+  "F3_gated_filter_does_not_beat_gated"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/spikes/G54_slice_gated_lift": {
+   "newest": 1787100600,
+   "from": "spikes/G54_slice_gated_lift/slice_gated.json"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a017fe-774f-7491-9167-031c7e08491c/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "hub-filter G51 <= 0.2585 OR mincount-2 G51 <= 0.2585 OR gated+filter <= 0.2679"
+}

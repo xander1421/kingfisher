@@ -1,0 +1,785 @@
+{
+ "gate": "device quiet: cpu_busy 0.6% (limit 15%), runnable 1, thermal 33200m, battery status=5 level=100 charging=true powered=1",
+ "fuel": 2000000,
+ "bytes_pushed": 0,
+ "normalisation": "canon",
+ "sessions": 1,
+ "chunk": 4,
+ "refusals": [],
+ "admission_refused": [],
+ "workers": [
+  "host-a",
+  "host-min",
+  "host-x86",
+  "phone"
+ ],
+ "tally": {
+  "DEV_SINGLE_OPERATOR": 4
+ },
+ "rows": [
+  {
+   "program": "lib__tests__test_stdlib.metta",
+   "verdict": "DEV_SINGLE_OPERATOR",
+   "agree": 4,
+   "key": [
+    "OK",
+    "48584",
+    "0a9d54f0812cfd4d00e5ede8bd231cc8cb35f1486a38ee71655bc59c77a2ee74"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "48584",
+     "raw_hash": "3887fb43d49c87dc3b302ee7880b05ff82aeae53dd81d227c00d060adc4b8e6b",
+     "sorted_hash": "698293cdfccfa2f21f12db895077ac187e7b470378d960c6b21a657b782d6165",
+     "n_results": "33",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t()\n1\t()\n2\t()\n3\t()\n4\t()\n5\t()\n6\t()\n7\t()\n8\t()\n9\t()\n10\t()\n11\t()\n12\t()\n13\t()\n14\t()\n15\t()\n16\t()\n17\t()\n18\t()\n19\t()\n20\t()\n21\t()\n22\t()\n23\t()\n24\t()\n25\t()\n26\t()\n27\t()\n28\t()\n29\t()\n30\t()\n31\t()\n32\t()",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0000",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 73.3,
+     "observed_ms": 118.2,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "48584",
+     "raw_hash": "3887fb43d49c87dc3b302ee7880b05ff82aeae53dd81d227c00d060adc4b8e6b",
+     "sorted_hash": "698293cdfccfa2f21f12db895077ac187e7b470378d960c6b21a657b782d6165",
+     "n_results": "33",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t()\n1\t()\n2\t()\n3\t()\n4\t()\n5\t()\n6\t()\n7\t()\n8\t()\n9\t()\n10\t()\n11\t()\n12\t()\n13\t()\n14\t()\n15\t()\n16\t()\n17\t()\n18\t()\n19\t()\n20\t()\n21\t()\n22\t()\n23\t()\n24\t()\n25\t()\n26\t()\n27\t()\n28\t()\n29\t()\n30\t()\n31\t()\n32\t()",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:a867fbfa5f53",
+     "domains": {
+      "binary": "bin:a867fbfa5f53",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "a867fbfa5f53",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-min",
+     "job_id": "j0000",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 69.3,
+     "observed_ms": 114.2,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "48584",
+     "raw_hash": "3887fb43d49c87dc3b302ee7880b05ff82aeae53dd81d227c00d060adc4b8e6b",
+     "sorted_hash": "698293cdfccfa2f21f12db895077ac187e7b470378d960c6b21a657b782d6165",
+     "n_results": "33",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "0\t()\n1\t()\n2\t()\n3\t()\n4\t()\n5\t()\n6\t()\n7\t()\n8\t()\n9\t()\n10\t()\n11\t()\n12\t()\n13\t()\n14\t()\n15\t()\n16\t()\n17\t()\n18\t()\n19\t()\n20\t()\n21\t()\n22\t()\n23\t()\n24\t()\n25\t()\n26\t()\n27\t()\n28\t()\n29\t()\n30\t()\n31\t()\n32\t()",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0000",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 124.4,
+     "observed_ms": 168.9,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "48584",
+     "raw_hash": "3887fb43d49c87dc3b302ee7880b05ff82aeae53dd81d227c00d060adc4b8e6b",
+     "sorted_hash": "698293cdfccfa2f21f12db895077ac187e7b470378d960c6b21a657b782d6165",
+     "n_results": "33",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "0\t()\n1\t()\n2\t()\n3\t()\n4\t()\n5\t()\n6\t()\n7\t()\n8\t()\n9\t()\n10\t()\n11\t()\n12\t()\n13\t()\n14\t()\n15\t()\n16\t()\n17\t()\n18\t()\n19\t()\n20\t()\n21\t()\n22\t()\n23\t()\n24\t()\n25\t()\n26\t()\n27\t()\n28\t()\n29\t()\n30\t()\n31\t()\n32\t()",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0000",
+     "shard_cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 219.8,
+     "observed_ms": 267.9,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:PHONE"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    }
+   ],
+   "dispatched": 4,
+   "returned": 4,
+   "domains": 2,
+   "domains_per_class": {
+    "binary": 4,
+    "manifest": 2,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 2
+   }
+  },
+  {
+   "program": "python__hyperon__exts__snet_io__test_snet_meta.metta",
+   "verdict": "DEV_SINGLE_OPERATOR",
+   "agree": 4,
+   "key": [
+    "OK",
+    "107",
+    "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "5d0c07f0d906bdae40aa2c6fdbc107ac3d7795d33a761f6089f87d40339a061b",
+     "sorted_hash": "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) snet_io) Failed to resolve module top:snet_io)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0001",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 10.9,
+     "observed_ms": 129.0,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "5d0c07f0d906bdae40aa2c6fdbc107ac3d7795d33a761f6089f87d40339a061b",
+     "sorted_hash": "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) snet_io) Failed to resolve module top:snet_io)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:a867fbfa5f53",
+     "domains": {
+      "binary": "bin:a867fbfa5f53",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "a867fbfa5f53",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-min",
+     "job_id": "j0001",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 11.0,
+     "observed_ms": 125.2,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "5d0c07f0d906bdae40aa2c6fdbc107ac3d7795d33a761f6089f87d40339a061b",
+     "sorted_hash": "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3",
+     "n_results": "1",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) snet_io) Failed to resolve module top:snet_io)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0001",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 21.9,
+     "observed_ms": 190.8,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "5d0c07f0d906bdae40aa2c6fdbc107ac3d7795d33a761f6089f87d40339a061b",
+     "sorted_hash": "149dc0298066e022b2b65198149fc45d710d3e23af7225c86c86474de35048f3",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) snet_io) Failed to resolve module top:snet_io)",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0001",
+     "shard_cid": "bafkreiccmiqde4lc5zlouexilnc3m3fd25w3pwmwknskya3jlbg6fuhgzq",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 73.8,
+     "observed_ms": 341.8,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:PHONE"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    }
+   ],
+   "dispatched": 4,
+   "returned": 4,
+   "domains": 2,
+   "domains_per_class": {
+    "binary": 4,
+    "manifest": 2,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 2
+   }
+  },
+  {
+   "program": "python__sandbox__bhv_binding__01_example_majority.metta",
+   "verdict": "DEV_SINGLE_OPERATOR",
+   "agree": 4,
+   "key": [
+    "OK",
+    "107",
+    "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0002",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 10.8,
+     "observed_ms": 139.6,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:a867fbfa5f53",
+     "domains": {
+      "binary": "bin:a867fbfa5f53",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "a867fbfa5f53",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-min",
+     "job_id": "j0002",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 10.1,
+     "observed_ms": 135.2,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0002",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 22.2,
+     "observed_ms": 212.8,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0002",
+     "shard_cid": "bafkreicyubvl6fkf6arxefhoaqslqcop4vzf5q7a6m6ff6aaqwhgyqu7ka",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 77.5,
+     "observed_ms": 419.2,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:PHONE"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    }
+   ],
+   "dispatched": 4,
+   "returned": 4,
+   "domains": 2,
+   "domains_per_class": {
+    "binary": 4,
+    "manifest": 2,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 2
+   }
+  },
+  {
+   "program": "python__sandbox__bhv_binding__02_example_perm.metta",
+   "verdict": "DEV_SINGLE_OPERATOR",
+   "agree": 4,
+   "key": [
+    "OK",
+    "107",
+    "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed"
+   ],
+   "envelopes": [
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:f52d98196ad0",
+     "domains": {
+      "binary": "bin:f52d98196ad0",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "f52d98196ad0",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-a",
+     "job_id": "j0003",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 10.8,
+     "observed_ms": 150.4,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:a867fbfa5f53",
+     "domains": {
+      "binary": "bin:a867fbfa5f53",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "a867fbfa5f53",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-min",
+     "job_id": "j0003",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 10.2,
+     "observed_ms": 145.3,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "x86_64",
+     "os": "macos",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "host:Victorias-MacBook-Pro.local|bin:989da5cd3be7",
+     "domains": {
+      "binary": "bin:989da5cd3be7",
+      "host": "host:Victorias-MacBook-Pro.local",
+      "os": "darwin-25.4.0",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "989da5cd3be7",
+     "host_id": "host:Victorias-MacBook-Pro.local",
+     "worker": "host-x86",
+     "job_id": "j0003",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 21.1,
+     "observed_ms": 233.9,
+     "domain_mismatch": {
+      "isa": {
+       "declared": "aarch64",
+       "observed": "x86_64"
+      },
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:HOST"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    },
+    {
+     "status": "OK",
+     "fuel_used": "107",
+     "raw_hash": "12577e9f73842c41124ba59abf9851bc4932db56995e1b0848ee653b08ec87be",
+     "sorted_hash": "bd7eb37518bde01d746677661049929c2282a939c574f7ae344802d72b21c0ed",
+     "n_results": "1",
+     "arch": "aarch64",
+     "os": "android",
+     "results_text": "0\t(Error (import! ModuleSpace(GroundingSpace-top) bhv_binding) Failed to resolve module top:bhv_binding)",
+     "domain": "adb:R5CY93675MK|bin:c90624244472",
+     "domains": {
+      "binary": "bin:c90624244472",
+      "host": "adb:R5CY93675MK",
+      "os": "android-16",
+      "isa": "aarch64",
+      "operator": "operator:self"
+     },
+     "bin_sha256": "c90624244472",
+     "host_id": "adb:R5CY93675MK",
+     "worker": "phone",
+     "job_id": "j0003",
+     "shard_cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
+     "fuel_limit": 2000000,
+     "bytes_pushed": 0,
+     "wall_ms": 75.5,
+     "observed_ms": 494.8,
+     "domain_mismatch": {
+      "operator": {
+       "declared": "operator:self",
+       "observed": "DEV:PHONE"
+      }
+     },
+     "_per_class": {
+      "binary": 4,
+      "manifest": 2,
+      "host": 2,
+      "os": 2,
+      "isa": 2,
+      "operator": 2
+     }
+    }
+   ],
+   "dispatched": 4,
+   "returned": 4,
+   "domains": 2,
+   "domains_per_class": {
+    "binary": 4,
+    "manifest": 2,
+    "host": 2,
+    "os": 2,
+    "isa": 2,
+    "operator": 2
+   }
+  }
+ ]
+}

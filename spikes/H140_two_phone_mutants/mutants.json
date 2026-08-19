@@ -1,0 +1,85 @@
+{
+  "R5CY93675MK": {
+    "honest": {
+      "verdict": "ACCEPTED",
+      "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    "M01_tampered_step_fuel": {
+      "ok": true,
+      "want": "FUEL_DIVERGENCE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M01_tampered_step_fuel\n  [VERDICT] REJECTED: FUEL_DIVERGENCE: step 0: op 'PARSE' declared 11 fuel, table dictates 10\n-------------------------------------------------------\n"
+    },
+    "M02_illegal_opcode": {
+      "ok": true,
+      "want": "ILLEGAL_OPCODE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M02_illegal_opcode\n  [VERDICT] REJECTED: ILLEGAL_OPCODE: step 0 op 'FORGED_OPCODE'\n-------------------------------------------------------\n"
+    },
+    "M03_corrupted_root": {
+      "ok": true,
+      "want": "CORPUS_ROOT_MISMATCH",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M03_corrupted_root\n  [VERDICT] REJECTED: CORPUS_ROOT_MISMATCH: declared 0000000000000000000000000000000000000000000000000000000000000000, recomputed 4b3974e92846260b2132f0d9e2ea8f5e233bb05e20ea12ea58fa78bc827de9ee\n-------------------------------------------------------\n"
+    },
+    "M04_declared_fuel_mismatch": {
+      "ok": true,
+      "want": "FUEL_FILE_MISMATCH",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M04_declared_fuel_mismatch\n  [VERDICT] REJECTED: FUEL_FILE_MISMATCH: derived sum = 400, declared fixture fuel = 399\n-------------------------------------------------------\n"
+    },
+    "M05_inconsistent_unify": {
+      "ok": true,
+      "want": "SEMANTIC_UNIFICATION_FAILURE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M05_inconsistent_unify\n  [VERDICT] REJECTED: SEMANTIC_UNIFICATION_FAILURE: step 2 bindings do not match redex unification (want {$p:(Frog $x),$q:(Green $x)}, got {$p:(Toad $x),$q:(Green $x)})\n-------------------------------------------------------\n"
+    },
+    "M06_result_mismatch_rehashed": {
+      "ok": true,
+      "want": "RESULT_NOT_DERIVED",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M06_result_mismatch_rehashed\n  [VERDICT] REJECTED: RESULT_NOT_DERIVED: re-exec ((Frog $0) (Green $0)), claimed ((Toad $0) (Green $0))\n-------------------------------------------------------\n"
+    },
+    "M07_skipped_unify_rewritten": {
+      "ok": true,
+      "want": "SEMANTIC_UNIFICATION_FAILURE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M07_skipped_unify_rewritten\n  [VERDICT] REJECTED: SEMANTIC_UNIFICATION_FAILURE: step 2 bindings do not match redex unification (want {$p:(Frog $x),$q:(Green $x)}, got {$p:(Toad $x),$q:(Green $x)})\n-------------------------------------------------------\n"
+    }
+  },
+  "R5CX508MPRZ": {
+    "honest": {
+      "verdict": "ACCEPTED",
+      "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    "M01_tampered_step_fuel": {
+      "ok": true,
+      "want": "FUEL_DIVERGENCE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M01_tampered_step_fuel\n  [VERDICT] REJECTED: FUEL_DIVERGENCE: step 0: op 'PARSE' declared 11 fuel, table dictates 10\n-------------------------------------------------------\n"
+    },
+    "M02_illegal_opcode": {
+      "ok": true,
+      "want": "ILLEGAL_OPCODE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M02_illegal_opcode\n  [VERDICT] REJECTED: ILLEGAL_OPCODE: step 0 op 'FORGED_OPCODE'\n-------------------------------------------------------\n"
+    },
+    "M03_corrupted_root": {
+      "ok": true,
+      "want": "CORPUS_ROOT_MISMATCH",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M03_corrupted_root\n  [VERDICT] REJECTED: CORPUS_ROOT_MISMATCH: declared 0000000000000000000000000000000000000000000000000000000000000000, recomputed 4b3974e92846260b2132f0d9e2ea8f5e233bb05e20ea12ea58fa78bc827de9ee\n-------------------------------------------------------\n"
+    },
+    "M04_declared_fuel_mismatch": {
+      "ok": true,
+      "want": "FUEL_FILE_MISMATCH",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M04_declared_fuel_mismatch\n  [VERDICT] REJECTED: FUEL_FILE_MISMATCH: derived sum = 400, declared fixture fuel = 399\n-------------------------------------------------------\n"
+    },
+    "M05_inconsistent_unify": {
+      "ok": true,
+      "want": "SEMANTIC_UNIFICATION_FAILURE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M05_inconsistent_unify\n  [VERDICT] REJECTED: SEMANTIC_UNIFICATION_FAILURE: step 2 bindings do not match redex unification (want {$p:(Frog $x),$q:(Green $x)}, got {$p:(Toad $x),$q:(Green $x)})\n-------------------------------------------------------\n"
+    },
+    "M06_result_mismatch_rehashed": {
+      "ok": true,
+      "want": "RESULT_NOT_DERIVED",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M06_result_mismatch_rehashed\n  [VERDICT] REJECTED: RESULT_NOT_DERIVED: re-exec ((Frog $0) (Green $0)), claimed ((Toad $0) (Green $0))\n-------------------------------------------------------\n"
+    },
+    "M07_skipped_unify_rewritten": {
+      "ok": true,
+      "want": "SEMANTIC_UNIFICATION_FAILURE",
+      "out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_scale/F001/mutants/M07_skipped_unify_rewritten\n  [VERDICT] REJECTED: SEMANTIC_UNIFICATION_FAILURE: step 2 bindings do not match redex unification (want {$p:(Frog $x),$q:(Green $x)}, got {$p:(Toad $x),$q:(Green $x)})\n-------------------------------------------------------\n"
+    }
+  },
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+}

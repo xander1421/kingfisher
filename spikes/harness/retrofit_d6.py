@@ -274,11 +274,17 @@ def selfcheck():
     observation that is not on disk. So the check drives it at a spike with no
     artefacts and asserts it reports nothing rather than something.
     """
-    import tempfile
+    import shutil, tempfile
     global SPIKES
     real = SPIKES
+    # v2 (H93): this `mkdtemp` was never removed. Harmless while nothing ran the
+    # module; H78 wired every `--selfcheck` into `bringup.sh` under launchd at
+    # StartInterval 600, which turned one dormant leak into 144 directories a day
+    # OUTSIDE the workspace (§10). Measured as a controlled pair, not one draw:
+    # `spikes/H93_selfcheck_blast/leakrate.py` -> ARM A +5/5 runs, ARM B +0/5.
+    box = tempfile.mkdtemp()
     try:
-        SPIKES = tempfile.mkdtemp()
+        SPIKES = box
         os.makedirs(os.path.join(SPIKES, 'Q1_quorum_sim'))
         assert q1() is None, 'must refuse when quorumsim.json is absent'
         assert b1() is None and w4() is None and n1() is None and s72() is None, \
@@ -300,6 +306,7 @@ def selfcheck():
         assert counters.get('amplification_is_bounded') is True
     finally:
         SPIKES = real
+        shutil.rmtree(box, ignore_errors=True)
     print('retrofit_d6 selfcheck: extraction refuses rather than invents')
 
 

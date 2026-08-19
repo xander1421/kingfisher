@@ -1,0 +1,105 @@
+  full_system            mrr=0.1358 h10=0.2061
+  no_constant_rules      mrr=0.0473 h10=0.0914
+  two_hop_only           mrr=0.0572 h10=0.1083
+  frequency_null         mrr=0.1732 h10=0.2855
+{
+  "arms": {
+    "frequency_null": {
+      "hits1": 0.1141,
+      "hits10": 0.2855,
+      "hits3": 0.186,
+      "mrr": 0.1732,
+      "n_queries": 81634,
+      "queries_with_a_scored_target": 65862
+    },
+    "full_system": {
+      "elapsed_sec": 20.475,
+      "hits1": 0.0978,
+      "hits10": 0.2061,
+      "hits3": 0.1506,
+      "mrr": 0.1358,
+      "mrr_head": 0.0657,
+      "mrr_tail": 0.2058,
+      "n_queries": 81634,
+      "n_triples": 40817
+    },
+    "no_constant_rules": {
+      "elapsed_sec": 21.2327,
+      "hits1": 0.0245,
+      "hits10": 0.0914,
+      "hits3": 0.0477,
+      "mrr": 0.0473,
+      "mrr_head": 0.0244,
+      "mrr_tail": 0.0702,
+      "n_queries": 81634,
+      "n_triples": 40817
+    },
+    "two_hop_only": {
+      "elapsed_sec": 21.8631,
+      "hits1": 0.0292,
+      "hits10": 0.1083,
+      "hits3": 0.0609,
+      "mrr": 0.0572,
+      "mrr_head": 0.0334,
+      "mrr_tail": 0.0809,
+      "n_queries": 81634,
+      "n_triples": 40817
+    }
+  },
+  "controls": {
+    "C1_instrument_reproduces_G48": {
+      "g48_hits10": 0.2061,
+      "g48_mrr": 0.1358,
+      "hits10": 0.2061,
+      "mrr": 0.1358,
+      "ok": true,
+      "what_would_fail_it": "the full-system arm returning anything but 0.1358 / 0.2061 on the pair-disjoint split"
+    },
+    "C2_null_is_not_degenerate": {
+      "n_queries": 81634,
+      "ok": true,
+      "queries_with_a_scored_target": 65862,
+      "share": 0.8068,
+      "what_would_fail_it": "a null that scores the true answer above zero for almost no query, whose MRR would then measure the tie-averaging convention rather than frequency"
+    },
+    "C3_same_filtered_candidate_sets": {
+      "how": "rank_from_scores() is G34's convention lifted verbatim (1 + higher + equal/2, zero-branch averaged over the unscored tail) and both arms read the same true_sp / true_po index",
+      "ok": true,
+      "what_would_fail_it": "the null and the system using different rank conventions or filters, making this a comparison of two protocols"
+    }
+  },
+  "controls_ok": "3/3",
+  "elapsed_sec": 92.793,
+  "falsifiers": {
+    "F1_null_matches_the_full_system": {
+      "fired": false,
+      "full_mrr": 0.1358,
+      "gap": -0.0374,
+      "meaning_if_fired": "the rule machinery buys nothing over a marginal and this series' accuracy claim is a prior",
+      "null_mrr": 0.1732,
+      "question": "does a predicate-conditional frequency prior score within 0.002 of the full rule system on a leak-free split?"
+    },
+    "F2_null_is_too_weak_to_test_anything": {
+      "fired": false,
+      "meaning_if_fired": "'beats null' would restate the structure's existence rather than test it (A20); a stronger null is required before any claim",
+      "null_mrr": 0.1732,
+      "question": "can the null contain the effect at all?"
+    },
+    "F3_advantage_is_all_compositional": {
+      "constant_contribution": 0.0885,
+      "fired": false,
+      "full_mrr": 0.1358,
+      "meaning_if_fired": "the constant rules contribute nothing and the advantage is compositional after all",
+      "no_constant_mrr": 0.0473,
+      "null_mrr": 0.1732,
+      "question": "is the full system's advantage over the null carried by the CONSTANT-grounded rules rather than by composition?"
+    }
+  },
+  "n_test": 40817,
+  "n_train": 190480,
+  "seed": "0xC0FFEE",
+  "spike": "G49",
+  "split": "pair_disjoint (G48)"
+}
+
+D6 Provenance Certified: ok=True

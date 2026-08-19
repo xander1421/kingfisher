@@ -1,0 +1,121 @@
+{
+  "arm_b": [
+    {
+      "complete": true,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fast-path",
+      "mutation": "MUT0_BASELINE",
+      "n": 127
+    },
+    {
+      "complete": true,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fast-path",
+      "mutation": "MUT1_REVERSE_SCORES",
+      "n": 127
+    },
+    {
+      "complete": true,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fast-path",
+      "mutation": "MUT2_EXTREME_BETA",
+      "n": 127
+    },
+    {
+      "complete": false,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fallback-grok_check",
+      "mutation": "MUT3_DROP_GROUND_TRUTH",
+      "n": 126,
+      "rc": 0
+    },
+    {
+      "complete": false,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fallback-grok_check",
+      "mutation": "MUT4_INJECT_POISON",
+      "n": 128,
+      "rc": 0
+    },
+    {
+      "complete": false,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fallback-grok_check",
+      "mutation": "MUT5_CORRUPT_HDC",
+      "n": 0,
+      "rc": 0
+    },
+    {
+      "complete": true,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fast-path",
+      "mutation": "MUT6_FLAT_NOISE",
+      "n": 127
+    },
+    {
+      "complete": true,
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "mode": "fast-path",
+      "mutation": "MUT7_NEAR_TIE",
+      "n": 127
+    }
+  ],
+  "class": "Gate 4 Arm B retarget to F002_specv1",
+  "controls": {
+    "C1_f001": {
+      "ok": true,
+      "out": "ACCEPT: /Users/victorianikolenko/kingfisher/fixtures/F001 -> Digest: 590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "rc": 0
+    },
+    "C2_f002": {
+      "ok": true,
+      "out": "ACCEPT: /Users/victorianikolenko/kingfisher/fixtures/F002_specv1 -> Digest: c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "rc": 0
+    },
+    "C3_rust_wrong_class": {
+      "ok": true,
+      "out": "-------------------------------------------------------\nTARGET: /Users/victorianikolenko/kingfisher/fixtures/F002_specv1\n  [VERDICT] REJECTED: WRONG_FIXTURE_CLASS: rust checker is F001-only (no F001.corpus.bin)\n-------------------------------------------------------",
+      "rc": 1
+    },
+    "C4_still_draft": {
+      "ok": true,
+      "status": "F002_DRAFT"
+    }
+  },
+  "f002_status": "F002_DRAFT",
+  "falsifiers": {
+    "F1_old_battery_is_fragment": {
+      "expect": true,
+      "fired": true,
+      "homemade": "95ef75de61461a5fc6718e0639c9ffe05da25f5fc1373b0d3d02343d7bbcee78",
+      "pin": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+    },
+    "F2_no_fallback_invisible": {
+      "expect": true,
+      "fired": true,
+      "forged_digest": "f66ca09c62764f3ef69e4bb866442b10245847e11fb3e0a7e783271633ee84fd"
+    },
+    "F3_fallback_leaves_pin": {
+      "all_mutations_keep_pin": true,
+      "expect": false,
+      "fired": false
+    }
+  },
+  "fuel": 400,
+  "gate4_closed": false,
+  "id": "G70",
+  "n_hits": 127,
+  "not_f002_freeze": true,
+  "not_operator_2": true,
+  "phone_f001": {
+    "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "fuel": 400,
+    "model": "SM-S938B",
+    "mutants_rejected": 7,
+    "not_a_new_operator_domain": true,
+    "serial": "R5CY93675MK",
+    "verdict": "ACCEPTED",
+    "witness_sha256": "112f7e8c9e351f1d651b9270902c50fe049219aac78e1f11dec5e40088617151"
+  },
+  "reason_not_closed": "F002_specv1 is F002_DRAFT; rust stays F001-only; Arm B is now on the fragment digest"
+}

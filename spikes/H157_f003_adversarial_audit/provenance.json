@@ -1,0 +1,119 @@
+{
+ "spike": "H157_f003_adversarial_audit",
+ "recorded_utc": "2026-08-19T13:34:33Z",
+ "note": "H157: Adversarial audit on F003 Modus Ponens and FT_METTA_CORE_V2 soundness.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H157_f003_adversarial_audit/result.json",
+   "sha256": "b2632b9cd868930d4f7358f6145ac2dd27e8a50c8c8854fb72b8105824974907",
+   "bytes": 1062,
+   "mtime": 1787146473
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_honest_f003",
+   "must_fire_because": "Honest F003 derives 0e1edf5b",
+   "can_fail_because": "reference broken",
+   "null_must_contain": "base failed",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "base_ok": true
+   }
+  },
+  {
+   "name": "C2_pins_intact",
+   "must_fire_because": "F001 and F002 pins remain invariant",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pins_intact": true
+   }
+  },
+  {
+   "name": "C3_all_attacks_rejected",
+   "must_fire_because": "All 4 adversarial attacks must be rejected",
+   "can_fail_because": "attack accepted",
+   "null_must_contain": "attack accepted",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "attacks_passed_count": 0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_any_attack_accepts",
+   "must_fire_because": null,
+   "can_fail_because": "any attack ACCEPT",
+   "null_must_contain": "attack pass",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "attacks_passed": []
+   },
+   "refutes": "that verifier soundly rejects all 4 adversarial attacks",
+   "fires_when": "any attack ACCEPT",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_table_collision",
+   "must_fire_because": null,
+   "can_fail_because": "collision detected",
+   "null_must_contain": "collision",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "collision": false
+   },
+   "refutes": "that fuel table downgrade does not collide with frozen pins",
+   "fires_when": "collision detected",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_pins_moved",
+   "must_fire_because": null,
+   "can_fail_because": "pins move",
+   "null_must_contain": "pins moved",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "pins_intact": true
+   },
+   "refutes": "that F001 and F002 pins remain invariant",
+   "fires_when": "pins move",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "adversarial verification audit; self-contained",
+ "problems": [],
+ "ok": true,
+ "falsifier": "Adversarial attack on Modus Ponens verifier succeeded"
+}

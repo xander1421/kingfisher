@@ -1,0 +1,97 @@
+{
+  "spike": "G58",
+  "seed": "0xC0FFEE",
+  "split": "pair_disjoint (0 leak by construction)",
+  "field_order": "p,s,o",
+  "headline_arm": "B_transe_on_prior_support",
+  "headline_is_test_grid": false,
+  "candidate_set": "train_support_of_p (same as G51)",
+  "not_full_entity_ranking": true,
+  "official_test": {
+    "official_test_available": false,
+    "paths_found": [],
+    "literature_compare": "unavailable",
+    "reason": "triples.bin is FB15k-237 TRAIN only; official test not in tree"
+  },
+  "literature_compare": "unavailable",
+  "literature_note": "do not quote Bordes/RotatE MRR against this split",
+  "dim": 32,
+  "epochs": 8,
+  "lr": 0.05,
+  "margin": 1.0,
+  "n_train": 190480,
+  "n_dev_unused": 40818,
+  "n_test": 40817,
+  "n_groups": 212110,
+  "hinge_updates": 604616,
+  "g54_gated_mrr_reference": 0.2313,
+  "arms": {
+    "A_prior_support": {
+      "mrr": 0.1732,
+      "hits1": 0.1141,
+      "hits3": 0.186,
+      "hits10": 0.2855,
+      "n_queries": 81634
+    },
+    "B_transe_on_prior_support": {
+      "mrr": 0.1534,
+      "hits1": 0.0899,
+      "hits3": 0.1629,
+      "hits10": 0.2816,
+      "n_queries": 81634
+    }
+  },
+  "transe_minus_gated": -0.0779,
+  "transe_minus_prior": -0.0198,
+  "field_order_obs": {
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504
+  },
+  "controls": {
+    "C1_prior": {
+      "ok": true,
+      "mrr": 0.1732
+    },
+    "C3_leak": {
+      "ok": true,
+      "leak": 0
+    },
+    "C4_field_order": {
+      "ok": true,
+      "declared_order": "p,s,o",
+      "npred": 237,
+      "nent": 14505,
+      "max_p": 236,
+      "max_s": 14503,
+      "max_o": 14504
+    },
+    "C5_official_test_absent": {
+      "ok": true,
+      "official_test_available": false,
+      "paths_found": [],
+      "literature_compare": "unavailable",
+      "reason": "triples.bin is FB15k-237 TRAIN only; official test not in tree"
+    }
+  },
+  "falsifiers": {
+    "F1_latent_beats_gated": {
+      "transe_mrr": 0.1534,
+      "gated_ref": 0.2313,
+      "delta": -0.0779,
+      "bar": 0.005,
+      "fired": false,
+      "description": "Fires if TransE_support beats G54 gated by >=+0.005"
+    },
+    "F2_transe_below_prior": {
+      "transe_mrr": 0.1534,
+      "prior_mrr": 0.1732,
+      "fired": true,
+      "description": "Fires if TransE_support < 0.1732 (broken/undertrained)"
+    }
+  },
+  "elapsed_sec": 138.18
+}

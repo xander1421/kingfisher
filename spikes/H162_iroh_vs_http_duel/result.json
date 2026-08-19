@@ -1,0 +1,48 @@
+{
+  "spike": "H162",
+  "timestamp": "2026-08-19 15:48:10",
+  "elapsed_sec": 0.66,
+  "duel": {
+    "HTTP_1_1_TCP": {
+      "throughput_mb_s": 149.16,
+      "avg_latency_ms": 0.582,
+      "binary_size_kb": 328,
+      "deps": "0 external (stdlib only)",
+      "range_verification": "Whole-blob only",
+      "cellular_roaming": "Reconnect required",
+      "mobile_battery_impact": "Ultra-low (sleep between requests)"
+    },
+    "Iroh_QUIC_BLAKE3": {
+      "throughput_mb_s": 131.26,
+      "avg_latency_ms": 0.652,
+      "binary_size_kb": 18840,
+      "deps": "quinn + tokio + rustls + ring + iroh-blobs",
+      "range_verification": "95.3% bandwidth reduction on random 4 KB spot-checks",
+      "cellular_roaming": "Zero-interruption connection migration (QUIC ConnID)",
+      "mobile_battery_impact": "Moderate (UDP keepalive loop in user space)"
+    },
+    "recommendation": "Use HTTP/1.1 for deterministic local node execution and whole-shard sync (zero footprint, ultra-low battery). Keep Iroh/BLAKE3 as an optional protocol for public mesh spot-checking and verified range proofs."
+  },
+  "controls": {
+    "C1_all_shards_verified": {
+      "ok": true
+    },
+    "C2_bao_bandwidth_reduction": {
+      "ok": true
+    },
+    "C3_footprint_measured": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_http_low_throughput": {
+      "fired": false
+    },
+    "F2_bao_proof_failure": {
+      "fired": false
+    },
+    "F3_footprint_delta_small": {
+      "fired": false
+    }
+  }
+}

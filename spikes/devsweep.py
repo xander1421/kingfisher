@@ -74,7 +74,7 @@ def gate():
     if not ok:
         sys.exit(f'REFUSING: battery instrument is {why} -- a frozen override reports '
                  f'whatever it was told to, which once read a discharging phone as charging')
-    if 'powered: true' not in bat:
+    if 'powered: true' not in bat and 'usb: true' not in bat and 'ac: true' not in bat:
         sys.exit('REFUSING: device is not on external power (MISSION_LOOP §10)')
     return True
 

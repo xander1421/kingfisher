@@ -1,0 +1,1 @@
+EASY mutant: step 2 claims Toad bindings; later steps still Frog. A consistent Toad forgery is impossible against this corpus — that would be a different fixture. See M07 for the consistent-looking skipped-unify rewrite.

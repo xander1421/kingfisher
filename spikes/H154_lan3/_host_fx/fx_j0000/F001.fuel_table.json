@@ -1,0 +1,12 @@
+{
+  "costs": {
+    "BIND_SPACE": 10,
+    "CANONICALIZE": 200,
+    "PARSE": 10,
+    "SUBSTITUTE": 80,
+    "UNIFY": 100
+  },
+  "id": "FT_METTA_CORE_V1",
+  "note": "Stipulated probe costs, not Hyperon-measured.",
+  "overflow": "reject"
+}

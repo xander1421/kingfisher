@@ -1,0 +1,57 @@
+{
+  "_also_see": {
+    "bytes": 23382,
+    "cid": "bafkreihqdwrxiwqyy6nxtwqhzwsoghq37zjxzjq6fnd5pa2y3dinmky364",
+    "count": 1299
+  },
+  "_derivationally_related_form": {
+    "bytes": 534870,
+    "cid": "bafkreibtxo4ntwajwmmze6xsa2l4annpba24t7malevkbsh2ufjrydmkem",
+    "count": 29715
+  },
+  "_has_part": {
+    "bytes": 86688,
+    "cid": "bafkreihivlgiviy52ybdzhkaopcwz4fd35skjigk2rwxedj2xqekwcaooe",
+    "count": 4816
+  },
+  "_hypernym": {
+    "bytes": 626328,
+    "cid": "bafkreihumwrxnesuhhozsaceado5ps66fl4zwtemlexfxvghe2coy3j5ku",
+    "count": 34796
+  },
+  "_instance_hypernym": {
+    "bytes": 52578,
+    "cid": "bafkreidz2325yt2rb37yavwb4vgwrtrfainqmsupurdrtvvh7f3ksduj3y",
+    "count": 2921
+  },
+  "_member_meronym": {
+    "bytes": 133236,
+    "cid": "bafkreidhoyduarjsry7p63dcajulbpbvjyqiinlaf7hgh5i4ytwh7cpmxi",
+    "count": 7402
+  },
+  "_member_of_domain_region": {
+    "bytes": 16614,
+    "cid": "bafkreia7gxfaup5c7irz3fzmvvvkc55c36rmjsuj6bopgqokha7pzib6he",
+    "count": 923
+  },
+  "_member_of_domain_usage": {
+    "bytes": 11322,
+    "cid": "bafkreidae6nwovpd6e3w32r4h2qa3si2p3rv3tumylhkifg52ydwdy2hlq",
+    "count": 629
+  },
+  "_similar_to": {
+    "bytes": 1440,
+    "cid": "bafkreicyjis5qwuvvaqcmkukdaxza5zilfct4vedfcvc547c7cwfeyhefq",
+    "count": 80
+  },
+  "_synset_domain_topic_of": {
+    "bytes": 56088,
+    "cid": "bafkreia6jqdqvaqhqjboln7pokmnll6ky764syqksfxqlh7dwkfkgwjxu4",
+    "count": 3116
+  },
+  "_verb_group": {
+    "bytes": 20484,
+    "cid": "bafkreihbtnainwtgpj7iiiqjsch7ukkcjavkoq7b5lr5v67ncj6iwtptiq",
+    "count": 1138
+  }
+}

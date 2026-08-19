@@ -1,0 +1,188 @@
+{
+ "spike": "G58_transe_latent",
+ "recorded_utc": "2026-08-19T01:27:16Z",
+ "note": "G58: TransE latent arm on pair-disjoint split, same candidate set as G51. Official test not fetched.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G58_transe_latent/transe.py",
+   "sha256": "c5a607286db1b7d305a4cd95bbf5fcdf9cebc336fce2fd355ea1da5dcb460c4c",
+   "bytes": 11592,
+   "mtime": 1787102665,
+   "compared_ts": 1787102665,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G58_transe_latent/transe.json",
+   "sha256": "1c21608f24c5150cf9453724f51414786a77b8a5409d875ed26a4a2859ad09c0",
+   "bytes": 2410,
+   "mtime": 1787102836,
+   "compared_ts": 1787102836,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_prior",
+   "must_fire_because": "same-support prior reproduces 0.1732",
+   "can_fail_because": "split or rank drifted",
+   "null_must_contain": "unexpected prior",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.1732
+   }
+  },
+  {
+   "name": "C3_leak",
+   "must_fire_because": "leak 0",
+   "can_fail_because": "partition broken",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "leak": 0
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "(p,s,o)",
+   "can_fail_because": "G52 swap",
+   "null_must_contain": "max_p>=npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504
+   }
+  },
+  {
+   "name": "C5_official_test_absent",
+   "must_fire_because": "setup must see that official test is missing",
+   "can_fail_because": "a test.txt appeared or detector always-true",
+   "null_must_contain": "official_test_available true",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "official_test_available": false,
+    "paths_found": [],
+    "literature_compare": "unavailable",
+    "reason": "triples.bin is FB15k-237 TRAIN only; official test not in tree"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_latent_beats_gated",
+   "must_fire_because": null,
+   "can_fail_because": "transe_support - 0.2313 >= 0.005",
+   "null_must_contain": "a signed delta vs 0.2313",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "transe_mrr": 0.1534,
+    "gated_ref": 0.2313,
+    "delta": -0.0779,
+    "bar": 0.005,
+    "fired": false,
+    "description": "Fires if TransE_support beats G54 gated by >=+0.005"
+   },
+   "refutes": "that observed+DEV-gate is the better class on this split",
+   "fires_when": "transe_support - 0.2313 >= 0.005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_transe_below_prior",
+   "must_fire_because": null,
+   "can_fail_because": "transe_support < 0.1732",
+   "null_must_contain": "an MRR on either side of the prior",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "transe_mrr": 0.1534,
+    "prior_mrr": 0.1732,
+    "fired": true,
+    "description": "Fires if TransE_support < 0.1732 (broken/undertrained)"
+   },
+   "refutes": "that the latent arm is a working TransE",
+   "fires_when": "transe_support < 0.1732",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_transe_below_prior"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "TransE on prior support beats G54 gated by +0.005, OR TransE scores below the frequency prior"
+}

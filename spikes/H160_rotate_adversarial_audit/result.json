@@ -1,0 +1,41 @@
+{
+  "spike": "H160",
+  "timestamp": "2026-08-19 15:20:48",
+  "elapsed_sec": 137.41,
+  "audit": {
+    "rotate_selected_keys": 26,
+    "test_queries_evaluated": 2412,
+    "test_query_fraction_pct": 5.89,
+    "distinct_predicates": 24
+  },
+  "metrics_on_selected_keys": {
+    "mrr_rotate": 0.2259,
+    "mrr_distmult": 0.2129,
+    "mrr_complex": 0.2066,
+    "delta_vs_distmult": 0.013,
+    "delta_vs_complex": 0.0193,
+    "net_mrr_mass_gain_vs_distmult": 31.24
+  },
+  "controls": {
+    "C1_test_size": {
+      "ok": true
+    },
+    "C2_rotate_keys_count": {
+      "ok": true
+    },
+    "C3_zero_leak": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_rotate_vs_distmult_delta": {
+      "fired": false
+    },
+    "F2_rotate_vs_complex_delta": {
+      "fired": false
+    },
+    "F3_zero_test_queries": {
+      "fired": false
+    }
+  }
+}

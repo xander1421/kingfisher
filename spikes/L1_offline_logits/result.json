@@ -1,0 +1,22 @@
+{
+  "device": "Samsung Galaxy S25 Ultra (SM-S938B / Snapdragon 8 Elite SM8750)",
+  "model": "SmolLM2-135M-Q4_0.gguf",
+  "prompt": "The capital of France is",
+  "ntok": 16,
+  "reps": 4,
+  "hashes": [
+    "6aacbbad02c5",
+    "6aacbbad02c5",
+    "6aacbbad02c5",
+    "6aacbbad02c5"
+  ],
+  "lengths": [
+    52,
+    52,
+    52,
+    52
+  ],
+  "distinct_hashes": 1,
+  "canonical_hash": "6aacbbad02c5",
+  "verdict": "SELF-DETERMINISTIC"
+}

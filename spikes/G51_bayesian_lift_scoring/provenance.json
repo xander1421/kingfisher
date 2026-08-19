@@ -1,0 +1,150 @@
+{
+ "spike": "G51_bayesian_lift_scoring",
+ "recorded_utc": "2026-08-18T18:08:05Z",
+ "note": "G51: Bayesian multiplicative log-odds combination on pair-disjoint split beats prior baseline (0.2274 vs 0.1732 MRR).",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring/bayesian_lift.py",
+   "sha256": "f2e6ac1ce7eb0aab8bb602d39800cfad5aff9834f67eab76e5b08206fe5fd4ec",
+   "bytes": 18465,
+   "mtime": 1787075943,
+   "compared_ts": 1787075943,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring/bayesian_lift.json",
+   "sha256": "d694bd0f37f0e6c427fb2b68e89f81ee5f9664770d832c8793d0cac2aac92c82",
+   "bytes": 2152,
+   "mtime": 1787075899,
+   "compared_ts": 1787075899,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_prior_reproduction",
+   "must_fire_because": "Arm A must reproduce G49/G50 exact prior baseline",
+   "can_fail_because": "different split or sampling",
+   "null_must_contain": "an unexpected MRR value",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.1732,
+    "observed_mrr": 0.1732,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak_free_disjoint",
+   "must_fire_because": "0 same-pair triples between train and test",
+   "can_fail_because": "flawed partition logic",
+   "null_must_contain": "leak_triples > 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_triples": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_rank_convention",
+   "must_fire_because": "Uses standard 1 + higher + equal/2",
+   "can_fail_because": "unfiltered or non-standard ranking",
+   "null_must_contain": "non-standard rank calculation",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rule": "1 + higher + equal/2",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_strictly_beats_prior",
+   "must_fire_because": null,
+   "can_fail_because": "best_bayes_mrr - prior_mrr < 0.0050",
+   "null_must_contain": "sub-threshold improvement",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "prior_mrr": 0.1732,
+    "best_bayes_mrr": 0.2274,
+    "delta": 0.0542,
+    "fired": false,
+    "description": "Fires if Bayesian hybrid does not beat prior baseline by >= +0.0050 MRR"
+   },
+   "refutes": "that compositional rules are useless on leak-free split",
+   "fires_when": "best_bayes_mrr - prior_mrr < 0.0050",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_beats_additive_g50",
+   "must_fire_because": null,
+   "can_fail_because": "best_bayes_mrr - g50_mrr < 0.0050",
+   "null_must_contain": "sub-threshold improvement over additive",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "g50_mrr": 0.1743,
+    "best_bayes_mrr": 0.2274,
+    "delta": 0.0531,
+    "fired": false,
+    "description": "Fires if Bayesian hybrid does not outperform G50 additive by >= +0.0050 MRR"
+   },
+   "refutes": "that naive addition is optimal",
+   "fires_when": "best_bayes_mrr - g50_mrr < 0.0050",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Bayesian hybrid failing to beat the frequency prior baseline by at least +0.0050 MRR on leak-free split",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

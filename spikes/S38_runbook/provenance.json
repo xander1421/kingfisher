@@ -1,15 +1,15 @@
 {
  "spike": "S38_runbook",
- "recorded_utc": "2026-08-17T16:31:21Z",
+ "recorded_utc": "2026-08-17T16:41:44Z",
  "note": "",
  "repos": [],
  "manifests": {},
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S38_runbook/runbook_check.json",
-   "sha256": "b00af9596b8a9b0acf50c66d81365a394a0036755f1f7b8a0365111e0a38b18d",
+   "sha256": "fca8bfcf0401a31327b0d522582fe4b1a08a031d4b55370a2d6faa2fd1293619",
    "bytes": 2372,
-   "mtime": 1786984281
+   "mtime": 1786984904
   }
  ],
  "missing_artifacts": [],
@@ -19,14 +19,7 @@
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
-  "ro.build.id": "BP4A.251205.006",
-  "ro.product.model": "SM-S938B",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "sun",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C_commands_actually_execute",
@@ -96,5 +89,9 @@
  "no_deps_reason": "the run-book depends on the whole tree by construction, and its commands are EXECUTED rather than read -- a staleness check over spikes/harness would judge other lanes in-flight edits rather than this run",
  "problems": [],
  "ok": true,
- "falsifier": "a command passing without being executed and without a stated reason, which would make this a spell-checker"
+ "falsifier": "a command passing without being executed and without a stated reason, which would make this a spell-checker",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
 }

@@ -1,0 +1,99 @@
+  original_shuffle train=190480 test= 40818 leak= 12249 mrr=0.2648 h10=0.3929
+  pair_disjoint    train=190480 test= 40817 leak=     0 mrr=0.1358 h10=0.2061
+{
+  "arms": {
+    "original_shuffle": {
+      "elapsed_sec": 30.6832,
+      "hits1": 0.1748,
+      "hits10": 0.3929,
+      "hits3": 0.3169,
+      "mrr": 0.2648,
+      "mrr_head": 0.193,
+      "mrr_tail": 0.3366,
+      "n_queries": 81636,
+      "n_test": 40818,
+      "n_train": 190480,
+      "n_triples": 40818,
+      "same_pair_leak": 12249
+    },
+    "pair_disjoint": {
+      "elapsed_sec": 22.3835,
+      "hits1": 0.0978,
+      "hits10": 0.2061,
+      "hits3": 0.1506,
+      "mrr": 0.1358,
+      "mrr_head": 0.0657,
+      "mrr_tail": 0.2058,
+      "n_queries": 81634,
+      "n_test": 40817,
+      "n_train": 190480,
+      "n_triples": 40817,
+      "same_pair_leak": 0
+    }
+  },
+  "controls": {
+    "C1_detector_still_fires_on_the_original_split": {
+      "ok": true,
+      "original_leak": 12249,
+      "original_leak_pct": 30.01,
+      "what_would_fail_it": "the same-pair detector reporting 0 on the ORIGINAL split, which would satisfy F1 for the wrong reason -- a detector blind everywhere (A15)"
+    },
+    "C2_test_sets_are_comparable_in_size": {
+      "n_test_original": 40818,
+      "n_test_pair": 40817,
+      "ok": true,
+      "ratio": 1.0,
+      "tolerance": 0.1,
+      "what_would_fail_it": "a pair-disjoint test set far from 40,818, which would make F2 a comparison of two sample sizes"
+    },
+    "C3_instrument_unchanged_on_the_original_split": {
+      "hits10": 0.3929,
+      "mrr": 0.2648,
+      "ok": true,
+      "published_hits10": 0.3929,
+      "published_mrr": 0.2648,
+      "what_would_fail_it": "the original arm returning anything but 0.2648 / 0.3929, which would mean this is not the instrument G34, G46 and G47 used"
+    }
+  },
+  "controls_ok": "3/3",
+  "elapsed_sec": 109.306,
+  "falsifiers": {
+    "F1_pair_disjoint_split_still_leaks": {
+      "fired": false,
+      "leak": 0,
+      "meaning_if_fired": "the constructor does not do what it claims and the instrument is withdrawn -- 'small' is not accepted",
+      "question": "does the pair-disjoint split leave ANY test triple with a same-pair train edge?"
+    },
+    "F2_leak_free_split_matches_the_headline": {
+      "fired": false,
+      "g46_no_same_pair_proxy": 0.1503,
+      "meaning_if_fired": "the leakage was not what carried 0.2648; G46's mechanism is retracted and only its arithmetic kept",
+      "mrr_original": 0.2648,
+      "mrr_pair_disjoint": 0.1358,
+      "question": "does the leak-free split land within 0.002 of 0.2648?"
+    },
+    "F3_train_volume_confound": {
+      "fired": false,
+      "meaning_if_fired": "report as 'the split changed and two things moved', NOT as a leakage measurement",
+      "n_train_original": 190480,
+      "n_train_pair": 190480,
+      "question": "did pair-grouping move the TRAIN set size enough that the drop could be training volume rather than leakage?",
+      "ratio": 1.0,
+      "tolerance": 0.05
+    }
+  },
+  "groups": {
+    "triples_per_pair_mean": 1.283,
+    "unordered_entity_pairs": 212110
+  },
+  "not_the_official_split": {
+    "literature_comparison": "UNAVAILABLE and recorded as unavailable",
+    "threshold_note": "`.github/autoloop/PROGRAM.md:40` sets filtered_mrr >= 0.2500 on the same line as (Current: 0.2648), so the bar was derived from the number it gates. The gate is UNINFORMATIVE: both arms here are measured against it and neither is evidence about it. Not re-baselined by this lane -- A22 in either direction.",
+    "what_it_is_not": "FB15k-237's official 20,466-triple test split, which is not in this repository (HUMAN_NEEDED.md)",
+    "what_this_is": "a pair-disjoint re-split of FB15k-237's official TRAIN split, leak-free by construction"
+  },
+  "seed": "0xC0FFEE",
+  "spike": "G48"
+}
+
+D6 Provenance Certified: ok=True

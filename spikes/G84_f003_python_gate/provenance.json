@@ -1,0 +1,191 @@
+{
+ "spike": "G84_f003_python_gate",
+ "recorded_utc": "2026-08-19T12:59:25Z",
+ "note": "G84: Python-only F003 modus ponens gate under FT_METTA_CORE_V2. F003_DRAFT.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G84_f003_python_gate/result.json",
+   "sha256": "e4ea3ae7b8914112d5d45ef4ace2c82f6fb48e0cf3de820cf1fc745e60d3b9a6",
+   "bytes": 2633,
+   "mtime": 1787144365
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_python_f003",
+   "must_fire_because": "Python grok_check accepts F003_specv1 at 0e1edf5b",
+   "can_fail_because": "unification or hashing bug",
+   "null_must_contain": "digest mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_mutants_reject",
+   "must_fire_because": "All 7 F003 mutants must REJECT",
+   "can_fail_because": "mutant ACCEPT",
+   "null_must_contain": "mutant pass",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_rust_wrong_class",
+   "must_fire_because": "Rust must reject F003 as WRONG_FIXTURE_CLASS",
+   "can_fail_because": "premature rust support",
+   "null_must_contain": "wrong error",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_parent_rejected",
+   "must_fire_because": "Parent fixtures/F003 must be rejected",
+   "can_fail_because": "parent accepted",
+   "null_must_contain": "parent pass",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_pins_unmoved",
+   "must_fire_because": "F001 and F002 pins must remain unmoved",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pin moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_spec_and_status",
+   "must_fire_because": "Spec must name F003_DRAFT and status must be DRAFT",
+   "can_fail_because": "premature freeze",
+   "null_must_contain": "not draft",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_mutant_accept",
+   "must_fire_because": null,
+   "can_fail_because": "any mutant ACCEPT",
+   "null_must_contain": "mutant pass",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "any_accept": false
+   },
+   "refutes": "that Python checker rejects F003 mutants",
+   "fires_when": "any mutant ACCEPT",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_rust_accept",
+   "must_fire_because": null,
+   "can_fail_because": "rust accepts F003",
+   "null_must_contain": "rust accept",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rc": 1
+   },
+   "refutes": "that Rust checker does not accept F003 prematurely",
+   "fires_when": "rust accepts F003",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_in_immortal",
+   "must_fire_because": null,
+   "can_fail_because": "F003 in immortal.json",
+   "null_must_contain": "in immortal",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "in_immortal": false
+   },
+   "refutes": "that F003 is not prematurely in immortal.json",
+   "fires_when": "F003 in immortal.json",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_pin_moved",
+   "must_fire_because": null,
+   "can_fail_because": "F001 or F002 pin moves",
+   "null_must_contain": "pin moved",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "d1": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "d2": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   },
+   "refutes": "that F001 and F002 pins remain invariant",
+   "fires_when": "F001 or F002 pin moves",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F5_status_frozen",
+   "must_fire_because": null,
+   "can_fail_because": "F003 status == FROZEN",
+   "null_must_contain": "frozen status",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "status": "F003_DRAFT"
+   },
+   "refutes": "that F003 remains DRAFT",
+   "fires_when": "F003 status == FROZEN",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "kernel specification gate; no external elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "Python-only F003 modus ponens verification gate failure"
+}

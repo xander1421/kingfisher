@@ -1,0 +1,61 @@
+{
+  "spike": "G88",
+  "timestamp": "2026-08-19 15:16:57",
+  "elapsed_sec": 142.78,
+  "split": {
+    "train": 272115,
+    "valid": 17535,
+    "test": 20466,
+    "total_queries": 40932,
+    "entities": 14541,
+    "predicates": 237
+  },
+  "choices": {
+    "distmult": 279,
+    "g64": 85,
+    "rotate": 26,
+    "prior": 17,
+    "complex": 39
+  },
+  "choice_sha256": "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
+  "metrics": {
+    "mrr": 0.3143,
+    "hits1": 0.2289,
+    "hits3": 0.3443,
+    "hits10": 0.4815
+  },
+  "comparands": {
+    "g87_4way_bidi_mix": 0.3136,
+    "g77_4way_mix": 0.3101,
+    "g76_distmult_baseline": 0.2852,
+    "g64_bidirectional_symbolic": 0.2778,
+    "g72_complex_baseline": 0.2755,
+    "g79_rotate_baseline": 0.2643,
+    "g59_observed_gate": 0.2679
+  },
+  "controls": {
+    "C1_test_size": {
+      "ok": true
+    },
+    "C2_zero_leak": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    },
+    "C4_rotate_loaded": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_below_g87": {
+      "fired": false
+    },
+    "F2_below_distmult": {
+      "fired": false
+    },
+    "F3_test_count": {
+      "fired": false
+    }
+  }
+}

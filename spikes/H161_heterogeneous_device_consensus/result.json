@@ -1,0 +1,82 @@
+{
+  "spike": "H161",
+  "timestamp": "2026-08-19 15:56:57",
+  "elapsed_sec": 9.267,
+  "endpoints": {
+    "samsung_s25_ultra": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    },
+    "android_emulator": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    },
+    "macos_host_arm64": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    },
+    "macos_rosetta_x86": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    },
+    "ios_runtime": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    }
+  },
+  "f003_python_digest": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5",
+  "f003_rust_status": "REJECTED_WRONG_FIXTURE_CLASS",
+  "ios_target_valid": true,
+  "telemetry": {
+    "phone_battery_before": {
+      "temperature_c": 32.0,
+      "level_pct": 100,
+      "status": 5
+    },
+    "phone_battery_after": {
+      "temperature_c": 32.0,
+      "level_pct": 100,
+      "status": 5
+    }
+  },
+  "controls": {
+    "C1_device_health": {
+      "ok": true
+    },
+    "C2_exact_bit_parity": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    },
+    "C4_ios_toolchain": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_digest_divergence": {
+      "fired": false
+    },
+    "F2_phone_overheating": {
+      "fired": false
+    },
+    "F3_fixture_leak": {
+      "fired": false
+    }
+  }
+}

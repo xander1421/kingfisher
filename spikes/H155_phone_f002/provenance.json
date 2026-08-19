@@ -1,0 +1,173 @@
+{
+ "spike": "H155_phone_f002",
+ "recorded_utc": "2026-08-19T12:37:37Z",
+ "note": "H155: Phone F002 execution on Samsung Galaxy S25 Ultra (Snapdragon 8 Elite). Gate 4 closed on silicon.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H155_phone_f002/result.json",
+   "sha256": "35c01d13c1f20f8c524b5c7146288de39d7b8bef656a77426eb0bb0ca4ddaa3e",
+   "bytes": 3415,
+   "mtime": 1787143057
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures/verifier/trace_verifier_android",
+   "sha256": "486e1ffbd895fcccc24c75717d5f1004322fa406e791a081c7016c6042ccf320",
+   "bytes": 4517840,
+   "mtime": 1787143054
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_device_quiet",
+   "must_fire_because": "Device must be quiet before and after execution",
+   "can_fail_because": "thermal/CPU contention",
+   "null_must_contain": "contention detected",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_pin_matches_host",
+   "must_fire_because": "S25 on-device digests must match host exactly",
+   "can_fail_because": "cross-ISA compiler divergence",
+   "null_must_contain": "digest mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_fuel_parsed",
+   "must_fire_because": "Derived fuel must be 400 parsed from stdout",
+   "can_fail_because": "unsupported fuel table",
+   "null_must_contain": "fuel != 400",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "fuel_f001": 400,
+    "fuel_f002": 400,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_phone_f002_pin",
+   "must_fire_because": null,
+   "can_fail_because": "S25 F002 digest != c43b1eab",
+   "null_must_contain": "pin mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "observed_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+    "expected": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   },
+   "refutes": "that S25 native binary reproduces c43b1eab",
+   "fires_when": "S25 F002 digest != c43b1eab",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_phone_f001_pin",
+   "must_fire_because": null,
+   "can_fail_because": "S25 F001 digest != 590d8769",
+   "null_must_contain": "F001 moved",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "observed_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "expected": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+   },
+   "refutes": "that F001 pin remains unmoved on silicon",
+   "fires_when": "S25 F001 digest != 590d8769",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_mutant_accept",
+   "must_fire_because": null,
+   "can_fail_because": "any of 7 mutants ACCEPT on phone",
+   "null_must_contain": "mutant ACCEPT",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "any_accept": false,
+    "tokens": {
+     "M01_tampered_step_fuel": "FUEL_DIVERGENCE",
+     "M02_illegal_opcode": "ILLEGAL_OPCODE",
+     "M03_corrupted_root": "CORPUS_ROOT_MISMATCH",
+     "M04_declared_fuel_mismatch": "FUEL_FILE_MISMATCH",
+     "M05_inconsistent_unify": "SEMANTIC_UNIFICATION_FAILURE",
+     "M06_result_mismatch_rehashed": "RESULT_NOT_DERIVED",
+     "M07_skipped_unify_rewritten": "SEMANTIC_UNIFICATION_FAILURE"
+    }
+   },
+   "refutes": "that on-device binary rejects all 7 F002 mutants",
+   "fires_when": "any of 7 mutants ACCEPT on phone",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_gemini_accept",
+   "must_fire_because": null,
+   "can_fail_because": "Gemini F002 ACCEPT on phone",
+   "null_must_contain": "gemini ACCEPT",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "gemini_out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kftest_f002/fixtures/F002\n  [VERDICT] REJECTED: FUEL_TABLE_MISMATCH\n-------------------------------------------------------"
+   },
+   "refutes": "that Gemini F002 is rejected on device",
+   "fires_when": "Gemini F002 ACCEPT on phone",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F5_f003_wrong_class",
+   "must_fire_because": null,
+   "can_fail_because": "F003 output missing WRONG_FIXTURE_CLASS",
+   "null_must_contain": "wrong error code",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "f003_out": "-------------------------------------------------------\nTARGET: /data/local/tmp/kftest_f002/fixtures/F003_specv1\n  [VERDICT] REJECTED: WRONG_FIXTURE_CLASS: rust checker is F001_PROBE_V1 + F002_TWO_BOUND (no matching corpus.bin)\n-------------------------------------------------------"
+   },
+   "refutes": "that F003 is rejected as WRONG_FIXTURE_CLASS",
+   "fires_when": "F003 output missing WRONG_FIXTURE_CLASS",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "on-device hardware verification; no elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "S25 on-device binary failing F002 verification or moving F001 pin",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

@@ -1,7 +1,7 @@
 {
  "seed": 20260817,
  "corpus": {
-  "path": "../S52_realkg/triples.bin",
+  "path": "spikes/S52_realkg/triples.bin",
   "triples": 272115,
   "preds": 237,
   "entities": 14505

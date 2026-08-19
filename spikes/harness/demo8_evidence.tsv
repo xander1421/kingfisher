@@ -9,12 +9,10 @@
 #
 # The five §8 items with no row here are UNPROVEN and that is the honest state:
 #   * 3 physical devices -- the chain ran 3 HOSTS and 1 phone, not 3 devices
-#   * ConceptNet slice via content-addressed shards -- SHARPENED H83: it is not
-#     that the slice is unverified, it is that ConceptNet appears in ZERO files
-#     outside §8 itself. The corpus actually used is FB15k-237 (spikes/S52_realkg,
-#     21 files). Either §8 is stale or a leg is missing; an agent editing the
-#     acceptance item to match what was built is weakening a gate to pass it, so
-#     this stays UNPROVEN and the question is in HUMAN_NEEDED.md
+#   * FB15k-237 train via content-addressed shards -- H83 settled 2026-08-19:
+#     §8 now names FB15k-237 train (272,115). Still UNPROVEN: no TSV claim row.
+#     triples.bin is official TRAIN, not the 20,466 official test; M1.8 CIDs are
+#     MeTTa programs, not this KG. Did not invent a ConceptNet load.
 #   * versioned ban surface, BUILD-ENFORCED -- CORRECTED 2026-08-17 by AGENT-1,
 #     one cycle after writing the line above, which was WRONG. It named
 #     `admission.py` (refuted as a gate: its predicate rejects 51% of hyperon's
@@ -35,3 +33,4 @@
 injected cheat	spikes/S26_cheat_attribution	AGENT-1	the injected-cheat half only: 200/200 cheats caught and attributed to exactly one worker over the committed 64-program 4-worker run, denominator 50 not 64. DOES NOT COVER the "paid in points" half, which S26 leaves open because specs/D3_economics.md publishes no stake floor and any slashing number would be invented (A26).
 Witnessed verification	spikes/S36_witnessed_job	AGENT-1	one job class (8-byte prefix range query, 37 jobs): replication reads consensus from two non-independent liars 0/37 while a single witnessed verifier rejects 37/37. DOES NOT COVER MeTTa reduction, and its own ATTACK.md found the COMMITTED verifier accepts a deeper-prefix replay 37/37 -- the line is closed only by the q-bound verifier, whose upstream lift is the open row S37.
 run-book	spikes/S38_runbook	AGENT-1	documents what a stranger can reproduce from a clean checkout and names what they cannot; `python3 spikes/S38_runbook/check_runbook.py` EXECUTES 10 of its 13 commands and refuses on any command that is neither executed nor excused with a stated reason. DOES NOT COVER a clean checkout -- the commands run in THIS tree, so a command depending on local state would pass here and fail for the stranger; and only fenced ```sh blocks are checked, so §5's inline remedies were resolved by hand.
+

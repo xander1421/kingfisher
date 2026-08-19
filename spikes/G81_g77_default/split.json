@@ -1,0 +1,62 @@
+{
+  "spike": "G81",
+  "split": "official FB15k-237 train/valid/test",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "n_test": 20466,
+  "n_small_default": 210,
+  "n_valid_picked_distmult": 81,
+  "delta_ref": 0.0067,
+  "contrib": {
+    "all_keys": 0.006729,
+    "default_nlt20": 0.000191,
+    "valid_picked_distmult": 0.006549,
+    "other": -1.1e-05,
+    "default_share": 0.0285,
+    "picked_share": 0.9775,
+    "default_n_test": 2512,
+    "picked_n_test": 16344
+  },
+  "top10_small_n": [],
+  "controls": {
+    "C1_n_small": {
+      "n": 210,
+      "file": 210,
+      "ok": true
+    },
+    "C2_four_sha": {
+      "expected": "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+      "observed": "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+      "ok": true
+    },
+    "C3_delta": {
+      "sum_contrib": 0.006729,
+      "ref": 0.0067,
+      "ok": true
+    },
+    "C4_g78_arms": {
+      "four": 0.3101,
+      "three": 0.3034,
+      "leak": 0,
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_default_is_headline": {
+      "default_share": 0.0285,
+      "fired": false,
+      "description": "Fires if defaulted share of +0.0067 >= 0.50"
+    },
+    "F2_leftover_is_default": {
+      "default_share": 0.0285,
+      "leftover": 0.2158,
+      "fired": false,
+      "description": "Fires if defaulted share >= G78 leftover 0.216"
+    },
+    "F3_top10_are_defaults": {
+      "n_top10_small": 0,
+      "fired": false,
+      "description": "Fires if a G78 top-10 key has n_valid < 20"
+    }
+  }
+}

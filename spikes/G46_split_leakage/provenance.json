@@ -1,11 +1,11 @@
 {
  "spike": "G46_split_leakage",
- "recorded_utc": "2026-08-18T11:01:34Z",
+ "recorded_utc": "2026-08-18T23:11:07Z",
  "note": "G46: how much of G34's 0.2648 is the re-split rather than the method? Same rules, same ranker, same filter; the only variable is which test triples are scored.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G36_repro_g34",
-   "head": "380a7335798b60d3af7068c00b9616bca086bd04",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
    "clean": false,
    "dirty_files": [
     "spikes/G36_repro_g34/length1_constants.json"
@@ -27,15 +27,15 @@
    "sha256": "dd9bdfc59be6f68a29d51f52a4e8057a8d9ddd73e5bf4c5c75fcc5f96c5d1d08",
    "bytes": 12017,
    "mtime": 1787050801,
-   "compared_ts": 1787050801,
-   "compared_clock": "mtime"
+   "compared_ts": 1787051025,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G46_split_leakage/leak.json",
-   "sha256": "4d3c8282a485c4b82921a69b3d3ab514d942a87b8a1cea164ca8573f5a264382",
-   "bytes": 3072,
-   "mtime": 1787050894,
-   "compared_ts": 1787050894,
+   "sha256": "5040da77fb9c80e1245ae2835b2f2b42bb597ea864cae6872916827fe2135f7c",
+   "bytes": 3073,
+   "mtime": 1787094667,
+   "compared_ts": 1787094667,
    "compared_clock": "mtime"
   },
   {
@@ -54,14 +54,7 @@
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
-  "ro.build.id": "BP4A.251205.006",
-  "ro.product.model": "SM-S938B",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "sun",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C1_reproduces_published_headline",
@@ -158,5 +151,8 @@
  },
  "problems": [],
  "ok": true,
- "falsifier": "filtered MRR on the leakage-free part landing within 0.01 of the published 0.2648, which would mean the re-split contributed nothing measurable and the finding is labelling only"
+ "falsifier": "filtered MRR on the leakage-free part landing within 0.01 of the published 0.2648, which would mean the re-split contributed nothing measurable and the finding is labelling only",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }

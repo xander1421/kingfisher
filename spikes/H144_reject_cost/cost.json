@@ -1,0 +1,11 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "serial": "R5CY93675MK",
+  "n": 200,
+  "accept_s": 1.63,
+  "m06_result_not_derived_s": 1.65,
+  "m02_illegal_opcode_s": 1.65,
+  "falsifier": "walls within 15% → reject costs the same as accept",
+  "falsifier_fired": true,
+  "note": "REJECT is not a cheaper path. M02 (illegal opcode early) matches M06 (full re-exec) at this N."
+}

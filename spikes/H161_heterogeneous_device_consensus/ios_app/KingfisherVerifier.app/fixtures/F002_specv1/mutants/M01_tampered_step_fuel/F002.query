@@ -1,0 +1,1 @@
+!(collapse (match &self (, (cites $x $z) (cites $z $y) (verdict $y RED)) (hit $x $y)))

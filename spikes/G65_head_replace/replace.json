@@ -1,0 +1,134 @@
+{
+  "spike": "G65",
+  "split": "official FB15k-237 train/valid/test",
+  "field_order": "p,s,o",
+  "headline_arm": "D_valid_select_head",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "n_test": 20466,
+  "n_rules_2hop": 2201,
+  "pred_gate": {
+    "sha256": "1d43d45761384ee788d146b3d0680b871888068d4e30a1d747809ac25c7f4c2b",
+    "n_on": 157,
+    "n_off": 66
+  },
+  "head_choice": {
+    "sha256": "6670401bde8a44a6dca1ba4d610672313219cf6a2cb0e8283a9027d903cb7603",
+    "counts": {
+      "g51": 172,
+      "analog_only": 28,
+      "prior": 14,
+      "analog": 9
+    },
+    "n_predicates": 223
+  },
+  "arms": {
+    "A_pred_gate": {
+      "mrr": 0.2679,
+      "hits1": 0.1951,
+      "hits3": 0.2922,
+      "hits10": 0.4037,
+      "n_queries": 40932
+    },
+    "B_replace_analog": {
+      "mrr": 0.2527,
+      "hits1": 0.1854,
+      "hits3": 0.2744,
+      "hits10": 0.3814,
+      "n_queries": 40932
+    },
+    "C_replace_analog_only": {
+      "mrr": 0.2554,
+      "hits1": 0.1874,
+      "hits3": 0.2773,
+      "hits10": 0.3855,
+      "n_queries": 40932
+    },
+    "D_valid_select_head": {
+      "mrr": 0.2691,
+      "hits1": 0.1967,
+      "hits3": 0.2937,
+      "hits10": 0.4051,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "head": {
+      "pred_gate": {
+        "mrr": 0.1703,
+        "hits1": 0.1094,
+        "hits3": 0.1833,
+        "hits10": 0.2827,
+        "n_queries": 20466
+      },
+      "replace_analog": {
+        "mrr": 0.1398,
+        "hits1": 0.09,
+        "hits3": 0.1477,
+        "hits10": 0.2381,
+        "n_queries": 20466
+      },
+      "replace_analog_only": {
+        "mrr": 0.1453,
+        "hits1": 0.0941,
+        "hits3": 0.1536,
+        "hits10": 0.2464,
+        "n_queries": 20466
+      },
+      "valid_select": {
+        "mrr": 0.1727,
+        "hits1": 0.1126,
+        "hits3": 0.1864,
+        "hits10": 0.2854,
+        "n_queries": 20466
+      }
+    }
+  },
+  "controls": {
+    "C1_test_n": {
+      "n": 20466,
+      "ok": true
+    },
+    "C2_leak": {
+      "leak": 0,
+      "ok": true
+    },
+    "C3_pred_gate_repro": {
+      "expected": 0.2679,
+      "observed": 0.2679,
+      "ok": true
+    },
+    "C4_237": {
+      "npred": 237,
+      "ok": true
+    },
+    "C5_train_hash": {
+      "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_global_replace_helps": {
+      "replace_analog": 0.2527,
+      "replace_analog_only": 0.2554,
+      "bar": 0.2679,
+      "fired": false,
+      "description": "Fires if B or C >= 0.2679 (global replace helps)"
+    },
+    "F2_select_head_not_better": {
+      "select_head": 0.1727,
+      "g59_head": 0.1703,
+      "delta": 0.0024,
+      "fired": true,
+      "description": "Fires if selected head does not beat 0.1703 by +0.005"
+    },
+    "F3_select_does_not_beat_g59": {
+      "select_mrr": 0.2691,
+      "g59": 0.2679,
+      "delta": 0.0012,
+      "fired": false,
+      "description": "Fires if D <= 0.2679. Signed."
+    }
+  },
+  "elapsed_sec": 301.74
+}

@@ -1,0 +1,49 @@
+{
+  "spike": "S88",
+  "timestamp": "2026-08-19 15:31:17",
+  "elapsed_sec": 0.12,
+  "dataset": "WN18RR (WordNet hierarchical semantic graph)",
+  "source": {
+    "git": "https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding",
+    "commit": "2e440e0f9c687314d5ff67ead68ce985dc446e3a",
+    "citation": "Dettmers et al. (AAAI 2018)"
+  },
+  "stats": {
+    "train_triples": 86835,
+    "valid_triples": 3034,
+    "test_triples": 3134,
+    "entities": 40943,
+    "relations": 11,
+    "predicate_shards": 11,
+    "master_manifest_cid": "bafkreicguk6k72apxdfs6jsslzl2motb3sxjdrkysziaegxcyo5icx7hom",
+    "total_sharded_bytes": 1563030
+  },
+  "benchmarks": {
+    "ingestion_sec": 0.032,
+    "ingestion_triples_per_sec": 2685714.2,
+    "recovery_sec": 0.017,
+    "read_latency_ms_per_shard": 1.515
+  },
+  "controls": {
+    "C1_official_hashes": {
+      "ok": true
+    },
+    "C2_shard_count": {
+      "ok": true
+    },
+    "C3_zero_leak": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_roundtrip_loss": {
+      "fired": false
+    },
+    "F2_hash_mismatch": {
+      "fired": false
+    },
+    "F3_train_count": {
+      "fired": false
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "status": "F001_FROZEN",
+  "not_a_new_operator_domain": true,
+  "one": {
+    "serial": "R5CY93675MK",
+    "gate": "device quiet: cpu_busy 0.7% (limit 15%), runnable 1, thermal 37400m, battery status=5 level=100 charging=true powered=1",
+    "once": {
+      "wall_s": 0.024088542006211355,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "verdict": "ACCEPTED",
+      "out_tail": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_feas/F001\n  [VERDICT] ACCEPTED\n    -> Derived Fuel:     400\n    -> Witness SHA-256:  112f7e8c9e351f1d651b9270902c50fe049219aac78e1f11dec5e40088617151\n    -> Consensus Digest: 590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\n-------------------------------------------------------\n"
+    },
+    "n200_s": 1.5815184579987545,
+    "n200_jobs_per_s": 126.46074346364506,
+    "k2_400_s": 1.8614567089971388,
+    "k2_jobs_per_s": 214.88547010878395,
+    "k2_times": [
+      1.859456833000877,
+      1.8285688330070116
+    ]
+  },
+  "two": {
+    "gate": "device quiet: cpu_busy 3.5% (limit 15%), runnable 1, thermal UNREADABLE(overridden), battery status=2 level=38 thermal-override=UNREADABLE charging=true powered=1",
+    "once": {
+      "wall_s": 0.06779804099642206,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "verdict": "ACCEPTED",
+      "out_tail": "-------------------------------------------------------\nTARGET: /data/local/tmp/kf_feas/F001\n  [VERDICT] ACCEPTED\n    -> Derived Fuel:     400\n    -> Witness SHA-256:  112f7e8c9e351f1d651b9270902c50fe049219aac78e1f11dec5e40088617151\n    -> Consensus Digest: 590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\n-------------------------------------------------------\n"
+    },
+    "steal": {
+      "k25": 2,
+      "k24": 2,
+      "jobs": 400,
+      "chunk": 50,
+      "wall_s": 1.4021242919989163,
+      "taken": {
+        "R5CY93675MK": 300,
+        "R5CX508MPRZ": 100
+      },
+      "workers": [
+        {
+          "serial": "R5CY93675MK",
+          "wall_s": 1.3750765419972595,
+          "chunks": [
+            {
+              "n": 50,
+              "s": 0.46274479100247845
+            },
+            {
+              "n": 50,
+              "s": 0.4609485830005724
+            },
+            {
+              "n": 50,
+              "s": 0.45133295899722725
+            }
+          ]
+        },
+        {
+          "serial": "R5CY93675MK",
+          "wall_s": 1.3721492499898886,
+          "chunks": [
+            {
+              "n": 50,
+              "s": 0.45696837500145193
+            },
+            {
+              "n": 50,
+              "s": 0.4609571659966605
+            },
+            {
+              "n": 50,
+              "s": 0.45414354199601803
+            }
+          ]
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "wall_s": 1.2908347500051605,
+          "chunks": [
+            {
+              "n": 50,
+              "s": 1.290779292001389
+            }
+          ]
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "wall_s": 1.399017499992624,
+          "chunks": [
+            {
+              "n": 50,
+              "s": 1.399006042003748
+            }
+          ]
+        }
+      ],
+      "jobs_per_s": 285.28141355410537
+    },
+    "steal_vs_s25_k2": 0.7532403440928325
+  },
+  "s24_gate_rc": 0
+}

@@ -1,0 +1,11 @@
+{
+  "accepted_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+  "corpus_root": "b8ec775c6591b9b1e9bc5174987e06b8456fdae6e47eb1c09a024bc471bb343d",
+  "expected_fuel": 400,
+  "expected_result": "((hit B1 S13) (hit B1 S18) (hit B1 S32) (hit B1 S33) (hit B1 S9) (hit M1 S32) (hit N1 S13) (hit N1 S18) (hit N1 S32) (hit N1 S46) (hit N1 S54) (hit N1 S60) (hit N1 S9) (hit Q1 S32) (hit Q1 S33) (hit Q1 S54) (hit S13 S13) (hit S14 S60) (hit S15 S60) (hit S16 S60) (hit S16 S9) (hit S17 S13) (hit S18 S13) (hit S18 S60) (hit S2 S60) (hit S30 S9) (hit S32 S18) (hit S32 S32) (hit S32 S33) (hit S32 S46) (hit S32 S9) (hit S33 S18) (hit S33 S33) (hit S33 S54) (hit S33 S9) (hit S34 S18) (hit S34 S32) (hit S34 S33) (hit S34 S54) (hit S34 S9) (hit S35 S33) (hit S35 S54) (hit S35 S9) (hit S43 S60) (hit S43 S9) (hit S44 S13) (hit S44 S18) (hit S44 S9) (hit S45 S13) (hit S45 S18) (hit S45 S32) (hit S45 S33) (hit S45 S54) (hit S45 S9) (hit S46 S9) (hit S47 S13) (hit S47 S18) (hit S47 S32) (hit S47 S33) (hit S48 S13) (hit S48 S18) (hit S48 S46) (hit S49 S13) (hit S49 S18) (hit S49 S32) (hit S49 S33) (hit S49 S46) (hit S49 S9) (hit S50 S18) (hit S50 S32) (hit S50 S33) (hit S50 S54) (hit S50 S9) (hit S51 S18) (hit S51 S32) (hit S51 S33) (hit S51 S46) (hit S51 S54) (hit S51 S9) (hit S52 S13) (hit S52 S46) (hit S53 S18) (hit S53 S32) (hit S54 S32) (hit S54 S46) (hit S55 S18) (hit S55 S32) (hit S55 S33) (hit S56 S46) (hit S56 S54) (hit S57 S32) (hit S57 S46) (hit S57 S9) (hit S59 S18) (hit S59 S32) (hit S59 S33) (hit S59 S9) (hit S61 S54) (hit S62 S59) (hit S62 S60) (hit S63 S18) (hit S64 S13) (hit S64 S18) (hit S64 S32) (hit S64 S33) (hit S64 S46) (hit S66 S60) (hit S66 S9) (hit S68 S60) (hit S69 S18) (hit S69 S32) (hit S69 S33) (hit S69 S9) (hit S71 S33) (hit S71 S54) (hit S71 S60) (hit S71 S9) (hit S72 S18) (hit S72 S32) (hit S72 S33) (hit S72 S54) (hit S72 S9) (hit W1 S18) (hit W1 S32) (hit W1 S33) (hit W1 S9) (hit W4 S13))",
+  "manifest_id": "F002.manifest.v1",
+  "query_id": "F002",
+  "spec": "kingfisher.digest/v1",
+  "status": "F002_FROZEN",
+  "witness_trace_sha256": "2271d0629b002adbca0dc1a3a72ea03b3da9ecae9a5bca1e81b44f9ae95e46ef"
+}

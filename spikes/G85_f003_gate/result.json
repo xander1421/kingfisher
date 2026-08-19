@@ -1,0 +1,54 @@
+{
+  "spike": "G85",
+  "timestamp": "2026-08-19 14:00:35",
+  "elapsed_sec": 0.28,
+  "f003_digest": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5",
+  "mutants": [
+    {
+      "name": "M01_tampered_step_fuel",
+      "rc": 1,
+      "accept": false,
+      "token": "FUEL_DIVERGENCE"
+    },
+    {
+      "name": "M02_illegal_opcode",
+      "rc": 1,
+      "accept": false,
+      "token": "ILLEGAL_OPCODE"
+    },
+    {
+      "name": "M03_corrupted_root",
+      "rc": 1,
+      "accept": false,
+      "token": "CORPUS_ROOT_MISMATCH"
+    },
+    {
+      "name": "M04_declared_fuel_mismatch",
+      "rc": 1,
+      "accept": false,
+      "token": "FUEL_FILE_MISMATCH"
+    },
+    {
+      "name": "M05_inconsistent_unify",
+      "rc": 1,
+      "accept": false,
+      "token": "SEMANTIC_UNIFICATION_FAILURE"
+    },
+    {
+      "name": "M06_result_mismatch_rehashed",
+      "rc": 1,
+      "accept": false,
+      "token": "RESULT_NOT_DERIVED"
+    },
+    {
+      "name": "M07_skipped_unify_rewritten",
+      "rc": 1,
+      "accept": false,
+      "token": "RESULT_NOT_DERIVED"
+    }
+  ],
+  "rust_wrong_class": true,
+  "pins_unmoved": true,
+  "spec_ok": true,
+  "not_immortal": true
+}

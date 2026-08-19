@@ -1,0 +1,182 @@
+{
+ "results": {
+  "G17_2hop_only": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 32.48238706588745,
+   "mrr": 0.0631122756859102,
+   "hits1": 0.031064726346219804,
+   "hits3": 0.06622078494781714,
+   "hits10": 0.12294820912342594,
+   "mrr_tail": 0.0895496760584301,
+   "mrr_head": 0.0366748753133903
+  },
+  "Length1_only": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 1.2588460445404053,
+   "mrr": 0.15716885363244212,
+   "hits1": 0.09140575236415308,
+   "hits3": 0.19653094223136852,
+   "hits10": 0.23953892890391493,
+   "mrr_tail": 0.16749578744821805,
+   "mrr_head": 0.14684191981666614
+  },
+  "G17_plus_Length1": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 30.66588807106018,
+   "mrr": 0.1869768341949883,
+   "hits1": 0.1088980351805576,
+   "hits3": 0.2262114753295115,
+   "hits10": 0.2931672301435641,
+   "mrr_tail": 0.21236711942409828,
+   "mrr_head": 0.1615865489658783
+  },
+  "Constants_only": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 1.0706040859222412,
+   "mrr": 0.1209313073636332,
+   "hits1": 0.100911362634132,
+   "hits3": 0.138835807731883,
+   "hits10": 0.15117105198686853,
+   "mrr_tail": 0.1911138349348903,
+   "mrr_head": 0.05074877979237608
+  },
+  "G34_Full_System (Max)": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 35.30544471740723,
+   "mrr": 0.2648067492241375,
+   "hits1": 0.17480033318633936,
+   "hits3": 0.3168577588318879,
+   "hits10": 0.39292713998726053,
+   "mrr_tail": 0.3366383858289952,
+   "mrr_head": 0.19297511261927974
+  },
+  "G35_Full_System (Calibrated Soft)": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 38.52223992347717,
+   "mrr": 0.2749613541076807,
+   "hits1": 0.19989955411828114,
+   "hits3": 0.320961340585036,
+   "hits10": 0.3981331765397619,
+   "mrr_tail": 0.34707781638425295,
+   "mrr_head": 0.20284489183110838
+  },
+  "Empty_baseline": {
+   "n_queries": 81636,
+   "n_triples": 40818,
+   "elapsed_sec": 0.07529211044311523,
+   "mrr": 0.00013946353058580304,
+   "hits1": 0.0,
+   "hits3": 0.0,
+   "hits10": 0.0,
+   "mrr_tail": 0.00013817074773658076,
+   "mrr_head": 0.0001407563134350253
+  },
+  "C1_planted_control": {
+   "n_queries": 600,
+   "n_triples": 300,
+   "elapsed_sec": 0.0024340152740478516,
+   "mrr": 0.9888888888888889,
+   "hits1": 0.9666666666666667,
+   "hits3": 1.0,
+   "hits10": 1.0,
+   "mrr_tail": 0.9888888888888889,
+   "mrr_head": 0.9888888888888889
+  }
+ },
+ "literature_table": {
+  "RotatE (Embedding) [Sun 2019]   ": {
+   "MRR": 0.338,
+   "Hits@1": 0.241,
+   "Hits@3": 0.375,
+   "Hits@10": 0.533,
+   "family": "Embedding"
+  },
+  "AnyBURL (len<=3) [Meilicke 2019]": {
+   "MRR": 0.302,
+   "Hits@1": 0.221,
+   "Hits@3": 0.334,
+   "Hits@10": 0.463,
+   "family": "Rule (len<=3)"
+  },
+  "TransE (Embedding) [Bordes 2013]": {
+   "MRR": 0.294,
+   "Hits@1": 0.198,
+   "Hits@3": 0.33,
+   "Hits@10": 0.465,
+   "family": "Embedding"
+  },
+  "RuleN (len<=3)   [Meilicke 2018]": {
+   "MRR": 0.285,
+   "Hits@1": 0.208,
+   "Hits@3": 0.312,
+   "Hits@10": 0.435,
+   "family": "Rule (len<=3)"
+  },
+  "ComplEx (Embedding) [Trouillon] ": {
+   "MRR": 0.278,
+   "Hits@1": 0.194,
+   "Hits@3": 0.308,
+   "Hits@10": 0.45,
+   "family": "Embedding"
+  },
+  "Kingfisher G35 (Calibrated Soft)": {
+   "MRR": 0.2749613541076807,
+   "Hits@1": 0.19989955411828114,
+   "Hits@3": 0.320961340585036,
+   "Hits@10": 0.3981331765397619,
+   "family": "Rule (len<=2)"
+  },
+  "Kingfisher G34 (G17+L1+Const)   ": {
+   "MRR": 0.2648067492241375,
+   "Hits@1": 0.17480033318633936,
+   "Hits@3": 0.3168577588318879,
+   "Hits@10": 0.39292713998726053,
+   "family": "Rule (len<=2)"
+  },
+  "AnyBURL (len<=2) [Meilicke 2019]": {
+   "MRR": 0.245,
+   "Hits@1": 0.178,
+   "Hits@3": 0.271,
+   "Hits@10": 0.375,
+   "family": "Rule (len<=2)"
+  },
+  "AMIE+ (len<=2)   [Gal\u00e1rraga 2015]": {
+   "MRR": 0.198,
+   "Hits@1": 0.141,
+   "Hits@3": 0.219,
+   "Hits@10": 0.312,
+   "family": "Rule (len<=2)"
+  },
+  "Kingfisher G17 (2-hop only)     ": {
+   "MRR": 0.0631122756859102,
+   "Hits@1": 0.031064726346219804,
+   "Hits@3": 0.06622078494781714,
+   "Hits@10": 0.12294820912342594,
+   "family": "Rule (len=2)"
+  }
+ },
+ "falsifiers": {
+  "f1_fired": false,
+  "f2_fired": false,
+  "f3_fired": false
+ },
+ "controls": {
+  "c1": true,
+  "c2": true,
+  "c3": true,
+  "c4": true
+ },
+ "rule_counts": {
+  "2hop": 3198,
+  "subsume": 189,
+  "inverse": 174,
+  "const_tail": 2547,
+  "const_head": 878
+ }
+}

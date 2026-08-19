@@ -68,18 +68,23 @@ def main():
 def demo():
     import tempfile
     d = tempfile.mkdtemp()
-    open(os.path.join(d, 'x.py'), 'w').write('')
+    os.makedirs(os.path.join(d, 'sub'))
+    open(os.path.join(d, 'sub', 'x.py'), 'w').write('')
+    open(os.path.join(d, 'sub', 'note.md'), 'w').write('')
     led = os.path.join(d, 'L.md')
+    # Paths MUST contain '/' — REPRO refuses a slash-less token (own-prose false positive).
     open(led, 'w').write(
-        '| claim one | **A** | evidence repro: `x.py 3` |\n'
+        '| claim one | **A** | evidence repro: `sub/x.py 3` |\n'
         '| claim two | **A** | evidence with no reproducer |\n'
-        '| claim three | **A** | evidence repro: `gone.py` |\n'
-        '| claim four | **B** | not audited at grade A |\n')
-    have, missing, broken = audit(led, d)
-    assert len(have) == 1 and have[0][1] == 'x.py 3', have
+        '| claim three | **A** | evidence repro: `sub/gone.py` |\n'
+        '| claim four | **B** | not audited at grade A |\n'
+        '| claim five | **A** | evidence repro: `sub/note.md` |\n')
+    have, missing, broken, inert = audit(led, d)
+    assert len(have) == 1 and have[0][1] == 'sub/x.py 3', have
     assert missing == ['claim two'], missing
-    assert len(broken) == 1 and broken[0][1] == 'gone.py', broken
-    print('reprocheck: 3 assertions pass')
+    assert len(broken) == 1 and broken[0][1] == 'sub/gone.py', broken
+    assert len(inert) == 1 and inert[0][1] == 'sub/note.md', inert
+    print('reprocheck: 4-tuple demo matches audit()')
 
 
 if __name__ == '__main__':

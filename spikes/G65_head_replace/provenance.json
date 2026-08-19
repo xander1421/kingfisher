@@ -1,0 +1,237 @@
+{
+ "spike": "G65_head_replace",
+ "recorded_utc": "2026-08-19T02:54:45Z",
+ "note": "G65: replace G51 on head (global analog or valid-selected arm); tail stays G59 gate.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G65_head_replace/replace.py",
+   "sha256": "8e4e242f3b64a565055d771217f3ebed191e253c739a80378dda9324fdf4e947",
+   "bytes": 11915,
+   "mtime": 1787107741,
+   "compared_ts": 1787107741,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G65_head_replace/replace.json",
+   "sha256": "616073b7ba575f5304885fafd104a1c7f16db2f971cb4f059940cbb8666da89e",
+   "bytes": 3031,
+   "mtime": 1787108085,
+   "compared_ts": 1787108085,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "official leak 0",
+   "can_fail_because": "id packing broke",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_pred_gate_repro",
+   "must_fire_because": "G59 pred-gate 0.2679",
+   "can_fail_because": "scorer drifted",
+   "null_must_contain": "mrr!=0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.2679,
+    "observed": 0.2679,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_237",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "vocab broken",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "npred": 237,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_train_hash",
+   "must_fire_because": "same official train as G59",
+   "can_fail_because": "corpus swapped",
+   "null_must_contain": "hash miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_global_replace_helps",
+   "must_fire_because": null,
+   "can_fail_because": "B or C >= 0.2679",
+   "null_must_contain": "replace wins without selection",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "replace_analog": 0.2527,
+    "replace_analog_only": 0.2554,
+    "bar": 0.2679,
+    "fired": false,
+    "description": "Fires if B or C >= 0.2679 (global replace helps)"
+   },
+   "refutes": "that G63 slices predict a loss for global replace",
+   "fires_when": "B or C >= 0.2679",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_select_head_not_better",
+   "must_fire_because": null,
+   "can_fail_because": "select_head \u2212 0.1703 < 0.005",
+   "null_must_contain": "signed delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "select_head": 0.1727,
+    "g59_head": 0.1703,
+    "delta": 0.0024,
+    "fired": true,
+    "description": "Fires if selected head does not beat 0.1703 by +0.005"
+   },
+   "refutes": "that valid-selected head beats gated head by +0.005",
+   "fires_when": "select_head \u2212 0.1703 < 0.005",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_select_does_not_beat_g59",
+   "must_fire_because": null,
+   "can_fail_because": "D <= 0.2679",
+   "null_must_contain": "signed delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "select_mrr": 0.2691,
+    "g59": 0.2679,
+    "delta": 0.0012,
+    "fired": false,
+    "description": "Fires if D <= 0.2679. Signed."
+   },
+   "refutes": "that head replacement raises official gated MRR",
+   "fires_when": "D <= 0.2679",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_select_head_not_better"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "global replace helps OR valid-select does not beat 0.2679 / head 0.1703",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

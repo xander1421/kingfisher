@@ -1,0 +1,153 @@
+{
+ "spike": "H158_g87_adversarial_audit",
+ "recorded_utc": "2026-08-19T13:53:46Z",
+ "note": "H158: Adversarial Audit & Topology Decomposition of G87 Neuro-Symbolic Hybrid.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H158_g87_adversarial_audit/result.json",
+   "sha256": "2fe0449144267ce62279712cf686c4fad301071d6d5e076ba1be49a0fcbbcd3f",
+   "bytes": 1988,
+   "mtime": 1787147626,
+   "compared_ts": 1787147626,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_reconstruct_g87",
+   "must_fire_because": "Reconstruct G87 MRR = 0.3136",
+   "can_fail_because": "unstable calculation",
+   "null_must_contain": "mrr mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "overall_mrr": 0.3136,
+    "expected": 0.3136
+   }
+  },
+  {
+   "name": "C2_g64_key_count",
+   "must_fire_because": "85 G64 relation directions selected",
+   "can_fail_because": "selection mismatch",
+   "null_must_contain": "wrong key count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_g64_keys": 85
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 pins remain invariant",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_g64_loses_to_dm",
+   "must_fire_because": null,
+   "can_fail_because": "delta <= 0",
+   "null_must_contain": "negative delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "delta_g64_vs_dm": 0.07214099306642974
+   },
+   "refutes": "that G64 improves over DistMult on the selected test queries",
+   "fires_when": "delta <= 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_no_non_chain_rules",
+   "must_fire_because": null,
+   "can_fail_because": "non_chain == 0",
+   "null_must_contain": "no non-chain",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "non_chain_rules": 4472
+   },
+   "refutes": "that non-chain topologies (BF/FB/BB) exist in the mined rule set",
+   "fires_when": "non_chain == 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_top3_concentration",
+   "must_fire_because": null,
+   "can_fail_because": "top3_share >= 0.80",
+   "null_must_contain": "over-concentrated",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "top3_share": 0.3820361398339571
+   },
+   "refutes": "that G64 gains are broadly distributed (top-3 < 80%)",
+   "fires_when": "top3_share >= 0.80",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Adversarial audit on G87 neuro-symbolic hybrid"
+}

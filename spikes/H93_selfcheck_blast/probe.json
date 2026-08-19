@@ -1,0 +1,158 @@
+{
+ "swept_by_selfcheckall_v1": [
+  "cite.py",
+  "demo8.py",
+  "githygiene.py",
+  "idscope.py",
+  "journalcheck.py",
+  "recheck.py",
+  "refcheck.py",
+  "retrofit_d6.py",
+  "rostercheck.py"
+ ],
+ "controls": {
+  "C1_leak_detected": true,
+  "C1_fails_if": "the /tmp snapshot differ is inert; then no module can ever be reported OUTSIDE",
+  "C2_quiet_is_clean": true,
+  "C2_fails_if": "the differ reports noise for a module that writes nothing; then C1 proves nothing"
+ },
+ "f3_rule_membership": {
+  "prose_quoted_never_handled": {
+   "quoted_rule_counts_it": true,
+   "bare_rule_counts_it": true,
+   "rules_agree": true
+  },
+  "handled_via_bare_argv": {
+   "quoted_rule_counts_it": false,
+   "bare_rule_counts_it": false,
+   "rules_agree": true
+  },
+  "bare_mention_only": {
+   "quoted_rule_counts_it": false,
+   "bare_rule_counts_it": true,
+   "rules_agree": false
+  }
+ },
+ "modules": [
+  {
+   "module": "cite.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.09,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "demo8.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 2.81,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "githygiene.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 3.99,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "idscope.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.05,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "journalcheck.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.06,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "recheck.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.08,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "refcheck.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.08,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  },
+  {
+   "module": "retrofit_d6.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.08,
+   "left_outside": [
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/tmpgqbc1gbb"
+   ],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [
+    "tmpdtau2p47"
+   ],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": true
+  },
+  {
+   "module": "rostercheck.py",
+   "state": "GREEN",
+   "rc": 0,
+   "secs": 0.11,
+   "left_outside": [],
+   "git_changed": false,
+   "git_delta": [],
+   "redirected_tmpdir_entries": [],
+   "rc_under_redirect": 0,
+   "writes_outside_workspace": false
+  }
+ ],
+ "summary": {
+  "swept": 9,
+  "write_outside_workspace": 1,
+  "mutate_shared_tree": 0,
+  "F1_falsified": true,
+  "F2_falsified": false,
+  "F3_falsified": true
+ }
+}

@@ -199,8 +199,18 @@ fi
 # §12.6 independently obliges the harness to keep state per-lane. Recorded as
 # the assumption it is. `prompts/<ATOM>.md` is deliberately NOT listed: spawn
 # briefs are written by the harness owner FOR a lane.
+# v8, H123 (ok-1): `--name-only` REPORTS A RENAME AS THE DESTINATION ALONE, so
+# `git mv HANDOFF.OTHER-9.md notes.md` staged one path -- `notes.md`, which
+# matches no ownership case and falls through `*) continue` -- and this gate
+# passed a commit that DELETES another lane's journal. Measured, both directions,
+# in spikes/H123_rename_evasion/probe.sh: renaming their journal ONTO mine is
+# recorded by git as D + M and was always refused, which is why the evasion needs
+# an UNOWNED destination and why that arm is kept beside the one that works.
+# `--name-status -M` names the source, and both ends are walked below.
+# Cites: man:git-diff "Renamed (R)"
 foreign=""
-for f in $(git diff --cached --name-only 2>/dev/null); do
+for f in $(git diff --cached --name-status -M 2>/dev/null \
+           | awk -F'\t' '{ if ($1 ~ /^R/) { print $2; print $3 } else print $2 }'); do
   owner=""
   case "$f" in
     HANDOFF.*.md)    owner=${f#HANDOFF.}; owner=${owner%.md} ;;

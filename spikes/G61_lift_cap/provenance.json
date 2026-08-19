@@ -1,0 +1,194 @@
+{
+ "spike": "G61_lift_cap",
+ "recorded_utc": "2026-08-19T02:17:52Z",
+ "note": "G61: valid-fitted lift cap on official FB15k-237. Literature unavailable.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G61_lift_cap/lift_cap.py",
+   "sha256": "37d5cfc151af4c7d47eeb223c41e2bedaf64738b633e4de0855ec75a7ba5a04d",
+   "bytes": 11656,
+   "mtime": 1787105352,
+   "compared_ts": 1787105352,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G61_lift_cap/lift_cap.json",
+   "sha256": "cc0b0564c8fbfd943f4ca06e76ef384a01c4d8fe444ef471f3c3006f213466c9",
+   "bytes": 2354,
+   "mtime": 1787105872,
+   "compared_ts": 1787105872,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong file",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "n": 20466
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "leak 0",
+   "can_fail_because": "loader mix",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "leak": 0
+   }
+  },
+  {
+   "name": "C3_g51",
+   "must_fire_because": "official G51 0.2585",
+   "can_fail_because": "scorer drifted",
+   "null_must_contain": "G51 != 0.2585",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2585
+   }
+  },
+  {
+   "name": "C4_gated",
+   "must_fire_because": "valid-gated 0.2679",
+   "can_fail_because": "gate drifted",
+   "null_must_contain": "gated != 0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2679
+   }
+  },
+  {
+   "name": "C5_cap_hashed",
+   "must_fire_because": "p95 cap hashed before test",
+   "can_fail_because": "missing sha",
+   "null_must_contain": "empty sha",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "sha256": "cd8cfe45b1e2b652097b80585fb8577c52b9fe2c901f1b8eca38e166bf10b464"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_cap_all_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "cap_all <= G51",
+   "null_must_contain": "signed cap-G51 delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "cap_mrr": 0.2588,
+    "g51_mrr": 0.2585,
+    "delta": 0.0003,
+    "fired": false,
+    "description": "Fires if lift-cap-all <= official G51. Signed."
+   },
+   "refutes": "that clipping rare-entity lift raises official G51",
+   "fires_when": "cap_all <= G51",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_gated_cap_does_not_beat_gated",
+   "must_fire_because": null,
+   "can_fail_because": "gated_cap <= gated",
+   "null_must_contain": "signed gated_cap-gated delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "gated_cap_mrr": 0.268,
+    "gated_mrr": 0.2679,
+    "delta": 0.0001,
+    "fired": false,
+    "description": "Fires if gated+cap <= G59 gated 0.2679. Signed."
+   },
+   "refutes": "that a lift cap on top of the G59 gate raises official MRR",
+   "fires_when": "gated_cap <= gated",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "valid p95 true-lift cap does not beat G51 and does not beat G59 gated"
+}

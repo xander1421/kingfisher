@@ -1,0 +1,92 @@
+{
+ "spike": "H151_phone_freeze",
+ "recorded_utc": "2026-08-18T23:54:57Z",
+ "note": "H151: S25 holds frozen pin; S24 refused cpu_busy (game)",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H151_phone_freeze/phone.json",
+   "sha256": "dc49bd0ecdf205de87d8bb0738f2a2fe909f310bf64245a5071163eb73145d33",
+   "bytes": 1266,
+   "mtime": 1787097297
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "s25_holds_pin",
+   "must_fire_because": "on-device F001 after freeze must ACCEPT 590d8769",
+   "can_fail_because": "S25 printed a different digest or REJECTED honest F001",
+   "null_must_contain": "a digest that can match or miss the pin",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "verdict": "ACCEPTED",
+    "m06_rc": 1
+   }
+  },
+  {
+   "name": "s24_gate_held",
+   "must_fire_because": "attached+charging S24 must not run a job while cpu_busy",
+   "can_fail_because": "job_ran true, or limit raised, or app killed",
+   "null_must_contain": "job_ran true or false",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "job_ran": false,
+    "refused": "cpu_busy",
+    "samples": [
+     50.2,
+     19.3,
+     22.3,
+     53.6,
+     43.5,
+     27.7,
+     32.0,
+     43.3,
+     48.2,
+     46.5,
+     42.0,
+     44.8,
+     46.8
+    ]
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "freeze_moved_phone_pin",
+   "must_fire_because": null,
+   "can_fail_because": "S25 digest != 590d8769",
+   "null_must_contain": "a digest field that can equal or differ from the pin",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+   },
+   "refutes": "F001_FROZEN status flip changed the on-device digest",
+   "fires_when": "S25 digest != 590d8769",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "on-device pin check; no elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "S25 on-device digest after freeze is not 590d8769"
+}

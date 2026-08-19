@@ -1,0 +1,151 @@
+{
+ "spike": "S88_wn18rr_ingestion",
+ "recorded_utc": "2026-08-19T14:31:17Z",
+ "note": "S88: WN18RR Canonical Ingestion & Content-Addressed Sharding.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/result.json",
+   "sha256": "391d38956641e1209b05736b8bde978307d25eaac3d97b41a81fd615bf2c9f63",
+   "bytes": 1147,
+   "mtime": 1787149877,
+   "compared_ts": 1787149877,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_official_hashes",
+   "must_fire_because": "All WN18RR split file hashes match SOURCE.txt",
+   "can_fail_because": "corrupted or unpinned download",
+   "null_must_contain": "hash mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "actual_hashes": {
+     "train.txt": "038612e783c215ee5f3ca9fbfca27b8d0739be1028fe4ee7c174aecf0b83d5df",
+     "valid.txt": "453ce7202afa58094a04d2b1560ee2b02660f1c260b32ce6651c8ccedd1028ab",
+     "test.txt": "0383bceaaa1096cf3c03ec021ed0048068e2355dbfc0239b292cefdac821cec5",
+     "entities.dict": "3dc41455a835d7523b68a2d449a8ae9429ba8cf8be7db7e29b4cbadf6fbc092f",
+     "relations.dict": "0cf033f5ea243c938d86e8e5e89b43676df040b9196ce495b92382e54ad59916"
+    }
+   }
+  },
+  {
+   "name": "C2_shard_count",
+   "must_fire_because": "Exactly 11 predicate shards created",
+   "can_fail_because": "missing predicates",
+   "null_must_contain": "wrong shard count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_shards": 11
+   }
+  },
+  {
+   "name": "C3_zero_leak",
+   "must_fire_because": "0 overlap between train and test triples",
+   "can_fail_because": "data leakage",
+   "null_must_contain": "train/test leakage",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "train_test_overlap": 0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_roundtrip_loss",
+   "must_fire_because": null,
+   "can_fail_because": "not parity_ok",
+   "null_must_contain": "triple lost or mutated",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "lost": 0,
+    "mutated": 0
+   },
+   "refutes": "that ShardStore recovers 100% of triples with 0 mutations",
+   "fires_when": "not parity_ok",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_hash_mismatch",
+   "must_fire_because": null,
+   "can_fail_because": "len(hash_mismatches) > 0",
+   "null_must_contain": "hash mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mismatches": []
+   },
+   "refutes": "that official split files match commit 2e440e0 hashes",
+   "fires_when": "len(hash_mismatches) > 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_train_count",
+   "must_fire_because": null,
+   "can_fail_because": "n_train != 86835",
+   "null_must_contain": "wrong train count",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_train": 86835
+   },
+   "refutes": "that train set contains exactly 86,835 triples",
+   "fires_when": "n_train != 86835",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "WN18RR ingestion fails hash verification or roundtrip parity"
+}

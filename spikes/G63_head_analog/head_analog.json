@@ -1,0 +1,169 @@
+{
+  "spike": "G63",
+  "split": "official FB15k-237 train/valid/test",
+  "field_order": "p,s,o",
+  "headline_arm": "D_head_analog_gated",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "n_train": 272115,
+  "n_test": 20466,
+  "n_rules_2hop": 2201,
+  "entropy": {
+    "n": 237,
+    "median_h_obj": 3.882,
+    "median_h_sub": 4.8087,
+    "mean_h_obj": 3.6473,
+    "mean_h_sub": 4.7927
+  },
+  "gate": {
+    "sha256": "1d43d45761384ee788d146b3d0680b871888068d4e30a1d747809ac25c7f4c2b",
+    "n_g51_on": 157,
+    "n_g51_off": 66
+  },
+  "arms": {
+    "A_prior": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "B_g51": {
+      "mrr": 0.2585,
+      "hits1": 0.1898,
+      "hits3": 0.281,
+      "hits10": 0.3837,
+      "n_queries": 40932
+    },
+    "C_pred_gate": {
+      "mrr": 0.2679,
+      "hits1": 0.1951,
+      "hits3": 0.2922,
+      "hits10": 0.4037,
+      "n_queries": 40932
+    },
+    "D_head_analog_gated": {
+      "mrr": 0.268,
+      "hits1": 0.1954,
+      "hits3": 0.2931,
+      "hits10": 0.4055,
+      "n_queries": 40932
+    },
+    "E_head_analog_only": {
+      "mrr": 0.2432,
+      "hits1": 0.179,
+      "hits3": 0.2629,
+      "hits10": 0.3681,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "head": {
+      "prior": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      },
+      "g51": {
+        "mrr": 0.1645,
+        "hits1": 0.1067,
+        "hits3": 0.1771,
+        "hits10": 0.2695,
+        "n_queries": 20466
+      },
+      "analog": {
+        "mrr": 0.1398,
+        "hits1": 0.09,
+        "hits3": 0.1477,
+        "hits10": 0.2381,
+        "n_queries": 20466
+      },
+      "analog_only": {
+        "mrr": 0.1453,
+        "hits1": 0.0941,
+        "hits3": 0.1536,
+        "hits10": 0.2464,
+        "n_queries": 20466
+      },
+      "g51_on_analog": {
+        "mrr": 0.1673,
+        "hits1": 0.1088,
+        "hits3": 0.1818,
+        "hits10": 0.2781,
+        "n_queries": 20466
+      }
+    },
+    "tail": {
+      "prior": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "g51": {
+        "mrr": 0.3525,
+        "hits1": 0.2729,
+        "hits3": 0.385,
+        "hits10": 0.4979,
+        "n_queries": 20466
+      },
+      "pred_gate": {
+        "mrr": 0.3655,
+        "hits1": 0.2808,
+        "hits3": 0.4011,
+        "hits10": 0.5247,
+        "n_queries": 20466
+      }
+    }
+  },
+  "controls": {
+    "C1_test_n": {
+      "n": 20466,
+      "ok": true
+    },
+    "C2_leak": {
+      "leak": 0,
+      "ok": true
+    },
+    "C3_pred_gate_repro": {
+      "expected": 0.2679,
+      "observed": 0.2679,
+      "ok": true
+    },
+    "C4_237": {
+      "npred": 237,
+      "ok": true
+    },
+    "C5_train_hash": {
+      "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_head_is_not_flatter": {
+      "median_h_sub": 4.8087,
+      "median_h_obj": 3.882,
+      "fired": false,
+      "description": "Fires if median H(subject|p) <= median H(object|p)"
+    },
+    "F2_head_analog_not_better_prior": {
+      "head_analog_only": 0.1453,
+      "head_prior": 0.1363,
+      "delta": 0.009,
+      "bar": 0.005,
+      "fired": false,
+      "description": "Fires if head-analog-only does not beat head prior by +0.005"
+    },
+    "F3_headline_does_not_beat_g59": {
+      "headline_mrr": 0.268,
+      "g59_gated": 0.2679,
+      "delta": 0.0001,
+      "fired": false,
+      "description": "Fires if gated+head-analog <= G59 0.2679. Signed."
+    }
+  },
+  "elapsed_sec": 658.65
+}

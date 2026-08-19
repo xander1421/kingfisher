@@ -1,0 +1,7 @@
+{
+  "author_domain": "grok-build-sandbox",
+  "fuel_table": "FT_METTA_CORE_V1 stipulated",
+  "isa": "independent-of-isa",
+  "note": "Generated from digest_spec. Not produced by Hyperon. Probe only.",
+  "producer": "kingfisher-kernel/fixtures/verifier/generate_f001.py"
+}

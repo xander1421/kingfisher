@@ -94,3 +94,9 @@ bringup.log
 # `gh aw compile` regenerates it there -- move it back out, or Actions becomes
 # reachable again on the next dispatch.
 .github/workflows/*.lock.yml
+spikes/harness/.selfcheckall_demo_tmp/
+# Regenerable build artifacts and CID blobs — githygiene refuses >1MB and is right to.
+spikes/*/agent_android
+spikes/*/trace_verifier_android
+spikes/S30_speed_duel/bin/
+spikes/S87_content_addressed_corpus/store/blobs/

@@ -1,0 +1,184 @@
+{
+ "spike": "G62_head_analog",
+ "recorded_utc": "2026-08-19T02:47:42Z",
+ "note": "G62: official-test head analog; tail stays G59 gate. Literature unavailable.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G54_slice_gated_lift/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G62_head_analog/head_analog.py",
+   "sha256": "d6b02c6b2c2033ec0127e55181b98f4ae7c93d038ccdd807af58cf4751984d02",
+   "bytes": 10400,
+   "mtime": 1787107031,
+   "compared_ts": 1787107031,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G62_head_analog/head_analog.json",
+   "sha256": "1f75188a3b2f593f87b9d603bc0e50f8b0bbcb567077926e5d2d80446e634b51",
+   "bytes": 2862,
+   "mtime": 1787107662,
+   "compared_ts": 1787107662,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong file",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "n": 20466
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "leak 0",
+   "can_fail_because": "loader mix",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "leak": 0
+   }
+  },
+  {
+   "name": "C3_gated",
+   "must_fire_because": "pred-gate 0.2679",
+   "can_fail_because": "G59 scorer drifted",
+   "null_must_contain": "gated != 0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2679,
+    "ref": 0.2679
+   }
+  },
+  {
+   "name": "C4_npred",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "dict unpack",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "npred": 237
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_hybrid_does_not_beat_gated",
+   "must_fire_because": null,
+   "can_fail_because": "hybrid <= gated",
+   "null_must_contain": "signed hybrid-gated delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hybrid_mrr": 0.2527,
+    "gated_mrr": 0.2679,
+    "delta": -0.0152,
+    "fired": true,
+    "description": "Fires if gated-tail+analog-head <= G59 0.2679. Signed."
+   },
+   "refutes": "that analog on head plus gated tail raises official MRR",
+   "fires_when": "hybrid <= gated",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_analog_does_not_lift_head",
+   "must_fire_because": null,
+   "can_fail_because": "analog_head <= gated_head",
+   "null_must_contain": "signed analog-head delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "analog_head": 0.1398,
+    "gated_head": 0.1703,
+    "delta": -0.0305,
+    "fired": true,
+    "description": "Fires if analog head <= gated head 0.1703. Signed."
+   },
+   "refutes": "that object-signature analog moves the official-test head level",
+   "fires_when": "analog_head <= gated_head",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_hybrid_does_not_beat_gated",
+  "F2_analog_does_not_lift_head"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "newest": 1787100600,
+   "from": "spikes/G54_slice_gated_lift/slice_gated.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "head-only analog does not beat G59 gated overall and does not lift head"
+}

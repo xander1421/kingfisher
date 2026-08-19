@@ -1,0 +1,95 @@
+  all            n= 40818  {'n_queries': 81636, 'n_triples': 40818, 'elapsed_sec': 34.5637, 'mrr': 0.2648, 'hits1': 0.1748, 'hits3': 0.3169, 'hits10': 0.3929, 'mrr_tail': 0.3366, 'mrr_head': 0.193}
+  same_pair      n= 12249  {'n_queries': 24498, 'n_triples': 12249, 'elapsed_sec': 11.0498, 'mrr': 0.5318, 'hits1': 0.3147, 'hits3': 0.6607, 'hits10': 0.8146, 'mrr_tail': 0.5714, 'mrr_head': 0.4922}
+  no_same_pair   n= 28569  {'n_queries': 57138, 'n_triples': 28569, 'elapsed_sec': 23.1984, 'mrr': 0.1503, 'hits1': 0.1148, 'hits3': 0.1694, 'hits10': 0.2121, 'mrr_tail': 0.236, 'mrr_head': 0.0647}
+{
+  "arms": {
+    "all": {
+      "elapsed_sec": 34.5637,
+      "hits1": 0.1748,
+      "hits10": 0.3929,
+      "hits3": 0.3169,
+      "mrr": 0.2648,
+      "mrr_head": 0.193,
+      "mrr_tail": 0.3366,
+      "n_queries": 81636,
+      "n_triples": 40818
+    },
+    "no_same_pair": {
+      "elapsed_sec": 23.1984,
+      "hits1": 0.1148,
+      "hits10": 0.2121,
+      "hits3": 0.1694,
+      "mrr": 0.1503,
+      "mrr_head": 0.0647,
+      "mrr_tail": 0.236,
+      "n_queries": 57138,
+      "n_triples": 28569
+    },
+    "same_pair": {
+      "elapsed_sec": 11.0498,
+      "hits1": 0.3147,
+      "hits10": 0.8146,
+      "hits3": 0.6607,
+      "mrr": 0.5318,
+      "mrr_head": 0.4922,
+      "mrr_tail": 0.5714,
+      "n_queries": 24498,
+      "n_triples": 12249
+    }
+  },
+  "controls": {
+    "C1_reproduces_published_headline": {
+      "hits10": 0.3929,
+      "mrr": 0.2648,
+      "ok": true,
+      "published_hits10": 0.3929,
+      "published_mrr": 0.2648,
+      "what_would_fail_it": "an `all` arm that does not return the published 0.2648 / 0.3929, which would mean this harness is not the instrument that produced them"
+    },
+    "C2_detector_matches_pairs_not_density": {
+      "ok": true,
+      "randomised_pair_hits": 34,
+      "randomised_pair_pct": 0.083,
+      "what_would_fail_it": "a randomised-pair control returning a rate comparable to the measured 30%, which would mean the detector matches any pair at all"
+    },
+    "C3_partition_is_exhaustive_and_disjoint": {
+      "ok": true,
+      "sum": 40818,
+      "test": 40818,
+      "what_would_fail_it": "the parts not summing to the whole"
+    }
+  },
+  "controls_ok": "3/3",
+  "corpus": {
+    "equals_fb15k237_official_train": true,
+    "nent": 14505,
+    "npred": 237,
+    "nt": 272115
+  },
+  "elapsed_sec": 98.496,
+  "falsifiers": {
+    "F2_clean_subset_matches_the_headline": {
+      "drop_vs_published": 0.1145,
+      "fired": false,
+      "meaning_if_fired": "the re-split contributed nothing measurable and the finding shrinks to labelling only",
+      "mrr_all": 0.2648,
+      "mrr_no_same_pair": 0.1503,
+      "mrr_same_pair": 0.5318,
+      "question": "is filtered MRR on test triples with NO same-pair train edge within seed noise of the published 0.2648?"
+    },
+    "F3_same_pair_share_too_small_to_matter": {
+      "fired": false,
+      "meaning_if_fired": "the causal story is wrong even if the number moves",
+      "question": "can a 30% share carry a 0.063 -> 0.265 jump at all?",
+      "same_pair_pct": 30.01
+    }
+  },
+  "partition": {
+    "no_same_pair": 28569,
+    "same_pair": 12249,
+    "same_pair_pct": 30.01,
+    "test": 40818
+  },
+  "seed": "0xC0FFEE",
+  "spike": "G46"
+}

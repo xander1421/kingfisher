@@ -76,11 +76,45 @@ def modules(d=None):
     return out
 
 
-def run(d, name, timeout=PER_MODULE_TIMEOUT):
+def demo_only(d=None):
+    """H104: modules whose runnable check is demo() on __main__, not --selfcheck.
+
+    Discovered by the property (a demo entry point), not by the flag name.
+    Listed, not executed: kfcheck.demo() writes tempfile.mkdtemp() (/tmp),
+    and this runner is on a 10-minute launchd path.
+    """
+    d = d or HARNESS
+    flagged = set(modules(d))
+    out = []
+    for name in sorted(os.listdir(d)):
+        if not name.endswith('.py') or name == SELF or name in flagged:
+            continue
+        try:
+            text = open(os.path.join(d, name), encoding='utf-8').read()
+        except OSError:
+            continue
+        if re.search(r'^def demo\s*\(', text, re.M) and '__main__' in text:
+            out.append(name)
+    return out
+
+
+def demo_argv(text):
+    """reprocheck's __main__ runs production main() unless --demo is passed."""
+    if re.search(r"""['"]--demo['"]""", text):
+        return ['--demo']
+    return []
+
+
+def run(d, name, timeout=PER_MODULE_TIMEOUT, extra_args=None, env=None):
     """-> (state, detail). States: GREEN, RED, TIMEOUT, ERROR."""
+    args = [sys.executable, os.path.join(d, name)]
+    if extra_args is None:
+        args.append('--selfcheck')
+    else:
+        args.extend(extra_args)
     try:
-        p = subprocess.run([sys.executable, os.path.join(d, name), '--selfcheck'],
-                           cwd=ROOT, capture_output=True, text=True, timeout=timeout)
+        p = subprocess.run(args, cwd=ROOT, capture_output=True, text=True,
+                           timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
         return 'TIMEOUT', f'no verdict in {timeout}s'
     except OSError as e:
@@ -98,12 +132,33 @@ def run(d, name, timeout=PER_MODULE_TIMEOUT):
 def scan(d=None, timeout=PER_MODULE_TIMEOUT):
     d = d or HARNESS
     names = modules(d)
+    demos = demo_only(d)
     bad = []
     for name in names:
         state, detail = run(d, name, timeout)
         print(f'  {state:8} {name}' + (f' -- {detail}' if detail else ''))
         if state != 'GREEN':
             bad.append(name)
+    # H104: the certify() stack is demo() on __main__, not --selfcheck.
+    # TMPDIR under the workspace: kfcheck.demo() uses mkdtemp (/tmp otherwise).
+    tmp = os.path.join(d, '.selfcheckall_demo_tmp')
+    os.makedirs(tmp, exist_ok=True)
+    env = os.environ.copy()
+    env['TMPDIR'] = tmp
+    try:
+        for name in demos:
+            text = open(os.path.join(d, name), encoding='utf-8').read()
+            state, detail = run(d, name, timeout, extra_args=demo_argv(text), env=env)
+            print(f'  {state:8} {name}' + (f' -- {detail}' if detail else ''))
+            if state != 'GREEN':
+                bad.append(name)
+    finally:
+        try:
+            import shutil
+            shutil.rmtree(tmp, ignore_errors=True)
+        except OSError:
+            pass
+    n = len(names) + len(demos)
     shell = sorted(n for n in os.listdir(d)
                    if n.endswith('.sh') and '--selfcheck' in
                    open(os.path.join(d, n), encoding='utf-8', errors='replace').read())
@@ -111,10 +166,10 @@ def scan(d=None, timeout=PER_MODULE_TIMEOUT):
         print(f'  NOT RUN  {len(shell)} shell module(s) carry --selfcheck and are '
               f'excluded here (they build git sandboxes): ' + ' '.join(shell))
     if bad:
-        print(f'\nselfcheckall: {len(bad)} of {len(names)} harness selfcheck(s) '
+        print(f'\nselfcheckall: {len(bad)} of {n} harness selfcheck(s) '
               f'are not green -- ' + ', '.join(bad))
         return 1
-    print(f'selfcheckall: all {len(names)} harness selfcheck(s) green')
+    print(f'selfcheckall: all {n} harness selfcheck(s) green')
     return 0
 
 
@@ -140,6 +195,12 @@ def selfcheck():
         # that greps for the bare word calls this covered.
         open(os.path.join(d, 'mentions_only.py'), 'w').write(
             "# this module talks about --selfcheck and implements nothing\n")
+        open(os.path.join(d, 'demo_only.py'), 'w').write(
+            "def demo():\n    print('demo ran')\n"
+            "if __name__ == '__main__':\n    demo()\n")
+        open(os.path.join(d, 'demo_red.py'), 'w').write(
+            "def demo():\n    print('demo failed on purpose')\n    raise SystemExit(1)\n"
+            "if __name__ == '__main__':\n    demo()\n")
 
         import io, contextlib
         buf = io.StringIO()
@@ -165,10 +226,16 @@ def selfcheck():
            'the hang is not reported GREEN before it is reported TIMEOUT')
         ck('mentions_only' not in out,
            'a module that only MENTIONS the flag is not counted as covered')
+        ck('GREEN    demo_only.py' in out,
+           'H104: demo() on __main__ is executed under the timeout contract')
+        ck('RED      demo_red.py' in out,
+           'H104: a failing demo() reports RED, not skipped')
+        ck('DEMO' not in out,
+           'H104: demo() modules are no longer listed-and-skipped')
         # Anti-inversion: without this, "report RED for everything" passes above.
         ck(rc == 1, 'a set containing a red module exits 1')
         b2 = io.StringIO()
-        for f in ('red.py', 'hangs.py'):
+        for f in ('red.py', 'hangs.py', 'demo_red.py'):
             os.remove(os.path.join(d, f))
         with contextlib.redirect_stdout(b2):
             rc2 = scan(d, timeout=2)

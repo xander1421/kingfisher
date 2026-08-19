@@ -1,0 +1,147 @@
+{
+ "spike": "G92_wn18rr_hybrid",
+ "recorded_utc": "2026-08-19T15:06:49Z",
+ "note": "G92: Neuro-Symbolic Hybrid Mix with RotatE and ComplEx on Official WN18RR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid/result.json",
+   "sha256": "3b831ea688a45214a3525ffd677e0ed962b42ce545848dee5ba17c5c7834d22a",
+   "bytes": 1166,
+   "mtime": 1787152009,
+   "compared_ts": 1787152009,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_size",
+   "must_fire_because": "Evaluates exactly 3,134 official WN18RR test triples",
+   "can_fail_because": "test split truncated",
+   "null_must_contain": "wrong split",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_test": 3134
+   }
+  },
+  {
+   "name": "C2_query_count",
+   "must_fire_because": "Evaluates exactly 6,268 queries (head+tail for 3,134 triples)",
+   "can_fail_because": "query count mismatch",
+   "null_must_contain": "wrong queries",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 6268
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 golden pins remain uncorrupted",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_wrong_query_count",
+   "must_fire_because": null,
+   "can_fail_because": "n_queries != 6268",
+   "null_must_contain": "truncated evaluation",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 6268
+   },
+   "refutes": "that test covers exactly 6,268 queries",
+   "fires_when": "n_queries != 6268",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_fails_symbolic_baseline",
+   "must_fire_because": null,
+   "can_fail_because": "mrr < 0.0355",
+   "null_must_contain": "inferior performance",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.36111757159233093,
+    "baseline_symbolic": 0.0355
+   },
+   "refutes": "that hybrid beats pure symbolic rules (0.0355 MRR)",
+   "fires_when": "mrr < 0.0355",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_fails_complex_baseline",
+   "must_fire_because": null,
+   "can_fail_because": "mrr < 0.1251",
+   "null_must_contain": "inferior performance",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.36111757159233093,
+    "baseline_complex": 0.1251
+   },
+   "refutes": "that hybrid beats standalone ComplEx (0.1251 MRR)",
+   "fires_when": "mrr < 0.1251",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Hybrid mix fails to beat ComplEx and pure symbolic baselines or truncates test set"
+}

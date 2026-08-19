@@ -1,0 +1,257 @@
+{
+ "spike": "G57_signed_null_write",
+ "recorded_utc": "2026-08-19T01:10:36Z",
+ "note": "G57: diagnose p=13; lift>1 gate and signed/null residual writes on pair-disjoint split.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G54_slice_gated_lift/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G57_signed_null_write/signed_null.py",
+   "sha256": "205e74884ef3a3f64af52fb8c05c93100c06a38d85ba2694e568d71c9a82c880",
+   "bytes": 18747,
+   "mtime": 1787101523,
+   "compared_ts": 1787101523,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G57_signed_null_write/signed_null.json",
+   "sha256": "50815aa1c476d9a2dc6f547b382012f40118fd54b24e26d6d4f37cefbdcd55e9",
+   "bytes": 7180,
+   "mtime": 1787101836,
+   "compared_ts": 1787101836,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_prior_reproduction",
+   "must_fire_because": "imported G51 prior = 0.1732",
+   "can_fail_because": "split drifted",
+   "null_must_contain": "unexpected prior",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.1732,
+    "observed_mrr": 0.1732,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_g51_reproduction",
+   "must_fire_because": "imported G51 \u03b2=0.10 = 0.2274",
+   "can_fail_because": "lift formula drifted",
+   "null_must_contain": "unexpected G51",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.2274,
+    "observed_mrr": 0.2274,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_leak_free",
+   "must_fire_because": "0 same-pair leak",
+   "can_fail_because": "partition broken",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_triples": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "(p,s,o) max(p)<npred",
+   "can_fail_because": "G52 swap",
+   "null_must_contain": "max_p>=npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504,
+    "swap_would_fail": true
+   }
+  },
+  {
+   "name": "C5_canary_n",
+   "must_fire_because": "p=13 query count matches G54",
+   "can_fail_because": "split or query loop drifted",
+   "null_must_contain": "n\u22603856",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 3856,
+    "observed": 3856,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_per_query_matches_g51_eval",
+   "must_fire_because": "per-query prior/g51 match imported eval",
+   "can_fail_because": "different instrument",
+   "null_must_contain": "aggregate mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "prior_mrr": 0.1732,
+    "g51_mrr": 0.2274,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_canary_is_not_a_miss",
+   "must_fire_because": null,
+   "can_fail_because": "among G51-worse p=13 queries, true in firings \u226550%",
+   "null_must_contain": "true mostly present on hurt queries",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "frac_worse_true_fired": 0.4814,
+    "n_g51_worse": 2472,
+    "fired": false,
+    "description": "Fires if among p=13 queries G51-worse-than-prior, true is in firings \u226550% (miss is NOT the mechanism)"
+   },
+   "refutes": "that p=13 hurt is rules missing the true target",
+   "fires_when": "among G51-worse p=13 queries, true in firings \u226550%",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_lift_gt1_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "lift_gt1_mrr \u2264 g51_mrr",
+   "null_must_contain": "signed delta, including a loss",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "lift_gt1_mrr": 0.2275,
+    "g51_mrr": 0.2274,
+    "delta": 0.0001,
+    "fired": false,
+    "description": "Fires if lift>1 gate MRR \u2264 G51. Signed."
+   },
+   "refutes": "that refusing lift<1 writes raises MRR",
+   "fires_when": "lift_gt1_mrr \u2264 g51_mrr",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_signed_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "signed_mrr \u2264 g51_mrr",
+   "null_must_contain": "signed delta, including a loss",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "signed_mrr": 0.2118,
+    "g51_mrr": 0.2274,
+    "delta": -0.0156,
+    "null_delta": -0.021,
+    "fired": true,
+    "description": "Fires if signed residual MRR \u2264 G51. Signed. null_delta recorded so a LOSS is visible."
+   },
+   "refutes": "that a signed log-odds residual beats always-positive G51",
+   "fires_when": "signed_mrr \u2264 g51_mrr",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F3_signed_does_not_beat_g51"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "newest": 1787100600,
+   "from": "spikes/G54_slice_gated_lift/slice_gated.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "p=13 hurt is not a miss AND lift>1 and signed both fail to beat G51"
+}

@@ -1,0 +1,121 @@
+{
+ "spike": "G52_dev_calibrated_manifest",
+ "recorded_utc": "2026-08-18T19:03:51Z",
+ "note": "G52: ModelManifest frozen from dev tuning and evaluated on held-out test split under fixed-point scoring.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G52_dev_calibrated_manifest/manifest_results.json",
+   "sha256": "2eb07f8457b60c9974ac168b1d71f24f0c63d782edb42289f4c576a30f4ad457",
+   "bytes": 341,
+   "mtime": 1787079831,
+   "compared_ts": 1787079831,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G52_dev_calibrated_manifest/ModelManifest.json",
+   "sha256": "09a32dc16263530a7423f179b47fc1afd4e499271e1c54c9c19661cf51da5726",
+   "bytes": 580,
+   "mtime": 1787079831,
+   "compared_ts": 1787079831,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_zero_leakage_across_partitions",
+   "must_fire_because": "0 same-pair triples across train/dev/test",
+   "can_fail_because": "partition leakage",
+   "null_must_contain": "leakage detected",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_triples": 0
+   }
+  },
+  {
+   "name": "C2_dev_tuned_before_test",
+   "must_fire_because": "Hyperparameters frozen before test execution",
+   "can_fail_because": "test-set contamination",
+   "null_must_contain": "test tuning",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "alpha": 0.05,
+    "beta": 0.1
+   }
+  },
+  {
+   "name": "C3_deterministic_fixed_point_ranks",
+   "must_fire_because": "Fixed-point integer ranking",
+   "can_fail_because": "float indeterminacy",
+   "null_must_contain": "non-deterministic ordering",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "scale": 10000
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_beats_prior_on_held_out_test",
+   "must_fire_because": null,
+   "can_fail_because": "mrr_test - null_mrr < 0.0050",
+   "null_must_contain": "sub-threshold test gain",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "delta": -0.0015
+   },
+   "refutes": "that rule lift fails on unseen test split",
+   "fires_when": "mrr_test - null_mrr < 0.0050",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_beats_prior_on_held_out_test"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Dev-tuned Bayesian manifest failing to beat frequency null on unseen test split"
+}

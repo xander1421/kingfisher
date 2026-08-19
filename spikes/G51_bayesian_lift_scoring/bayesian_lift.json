@@ -1,0 +1,90 @@
+{
+  "spike": "G51",
+  "seed": "0xC0FFEE",
+  "split": "pair_disjoint (0 leak by construction)",
+  "n_train": 190480,
+  "n_test": 40817,
+  "n_rules_2hop": 1410,
+  "arms": {
+    "A_prior_alone": {
+      "mrr": 0.1732,
+      "hits1": 0.1141,
+      "hits3": 0.186,
+      "hits10": 0.2855,
+      "n_queries": 81634,
+      "queries_with_rule_firings": 0
+    },
+    "B_rules_alone": {
+      "mrr": 0.095,
+      "hits1": 0.0488,
+      "hits3": 0.101,
+      "hits10": 0.1729,
+      "n_queries": 81634,
+      "queries_with_rule_firings": 0
+    },
+    "C_g50_additive": {
+      "mrr": 0.1743,
+      "hits1": 0.1145,
+      "hits3": 0.1871,
+      "hits10": 0.2881,
+      "n_queries": 81634,
+      "queries_with_rule_firings": 0
+    },
+    "D_bayesian_hybrid_beta10": {
+      "mrr": 0.2263,
+      "hits1": 0.1535,
+      "hits3": 0.2507,
+      "hits10": 0.3611,
+      "n_queries": 81634,
+      "queries_with_rule_firings": 61017
+    },
+    "E_bayesian_scaled_beta01": {
+      "mrr": 0.2274,
+      "hits1": 0.1524,
+      "hits3": 0.2547,
+      "hits10": 0.3662,
+      "n_queries": 81634,
+      "queries_with_rule_firings": 61017
+    },
+    "F_bayesian_scaled_beta001": {
+      "mrr": 0.2175,
+      "hits1": 0.142,
+      "hits3": 0.2403,
+      "hits10": 0.3638,
+      "n_queries": 81634,
+      "queries_with_rule_firings": 61017
+    }
+  },
+  "controls": {
+    "C1_prior_reproduction": {
+      "expected_mrr": 0.1732,
+      "observed_mrr": 0.1732,
+      "ok": true
+    },
+    "C2_leak_free_disjoint": {
+      "leak_triples": 0,
+      "ok": true
+    },
+    "C3_rank_convention": {
+      "rule": "1 + higher + equal/2",
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_strictly_beats_prior": {
+      "prior_mrr": 0.1732,
+      "best_bayes_mrr": 0.2274,
+      "delta": 0.0542,
+      "fired": false,
+      "description": "Fires if Bayesian hybrid does not beat prior baseline by >= +0.0050 MRR"
+    },
+    "F2_beats_additive_g50": {
+      "g50_mrr": 0.1743,
+      "best_bayes_mrr": 0.2274,
+      "delta": 0.0531,
+      "fired": false,
+      "description": "Fires if Bayesian hybrid does not outperform G50 additive by >= +0.0050 MRR"
+    }
+  },
+  "elapsed_sec": 367.91
+}

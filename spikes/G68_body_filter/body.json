@@ -1,0 +1,273 @@
+{
+  "spike": "G68",
+  "split": "official FB15k-237 train/valid/test",
+  "field_order": "p,s,o",
+  "headline_arm": "G_gated_best_filter",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "n_train": 272115,
+  "n_valid": 17535,
+  "n_test": 20466,
+  "npred": 237,
+  "nent": 14541,
+  "n_rules_2hop": 2201,
+  "rules_source": "G65_head_replace/rules_cache.json",
+  "rules_cache_sha256": "c083dd1e9fd25e91875761c97af95fabfe95458a0215ed6e6b1b5562ddd301ea",
+  "hub": {
+    "cut": 72.0,
+    "cut_all_nodes_p95": 72.0,
+    "population": "train nodes with in_deg>0 and out_deg>0 (appear as 2-hop intermediates)",
+    "degree_def": "undirected unique-neighbour count (train only)",
+    "n_nodes": 14505,
+    "n_intermediates": 12655,
+    "n_hubs": 626,
+    "max_deg": 5984
+  },
+  "mincount": {
+    "value": 2,
+    "max_triple_multiplicity": 1,
+    "n_train_triples_count_ge2": 0,
+    "note": "FB15k-237 train triples are unique, so last-hop count is 0 or 1. mincount=2 is a complete last-hop veto on this graph."
+  },
+  "last_hop_mapping": {
+    "tail": "s -q-> z -r-> c ; last hop (z, r, c) as (subject z, rel r, object c)",
+    "head": "cand -q-> z -r-> o walked via in_adj as G54.collect_firings (o -r-> z -q-> cand); last hop of the walk that produces cand is (cand, q, z) as (subject cand, rel q, object z). Hub remains z.",
+    "mincount_counts": "train multiplicity of that last-hop triple"
+  },
+  "gate": {
+    "sha256": "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+    "n_g51_on": 157,
+    "n_g51_off": 66,
+    "applied_to_G": "G59 freeze_gate on unfiltered valid prior vs g51; mask applied to valid-best of D/E/F = D_g51_hub (key=hub). Not a newly fitted filter-specific gate."
+  },
+  "valid_filter_mrr": {
+    "D_g51_hub": 0.2512,
+    "E_g51_mincount": 0.2358,
+    "F_g51_both": 0.2358
+  },
+  "best_filter_on_valid": "D_g51_hub",
+  "firings_test": {
+    "n_paths_unfiltered": 81249857,
+    "n_paths_hub": 50118034,
+    "n_paths_mincount": 0,
+    "n_paths_both": 0,
+    "n_queries": 40932,
+    "n_queries_unfiltered_fired": 33623,
+    "n_queries_hub_fired": 31797,
+    "n_queries_mincount_fired": 0,
+    "n_queries_both_fired": 0,
+    "identity_checked": 200,
+    "identity_matched": 200,
+    "n_paths_dropped_hub": 31131823,
+    "n_paths_dropped_mincount": 81249857,
+    "n_paths_dropped_both": 81249857
+  },
+  "firings_valid": {
+    "n_paths_unfiltered": 68031932,
+    "n_paths_hub": 43012975,
+    "n_paths_mincount": 0,
+    "n_paths_both": 0,
+    "n_queries": 35070,
+    "n_queries_unfiltered_fired": 28853,
+    "n_queries_hub_fired": 27315,
+    "n_queries_mincount_fired": 0,
+    "n_queries_both_fired": 0,
+    "identity_checked": 200,
+    "identity_matched": 200,
+    "n_paths_dropped_hub": 25018957,
+    "n_paths_dropped_mincount": 68031932,
+    "n_paths_dropped_both": 68031932
+  },
+  "arms": {
+    "A_prior": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "B_g51": {
+      "mrr": 0.2585,
+      "hits1": 0.1898,
+      "hits3": 0.281,
+      "hits10": 0.3837,
+      "n_queries": 40932
+    },
+    "C_valid_gated": {
+      "mrr": 0.2679,
+      "hits1": 0.1951,
+      "hits3": 0.2922,
+      "hits10": 0.4037,
+      "n_queries": 40932
+    },
+    "D_g51_hub": {
+      "mrr": 0.2489,
+      "hits1": 0.1801,
+      "hits3": 0.2694,
+      "hits10": 0.379,
+      "n_queries": 40932
+    },
+    "E_g51_mincount": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "F_g51_both": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "G_gated_best_filter": {
+      "mrr": 0.2656,
+      "hits1": 0.1935,
+      "hits3": 0.2892,
+      "hits10": 0.4008,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "prior": {
+      "tail": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      }
+    },
+    "g51": {
+      "tail": {
+        "mrr": 0.3525,
+        "hits1": 0.2729,
+        "hits3": 0.385,
+        "hits10": 0.4979,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1645,
+        "hits1": 0.1067,
+        "hits3": 0.1771,
+        "hits10": 0.2695,
+        "n_queries": 20466
+      }
+    },
+    "hub": {
+      "tail": {
+        "mrr": 0.3462,
+        "hits1": 0.2618,
+        "hits3": 0.3763,
+        "hits10": 0.5108,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1517,
+        "hits1": 0.0983,
+        "hits3": 0.1625,
+        "hits10": 0.2471,
+        "n_queries": 20466
+      }
+    },
+    "mincount": {
+      "tail": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      }
+    },
+    "both": {
+      "tail": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      }
+    }
+  },
+  "deltas": {
+    "hub_minus_g51": -0.0096,
+    "mincount_minus_g51": -0.0251,
+    "gated_best_minus_gated": -0.0023
+  },
+  "controls": {
+    "C1_test_n": {
+      "ok": true,
+      "n": 20466
+    },
+    "C2_leak": {
+      "ok": true,
+      "leak": 0
+    },
+    "C3_g51": {
+      "ok": true,
+      "mrr": 0.2585,
+      "expected": 0.2585
+    },
+    "C4_gated": {
+      "ok": true,
+      "mrr": 0.2679,
+      "expected": 0.2679
+    },
+    "C5_npred": {
+      "ok": true,
+      "npred": 237
+    },
+    "C6_firings_identity": {
+      "ok": true,
+      "valid": "200/200",
+      "test": "200/200"
+    }
+  },
+  "falsifiers": {
+    "F1_hub_filter_does_not_beat_g51": {
+      "hub_mrr": 0.2489,
+      "g51_mrr": 0.2585,
+      "delta": -0.0096,
+      "fired": true,
+      "description": "Fires if hub-filter G51 <= unfiltered G51 0.2585. Signed."
+    },
+    "F2_mincount_does_not_beat_g51": {
+      "mincount_mrr": 0.2334,
+      "g51_mrr": 0.2585,
+      "delta": -0.0251,
+      "fired": true,
+      "description": "Fires if mincount-2 G51 <= 0.2585. Signed."
+    },
+    "F3_gated_filter_does_not_beat_gated": {
+      "gated_filter_mrr": 0.2656,
+      "gated_mrr": 0.2679,
+      "best_filter": "D_g51_hub",
+      "delta": -0.0023,
+      "fired": true,
+      "description": "Fires if gated+filter <= 0.2679. Signed."
+    }
+  },
+  "elapsed_sec": 171.9
+}

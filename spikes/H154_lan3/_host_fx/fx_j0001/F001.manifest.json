@@ -1,0 +1,12 @@
+{
+  "fuel_table_id": "FT_METTA_CORE_V1",
+  "id": "F001.manifest.v1",
+  "kitchen_forbidden": [
+    "HDC",
+    "G51",
+    "autoloop"
+  ],
+  "query_class": "F001_PROBE_V1",
+  "spec": "kingfisher.digest/v1",
+  "status": "F001_FROZEN"
+}

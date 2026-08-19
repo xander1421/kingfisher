@@ -1,0 +1,119 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "thermal_override": "QUIET_ALLOW_THERMAL_UNREADABLE=1",
+  "not_a_new_isa": true,
+  "not_a_new_operator_domain": true,
+  "peer_claim_decay": {
+    "cited_one_one_as_max": 6.874,
+    "arith_200_x_24_3ms": 4.859999999999999,
+    "cited_three_one_as_parallel": 5.173,
+    "if_parallel_would_be_max": "max(2.50, 2.67)\u22482.67, not 5.17",
+    "mission_not_achieved": [
+      "Gate 3 open (8c46ea20 unmatched)",
+      "F001_DRAFT",
+      "section-8 UNPROVEN",
+      "0 ACCEPTED",
+      "two phones are not operator=2"
+    ]
+  },
+  "gates": {
+    "R5CY93675MK": "device quiet: cpu_busy 0.2% (limit 15%), runnable 2, thermal 36300m, battery status=5 level=100 charging=true powered=1",
+    "R5CX508MPRZ": "device quiet: cpu_busy 2.8% (limit 15%), runnable 1, thermal UNREADABLE(overridden), battery status=2 level=41 thermal-override=UNREADABLE charging=true powered=1"
+  },
+  "one_one": {
+    "s25_s": 1.5375614579970716,
+    "s24_s": 4.735545625000668,
+    "wall_s": 4.738968624995323
+  },
+  "oracle_3_1_k2": {
+    "times_s": [
+      1.267152583997813,
+      1.2688098750004428,
+      1.0432898329963791,
+      1.0779664590008906
+    ],
+    "wall_s": 1.2709113750024699,
+    "jobs_per_s": 314.73477054938047
+  },
+  "s25_k2": {
+    "times_s": [
+      1.69159637499979,
+      1.6866442499958794
+    ],
+    "wall_s": 1.6920077079994371,
+    "jobs_per_s": 236.40554242683928
+  },
+  "steal": {
+    "k25": 2,
+    "k24": 2,
+    "jobs": 400,
+    "chunk": 50,
+    "wall_s": 1.3682024169975193,
+    "taken": {
+      "R5CY93675MK": 300,
+      "R5CX508MPRZ": 100
+    },
+    "workers": [
+      {
+        "serial": "R5CY93675MK",
+        "wall_s": 1.3668287910040817,
+        "chunks": [
+          {
+            "n": 50,
+            "s": 0.4706692909967387
+          },
+          {
+            "n": 50,
+            "s": 0.4499163750006119
+          },
+          {
+            "n": 50,
+            "s": 0.4460267920003389
+          }
+        ]
+      },
+      {
+        "serial": "R5CY93675MK",
+        "wall_s": 1.367524624998623,
+        "chunks": [
+          {
+            "n": 50,
+            "s": 0.4692162920036935
+          },
+          {
+            "n": 50,
+            "s": 0.45354245800263016
+          },
+          {
+            "n": 50,
+            "s": 0.4447232089951285
+          }
+        ]
+      },
+      {
+        "serial": "R5CX508MPRZ",
+        "wall_s": 1.254382084000099,
+        "chunks": [
+          {
+            "n": 50,
+            "s": 1.2543257500001346
+          }
+        ]
+      },
+      {
+        "serial": "R5CX508MPRZ",
+        "wall_s": 1.2364932080017752,
+        "chunks": [
+          {
+            "n": 50,
+            "s": 1.2364375409961212
+          }
+        ]
+      }
+    ],
+    "jobs_per_s": 292.35440241202645
+  },
+  "steal_vs_one_one": 0.28871311993522003,
+  "steal_vs_oracle": 1.0765521844470551,
+  "steal_vs_s25_k2": 0.8086265863500277
+}

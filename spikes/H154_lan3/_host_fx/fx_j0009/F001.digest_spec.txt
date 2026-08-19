@@ -1,0 +1,219 @@
+Kingfisher consensus digest specification
+spec_id: kingfisher.digest/v1
+status:  NORMATIVE. A stranger must be able to implement this page
+         without reading any verifier source.
+
+------------------------------------------------------------------------------
+0. Scope
+------------------------------------------------------------------------------
+This spec defines ONLY:
+  - how corpus_root is computed
+  - how witness bytes are canonicalized
+  - how the accepted consensus digest is computed
+  - how fuel is derived
+  - the legal rewrite relation for fixture class F001_PROBE_V1
+
+It does not define HDC, G51, autoloop, or any kitchen metric.
+
+------------------------------------------------------------------------------
+1. Integers and concatenation
+------------------------------------------------------------------------------
+- u32be(n)  : n as 4 bytes, unsigned, big-endian
+- u64be(n)  : n as 8 bytes, unsigned, big-endian
+- utf8(s)   : Unicode string encoded UTF-8, no BOM
+- ||        : byte concatenation
+- hex64(b)  : SHA-256 digest of b, written as 64 lowercase ASCII hex chars
+              (no 0x prefix, no newline)
+
+No ASCII decimal lengths. No little-endian. No implicit separators.
+
+------------------------------------------------------------------------------
+2. Corpus root
+------------------------------------------------------------------------------
+Let corpus.bin be the exact on-disk bytes of the space dump
+(including a single trailing LF 0x0A if the dump is a text fact).
+
+    corpus_root = hex64(corpus.bin)     # 64 ASCII hex chars, lowercase
+
+The file F001.corpus_root is those 64 chars plus a single trailing LF.
+
+A verifier MUST hash F001.corpus.bin. It MUST NOT hash a string literal
+baked into the binary. If corpus.bin is missing, REJECT.
+
+------------------------------------------------------------------------------
+3. Canonical witness bytes
+------------------------------------------------------------------------------
+Witness is a JSON object with EXACTLY these keys (no others):
+
+    {
+      "spec": "kingfisher.trace/v1",
+      "query_id": "F001",
+      "corpus_root": "<64 hex>",
+      "manifest_id": "<string>",
+      "fuel_table_id": "FT_METTA_CORE_V1",
+      "steps": [ { "i": <int>, "rule": <str>, "redex": <str>,
+                   "contractum": <str>, "fuel": <int> }, ... ],
+      "result": <str>,
+      "fuel_total": <int>
+    }
+
+Canonical bytes W:
+
+    json.dumps(obj, ensure_ascii=False, separators=(',', ':'),
+               sort_keys=True).encode('utf-8') + b'\n'
+
+That is: UTF-8, sorted keys at every object, no spaces, one trailing LF.
+
+    witness_hash = SHA-256(W)           # 32 raw bytes, not hex
+
+F001.witness.json MUST be stored as exactly those canonical bytes.
+A verifier that hashes pretty-printed JSON is non-conformant.
+
+------------------------------------------------------------------------------
+4. Fuel
+------------------------------------------------------------------------------
+Fuel table FT_METTA_CORE_V1 (stipulated probe costs, NOT measured from
+Hyperon — do not claim otherwise):
+
+    PARSE          10
+    BIND_SPACE     10
+    UNIFY         100
+    SUBSTITUTE     80
+    CANONICALIZE  200
+
+Rules:
+  - every step.rule MUST be a key of this table
+  - step.fuel MUST equal table[step.rule]          (derived, not trusted)
+  - fuel_total MUST equal sum(step.fuel)
+  - F001.fuel is ASCII decimal of fuel_total plus one LF
+  - overflow / mismatch → REJECT
+  - unknown rule → REJECT (illegal opcode)
+
+------------------------------------------------------------------------------
+5. Accepted digest
+------------------------------------------------------------------------------
+    magic        = b'KF01'                         # 4 bytes
+    cr           = utf8(corpus_root)               # 64 hex chars, no LF
+    mid          = utf8(manifest_id)
+    q            = utf8(query)                     # exact F001.query bytes
+                                                   #   minus its trailing LF
+    r            = utf8(result)                    # witness.result
+    fuel         = u64be(fuel_total)
+    wh           = SHA-256(W)                      # 32 raw bytes
+
+    payload = magic
+           || u32be(len(cr))  || cr
+           || u32be(len(mid)) || mid
+           || u32be(len(q))   || q
+           || u32be(len(r))   || r
+           || fuel
+           || wh
+
+    accepted_digest = hex64(payload)               # 64 lowercase hex + LF
+                                                   # in F001.accepted_digest
+
+manifest_id for F001 is: "F001.manifest.v1"
+
+query for F001 is the file F001.query with the single trailing LF stripped:
+    (implies $p $q)
+
+------------------------------------------------------------------------------
+6. Legal rewrite relation (F001_PROBE_V1)
+------------------------------------------------------------------------------
+S-expressions: atoms are [A-Za-z0-9_]+ or $[A-Za-z0-9_]+
+               lists are '(' sexpr* ')' with single spaces, no extra space
+               after '(' or before ')'.
+Variable = atom starting with '$'.
+
+Unify (standard first-order, with occur-check):
+  unify(v, t, σ) binds v unless occur-check fails
+  unify(atom, atom) succeeds iff equal
+  unify(list, list) succeeds iff same length and pairwise unify
+
+F001 corpus fact (corpus.bin with LF stripped):
+    (implies (Frog $x) (Green $x))
+
+F001 query (query file with LF stripped):
+    (implies $p $q)
+
+Required trace shape (exactly 5 steps, i = 0..4 in order):
+
+  i=0 PARSE
+      redex      = query
+      contractum = query
+      meaning    : source parsed as that term
+
+  i=1 BIND_SPACE
+      redex      = query
+      contractum = corpus fact
+      meaning    : space is bound to the corpus fact
+
+  i=2 UNIFY
+      redex      = query
+      contractum = MUST be the canonical binding print:
+                   {$p:(Frog $x),$q:(Green $x)}
+      meaning    : verifier RE-RUNS unify(query, corpus_fact, {})
+                   and pretty-prints bindings with keys sorted,
+                   format {k:v,k2:v2} no spaces. If the trace's
+                   contractum differs, REJECT SEMANTIC_UNIFICATION_FAILURE.
+
+  i=3 SUBSTITUTE
+      redex      = ($p $q)
+      contractum = MUST equal apply(σ, ($p $q))
+                   which is ((Frog $x) (Green $x))
+      meaning    : σ is ONLY the substitution produced by step 2.
+                   Bindings may not be invented. If step 2 is missing
+                   or failed, REJECT BINDINGS_NOT_DERIVED.
+
+  i=4 CANONICALIZE
+      redex      = step 3 contractum
+      contractum = alpha-normalize: walk left-to-right, first seen
+                   variable → $0, next new → $1, ...
+                   For this probe: ((Frog $0) (Green $0))
+
+  result MUST equal step 4 contractum.
+  If result differs (even when digest is recomputed for the lie):
+      REJECT RESULT_NOT_DERIVED
+
+Pretty-print of a sexpr: same spacing rule as above.
+Pretty-print of bindings: '{' + ','.join(f'{k}:{v}' for k,v in sorted σ) + '}'
+
+------------------------------------------------------------------------------
+7. Hand-computed test vector (toy, not F001)
+------------------------------------------------------------------------------
+Inputs:
+  corpus_root  = 64 times ASCII '0'
+  manifest_id  = "m"
+  query        = "q"
+  result       = "r"
+  fuel_total   = 1
+  witness_hash = 32 zero bytes
+
+payload =
+  KF01
+  || u32be(64) || 64*'0'
+  || u32be(1)  || 'm'
+  || u32be(1)  || 'q'
+  || u32be(1)  || 'r'
+  || u64be(1)
+  || 32*0x00
+
+accepted_digest MUST be (normative, computed by digest.py):
+  2f8b309d1c8878efe307f214c0d2a3f9b44972d3df422c0b7a7488e9aea2b2f3
+
+Also stored as the single line in F001.digest_spec.toy.
+If an implementation disagrees with this hex, the implementation is wrong.
+
+------------------------------------------------------------------------------
+8. Conformance
+------------------------------------------------------------------------------
+ACCEPT F001 only if ALL of:
+  - corpus.bin hashes to corpus_root
+  - witness.json is canonical (re-canonicalizing does not change bytes)
+  - fuel derived from table, sums, matches F001.fuel
+  - five legal steps as in §6
+  - result == canonicalize(apply(unify(query, fact), ($p $q)))
+  - recomputed accepted_digest == F001.accepted_digest
+
+Otherwise REJECT with a machine-readable reason token.
+No implementation may ACCEPT a mutant in fixtures/F001/mutants/.

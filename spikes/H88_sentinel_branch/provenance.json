@@ -1,19 +1,18 @@
 {
  "spike": "H88_sentinel_branch",
- "recorded_utc": "2026-08-18T10:52:26Z",
+ "recorded_utc": "2026-08-18T11:02:05Z",
  "note": "H88: a sentinel computed, documented as \"not clear\", and read by the one branch that could not tell it from clear. Two-sided against the pre-fix copy.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/H88_sentinel_branch",
-   "head": "9f82039adfc866fa2374f6d45636f1d686808e87",
+   "head": "380a7335798b60d3af7068c00b9616bca086bd04",
    "clean": false,
    "dirty_files": [
-    "spikes/H88_sentinel_branch/certify_h88.py",
     "spikes/H88_sentinel_branch/probe.live.out",
     "spikes/H88_sentinel_branch/probe.prefix.out"
    ],
-   "diff_sha256": "e07f3c1785a2526aab73720d32c3767876a167f8993942ffd7b5c051f80811a4",
-   "diff_bytes": 6053
+   "diff_sha256": "7808eb8c6d768768662cf2f001501faf793afc5304840198012d124b05e0147f",
+   "diff_bytes": 3484
   }
  ],
  "manifests": {
@@ -26,25 +25,25 @@
  "artifacts": [
   {
    "path": "probe.prefix.out",
-   "sha256": "d006fb96391f161104ff9d2d7cf6085a4fb5bbdf31f230007d2487cc81f9933d",
+   "sha256": "8feb71150607308dadd64772e65f96950596e76d177265874c9639f8b774aed0",
    "bytes": 1514,
-   "mtime": 1787050340,
-   "compared_ts": 1787050340,
+   "mtime": 1787050919,
+   "compared_ts": 1787050919,
    "compared_clock": "mtime"
   },
   {
    "path": "probe.live.out",
-   "sha256": "7ffd18df46ee6c4811abe21972fa419b1f654894d10b3229d9628294f7b4891f",
+   "sha256": "c1f6571c114f8293a2713f07264ea12a0778459e458db85fa3007a4974861ef3",
    "bytes": 1429,
-   "mtime": 1787050341,
-   "compared_ts": 1787050341,
+   "mtime": 1787050920,
+   "compared_ts": 1787050920,
    "compared_clock": "mtime"
   },
   {
    "path": "falsify.out",
    "sha256": "763d4426ae9859c0cc792f190154f8992e690133b8f0eae84dc9db7911d0ba24",
    "bytes": 135,
-   "mtime": 1787050344,
+   "mtime": 1787050923,
    "compared_ts": 1787050142,
    "compared_clock": "regenerated (mtime >= newest source mtime)"
   },
@@ -52,7 +51,7 @@
    "path": "run.out",
    "sha256": "80bda5f0ce9c3c5cb7923324d084761314687cad626a2529fe2d046037ddcca9",
    "bytes": 183,
-   "mtime": 1787050346,
+   "mtime": 1787050925,
    "compared_ts": 1787050142,
    "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
@@ -157,8 +156,8 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/H88_sentinel_branch": {
-   "newest": 1787050339,
-   "from": "spikes/H88_sentinel_branch/certify_h88.py"
+   "newest": 1787050424,
+   "from": "<HEAD commit>"
   }
  },
  "problems": [],

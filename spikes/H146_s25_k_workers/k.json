@@ -1,0 +1,11 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "serial": "R5CY93675MK",
+  "n_per_worker": 200,
+  "k": {
+    "1": {"wall_s": 1.640, "jobs": 200, "jobs_per_s": 122.0},
+    "2": {"wall_s": 1.866, "jobs": 400, "jobs_per_s": 214.4},
+    "4": {"wall_s": 2.757, "jobs": 800, "jobs_per_s": 290.2}
+  },
+  "note": "Do not compare walls across k (job count changes). Throughput 1→2 is 1.76x, 2→4 is 1.35x. Diminishing, not dead."
+}

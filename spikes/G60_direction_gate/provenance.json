@@ -1,0 +1,214 @@
+{
+ "spike": "G60_direction_gate",
+ "recorded_utc": "2026-08-19T01:59:18Z",
+ "note": "G60: direction-split valid gate on official FB15k-237. Literature unavailable.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G60_direction_gate/dir_gate.py",
+   "sha256": "123f9bdbad9294c254bc2999358ccc8b49946e2decaaea631c85c26465a928c2",
+   "bytes": 10947,
+   "mtime": 1787104303,
+   "compared_ts": 1787104303,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G60_direction_gate/dir_gate.json",
+   "sha256": "c5d608ca330070cd493dfc567e793922132097ac639a99a99cd9b53b92848841",
+   "bytes": 3454,
+   "mtime": 1787104758,
+   "compared_ts": 1787104758,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong file",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "n": 20466
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "same-pair leak 0",
+   "can_fail_because": "loader mixed splits",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "leak": 0
+   }
+  },
+  {
+   "name": "C3_pred_gate_repro",
+   "must_fire_because": "predicate gate reproduces G59 0.2679",
+   "can_fail_because": "G51/G54 scorer drifted",
+   "null_must_contain": "gated MRR != 0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2679,
+    "ref": 0.2679
+   }
+  },
+  {
+   "name": "C4_npred",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "dict unpack wrong",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "npred": 237
+   }
+  },
+  {
+   "name": "C5_hashed",
+   "must_fire_because": "dir mask hashed before test apply",
+   "can_fail_because": "missing sha",
+   "null_must_contain": "empty sha256",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "sha256": "748bde7f7b10f820a222b36f66e7591034f41f11bc8ca7c6aedd876d61893d91"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_dir_gate_does_not_beat_pred_gate",
+   "must_fire_because": null,
+   "can_fail_because": "dir_gate <= pred_gate",
+   "null_must_contain": "signed dir-pred delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "dir_mrr": 0.2679,
+    "pred_mrr": 0.2679,
+    "delta": 0.0,
+    "fired": true,
+    "description": "Fires if (p,direction) gate MRR <= predicate gate. Signed."
+   },
+   "refutes": "that gating per direction raises official-test MRR",
+   "fires_when": "dir_gate <= pred_gate",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_dir_gate_does_not_lift_head",
+   "must_fire_because": null,
+   "can_fail_because": "dir_head <= pred_head",
+   "null_must_contain": "signed head delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "dir_head": 0.1707,
+    "pred_head": 0.1703,
+    "delta": 0.0004,
+    "fired": false,
+    "description": "Fires if dir-gate head <= pred-gate head 0.1703. Signed."
+   },
+   "refutes": "that a per-direction gate closes the official-test head gap",
+   "fires_when": "dir_head <= pred_head",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_dir_gate_does_not_beat_pred_gate"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "per-(p,direction) valid-gate does not beat G59 predicate gate AND does not raise official-test head MRR"
+}

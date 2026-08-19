@@ -1,0 +1,164 @@
+{
+ "spike": "H162_iroh_vs_http_duel",
+ "recorded_utc": "2026-08-19T14:48:10Z",
+ "note": "H162: Transport Duel \u2014 Iroh (QUIC/BLAKE3) vs HTTP/1.1 (TCP/CIDv1).",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/store",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S87_content_addressed_corpus/store/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/store",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S88_wn18rr_ingestion/store/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/store": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/store": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H162_iroh_vs_http_duel/result.json",
+   "sha256": "4fd770eeb5e9e869ad3754f5077bf93206f5ddf8eb8af1ce556a987ab0cb44f3",
+   "bytes": 1483,
+   "mtime": 1787150890,
+   "compared_ts": 1787150890,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_all_shards_verified",
+   "must_fire_because": "All 248 shards streamed and verified over HTTP",
+   "can_fail_because": "CID mismatch or network drop",
+   "null_must_contain": "HTTP verification failure",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "verified_shards": 248,
+    "expected": 248
+   }
+  },
+  {
+   "name": "C2_bao_bandwidth_reduction",
+   "must_fire_because": "BLAKE3 Bao achieves >95% bandwidth reduction for spot-checks",
+   "can_fail_because": "inefficient proof size",
+   "null_must_contain": "poor proof compression",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "bandwidth_saved_pct": 95.34
+   }
+  },
+  {
+   "name": "C3_footprint_measured",
+   "must_fire_because": "Iroh stack is >10x larger than stdlib HTTP agent",
+   "can_fail_because": "unrealistic binary model",
+   "null_must_contain": "footprint model error",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "footprint_ratio": 57.4
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_http_low_throughput",
+   "must_fire_because": null,
+   "can_fail_because": "http_mb_s < 50.0",
+   "null_must_contain": "HTTP throughput too low",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "http_mb_s": 149.16
+   },
+   "refutes": "that HTTP/1.1 achieves >50 MB/s streaming",
+   "fires_when": "http_mb_s < 50.0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_bao_proof_failure",
+   "must_fire_because": null,
+   "can_fail_because": "bandwidth_saved_pct <= 90.0",
+   "null_must_contain": "Bao proof too large",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "bandwidth_saved_pct": 95.34
+   },
+   "refutes": "that BLAKE3 verified ranges save >90% bandwidth on 4 KB spot checks",
+   "fires_when": "bandwidth_saved_pct <= 90.0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_footprint_delta_small",
+   "must_fire_because": null,
+   "can_fail_because": "footprint_ratio < 10.0",
+   "null_must_contain": "footprint delta small",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "footprint_ratio": 57.4
+   },
+   "refutes": "that stdlib HTTP has >10x smaller binary footprint than Iroh",
+   "fires_when": "footprint_ratio < 10.0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/store": {
+   "newest": 1787150889,
+   "from": "spikes/S87_content_addressed_corpus/store/index.db"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/store": {
+   "newest": 1787150889,
+   "from": "spikes/S88_wn18rr_ingestion/store/index.db"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Transport duel benchmark fails verification or comparison"
+}

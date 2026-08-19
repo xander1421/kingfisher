@@ -1,0 +1,235 @@
+{
+ "spike": "G61_head_analog",
+ "recorded_utc": "2026-08-19T02:28:59Z",
+ "note": "G61: official-split head entropy + head-only analogical residual.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G61_head_analog/head_analog.py",
+   "sha256": "bbfca4b8d0448b3677e01d876fa5881e6c84dd697951334b1b971a6aef115784",
+   "bytes": 15204,
+   "mtime": 1787105874,
+   "compared_ts": 1787105874,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G61_head_analog/head_analog.json",
+   "sha256": "da6ee7f9e5939048d3305606e013f6181b16c3eea5340cae9c5b6b80fc14ebc0",
+   "bytes": 3727,
+   "mtime": 1787106539,
+   "compared_ts": 1787106539,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "official leak 0",
+   "can_fail_because": "id packing broke pairs",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_pred_gate_repro",
+   "must_fire_because": "G59 pred-gate 0.2679",
+   "can_fail_because": "gate or scorer drifted",
+   "null_must_contain": "mrr!=0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.2679,
+    "observed": 0.2679,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_237",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "vocab broken",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "npred": 237,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_train_hash",
+   "must_fire_because": "same official train file as G59",
+   "can_fail_because": "corpus swapped",
+   "null_must_contain": "hash prefix miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_head_is_not_flatter",
+   "must_fire_because": null,
+   "can_fail_because": "median H_sub <= median H_obj",
+   "null_must_contain": "subjects not flatter",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "median_h_sub": 4.8087,
+    "median_h_obj": 3.882,
+    "fired": false,
+    "description": "Fires if median H(subject|p) <= median H(object|p)"
+   },
+   "refutes": "that head is the higher-entropy side",
+   "fires_when": "median H_sub <= median H_obj",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_head_analog_not_better_prior",
+   "must_fire_because": null,
+   "can_fail_because": "head analog-only \u2212 head prior < +0.005",
+   "null_must_contain": "signed delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "head_analog_only": 0.1453,
+    "head_prior": 0.1363,
+    "delta": 0.009,
+    "bar": 0.005,
+    "fired": false,
+    "description": "Fires if head-analog-only does not beat head prior by +0.005"
+   },
+   "refutes": "that analogical is a better head prior",
+   "fires_when": "head analog-only \u2212 head prior < +0.005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_headline_does_not_beat_g59",
+   "must_fire_because": null,
+   "can_fail_because": "headline <= 0.2679",
+   "null_must_contain": "signed delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "headline_mrr": 0.268,
+    "g59_gated": 0.2679,
+    "delta": 0.0001,
+    "fired": false,
+    "description": "Fires if gated+head-analog <= G59 0.2679. Signed."
+   },
+   "refutes": "that head-analog raises official gated MRR",
+   "fires_when": "headline <= 0.2679",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "head is not flatter OR analog is not a better head prior OR headline does not beat 0.2679",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

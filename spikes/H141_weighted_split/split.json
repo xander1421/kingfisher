@@ -1,0 +1,27 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "one_one": {
+    "s25_n": 200,
+    "s24_n": 200,
+    "s25_s": 1.5559115830037626,
+    "s24_s": 5.380112457998621,
+    "wall_s": 5.38185029199667
+  },
+  "three_one": {
+    "s25_n": 300,
+    "s24_n": 100,
+    "s25_s": 2.326261041998805,
+    "s24_s": 2.5539959170055226,
+    "wall_s": 2.5564291669943486
+  },
+  "s25_only_400_s": 3.0235484579970944,
+  "weighted_vs_one_one": 0.47500934219519353,
+  "retracted_prior": {
+    "one_one_wall_s": 6.8744451660022605,
+    "three_one_wall_s": 5.173469625005964,
+    "s25_only_400_s": 3.2467931669962127,
+    "weighted_vs_one_one": 0.7525654071097239,
+    "why": "tuple of submit().result() evaluated left-to-right; walls were sums. Replaced by H148 submit-all on the same pair."
+  },
+  "source": "spikes/H148_fleet_scale/fleet.json same run"
+}

@@ -1,0 +1,107 @@
+{
+ "spike": "H154_lan3",
+ "recorded_utc": "2026-08-19T00:31:22Z",
+ "note": "H154: 3 physical devices, LAN HTTP, no adb reverse. Not iroh. operator=1.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H154_lan3/lan3.json",
+   "sha256": "186e7b3f06361a2290a3b1295a500fdee206fcc4c1d70a171528504d5e1561b2",
+   "bytes": 5043,
+   "mtime": 1787099389
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "three_workers_same_pin",
+   "must_fire_because": "host-darwin + phone-s25 + phone-s24 each ACCEPT 590d8769 over LAN",
+   "can_fail_because": "fewer than 3 workers, or any envelope digest != pin",
+   "null_must_contain": "a worker set that can miss a name or a digest",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "workers": [
+     "host-darwin",
+     "phone-s24",
+     "phone-s25"
+    ],
+    "accepted_pin": 12,
+    "queued": 12
+   }
+  },
+  {
+   "name": "transport_is_lan_not_adb_reverse",
+   "must_fire_because": "phones dial the LAN address; unauth is 401; bind is not 0.0.0.0",
+   "can_fail_because": "job_peers include 127.0.0.1, reverse set, unauth != 401, bind 0.0.0.0",
+   "null_must_contain": "127.0.0.1 peers, empty reverse list, or HTTP 200 unauth",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "job_peers": [
+     "192.168.1.20",
+     "192.168.1.21",
+     "192.168.1.25"
+    ],
+    "unauth": [
+     "401",
+     "401"
+    ],
+    "bind": "192.168.1.25",
+    "shard_bytes": 491520
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "not_three_device_lan",
+   "must_fire_because": null,
+   "can_fail_because": "workers < 3 OR accepted_pin < queued OR phone peer is 127.0.0.1 OR unauth != 401",
+   "null_must_contain": "worker counts, peer IPs, and HTTP codes that can fail each check",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "workers": [
+     "host-darwin",
+     "phone-s24",
+     "phone-s25"
+    ],
+    "accepted": 12,
+    "peers": [
+     "192.168.1.20",
+     "192.168.1.21",
+     "192.168.1.25"
+    ],
+    "unauth": [
+     "401",
+     "401"
+    ]
+   },
+   "refutes": "3-device LAN run missing a worker, pin, or used adb reverse",
+   "fires_when": "workers < 3 OR accepted_pin < queued OR phone peer is 127.0.0.1 OR unauth != 401",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "live LAN F001 on 3 machines; no elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "fewer than 3 workers ACCEPT 590d8769, or a phone peer is 127.0.0.1, or unauth is not 401",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

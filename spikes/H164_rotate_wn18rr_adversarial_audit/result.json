@@ -1,0 +1,117 @@
+{
+  "spike": "H164",
+  "timestamp": "2026-08-19 16:04:59",
+  "elapsed_sec": 186.53,
+  "honest_metrics": {
+    "mrr": 0.3546,
+    "top_predicate": "_derivationally_related_form",
+    "top_predicate_share_pct": 90.95
+  },
+  "attacks": {
+    "A1_hub_concentration": {
+      "max_predicate_share_pct": 90.95,
+      "threshold_pct": 60.0,
+      "passed": false
+    },
+    "A2_phase_randomization": {
+      "shuffled_mrr": 0.002,
+      "honest_mrr": 0.3546,
+      "mrr_drop": 0.3526,
+      "passed": true
+    },
+    "A3_unit_modulus": {
+      "max_modulus_error": 1.1920928955078125e-07,
+      "passed": true
+    }
+  },
+  "predicate_breakdown": {
+    "_hypernym": {
+      "queries": 2502,
+      "mrr": 0.0122,
+      "mrr_mass": 30.47,
+      "mass_share_pct": 1.37
+    },
+    "_derivationally_related_form": {
+      "queries": 2148,
+      "mrr": 0.9412,
+      "mrr_mass": 2021.68,
+      "mass_share_pct": 90.95
+    },
+    "_member_meronym": {
+      "queries": 506,
+      "mrr": 0.0404,
+      "mrr_mass": 20.42,
+      "mass_share_pct": 0.92
+    },
+    "_has_part": {
+      "queries": 344,
+      "mrr": 0.0178,
+      "mrr_mass": 6.12,
+      "mass_share_pct": 0.28
+    },
+    "_instance_hypernym": {
+      "queries": 244,
+      "mrr": 0.0959,
+      "mrr_mass": 23.4,
+      "mass_share_pct": 1.05
+    },
+    "_synset_domain_topic_of": {
+      "queries": 228,
+      "mrr": 0.0265,
+      "mrr_mass": 6.05,
+      "mass_share_pct": 0.27
+    },
+    "_also_see": {
+      "queries": 112,
+      "mrr": 0.4027,
+      "mrr_mass": 45.1,
+      "mass_share_pct": 2.03
+    },
+    "_verb_group": {
+      "queries": 78,
+      "mrr": 0.8799,
+      "mrr_mass": 68.63,
+      "mass_share_pct": 3.09
+    },
+    "_member_of_domain_region": {
+      "queries": 52,
+      "mrr": 0.0105,
+      "mrr_mass": 0.55,
+      "mass_share_pct": 0.02
+    },
+    "_member_of_domain_usage": {
+      "queries": 48,
+      "mrr": 0.0082,
+      "mrr_mass": 0.4,
+      "mass_share_pct": 0.02
+    },
+    "_similar_to": {
+      "queries": 6,
+      "mrr": 0.0171,
+      "mrr_mass": 0.1,
+      "mass_share_pct": 0.0
+    }
+  },
+  "controls": {
+    "C1_all_relations_audited": {
+      "ok": true
+    },
+    "C2_test_size": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_phase_shuffled_survives": {
+      "fired": false
+    },
+    "F2_unit_modulus_violated": {
+      "fired": false
+    },
+    "F3_hub_concentration_exceeded": {
+      "fired": true
+    }
+  }
+}

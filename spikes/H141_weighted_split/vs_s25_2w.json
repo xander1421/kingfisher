@@ -1,0 +1,7 @@
+{
+  "s25_two_workers_400_s": 1.8525822500014328,
+  "h141_three_one_s": 5.173,
+  "h141_one_one_s": 6.874,
+  "note": "RETRACTED walls (H148). 6.874 and 5.173 were sequential sums, not parallel. Live numbers: spikes/H148_fleet_scale/fleet.json",
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+}

@@ -1,0 +1,243 @@
+{
+ "spike": "W6_incremental_witness",
+ "recorded_utc": "2026-08-17T15:10:51Z",
+ "note": "W6: Incremental Verifier State Maintenance across Epoch Chains. Models O(1) verifier memory (72 B) maintaining Merkle root and sequence chain across N=66 epochs. Certified D6 compliant.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../W2_witnessed_trie",
+   "head": "549b19813bcd7d840d0d9a9d0797e2ffb059729a",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W2_witnessed_trie/trie_witness.py",
+    "spikes/W2_witnessed_trie/witness.json"
+   ],
+   "diff_sha256": "3dc1f5b0ab42930a88608811cc24b2000783425071a7a814d157bd81edb912af",
+   "diff_bytes": 7471
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S73_epoch_commitment",
+   "head": "549b19813bcd7d840d0d9a9d0797e2ffb059729a",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S74_epoch_chain",
+   "head": "549b19813bcd7d840d0d9a9d0797e2ffb059729a",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S57_hyperon_corpus",
+   "head": "549b19813bcd7d840d0d9a9d0797e2ffb059729a",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../W2_witnessed_trie": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S73_epoch_commitment": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S74_epoch_chain": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S57_hyperon_corpus": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/incremental.json",
+   "sha256": "4580c4ff6aafcce3384f8a164e3b3a057767f0c96049bb40ef4f97d63ac039f2",
+   "bytes": 52994,
+   "mtime": 1786979451,
+   "compared_ts": 1786979451,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C_incremental_matches_full_rebuild",
+   "must_fire_because": "incrementally maintained root must exactly match full trie rebuild at every epoch",
+   "can_fail_because": "if apply_insert or fold had an incorrect divergence case",
+   "null_must_contain": "a divergence between fold-forward and full rebuild",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "total_epochs_verified": 66,
+    "final_root": "daf1d148be40a6a5784e70c13daf30b02f579a96e516be04792637903a1298eb"
+   }
+  },
+  {
+   "name": "C_constant_verifier_memory",
+   "must_fire_because": "verifier resident memory must remain strictly 72 bytes across all epochs",
+   "can_fail_because": "if verifier retained prior atoms or subtrie nodes in memory",
+   "null_must_contain": "growing verifier memory with space size",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "memory_bytes_sampled": [
+     72,
+     72,
+     72,
+     72,
+     72,
+     72
+    ],
+    "full_verifier_memory_final": 132871
+   }
+  },
+  {
+   "name": "C_cumulative_bandwidth_beats_full_sync",
+   "must_fire_because": "cumulative witness bandwidth must be strictly less than cumulative full sync bandwidth",
+   "can_fail_because": "if authentication path overhead exceeded cumulative full trie transfers",
+   "null_must_contain": "witness proofs larger than cumulative full space payloads",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "cum_witness_bytes": 1486761,
+    "cum_full_sync_bytes": 6037334,
+    "saving_pct": 75.37
+   }
+  },
+  {
+   "name": "C_corrupted_delta_rejected_atomically",
+   "must_fire_because": "verifier must reject corrupted delta proofs and maintain unmutated root",
+   "can_fail_because": "if non-membership verification failed to detect modified step digests",
+   "null_must_contain": "accepted corrupted proofs",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mutations_tested": 65,
+    "mutations_rejected": 65
+   }
+  },
+  {
+   "name": "C_out_of_order_epoch_rejected",
+   "must_fire_because": "applying an epoch delta proof against a mismatched predecessor root must fail",
+   "can_fail_because": "if verify_insert did not bind the exact root predecessor",
+   "null_must_contain": "epoch proofs valid across different predecessor states",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "out_of_order_applied": false,
+    "predecessor_epoch": 4,
+    "delta_epoch": 6
+   }
+  },
+  {
+   "name": "C_sequence_chain_bound",
+   "must_fire_because": "verifier sequence chain heads must be strictly tracked across all 66 epochs",
+   "can_fail_because": "if chain_step was omitted or disconnected from root advance",
+   "null_must_contain": "untracked or disconnected sequence heads",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "chain_length": 66,
+    "final_chain_head": "ca079ef9a8c26669790af130870eb6d75ce03d827dc5c856161b217875a7df7c"
+   }
+  },
+  {
+   "name": "C_query_on_incremental_root",
+   "must_fire_because": "incremental root must verify downstream membership, non-membership, and completeness queries",
+   "can_fail_because": "if folded root differed from honest trie state",
+   "null_must_contain": "failing queries on incrementally folded root",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "membership": "30/30",
+    "absence": "30/30",
+    "completeness": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F_no_memory_advantage",
+   "must_fire_because": null,
+   "can_fail_because": "verifier memory > 128 bytes or cumulative witness bandwidth >= full sync bandwidth at N >= 20 epochs",
+   "null_must_contain": "a verifier whose memory scales with space size",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "verifier_resident_bytes": 72,
+    "ep20_cum_witness_bw": 524379,
+    "ep20_cum_full_bw": 985884,
+    "saving_pct_at_ep20": 46.81
+   },
+   "refutes": "that incremental witnessed verification provides O(1) memory and sub-quadratic cumulative network scaling",
+   "fires_when": "verifier memory > 128 bytes or cumulative witness bandwidth >= full sync bandwidth at N >= 20 epochs",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../W2_witnessed_trie": {
+   "newest": 1786977076,
+   "from": "spikes/W2_witnessed_trie/witness.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S73_epoch_commitment": {
+   "newest": 1786961862,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S74_epoch_chain": {
+   "newest": 1786962091,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness/../S57_hyperon_corpus": {
+   "newest": 1786923851,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Verifier resident memory exceeds 128 bytes, or cumulative witness bandwidth exceeds cumulative full sync bandwidth for N >= 20 epochs."
+}

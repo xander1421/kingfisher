@@ -1,0 +1,192 @@
+{
+  "spike": "G55",
+  "seed": "0xC0FFEE",
+  "split": "pair_disjoint (0 leak by construction)",
+  "field_order": "p,s,o",
+  "beta": 0.1,
+  "alpha": 0.1,
+  "n_train": 190480,
+  "n_dev_unused": 40818,
+  "n_test": 40817,
+  "n_rules_2hop": 1410,
+  "n_groups": 212110,
+  "headline_arm": "E_stack",
+  "headline_is_test_grid": false,
+  "dev_used_for_anything": false,
+  "arms": {
+    "A_prior": {
+      "mrr": 0.1732,
+      "hits1": 0.1141,
+      "hits3": 0.186,
+      "hits10": 0.2855,
+      "n_queries": 81634
+    },
+    "B_g51": {
+      "mrr": 0.2274,
+      "hits1": 0.1524,
+      "hits3": 0.2547,
+      "hits10": 0.3662,
+      "n_queries": 81634
+    },
+    "C_type_replace": {
+      "mrr": 0.1731,
+      "hits1": 0.1149,
+      "hits3": 0.187,
+      "hits10": 0.2868,
+      "n_queries": 81634
+    },
+    "D_silent_fill": {
+      "mrr": 0.2273,
+      "hits1": 0.1528,
+      "hits3": 0.2547,
+      "hits10": 0.3663,
+      "n_queries": 81634
+    },
+    "E_stack": {
+      "mrr": 0.2228,
+      "hits1": 0.1497,
+      "hits3": 0.2477,
+      "hits10": 0.3633,
+      "n_queries": 81634
+    }
+  },
+  "slices": {
+    "fired": {
+      "n": 61017,
+      "prior": {
+        "mrr": 0.1472,
+        "hits1": 0.0946,
+        "hits3": 0.1554,
+        "hits10": 0.2471,
+        "n_queries": 61017
+      },
+      "g51": {
+        "mrr": 0.2197,
+        "hits1": 0.1459,
+        "hits3": 0.2475,
+        "hits10": 0.3551,
+        "n_queries": 61017
+      },
+      "type": {
+        "mrr": 0.1471,
+        "hits1": 0.0953,
+        "hits3": 0.157,
+        "hits10": 0.2486,
+        "n_queries": 61017
+      },
+      "fill": {
+        "mrr": 0.2197,
+        "hits1": 0.1459,
+        "hits3": 0.2475,
+        "hits10": 0.3551,
+        "n_queries": 61017
+      },
+      "stack": {
+        "mrr": 0.2137,
+        "hits1": 0.1418,
+        "hits3": 0.2382,
+        "hits10": 0.3511,
+        "n_queries": 61017
+      }
+    },
+    "silent": {
+      "n": 20617,
+      "prior": {
+        "mrr": 0.2502,
+        "hits1": 0.1716,
+        "hits3": 0.2763,
+        "hits10": 0.3991,
+        "n_queries": 20617
+      },
+      "g51": {
+        "mrr": 0.2502,
+        "hits1": 0.1716,
+        "hits3": 0.2763,
+        "hits10": 0.3991,
+        "n_queries": 20617
+      },
+      "type": {
+        "mrr": 0.2498,
+        "hits1": 0.173,
+        "hits3": 0.276,
+        "hits10": 0.3997,
+        "n_queries": 20617
+      },
+      "fill": {
+        "mrr": 0.2498,
+        "hits1": 0.173,
+        "hits3": 0.276,
+        "hits10": 0.3997,
+        "n_queries": 20617
+      },
+      "stack": {
+        "mrr": 0.2498,
+        "hits1": 0.173,
+        "hits3": 0.276,
+        "hits10": 0.3997,
+        "n_queries": 20617
+      }
+    }
+  },
+  "silent_g51_minus_prior": 0.0,
+  "fired_g51_minus_prior": 0.0725,
+  "fill_minus_g51": -0.0001,
+  "stack_minus_g51": -0.0046,
+  "type_minus_prior": -0.0001,
+  "field_order_obs": {
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504
+  },
+  "controls": {
+    "C1_prior_reproduction": {
+      "expected_mrr": 0.1732,
+      "observed_mrr": 0.1732,
+      "ok": true
+    },
+    "C2_g51_reproduction": {
+      "expected_mrr": 0.2274,
+      "observed_mrr": 0.2274,
+      "ok": true
+    },
+    "C3_leak_free": {
+      "leak_triples": 0,
+      "ok": true
+    },
+    "C4_field_order": {
+      "ok": true,
+      "declared_order": "p,s,o",
+      "npred": 237,
+      "nent": 14505,
+      "max_p": 236,
+      "max_s": 14503,
+      "max_o": 14504
+    }
+  },
+  "falsifiers": {
+    "F1_no_silent_hole": {
+      "silent_g51_minus_prior": 0.0,
+      "bar": 0.02,
+      "fired": false,
+      "description": "Fires if silent-slice G51 already beats prior by >=0.02 (no hole to fill)"
+    },
+    "F2_silent_fill_does_not_beat_g51": {
+      "fill_mrr": 0.2273,
+      "g51_mrr": 0.2274,
+      "delta": -0.0001,
+      "fired": true,
+      "description": "Fires if silent-fill MRR <= G51. Signed."
+    },
+    "F3_stack_does_not_beat_g51": {
+      "stack_mrr": 0.2228,
+      "g51_mrr": 0.2274,
+      "delta": -0.0046,
+      "fired": true,
+      "description": "Fires if stack MRR <= G51. Signed so a LOSS is visible."
+    }
+  },
+  "elapsed_sec": 319.05
+}

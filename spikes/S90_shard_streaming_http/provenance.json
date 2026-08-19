@@ -1,0 +1,168 @@
+{
+ "spike": "S90_shard_streaming_http",
+ "recorded_utc": "2026-08-19T14:45:40Z",
+ "note": "S90: Content-Addressed Shard Streaming & Remote Verification over Authenticated LAN HTTP.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/store",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S87_content_addressed_corpus/store/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/store",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S88_wn18rr_ingestion/store/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/store": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/store": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S90_shard_streaming_http/result.json",
+   "sha256": "2deef7a9cbadce0a88d2877c15948f21e6988472d2801078be08f8bbdf1c025f",
+   "bytes": 924,
+   "mtime": 1787150740,
+   "compared_ts": 1787150740,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_all_shards_streamed",
+   "must_fire_because": "All 248 predicate shards streamed and verified",
+   "can_fail_because": "missing shards or CID mismatch",
+   "null_must_contain": "shard failure",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_shards": 248,
+    "mismatches": 0
+   }
+  },
+  {
+   "name": "C2_exact_triple_count",
+   "must_fire_because": "Exact 358,950 total training triples recovered (272,115 FB + 86,835 WN)",
+   "can_fail_because": "lost triples",
+   "null_must_contain": "triple count mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "recovered_triples": 358950,
+    "expected": 358950
+   }
+  },
+  {
+   "name": "C3_attacks_passed",
+   "must_fire_because": "All 3 transport attacks handled with sound rejection",
+   "can_fail_because": "security or integrity bypass",
+   "null_must_contain": "attack bypass",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "a1_unauth": true,
+    "a2_corrupt": true,
+    "a3_notfound": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_cid_integrity_mismatch",
+   "must_fire_because": null,
+   "can_fail_because": "len(cid_mismatches) > 0",
+   "null_must_contain": "CID mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "cid_mismatches": []
+   },
+   "refutes": "that all streamed shards match their content-addressed CIDs",
+   "fires_when": "len(cid_mismatches) > 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_unauth_access_allowed",
+   "must_fire_because": null,
+   "can_fail_because": "not a1_ok",
+   "null_must_contain": "unauth request allowed",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "unauth_status": 401
+   },
+   "refutes": "that HTTP endpoint enforces Bearer token authentication",
+   "fires_when": "not a1_ok",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_corruption_undetected",
+   "must_fire_because": null,
+   "can_fail_because": "not a2_ok",
+   "null_must_contain": "corruption undetected",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "corrupted_cid": "bafkreih24hpwyztug3uwmjiwoc3c4airefqyx32k2sye56zbahdtrli2zi",
+    "sample_cid": "bafkreifjwmcrh7z6dcil2zal3lx24c2kwpxvnosnnd44l444qswcjikezq"
+   },
+   "refutes": "that client-side CID verification rejects tampered bytes",
+   "fires_when": "not a2_ok",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S87_content_addressed_corpus/store": {
+   "newest": 1787150739,
+   "from": "spikes/S87_content_addressed_corpus/store/index.db"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/S88_wn18rr_ingestion/store": {
+   "newest": 1787150739,
+   "from": "spikes/S88_wn18rr_ingestion/store/index.db"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Shard streaming over HTTP fails CID verification or security attacks"
+}

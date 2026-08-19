@@ -1,0 +1,43 @@
+{
+  "spike": "S90",
+  "timestamp": "2026-08-19 15:45:40",
+  "elapsed_sec": 0.73,
+  "protocol": "HTTP/1.1 with Bearer Token Authorization",
+  "transport_stats": {
+    "total_shards": 248,
+    "fb15k237_shards": 237,
+    "wn18rr_shards": 11,
+    "total_triples_streamed": 358950,
+    "total_mb_streamed": 21.52,
+    "stream_wall_sec": 0.205,
+    "throughput_mb_s": 104.75,
+    "avg_latency_ms": 0.728
+  },
+  "attacks": {
+    "A1_unauthorized_401": true,
+    "A2_bit_corruption_rejected": true,
+    "A3_nonexistent_cid_404": true
+  },
+  "controls": {
+    "C1_all_shards_streamed": {
+      "ok": true
+    },
+    "C2_exact_triple_count": {
+      "ok": true
+    },
+    "C3_attacks_passed": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_cid_integrity_mismatch": {
+      "fired": false
+    },
+    "F2_unauth_access_allowed": {
+      "fired": false
+    },
+    "F3_corruption_undetected": {
+      "fired": false
+    }
+  }
+}

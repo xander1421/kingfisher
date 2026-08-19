@@ -1,0 +1,232 @@
+{
+ "spike": "G83_f003_draft",
+ "recorded_utc": "2026-08-19T12:47:56Z",
+ "note": "G83: F003_DRAFT named in fragment, not frozen, rust WRONG_FIXTURE_CLASS.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/specs",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures/F003_specv1",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "fixtures/F003_specv1/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/kitchen",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "kitchen/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/specs": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/fixtures/F003_specv1": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/kitchen": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G83_f003_draft/draft.py",
+   "sha256": "e3edb506c7737fd5b671b1d426d9d0cb1da5172c9aa94c0fabaf03ff41d92522",
+   "bytes": 8456,
+   "mtime": 1787143592,
+   "compared_ts": 1787143592,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G83_f003_draft/draft.json",
+   "sha256": "4b4d3bac0f3fe55b208c73ee4c357047ad23b34f246dce3cf8cdf9083335dd0e",
+   "bytes": 1946,
+   "mtime": 1787143676,
+   "compared_ts": 1787143676,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_spec_draft",
+   "must_fire_because": "fragment names F003_DRAFT and not a legal class",
+   "can_fail_because": "spec silent or treats F003 as frozen",
+   "null_must_contain": "F003 missing from spec",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_gate4",
+   "must_fire_because": "Gate 4 line names S25 + real pin; phone-open gone",
+   "can_fail_because": "stale phone-open sentence",
+   "null_must_contain": "Phone F002 still open",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_python_f003",
+   "must_fire_because": "grok_check ACCEPT 0e1edf5b on sidecar",
+   "can_fail_because": "python checker drift",
+   "null_must_contain": "python miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "digest": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5"
+   }
+  },
+  {
+   "name": "C4_rust_wrong_class",
+   "must_fire_because": "rust stays WRONG_FIXTURE_CLASS",
+   "can_fail_because": "rust taught F003",
+   "null_must_contain": "rust ACCEPT",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_pins",
+   "must_fire_because": "F001 590d8769 F002 c43b1eab9db84338",
+   "can_fail_because": "pin move",
+   "null_must_contain": "pin miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_spec_length",
+   "must_fire_because": "KERNEL_FRAGMENT stays 1\u20132 pages",
+   "can_fail_because": "spec bloated past 120 lines",
+   "null_must_contain": "nlines>120",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "nlines": 103,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_rust_accepts_f003",
+   "must_fire_because": null,
+   "can_fail_because": "rust ACCEPT on F003_specv1",
+   "null_must_contain": "rust ACCEPT",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "fires_when": "rust ACCEPT on F003_specv1"
+   },
+   "refutes": "that rust has not been taught F003",
+   "fires_when": "rust ACCEPT on F003_specv1",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_f003_immortal",
+   "must_fire_because": null,
+   "can_fail_because": "F003 key in kitchen/immortal.json",
+   "null_must_contain": "immortal F003",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "fires_when": "F003 key in kitchen/immortal.json"
+   },
+   "refutes": "that F003 is not frozen",
+   "fires_when": "F003 key in kitchen/immortal.json",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_pin_moved",
+   "must_fire_because": null,
+   "can_fail_because": "F001 or F002 pin missing from grok_check",
+   "null_must_contain": "pin miss",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "fires_when": "F001 or F002 pin missing from grok_check"
+   },
+   "refutes": "that F001/F002 pins are unmoved",
+   "fires_when": "F001 or F002 pin missing from grok_check",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/specs": {
+   "newest": 0,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/fixtures/F003_specv1": {
+   "newest": 1787083536,
+   "from": "fixtures/F003_specv1/mutants/M01_tampered_step_fuel/F003.witness.json"
+  },
+  "/Users/victorianikolenko/kingfisher/kitchen": {
+   "newest": 1787143579,
+   "from": "kitchen/test_g83.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "rust ACCEPT F003, or F003 frozen, or F001/F002 pin moves"
+}

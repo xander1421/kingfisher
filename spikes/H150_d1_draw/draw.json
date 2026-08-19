@@ -1,0 +1,65 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "concession": "coordinator holds REG_e, beacon_e, and can bias every draw",
+  "no_chain": true,
+  "r3_scoped_out": true,
+  "f5_live": true,
+  "rows": {
+    "0.05": {
+      "stake_share": 0.2,
+      "duty_honest": 0.05,
+      "n_jobs": 4000,
+      "k": 3,
+      "first_offer_adv": 0.20258333333333334,
+      "accepted_adv": 0.8555833333333334,
+      "online_set_adv": 0.8556666666666667,
+      "decliner_accepted_adv": 0.0,
+      "n_first": 12000,
+      "n_ack": 12000,
+      "n_on": 12000,
+      "n_dec": 3224
+    },
+    "0.10": {
+      "stake_share": 0.2,
+      "duty_honest": 0.1,
+      "n_jobs": 4000,
+      "k": 3,
+      "first_offer_adv": 0.20258333333333334,
+      "accepted_adv": 0.74375,
+      "online_set_adv": 0.752,
+      "decliner_accepted_adv": 0.0,
+      "n_first": 12000,
+      "n_ack": 12000,
+      "n_on": 12000,
+      "n_dec": 6101
+    },
+    "0.25": {
+      "stake_share": 0.2,
+      "duty_honest": 0.25,
+      "n_jobs": 4000,
+      "k": 3,
+      "first_offer_adv": 0.20258333333333334,
+      "accepted_adv": 0.5249166666666667,
+      "online_set_adv": 0.526,
+      "decliner_accepted_adv": 0.0,
+      "n_first": 12000,
+      "n_ack": 12000,
+      "n_on": 12000,
+      "n_dec": 10947
+    }
+  },
+  "f1_first_offer_tracks_stake": true,
+  "null_online_set_captures": true,
+  "f2_decliner_cannot_raise": true,
+  "f2b_accepted_exceeds_stake": true,
+  "f3": {
+    "stable_across_calls": true,
+    "beacon_moves_seed": true,
+    "device_id_not_in_seed_input": true
+  },
+  "f4": {
+    "same_draws_on_frozen": true,
+    "root_moves_if_not_frozen": true,
+    "seed_moves_if_not_frozen": true
+  }
+}

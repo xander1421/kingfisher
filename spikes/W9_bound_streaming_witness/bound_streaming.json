@@ -1,0 +1,123 @@
+{
+  "adversarial_audit": {
+    "bound_fork_rejected": true,
+    "bound_inflation_defeated": true,
+    "mismatch_rejected": true,
+    "unbound_fork_vulnerable": true,
+    "unbound_inflation_vulnerable": true
+  },
+  "continuous_reduction_stream": {
+    "all_72b": true,
+    "final_live_atoms": 308,
+    "final_root": "2e8132b588e8efb1dbade3c2ac55665b69bb8813f44a91877f61d0b8b8f28835",
+    "mean_us": 120.1,
+    "median_us": 38.5,
+    "p95_us": 75.04,
+    "total_stream_events": 1001
+  },
+  "downstream_queries": {
+    "absence_tested": 30,
+    "absence_verified": 30,
+    "completeness_verified": true,
+    "membership_tested": 30,
+    "membership_verified": 30
+  },
+  "falsifier_fired": true,
+  "seed": 20260818,
+  "sqlite_shardstore_stream": {
+    "final_chain_head": "4609c3f91fcffe3a1ff5dbc9895cf0b74c067a9e1bfa65a4f3f69f7fc2640fa6",
+    "final_live_atoms": 1218,
+    "final_root": "d91f57d71361495b310616f3447369ed62eb85f11d47346c67f24892c631ad50",
+    "mean_latency_us": 1163.44,
+    "median_latency_us": 508.71,
+    "p95_latency_us": 3610.04,
+    "sampled_records": [
+      {
+        "added_atoms": 57,
+        "bandwidth_saving_pct": -520.68,
+        "chain_head": "5e71164ca0e9a9d6112eeff065fbccc19e3c403037f449efdf097a36e65e6f37",
+        "cid": "bafkreidothpen7fnrbo5qjka67fpkc7mrm5mok34lyxwhf5rll5wdz6bk4",
+        "cum_full_snapshot_bytes": 2558,
+        "cum_witness_bytes": 15877,
+        "full_space_bytes": 2558,
+        "hash_bytes": 49508,
+        "hash_calls": 573,
+        "live_atoms": 58,
+        "root": "5df50e7f8e2ea4c59ecdf25930a5dc33fffd60d6be97c4ef179c0e0854c4d31b",
+        "seq": 1,
+        "shard_witness_bytes": 15877,
+        "transition_time_us": 1489.83,
+        "verifier_memory_bytes": 72
+      },
+      {
+        "added_atoms": 75,
+        "bandwidth_saving_pct": -47.37,
+        "chain_head": "53a51f0cc0266843c44e697ddc0ae90eee61a9636d1bfd1d54c9b28087e0ad96",
+        "cid": "bafkreigrqe5ddubfc33f3ukco4blkm2qw652zkrko5bwmso7wwndenqyca",
+        "cum_full_snapshot_bytes": 218234,
+        "cum_witness_bytes": 321614,
+        "full_space_bytes": 78823,
+        "hash_bytes": 62393,
+        "hash_calls": 550,
+        "live_atoms": 446,
+        "root": "5ef115ac525ff81265e5398326aed9750374840db1a594cb12bda77378adaf32",
+        "seq": 10,
+        "shard_witness_bytes": 20020,
+        "transition_time_us": 1573.44,
+        "verifier_memory_bytes": 72
+      },
+      {
+        "added_atoms": 5,
+        "bandwidth_saving_pct": 62.72,
+        "chain_head": "26fa6d41529dae530236278e4f356c94bc66e1f1b3896437841a65f7c2961d30",
+        "cid": "bafkreibydeqy77wlnjw3oxehsogcuftekfdb2tfkk5qxrvgzi3nwq2wob4",
+        "cum_full_snapshot_bytes": 1033672,
+        "cum_witness_bytes": 385304,
+        "full_space_bytes": 84254,
+        "hash_bytes": 11711,
+        "hash_calls": 70,
+        "live_atoms": 534,
+        "root": "f9412671cf734f5fa22f64cdcd7a923cbd302345c34612c3eb12faca68f9726a",
+        "seq": 20,
+        "shard_witness_bytes": 4835,
+        "transition_time_us": 236.67,
+        "verifier_memory_bytes": 72
+      },
+      {
+        "added_atoms": 19,
+        "bandwidth_saving_pct": 76.84,
+        "chain_head": "a74979fd6c915b00775fb2ae7f052cf70a83d06a7844b5154b60f9bd8dc4b2d5",
+        "cid": "bafkreifwu422wxyryites3efwldigswmgy5gobkqvac6jb4cuy5ezvh2za",
+        "cum_full_snapshot_bytes": 2901232,
+        "cum_witness_bytes": 671863,
+        "full_space_bytes": 102538,
+        "hash_bytes": 66747,
+        "hash_calls": 370,
+        "live_atoms": 809,
+        "root": "3e0040fb50c980a52363344ed6e7cdbd18d81db30914b340838290ec37ca6470",
+        "seq": 40,
+        "shard_witness_bytes": 26683,
+        "transition_time_us": 2140.54,
+        "verifier_memory_bytes": 72
+      },
+      {
+        "added_atoms": 18,
+        "bandwidth_saving_pct": 77.4,
+        "chain_head": "4609c3f91fcffe3a1ff5dbc9895cf0b74c067a9e1bfa65a4f3f69f7fc2640fa6",
+        "cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
+        "cum_full_snapshot_bytes": 5642995,
+        "cum_witness_bytes": 1275568,
+        "full_space_bytes": 129062,
+        "hash_bytes": 46863,
+        "hash_calls": 261,
+        "live_atoms": 1218,
+        "root": "d91f57d71361495b310616f3447369ed62eb85f11d47346c67f24892c631ad50",
+        "seq": 63,
+        "shard_witness_bytes": 18816,
+        "transition_time_us": 1249.42,
+        "verifier_memory_bytes": 72
+      }
+    ],
+    "total_shards_processed": 63
+  }
+}

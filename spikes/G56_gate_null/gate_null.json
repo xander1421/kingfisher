@@ -1,0 +1,110 @@
+{
+  "spike": "G56",
+  "seed": "0xC0FFEE",
+  "split": "pair_disjoint",
+  "n_train": 190480,
+  "n_dev": 40818,
+  "n_test": 40817,
+  "n_rules_2hop": 1410,
+  "n_rand": 1000,
+  "h_median": 3.7367807727729256,
+  "arms": {
+    "A_prior": {
+      "mrr": 0.1732,
+      "hits1": 0.1141,
+      "hits3": 0.186,
+      "hits10": 0.2855,
+      "n_queries": 81634
+    },
+    "B_g51": {
+      "mrr": 0.2274,
+      "hits1": 0.1524,
+      "hits3": 0.2547,
+      "hits10": 0.3662,
+      "n_queries": 81634
+    },
+    "C_dev_gated": {
+      "mrr": 0.2313,
+      "hits1": 0.1535,
+      "hits3": 0.2585,
+      "hits10": 0.3783,
+      "n_queries": 81634
+    },
+    "D_entropy_gated": {
+      "mrr": 0.2235,
+      "hits1": 0.15,
+      "hits3": 0.249,
+      "hits10": 0.3611,
+      "n_queries": 81634
+    }
+  },
+  "gate": {
+    "sha256": "12a58f76160a4f1f9c92796de2491783b643ce429f597df2b7be2472c75e497a",
+    "n_g51_on": 132,
+    "n_g51_off": 105,
+    "n_eligible": 235
+  },
+  "null": {
+    "n": 1000,
+    "median": 0.2031,
+    "p95": 0.2192,
+    "min": 0.1792,
+    "max": 0.2272,
+    "true_gated": 0.2313,
+    "n_random_ge_true": 0,
+    "pctile_ge": 0.0
+  },
+  "dev_gated_minus_g51": 0.0039,
+  "entropy_minus_g51": -0.0039,
+  "field_order_obs": {
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504
+  },
+  "controls": {
+    "C1_prior": {
+      "ok": true,
+      "mrr": 0.1732
+    },
+    "C2_g51": {
+      "ok": true,
+      "mrr": 0.2274
+    },
+    "C3_leak": {
+      "ok": true,
+      "leak": 0
+    },
+    "C4_field_order": {
+      "ok": true,
+      "npred": 237,
+      "nent": 14505,
+      "max_p": 236,
+      "max_s": 14503,
+      "max_o": 14504
+    },
+    "C5_reproduces_g54_gated": {
+      "ok": true,
+      "gated": 0.2313,
+      "g54": 0.2313
+    }
+  },
+  "falsifiers": {
+    "F1_gated_is_selection_noise": {
+      "pctile_ge": 0.0,
+      "p95_null": 0.2192,
+      "true": 0.2313,
+      "fired": false,
+      "description": "Fires if DEV-gated is not above the 95th percentile of same-size random masks"
+    },
+    "F2_entropy_gate_does_not_beat_g51": {
+      "entropy_mrr": 0.2235,
+      "g51_mrr": 0.2274,
+      "delta": -0.0039,
+      "fired": true,
+      "description": "Fires if train-entropy hard gate MRR <= G51. Signed."
+    }
+  },
+  "elapsed_sec": 287.48
+}

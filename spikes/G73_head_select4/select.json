@@ -1,0 +1,205 @@
+{
+  "spike": "G73",
+  "split": "official FB15k-237 train/valid/test",
+  "field_order": "p,s,o",
+  "headline_arm": "F_valid_select_head",
+  "headline_is_test_grid": false,
+  "quoted_new_high": false,
+  "literature_compare": "unavailable",
+  "g67_0.2706_is_not_this_row": true,
+  "note": "G67 0.2706 was {g51_gated, AA, prior} without analog_only",
+  "n_test": 20466,
+  "npred": 237,
+  "n_rules_2hop": 2201,
+  "n_head": 20466,
+  "n_d_head_analog_only": 20466,
+  "n_e_head_aa": 20466,
+  "replace_used_analog_only": true,
+  "replace_used_aa": true,
+  "n_analog_only_eq_g51_head": 3487,
+  "n_analog_only_eq_prior_head": 8503,
+  "head_keys": [
+    "g51_gated",
+    "analog_only",
+    "aa",
+    "prior"
+  ],
+  "graph": {
+    "kind": "simple_undirected",
+    "predicate_ignored": true,
+    "n_nodes": 14505,
+    "n_edges": 210946,
+    "mean_deg": 29.086,
+    "aa_formula": "sum_{z in N(s)\u2229N(o)} 1/log(1+deg(z))",
+    "log": "natural",
+    "cn_formula": "|N(s)\u2229N(o)|"
+  },
+  "pred_gate": {
+    "sha256": "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+    "n_on": 157,
+    "n_off": 66
+  },
+  "head_choice": {
+    "sha256": "6b16b2d9ad6ddb0e3ffea73275d91eca16e2c4d4d259807da1b7e0cac5852b27",
+    "counts": {
+      "aa": 30,
+      "g51_gated": 167,
+      "analog_only": 25,
+      "prior": 1
+    },
+    "n_predicates": 223,
+    "n_test_queries_by_choice": {
+      "g51_gated": 9948,
+      "analog_only": 3928,
+      "aa": 6559,
+      "prior": 31
+    }
+  },
+  "arms": {
+    "A_prior": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "B_g51": {
+      "mrr": 0.2585,
+      "hits1": 0.1898,
+      "hits3": 0.281,
+      "hits10": 0.3837,
+      "n_queries": 40932
+    },
+    "C_valid_gated": {
+      "mrr": 0.2679,
+      "hits1": 0.1951,
+      "hits3": 0.2922,
+      "hits10": 0.4037,
+      "n_queries": 40932
+    },
+    "D_global_analog_only_head": {
+      "mrr": 0.2554,
+      "hits1": 0.1874,
+      "hits3": 0.2773,
+      "hits10": 0.3855,
+      "n_queries": 40932
+    },
+    "E_global_aa_head": {
+      "mrr": 0.25,
+      "hits1": 0.1759,
+      "hits3": 0.2751,
+      "hits10": 0.3887,
+      "n_queries": 40932
+    },
+    "F_valid_select_head": {
+      "mrr": 0.2714,
+      "hits1": 0.1963,
+      "hits3": 0.2984,
+      "hits10": 0.4126,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "head": {
+      "prior": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      },
+      "g51": {
+        "mrr": 0.1645,
+        "hits1": 0.1067,
+        "hits3": 0.1771,
+        "hits10": 0.2695,
+        "n_queries": 20466
+      },
+      "gated": {
+        "mrr": 0.1703,
+        "hits1": 0.1094,
+        "hits3": 0.1833,
+        "hits10": 0.2827,
+        "n_queries": 20466
+      },
+      "analog_only": {
+        "mrr": 0.1453,
+        "hits1": 0.0941,
+        "hits3": 0.1536,
+        "hits10": 0.2464,
+        "n_queries": 20466
+      },
+      "aa": {
+        "mrr": 0.1344,
+        "hits1": 0.0709,
+        "hits3": 0.1491,
+        "hits10": 0.2527,
+        "n_queries": 20466
+      },
+      "valid_select": {
+        "mrr": 0.1774,
+        "hits1": 0.1117,
+        "hits3": 0.1958,
+        "hits10": 0.3004,
+        "n_queries": 20466
+      }
+    }
+  },
+  "controls": {
+    "C1_test_n": {
+      "n": 20466,
+      "ok": true
+    },
+    "C2_leak": {
+      "leak": 0,
+      "ok": true
+    },
+    "C3_pred_gate_repro": {
+      "expected": 0.2679,
+      "observed": 0.2679,
+      "ok": true
+    },
+    "C4_237": {
+      "npred": 237,
+      "ok": true
+    },
+    "C5_select_mask": {
+      "sha256": "6b16b2d9ad6ddb0e3ffea73275d91eca16e2c4d4d259807da1b7e0cac5852b27",
+      "hashed_before_test": true,
+      "ok": true
+    },
+    "C6_analog_only_head": {
+      "expected": 0.1453,
+      "observed": 0.1453,
+      "residual_on_prior_is": 0.1398,
+      "ok": true
+    },
+    "C7_aa_head": {
+      "expected": 0.1344,
+      "observed": 0.1344,
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_global_analog_only_replace_loses": {
+      "d_mrr": 0.2554,
+      "bar": 0.2679,
+      "fired": true,
+      "description": "Fires if D global analog_only-head replace MRR <= 0.2679"
+    },
+    "F2_select_not_plus005": {
+      "f_mrr": 0.2714,
+      "g59": 0.2679,
+      "delta": 0.0035,
+      "fired": true,
+      "description": "Fires if F - 0.2679 < 0.005"
+    },
+    "F3_analog_only_head_miss": {
+      "analog_only_head": 0.1453,
+      "g59_head": 0.1703,
+      "fired": true,
+      "description": "Fires if analog_only head MRR <= gated head 0.1703"
+    }
+  },
+  "elapsed_sec": 243.95
+}

@@ -1,0 +1,49 @@
+loop_gate.sh contract:
+  PASS  no signal refuses the stop
+  PASS  per-lane signal ends turn
+  PASS    leaves exit marker
+  PASS    consumes the signal
+  PASS  bare signal is REFUSED
+  PASS    no marker written
+  PASS  L2 cannot exit on a bare signal
+  PASS    L1 can still exit properly
+  PASS  malformed signal refuses
+  PASS    malformed is removed
+  PASS  other lane cannot consume
+  PASS    victim's signal intact
+  PASS    no marker leaked to L2
+  PASS  fuses count per lane
+  PASS  fuse releases the loop
+  PASS    fuse marker written
+  PASS  STOP outranks the contract
+  PASS  no callsign is not gated
+  PASS    writes no 'unknown' fuse
+  PASS    writes no 'unknown' marker
+  PASS    writes no fuse at all
+  PASS  no callsign cannot steal exit
+  PASS    lane signal untouched
+  KNOWN  fuse undercounts under concurrency: 12/20 (unsynchronised RMW, WORK_QUEUE H13)
+  PASS  corrupt fuse file recovers
+  PASS  reg .claude/settings.json resolves to an executable
+  PASS  reg spikes/S51_multicore/.claude/settings.json resolves to an executable
+  PASS  refusal names a path the hook obeys (.loop_signal.L7)
+  PASS  launcher clears a stale signal before the turn
+  PASS  commit-msg gate matches its tracked source
+  PASS  pre-commit gate matches its tracked source
+  PASS  commit gate refuses another lane's journal
+  PASS    ... unless Carries: names it
+  PASS    ... and accepts the atom's OWN journal
+  PASS  hostile callsign handled: L"6 (refused)
+  PASS  hostile callsign handled: L\6 (refused)
+  PASS  hostile callsign handled: L 6 (refused)
+  PASS  hostile callsign handled: ../L6 (refused)
+  PASS  hostile callsign handled: $(touch pwned) (refused)
+  PASS  hostile callsign handled: L`6 (refused)
+  PASS  hostile callsign handled: L6 (refused)
+  PASS    no callsign was executed
+  PASS    launcher refuses what the hook will not gate
+  PASS    launcher never reached claude
+  PASS    hostile callsigns left no state
+
+loop_gate.sh: 44 checks pass
+rc3=0

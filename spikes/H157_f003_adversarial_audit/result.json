@@ -1,0 +1,57 @@
+{
+  "spike": "H157",
+  "timestamp": "2026-08-19 14:34:33",
+  "elapsed_sec": 0.23,
+  "base_f003_ok": true,
+  "attacks": [
+    {
+      "attack": "A1_fuel_table_downgrade",
+      "rc": 1,
+      "token": "ILLEGAL_OPCODE",
+      "accept": false
+    },
+    {
+      "attack": "A2_unbound_var_injection",
+      "rc": 1,
+      "token": "RESULT_NOT_DERIVED",
+      "accept": false
+    },
+    {
+      "attack": "A3_premise_mismatch",
+      "rc": 1,
+      "token": "RESULT_NOT_DERIVED",
+      "accept": false
+    },
+    {
+      "attack": "A4_tampered_step_cost",
+      "rc": 1,
+      "token": "FUEL_DIVERGENCE",
+      "accept": false
+    }
+  ],
+  "attacks_passed": [],
+  "pins_intact": true,
+  "controls": {
+    "C1_honest_f003": {
+      "ok": true
+    },
+    "C2_pins_intact": {
+      "ok": true
+    },
+    "C3_all_attacks_rejected": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_any_attack_accepts": {
+      "fired": false,
+      "passed": []
+    },
+    "F2_table_collision": {
+      "fired": false
+    },
+    "F3_pins_moved": {
+      "fired": false
+    }
+  }
+}

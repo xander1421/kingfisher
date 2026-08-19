@@ -1,0 +1,407 @@
+{
+  "registry_root": "6afb946c8f8895900eae8db0955b6fcc0b92b5e5f782540a0687e504c256698e",
+  "beacon": "0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
+  "n_dispatched": 65,
+  "n_accepted": 65,
+  "n_refused": 0,
+  "domain_axes": {
+    "binary": 3,
+    "manifest": 3,
+    "host": 3,
+    "os": 3,
+    "isa": 2,
+    "operator": 3
+  },
+  "job_results": [
+    {
+      "job_id": "JOB_001",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_002",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_003",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_004",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_005",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_006",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_007",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_008",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_009",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_010",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_011",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_012",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_013",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_014",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_015",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_016",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_017",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_018",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_019",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_020",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_021",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_022",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_023",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_024",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_025",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_026",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_027",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_028",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_029",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_030",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_031",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_032",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_033",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_034",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_035",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_036",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_037",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_038",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_039",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_040",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_041",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_042",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_043",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_044",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_045",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_046",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_047",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_048",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_049",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_050",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_051",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_052",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_053",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_054",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_055",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_056",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_057",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_058",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_059",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_060",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_061",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_062",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_063",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_064",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    {
+      "job_id": "JOB_065",
+      "verdict": "QUORUM_ACCEPTED",
+      "maj_count": 3,
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    }
+  ]
+}

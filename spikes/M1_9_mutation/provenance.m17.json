@@ -1,17 +1,18 @@
 {
  "spike": "M1_9_mutation",
- "recorded_utc": "2026-08-18T11:33:24Z",
+ "recorded_utc": "2026-08-18T22:07:40Z",
  "note": "M1_9 re-certified under M17. Five mutations, not four: the write-up predated stdlib-if.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/M1_9_mutation",
-   "head": "8f4e0216423511c6c32abd8538af5e82e1e3f859",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
    "clean": false,
    "dirty_files": [
-    "spikes/M1_9_mutation/certify_m17.py"
+    "spikes/M1_9_mutation/mutation.json",
+    "spikes/M1_9_mutation/provenance.m17.json"
    ],
-   "diff_sha256": "e3bcce8417173dbda299fce7572867a614c494b88973ffe9104afcc65a5428e9",
-   "diff_bytes": 1486
+   "diff_sha256": "8245a5158e94494ba68842cbf17583161633afc41d035b581b25791c27965563",
+   "diff_bytes": 7225
   }
  ],
  "manifests": {
@@ -24,19 +25,19 @@
  "artifacts": [
   {
    "path": "mutation.json",
-   "sha256": "c658f184bca3c41ae3b120a73fa463e8da7231ca6a3919662fdbd189d39b4070",
-   "bytes": 3370,
-   "mtime": 1787052473,
-   "compared_ts": 1786972613,
-   "compared_clock": "last-commit"
+   "sha256": "e30181e8e020abdaaf22da468b22dd67d6db35dcc9e370f80b75eb5b99e1d863",
+   "bytes": 4087,
+   "mtime": 1787090763,
+   "compared_ts": 1787090763,
+   "compared_clock": "mtime"
   },
   {
    "path": "baseline.json",
    "sha256": "e60858318830acec72dafeda2508de84aadb76dbe2ad528a23796f14ab4df2d6",
    "bytes": 11908,
-   "mtime": 1787052473,
+   "mtime": 1787089917,
    "compared_ts": 1786964981,
-   "compared_clock": "last-commit"
+   "compared_clock": "regenerated (mtime >= newest source mtime)"
   }
  ],
  "missing_artifacts": [],
@@ -46,30 +47,23 @@
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
-  "ro.build.id": "BP41.250822.007",
-  "ro.product.model": "sdk_gphone64_arm64",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "mutant-is-live",
    "must_fire_because": "a 0/64 from a dead mutant, a failed rebuild or a missed anchor is indistinguishable from a 0/64 the corpus genuinely did not notice",
    "can_fail_because": "a feature-gated or semantically inert edit leaves probe_base == probe_mut and the mutation is reported VOID with no rate",
    "null_must_contain": "the probe output BEFORE and AFTER each mutation, which must differ",
-   "fired": false,
+   "fired": true,
    "detail": "every mutation changed its own probe, so every rate below is about the corpus",
    "kind": "control",
    "constant_observations": false,
    "observations": [
-    "sub-is-add: None None -> None",
-    "less-is-lesseq: None None -> None",
-    "resolver-message: None None -> None",
-    "stdlib-if: None None -> None",
-    "stdlib-init: None None -> None"
+    "sub-is-add: !(- 5 3) '0\\t2' -> '0\\t8'",
+    "less-is-lesseq: !(< 1 1) '0\\tFalse' -> '0\\tTrue'",
+    "resolver-message: !(import! &self kf_no_such_module) '0\\t(Error (import! ModuleSpace(GroundingSpace-top) kf_no_such_module) Failed to resolve module top:kf_no_such_module)' -> '0\\t(Error (import! ModuleSpace(GroundingSpace-top) kf_no_such_module) Cannot resolve module top:kf_no_such_module)'",
+    "stdlib-if: !(if True yes no) '0\\tyes' -> '0\\tno'",
+    "stdlib-init: !(kf-canary) '0\\t(kf-canary)' -> '0\\t1'"
    ]
   },
   {
@@ -112,15 +106,11 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/M1_9_mutation": {
-   "newest": 1787052798,
-   "from": "spikes/M1_9_mutation/certify_m17.py"
+   "newest": 1787052829,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "STALE ARTIFACT mutation.json predates M1_9_mutation source by 22.3h (newest source: spikes/M1_9_mutation/certify_m17.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "STALE ARTIFACT baseline.json predates M1_9_mutation source by 24.4h (newest source: spikes/M1_9_mutation/certify_m17.py; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "CONTROL mutant-is-live DID NOT FIRE -- run is VOID, not negative. (a 0/64 from a dead mutant, a failed rebuild or a missed anchor is indistinguishable from a 0/64 the corpus genuinely did not notice)"
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if a fresh sweep gave different rates, or any probe failed to move, the recorded rates are about this harness and not about the corpus"
 }

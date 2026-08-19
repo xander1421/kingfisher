@@ -1,0 +1,221 @@
+{
+ "spike": "G80_rust_f002",
+ "recorded_utc": "2026-08-19T12:35:53Z",
+ "note": "G80: rust F002_TWO_BOUND. Phone F002 not claimed closed.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures/F001",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "fixtures/F001/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures/F002_specv1",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "fixtures/F002_specv1/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/fixtures/F001": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/fixtures/F002_specv1": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures/verifier/trace_verifier.rs",
+   "sha256": "e95ad3360b0bedc16a5336f5f7d706ac2e5fc0f60b48ab64b3a43f66f1d3a9a9",
+   "bytes": 29218,
+   "mtime": 1787142432,
+   "compared_ts": 1787142432,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G80_rust_f002/result.json",
+   "sha256": "89e611ba4e8c5796655a01809a661e0e4b13ed55b7f2db70b6518e8466424ebd",
+   "bytes": 2694,
+   "mtime": 1787142953,
+   "compared_ts": 1787142953,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_python_f001",
+   "must_fire_because": "python F001 pin",
+   "can_fail_because": "checker drift",
+   "null_must_contain": "F001 miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_python_f002",
+   "must_fire_because": "python F002 pin",
+   "can_fail_because": "checker drift",
+   "null_must_contain": "F002 miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_fuel",
+   "must_fire_because": "F002 fuel 400",
+   "can_fail_because": "table hot-patched",
+   "null_must_contain": "fuel!=400",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "fuel_f001": 400,
+    "fuel_f002": 400,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_rust_f002_pin",
+   "must_fire_because": null,
+   "can_fail_because": "rust F002_specv1 digest != c43b1eab",
+   "null_must_contain": "pin miss",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "digest_in_out": true
+   },
+   "refutes": "that rust reproduces c43b1eab",
+   "fires_when": "rust F002_specv1 digest != c43b1eab",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_rust_f001_pin",
+   "must_fire_because": null,
+   "can_fail_because": "rust F001 digest != 590d8769",
+   "null_must_contain": "F001 moved",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "digest_in_out": true
+   },
+   "refutes": "that F001 pin is unmoved",
+   "fires_when": "rust F001 digest != 590d8769",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_mutant_accept",
+   "must_fire_because": null,
+   "can_fail_because": "any of 7 F002 mutants ACCEPT",
+   "null_must_contain": "mutant ACCEPT",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "any_accept": false,
+    "tokens": {
+     "M01_tampered_step_fuel": "FUEL_DIVERGENCE",
+     "M02_illegal_opcode": "ILLEGAL_OPCODE",
+     "M03_corrupted_root": "CORPUS_ROOT_MISMATCH",
+     "M04_declared_fuel_mismatch": "FUEL_FILE_MISMATCH",
+     "M05_inconsistent_unify": "SEMANTIC_UNIFICATION_FAILURE",
+     "M06_result_mismatch_rehashed": "RESULT_NOT_DERIVED",
+     "M07_skipped_unify_rewritten": "SEMANTIC_UNIFICATION_FAILURE"
+    }
+   },
+   "refutes": "that rust rejects F002 mutants",
+   "fires_when": "any of 7 F002 mutants ACCEPT",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_gemini_accept",
+   "must_fire_because": null,
+   "can_fail_because": "rust fixtures/F002 ACCEPT",
+   "null_must_contain": "gemini ACCEPT",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false
+   },
+   "refutes": "that Gemini F002 stays invalid",
+   "fires_when": "rust fixtures/F002 ACCEPT",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F5_f003_looks_like_broken_f001",
+   "must_fire_because": null,
+   "can_fail_because": "rust F003_specv1 reports MISSING_FILE F001.corpus.bin",
+   "null_must_contain": "MISSING_FILE F001",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fired": false,
+    "wrong_class": true
+   },
+   "refutes": "that unknown class is WRONG_FIXTURE_CLASS not MISSING_FILE F001",
+   "fires_when": "rust F003_specv1 reports MISSING_FILE F001.corpus.bin",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/fixtures/F001": {
+   "newest": 1787094897,
+   "from": "fixtures/F001/F001.scope.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/fixtures/F002_specv1": {
+   "newest": 1787110760,
+   "from": "fixtures/F002_specv1/F002.scope.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "rust F002 digest moves, or F001 moves, or a mutant/Gemini ACCEPT, or F003 looks like broken F001",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

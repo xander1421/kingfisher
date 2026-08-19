@@ -1,0 +1,259 @@
+{
+ "spike": "G35_adaptive_clustering",
+ "recorded_utc": "2026-08-18T10:59:02Z",
+ "note": "G35: Relation-specific adaptive calibration & predicate clustering on FB15k-237",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../G17_composition_redo",
+   "head": "4480f00791b0ebe5b3997f1a2292553943c98a3d",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../G30_external_yardstick",
+   "head": "4480f00791b0ebe5b3997f1a2292553943c98a3d",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../S52_realkg",
+   "head": "4480f00791b0ebe5b3997f1a2292553943c98a3d",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../G30_external_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/adaptive_clustering.py",
+   "sha256": "ccfb3ae557efd6f4b7b3000f306cd6022ef8743c3e8b0f108d65cc35b785dbe0",
+   "bytes": 31100,
+   "mtime": 1787050559,
+   "compared_ts": 1787050559,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/adaptive_clustering.json",
+   "sha256": "1066cce94d0d236fcc9b8508dffb9de654492c4d907fed3648637610ee3f3760",
+   "bytes": 4424,
+   "mtime": 1787050742,
+   "compared_ts": 1787050742,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_planted_composition_upper_bound",
+   "must_fire_because": "a rule engine with valid inference must achieve MRR=1.0 on a planted composition",
+   "can_fail_because": "inference walk could miss multi-hop paths or fail filter verification",
+   "null_must_contain": "an unpredicted or incorrectly ranked query on a deterministic planted relation",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.9888888888888889,
+    "hits1": 0.9666666666666667,
+    "hits10": 1.0
+   }
+  },
+  {
+   "name": "C2_empty_rule_lower_bound",
+   "must_fire_because": "an empty rule set must yield zero hits and MRR near random entity expectation",
+   "can_fail_because": "tie-breaking bug could assign rank 1 to unpredicted entities",
+   "null_must_contain": "non-zero hits when zero rules are provided",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.00013946353058580304,
+    "hits10": 0.0
+   }
+  },
+  {
+   "name": "C3_metric_monotonicity",
+   "must_fire_because": "Hits@1 <= Hits@3 <= Hits@10 must strictly hold across all models",
+   "can_fail_because": "metric calculation bug across different thresholds",
+   "null_must_contain": "a strict violation of Hits@K monotonicity",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "G17_2hop_only": [
+     0.031064726346219804,
+     0.06622078494781714,
+     0.12294820912342594
+    ],
+    "Length1_only": [
+     0.09140575236415308,
+     0.19653094223136852,
+     0.23953892890391493
+    ],
+    "G17_plus_Length1": [
+     0.1088980351805576,
+     0.2262114753295115,
+     0.2931672301435641
+    ],
+    "Constants_only": [
+     0.100911362634132,
+     0.138835807731883,
+     0.15117105198686853
+    ],
+    "G34_Full_System (Max)": [
+     0.17480033318633936,
+     0.3168577588318879,
+     0.39292713998726053
+    ],
+    "G35_Full_System (Calibrated Soft)": [
+     0.19989955411828114,
+     0.320961340585036,
+     0.3981331765397619
+    ],
+    "Empty_baseline": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "C1_planted_control": [
+     0.9666666666666667,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "C4_strict_additivity",
+   "must_fire_because": "combined rule system must strictly exceed individual sub-models on Filtered MRR",
+   "can_fail_because": "rule conflict or confidence calibration degradation",
+   "null_must_contain": "combined system scoring lower MRR than baseline",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "2hop": 0.0631122756859102,
+    "g17_l1": 0.1869768341949883,
+    "g34_full": 0.2648067492241375,
+    "g35_full": 0.2749613541076807,
+    "full": 0.2749613541076807,
+    "full_mrr": 0.2749613541076807,
+    "full_h10": 0.3981331765397619,
+    "full_h1": 0.19989955411828114
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_g35_lift_over_g34",
+   "must_fire_because": null,
+   "can_fail_because": "Full G35 fails to improve Filtered MRR by at least +0.0050 over G34 baseline",
+   "null_must_contain": "a marginal or zero MRR gain from G35 calibration",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_g34": 0.2648067492241375,
+    "mrr_g35": 0.2749613541076807,
+    "gain": 0.010154604883543195
+   },
+   "refutes": "Relation-specific calibration and clustering provide significant link prediction gains over static G34",
+   "fires_when": "Full G35 fails to improve Filtered MRR by at least +0.0050 over G34 baseline",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_hits1_precision_lift",
+   "must_fire_because": null,
+   "can_fail_because": "Full G35 fails to improve Hits@1 by at least +10% relative over G34",
+   "null_must_contain": "a Hits@1 gain below +10%",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "h1_g34": 0.17480033318633936,
+    "h1_g35": 0.19989955411828114,
+    "gain_pct": 14.358794674141539
+   },
+   "refutes": "Calibrated soft combination substantially improves top-1 link prediction precision over max scoring",
+   "fires_when": "Full G35 fails to improve Hits@1 by at least +10% relative over G34",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_super_additivity",
+   "must_fire_because": null,
+   "can_fail_because": "G35 full system fails to exceed G34 and G17+L1 on Filtered MRR",
+   "null_must_contain": "sub-model achieving higher MRR than G35 full system",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_g35": 0.2749613541076807,
+    "mrr_g34": 0.2648067492241375,
+    "mrr_g17_l1": 0.1869768341949883
+   },
+   "refutes": "G35 full calibrated system strictly improves over all individual sub-models",
+   "fires_when": "G35 full system fails to exceed G34 and G17+L1 on Filtered MRR",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../G30_external_yardstick": {
+   "newest": 1786979491,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G35_adaptive_clustering/../S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Full G35 fails to improve Filtered MRR by +0.0050 over G34, fails +10% relative Hits@1 lift, or fails super-additivity"
+}

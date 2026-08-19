@@ -1,0 +1,148 @@
+{
+ "spike": "G91_rotate_wn18rr",
+ "recorded_utc": "2026-08-19T14:59:09Z",
+ "note": "G91: RotatE Geometric Embedding Training & Evaluation on Official WN18RR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr/result.json",
+   "sha256": "13efeaadaddc45b277e363a3623c4f329df3735a2b668dab8ced79e803c9df0d",
+   "bytes": 850,
+   "mtime": 1787151549,
+   "compared_ts": 1787151549,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_size",
+   "must_fire_because": "3,134 test triples (6,268 queries)",
+   "can_fail_because": "corrupted split",
+   "null_must_contain": "wrong query count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 6268,
+    "expected": 6268
+   }
+  },
+  {
+   "name": "C2_zero_leak",
+   "must_fire_because": "0 overlap between train and test",
+   "can_fail_because": "data leakage",
+   "null_must_contain": "leakage",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_count": 0
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 pins remain invariant",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_wrong_query_count",
+   "must_fire_because": null,
+   "can_fail_because": "n_queries != 6268",
+   "null_must_contain": "query count mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 6268
+   },
+   "refutes": "that full official test split was evaluated",
+   "fires_when": "n_queries != 6268",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_fails_symbolic_baseline",
+   "must_fire_because": null,
+   "can_fail_because": "mrr <= 0.0355",
+   "null_must_contain": "RotatE <= 0.0355",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rotate_mrr": 0.3546,
+    "symbolic_mrr": 0.0355
+   },
+   "refutes": "that RotatE outperforms pure 2-hop symbolic rules (0.0355 MRR) on WN18RR",
+   "fires_when": "mrr <= 0.0355",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_loss_not_decreasing",
+   "must_fire_because": null,
+   "can_fail_because": "losses[-1] >= losses[0]",
+   "null_must_contain": "loss increased",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "initial_loss": 12.536010629990521,
+    "final_loss": 1.5690352667780483
+   },
+   "refutes": "that training loss decreases over epochs",
+   "fires_when": "losses[-1] >= losses[0]",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "RotatE on WN18RR fails training or evaluation"
+}

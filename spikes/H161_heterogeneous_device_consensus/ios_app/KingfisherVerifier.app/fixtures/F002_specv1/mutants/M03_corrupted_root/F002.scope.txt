@@ -1,0 +1,1 @@
+F002_DRAFT spec-v1 sidecar. Same 5180 B corpus as fixtures/F002. Digest is kingfisher.digest/v1 (query string + raw witness hash). Fuel = 10+10+100+80+200 stipulated. Not frozen. Not a MeTTa interpreter.

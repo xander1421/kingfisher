@@ -1,0 +1,149 @@
+{
+ "spike": "H164_rotate_wn18rr_adversarial_audit",
+ "recorded_utc": "2026-08-19T15:04:59Z",
+ "note": "H164: Adversarial Audit & Phase-Causality Ablation of RotatE on Official WN18RR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H164_rotate_wn18rr_adversarial_audit/result.json",
+   "sha256": "ae93df96a220e69b218e50862b46f9be53c79758cf11e6c752e6ccc8f178a8fb",
+   "bytes": 2456,
+   "mtime": 1787151899,
+   "compared_ts": 1787151899,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_all_relations_audited",
+   "must_fire_because": "All 11 relations audited individually",
+   "can_fail_because": "missing predicates",
+   "null_must_contain": "predicate count mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_relations": 11
+   }
+  },
+  {
+   "name": "C2_test_size",
+   "must_fire_because": "Exact 6,268 test queries evaluated",
+   "can_fail_because": "corrupted split",
+   "null_must_contain": "query count mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 6268
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 pins remain invariant",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_phase_shuffled_survives",
+   "must_fire_because": null,
+   "can_fail_because": "shuffled_mrr >= 0.050",
+   "null_must_contain": "shuffled MRR did not collapse",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "shuffled_mrr": 0.0020104535508310034,
+    "honest_mrr": 0.3546446725150236
+   },
+   "refutes": "that rotation angles theta are the causal driver of link prediction",
+   "fires_when": "shuffled_mrr >= 0.050",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_unit_modulus_violated",
+   "must_fire_because": null,
+   "can_fail_because": "not audit_modulus_ok",
+   "null_must_contain": "modulus error",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "max_mod_err": 1.1920928955078125e-07
+   },
+   "refutes": "that relation embeddings maintain unit modulus |r| = 1",
+   "fires_when": "not audit_modulus_ok",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_hub_concentration_exceeded",
+   "must_fire_because": null,
+   "can_fail_because": "max_share >= 60.0",
+   "null_must_contain": "hub concentration >= 60%",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "top_pred": "_derivationally_related_form",
+    "max_share": 90.95
+   },
+   "refutes": "that RotatE performance is broadly distributed (<60% from single predicate)",
+   "fires_when": "max_share >= 60.0",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F3_hub_concentration_exceeded"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "RotatE adversarial audit on WN18RR fails or reveals vulnerability"
+}

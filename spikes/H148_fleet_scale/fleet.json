@@ -1,0 +1,88 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "thermal_override": "QUIET_ALLOW_THERMAL_UNREADABLE=1",
+  "operator_waived_unread_thermal": true,
+  "not_a_new_isa": true,
+  "not_a_new_operator_domain": true,
+  "retracted_h141": {
+    "one_one_wall_s": 6.8744451660022605,
+    "three_one_wall_s": 5.173469625005964,
+    "why": "tuple of submit().result() evaluated left-to-right; walls were sums"
+  },
+  "eval_order_demo": {
+    "bug_s": 0.10599250000086613,
+    "fix_s": 0.05497304200252984,
+    "bug_is_sum": true,
+    "fix_is_max": true,
+    "ratio_bug_over_fix": 1.9280814038995404,
+    "slept": [
+      0.05,
+      0.05,
+      0.05,
+      0.05
+    ]
+  },
+  "submit_result_same_expr": {
+    "H141": [],
+    "H148": []
+  },
+  "gates": {
+    "R5CY93675MK": "device quiet: cpu_busy 0.7% (limit 15%), runnable 5, thermal 36600m, battery status=5 level=100 charging=true powered=1",
+    "R5CX508MPRZ": "device quiet: cpu_busy 3.6% (limit 15%), runnable 1, thermal UNREADABLE(overridden), battery status=2 level=39 thermal-override=UNREADABLE charging=true powered=1"
+  },
+  "one_one": {
+    "s25_n": 200,
+    "s24_n": 200,
+    "s25_s": 1.5559115830037626,
+    "s24_s": 5.380112457998621,
+    "wall_s": 5.38185029199667
+  },
+  "three_one": {
+    "s25_n": 300,
+    "s24_n": 100,
+    "s25_s": 2.326261041998805,
+    "s24_s": 2.5539959170055226,
+    "wall_s": 2.5564291669943486
+  },
+  "s25_only_400_s": 3.0235484579970944,
+  "s25_k2": {
+    "serial": "R5CY93675MK",
+    "k": 2,
+    "n_each": 200,
+    "jobs": 400,
+    "times_s": [
+      1.763004207998165,
+      1.7770003330006148
+    ],
+    "wall_s": 1.7790410829984467,
+    "jobs_per_s": 224.84022646954762
+  },
+  "s24_k2": {
+    "serial": "R5CX508MPRZ",
+    "k": 2,
+    "n_each": 100,
+    "jobs": 200,
+    "times_s": [
+      2.520413209000253,
+      2.524677541994606
+    ],
+    "wall_s": 2.527384583998355,
+    "jobs_per_s": 79.13318822400879
+  },
+  "fleet_weighted_k2": {
+    "s25_n": 300,
+    "s24_n": 100,
+    "jobs": 400,
+    "times_s": [
+      1.2915407910040813,
+      1.2941968750019441,
+      1.3341000419968623,
+      1.2457663329987554
+    ],
+    "wall_s": 1.3371465419986635,
+    "jobs_per_s": 299.14447477245903
+  },
+  "weighted_vs_one_one": 0.47500934219519353,
+  "three_one_vs_s25_only": 0.845506266067195,
+  "fleet_vs_s25_k2": 0.7516108283148799
+}

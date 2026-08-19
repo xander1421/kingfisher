@@ -1,0 +1,133 @@
+{
+  "spike": "G86",
+  "timestamp": "2026-08-19 14:42:52",
+  "elapsed_sec": 1.27,
+  "split": {
+    "n_train": 272115,
+    "n_valid": 17535,
+    "n_test": 20466,
+    "n_entities": 14541,
+    "n_relations": 237
+  },
+  "mining": {
+    "total_l1_rules_mined": 312,
+    "top_rules": [
+      {
+        "body": "/location/administrative_division/first_level_division_of",
+        "head": "/location/location/contains",
+        "direction": "inverse",
+        "support": 124,
+        "confidence": 0.8794,
+        "lift": 46.0117
+      },
+      {
+        "body": "/soccer/football_player/current_team./sports/sports_team_roster/team",
+        "head": "/sports/pro_athlete/teams./sports/sports_team_roster/team",
+        "direction": "direct",
+        "support": 452,
+        "confidence": 0.8433,
+        "lift": 339.4528
+      },
+      {
+        "body": "/sports/sports_position/players./american_football/football_historical_roster_position/position_s",
+        "head": "/sports/sports_position/players./sports/sports_team_roster/position",
+        "direction": "inverse",
+        "support": 86,
+        "confidence": 0.8431,
+        "lift": 1835.4424
+      },
+      {
+        "body": "/sports/sports_position/players./american_football/football_historical_roster_position/position_s",
+        "head": "/sports/sports_position/players./sports/sports_team_roster/position",
+        "direction": "direct",
+        "support": 85,
+        "confidence": 0.8333,
+        "lift": 1814.1
+      },
+      {
+        "body": "/user/jg/default_domain/olympic_games/sports",
+        "head": "/olympics/olympic_games/sports",
+        "direction": "direct",
+        "support": 483,
+        "confidence": 0.8313,
+        "lift": 340.6869
+      },
+      {
+        "body": "/location/administrative_division/country",
+        "head": "/location/location/contains",
+        "direction": "inverse",
+        "support": 320,
+        "confidence": 0.829,
+        "lift": 43.3739
+      },
+      {
+        "body": "/american_football/football_team/current_roster./sports/sports_team_roster/position",
+        "head": "/sports/sports_team/roster./american_football/football_roster_position/position",
+        "direction": "direct",
+        "support": 470,
+        "confidence": 0.8202,
+        "lift": 367.7113
+      },
+      {
+        "body": "/american_football/football_team/current_roster./sports/sports_team_roster/position",
+        "head": "/sports/sports_position/players./sports/sports_team_roster/team",
+        "direction": "inverse",
+        "support": 470,
+        "confidence": 0.8202,
+        "lift": 63.7717
+      },
+      {
+        "body": "/business/business_operation/operating_income./measurement_unit/dated_money_value/currency",
+        "head": "/business/business_operation/revenue./measurement_unit/dated_money_value/currency",
+        "direction": "direct",
+        "support": 162,
+        "confidence": 0.8182,
+        "lift": 1035.5328
+      },
+      {
+        "body": "/sports/sports_team/roster./american_football/football_historical_roster_position/position_s",
+        "head": "/sports/sports_position/players./sports/sports_team_roster/team",
+        "direction": "inverse",
+        "support": 508,
+        "confidence": 0.8167,
+        "lift": 63.4977
+      }
+    ]
+  },
+  "evaluation": {
+    "pure_l1_filtered_mrr": 0.0,
+    "test_fired_queries": 6703,
+    "hits1": 0,
+    "hits1_ratio": 0.0,
+    "hits3": 0,
+    "hits3_ratio": 0.0,
+    "hits10": 0,
+    "hits10_ratio": 0.0,
+    "test_evaluated": 20466
+  },
+  "controls": {
+    "C1_split_sizes": {
+      "ok": true
+    },
+    "C2_zero_leak": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    },
+    "C4_rules_mined": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_no_rules": {
+      "fired": false
+    },
+    "F2_zero_hits": {
+      "fired": true
+    },
+    "F3_test_count": {
+      "fired": false
+    }
+  }
+}

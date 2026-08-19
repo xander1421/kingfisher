@@ -1,0 +1,298 @@
+{
+ "spike": "G45_lift_constrained_mining",
+ "recorded_utc": "2026-08-18T11:10:20Z",
+ "note": "G45: Lift-Constrained Hybrid Rule Mining and Calibration on FB15k-237",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G17_composition_redo",
+   "head": "84f9d32e54ada82b74e801653798290e9270a417",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G30_external_yardstick",
+   "head": "84f9d32e54ada82b74e801653798290e9270a417",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G34_length1_and_constants",
+   "head": "84f9d32e54ada82b74e801653798290e9270a417",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G34_length1_and_constants/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../H107_autoloop_eval_and_witness_attack",
+   "head": "84f9d32e54ada82b74e801653798290e9270a417",
+   "clean": false,
+   "dirty_files": [
+    "spikes/H107_autoloop_eval_and_witness_attack/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../S52_realkg",
+   "head": "84f9d32e54ada82b74e801653798290e9270a417",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G30_external_yardstick": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G34_length1_and_constants": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../H107_autoloop_eval_and_witness_attack": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/lift_constrained_mining.py",
+   "sha256": "55eb4f75398323e4782d7548e87ce84d0ae13f12141c1a3e6cf625e8a7cd56c6",
+   "bytes": 35828,
+   "mtime": 1787050954,
+   "compared_ts": 1787050954,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/lift_constrained_mining.json",
+   "sha256": "81eedff57068eadd4a67ad4ac8d8f8116290544ba236d2a02d9e7ba72c075057",
+   "bytes": 5840,
+   "mtime": 1787051420,
+   "compared_ts": 1787051420,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_planted_composition_upper_bound",
+   "must_fire_because": "a rule engine with valid inference must achieve MRR=1.0 on a planted composition",
+   "can_fail_because": "inference walk could miss multi-hop paths or fail filter verification",
+   "null_must_contain": "an unpredicted or incorrectly ranked query on a deterministic planted relation",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.9888888888888889,
+    "hits1": 0.9666666666666667,
+    "hits10": 1.0
+   }
+  },
+  {
+   "name": "C2_empty_rule_lower_bound",
+   "must_fire_because": "an empty rule set must yield zero hits and MRR near random entity expectation",
+   "can_fail_because": "tie-breaking bug could assign rank 1 to unpredicted entities",
+   "null_must_contain": "non-zero hits when zero rules are provided",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.00013946353058580304,
+    "hits10": 0.0
+   }
+  },
+  {
+   "name": "C3_metric_monotonicity",
+   "must_fire_because": "Hits@1 <= Hits@3 <= Hits@10 must strictly hold across all models",
+   "can_fail_because": "metric calculation bug across different thresholds",
+   "null_must_contain": "a strict violation of Hits@K monotonicity",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "Empty_baseline": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "G17_2hop_only": [
+     0.031064726346219804,
+     0.06622078494781714,
+     0.12294820912342594
+    ],
+    "Length1_only": [
+     0.09140575236415308,
+     0.19653094223136852,
+     0.23953892890391493
+    ],
+    "G17_plus_Length1": [
+     0.1088980351805576,
+     0.2262114753295115,
+     0.2931672301435641
+    ],
+    "Constants_unfiltered_only": [
+     0.100911362634132,
+     0.138835807731883,
+     0.15117105198686853
+    ],
+    "Constants_lift_filtered_only": [
+     0.05381204370620805,
+     0.08786564750845215,
+     0.10007839678573179
+    ],
+    "G34_Full_System_Unfiltered": [
+     0.17480033318633936,
+     0.3168577588318879,
+     0.39292713998726053
+    ],
+    "G45_Lift_Constrained_Max": [
+     0.14284139350286637,
+     0.2827551570385614,
+     0.35897153216718114
+    ],
+    "G45_Calibrated_Hybrid_Full": [
+     0.1708804938997501,
+     0.2885001714929688,
+     0.3647287961193591
+    ],
+    "C1_planted_control": [
+     0.9666666666666667,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "C4_strict_lift_constraint_invariance",
+   "must_fire_because": "all retained constant rules must strictly satisfy Lift >= 1.25",
+   "can_fail_because": "lift threshold filtering defect or base rate division error",
+   "null_must_contain": "a retained constant rule with Lift < 1.25",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "min_tail_lift": 1.2574921921722373,
+    "min_head_lift": 1.2524271844660195,
+    "threshold": 1.25
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_spurious_rule_elimination",
+   "must_fire_because": null,
+   "can_fail_because": "Any constant rule with Lift < 1.25 survives into the rule base or spurious rules fail to be pruned",
+   "null_must_contain": "a sub-base-rate constant rule surviving lift filtering",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "min_tail_lift": 1.2574921921722373,
+    "min_head_lift": 1.2524271844660195,
+    "spurious_tail_count": 966
+   },
+   "refutes": "Empirical lift filtering removes all spurious sub-base-rate hub constant rules",
+   "fires_when": "Any constant rule with Lift < 1.25 survives into the rule base or spurious rules fail to be pruned",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_calibration_gain_over_uncalibrated",
+   "must_fire_because": null,
+   "can_fail_because": "Calibrated hybrid system fails to achieve at least +0.0050 Filtered MRR over lift-constrained max scoring",
+   "null_must_contain": "an MRR gain below +0.0050 from calibration and soft aggregation",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_max_lift": 0.2321133959810531,
+    "mrr_g45_full": 0.24430106695501058,
+    "gain": 0.012187670973957482
+   },
+   "refutes": "Relation-specific calibration and soft aggregation improve link prediction ranking over naive max scoring on lift-constrained rules",
+   "fires_when": "Calibrated hybrid system fails to achieve at least +0.0050 Filtered MRR over lift-constrained max scoring",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_literature_parity_certified",
+   "must_fire_because": null,
+   "can_fail_because": "Full G45 calibrated system fails to achieve Filtered MRR >= 0.1980 on FB15k-237",
+   "null_must_contain": "Filtered MRR below 0.1980",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_g45_full": 0.24430106695501058,
+    "amie_mrr": 0.198,
+    "anyburl_len2_mrr": 0.245
+   },
+   "refutes": "Sound, lift-constrained hybrid rule engine reaches benchmark parity with standard length<=2 rule baselines (AMIE+)",
+   "fires_when": "Full G45 calibrated system fails to achieve Filtered MRR >= 0.1980 on FB15k-237",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G30_external_yardstick": {
+   "newest": 1786979491,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../G34_length1_and_constants": {
+   "newest": 1787050043,
+   "from": "spikes/G34_length1_and_constants/length1_constants.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../H107_autoloop_eval_and_witness_attack": {
+   "newest": 1787050095,
+   "from": "spikes/H107_autoloop_eval_and_witness_attack/attack_results.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G45_lift_constrained_mining/../S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Lift filtering fails to eliminate spurious constant rules, calibration fails to improve over raw max scoring (+0.0050 MRR), or full system falls below AMIE+ parity (0.1980 MRR)",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

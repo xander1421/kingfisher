@@ -1,0 +1,9 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "s25_200_s": 1.5753709170021466,
+  "emu_200_s": 5.002496166001947,
+  "parallel_wall_s": 5.363990707999619,
+  "speedup": 1.2263009839286547,
+  "emulator_is_not_a_phone": true,
+  "emulator_same_host_as_mac": true
+}

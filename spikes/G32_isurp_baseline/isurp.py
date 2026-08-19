@@ -224,8 +224,14 @@ def main():
           f"{len(by_support) + len(by_conf) - len(cands)} overlapping\n",
           flush=True)
 
-    rows = []
-    for (p, q, r), cand, stratum in cands:
+    cache = os.path.join(HERE, "isurp_rows.json")
+    if os.path.exists(cache):
+        rows = json.load(open(cache))
+        print(f"loaded {len(rows)} scored rows from cache", flush=True)
+        cands_iter = []
+    else:
+        rows, cands_iter = [], cands
+    for (p, q, r), cand, stratum in cands_iter:
         cl = sorted(cand)
         conf = conf_of(cand, r_pairs_of[r])
         c_lin, c_exp = closed_form(cl, r, dout, din, m)
@@ -259,6 +265,7 @@ def main():
               f"closed {c_exp:.4f}  head-shuf {e_head:.4f}+-{sd:.4f}  "
               f"whole-shuf {e_whole:.4f}", flush=True)
 
+    json.dump(rows, open(cache, "w"), indent=1)
     for st in ("support", "conf"):
         sr = [x for x in rows if x["stratum"] == st]
         if sr:
@@ -282,7 +289,7 @@ def main():
               f"mean {sum(wdiffs) / len(wdiffs):.5f}")
 
     ents = sorted({e for _, s, o in train for e in (s, o)})
-    (bp_key, bp_cand) = cands[0]
+    bp_key, bp_cand, _st = cands[0]   # largest-support rule's pair set
     r_ind, r_dep = npred + 101, npred + 102
     rng = random.Random(77)
     ind = [(r_ind, rng.choice(ents), rng.choice(ents)) for _ in range(len(bp_cand))]

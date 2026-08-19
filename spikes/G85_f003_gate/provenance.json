@@ -1,0 +1,162 @@
+{
+ "spike": "G85_f003_gate",
+ "recorded_utc": "2026-08-19T13:00:35Z",
+ "note": "G85: Python-only F003 modus ponens gate.",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G85_f003_gate/result.json",
+   "sha256": "5b539925ea8ac7a99cd8f3415b1ddfe8bc3deaa3beba80b96198d2a1e061e3f9",
+   "bytes": 1182,
+   "mtime": 1787144435
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_spec_draft",
+   "must_fire_because": "Spec names F003_MODUS_PONENS and F003_DRAFT",
+   "can_fail_because": "spec drift",
+   "null_must_contain": "spec missing draft",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "spec_has_draft": true
+   }
+  },
+  {
+   "name": "C2_mutants_reject",
+   "must_fire_because": "All 7 mutants REJECT",
+   "can_fail_because": "mutant ACCEPT",
+   "null_must_contain": "mutant pass",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mutants_count": 7,
+    "any_accept": false
+   }
+  },
+  {
+   "name": "C3_python_f003",
+   "must_fire_because": "Python accepts 0e1edf5b",
+   "can_fail_because": "digest mismatch",
+   "null_must_contain": "digest miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "d3": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5"
+   }
+  },
+  {
+   "name": "C4_rust_wrong_class",
+   "must_fire_because": "Rust returns WRONG_FIXTURE_CLASS",
+   "can_fail_because": "wrong rust error",
+   "null_must_contain": "wrong error",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rust_wrong_class": true
+   }
+  },
+  {
+   "name": "C5_nlines_120",
+   "must_fire_because": "Spec <= 120 lines",
+   "can_fail_because": "spec too long",
+   "null_must_contain": "lines > 120",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "spec_lines": 105
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_mutant_accept",
+   "must_fire_because": null,
+   "can_fail_because": "any mutant ACCEPT",
+   "null_must_contain": "mutant pass",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "any_accept": false
+   },
+   "refutes": "that Python checker rejects F003 mutants",
+   "fires_when": "any mutant ACCEPT",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_rust_accept",
+   "must_fire_because": null,
+   "can_fail_because": "rust accepts F003",
+   "null_must_contain": "rust accept",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rc": 1
+   },
+   "refutes": "that Rust checker does not accept F003",
+   "fires_when": "rust accepts F003",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_in_immortal",
+   "must_fire_because": null,
+   "can_fail_because": "F003 in immortal.json",
+   "null_must_contain": "in immortal",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "in_immortal": false
+   },
+   "refutes": "that F003 is not in immortal.json",
+   "fires_when": "F003 in immortal.json",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_pin_moved",
+   "must_fire_because": null,
+   "can_fail_because": "F001 or F002 pin moves",
+   "null_must_contain": "pin moved",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "pins_unmoved": true
+   },
+   "refutes": "that F001 and F002 pins remain invariant",
+   "fires_when": "F001 or F002 pin moves",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "kernel specification gate; no external elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "Python-only F003 gate check failure"
+}

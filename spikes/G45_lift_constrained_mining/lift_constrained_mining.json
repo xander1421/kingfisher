@@ -1,0 +1,210 @@
+{
+  "results": {
+    "Empty_baseline": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 0.08750104904174805,
+      "mrr": 0.00013946353058580304,
+      "hits1": 0.0,
+      "hits3": 0.0,
+      "hits10": 0.0,
+      "mrr_tail": 0.00013817074773658076,
+      "mrr_head": 0.0001407563134350253
+    },
+    "G17_2hop_only": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 32.37991499900818,
+      "mrr": 0.0631122756859102,
+      "hits1": 0.031064726346219804,
+      "hits3": 0.06622078494781714,
+      "hits10": 0.12294820912342594,
+      "mrr_tail": 0.0895496760584301,
+      "mrr_head": 0.0366748753133903
+    },
+    "Length1_only": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 1.1706178188323975,
+      "mrr": 0.15716885363244212,
+      "hits1": 0.09140575236415308,
+      "hits3": 0.19653094223136852,
+      "hits10": 0.23953892890391493,
+      "mrr_tail": 0.16749578744821805,
+      "mrr_head": 0.14684191981666614
+    },
+    "G17_plus_Length1": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 32.116461753845215,
+      "mrr": 0.1869768341949883,
+      "hits1": 0.1088980351805576,
+      "hits3": 0.2262114753295115,
+      "hits10": 0.2931672301435641,
+      "mrr_tail": 0.21236711942409828,
+      "mrr_head": 0.1615865489658783
+    },
+    "Constants_unfiltered_only": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 0.950031042098999,
+      "mrr": 0.1209313073636332,
+      "hits1": 0.100911362634132,
+      "hits3": 0.138835807731883,
+      "hits10": 0.15117105198686853,
+      "mrr_tail": 0.1911138349348903,
+      "mrr_head": 0.05074877979237608
+    },
+    "Constants_lift_filtered_only": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 0.8423359394073486,
+      "mrr": 0.07195383527019762,
+      "hits1": 0.05381204370620805,
+      "hits3": 0.08786564750845215,
+      "hits10": 0.10007839678573179,
+      "mrr_tail": 0.10019312824194303,
+      "mrr_head": 0.04371454229845224
+    },
+    "G34_Full_System_Unfiltered": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 29.0329327583313,
+      "mrr": 0.2648067492241375,
+      "hits1": 0.17480033318633936,
+      "hits3": 0.3168577588318879,
+      "hits10": 0.39292713998726053,
+      "mrr_tail": 0.3366383858289952,
+      "mrr_head": 0.19297511261927974
+    },
+    "G45_Lift_Constrained_Max": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 34.07125782966614,
+      "mrr": 0.2321133959810531,
+      "hits1": 0.14284139350286637,
+      "hits3": 0.2827551570385614,
+      "hits10": 0.35897153216718114,
+      "mrr_tail": 0.2764287676644539,
+      "mrr_head": 0.18779802429765233
+    },
+    "G45_Calibrated_Hybrid_Full": {
+      "n_queries": 81636,
+      "n_triples": 40818,
+      "elapsed_sec": 41.40972304344177,
+      "mrr": 0.24430106695501058,
+      "hits1": 0.1708804938997501,
+      "hits3": 0.2885001714929688,
+      "hits10": 0.3647287961193591,
+      "mrr_tail": 0.28954710865289157,
+      "mrr_head": 0.19905502525712956
+    },
+    "C1_planted_control": {
+      "n_queries": 600,
+      "n_triples": 300,
+      "elapsed_sec": 0.0027048587799072266,
+      "mrr": 0.9888888888888889,
+      "hits1": 0.9666666666666667,
+      "hits3": 1.0,
+      "hits10": 1.0,
+      "mrr_tail": 0.9888888888888889,
+      "mrr_head": 0.9888888888888889
+    }
+  },
+  "literature_table": {
+    "RotatE (Sun et al., 2019)       ": {
+      "family": "Embedding",
+      "MRR": 0.338,
+      "Hits@1": 0.241,
+      "Hits@3": 0.375,
+      "Hits@10": 0.533
+    },
+    "AnyBURL len<=3 (Meilicke, 2019) ": {
+      "family": "Rule (len<=3)",
+      "MRR": 0.302,
+      "Hits@1": 0.221,
+      "Hits@3": 0.334,
+      "Hits@10": 0.463
+    },
+    "TransE (Bordes et al., 2013)    ": {
+      "family": "Embedding",
+      "MRR": 0.294,
+      "Hits@1": 0.198,
+      "Hits@3": 0.33,
+      "Hits@10": 0.465
+    },
+    "RuleN (Meilicke et al., 2018)   ": {
+      "family": "Rule (len<=3)",
+      "MRR": 0.285,
+      "Hits@1": 0.208,
+      "Hits@3": 0.312,
+      "Hits@10": 0.435
+    },
+    "ComplEx (Trouillon et al., 2016)": {
+      "family": "Embedding",
+      "MRR": 0.278,
+      "Hits@1": 0.194,
+      "Hits@3": 0.308,
+      "Hits@10": 0.45
+    },
+    "G34 (Unconstrained Constants)   ": {
+      "family": "Rule (len<=2)",
+      "MRR": 0.2648067492241375,
+      "Hits@1": 0.17480033318633936,
+      "Hits@3": 0.3168577588318879,
+      "Hits@10": 0.39292713998726053
+    },
+    "AnyBURL len<=2 (Meilicke, 2019) ": {
+      "family": "Rule (len<=2)",
+      "MRR": 0.245,
+      "Hits@1": 0.178,
+      "Hits@3": 0.271,
+      "Hits@10": 0.375
+    },
+    "Kingfisher G45 (Lift+Calibrated)": {
+      "family": "Rule (len<=2)",
+      "MRR": 0.24430106695501058,
+      "Hits@1": 0.1708804938997501,
+      "Hits@3": 0.2885001714929688,
+      "Hits@10": 0.3647287961193591
+    },
+    "AMIE+ (Gal\u00e1rraga et al., 2015)  ": {
+      "family": "Rule (len<=2)",
+      "MRR": 0.198,
+      "Hits@1": 0.141,
+      "Hits@3": 0.219,
+      "Hits@10": 0.312
+    },
+    "Kingfisher G17 (2-hop only)     ": {
+      "family": "Rule (len=2)",
+      "MRR": 0.0631122756859102,
+      "Hits@1": 0.031064726346219804,
+      "Hits@3": 0.06622078494781714,
+      "Hits@10": 0.12294820912342594
+    }
+  },
+  "falsifiers": {
+    "f1_fired": false,
+    "f2_fired": false,
+    "f3_fired": false
+  },
+  "controls": {
+    "c1": true,
+    "c2": true,
+    "c3": true,
+    "c4": true
+  },
+  "rule_counts": {
+    "2hop": 3198,
+    "subsume": 189,
+    "inverse": 174,
+    "const_tail_unfiltered": 2547,
+    "const_head_unfiltered": 878,
+    "const_tail_lift": 1540,
+    "const_head_lift": 754,
+    "spurious_tail_eliminated": 966,
+    "spurious_tail_pct": 37.926972909305064,
+    "total_unfiltered": 6986,
+    "total_lift_constrained": 5855
+  }
+}

@@ -1,0 +1,262 @@
+{
+ "spike": "G78_g77_slice",
+ "recorded_utc": "2026-08-19T09:06:24Z",
+ "note": "G78: slice G77 DistMult picks. Do not move G59 0.2679. No literature MRR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G77_distmult_select/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G75_complex_gate/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G76_distmult_min10",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G76_distmult_min10/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G76_distmult_min10": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G78_g77_slice/slice.py",
+   "sha256": "965fe94a9bbe567d5812fdd09eb056f73a9d04c6a3a19e3938419b5c966ad9e7",
+   "bytes": 15531,
+   "mtime": 1787130312,
+   "compared_ts": 1787130312,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G78_g77_slice/slice.json",
+   "sha256": "5119a3170643f5aea122d1e5464b9bd83c2b5f4b59660b6a1f0dd5364f9b468c",
+   "bytes": 191784,
+   "mtime": 1787130384,
+   "compared_ts": 1787130384,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_four_sha",
+   "must_fire_because": "reconstruct G77 4-way mask",
+   "can_fail_because": "select drifted",
+   "null_must_contain": "sha mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+    "observed": "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_four_mrr",
+   "must_fire_because": "G77 0.3101",
+   "can_fail_because": "scorer drifted",
+   "null_must_contain": "mrr!=0.3101",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.3101,
+    "observed": 0.3101,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_three",
+   "must_fire_because": "G75 0.3034 / sha 17509ac9df1e",
+   "can_fail_because": "3-way drifted",
+   "null_must_contain": "3-way mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_sha_prefix": "17509ac9df1e",
+    "observed": "17509ac9df1ea03725161559a59c22764e4b0cc7a44d19f980dfbdbba1063cae",
+    "mrr": 0.3034,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_test_leak",
+   "must_fire_because": "official test 20466 leak 0",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "n!=20466 or leak",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_emb_hash",
+   "must_fire_because": "same embeddings as G77",
+   "can_fail_because": "npz swapped",
+   "null_must_contain": "hash miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "complex": "f54a5700099b517db4e3057bb1a72e7918032e9a9911089d17193207e9418eef",
+    "distmult": "61cb61cab600e60f6b2caaba15d13e4f9e2c6255c58265383d9357dacee077cc",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_concentrated",
+   "must_fire_because": null,
+   "can_fail_because": "top-10 keys carry >= 50% of +0.0067",
+   "null_must_contain": "share of delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "top10_share": 0.7842,
+    "top10_contrib": 0.005254,
+    "delta_ref": 0.0067,
+    "fired": true,
+    "description": "Fires if top-10 keys carry >= 50% of +0.0067"
+   },
+   "refutes": "that +0.0067 is spread across DistMult picks",
+   "fires_when": "top-10 keys carry >= 50% of +0.0067",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_losers_cover_headline",
+   "must_fire_because": null,
+   "can_fail_because": "negative DistMult-vs-ComplEx mass >= +0.0067",
+   "null_must_contain": "loser mass",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "neg_dm_cx_mass": 0.002671,
+    "delta_ref": 0.0067,
+    "n_lose": 130,
+    "fired": false,
+    "description": "Fires if DistMult-vs-ComplEx loser mass >= +0.0067"
+   },
+   "refutes": "that DistMult wins dominate the 130 losses",
+   "fires_when": "negative DistMult-vs-ComplEx mass >= +0.0067",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_head_distmult_loses",
+   "must_fire_because": null,
+   "can_fail_because": "TEST DistMult <= ComplEx on DistMult-picked heads",
+   "null_must_contain": "head dm vs cx",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "head_dm": 0.2152,
+    "head_cx": 0.2001,
+    "fired": false,
+    "description": "Fires if DistMult-picked heads TEST DM <= CX"
+   },
+   "refutes": "that DistMult-picked heads stay DistMult-better",
+   "fires_when": "TEST DistMult <= ComplEx on DistMult-picked heads",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_concentrated"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select": {
+   "newest": 1787114197,
+   "from": "spikes/G77_distmult_select/select.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate": {
+   "newest": 1787113487,
+   "from": "spikes/G75_complex_gate/hybrid.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G76_distmult_min10": {
+   "newest": 1787113863,
+   "from": "spikes/G76_distmult_min10/distmult.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "G77 +0.0067 is concentrated, or loser mass covers it, or DistMult heads lose",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

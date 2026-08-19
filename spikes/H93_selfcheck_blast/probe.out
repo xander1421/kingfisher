@@ -1,0 +1,19 @@
+  GREEN    cite.py              outside=False tree_dirtied=False 0.09s 
+  GREEN    demo8.py             outside=False tree_dirtied=False 2.81s 
+  GREEN    githygiene.py        outside=False tree_dirtied=False 3.99s 
+  GREEN    idscope.py           outside=False tree_dirtied=False 0.05s 
+  GREEN    journalcheck.py      outside=False tree_dirtied=False 0.06s 
+  GREEN    recheck.py           outside=False tree_dirtied=False 0.08s 
+  GREEN    refcheck.py          outside=False tree_dirtied=False 0.08s 
+  GREEN    retrofit_d6.py       outside=True  tree_dirtied=False 0.08s left=['/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/tmpgqbc1gbb']
+  GREEN    rostercheck.py       outside=False tree_dirtied=False 0.11s 
+
+1/9 swept modules WRITE OUTSIDE THE WORKSPACE (§10).
+0/9 mutate the shared git tree.
+F1 falsified: True | F2 falsified: False | F3 falsified: True
+controls: {
+ "C1_leak_detected": true,
+ "C1_fails_if": "the /tmp snapshot differ is inert; then no module can ever be reported OUTSIDE",
+ "C2_quiet_is_clean": true,
+ "C2_fails_if": "the differ reports noise for a module that writes nothing; then C1 proves nothing"
+}

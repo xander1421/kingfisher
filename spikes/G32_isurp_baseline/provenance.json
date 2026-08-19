@@ -1,0 +1,126 @@
+{
+ "spike": "G32_isurp_baseline",
+ "recorded_utc": "2026-08-17T14:30:13Z",
+ "note": "G32: closed-form degree-preserving baseline vs the shuffle null, after reading hyperon-miner's isurp",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/../G17_composition_redo",
+   "head": "cd204df8d44f4cdcad0b8b86b9d5ba990d38d011",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/../G17_composition_redo": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/isurp.py",
+   "sha256": "6b75578b7e5b2b9c064697dbb98d6bfc792824ae1a8b456772ba80e7e6650a37",
+   "bytes": 19538,
+   "mtime": 1786968165,
+   "compared_ts": 1786968165,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/isurp.json",
+   "sha256": "3141c197d1d17259f7dbb2a50c1cacbed38cfd109eac70ef5079a26ff468221e",
+   "bytes": 30091,
+   "mtime": 1786977013,
+   "compared_ts": 1786977013,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_independent_head",
+   "must_fire_because": "a baseline that reports structure for a randomly placed head makes every excess it has ever scored suspect",
+   "can_fail_because": "placement is rng.choice over real entities, so degree-correlated placement could produce a spurious excess",
+   "null_must_contain": "a nonzero excess for a head placed at random over the same entities with matched edge count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "conf": 0.000230314507254907,
+    "closed": 0.00018862549790568618,
+    "head_shuffle": 0.0002006295263198301,
+    "excess_closed": 4.1689009349220806e-05,
+    "excess_head": 2.9684980935076882e-05,
+    "n_cand": 39077,
+    "n_edges": 39077
+   }
+  },
+  {
+   "name": "C2_dependent_head",
+   "must_fire_because": "a null that explains away a dependence planted by construction cannot exclude chance structure (A20)",
+   "can_fail_because": "the planted head raises r's degrees on exactly those endpoints, so a degree-preserving baseline could absorb the entire effect -- that is the failure mode under test",
+   "null_must_contain": "a near-zero excess for a head planted exactly on the body's endpoint pairs",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "conf": 1.0,
+    "closed": 0.45456657365947356,
+    "head_shuffle": 0.4556931187143332,
+    "excess_closed": 0.5454334263405265,
+    "excess_head": 0.5443068812856668,
+    "n_cand": 39077,
+    "n_edges": 39077
+   }
+  },
+  {
+   "name": "C3_closed_form_agreement",
+   "must_fire_because": "the closed form replaces the sampled null only if it reproduces it",
+   "can_fail_because": "the closed form treats candidate pairs as independent and ignores the permutation's exchange constraint; if that matters the two diverge here",
+   "null_must_contain": "a disagreement larger than sampling error",
+   "fired": false,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "max_abs_diff": 0.24770368106645863,
+    "mean_abs_diff": 0.0671744630831246,
+    "within_2se": 29,
+    "n_rules": 60,
+    "K": 50,
+    "head_vs_whole_max": 0.39743719151599327
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": "",
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/../G17_composition_redo": {
+   "newest": 1786951612,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [
+  "CONTROL C3_closed_form_agreement DID NOT FIRE -- run is VOID, not negative. (the closed form replaces the sampled null only if it reproduces it)"
+ ],
+ "ok": false
+}

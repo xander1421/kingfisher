@@ -1,0 +1,164 @@
+{
+  "spike": "G59",
+  "split": "official FB15k-237 train/valid/test",
+  "source_git": "https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding",
+  "source_commit": "2e440e0f9c687314d5ff67ead68ce985dc446e3a",
+  "field_order": "p,s,o",
+  "headline_arm": "C_valid_gated",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "n_train": 272115,
+  "n_valid": 17535,
+  "n_test": 20466,
+  "npred": 237,
+  "nent_all": 14541,
+  "nent_train": 14505,
+  "n_rules_2hop": 2201,
+  "file_sha256": {
+    "train.txt": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "valid.txt": "cf6309010852f6a8d47a45df830a426415d1ee6f7a3970a8376ff1fb81db4a5c",
+    "test.txt": "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574"
+  },
+  "pred_count_bag_matches_triples_bin": true,
+  "triples_bin": {
+    "nt": 272115,
+    "npred": 237,
+    "nent": 14505,
+    "ents_used": 14505
+  },
+  "same_pair_leak": {
+    "n": 0,
+    "frac": 0.0,
+    "n_test": 20466
+  },
+  "gate": {
+    "sha256": "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+    "n_g51_on": 157,
+    "n_g51_off": 66,
+    "fitted_on": "official valid"
+  },
+  "arms": {
+    "A_prior": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "B_g51": {
+      "mrr": 0.2585,
+      "hits1": 0.1898,
+      "hits3": 0.281,
+      "hits10": 0.3837,
+      "n_queries": 40932
+    },
+    "C_valid_gated": {
+      "mrr": 0.2679,
+      "hits1": 0.1951,
+      "hits3": 0.2922,
+      "hits10": 0.4037,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "direction_prior": {
+      "tail": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      }
+    },
+    "direction_g51": {
+      "tail": {
+        "mrr": 0.3525,
+        "hits1": 0.2729,
+        "hits3": 0.385,
+        "hits10": 0.4979,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1645,
+        "hits1": 0.1067,
+        "hits3": 0.1771,
+        "hits10": 0.2695,
+        "n_queries": 20466
+      }
+    },
+    "direction_gated": {
+      "tail": {
+        "mrr": 0.3655,
+        "hits1": 0.2808,
+        "hits3": 0.4011,
+        "hits10": 0.5247,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1703,
+        "hits1": 0.1094,
+        "hits3": 0.1833,
+        "hits10": 0.2827,
+        "n_queries": 20466
+      }
+    }
+  },
+  "pair_disjoint_transcribed": {
+    "note": "G51/G54 on pair-disjoint re-split of the same train; not official test",
+    "prior": 0.1732,
+    "g51": 0.2274,
+    "gated": 0.2313
+  },
+  "controls": {
+    "C1_train_count_and_hash": {
+      "n": 272115,
+      "sha256": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+      "ok": true
+    },
+    "C2_test_count_and_hash": {
+      "n": 20466,
+      "sha256": "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574",
+      "ok": true
+    },
+    "C3_valid_count": {
+      "n": 17535,
+      "ok": true
+    },
+    "C4_237_relations": {
+      "npred": 237,
+      "ok": true
+    },
+    "C5_filter_is_train_valid_test": {
+      "n_filter_triples": 310116,
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_train_is_not_triples_bin": {
+      "counts_match": true,
+      "fired": false,
+      "description": "Fires if official train predicate-count bag != triples.bin"
+    },
+    "F2_official_test_has_zero_same_pair_leak": {
+      "leak": 0,
+      "frac": 0.0,
+      "fired": true,
+      "description": "Fires if official test same-pair leak with train is 0"
+    },
+    "F3_valid_gated_does_not_beat_official_g51": {
+      "gated_mrr": 0.2679,
+      "g51_mrr": 0.2585,
+      "delta": 0.0094,
+      "fired": false,
+      "description": "Fires if valid-fitted gate MRR <= official G51. Signed."
+    }
+  },
+  "elapsed_sec": 452.14
+}

@@ -1,0 +1,342 @@
+{
+ "spike": "G79_rotate_all_entity",
+ "recorded_utc": "2026-08-19T12:20:52Z",
+ "note": "G79: RotatE filtered all-entity on official FB15k-237 with G72 min_epoch=10. Sun 2019 0.338 is excerpted, not a bar. No literature headline.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G72_complex_all_entity/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/refs",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/refs/sun-2019-rotate-fb15k237.txt"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/refs": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G79_rotate_all_entity/rotate.py",
+   "sha256": "6bde81f19e45b3d55391d2e0c90de6bf1d610d43953ab631971e8fbf0e1176e3",
+   "bytes": 26564,
+   "mtime": 1787142013,
+   "compared_ts": 1787142013,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G79_rotate_all_entity/rotate.json",
+   "sha256": "b290458c42da975ef8d6cf805eebeccf3ba348d51a87108249f05bc07caf2e3c",
+   "bytes": 8841,
+   "mtime": 1787142052,
+   "compared_ts": 1787142052,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test is 20466",
+   "can_fail_because": "wrong test.txt",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "expected": 20466,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "official leak is 0",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_nent",
+   "must_fire_because": "14541 entities",
+   "can_fail_because": "pack_ids over train only",
+   "null_must_contain": "nent!=14541",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "nent": 14541,
+    "expected": 14541,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "(p,s,o); 237 relations",
+   "can_fail_because": "(s,p,o) swap",
+   "null_must_contain": "max_p>=npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14541,
+    "max_p": 236,
+    "max_s": 14540,
+    "max_o": 14540
+   }
+  },
+  {
+   "name": "C5_min_epoch",
+   "must_fire_because": "best_epoch >= 10",
+   "can_fail_because": "G66 epoch-1 trap",
+   "null_must_contain": "best_epoch<10",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "best_epoch": 17,
+    "min_epoch": 10,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_prior_identity",
+   "must_fire_because": "prior 0.2334",
+   "can_fail_because": "score_split drift",
+   "null_must_contain": "prior!=0.2334",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "prior": 0.2334,
+    "ref": 0.2334,
+    "ok": true
+   }
+  },
+  {
+   "name": "C7_excerpt_present",
+   "must_fire_because": "Sun 2019 table stored under corpus/",
+   "can_fail_because": "G35 unsourced recall",
+   "null_must_contain": "excerpt missing",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "why": null,
+    "sha256": "1a66f2b895f4bb99bd3c46f2be0f4f4e7a1be48157ea1ec46ee1e072d65abe44",
+    "readme_rotate_mrr": 0.337,
+    "table5_rotate_mrr": 0.338,
+    "table5_complex_mrr": 0.247,
+    "table5_distmult_mrr": 0.241,
+    "protocol_note": "self-adversarial dim=1000 100k steps; not this trainer"
+   }
+  },
+  {
+   "name": "C8_literature_compare",
+   "must_fire_because": "headline stays unavailable (protocol)",
+   "can_fail_because": "quoted 0.338 as our bar",
+   "null_must_contain": "a literature MRR headline",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "value": "unavailable",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_rotate_does_not_beat_distmult",
+   "must_fire_because": null,
+   "can_fail_because": "rotate - 0.2852 < 0.005",
+   "null_must_contain": "a signed delta vs DistMult, including a loss",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rotate_mrr": 0.2643,
+    "distmult_ref": 0.2852,
+    "delta": -0.0209,
+    "bar": 0.005,
+    "fired": true,
+    "fires_when": "rotate - 0.2852 < 0.005"
+   },
+   "refutes": "that RotatE under G72 protocol is a +0.005 lift over DistMult 0.2852",
+   "fires_when": "rotate - 0.2852 < 0.005",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_rotate_below_official_prior",
+   "must_fire_because": null,
+   "can_fail_because": "rotate < 0.2334",
+   "null_must_contain": "an MRR on either side of the official prior 0.2334",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rotate_mrr": 0.2643,
+    "prior_bar": 0.2334,
+    "prior_observed": 0.2334,
+    "fired": false,
+    "fires_when": "rotate < 0.2334"
+   },
+   "refutes": "that the latent arm is a working RotatE",
+   "fires_when": "rotate < 0.2334",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_rotate_below_complex",
+   "must_fire_because": null,
+   "can_fail_because": "rotate < 0.2755",
+   "null_must_contain": "RotatE on either side of 0.2755",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rotate_mrr": 0.2643,
+    "complex_ref": 0.2755,
+    "delta": -0.0112,
+    "fired": true,
+    "fires_when": "rotate < 0.2755"
+   },
+   "refutes": "that RotatE under this protocol beats ComplEx 0.2755",
+   "fires_when": "rotate < 0.2755",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_rotate_does_not_beat_distmult",
+  "F3_rotate_below_complex"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity": {
+   "newest": 1787112085,
+   "from": "spikes/G72_complex_all_entity/complex.json"
+  },
+  "/Users/victorianikolenko/kingfisher/corpus/refs": {
+   "newest": 1787141372,
+   "from": "corpus/refs/sun-2019-rotate-fb15k237.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "RotatE min_epoch=10 does not beat DistMult 0.2852 by +0.005, OR RotatE < 0.2334, OR RotatE < ComplEx 0.2755",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

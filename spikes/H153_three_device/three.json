@@ -1,0 +1,209 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "status": "F001_FROZEN",
+  "emulator_is_not_a_phone": true,
+  "emulator_same_host_as_mac": true,
+  "not_a_new_operator_domain": true,
+  "not_three_physical_phones": true,
+  "gates": {
+    "R5CY93675MK": "device quiet: cpu_busy 0.6% (limit 15%), runnable 1, thermal 36600m, battery status=5 level=100 charging=true powered=1",
+    "R5CX508MPRZ": "device quiet: cpu_busy 3.8% (limit 15%), runnable 1, thermal UNREADABLE(overridden), battery status=2 level=38 thermal-override=UNREADABLE charging=true powered=1",
+    "emulator-5554": "device quiet: cpu_busy 4.4% (limit 15%), runnable 1, thermal UNREADABLE(overridden), battery status=2 level=100 thermal-override=UNREADABLE charging=true powered=1"
+  },
+  "pins": {
+    "R5CY93675MK": {
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "verdict": "ACCEPTED"
+    },
+    "R5CX508MPRZ": {
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "verdict": "ACCEPTED"
+    },
+    "emulator-5554": {
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "verdict": "ACCEPTED"
+    }
+  },
+  "s25_k2_s": 1.7466532919934252,
+  "s25_k2_jobs_per_s": 229.00938717121525,
+  "two_phone": {
+    "workers": {
+      "R5CY93675MK": 2,
+      "R5CX508MPRZ": 2
+    },
+    "wall_s": 1.3956204169953708,
+    "taken": {
+      "R5CY93675MK": 300,
+      "R5CX508MPRZ": 100,
+      "emulator-5554": 0
+    },
+    "jobs_per_s": 286.6108829656988,
+    "detail": [
+      {
+        "serial": "R5CY93675MK",
+        "jobs": 150,
+        "wall_s": 1.3851328339951579
+      },
+      {
+        "serial": "R5CY93675MK",
+        "jobs": 150,
+        "wall_s": 1.394866666989401
+      },
+      {
+        "serial": "R5CX508MPRZ",
+        "jobs": 50,
+        "wall_s": 1.266611583007034
+      },
+      {
+        "serial": "R5CX508MPRZ",
+        "jobs": 50,
+        "wall_s": 1.3519727909879293
+      }
+    ]
+  },
+  "three_rounds": [
+    {
+      "workers": {
+        "R5CY93675MK": 2,
+        "R5CX508MPRZ": 2,
+        "emulator-5554": 2
+      },
+      "wall_s": 1.3790902079927037,
+      "taken": {
+        "R5CY93675MK": 100,
+        "R5CX508MPRZ": 100,
+        "emulator-5554": 200
+      },
+      "jobs_per_s": 290.04629115756603,
+      "detail": [
+        {
+          "serial": "R5CY93675MK",
+          "jobs": 50,
+          "wall_s": 0.478417125006672
+        },
+        {
+          "serial": "R5CY93675MK",
+          "jobs": 50,
+          "wall_s": 0.4665747079998255
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "jobs": 50,
+          "wall_s": 1.3178424590005307
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "jobs": 50,
+          "wall_s": 1.372636500003864
+        },
+        {
+          "serial": "emulator-5554",
+          "jobs": 100,
+          "wall_s": 0.7576945420005359
+        },
+        {
+          "serial": "emulator-5554",
+          "jobs": 100,
+          "wall_s": 0.706115958004375
+        }
+      ],
+      "round": 0
+    },
+    {
+      "workers": {
+        "R5CY93675MK": 2,
+        "R5CX508MPRZ": 2,
+        "emulator-5554": 2
+      },
+      "wall_s": 1.2357740830047987,
+      "taken": {
+        "R5CY93675MK": 100,
+        "R5CX508MPRZ": 100,
+        "emulator-5554": 200
+      },
+      "jobs_per_s": 323.68375862633036,
+      "detail": [
+        {
+          "serial": "R5CY93675MK",
+          "jobs": 50,
+          "wall_s": 0.4685648339946056
+        },
+        {
+          "serial": "R5CY93675MK",
+          "jobs": 50,
+          "wall_s": 0.4610787079873262
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "jobs": 50,
+          "wall_s": 1.228079416003311
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "jobs": 50,
+          "wall_s": 1.2267761249968316
+        },
+        {
+          "serial": "emulator-5554",
+          "jobs": 100,
+          "wall_s": 0.7233913329982897
+        },
+        {
+          "serial": "emulator-5554",
+          "jobs": 100,
+          "wall_s": 0.7451004169997759
+        }
+      ],
+      "round": 1
+    },
+    {
+      "workers": {
+        "R5CY93675MK": 2,
+        "R5CX508MPRZ": 2,
+        "emulator-5554": 2
+      },
+      "wall_s": 1.2690609999990556,
+      "taken": {
+        "R5CY93675MK": 100,
+        "R5CX508MPRZ": 100,
+        "emulator-5554": 200
+      },
+      "jobs_per_s": 315.1936746935708,
+      "detail": [
+        {
+          "serial": "R5CY93675MK",
+          "jobs": 50,
+          "wall_s": 0.46821579200332053
+        },
+        {
+          "serial": "R5CY93675MK",
+          "jobs": 50,
+          "wall_s": 0.47699879099673126
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "jobs": 50,
+          "wall_s": 1.2415864999929909
+        },
+        {
+          "serial": "R5CX508MPRZ",
+          "jobs": 50,
+          "wall_s": 1.2643122500012396
+        },
+        {
+          "serial": "emulator-5554",
+          "jobs": 100,
+          "wall_s": 0.7353654589969665
+        },
+        {
+          "serial": "emulator-5554",
+          "jobs": 100,
+          "wall_s": 0.7531835419940762
+        }
+      ],
+      "round": 2
+    }
+  ],
+  "three_best_vs_s25_k2": 0.7075096635774987,
+  "three_best_vs_two": 0.8854657526903303
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""recordloss.py v2 — H94 (v1), H117 (v2). A completed record must not leave an append-mostly
+"""recordloss.py v3 — H94 (v1), H117 (v2), H123 (v3). A completed record must not leave an append-mostly
 document, and every gate in this repo was blind to it.
 
 WHY THIS EXISTS (§12.7 rationale)
@@ -85,6 +85,12 @@ in the same commit, was QUIET. v2 pairs source and destination from
 is quiet because the records MOVED and not because nothing was looked at. Found
 by this lane's own H117 attack, behind a positive control that a pure deletion
 still refuses -- without that control the silence reads as correctness.
+
+v3, H123 — DEFECT REMOVED: a rename to a path OUTSIDE the covered set was quiet,
+because the keys were still in the blob. They are not in any document a reader or
+a gate looks at: `git mv HANDOFF.OTHER-9.md notes.md` deletes a journal as far as
+every consumer is concerned, and it is the shape that also walked another lane's
+journal past `commit-msg.hook`'s H19 ownership gate.
 
   python3 recordloss.py               gate: HEAD vs the index, commit paths only
   python3 recordloss.py --commit REV  replay one commit (F1: 10ed3f2 refuses)
@@ -187,7 +193,12 @@ def gate(cwd=None):
         before = blob(f'HEAD:{src}', cwd)
         if before is None:                # new file: no previous revision
             continue
-        lost = compare(before, blob(f':{dst}', cwd), covered(src))
+        # A rename OUT of the covered corpus is a loss even though the bytes
+        # survive: nothing reads `notes.md` as a journal, §14.2's headline greps
+        # `^DONE` in CHANNEL.md, and `git mv HANDOFF.OTHER-9.md notes.md` is the
+        # shape that walked another lane's journal past the H19 gate (H123 arm B).
+        after = blob(f':{dst}', cwd) if covered(dst) else None
+        lost = compare(before, after, covered(src))
         if lost:
             losses[src if src == dst else f'{src} -> {dst}'] = lost
     if losses:
@@ -344,6 +355,14 @@ def selfcheck():
         run('git', 'add', 'HANDOFF.y.md', cwd=t)
         if quiet_gate(t) != 1:
             fails.append('a rename that DROPS a record must REFUSE (H117 FA2c)')
+        run('git', 'reset', '-q', '--hard', 'HEAD', cwd=t)   # throwaway repo
+
+        # 10 — H123: a rename OUT of the covered set. The bytes survive and the
+        # records do not: nothing reads `notes.md` as a journal, and this is the
+        # shape that walked another lane's journal past the H19 ownership gate.
+        run('git', 'mv', 'HANDOFF.x.md', 'notes.md', cwd=t)
+        if quiet_gate(t) != 1:
+            fails.append('a rename OUT of the covered set must REFUSE (H123 arm B)')
     finally:
         shutil.rmtree(root, ignore_errors=True)
 

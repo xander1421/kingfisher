@@ -1,0 +1,21 @@
+{
+  "manifest_version": "1.0.0",
+  "spike": "G52",
+  "created_utc": "2026-08-18T19:03:51Z",
+  "corpus_binding": {
+    "triples_bin_sha256": "6a8af96e14ba0b6c255cfab8516ca39bb2b9225709fd4527f52273e927ee948e",
+    "n_total_triples": 272115,
+    "n_predicates": 237,
+    "n_entities": 14505,
+    "split_discipline": "pair_disjoint",
+    "n_train_triples": 190481,
+    "n_dev_triples": 40894,
+    "n_test_triples": 40740
+  },
+  "frozen_hyperparameters": {
+    "alpha": 0.05,
+    "beta": 0.1,
+    "fixed_point_scale": 10000,
+    "tie_breaking_order": "(-score_int, candidate_id)"
+  }
+}

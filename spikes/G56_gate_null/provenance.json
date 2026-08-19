@@ -1,0 +1,218 @@
+{
+ "spike": "G56_gate_null",
+ "recorded_utc": "2026-08-19T00:58:35Z",
+ "note": "G56: DEV-gated vs random-mask null; train-entropy hard gate.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G54_slice_gated_lift/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G56_gate_null/gate_null.py",
+   "sha256": "03c06f30d7e9aefff0024f8e28f38f82ad480d8eb1ceec7508c97cf2d91c9e2a",
+   "bytes": 15015,
+   "mtime": 1787100812,
+   "compared_ts": 1787100812,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G56_gate_null/gate_null.json",
+   "sha256": "2110f1273c9227415cccd470c23a6b33c4c3e5111808869ae2ca834f84a11317",
+   "bytes": 2290,
+   "mtime": 1787101115,
+   "compared_ts": 1787101115,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_prior",
+   "must_fire_because": "prior 0.1732",
+   "can_fail_because": "split drifted",
+   "null_must_contain": "unexpected prior",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.1732
+   }
+  },
+  {
+   "name": "C2_g51",
+   "must_fire_because": "G51 0.2274",
+   "can_fail_because": "lift drifted",
+   "null_must_contain": "unexpected G51",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "mrr": 0.2274
+   }
+  },
+  {
+   "name": "C3_leak",
+   "must_fire_because": "leak 0",
+   "can_fail_because": "partition broken",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "leak": 0
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "(p,s,o) max_p<npred",
+   "can_fail_because": "G52 swap",
+   "null_must_contain": "max_p>=npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504
+   }
+  },
+  {
+   "name": "C5_reproduces_g54_gated",
+   "must_fire_because": "reconstructed DEV-gated matches G54 0.2313",
+   "can_fail_because": "gate rule drifted from G54",
+   "null_must_contain": "gated MRR != 0.2313",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "gated": 0.2313,
+    "g54": 0.2313
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_gated_is_selection_noise",
+   "must_fire_because": null,
+   "can_fail_because": "P(random mask MRR >= true) >= 0.05",
+   "null_must_contain": "a percentile on either side of 0.05",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "pctile_ge": 0.0,
+    "p95_null": 0.2192,
+    "true": 0.2313,
+    "fired": false,
+    "description": "Fires if DEV-gated is not above the 95th percentile of same-size random masks"
+   },
+   "refutes": "that DEV-gated +0.0039 is a mechanism rather than picking 105 names",
+   "fires_when": "P(random mask MRR >= true) >= 0.05",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_entropy_gate_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "entropy_gated <= G51",
+   "null_must_contain": "signed entropy-G51 delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "entropy_mrr": 0.2235,
+    "g51_mrr": 0.2274,
+    "delta": -0.0039,
+    "fired": true,
+    "description": "Fires if train-entropy hard gate MRR <= G51. Signed."
+   },
+   "refutes": "that a train-entropy hard gate can replace DEV labels",
+   "fires_when": "entropy_gated <= G51",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_entropy_gate_does_not_beat_g51"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G54_slice_gated_lift": {
+   "newest": 1787100600,
+   "from": "spikes/G54_slice_gated_lift/slice_gated.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "DEV-gated TEST MRR is not above the 95th percentile of same-size random masks AND/OR train-entropy gate does not beat G51"
+}

@@ -1,135 +1,145 @@
 {
-  "arm_1_thread": {
+  "arm_1_thread_device": {
     "distinct": {
       "alpha": 1,
       "canon": 1,
       "fuel_at_pos": 1,
       "raw": 1
     },
-    "job_runs_per_invocation": 13,
-    "sigs": {
-      "alpha": [
-        "c1fafd2f8955ab45",
-        "c1fafd2f8955ab45",
-        "c1fafd2f8955ab45",
-        "c1fafd2f8955ab45",
-        "c1fafd2f8955ab45"
-      ],
-      "canon": [
-        "c8464069ca0b6e9e",
-        "c8464069ca0b6e9e",
-        "c8464069ca0b6e9e",
-        "c8464069ca0b6e9e",
-        "c8464069ca0b6e9e"
-      ],
-      "fuel_at_pos": [
-        "0f06b29cabe576bb",
-        "0f06b29cabe576bb",
-        "0f06b29cabe576bb",
-        "0f06b29cabe576bb",
-        "0f06b29cabe576bb"
-      ],
-      "raw": [
-        "1e249c956a6e0e2b",
-        "1e249c956a6e0e2b",
-        "1e249c956a6e0e2b",
-        "1e249c956a6e0e2b",
-        "1e249c956a6e0e2b"
-      ]
-    },
-    "wall_median": 5.110843896865845,
+    "job_runs": 13,
+    "throughput_steps_per_sec": 657.6,
+    "wall_median": 5.279813051223755,
     "walls": [
-      5.52,
-      5.11,
-      5.11,
-      5.11,
-      5.1
+      5.308,
+      5.308,
+      5.28,
+      5.267,
+      5.262
     ]
   },
-  "arm_n_thread": {
+  "arm_4_thread_device": {
     "distinct": {
       "alpha": 1,
       "canon": 1,
       "fuel_at_pos": 1,
       "raw": 5
     },
-    "job_runs_per_invocation": 52,
-    "sigs": {
-      "alpha": [
-        "991aeb40fde3bce3",
-        "991aeb40fde3bce3",
-        "991aeb40fde3bce3",
-        "991aeb40fde3bce3",
-        "991aeb40fde3bce3"
-      ],
-      "canon": [
-        "132408f4de8d0b74",
-        "132408f4de8d0b74",
-        "132408f4de8d0b74",
-        "132408f4de8d0b74",
-        "132408f4de8d0b74"
-      ],
-      "fuel_at_pos": [
-        "666aad6316e2dbf0",
-        "666aad6316e2dbf0",
-        "666aad6316e2dbf0",
-        "666aad6316e2dbf0",
-        "666aad6316e2dbf0"
-      ],
-      "raw": [
-        "103af11e95b9d9f0",
-        "6cdbf678d7a15df1",
-        "51b4db747eed5523",
-        "6895129d685ac943",
-        "8a7a8a844ded97f4"
-      ]
+    "effect_size": {
+      "alpha": {
+        "kept_vs_invocation_0": [
+          52,
+          52,
+          52,
+          52
+        ],
+        "total_per_invocation": 52
+      },
+      "canon": {
+        "kept_vs_invocation_0": [
+          52,
+          52,
+          52,
+          52
+        ],
+        "total_per_invocation": 52
+      },
+      "raw": {
+        "kept_vs_invocation_0": [
+          40,
+          43,
+          44,
+          43
+        ],
+        "total_per_invocation": 52
+      }
     },
-    "wall_median": 5.185135841369629,
+    "job_runs": 52,
+    "speedup_vs_serialised": 3.87,
+    "throughput_steps_per_sec": 2543.0,
+    "wall_median": 5.461217880249023,
     "walls": [
-      5.19,
-      5.19,
-      5.19,
-      5.18,
-      5.18
+      5.449,
+      5.477,
+      5.453,
+      5.466,
+      5.461
+    ]
+  },
+  "arm_8_thread_device": {
+    "distinct": {
+      "alpha": 1,
+      "canon": 1,
+      "fuel_at_pos": 1,
+      "raw": 5
+    },
+    "effect_size": {
+      "alpha": {
+        "kept_vs_invocation_0": [
+          104,
+          104,
+          104,
+          104
+        ],
+        "total_per_invocation": 104
+      },
+      "canon": {
+        "kept_vs_invocation_0": [
+          104,
+          104,
+          104,
+          104
+        ],
+        "total_per_invocation": 104
+      },
+      "raw": {
+        "kept_vs_invocation_0": [
+          73,
+          72,
+          78,
+          77
+        ],
+        "total_per_invocation": 104
+      }
+    },
+    "job_runs": 104,
+    "speedup_vs_serialised": 7.51,
+    "throughput_steps_per_sec": 4939.2,
+    "wall_median": 5.6235692501068115,
+    "walls": [
+      5.641,
+      5.612,
+      5.632,
+      5.617,
+      5.624
     ]
   },
   "c0_soakrun_identical": true,
-  "effect_size_n_thread": {
-    "alpha": {
-      "kept_vs_invocation_0": [
-        52,
-        52,
-        52,
-        52
-      ],
-      "total_per_invocation": 52
-    },
-    "canon": {
-      "kept_vs_invocation_0": [
-        52,
-        52,
-        52,
-        52
-      ],
-      "total_per_invocation": 52
-    },
-    "raw": {
-      "kept_vs_invocation_0": [
-        30,
-        32,
-        36,
-        36
-      ],
-      "total_per_invocation": 52
-    }
+  "cross_isa_canon_match": true,
+  "device": {
+    "abi": "arm64-v8a",
+    "model": "SM-S938B",
+    "platform": "sun",
+    "sdk": "36",
+    "thermal_after_m": 54400,
+    "thermal_before_m": 54000
   },
   "invocations": 5,
   "jobs_per_invocation": 13,
-  "parallel_speedup_vs_serialised": 3.94,
+  "memory_residency": {
+    "vm_hwm_kb": 6056,
+    "vm_peak_kb": 10878704,
+    "vm_rss_kb": 6056
+  },
+  "probe_alpha_distinct": 1,
   "probe_canon_distinct": 1,
   "probe_positions": 7,
   "probe_raw_distinct": 7,
-  "threadrun_sha256": "00bcc9e0e606c94b9c554ad38942f860fa7a2382e2b0b4bb59833ac217d5981c",
-  "threads": 4,
-  "verdict": "F2"
+  "threadrun_device_sha256": "c8fdb2ccd43908dbab7f7f839aa0bb0aa62fcb6071bc1f6942d661c2d6e9f4fd",
+  "threadrun_host_sha256": "60acd03bb3bdd48e461114b9c1aae25ff403bf86a982ddad9c6b150338ee9544",
+  "threads_tested": [
+    1,
+    4,
+    8
+  ],
+  "verdict": "F2 PROVEN ON PHYSICAL DEVICE: RAW varies under in-process concurrency, CANON and ALPHA remain 100% deterministic (zero divergence)"
 }

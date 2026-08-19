@@ -1,0 +1,31 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "status": "F001_FROZEN",
+  "not_a_new_isa": true,
+  "not_a_new_operator_domain": true,
+  "s25": {
+    "serial": "R5CY93675MK",
+    "gate_before": "device quiet: cpu_busy 1.4% (limit 15%), runnable 1, thermal 37400m, battery status=5 level=100 charging=true powered=1",
+    "gate_after": "device quiet: cpu_busy 1.5% (limit 15%), runnable 2, thermal 37400m, battery status=5 level=100 charging=true powered=1",
+    "verdict": "ACCEPTED",
+    "fuel": 400,
+    "witness_sha256": "112f7e8c9e351f1d651b9270902c50fe049219aac78e1f11dec5e40088617151",
+    "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "m06": "REJECTED RESULT_NOT_DERIVED",
+    "m06_rc": 1
+  },
+  "s24": {
+    "serial": "R5CX508MPRZ",
+    "attached": true,
+    "charging": true,
+    "level": 36,
+    "default_gate": "thermal-UNREADABLE",
+    "override": "QUIET_ALLOW_THERMAL_UNREADABLE=1",
+    "job_ran": false,
+    "refused": "cpu_busy",
+    "cpu_busy_pct_samples": [50.2, 19.3, 22.3, 53.6, 43.5, 27.7, 32.0, 43.3, 48.2, 46.5, 42.0, 44.8, 46.8],
+    "top_reason": "com.playspare.supermarket.store.simulator 206% CPU",
+    "did_not_kill_app": true,
+    "did_not_raise_cpu_limit": true
+  }
+}

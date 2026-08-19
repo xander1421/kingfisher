@@ -1,0 +1,61 @@
+=== population: output-discarding calls in harness-reachable code ===
+  total: 344
+
+=== shortlist: the callee is a REPO CHECKER (something that refuses with a reason) ===
+  shortlisted: 17
+    spikes/H116_inert_loop/probe.sh:18:  sh spikes/quiet.sh >/dev/null 2>&1
+    spikes/H11_fuse_scope/probe.py:96:bash .claude/hooks/loop_gate.sh </dev/null >/dev/null 2>&1
+    spikes/H11_fuse_scope/probe.py:97:bash .claude/hooks/loop_gate.sh </dev/null >/dev/null 2>&1
+    spikes/H78_selfcheck_wiring/check.sh:41:invoked() { grep -nE '^[^#]*python3 spikes/harness/selfcheckall\.py' "$1" >/dev/null; }
+    spikes/H78_selfcheck_wiring/check.sh:60:python3 "$ROOT/spikes/harness/selfcheckall.py" --selfcheck >/dev/null 2>&1
+    spikes/H68_delivery_gap/probe.sh:94:bash spikes/harness/check_live_launcher.sh >/dev/null 2>&1; clcrc=$?
+    spikes/harness/autoloop_local.sh:55:QUIET_JSON=$(sh spikes/quiet.sh --json 2>/dev/null)
+    spikes/harness/autoloop_local.sh:57:if ! sh spikes/quiet.sh >/dev/null 2>&1; then
+    spikes/harness/bringup.sh:179:  elif sh spikes/harness/install_hooks.sh >/dev/null 2>&1; then
+    spikes/harness/bringup.sh:188:if sh spikes/harness/test_loop_gate.sh >/dev/null 2>&1; then
+    spikes/harness/bringup.sh:244:  if sh spikes/quiet.sh >/dev/null 2>&1; then
+    spikes/harness/bringup.sh:247:    _qwhy=$(sh spikes/quiet.sh --json 2>/dev/null | sed -n 's/.*"refusals":"\([^"]*\)".*/\1/p')
+    spikes/H122_quiet_cause/probe.sh:38:if sh spikes/quiet.sh --json >/dev/null 2>&1 || [ -n "$(grep -c 'json' "$ROOT/spikes/quiet.sh")" ]; 
+    spikes/H122_quiet_cause/probe.sh:55:  a=$(sh spikes/quiet.sh --json 2>/dev/null)
+    spikes/H122_quiet_cause/probe.sh:56:  b=$(QUIET_ALLOW_CONTAINERS=1 sh spikes/quiet.sh --json 2>/dev/null)
+    spikes/H35_gate_scope/probe.sh:161:c1a=0; python3 spikes/harness/refcheck.py >/dev/null 2>&1 || c1a=1
+    spikes/H35_gate_scope/probe.sh:163:c1b=0; python3 spikes/harness/refcheck.py >/dev/null 2>&1 || c1b=1
+
+=== of those, which REPORT the refusal onward? (the 6 lines after each) ===
+  REPORTS-ONWARD  spikes/H116_inert_loop/probe.sh:18
+                    4:  printf '  sample %d: rc=%d%s\n' "$i" "$rc" "$([ "$rc" -eq 0 ] && echo ' (quiet)' || echo ' (REFUSES)')"
+                    7:echo "  quiet in $q of $n samples"
+  REPORTS-ONWARD  spikes/H11_fuse_scope/probe.py:96
+                    3:echo "span ${n}: $(cat ".loop_blocks.${CALLSIGN}" 2>/dev/null || echo ABSENT)" >> seen.log
+  REPORTS-ONWARD  spikes/H11_fuse_scope/probe.py:97
+                    2:echo "span ${n}: $(cat ".loop_blocks.${CALLSIGN}" 2>/dev/null || echo ABSENT)" >> seen.log
+  silent          spikes/H78_selfcheck_wiring/check.sh:41 (exit code consumed, nothing said to anyone)
+  REPORTS-ONWARD  spikes/H78_selfcheck_wiring/check.sh:60
+                    5:echo
+                    6:[ "$FAIL" -eq 0 ] && echo "H78 check: 5 assertions, 0 FAILED — the sweep is wired, reached, late, and ungate
+  REPORTS-ONWARD  spikes/H68_delivery_gap/probe.sh:94
+                    2:printf '   check_live_launcher.sh exit code RIGHT NOW: %s\n' "$clcrc"
+                    5:echo
+  REPORTS-ONWARD  spikes/harness/autoloop_local.sh:55
+                    2:QUIET_WHY=$(printf '%s' "$QUIET_JSON" | sed -n 's/.*"refusals":"\([^"]*\)".*/\1/p')
+                    5:    echo "gate      : quiet.sh REFUSES [${QUIET_WHY:-reason unavailable}], but this"
+  REPORTS-ONWARD  spikes/harness/autoloop_local.sh:57
+                    3:    echo "gate      : quiet.sh REFUSES [${QUIET_WHY:-reason unavailable}], but this"
+                    4:    echo "            program declares itself load-insensitive -- proceeding"
+  silent          spikes/harness/bringup.sh:179 (exit code consumed, nothing said to anyone)
+  silent          spikes/harness/bringup.sh:188 (exit code consumed, nothing said to anyone)
+  REPORTS-ONWARD  spikes/harness/bringup.sh:244
+                    5:    # H122: print WHICH arm refused. `containers(N)` is a floor no lane can clear
+  REPORTS-ONWARD  spikes/harness/bringup.sh:247
+                    2:    # H122: print WHICH arm refused. `containers(N)` is a floor no lane can clear
+  REPORTS-ONWARD  spikes/H122_quiet_cause/probe.sh:38
+                    2:  echo "  --json support in source: $(grep -c 'json' "$ROOT/spikes/quiet.sh") mention(s)"
+                    5:echo
+  REPORTS-ONWARD  spikes/H122_quiet_cause/probe.sh:55
+                    3:  la=$(printf '%s' "$a" | sed -n 's/.*"loadavg":\([0-9.]*\).*/\1/p')
+                    4:  ra=$(printf '%s' "$a" | sed -n 's/.*"refusals":"\([^"]*\)".*/\1/p')
+  REPORTS-ONWARD  spikes/H122_quiet_cause/probe.sh:56
+                    2:  la=$(printf '%s' "$a" | sed -n 's/.*"loadavg":\([0-9.]*\).*/\1/p')
+                    3:  ra=$(printf '%s' "$a" | sed -n 's/.*"refusals":"\([^"]*\)".*/\1/p')
+  silent          spikes/H35_gate_scope/probe.sh:161 (exit code consumed, nothing said to anyone)
+  silent          spikes/H35_gate_scope/probe.sh:163 (exit code consumed, nothing said to anyone)

@@ -132,6 +132,52 @@ assert adj(split)[5] == 1, 'the dissenter must not be counted as a domain'
 q3.MIN_DOMAINS = 1
 q3.OBSERVED.clear()
 
+# --- DEV single-operator: one human may exercise the agreement path without
+# minting operator=2. Production unset MUST still refuse. The DEV verdict is
+# not UNANIMOUS/MAJORITY so `accepted` cannot count it.
+q3.MIN_DOMAINS = 3
+q3.OBSERVED.clear()
+os.environ.pop('KF_DEV_SINGLE_OPERATOR', None)
+dev_same = [W('da'), W('db'), W('dc')]
+assert adj(dev_same)[0] == 'INSUFFICIENT_DOMAINS', 'unset flag must still refuse'
+os.environ['KF_DEV_SINGLE_OPERATOR'] = '1'
+v_dev, _, _, _, _, dom_dev = adj(dev_same)
+assert v_dev == 'DEV_SINGLE_OPERATOR', v_dev
+assert v_dev not in ('UNANIMOUS', 'MAJORITY', 'ACCEPTED'), v_dev
+assert dom_dev == 1, dom_dev
+os.environ['KF_DEV_SINGLE_OPERATOR'] = '0'
+assert adj(dev_same)[0] == 'INSUFFICIENT_DOMAINS', '0 is not a licence'
+os.environ.pop('KF_DEV_SINGLE_OPERATOR', None)
+q3.MIN_DOMAINS = 1
+q3.OBSERVED.clear()
+
+# --- DEV: phone is a second operator LABEL, not an attestation root.
+# Production: both seats UNATTESTED. DEV flag: DEV:PHONE != DEV:HOST.
+# Shared manifest still binds; verdict is still not UNANIMOUS.
+os.environ.pop('KF_DEV_SINGLE_OPERATOR', None)
+assert q3.operator_label('adb') == 'UNATTESTED'
+assert q3.operator_label('local') == 'UNATTESTED'
+os.environ['KF_DEV_SINGLE_OPERATOR'] = '1'
+assert q3.operator_label('adb') == 'DEV:PHONE'
+assert q3.operator_label('app') == 'DEV:PHONE'
+assert q3.operator_label('local') == 'DEV:HOST'
+assert q3.operator_label('adb') != q3.operator_label('local')
+q3.MIN_DOMAINS = 3
+q3.OBSERVED.clear()
+phone_pair = [
+    W('host', operator='DEV:HOST'),
+    W('host2', operator='DEV:HOST', host='h1'),
+    W('phone', operator='DEV:PHONE', host='h2', os='android', isa='aarch64', binary='b2'),
+]
+v_ph, _, _, _, _, dom_ph = adj(phone_pair)
+assert v_ph == 'DEV_SINGLE_OPERATOR', v_ph
+assert phone_pair[0]['_per_class']['operator'] == 2, phone_pair[0]['_per_class']
+assert phone_pair[0]['_per_class']['manifest'] == 1, 'manifest still binds'
+assert v_ph != 'UNANIMOUS'
+os.environ.pop('KF_DEV_SINGLE_OPERATOR', None)
+q3.MIN_DOMAINS = 1
+q3.OBSERVED.clear()
+
 print('adjudicate: 36 assertions pass')
 
 # --- SOUNDNESS: an empty result member must never read as agreement. -----------

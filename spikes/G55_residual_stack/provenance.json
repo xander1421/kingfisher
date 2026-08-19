@@ -1,0 +1,207 @@
+{
+ "spike": "G55_residual_stack",
+ "recorded_utc": "2026-08-19T00:48:11Z",
+ "note": "G55: silent-fill and G51+type stack on pair-disjoint split. Residuals stack; they do not replace.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G55_residual_stack/stack.py",
+   "sha256": "fbeac5858e77ea4a78439b1a39bf121541b07d8da1e368656ff5ef337ff478a4",
+   "bytes": 17129,
+   "mtime": 1787100166,
+   "compared_ts": 1787100166,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G55_residual_stack/stack.json",
+   "sha256": "0959c1f2f8449b9847594f9ff58dcbd61291f2e76c4b2e4fc9b1172e18cb8204",
+   "bytes": 4188,
+   "mtime": 1787100491,
+   "compared_ts": 1787100491,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_prior_reproduction",
+   "must_fire_because": "per-query prior must reproduce G51 0.1732",
+   "can_fail_because": "split or rank convention drifted",
+   "null_must_contain": "an unexpected prior MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.1732,
+    "observed_mrr": 0.1732,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_g51_reproduction",
+   "must_fire_because": "per-query G51 \u03b2=0.10 must reproduce 0.2274",
+   "can_fail_because": "lift formula drifted from G51",
+   "null_must_contain": "an unexpected G51 MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected_mrr": 0.2274,
+    "observed_mrr": 0.2274,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_leak_free",
+   "must_fire_because": "0 same-pair triples between train and test",
+   "can_fail_because": "partition logic broken",
+   "null_must_contain": "leak_triples > 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_triples": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "triples.bin unpacked as (p,s,o); max(p)<npred",
+   "can_fail_because": "G52-style (s,p,o) swap",
+   "null_must_contain": "max_p >= npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14505,
+    "max_p": 236,
+    "max_s": 14503,
+    "max_o": 14504
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_no_silent_hole",
+   "must_fire_because": null,
+   "can_fail_because": "silent \u0394(G51-prior) >= 0.02",
+   "null_must_contain": "a silent-slice delta on either side of 0.02",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "silent_g51_minus_prior": 0.0,
+    "bar": 0.02,
+    "fired": false,
+    "description": "Fires if silent-slice G51 already beats prior by >=0.02 (no hole to fill)"
+   },
+   "refutes": "that silent queries are a hole G51 does not lift",
+   "fires_when": "silent \u0394(G51-prior) >= 0.02",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_silent_fill_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "fill_mrr <= g51_mrr",
+   "null_must_contain": "signed fill-g51 delta, including a loss",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "fill_mrr": 0.2273,
+    "g51_mrr": 0.2274,
+    "delta": -0.0001,
+    "fired": true,
+    "description": "Fires if silent-fill MRR <= G51. Signed."
+   },
+   "refutes": "that swapping type in on silent queries raises test MRR",
+   "fires_when": "fill_mrr <= g51_mrr",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_stack_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "stack_mrr <= g51_mrr",
+   "null_must_contain": "signed stack-g51 delta, including a loss",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "stack_mrr": 0.2228,
+    "g51_mrr": 0.2274,
+    "delta": -0.0046,
+    "fired": true,
+    "description": "Fires if stack MRR <= G51. Signed so a LOSS is visible."
+   },
+   "refutes": "that type residual on top of G51 lift raises test MRR",
+   "fires_when": "stack_mrr <= g51_mrr",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_silent_fill_does_not_beat_g51",
+  "F3_stack_does_not_beat_g51"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "silent-slice G51 already lifts by >=0.02 AND silent-fill does not beat G51 AND stack does not beat G51"
+}

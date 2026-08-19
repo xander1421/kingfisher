@@ -88,6 +88,7 @@ class H(BaseHTTPRequestHandler):
         if path == '/job':
             with LOCK:
                 STATS['polls'] += 1
+                STATS.setdefault('poll_peers', []).append(self.client_address[0])
             try:
                 job = JOBS.get(timeout=float(os.environ.get('KF_POLL', '20')))
             except queue.Empty:
@@ -99,6 +100,7 @@ class H(BaseHTTPRequestHandler):
                 return self._send(200, b'')
             with LOCK:
                 STATS['jobs_out'] += 1
+                STATS.setdefault('job_peers', []).append(self.client_address[0])
             return self._send(200, json.dumps(job).encode(), 'application/json')
 
         if path.startswith('/shard/'):
@@ -134,6 +136,8 @@ class H(BaseHTTPRequestHandler):
         with LOCK:
             RESULTS.append(env)
             STATS['results'] += 1
+            # Observed by the coordinator, not declared by the worker (A22).
+            STATS.setdefault('result_peers', []).append(self.client_address[0])
         return self._send(200, b'ok')
 
 

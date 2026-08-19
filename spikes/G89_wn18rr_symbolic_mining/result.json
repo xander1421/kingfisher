@@ -1,0 +1,51 @@
+{
+  "spike": "G89",
+  "timestamp": "2026-08-19 15:33:02",
+  "elapsed_sec": 4.78,
+  "dataset": "WN18RR (WordNet hierarchical semantic graph)",
+  "split": {
+    "train": 86835,
+    "valid": 3034,
+    "test": 3134,
+    "total_queries": 6268,
+    "entities": 40943,
+    "predicates": 11
+  },
+  "rule_mining": {
+    "total_rules": 40,
+    "topologies": {
+      "FF": 12,
+      "BF": 12,
+      "FB": 8,
+      "BB": 8
+    }
+  },
+  "metrics": {
+    "mrr": 0.0355,
+    "hits1": 0.0233,
+    "hits3": 0.0362,
+    "hits10": 0.0578
+  },
+  "controls": {
+    "C1_test_size": {
+      "ok": true
+    },
+    "C2_zero_leak": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_wrong_query_count": {
+      "fired": false
+    },
+    "F2_zero_rules_mined": {
+      "fired": false
+    },
+    "F3_trivial_mrr": {
+      "fired": true
+    }
+  }
+}

@@ -1,0 +1,11 @@
+F002_FROZEN spec-v1. Class **F002_TWO_BOUND** in specs/KERNEL_FRAGMENT.md
+(not Hyperon-on-phone). Join (cites $x $z)(cites $z $y) with (verdict $y RED);
+result is the sorted (hit $x $y) set. Digest kingfisher.digest/v1.
+Fuel FT_METTA_CORE_V1 stipulated. Multi-result alternatives = REJECT.
+
+FROZEN 2026-08-19 (G71; same rule as F001: status is not in the payload):
+  digest c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9
+  host python grok_check + grok_f002 ACCEPT / 7 REJECT
+  rust stays F001-only (WRONG_FIXTURE_CLASS) — not a MeTTa interpreter
+  fixtures/F002 (Gemini) remains INVALID
+Pin must not move.

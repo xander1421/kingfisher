@@ -1,7 +1,7 @@
 {
   "arms": {
     "all": {
-      "elapsed_sec": 31.9387,
+      "elapsed_sec": 23.9153,
       "hits1": 0.1748,
       "hits10": 0.3929,
       "hits3": 0.3169,
@@ -12,7 +12,7 @@
       "n_triples": 40818
     },
     "no_same_pair": {
-      "elapsed_sec": 21.832,
+      "elapsed_sec": 16.0693,
       "hits1": 0.1148,
       "hits10": 0.2121,
       "hits3": 0.1694,
@@ -23,7 +23,7 @@
       "n_triples": 28569
     },
     "same_pair": {
-      "elapsed_sec": 9.8645,
+      "elapsed_sec": 7.9658,
       "hits1": 0.3147,
       "hits10": 0.8146,
       "hits3": 0.6607,
@@ -68,7 +68,7 @@
     "npred": 237,
     "nt": 272115
   },
-  "elapsed_sec": 92.997,
+  "elapsed_sec": 73.122,
   "falsifiers": {
     "F2_clean_subset_matches_the_headline": {
       "drop_vs_published": 0.1145,

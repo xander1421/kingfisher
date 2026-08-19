@@ -176,19 +176,29 @@ if [ -f spikes/harness/install_hooks.sh ]; then
     else
       problems=$((problems+1))
     fi
-  elif sh spikes/harness/install_hooks.sh >/dev/null 2>&1; then
+  # H126: keep the REASON. `install_hooks.sh` refuses with the missing path
+  # (`install_hooks: no spikes/harness/<gate>.hook`); discarding it told a lane
+  # only THAT the gates are missing, never WHICH source is absent.
+  elif _ih=$(sh spikes/harness/install_hooks.sh 2>&1); then
     note ok "git hooks installed/refreshed from tracked source"
   else
-    fail "install_hooks.sh failed — the commit gates are not installed"
+    fail "install_hooks.sh failed — the commit gates are not installed: $(printf '%s' "$_ih" | grep -iE 'no |error|fail' | head -1)"
   fi
 fi
 
 # 4 · The harness must be enforceable before anything runs under it. A fleet
 #     brought up on a broken gate is a fleet with no loop contract.
-if sh spikes/harness/test_loop_gate.sh >/dev/null 2>&1; then
+# H126. THIS WAS THE MOST EXPENSIVE DISCARDED REASON IN THE HARNESS: an 88-check
+# suite, its entire output sent to /dev/null, and the fleet told only that "the
+# loop contract is not enforceable as written". Which check? Re-run it and wait
+# minutes. The failing lines are the whole diagnosis and they were free.
+if _tlg=$(sh spikes/harness/test_loop_gate.sh 2>&1); then
   note ok "loop contract enforceable (test_loop_gate.sh passes)"
 else
   fail "test_loop_gate.sh FAILS — the loop contract is not enforceable as written"
+  printf '%s\n' "$_tlg" | grep -iE '^ *FAIL' | head -5 | sed 's/^/      /'
+  printf '      (%s FAIL line(s); full output: sh spikes/harness/test_loop_gate.sh)\n' \
+    "$(printf '%s\n' "$_tlg" | grep -ciE '^ *FAIL')"
 fi
 
 # 5 · The hook must be installed where a lane's session will actually find it.

@@ -1,0 +1,96 @@
+{
+  "arms": {
+    "A_prior_plus_all_rules": {
+      "hits1": 0.1144,
+      "hits10": 0.2866,
+      "hits3": 0.1865,
+      "mrr": 0.1736,
+      "n_queries": 81634,
+      "queries_reordered_by_rules": 60310
+    },
+    "B_prior_plus_2hop_only": {
+      "hits1": 0.1144,
+      "hits10": 0.2876,
+      "hits3": 0.187,
+      "mrr": 0.174,
+      "n_queries": 81634,
+      "queries_reordered_by_rules": 53651
+    },
+    "C_prior_alone": {
+      "hits1": 0.1141,
+      "hits10": 0.2855,
+      "hits3": 0.186,
+      "mrr": 0.1732,
+      "n_queries": 81634,
+      "queries_reordered_by_rules": 0
+    },
+    "two_hop_only_no_prior": {
+      "elapsed_sec": 18.3467,
+      "hits1": 0.0292,
+      "hits10": 0.1083,
+      "hits3": 0.0609,
+      "mrr": 0.0572,
+      "mrr_head": 0.0334,
+      "mrr_tail": 0.0809,
+      "n_queries": 81634,
+      "n_triples": 40817
+    }
+  },
+  "controls": {
+    "C1_rule_side_matches_G49": {
+      "g49_two_hop_mrr": 0.0572,
+      "mrr": 0.0572,
+      "ok": true,
+      "what_would_fail_it": "the 2-hop-only arm returning anything but G49's 0.0572, which would mean a different rule side and no comparison here would hold"
+    },
+    "C2_combination_actually_reorders": {
+      "A_reordered": 60310,
+      "B_reordered": 53651,
+      "n_queries": 81634,
+      "ok": true,
+      "what_would_fail_it": "the rules changing no candidate score, which would make every combined arm the prior with extra steps and F1 a measurement of nothing"
+    },
+    "C3_same_rank_convention": {
+      "how": "rank_from_scores imported from G49, which lifted G34's 1 + higher + equal/2 verbatim; same true_sp / true_po index",
+      "ok": true,
+      "what_would_fail_it": "a different rank rule or filter from G48/G49"
+    }
+  },
+  "controls_ok": "3/3",
+  "elapsed_sec": 81.447,
+  "falsifiers": {
+    "F1_nothing_beats_the_prior": {
+      "A_mrr": 0.1736,
+      "B_mrr": 0.174,
+      "best_combined": 0.174,
+      "delta_vs_prior": 0.0008,
+      "fired": true,
+      "meaning_if_fired": "nothing this lane has mined adds anything to counting on an honest split, and that is the lane's headline rather than an ablation footnote",
+      "prior_mrr": 0.1732,
+      "question": "does ANY arm exceed the prior by more than 0.002?",
+      "threshold": 0.002,
+      "verdict": "rules INERT -- refuted as useless"
+    },
+    "F2_prior_is_not_the_same_prior": {
+      "fired": false,
+      "g49_hits10": 0.2855,
+      "g49_mrr": 0.1732,
+      "hits10": 0.2855,
+      "meaning_if_fired": "no comparison in this row means anything",
+      "mrr": 0.1732,
+      "question": "does arm C reproduce G49's prior exactly?"
+    },
+    "F3_length1_families_are_not_harmful": {
+      "A_with_length1": 0.1736,
+      "B_without": 0.174,
+      "delta": 0.0004,
+      "fired": false,
+      "meaning_if_fired": "G49's 'actively harmful' reading is wrong and I retract it",
+      "question": "does dropping the length-1 families (B) beat keeping them (A), as G49's 'actively harmful' reading predicts?"
+    }
+  },
+  "n_test": 40817,
+  "seed": "0xC0FFEE",
+  "spike": "G50",
+  "split": "pair_disjoint (G48)"
+}

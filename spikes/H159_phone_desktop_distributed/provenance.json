@@ -1,0 +1,157 @@
+{
+ "spike": "H159_phone_desktop_distributed",
+ "recorded_utc": "2026-08-19T14:09:44Z",
+ "note": "H159: Distributed Parallel Verification & Work-Stealing between Phone and Desktop.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "fixtures/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/fixtures": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H159_phone_desktop_distributed/result.json",
+   "sha256": "4935e7aa7f9262bc8a181fd61b0065d138bbe453b3a472844b26bd8b28cb0448",
+   "bytes": 1399,
+   "mtime": 1787148584,
+   "compared_ts": 1787148584,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_device_health",
+   "must_fire_because": "Phone battery >= 80% and temp <= 37C",
+   "can_fail_because": "overheating or battery drain",
+   "null_must_contain": "thermal throttle",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "batt_before": {
+     "temperature_c": 31.4,
+     "level_pct": 100,
+     "status": 5
+    },
+    "batt_after": {
+     "temperature_c": 31.4,
+     "level_pct": 100,
+     "status": 5
+    }
+   }
+  },
+  {
+   "name": "C2_exact_bit_parity",
+   "must_fire_because": "100% matching consensus digests across Desktop and Phone",
+   "can_fail_because": "digest mismatch",
+   "null_must_contain": "digest mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_jobs": 200,
+    "all_rc_zero": true,
+    "parity": true
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 pins remain invariant",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_hash_divergence",
+   "must_fire_because": null,
+   "can_fail_because": "not parity_ok",
+   "null_must_contain": "divergence",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "parity_ok": true
+   },
+   "refutes": "that Phone and Desktop produce bit-identical consensus digests",
+   "fires_when": "not parity_ok",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_phone_overheating",
+   "must_fire_because": null,
+   "can_fail_because": "temp > 37.0",
+   "null_must_contain": "thermal threshold exceeded",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "temp_after": 31.4
+   },
+   "refutes": "that Snapdragon 8 Elite remains cool under verification workload",
+   "fires_when": "temp > 37.0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_swarm_speedup",
+   "must_fire_because": null,
+   "can_fail_because": "speedup < 1.10",
+   "null_must_contain": "speedup below 1.10x",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "speedup_vs_desk": 3.896628841300098,
+    "speedup_vs_phone": 0.7421761643289994
+   },
+   "refutes": "that distributed dual-device swarm improves over single-device baseline by >= 1.10x",
+   "fires_when": "speedup < 1.10",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/fixtures": {
+   "newest": 1787148582,
+   "from": "fixtures/verifier/trace_verifier_android"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Dual-device distributed verification diverges or fails speedup"
+}

@@ -1,0 +1,63 @@
+{
+  "spike": "H159",
+  "timestamp": "2026-08-19 15:09:44",
+  "elapsed_sec": 3.54,
+  "devices": {
+    "desktop": "Apple Silicon Host (macOS)",
+    "phone": "Samsung Galaxy S25 Ultra (SM_S938B, Snapdragon 8 Elite)",
+    "transport": "ADB USB 3.0"
+  },
+  "workload": {
+    "total_jobs": 200,
+    "f001_jobs": 100,
+    "f002_jobs": 100
+  },
+  "benchmarks": {
+    "desktop_alone_sec": 0.914,
+    "desktop_throughput_jps": 218.7,
+    "phone_alone_sec": 0.174,
+    "phone_throughput_jps": 1148.4,
+    "swarm_concurrent_sec": 0.235,
+    "swarm_throughput_jps": 852.4,
+    "speedup_vs_desktop": 3.9,
+    "speedup_vs_phone": 0.74
+  },
+  "telemetry": {
+    "phone_battery_before": {
+      "temperature_c": 31.4,
+      "level_pct": 100,
+      "status": 5
+    },
+    "phone_battery_after": {
+      "temperature_c": 31.4,
+      "level_pct": 100,
+      "status": 5
+    }
+  },
+  "pins": {
+    "F001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "F002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+  },
+  "controls": {
+    "C1_device_health": {
+      "ok": true
+    },
+    "C2_exact_bit_parity": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_hash_divergence": {
+      "fired": false
+    },
+    "F2_phone_overheating": {
+      "fired": false
+    },
+    "F3_swarm_speedup": {
+      "fired": false
+    }
+  }
+}

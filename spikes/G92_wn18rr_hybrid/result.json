@@ -1,0 +1,53 @@
+{
+  "spike": "G92",
+  "timestamp": "2026-08-19 16:06:49",
+  "elapsed_sec": 269.07,
+  "corpus": "WN18RR (Official 86,835 train, 3,034 valid, 3,134 test)",
+  "metrics": {
+    "mrr": 0.3611,
+    "hits1": 0.3486,
+    "hits3": 0.3682,
+    "hits10": 0.3878,
+    "lift_over_symbolic_mrr": 0.3256,
+    "lift_over_complex_mrr": 0.236
+  },
+  "model_choices": {
+    "complex": 218,
+    "rotate": 6050
+  },
+  "routing": {
+    "_also_see": "complex",
+    "_derivationally_related_form": "rotate",
+    "_has_part": "rotate",
+    "_hypernym": "rotate",
+    "_instance_hypernym": "rotate",
+    "_member_meronym": "rotate",
+    "_member_of_domain_region": "complex",
+    "_member_of_domain_usage": "complex",
+    "_similar_to": "complex",
+    "_synset_domain_topic_of": "rotate",
+    "_verb_group": "rotate"
+  },
+  "controls": {
+    "C1_test_size": {
+      "ok": true
+    },
+    "C2_query_count": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_wrong_query_count": {
+      "fired": false
+    },
+    "F2_fails_symbolic_baseline": {
+      "fired": false
+    },
+    "F3_fails_complex_baseline": {
+      "fired": false
+    }
+  }
+}

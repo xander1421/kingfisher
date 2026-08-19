@@ -1,7 +1,7 @@
 {
-  "demo8_after_edit": "CLAIMED 3 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
-  "demo8_before_edit": "CLAIMED 3 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
-  "falsifier_fired": true,
+  "demo8_after_edit": "CLAIMED 2 \u00b7 STALE 1 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
+  "demo8_before_edit": "CLAIMED 3 \u00b7 STALE 0 \u00b7 UNPROVEN 4 \u00b7 BROKEN 0   of 7",
+  "falsifier_fired": false,
   "fix_detects_the_edit": true,
   "probe_target": "spikes/S38_runbook/check_runbook.py",
   "stale_code_seen_by_fix_during_probe": [
@@ -21,5 +21,5 @@
       "stale_code": []
     }
   },
-  "verdict_moved": false
+  "verdict_moved": true
 }

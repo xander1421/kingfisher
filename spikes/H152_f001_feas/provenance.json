@@ -1,0 +1,81 @@
+{
+ "spike": "H152_f001_feas",
+ "recorded_utc": "2026-08-19T00:08:10Z",
+ "note": "H152: F001 feasible on 1 phone; steal adds the second",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H152_f001_feas/feas.json",
+   "sha256": "646a282f9d38e83b4c99aecadb02cfc471ef181c9009422ed39730999010195a",
+   "bytes": 3477,
+   "mtime": 1787098090
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "one_device_accepts",
+   "must_fire_because": "S25 on-device F001 ACCEPT 590d8769 and 200-loop is a rate",
+   "can_fail_because": "REJECT or digest mismatch or n200_jobs_per_s < 50",
+   "null_must_contain": "a digest and a jobs/s that can be zero or the pin",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "jps": 126.46074346364506
+   }
+  },
+  {
+   "name": "two_device_same_pin",
+   "must_fire_because": "S24 ACCEPT same frozen digest",
+   "can_fail_because": "S24 REJECT or different digest",
+   "null_must_contain": "S24 digest that can match or miss",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "taken": {
+     "R5CY93675MK": 300,
+     "R5CX508MPRZ": 100
+    }
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "second_phone_does_not_add_capacity",
+   "must_fire_because": null,
+   "can_fail_because": "steal_vs_s25_k2 >= 0.90",
+   "null_must_contain": "a ratio that can sit above or below 0.90",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "ratio": 0.7532403440928325,
+    "steal": 1.4021242919989163,
+    "s25_k2": 1.8614567089971388
+   },
+   "refutes": "live steal wall not < 0.90 of S25 k=2",
+   "fires_when": "steal_vs_s25_k2 >= 0.90",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "live F001 on phones; no elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "S25 pin fail, or live 2-phone steal not faster than S25 two workers"
+}

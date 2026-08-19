@@ -1,0 +1,315 @@
+{
+  "spike": "G72",
+  "split": "official FB15k-237 train/valid/test",
+  "source_git": "https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding",
+  "source_commit": "2e440e0f9c687314d5ff67ead68ce985dc446e3a",
+  "field_order": "p,s,o",
+  "headline_arm": "C_complex_all_entity",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "literature_note": "do not quote Bordes/RotatE/AMIE MRR; no excerpt under corpus/",
+  "candidate_set": "all 14541 entities, filtered train+valid+test",
+  "protocol": "filtered_all_entity",
+  "scoreboard_note": "pair-disjoint G54 0.2313 and official G59 0.2679 stay; G66 DistMult 0.2195 is the other all-entity column; G72 is ComplEx on the same protocol",
+  "model": "ComplEx",
+  "score_fn": "Re(sum_k h_k * r_k * conj(t_k))",
+  "train_objective": "unfiltered softmax 1-N (both directions), AdaGrad",
+  "seed": 72,
+  "dim": 64,
+  "max_epochs": 40,
+  "min_epoch": 10,
+  "patience": 8,
+  "lr": 0.1,
+  "batch": 1024,
+  "reg": 1e-05,
+  "valid_select": {
+    "every_after_min_epoch": 1,
+    "also_recorded_epochs": [
+      1,
+      5
+    ],
+    "n_sample": 2500,
+    "best_epoch": 10,
+    "best_valid_sample_mrr": 0.2903,
+    "min_epoch": 10,
+    "patience": 8,
+    "note": "valid only; no test grid (A26); epochs < 10 ineligible"
+  },
+  "train_hist": [
+    {
+      "epoch": 1,
+      "nll": 13.9026,
+      "sec": 36.33,
+      "eligible": false,
+      "valid_sample_mrr": 0.27
+    },
+    {
+      "epoch": 2,
+      "nll": 9.476,
+      "sec": 25.19,
+      "eligible": false
+    },
+    {
+      "epoch": 3,
+      "nll": 8.3068,
+      "sec": 25.73,
+      "eligible": false
+    },
+    {
+      "epoch": 4,
+      "nll": 7.6946,
+      "sec": 26.24,
+      "eligible": false
+    },
+    {
+      "epoch": 5,
+      "nll": 7.3205,
+      "sec": 23.56,
+      "eligible": false,
+      "valid_sample_mrr": 0.2976
+    },
+    {
+      "epoch": 6,
+      "nll": 7.0636,
+      "sec": 22.35,
+      "eligible": false
+    },
+    {
+      "epoch": 7,
+      "nll": 6.875,
+      "sec": 22.32,
+      "eligible": false
+    },
+    {
+      "epoch": 8,
+      "nll": 6.7317,
+      "sec": 22.53,
+      "eligible": false
+    },
+    {
+      "epoch": 9,
+      "nll": 6.6186,
+      "sec": 23.11,
+      "eligible": false
+    },
+    {
+      "epoch": 10,
+      "nll": 6.5277,
+      "sec": 22.21,
+      "eligible": true,
+      "valid_sample_mrr": 0.2903,
+      "best": true
+    },
+    {
+      "epoch": 11,
+      "nll": 6.4522,
+      "sec": 22.31,
+      "eligible": true,
+      "valid_sample_mrr": 0.2886,
+      "stale": 1
+    },
+    {
+      "epoch": 12,
+      "nll": 6.3896,
+      "sec": 22.41,
+      "eligible": true,
+      "valid_sample_mrr": 0.2898,
+      "stale": 2
+    },
+    {
+      "epoch": 13,
+      "nll": 6.3359,
+      "sec": 22.46,
+      "eligible": true,
+      "valid_sample_mrr": 0.287,
+      "stale": 3
+    },
+    {
+      "epoch": 14,
+      "nll": 6.2894,
+      "sec": 22.55,
+      "eligible": true,
+      "valid_sample_mrr": 0.2866,
+      "stale": 4
+    },
+    {
+      "epoch": 15,
+      "nll": 6.2491,
+      "sec": 22.31,
+      "eligible": true,
+      "valid_sample_mrr": 0.2848,
+      "stale": 5
+    },
+    {
+      "epoch": 16,
+      "nll": 6.2138,
+      "sec": 22.16,
+      "eligible": true,
+      "valid_sample_mrr": 0.287,
+      "stale": 6
+    },
+    {
+      "epoch": 17,
+      "nll": 6.1817,
+      "sec": 22.33,
+      "eligible": true,
+      "valid_sample_mrr": 0.2839,
+      "stale": 7
+    },
+    {
+      "epoch": 18,
+      "nll": 6.1539,
+      "sec": 22.27,
+      "eligible": true,
+      "valid_sample_mrr": 0.2844,
+      "stale": 8
+    }
+  ],
+  "n_train": 272115,
+  "n_valid": 17535,
+  "n_test": 20466,
+  "npred": 237,
+  "nent": 14541,
+  "n_rules_2hop": 2201,
+  "file_sha256": {
+    "train.txt": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "valid.txt": "cf6309010852f6a8d47a45df830a426415d1ee6f7a3970a8376ff1fb81db4a5c",
+    "test.txt": "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574"
+  },
+  "same_pair_leak": {
+    "n": 0,
+    "n_test": 20466
+  },
+  "field_order_obs": {
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14541,
+    "max_p": 236,
+    "max_s": 14540,
+    "max_o": 14540
+  },
+  "n_filter_triples": 310116,
+  "arms": {
+    "A_prior_support_neginf": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "B_g51_support_neginf": {
+      "mrr": 0.2585,
+      "hits1": 0.1898,
+      "hits3": 0.281,
+      "hits10": 0.3837,
+      "n_queries": 40932
+    },
+    "C_complex_all_entity": {
+      "mrr": 0.2755,
+      "hits1": 0.1916,
+      "hits3": 0.3015,
+      "hits10": 0.4452,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "prior": {
+      "tail": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      }
+    },
+    "g51": {
+      "tail": {
+        "mrr": 0.3525,
+        "hits1": 0.2729,
+        "hits3": 0.385,
+        "hits10": 0.4979,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1645,
+        "hits1": 0.1067,
+        "hits3": 0.1771,
+        "hits10": 0.2695,
+        "n_queries": 20466
+      }
+    },
+    "complex": {
+      "tail": {
+        "mrr": 0.3659,
+        "hits1": 0.2713,
+        "hits3": 0.4039,
+        "hits10": 0.5566,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1851,
+        "hits1": 0.1119,
+        "hits3": 0.1992,
+        "hits10": 0.3338,
+        "n_queries": 20466
+      }
+    }
+  },
+  "complex_minus_g51": 0.017,
+  "controls": {
+    "C1_test_n": {
+      "n": 20466,
+      "expected": 20466,
+      "ok": true
+    },
+    "C2_leak": {
+      "leak": 0,
+      "ok": true
+    },
+    "C3_nent": {
+      "nent": 14541,
+      "expected": 14541,
+      "ok": true
+    },
+    "C4_field_order": {
+      "ok": true,
+      "declared_order": "p,s,o",
+      "npred": 237,
+      "nent": 14541,
+      "max_p": 236,
+      "max_s": 14540,
+      "max_o": 14540
+    },
+    "C5_literature_compare": {
+      "value": "unavailable",
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_complex_does_not_beat_g51": {
+      "complex_mrr": 0.2755,
+      "g51_mrr": 0.2585,
+      "delta": 0.017,
+      "bar": 0.005,
+      "fired": false,
+      "fires_when": "complex - g51 < 0.005",
+      "description": "Fires if ComplEx all-entity MRR does not beat G51 (support\u2212\u221e / all-entity) by >= +0.005"
+    },
+    "F2_complex_below_official_prior": {
+      "complex_mrr": 0.2755,
+      "prior_bar": 0.2334,
+      "prior_observed": 0.2334,
+      "fired": false,
+      "fires_when": "complex < 0.2334",
+      "description": "Fires if ComplEx MRR < 0.2334 (official prior) \u2192 broken/undertrained"
+    }
+  },
+  "elapsed_sec": 468.04
+}

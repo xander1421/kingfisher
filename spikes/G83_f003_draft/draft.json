@@ -1,0 +1,73 @@
+{
+  "spike": "G83",
+  "not_operator_2": true,
+  "f003_frozen": false,
+  "rust_taught_f003": false,
+  "spec": {
+    "names_f003_draft": true,
+    "says_not_legal_class": true,
+    "gate4_phone_open_removed": true,
+    "gate4_names_s25_and_pin": true,
+    "v1_not_hotpatched": true,
+    "nlines": 103
+  },
+  "f003_sidecar": {
+    "status": "F003_DRAFT",
+    "digest": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5",
+    "table_id": "FT_METTA_CORE_V2",
+    "has_modus_ponens": true,
+    "in_immortal": false
+  },
+  "python_f003": {
+    "rc": 0,
+    "digest_ok": true,
+    "out_tail": "ACCEPT: /Users/victorianikolenko/kingfisher/fixtures/F003_specv1 -> Digest: 0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5\n"
+  },
+  "rust_f003": {
+    "rc": 1,
+    "wrong_class": true,
+    "accept": false,
+    "out_tail": "---\nTARGET: /Users/victorianikolenko/kingfisher/fixtures/F003_specv1\n  [VERDICT] REJECTED: WRONG_FIXTURE_CLASS: rust checker is F001_PROBE_V1 + F002_TWO_BOUND (no matching corpus.bin)\n-------------------------------------------------------\n"
+  },
+  "pins": {
+    "f001": true,
+    "f002": true
+  },
+  "controls": {
+    "C1_spec_draft": {
+      "ok": true
+    },
+    "C2_gate4": {
+      "ok": true
+    },
+    "C3_python_f003": {
+      "ok": true,
+      "digest": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5"
+    },
+    "C4_rust_wrong_class": {
+      "ok": true
+    },
+    "C5_pins": {
+      "ok": true
+    },
+    "C6_spec_length": {
+      "nlines": 103,
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_rust_accepts_f003": {
+      "fired": false,
+      "fires_when": "rust ACCEPT on F003_specv1"
+    },
+    "F2_f003_immortal": {
+      "fired": false,
+      "fires_when": "F003 key in kitchen/immortal.json"
+    },
+    "F3_pin_moved": {
+      "fired": false,
+      "fires_when": "F001 or F002 pin missing from grok_check"
+    }
+  },
+  "literature_compare": "unavailable"
+}

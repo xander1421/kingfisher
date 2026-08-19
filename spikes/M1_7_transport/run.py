@@ -17,6 +17,8 @@ CORPUS = os.path.join(HERE, '..', 'S57_hyperon_corpus', 'corpus')
 BIN = os.path.join(HERE, '..', 'S30_speed_duel', 'bin', 'known', 'fuelrun.android')
 
 def sh(*a, **k):
+    if a and a[0] == 'adb' and '-s' not in a and 'ANDROID_SERIAL' not in os.environ:
+        a = ('adb', '-s', 'R5CY93675MK') + a[1:]
     return subprocess.run(a, capture_output=True, text=True, **k)
 
 n = int(sys.argv[1]) if len(sys.argv) > 1 else 8

@@ -1,0 +1,7 @@
+F001_DRAFT
+query class: F001_PROBE_V1 (single implication fact + unify/subst/alpha)
+NOT a graph query. NOT S5 lossless HDC. NOT Arm B.
+corpus.bin is a 33-byte slogan, not an atomspace dump.
+fuel table is stipulated, not Hyperon-measured.
+Do not upgrade to F001_FROZEN until a second ISA reproduces this digest
+and a second-language checker agrees.

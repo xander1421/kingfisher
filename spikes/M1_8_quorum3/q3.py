@@ -62,6 +62,20 @@ FUELRUN_SRC = os.path.join(HERE, '..', 'S15_android_device', 'fuelrun')
 HYPERON_SRC = os.path.expanduser('~/kingfisher/elders/hyperon-experimental')
 
 
+def operator_label(via):
+    """Who the coordinator records as operator.
+
+    Production: always UNATTESTED (no attestation root).
+    DEV (KF_DEV_SINGLE_OPERATOR=1): phone (adb/app) is DEV:PHONE, host is
+    DEV:HOST — a seat label so one human can see operator=2 on that axis.
+    Not an attestation root. Manifest still binds. Verdict is still not
+    UNANIMOUS (DEV_SINGLE_OPERATOR).
+    """
+    if os.environ.get('KF_DEV_SINGLE_OPERATOR') == '1':
+        return 'DEV:PHONE' if via in ('adb', 'app') else 'DEV:HOST'
+    return 'UNATTESTED'
+
+
 def observed_domains(wid, binary, via):
     """Domain identity the COORDINATOR observes, never what the worker declares.
 
@@ -128,11 +142,9 @@ def observed_domains(wid, binary, via):
         'host': host,
         'os': os_id,
         'isa': isa,
-        # NO ATTESTATION ROOT EXISTS. Every worker is dispatched by this
-        # coordinator, so operator independence cannot be established at all --
-        # and this is the axis Q1's 72% capture figure is about. Pinned to one
-        # domain by construction rather than read from a string a worker chose.
-        'operator': 'UNATTESTED',
+        # Production: UNATTESTED (no attestation root). DEV flag: phone vs
+        # host seat labels only — see operator_label().
+        'operator': operator_label(via),
     }
 
 
@@ -278,6 +290,11 @@ def adjudicate(envs):
         for e in agree_envs:
             e['_per_class'] = per_class
         if domains < MIN_DOMAINS:
+            # DEV only: one human may walk the agreement path. This is NOT
+            # operator=2. The verdict must never be UNANIMOUS/MAJORITY or it
+            # lands in `accepted`. Unset / anything but "1" stays refuse.
+            if os.environ.get('KF_DEV_SINGLE_OPERATOR') == '1':
+                return 'DEV_SINGLE_OPERATOR', k, n, dispatched, returned, domains
             return 'INSUFFICIENT_DOMAINS', k, n, dispatched, returned, domains
         return ('UNANIMOUS' if n == dispatched else 'MAJORITY'), \
             k, n, dispatched, returned, domains
@@ -317,6 +334,10 @@ def main():
                     help='jobs per work session; preflight runs once per session '
                          '(M1.3: batched preflight is 0.51x a job, so per-job is '
                          'not viable -- amortise it)')
+    ap.add_argument('--battery-floor', type=int, default=90,
+                    help='minimum battery percentage required for device preflight')
+    ap.add_argument('--temp-max', type=float, default=40.0,
+                    help='maximum device temperature (C) allowed for preflight')
     a = ap.parse_args()
     global ALPHA, MIN_DOMAINS
     ALPHA = a.alpha
@@ -425,7 +446,7 @@ def main():
     # M1.3: dispatch in work sessions. Preflight gates each session, not each
     # job -- 35.1 ms batched against a 68.8 ms job means per-job preflight would
     # cost 51%. A refusal stops dispatch; jobs already sent still drain.
-    pol = preflight.Policy()
+    pol = preflight.Policy(battery_floor_pct=a.battery_floor, temp_max_c=a.temp_max)
     dispatch_at = {}
     sessions, dispatched, refusals = 0, 0, []
     for start in range(0, len(progs), a.chunk):
@@ -503,7 +524,12 @@ def main():
         print(f'{p[:44]:44} {v:20} {shape:>7} {dom}dom {str(fuel):>9}{flag}')
     print('\n' + '  '.join(f'{kk}={vv}' for kk, vv in sorted(tally.items())))
     accepted = tally['UNANIMOUS'] + tally['MAJORITY']
+    dev_ok = tally['DEV_SINGLE_OPERATOR']
     insuf = tally['INSUFFICIENT_DOMAINS']
+    if dev_ok:
+        print(f'\n!! DEV_SINGLE_OPERATOR on {dev_ok} job(s): '
+              f'KF_DEV_SINGLE_OPERATOR=1. Agreement exercised; NOT accepted. '
+              f'operator stays UNATTESTED.')
     if insuf:
         pc = next((e['_per_class'] for _,_,_,_,es,_,_,_ in rows
                    for e in es if e and e.get('_per_class')), {})

@@ -59,3 +59,18 @@ corpus 272115 triples, train 190480, preds 237
   [conf   ] (127,135)=>133  n    104  conf 0.5481  closed 0.1623  head-shuf 0.2031+-0.0279  whole-shuf 0.0423
   [conf   ] ( 58,234)=>139  n    138  conf 0.5435  closed 0.3245  head-shuf 0.4943+-0.0133  whole-shuf 0.1446
   [conf   ] (  5,178)=>4    n   2332  conf 0.5369  closed 0.4012  head-shuf 0.4423+-0.0055  whole-shuf 0.0449
+  [conf   ] (218,219)=>234  n     32  conf 0.5312  closed 0.3358  head-shuf 0.5312+-0.0000  whole-shuf 0.4821
+  [conf   ] (  4,178)=>5    n   2372  conf 0.5312  closed 0.3967  head-shuf 0.4378+-0.0068  whole-shuf 0.0438
+  stratum support  n=30  conf up to 0.0181, baseline up to 0.0020  -> worst |closed-shuffle| 0.00003
+  stratum conf     n=30  conf up to 0.7097, baseline up to 0.4536  -> worst |closed-shuffle| 0.24770
+
+C3 AGREEMENT closed vs head-shuffle: max 0.24770, mean 0.06717; 29/60 within 2 SE
+C4 head-shuffle vs WHOLE-graph shuffle: max 0.39744, mean 0.05830
+Traceback (most recent call last):
+  File "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/isurp.py", line 391, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/victorianikolenko/kingfisher/spikes/G32_isurp_baseline/isurp.py", line 285, in main
+    (bp_key, bp_cand) = cands[0]
+    ^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2, got 3)

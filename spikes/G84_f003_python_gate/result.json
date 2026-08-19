@@ -1,0 +1,118 @@
+{
+  "spike": "G84",
+  "timestamp": "2026-08-19 13:59:25",
+  "elapsed_sec": 0.33,
+  "f003_specv1": {
+    "digest": "0e1edf5bf87964efe1de8def1bef38ee22cdf86d495d8ac53273d2a6ed8bc8a5",
+    "digest_ok": true,
+    "status": "F003_DRAFT",
+    "is_draft": true
+  },
+  "mutants": [
+    {
+      "name": "M01_tampered_step_fuel",
+      "rc": 1,
+      "accept": false,
+      "token": "FUEL_DIVERGENCE"
+    },
+    {
+      "name": "M02_illegal_opcode",
+      "rc": 1,
+      "accept": false,
+      "token": "ILLEGAL_OPCODE"
+    },
+    {
+      "name": "M03_corrupted_root",
+      "rc": 1,
+      "accept": false,
+      "token": "CORPUS_ROOT_MISMATCH"
+    },
+    {
+      "name": "M04_declared_fuel_mismatch",
+      "rc": 1,
+      "accept": false,
+      "token": "FUEL_FILE_MISMATCH"
+    },
+    {
+      "name": "M05_inconsistent_unify",
+      "rc": 1,
+      "accept": false,
+      "token": "SEMANTIC_UNIFICATION_FAILURE"
+    },
+    {
+      "name": "M06_result_mismatch_rehashed",
+      "rc": 1,
+      "accept": false,
+      "token": "RESULT_NOT_DERIVED"
+    },
+    {
+      "name": "M07_skipped_unify_rewritten",
+      "rc": 1,
+      "accept": false,
+      "token": "RESULT_NOT_DERIVED"
+    }
+  ],
+  "rust_f003": {
+    "rc": 1,
+    "wrong_class": true,
+    "accept": false
+  },
+  "parent_f003_rejected": true,
+  "pins": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+    "f001_ok": true,
+    "f002_ok": true
+  },
+  "spec": {
+    "nlines": 105,
+    "has_draft": true,
+    "not_immortal": true
+  },
+  "controls": {
+    "C1_python_f003": {
+      "ok": true
+    },
+    "C2_mutants_reject": {
+      "ok": true
+    },
+    "C3_rust_wrong_class": {
+      "ok": true
+    },
+    "C4_parent_rejected": {
+      "ok": true
+    },
+    "C5_pins_unmoved": {
+      "ok": true
+    },
+    "C6_spec_and_status": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_mutant_accept": {
+      "fired": false,
+      "tokens": {
+        "M01_tampered_step_fuel": "FUEL_DIVERGENCE",
+        "M02_illegal_opcode": "ILLEGAL_OPCODE",
+        "M03_corrupted_root": "CORPUS_ROOT_MISMATCH",
+        "M04_declared_fuel_mismatch": "FUEL_FILE_MISMATCH",
+        "M05_inconsistent_unify": "SEMANTIC_UNIFICATION_FAILURE",
+        "M06_result_mismatch_rehashed": "RESULT_NOT_DERIVED",
+        "M07_skipped_unify_rewritten": "RESULT_NOT_DERIVED"
+      }
+    },
+    "F2_rust_accept": {
+      "fired": false
+    },
+    "F3_in_immortal": {
+      "fired": false
+    },
+    "F4_pin_moved": {
+      "fired": false
+    },
+    "F5_status_frozen": {
+      "fired": false
+    }
+  }
+}

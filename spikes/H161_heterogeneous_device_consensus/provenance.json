@@ -1,0 +1,178 @@
+{
+ "spike": "H161_heterogeneous_device_consensus",
+ "recorded_utc": "2026-08-19T14:56:57Z",
+ "note": "H161: Heterogeneous Multi-Device Consensus across Snapdragon 8 Elite, Emulator, macOS ARM64, Rosetta x86, and iOS.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/fixtures",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "fixtures/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/fixtures": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H161_heterogeneous_device_consensus/result.json",
+   "sha256": "b4671f7240be04437432b9901a302a10f4f3da10e3016748be9e8f54aba13ebd",
+   "bytes": 2279,
+   "mtime": 1787151417,
+   "compared_ts": 1787151417,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_device_health",
+   "must_fire_because": "Phone remains within thermal safety envelope (<38C)",
+   "can_fail_because": "device overheating",
+   "null_must_contain": "thermal throttle",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "battery_before": {
+     "temperature_c": 32.0,
+     "level_pct": 100,
+     "status": 5
+    },
+    "battery_after": {
+     "temperature_c": 32.0,
+     "level_pct": 100,
+     "status": 5
+    }
+   }
+  },
+  {
+   "name": "C2_exact_bit_parity",
+   "must_fire_because": "100% consensus digest match across Snapdragon phone, emulator, macOS ARM64, Rosetta x86_64, and iOS",
+   "can_fail_because": "digest mismatch",
+   "null_must_contain": "digest mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "endpoints": {
+     "samsung_s25_ultra": true,
+     "android_emulator": true,
+     "macos_host_arm64": true,
+     "macos_rosetta_x86": true,
+     "ios_runtime": true
+    }
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 golden pins remain uncorrupted and match published constants",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  },
+  {
+   "name": "C4_ios_toolchain",
+   "must_fire_because": "iOS binary runs with exact digest match and builds valid Mach-O arm64 target",
+   "can_fail_because": "missing ios target or runtime failure",
+   "null_must_contain": "invalid binary",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "file_output": "/Users/victorianikolenko/kingfisher/spikes/H161_heterogeneous_device_consensus/trace_verifier_ios_device: Mach-O 64-bit executable arm64",
+    "ios_match": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_digest_divergence",
+   "must_fire_because": null,
+   "can_fail_because": "any digest diverges",
+   "null_must_contain": "divergence",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "divergence": false
+   },
+   "refutes": "that heterogeneous endpoints produce bit-identical consensus digests",
+   "fires_when": "any digest diverges",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_phone_overheating",
+   "must_fire_because": null,
+   "can_fail_because": "temp > 38.0C",
+   "null_must_contain": "thermal threshold exceeded",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "temp_after": 32.0
+   },
+   "refutes": "that Snapdragon 8 Elite remains cool under verification workload",
+   "fires_when": "temp > 38.0C",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_fixture_leak",
+   "must_fire_because": null,
+   "can_fail_because": "f3 accepted by rust verifier",
+   "null_must_contain": "premature promotion",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rust_rejected": true
+   },
+   "refutes": "that Rust verifier enforces DRAFT fixture boundaries",
+   "fires_when": "f3 accepted by rust verifier",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/fixtures": {
+   "newest": 1787148582,
+   "from": "fixtures/verifier/trace_verifier_android"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Heterogeneous endpoints diverge on consensus digests or fail thermal/draft rails",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

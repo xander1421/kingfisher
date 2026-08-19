@@ -1,0 +1,86 @@
+{
+ "rows": [
+  {
+   "module": "cite.py",
+   "rc": 0,
+   "temp_creations": 1,
+   "outside_workspace": [
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/tmplo3xmdxd"
+   ],
+   "writes_outside": true
+  },
+  {
+   "module": "demo8.py",
+   "rc": 0,
+   "temp_creations": 1,
+   "outside_workspace": [],
+   "writes_outside": false
+  },
+  {
+   "module": "githygiene.py",
+   "rc": 0,
+   "temp_creations": 8,
+   "outside_workspace": [
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_d_4whhdx",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_zwy6cewc",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_noufeuoo",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_r47bj7w6",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_gd3j2f7q",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_g9kv3dyw",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_n1p_i81u",
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/ghsc_h71_4e32doap"
+   ],
+   "writes_outside": true
+  },
+  {
+   "module": "idscope.py",
+   "rc": 0,
+   "temp_creations": 0,
+   "outside_workspace": [],
+   "writes_outside": false
+  },
+  {
+   "module": "journalcheck.py",
+   "rc": 0,
+   "temp_creations": 0,
+   "outside_workspace": [],
+   "writes_outside": false
+  },
+  {
+   "module": "recheck.py",
+   "rc": 0,
+   "temp_creations": 0,
+   "outside_workspace": [],
+   "writes_outside": false
+  },
+  {
+   "module": "refcheck.py",
+   "rc": 0,
+   "temp_creations": 1,
+   "outside_workspace": [
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/tmpkuvprkup"
+   ],
+   "writes_outside": true
+  },
+  {
+   "module": "retrofit_d6.py",
+   "rc": 0,
+   "temp_creations": 1,
+   "outside_workspace": [
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/tmpze10wvrm"
+   ],
+   "writes_outside": true
+  },
+  {
+   "module": "rostercheck.py",
+   "rc": 0,
+   "temp_creations": 1,
+   "outside_workspace": [
+    "/var/folders/3r/fk2crcjs0m10qqkmsb_skld00000gn/T/tmp_tlg1oi6"
+   ],
+   "writes_outside": true
+  }
+ ],
+ "n_outside": 5,
+ "n_swept": 9
+}

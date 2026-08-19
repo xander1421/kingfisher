@@ -1,0 +1,120 @@
+{
+  "spike": "G80",
+  "not_operator_2": true,
+  "gate4_phone_closed": false,
+  "rust_f001": {
+    "rc": 0,
+    "digest_ok": true,
+    "fuel": 400
+  },
+  "rust_f002": {
+    "rc": 0,
+    "digest_ok": true,
+    "fuel": 400
+  },
+  "rust_gemini_f002": {
+    "rc": 1,
+    "accept": false,
+    "out_tail": "--------------------------------------------\nTARGET: /Users/victorianikolenko/kingfisher/fixtures/F002\n  [VERDICT] REJECTED: FUEL_TABLE_MISMATCH\n-------------------------------------------------------"
+  },
+  "rust_f003": {
+    "rc": 1,
+    "wrong_class": true,
+    "missing_f001": false
+  },
+  "python_f001": {
+    "rc": 0,
+    "ok": true
+  },
+  "python_f002": {
+    "rc": 0,
+    "ok": true
+  },
+  "mutants": [
+    {
+      "name": "M01_tampered_step_fuel",
+      "rc": 1,
+      "accept": false,
+      "token": "FUEL_DIVERGENCE"
+    },
+    {
+      "name": "M02_illegal_opcode",
+      "rc": 1,
+      "accept": false,
+      "token": "ILLEGAL_OPCODE"
+    },
+    {
+      "name": "M03_corrupted_root",
+      "rc": 1,
+      "accept": false,
+      "token": "CORPUS_ROOT_MISMATCH"
+    },
+    {
+      "name": "M04_declared_fuel_mismatch",
+      "rc": 1,
+      "accept": false,
+      "token": "FUEL_FILE_MISMATCH"
+    },
+    {
+      "name": "M05_inconsistent_unify",
+      "rc": 1,
+      "accept": false,
+      "token": "SEMANTIC_UNIFICATION_FAILURE"
+    },
+    {
+      "name": "M06_result_mismatch_rehashed",
+      "rc": 1,
+      "accept": false,
+      "token": "RESULT_NOT_DERIVED"
+    },
+    {
+      "name": "M07_skipped_unify_rewritten",
+      "rc": 1,
+      "accept": false,
+      "token": "SEMANTIC_UNIFICATION_FAILURE"
+    }
+  ],
+  "controls": {
+    "C1_python_f001": {
+      "ok": true
+    },
+    "C2_python_f002": {
+      "ok": true
+    },
+    "C3_fuel": {
+      "fuel_f001": 400,
+      "fuel_f002": 400,
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_rust_f002_pin": {
+      "fired": false,
+      "digest_in_out": true
+    },
+    "F2_rust_f001_pin": {
+      "fired": false,
+      "digest_in_out": true
+    },
+    "F3_mutant_accept": {
+      "fired": false,
+      "any_accept": false,
+      "tokens": {
+        "M01_tampered_step_fuel": "FUEL_DIVERGENCE",
+        "M02_illegal_opcode": "ILLEGAL_OPCODE",
+        "M03_corrupted_root": "CORPUS_ROOT_MISMATCH",
+        "M04_declared_fuel_mismatch": "FUEL_FILE_MISMATCH",
+        "M05_inconsistent_unify": "SEMANTIC_UNIFICATION_FAILURE",
+        "M06_result_mismatch_rehashed": "RESULT_NOT_DERIVED",
+        "M07_skipped_unify_rewritten": "SEMANTIC_UNIFICATION_FAILURE"
+      }
+    },
+    "F4_gemini_accept": {
+      "fired": false
+    },
+    "F5_f003_looks_like_broken_f001": {
+      "fired": false,
+      "wrong_class": true
+    }
+  }
+}

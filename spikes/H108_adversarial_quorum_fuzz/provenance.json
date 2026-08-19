@@ -1,0 +1,121 @@
+{
+ "spike": "H108_adversarial_quorum_fuzz",
+ "recorded_utc": "2026-08-18T19:24:30Z",
+ "note": "H108: 5-vector adversarial attack battery against D1+ VRF quorum and Merkle verifier.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_15_attested_seat_draw",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/M1_15_attested_seat_draw/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_15_attested_seat_draw": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H108_adversarial_quorum_fuzz/fuzz_attack.py",
+   "sha256": "ac18bc5137489603fc23da4e34fe3cb569d309122d693d57b63f9fcc8449eac7",
+   "bytes": 8641,
+   "mtime": 1787081068,
+   "compared_ts": 1787081068,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H108_adversarial_quorum_fuzz/result.json",
+   "sha256": "56ed0ca8b704eabcc7bc01d2023826fa2367e11d191288dea56b4409756b0708",
+   "bytes": 178,
+   "mtime": 1787081070,
+   "compared_ts": 1787081070,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_sybil_rejection",
+   "must_fire_because": "Unstaked Sybils cannot win VRF seat draw",
+   "can_fail_because": "unconstrained pool",
+   "null_must_contain": "sybil breach",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "defended": true
+   }
+  },
+  {
+   "name": "C2_collusion_refusal",
+   "must_fire_because": "Colluding operators rejected under multi-domain quorum",
+   "can_fail_because": "single-operator acceptance",
+   "null_must_contain": "collusion breach",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "defended": true
+   }
+  },
+  {
+   "name": "C3_fuel_tamper_rejection",
+   "must_fire_because": "Step fuel divergence rejected by verifier",
+   "can_fail_because": "arithmetic drift",
+   "null_must_contain": "fuel acceptance",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "defended": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_all_attacks_defended",
+   "must_fire_because": null,
+   "can_fail_because": "not all_defended",
+   "null_must_contain": "adversarial breach",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "defended_count": 5,
+    "total": 5
+   },
+   "refutes": "that adversary achieves quorum breach",
+   "fires_when": "not all_defended",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/M1_15_attested_seat_draw": {
+   "newest": 1787081001,
+   "from": "spikes/M1_15_attested_seat_draw/result.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Adversarial attack breaching quorum consensus or falsifying proofs"
+}

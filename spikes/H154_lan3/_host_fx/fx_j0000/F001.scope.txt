@@ -1,0 +1,14 @@
+F001_FROZEN
+query class: F001_PROBE_V1 in specs/KERNEL_FRAGMENT.md (KF_FRAGMENT_V1).
+NOT Hyperon. NOT a graph query. NOT S5 lossless HDC. NOT Arm B.
+corpus.bin is a 31-byte slogan (not 33), not an atomspace dump.
+fuel table is stipulated, not Hyperon-measured.
+
+FROZEN 2026-08-19 (operator: "i dont want to decide. this is your mission"):
+  encoding = this tree's measured digest, not the unmatched peer target 8c46ea20…
+  digest 590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f
+  host aarch64-apple-darwin python+rustc ACCEPT / 7 REJECT same tokens
+  linux/amd64 rust:alpine rustc same ACCEPT/REJECT
+  linux/amd64 python:3.12-slim generate_f001.py witness+digest byte-identical
+  phone aarch64 (S25 + S24) ACCEPT same digest, 7/7 REJECT
+Status is not in the digest payload. Pin must not move.

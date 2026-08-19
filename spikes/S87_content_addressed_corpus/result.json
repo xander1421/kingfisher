@@ -1,0 +1,49 @@
+{
+  "spike": "S87",
+  "timestamp": "2026-08-19 14:37:17",
+  "elapsed_sec": 0.57,
+  "corpus": {
+    "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237/train.txt",
+    "n_triples": 272115,
+    "n_predicates": 237,
+    "total_bytes": 21004940,
+    "manifest_cid": "bafkreibi5yrjzjgf7gvbpry6t4xgr5rh4eldea7y4r5nest2uov2g4n2yi"
+  },
+  "performance": {
+    "ingest_time_sec": 0.2388,
+    "retrieval_time_sec": 0.1238,
+    "avg_shard_read_latency_ms": 0.5203,
+    "hits": 238,
+    "misses": 0
+  },
+  "verification": {
+    "parity_ok": true,
+    "recovered_triples": 272115,
+    "mismatch_count": 0
+  },
+  "controls": {
+    "C1_triple_count": {
+      "ok": true
+    },
+    "C2_roundtrip_parity": {
+      "ok": true
+    },
+    "C3_unique_cids": {
+      "ok": true
+    },
+    "C4_footprint": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_data_loss": {
+      "fired": false
+    },
+    "F2_cid_mismatch": {
+      "fired": false
+    },
+    "F3_retrieval_latency": {
+      "fired": false
+    }
+  }
+}

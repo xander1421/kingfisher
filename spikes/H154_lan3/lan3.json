@@ -1,0 +1,178 @@
+{
+  "pin": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+  "status": "F001_FROZEN",
+  "transport": "lan-http+KF_TOKEN",
+  "not_iroh": true,
+  "not_quic": true,
+  "not_0_0_0_0": true,
+  "bind": "192.168.1.25",
+  "port": 18082,
+  "base": "http://192.168.1.25:18082",
+  "why_not_quic": "LATENCY_FLOOR: persistent HTTP+NODELAY 6.5ms vs RTT 6.4ms; QUIC 0-RTT cannot beat 1 RTT on a live long-poll worker",
+  "adb_used_for": "install and process start only",
+  "adb_reverse_s25": "",
+  "adb_reverse_s24": "",
+  "gates": {
+    "R5CY93675MK": "device quiet: cpu_busy 0.4% (limit 15%), runnable 2, thermal 35900m, battery status=5 level=100 charging=true powered=1",
+    "R5CX508MPRZ": "device quiet: cpu_busy 4.6% (limit 15%), runnable 1, thermal UNREADABLE(overridden), battery status=2 level=44 thermal-override=UNREADABLE charging=true powered=1"
+  },
+  "ips": {
+    "host": "192.168.1.25",
+    "s25": "192.168.1.20",
+    "s24": "192.168.1.21"
+  },
+  "controls": {
+    "unauth_s25": "401",
+    "unauth_s24": "401",
+    "nonloopback_without_token_refused": true
+  },
+  "jobs_queued": 12,
+  "envelopes": 12,
+  "accepted_pin": 12,
+  "workers": [
+    "host-darwin",
+    "phone-s24",
+    "phone-s25"
+  ],
+  "result_peers": [
+    "192.168.1.20",
+    "192.168.1.21",
+    "192.168.1.25"
+  ],
+  "job_peers": [
+    "192.168.1.20",
+    "192.168.1.21",
+    "192.168.1.25"
+  ],
+  "poll_peers": [
+    "192.168.1.20",
+    "192.168.1.21",
+    "192.168.1.25"
+  ],
+  "pollers_before_enqueue": [
+    "192.168.1.20",
+    "192.168.1.21",
+    "192.168.1.25"
+  ],
+  "shard_bytes": 491520,
+  "stats": {
+    "polls": 16,
+    "jobs_out": 12,
+    "shard_bytes": 491520,
+    "results": 12,
+    "misses": 0,
+    "unauthorised": 2,
+    "poll_peers": [
+      "192.168.1.25",
+      "192.168.1.20",
+      "192.168.1.21",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.25",
+      "192.168.1.20",
+      "192.168.1.21",
+      "192.168.1.25"
+    ]
+  },
+  "results": [
+    {
+      "job_id": "j0000",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0003",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0004",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0005",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0006",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0007",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0008",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0009",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0010",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0011",
+      "worker": "host-darwin",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0001",
+      "worker": "phone-s25",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    },
+    {
+      "job_id": "j0002",
+      "worker": "phone-s24",
+      "status": "ACCEPTED",
+      "digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "via": "http://192.168.1.25:18082"
+    }
+  ],
+  "wall_s": 0.402840249997098,
+  "via_loopback_count": 0,
+  "phone_job_peer_loopback": [],
+  "three_physical": true,
+  "coordinator_colocated_with_darwin_worker": true,
+  "not_three_phones": true,
+  "not_a_new_operator_domain": true,
+  "operator_stays_1": true
+}

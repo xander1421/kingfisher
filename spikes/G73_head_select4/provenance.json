@@ -1,0 +1,323 @@
+{
+ "spike": "G73_head_select4",
+ "recorded_utc": "2026-08-19T03:54:32Z",
+ "note": "G73: valid-select HEAD among {gated-G51, analog_only, AA, prior}; tail stays G59 pred-gate.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G51_bayesian_lift_scoring",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G51_bayesian_lift_scoring/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G54_slice_gated_lift",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G54_slice_gated_lift/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G59_official_split",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G59_official_split/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G67_head_aa",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G67_head_aa/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G54_slice_gated_lift": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G67_head_aa": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G73_head_select4/head_select.py",
+   "sha256": "0668e3f9c22f53bb88d97e5d0cee411d93303b4295d74e0f17b60cd400762a80",
+   "bytes": 23257,
+   "mtime": 1787111418,
+   "compared_ts": 1787111418,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G73_head_select4/select.json",
+   "sha256": "ed240c07b039148542c173da20ec89f955e2fb6d35af80d4396b790cf0cc0c69",
+   "bytes": 4651,
+   "mtime": 1787111672,
+   "compared_ts": 1787111672,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test 20466",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "official leak 0",
+   "can_fail_because": "id packing broke",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_pred_gate_repro",
+   "must_fire_because": "G59 pred-gate 0.2679",
+   "can_fail_because": "scorer drifted",
+   "null_must_contain": "mrr!=0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.2679,
+    "observed": 0.2679,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_237",
+   "must_fire_because": "237 relations",
+   "can_fail_because": "vocab broken",
+   "null_must_contain": "npred!=237",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "npred": 237,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_select_mask",
+   "must_fire_because": "head-select mask hashed before test",
+   "can_fail_because": "hashed after peeking at test",
+   "null_must_contain": "hash missing or after test",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "sha256": "6b16b2d9ad6ddb0e3ffea73275d91eca16e2c4d4d259807da1b7e0cac5852b27",
+    "hashed_before_test": true,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_analog_only_head",
+   "must_fire_because": "G63 analog_only head 0.1453 not residual 0.1398",
+   "can_fail_because": "residual-on-prior or analog scorer drift",
+   "null_must_contain": "head!=0.1453",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.1453,
+    "observed": 0.1453,
+    "residual_on_prior_is": 0.1398,
+    "ok": true
+   }
+  },
+  {
+   "name": "C7_aa_head",
+   "must_fire_because": "G67 AA head 0.1344",
+   "can_fail_because": "AA formula drift",
+   "null_must_contain": "head!=0.1344",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "expected": 0.1344,
+    "observed": 0.1344,
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_global_analog_only_replace_loses",
+   "must_fire_because": null,
+   "can_fail_because": "D <= 0.2679",
+   "null_must_contain": "signed: replace loses or ties",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "d_mrr": 0.2554,
+    "bar": 0.2679,
+    "fired": true,
+    "description": "Fires if D global analog_only-head replace MRR <= 0.2679"
+   },
+   "refutes": "that global analog_only-head replace beats the G59 gate",
+   "fires_when": "D <= 0.2679",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_select_not_plus005",
+   "must_fire_because": null,
+   "can_fail_because": "F - 0.2679 < 0.005",
+   "null_must_contain": "signed delta",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "f_mrr": 0.2714,
+    "g59": 0.2679,
+    "delta": 0.0035,
+    "fired": true,
+    "description": "Fires if F - 0.2679 < 0.005"
+   },
+   "refutes": "that valid-select beats 0.2679 by +0.005",
+   "fires_when": "F - 0.2679 < 0.005",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_analog_only_head_miss",
+   "must_fire_because": null,
+   "can_fail_because": "analog_only_head <= 0.1703",
+   "null_must_contain": "analog-style miss",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "analog_only_head": 0.1453,
+    "g59_head": 0.1703,
+    "fired": true,
+    "description": "Fires if analog_only head MRR <= gated head 0.1703"
+   },
+   "refutes": "that analog_only lifts the hard head level above 0.1703",
+   "fires_when": "analog_only_head <= 0.1703",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_global_analog_only_replace_loses",
+  "F2_select_not_plus005",
+  "F3_analog_only_head_miss"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787075943,
+   "from": "spikes/G51_bayesian_lift_scoring/bayesian_lift.py"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G54_slice_gated_lift": {
+   "newest": 1787100600,
+   "from": "spikes/G54_slice_gated_lift/slice_gated.json"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G59_official_split": {
+   "newest": 1787102949,
+   "from": "spikes/G59_official_split/official.json"
+  },
+  "/Users/victorianikolenko/.grok/worktrees/victorianikolenko-kingfisher/subagent-01a0181e-d413-77b1-8a63-74e46a9dadae/spikes/G67_head_aa": {
+   "newest": 1787109513,
+   "from": "spikes/G67_head_aa/aa.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "global analog_only-head replace <= 0.2679 OR valid-select < +0.005 OR analog_only head <= 0.1703"
+}

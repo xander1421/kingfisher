@@ -1,0 +1,170 @@
+{
+ "spike": "H107_autoloop_eval_and_witness_attack",
+ "recorded_utc": "2026-08-18T10:48:15Z",
+ "note": "H107: Adversarial Soundness Audit of Autoloop Evaluators, G35 Rule Selection, and W7 Witness Transitions",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/.github/autoloop/evaluators",
+   "head": "63aec9cb89a9c84beab71576a67a174a0e553f12",
+   "clean": false,
+   "dirty_files": [
+    ".github/autoloop/evaluators/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants",
+   "head": "63aec9cb89a9c84beab71576a67a174a0e553f12",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G34_length1_and_constants/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness",
+   "head": "63aec9cb89a9c84beab71576a67a174a0e553f12",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W6_incremental_witness/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/.github/autoloop/evaluators": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H107_autoloop_eval_and_witness_attack/attack_results.json",
+   "sha256": "3a76b4e2438ef72b928a07d0d87bcc9b995e37775225946328155f0d31d73105",
+   "bytes": 667,
+   "mtime": 1787050095,
+   "compared_ts": 1787050095,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_evaluator_defect_detected",
+   "must_fire_because": "auditor must detect key mismatch defects in eval_graph_ai and eval_verification",
+   "can_fail_because": "if evaluator keys were modified or masked",
+   "null_must_contain": "evaluators passing without detecting key mismatches",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "eval_graph_ai_dead_keys": true,
+    "eval_verification_frozen_defaults": true
+   }
+  },
+  {
+   "name": "C2_hub_bias_measured",
+   "must_fire_because": "auditor must measure that >50% of constant grounding rules concentrate on top-500 hubs",
+   "can_fail_because": "if dataset partitioning or entity counting failed",
+   "null_must_contain": "constant rules uniformly distributed across all 14,505 entities",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "tail_constants_in_top500_pct": 62.5,
+    "head_constants_in_top500_pct": 63.74,
+    "spurious_zero_lift_rules_pct": 37.93,
+    "spurious_count": 966,
+    "total_constant_rules": 2547
+   }
+  },
+  {
+   "name": "C3_w7_fork_injection_reproduced",
+   "must_fire_because": "auditor must reproduce that unbound delta_n splits sequence chain head on identical state roots",
+   "can_fail_because": "if delta_n binding check was already implemented",
+   "null_must_contain": "apply_epoch rejecting mismatched delta_n or failing to split chain heads",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "fork_injection_success": true,
+    "inflation_success": true,
+    "honest_chain_head": "1b0239ee6fe5adfad7c76e489e2e9939899b4fd2ad4a7a909214dac5ad39d9a9",
+    "forked_chain_head": "f42ee3119ffc8c03744b1d244e74b77b511b35d7c70660f76dba098e25ac51c8"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_system_soundness_hypothesis",
+   "must_fire_because": null,
+   "can_fail_because": "all three candidate components resist adversarial attack (no evaluator defects, no hub bias, no fork injection)",
+   "null_must_contain": "all attacks failing to find soundness defects",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "eval_vulnerabilities": {
+     "eval_graph_ai_dead_keys": true,
+     "eval_verification_frozen_defaults": true
+    },
+    "g35_hub_bias_pct": 37.93,
+    "w7_fork_injection": true
+   },
+   "refutes": "the hypothesis that Autoloop evaluators, G35 rule selection, and W7 state transitions are cryptographically and empirically sound",
+   "fires_when": "all three candidate components resist adversarial attack (no evaluator defects, no hub bias, no fork injection)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/.github/autoloop/evaluators": {
+   "newest": 1787049982,
+   "from": ".github/autoloop/evaluators/eval_determinism.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "newest": 1787050043,
+   "from": "spikes/G34_length1_and_constants/length1_constants.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness": {
+   "newest": 1786979451,
+   "from": "spikes/W6_incremental_witness/incremental.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Autoloop evaluators resist metric forgery and dead keys, G35 constant rules exhibit <30% spurious lift, and W7 state transitions bind delta_n against fork injection."
+}

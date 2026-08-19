@@ -1,0 +1,106 @@
+{
+ "spike": "H148_fleet_scale",
+ "recorded_utc": "2026-08-18T22:55:23Z",
+ "note": "H148: two-phone scale failed because submit().result() serialized the pair",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H148_fleet_scale/fleet.py",
+   "sha256": "f3717368a95af3c1aceb7986b89b602513acbce23b9a95c8636b55c5f91f6f87",
+   "bytes": 8569,
+   "mtime": 1787093586
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H148_fleet_scale/fleet.json",
+   "sha256": "22003da94cb89dd7e368a8287ca28af2c6788b30bdbd6c14e644d901018a47eb",
+   "bytes": 2345,
+   "mtime": 1787093723
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "eval_order_is_sum",
+   "must_fire_because": "host 50ms+50ms: tuple submit().result() wall is ~2x submit-all",
+   "can_fail_because": "if the tuple already overlapped, bug_s would be within 50% of fix_s",
+   "null_must_contain": "two 50ms sleeps whose walls can be a sum or a max",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "bug_s": 0.10599250000086613,
+    "fix_s": 0.05497304200252984,
+    "ratio": 1.9280814038995404
+   }
+  },
+  {
+   "name": "no_sequential_submit_result",
+   "must_fire_because": "production H141/H148 source must not call .result() on submit() in one expr",
+   "can_fail_because": "AST hits on H141 or H148 (demo_eval_order excluded)",
+   "null_must_contain": "AST of a file that can contain submit().result() or wait_all",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "H141": [],
+    "H148": []
+   }
+  },
+  {
+   "name": "phone_wall_is_max",
+   "must_fire_because": "1:1 and 3:1 walls must be <= 1.20 * max(phone times), not the sum",
+   "can_fail_because": "wall \u2248 s25+s24 as in retracted H141 6.874 / 5.173",
+   "null_must_contain": "a wall that can equal max(s25,s24) or s25+s24",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "one_one_wall": 5.38185029199667,
+    "one_one_max": 5.380112457998621,
+    "three_one_wall": 2.5564291669943486,
+    "three_one_max": 2.5539959170055226,
+    "retracted_one_one": 6.8744451660022605,
+    "retracted_three_one": 5.173469625005964
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "devices_add_no_capacity",
+   "must_fire_because": null,
+   "can_fail_because": "three_one_vs_s25_only >= 0.90 and fleet_vs_s25_k2 >= 0.90",
+   "null_must_contain": "ratios that can sit above or below 0.90",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "three_one_vs_s25_only": 0.845506266067195,
+    "fleet_vs_s25_k2": 0.7516108283148799,
+    "three_one_wall": 2.5564291669943486,
+    "s25_only": 3.0235484579970944,
+    "fleet_wall": 1.3371465419986635,
+    "s25_k2_wall": 1.7790410829984467
+   },
+   "refutes": "two phones still lose to one Snapdragon after the harness is parallel",
+   "fires_when": "three_one_vs_s25_only >= 0.90 and fleet_vs_s25_k2 >= 0.90",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "harness evaluation-order defect; no elder",
+ "problems": [],
+ "ok": true,
+ "falsifier": "after submit-all, 3:1 k=1 wall not < 0.90 of S25-only 400 AND fleet k=2 wall not < 0.90 of S25 k=2 400"
+}

@@ -1,0 +1,171 @@
+{
+ "spike": "G87_bidirectional_neurosymbolic",
+ "recorded_utc": "2026-08-19T13:50:18Z",
+ "note": "G87: 4-Way Neuro-Symbolic Hybrid with Bidirectional 4-Topology Mining on Official FB15k-237.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G87_bidirectional_neurosymbolic/result.json",
+   "sha256": "87b30cdbf7bfcf085588859df2b21abcd6470f5c977d8ef303bcbf69e759063b",
+   "bytes": 1100,
+   "mtime": 1787147418,
+   "compared_ts": 1787147418,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_test_size",
+   "must_fire_because": "20,466 test triples (40,932 head+tail queries)",
+   "can_fail_because": "corrupted split",
+   "null_must_contain": "wrong size",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "total_eval": 40932,
+    "expected": 40932
+   }
+  },
+  {
+   "name": "C2_zero_leak",
+   "must_fire_because": "0 overlap between train and test",
+   "can_fail_because": "data leakage",
+   "null_must_contain": "leakage",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_count": 0
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001 and F002 pins remain invariant",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  },
+  {
+   "name": "C4_g64_mined",
+   "must_fire_because": "At least 6000 4-topology rules mined",
+   "can_fail_because": "mining bug",
+   "null_must_contain": "too few rules",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "total_rules": 6736
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_below_distmult",
+   "must_fire_because": null,
+   "can_fail_because": "mrr < 0.2852",
+   "null_must_contain": "below distmult",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.3136,
+    "baseline": 0.2852
+   },
+   "refutes": "that 4-way mix beats single-model DistMult baseline (0.2852)",
+   "fires_when": "mrr < 0.2852",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_below_g64",
+   "must_fire_because": null,
+   "can_fail_because": "mrr < 0.2778",
+   "null_must_contain": "below g64",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.3136,
+    "baseline": 0.2778
+   },
+   "refutes": "that 4-way mix beats pure G64 (0.2778)",
+   "fires_when": "mrr < 0.2778",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_test_count",
+   "must_fire_because": null,
+   "can_fail_because": "len(test) != 20466",
+   "null_must_contain": "wrong test count",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "test_len": 20466
+   },
+   "refutes": "that full official test set was evaluated",
+   "fires_when": "len(test) != 20466",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "4-way neuro-symbolic mix with G64 performs below baseline",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

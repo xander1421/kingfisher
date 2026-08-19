@@ -1,0 +1,54 @@
+{
+  "spike": "H163",
+  "timestamp": "2026-08-19 16:00:07",
+  "elapsed_sec": 8.083,
+  "tasks": 250,
+  "endpoints": [
+    "phone",
+    "ios",
+    "emu",
+    "host",
+    "rosetta"
+  ],
+  "benchmarks": {
+    "host_baseline_sec": 0.345,
+    "host_throughput_jps": 144.8,
+    "swarm_concurrent_sec": 3.696,
+    "swarm_throughput_jps": 67.6,
+    "speedup_vs_baseline": 0.47
+  },
+  "telemetry": {
+    "phone_battery_before": {
+      "temperature_c": 34.8,
+      "level_pct": 100,
+      "status": 5
+    },
+    "phone_battery_after": {
+      "temperature_c": 34.8,
+      "level_pct": 100,
+      "status": 5
+    }
+  },
+  "controls": {
+    "C1_device_health": {
+      "ok": true
+    },
+    "C2_exact_bit_parity": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_digest_divergence": {
+      "fired": false
+    },
+    "F2_phone_overheating": {
+      "fired": false
+    },
+    "F3_swarm_speedup": {
+      "fired": true
+    }
+  }
+}

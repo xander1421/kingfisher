@@ -1,0 +1,299 @@
+{
+ "spike": "G77_distmult_select",
+ "recorded_utc": "2026-08-19T04:36:37Z",
+ "note": "G77: {DistMult, ComplEx, G51, prior} valid-select. No literature MRR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "corpus/fb15k237/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G75_complex_gate/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G76_distmult_min10",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G76_distmult_min10/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G76_distmult_min10": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select/mix.py",
+   "sha256": "8f19de2e02391d7256c04b6adef74bf6497308ead045fa41dd3615ac838269a7",
+   "bytes": 18357,
+   "mtime": 1787114123,
+   "compared_ts": 1787114123,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G77_distmult_select/select.json",
+   "sha256": "a80306075af2aa0cd727a1a054cf2365c3acc3c4f9ca407faf78c86888f93345",
+   "bytes": 18054,
+   "mtime": 1787114197,
+   "compared_ts": 1787114197,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "20466",
+   "can_fail_because": "wrong test",
+   "null_must_contain": "n!=20466",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 20466,
+    "ok": true
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "leak 0",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_nent",
+   "must_fire_because": "14541/237",
+   "can_fail_because": "pack_ids train only",
+   "null_must_contain": "nent!=14541",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "nent": 14541,
+    "npred": 237,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_g75_identity",
+   "must_fire_because": "3-way reproduces 0.3034",
+   "can_fail_because": "unbatch/score drift",
+   "null_must_contain": "3-way!=0.3034",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "three_way": 0.3034,
+    "ref": 0.3034,
+    "ok": true
+   }
+  },
+  {
+   "name": "C5_distmult_identity",
+   "must_fire_because": "G76 0.2852",
+   "can_fail_because": "wrong embeddings",
+   "null_must_contain": "distmult!=0.2852",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.2852,
+    "ref": 0.2852,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_complex_identity",
+   "must_fire_because": "G72 0.2755",
+   "can_fail_because": "wrong embeddings",
+   "null_must_contain": "complex!=0.2755",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.2755,
+    "ref": 0.2755,
+    "ok": true
+   }
+  },
+  {
+   "name": "C7_g51_prior",
+   "must_fire_because": "0.2585/0.2334",
+   "can_fail_because": "score_split drift",
+   "null_must_contain": "prior/G51 drift",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "g51": 0.2585,
+    "prior": 0.2334,
+    "ok": true
+   }
+  },
+  {
+   "name": "C8_g59_gate",
+   "must_fire_because": "0.2679",
+   "can_fail_because": "freeze_gate drift",
+   "null_must_contain": "gated!=0.2679",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "gated": 0.2679,
+    "ref": 0.2679,
+    "ok": true
+   }
+  },
+  {
+   "name": "C9_literature",
+   "must_fire_because": "no excerpt",
+   "can_fail_because": "invented literature MRR",
+   "null_must_contain": "a literature MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "value": "unavailable",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_not_a_new_high",
+   "must_fire_because": null,
+   "can_fail_because": "four-way - 0.3034 < 0.005",
+   "null_must_contain": "a signed delta vs 0.3034",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hybrid_mrr": 0.3101,
+    "g75_ref": 0.3034,
+    "delta": 0.0067,
+    "bar": 0.005,
+    "fired": false,
+    "fires_when": "four-way - 0.3034 < 0.005"
+   },
+   "refutes": "that adding DistMult is a +0.005 high over G75",
+   "fires_when": "four-way - 0.3034 < 0.005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_selection_hurts",
+   "must_fire_because": null,
+   "can_fail_because": "four-way < 0.3034",
+   "null_must_contain": "4-way on either side of 0.3034",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hybrid_mrr": 0.3101,
+    "g75_ref": 0.3034,
+    "fired": false,
+    "fires_when": "four-way < 0.3034"
+   },
+   "refutes": "that the 4-way is at least G75",
+   "fires_when": "four-way < 0.3034",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_distmult_picks_do_not_transfer",
+   "must_fire_because": null,
+   "can_fail_because": "median(TEST DistMult \u2212 ComplEx | valid DistMult) <= 0",
+   "null_must_contain": "a signed per-key test delta",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "n_keys": 283,
+    "median_delta": 0.0037,
+    "frac_le_0": 0.4594,
+    "n_lose": 130,
+    "fired": false,
+    "fires_when": "median(TEST DistMult \u2212 ComplEx | valid DistMult) <= 0"
+   },
+   "refutes": "that DistMult-chosen keys stay DistMult-better than ComplEx",
+   "fires_when": "median(TEST DistMult \u2212 ComplEx | valid DistMult) <= 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/fb15k237": {
+   "newest": 1787102945,
+   "from": "corpus/fb15k237/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G75_complex_gate": {
+   "newest": 1787113487,
+   "from": "spikes/G75_complex_gate/hybrid.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G76_distmult_min10": {
+   "newest": 1787113863,
+   "from": "spikes/G76_distmult_min10/distmult.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "4-way does not beat G75 0.3034 by +0.005, OR loses, OR DistMult picks fail to transfer",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

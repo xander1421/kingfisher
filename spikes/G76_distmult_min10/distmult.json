@@ -1,0 +1,331 @@
+{
+  "spike": "G76",
+  "split": "official FB15k-237 train/valid/test",
+  "source_git": "https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding",
+  "source_commit": "2e440e0f9c687314d5ff67ead68ce985dc446e3a",
+  "field_order": "p,s,o",
+  "headline_arm": "C_distmult_min10",
+  "headline_is_test_grid": false,
+  "literature_compare": "unavailable",
+  "literature_note": "do not quote Bordes/RotatE/AMIE MRR; no excerpt under corpus/",
+  "candidate_set": "all 14541 entities, filtered train+valid+test",
+  "protocol": "filtered_all_entity",
+  "scoreboard_note": "G66 DistMult 0.2195 was epoch-1; this row is the same bilinear form under G72's min_epoch=10 protocol. G72 ComplEx 0.2755 and G59 gated 0.2679 stay.",
+  "model": "DistMult",
+  "score_fn": "sum_k h_k * r_k * t_k",
+  "train_objective": "unfiltered softmax 1-N (both directions), AdaGrad",
+  "g66_was": {
+    "mrr": 0.2195,
+    "best_epoch": 1,
+    "note": "undertrained; not this row"
+  },
+  "seed": 76,
+  "dim": 64,
+  "max_epochs": 40,
+  "min_epoch": 10,
+  "patience": 8,
+  "lr": 0.1,
+  "batch": 1024,
+  "reg": 1e-05,
+  "used_cached_embeddings": false,
+  "valid_select": {
+    "n_sample": 2500,
+    "best_epoch": 10,
+    "best_valid_sample_mrr": 0.3054,
+    "min_epoch": 10,
+    "patience": 8,
+    "note": "valid only; epochs < 10 ineligible (G66 trap)"
+  },
+  "train_hist": [
+    {
+      "epoch": 1,
+      "nll": 13.8995,
+      "sec": 15.6,
+      "eligible": false,
+      "valid_sample_mrr": 0.2635
+    },
+    {
+      "epoch": 2,
+      "nll": 9.7372,
+      "sec": 15.7,
+      "eligible": false
+    },
+    {
+      "epoch": 3,
+      "nll": 8.7079,
+      "sec": 15.76,
+      "eligible": false
+    },
+    {
+      "epoch": 4,
+      "nll": 8.1595,
+      "sec": 15.8,
+      "eligible": false
+    },
+    {
+      "epoch": 5,
+      "nll": 7.8135,
+      "sec": 15.84,
+      "eligible": false,
+      "valid_sample_mrr": 0.3083
+    },
+    {
+      "epoch": 6,
+      "nll": 7.5682,
+      "sec": 15.86,
+      "eligible": false
+    },
+    {
+      "epoch": 7,
+      "nll": 7.3855,
+      "sec": 15.87,
+      "eligible": false
+    },
+    {
+      "epoch": 8,
+      "nll": 7.2406,
+      "sec": 15.87,
+      "eligible": false
+    },
+    {
+      "epoch": 9,
+      "nll": 7.1246,
+      "sec": 15.88,
+      "eligible": false
+    },
+    {
+      "epoch": 10,
+      "nll": 7.0279,
+      "sec": 15.89,
+      "eligible": true,
+      "valid_sample_mrr": 0.3054,
+      "best": true
+    },
+    {
+      "epoch": 11,
+      "nll": 6.9467,
+      "sec": 15.91,
+      "eligible": true,
+      "valid_sample_mrr": 0.3046,
+      "stale": 1
+    },
+    {
+      "epoch": 12,
+      "nll": 6.877,
+      "sec": 15.89,
+      "eligible": true,
+      "valid_sample_mrr": 0.3034,
+      "stale": 2
+    },
+    {
+      "epoch": 13,
+      "nll": 6.8163,
+      "sec": 15.89,
+      "eligible": true,
+      "valid_sample_mrr": 0.3006,
+      "stale": 3
+    },
+    {
+      "epoch": 14,
+      "nll": 6.7635,
+      "sec": 15.9,
+      "eligible": true,
+      "valid_sample_mrr": 0.3026,
+      "stale": 4
+    },
+    {
+      "epoch": 15,
+      "nll": 6.7168,
+      "sec": 15.9,
+      "eligible": true,
+      "valid_sample_mrr": 0.2992,
+      "stale": 5
+    },
+    {
+      "epoch": 16,
+      "nll": 6.675,
+      "sec": 15.91,
+      "eligible": true,
+      "valid_sample_mrr": 0.2986,
+      "stale": 6
+    },
+    {
+      "epoch": 17,
+      "nll": 6.6377,
+      "sec": 15.91,
+      "eligible": true,
+      "valid_sample_mrr": 0.2998,
+      "stale": 7
+    },
+    {
+      "epoch": 18,
+      "nll": 6.6042,
+      "sec": 15.91,
+      "eligible": true,
+      "valid_sample_mrr": 0.2985,
+      "stale": 8
+    }
+  ],
+  "n_train": 272115,
+  "n_valid": 17535,
+  "n_test": 20466,
+  "npred": 237,
+  "nent": 14541,
+  "n_rules_2hop": 2201,
+  "file_sha256": {
+    "train.txt": "6e4c2782169af21e9743f3b1d200886f5d595bf6bc504ec1351720949c5cdfae",
+    "valid.txt": "cf6309010852f6a8d47a45df830a426415d1ee6f7a3970a8376ff1fb81db4a5c",
+    "test.txt": "5711cf41623ceb4eacc50eb6108a3ca6565c7492e3caaf82a3e355cc660d1574"
+  },
+  "same_pair_leak": {
+    "n": 0,
+    "n_test": 20466
+  },
+  "field_order_obs": {
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14541,
+    "max_p": 236,
+    "max_s": 14540,
+    "max_o": 14540
+  },
+  "arms": {
+    "A_prior_support_neginf": {
+      "mrr": 0.2334,
+      "hits1": 0.17,
+      "hits3": 0.25,
+      "hits10": 0.3541,
+      "n_queries": 40932
+    },
+    "B_g51_support_neginf": {
+      "mrr": 0.2585,
+      "hits1": 0.1898,
+      "hits3": 0.281,
+      "hits10": 0.3837,
+      "n_queries": 40932
+    },
+    "C_distmult_min10": {
+      "mrr": 0.2852,
+      "hits1": 0.2008,
+      "hits3": 0.3121,
+      "hits10": 0.4552,
+      "n_queries": 40932
+    }
+  },
+  "slices": {
+    "prior": {
+      "tail": {
+        "mrr": 0.3305,
+        "hits1": 0.2545,
+        "hits3": 0.3568,
+        "hits10": 0.476,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1363,
+        "hits1": 0.0854,
+        "hits3": 0.1432,
+        "hits10": 0.2323,
+        "n_queries": 20466
+      }
+    },
+    "g51": {
+      "tail": {
+        "mrr": 0.3525,
+        "hits1": 0.2729,
+        "hits3": 0.385,
+        "hits10": 0.4979,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1645,
+        "hits1": 0.1067,
+        "hits3": 0.1771,
+        "hits10": 0.2695,
+        "n_queries": 20466
+      }
+    },
+    "distmult": {
+      "tail": {
+        "mrr": 0.3781,
+        "hits1": 0.2852,
+        "hits3": 0.4151,
+        "hits10": 0.5656,
+        "n_queries": 20466
+      },
+      "head": {
+        "mrr": 0.1923,
+        "hits1": 0.1163,
+        "hits3": 0.2091,
+        "hits10": 0.3448,
+        "n_queries": 20466
+      }
+    }
+  },
+  "distmult_minus_g51": 0.0267,
+  "distmult_minus_complex_ref": 0.0097,
+  "controls": {
+    "C1_test_n": {
+      "n": 20466,
+      "expected": 20466,
+      "ok": true
+    },
+    "C2_leak": {
+      "leak": 0,
+      "ok": true
+    },
+    "C3_nent": {
+      "nent": 14541,
+      "expected": 14541,
+      "ok": true
+    },
+    "C4_field_order": {
+      "ok": true,
+      "declared_order": "p,s,o",
+      "npred": 237,
+      "nent": 14541,
+      "max_p": 236,
+      "max_s": 14540,
+      "max_o": 14540
+    },
+    "C5_min_epoch": {
+      "best_epoch": 10,
+      "min_epoch": 10,
+      "ok": true
+    },
+    "C6_prior_identity": {
+      "prior": 0.2334,
+      "ref": 0.2334,
+      "ok": true
+    },
+    "C7_literature_compare": {
+      "value": "unavailable",
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_distmult_does_not_beat_g51": {
+      "distmult_mrr": 0.2852,
+      "g51_mrr": 0.2585,
+      "delta": 0.0267,
+      "bar": 0.005,
+      "fired": false,
+      "fires_when": "distmult - g51 < 0.005"
+    },
+    "F2_distmult_below_official_prior": {
+      "distmult_mrr": 0.2852,
+      "prior_bar": 0.2334,
+      "prior_observed": 0.2334,
+      "fired": false,
+      "fires_when": "distmult < 0.2334"
+    },
+    "F3_distmult_below_complex": {
+      "distmult_mrr": 0.2852,
+      "complex_ref": 0.2755,
+      "delta": 0.0097,
+      "fired": false,
+      "fires_when": "distmult < 0.2755"
+    }
+  },
+  "elapsed_sec": 323.15
+}

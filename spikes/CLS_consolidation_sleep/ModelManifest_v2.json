@@ -1,0 +1,13 @@
+{
+  "manifest_version": "2.0.0",
+  "manifest_id": "F003.manifest.v2",
+  "created_utc": "2026-08-18T19:10:35Z",
+  "consolidation_cycle": {
+    "new_episodes_ingested": 2,
+    "historical_replays_interleaved": 2,
+    "dev_tuning_partition": "dev_split_disjoint",
+    "frozen_alpha": 0.05,
+    "frozen_beta": 0.1
+  },
+  "regression_policy": "ZERO_HISTORICAL_DIGEST_DRIFT"
+}

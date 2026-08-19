@@ -1,0 +1,21 @@
+{
+  "elapsed_sec": 22.64,
+  "autoloop_evaluators": {
+    "eval_graph_ai_dead_keys": true,
+    "eval_verification_frozen_defaults": true
+  },
+  "g35_hub_bias": {
+    "tail_constants_in_top500_pct": 62.5,
+    "head_constants_in_top500_pct": 63.74,
+    "spurious_zero_lift_rules_pct": 37.93,
+    "spurious_count": 966,
+    "total_constant_rules": 2547
+  },
+  "w7_state_transitions": {
+    "fork_injection_success": true,
+    "inflation_success": true,
+    "honest_chain_head": "1b0239ee6fe5adfad7c76e489e2e9939899b4fd2ad4a7a909214dac5ad39d9a9",
+    "forked_chain_head": "f42ee3119ffc8c03744b1d244e74b77b511b35d7c70660f76dba098e25ac51c8"
+  },
+  "falsifier_fired": false
+}

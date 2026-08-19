@@ -1,15 +1,13 @@
 {
  "spike": "H113_lane_namespace",
- "recorded_utc": "2026-08-18T10:58:53Z",
+ "recorded_utc": "2026-08-18T11:02:06Z",
  "note": "H113: the lane-definition file assigned this lane a row namespace that exists in no other file.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/H113_lane_namespace",
-   "head": "4480f00791b0ebe5b3997f1a2292553943c98a3d",
-   "clean": false,
-   "dirty_files": [
-    "spikes/H113_lane_namespace/"
-   ],
+   "head": "380a7335798b60d3af7068c00b9616bca086bd04",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   }
@@ -26,17 +24,17 @@
    "path": "probe.out",
    "sha256": "922d259738042d40f35142107e9d6564ccf4108fb3a12245fd54461493a1b777",
    "bytes": 873,
-   "mtime": 1787050732,
-   "compared_ts": 1787050732,
-   "compared_clock": "mtime"
+   "mtime": 1787050925,
+   "compared_ts": 1787050813,
+   "compared_clock": "last-commit"
   },
   {
    "path": "falsify.out",
    "sha256": "e2130c629826fe9850b085483d21c228aa12d1a8c942cff4dcf0270431c1a184",
    "bytes": 226,
-   "mtime": 1787050733,
-   "compared_ts": 1787050733,
-   "compared_clock": "mtime"
+   "mtime": 1787050926,
+   "compared_ts": 1787050813,
+   "compared_clock": "last-commit"
   }
  ],
  "missing_artifacts": [],
@@ -131,14 +129,15 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/spikes/H113_lane_namespace": {
-   "newest": 1787050732,
-   "from": "spikes/H113_lane_namespace/certify_h113.py"
+   "newest": 1787050813,
+   "from": "<HEAD commit>"
   }
  },
  "problems": [],
  "ok": true,
  "falsifier": "if a P row exists in WORK_QUEUE.md, or any file defines P0-P5 as row ids rather than a priority tier, H113 is withdrawn",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

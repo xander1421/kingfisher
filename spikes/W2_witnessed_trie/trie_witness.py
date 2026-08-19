@@ -231,23 +231,26 @@ def prove_membership(root, k):
 def verify_membership(root_hash, k, pf):
     """True iff pf proves k is in the trie committed by root_hash. Uses only the
     proof and the root -- never the prover's trie."""
-    if pf is None:
+    if pf is None or not isinstance(pf, dict):
         return False
-    leaf = pf['leaf']
-    if fold(pf['steps'], desc_hash(leaf)) != root_hash:
+    try:
+        leaf = pf['leaf']
+        if fold(pf['steps'], desc_hash(leaf)) != root_hash:
+            return False
+        # re-walk the query against the PROVEN descriptions, so a proof of a
+        # different key cannot be replayed for this one.
+        i = 0
+        for (prefix, _t, _p), b in pf['steps']:
+            if k[i:i + len(prefix)] != prefix:
+                return False
+            i += len(prefix)
+            if i >= len(k) or k[i] != b:
+                return False
+            i += 1
+        prefix, term, _p = leaf
+        return k[i:] == prefix and term
+    except (KeyError, TypeError, ValueError, IndexError, AttributeError):
         return False
-    # re-walk the query against the PROVEN descriptions, so a proof of a
-    # different key cannot be replayed for this one.
-    i = 0
-    for (prefix, _t, _p), b in pf['steps']:
-        if k[i:i + len(prefix)] != prefix:
-            return False
-        i += len(prefix)
-        if i >= len(k) or k[i] != b:
-            return False
-        i += 1
-    prefix, term, _p = leaf
-    return k[i:] == prefix and term
 
 
 def prove_non_membership(root, k):
@@ -260,31 +263,34 @@ def verify_non_membership(root_hash, k, pf):
     """True iff pf proves k is ABSENT. This is the check an unordered structure
     cannot offer: it works because the trie's child set at the divergence point
     is authenticated, so 'there is no branch here' is a provable statement."""
-    if pf is None:
+    if pf is None or not isinstance(pf, dict):
         return False
-    d = pf['node']
-    if fold(pf['steps'], desc_hash(d)) != root_hash:
+    try:
+        d = pf['node']
+        if fold(pf['steps'], desc_hash(d)) != root_hash:
+            return False
+        i = 0
+        for (prefix, _t, _p), b in pf['steps']:
+            if k[i:i + len(prefix)] != prefix:
+                return False
+            i += len(prefix)
+            if i >= len(k) or k[i] != b:
+                return False
+            i += 1
+        prefix, term, pairs = d
+        have = {b for b, _h in pairs}
+        take = min(len(prefix), len(k) - i)
+        if prefix[:take] != k[i:i + take]:
+            return True                       # diverges inside the compressed prefix
+        i += take
+        if i == len(k):
+            # present only if the key consumed the WHOLE compressed prefix and a key
+            # ends at this node. `take < len(prefix)` means k stops mid-prefix, so k
+            # is absent however `term` reads.
+            return not (take == len(prefix) and term)
+        return k[i] not in have               # no branch for the next byte
+    except (KeyError, TypeError, ValueError, IndexError, AttributeError):
         return False
-    i = 0
-    for (prefix, _t, _p), b in pf['steps']:
-        if k[i:i + len(prefix)] != prefix:
-            return False
-        i += len(prefix)
-        if i >= len(k) or k[i] != b:
-            return False
-        i += 1
-    prefix, term, pairs = d
-    have = {b for b, _h in pairs}
-    take = min(len(prefix), len(k) - i)
-    if prefix[:take] != k[i:i + take]:
-        return True                       # diverges inside the compressed prefix
-    i += take
-    if i == len(k):
-        # present only if the key consumed the WHOLE compressed prefix and a key
-        # ends at this node. `take < len(prefix)` means k stops mid-prefix, so k
-        # is absent however `term` reads.
-        return not (take == len(prefix) and term)
-    return k[i] not in have               # no branch for the next byte
 
 
 def prove_completeness(root, q):
@@ -306,40 +312,43 @@ def verify_completeness(root_hash, q, pf):
     subtrie digest, so the fold to the root fails. This is the anti-omission
     check; controls C_omit / C_add / C_tamper each drive it to False.
     """
-    if pf is None:
+    if pf is None or not isinstance(pf, dict):
         return False
-    if pf['kind'] != COVER:
-        # empty answer: must be backed by a non-membership-style divergence
-        if pf['keys']:
-            return False
-        d = pf['node']
-        if fold(pf['steps'], desc_hash(d)) != root_hash:
-            return False
-        prefix, _term, pairs = d
-        i = pf['depth'] + 0
-        # re-walk against proven descriptions
-        j = 0
-        for (p2, _t, _p), b in pf['steps']:
-            if q[j:j + len(p2)] != p2:
+    try:
+        if pf['kind'] != COVER:
+            # empty answer: must be backed by a non-membership-style divergence
+            if pf['keys']:
                 return False
-            j += len(p2)
-            if j >= len(q) or q[j] != b:
+            d = pf['node']
+            if fold(pf['steps'], desc_hash(d)) != root_hash:
                 return False
-            j += 1
-        take = min(len(prefix), len(q) - j)
-        if prefix[:take] != q[j:j + take]:
-            return True
-        j += take
-        return j < len(q) and q[j] not in {b for b, _h in pairs}
-    ks = pf['keys']
-    if not ks:
+            prefix, _term, pairs = d
+            i = pf['depth'] + 0
+            # re-walk against proven descriptions
+            j = 0
+            for (p2, _t, _p), b in pf['steps']:
+                if q[j:j + len(p2)] != p2:
+                    return False
+                j += len(p2)
+                if j >= len(q) or q[j] != b:
+                    return False
+                j += 1
+            take = min(len(prefix), len(q) - j)
+            if prefix[:take] != q[j:j + take]:
+                return True
+            j += take
+            return j < len(q) and q[j] not in {b for b, _h in pairs}
+        ks = pf['keys']
+        if not ks:
+            return False
+        if any(not k.startswith(q) for k in ks):
+            return False
+        if list(ks) != sorted(set(ks)):
+            return False                      # canonical, duplicate-free, or reject
+        rebuilt = build(sorted(ks), pf['depth'])
+        return fold(pf['steps'], rebuilt.h) == root_hash
+    except (KeyError, TypeError, ValueError, IndexError, AttributeError):
         return False
-    if any(not k.startswith(q) for k in ks):
-        return False
-    if list(ks) != sorted(set(ks)):
-        return False                      # canonical, duplicate-free, or reject
-    rebuilt = build(sorted(ks), pf['depth'])
-    return fold(pf['steps'], rebuilt.h) == root_hash
 
 
 def reexecute(pf, filt):

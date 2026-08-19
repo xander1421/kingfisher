@@ -1,0 +1,144 @@
+  max       all            n= 40818 mrr=0.2648 h10=0.3929
+  max       same_pair      n= 12249 mrr=0.5318 h10=0.8146
+  max       no_same_pair   n= 28569 mrr=0.1503 h10=0.2121
+  noisy_or  all            n= 40818 mrr=0.2746 h10=0.3974
+  noisy_or  same_pair      n= 12249 mrr=0.5545 h10=0.8123
+  noisy_or  no_same_pair   n= 28569 mrr=0.1546 h10=0.2195
+{
+  "arms": {
+    "max": {
+      "all": {
+        "elapsed_sec": 39.3655,
+        "hits1": 0.1748,
+        "hits10": 0.3929,
+        "hits3": 0.3169,
+        "mrr": 0.2648,
+        "mrr_head": 0.193,
+        "mrr_tail": 0.3366,
+        "n_queries": 81636,
+        "n_triples": 40818
+      },
+      "no_same_pair": {
+        "elapsed_sec": 22.2024,
+        "hits1": 0.1148,
+        "hits10": 0.2121,
+        "hits3": 0.1694,
+        "mrr": 0.1503,
+        "mrr_head": 0.0647,
+        "mrr_tail": 0.236,
+        "n_queries": 57138,
+        "n_triples": 28569
+      },
+      "same_pair": {
+        "elapsed_sec": 11.4042,
+        "hits1": 0.3147,
+        "hits10": 0.8146,
+        "hits3": 0.6607,
+        "mrr": 0.5318,
+        "mrr_head": 0.4922,
+        "mrr_tail": 0.5714,
+        "n_queries": 24498,
+        "n_triples": 12249
+      }
+    },
+    "noisy_or": {
+      "all": {
+        "elapsed_sec": 36.5106,
+        "hits1": 0.1997,
+        "hits10": 0.3974,
+        "hits3": 0.3202,
+        "mrr": 0.2746,
+        "mrr_head": 0.2025,
+        "mrr_tail": 0.3467,
+        "n_queries": 81636,
+        "n_triples": 40818
+      },
+      "no_same_pair": {
+        "elapsed_sec": 21.9832,
+        "hits1": 0.118,
+        "hits10": 0.2195,
+        "hits3": 0.1754,
+        "mrr": 0.1546,
+        "mrr_head": 0.069,
+        "mrr_tail": 0.2401,
+        "n_queries": 57138,
+        "n_triples": 28569
+      },
+      "same_pair": {
+        "elapsed_sec": 13.235,
+        "hits1": 0.3902,
+        "hits10": 0.8123,
+        "hits3": 0.6578,
+        "mrr": 0.5545,
+        "mrr_head": 0.514,
+        "mrr_tail": 0.5951,
+        "n_queries": 24498,
+        "n_triples": 12249
+      }
+    }
+  },
+  "controls": {
+    "C1_copy_reproduces_the_original_under_max": {
+      "hits10": 0.3929,
+      "mrr": 0.2648,
+      "ok": true,
+      "published_hits10": 0.3929,
+      "published_mrr": 0.2648,
+      "what_would_fail_it": "the max arm of the rewritten file returning anything but 0.2648 / 0.3929"
+    },
+    "C2_operators_differ": {
+      "max_of_0.4_0.5": 0.5,
+      "noisy_or_of_0.4_0.5": 0.7,
+      "ok": true,
+      "what_would_fail_it": "both operators returning the same score for the same two confidences, which would make the rewrite inert by construction"
+    },
+    "C3_partition_recombines": {
+      "ok": true,
+      "sum": 40818,
+      "test": 40818,
+      "what_would_fail_it": "the parts not summing to the test set"
+    }
+  },
+  "controls_ok": "3/3",
+  "elapsed_sec": 174.232,
+  "falsifiers": {
+    "F1_noisy_or_does_not_help_the_clean_partition": {
+      "fired": false,
+      "gain": 0.0043,
+      "max_no_same_pair": 0.1503,
+      "meaning_if_fired": "the aggregation difference G30 named does not explain the gap for this rule set",
+      "noisy_or_no_same_pair": 0.1546,
+      "question": "does noisy-OR raise filtered MRR on the no-same-pair part?",
+      "threshold_absolute": 0.002,
+      "threshold_is": "an absolute floor chosen before the run, NOT a measured seed band -- no seed band for filtered MRR exists in this lane and inventing one would be A26"
+    },
+    "F2_gain_is_bought_on_the_leaky_third": {
+      "all_gain": 0.0098,
+      "clean_gain": 0.0043,
+      "fired": false,
+      "meaning_if_fired": "the gain must NOT be published as a method improvement",
+      "question": "is any gain confined to the blend and absent from the leakage-free partition?"
+    },
+    "F3_rewrite_is_inert": {
+      "fired": false,
+      "max_all_mrr": 0.2648,
+      "meaning_if_fired": "the rewrite is inert and this run measures nothing about aggregation -- family A, caught by checking",
+      "noisy_or_all_mrr": 0.2746,
+      "question": "did the aggregation change move any ranking at all?"
+    }
+  },
+  "partition": {
+    "all": 40818,
+    "no_same_pair": 28569,
+    "same_pair": 12249
+  },
+  "seed": "0xC0FFEE",
+  "source_sha256": {
+    "g34_original": "2955ff29946ee8a4b5dc93f93f6ff1f4e6dae8434ead97beb4390b0928447377",
+    "g47_copy": "adb2bcb40a7e932db1094438bbaf81f9a51c8bc4d838526ca54d055990b9fefc",
+    "sites_rewritten": 8
+  },
+  "spike": "G47"
+}
+
+D6 Provenance Certified: ok=True

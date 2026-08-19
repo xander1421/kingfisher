@@ -1,0 +1,102 @@
+{
+  "controls": {
+    "C1_f001": {
+      "ok": true,
+      "out": "ACCEPT: /Users/victorianikolenko/kingfisher/fixtures/F001 -> Digest: 590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f"
+    },
+    "C2_gemini_invalid": {
+      "ok": true,
+      "out": "TARGET: /Users/victorianikolenko/kingfisher/fixtures/F002\n  join: 127 hits match corpus\n  declared 8e7a63e1ab7ffc50f526703e34d6c9d7d5456d1743f724f3d45102677dd14e8d\n  spec-v1  e0bc05a287619d4d81450276395c808944ec12abf69c036294aa2a6215cefc1b\n  gemini   167bfa8e358f87697bb62680fad5d2221408ec86782b36f938396fa74de6030a\n  [VERDICT] F002_FROZEN_INVALID\n    - DIGEST_NOT_V1: declared matches Gemini query_id+hex-witness encoding, not kingfisher.digest/v1 (want e0bc05a287619d4d81450276395c808944ec12abf69c0"
+    },
+    "C3_generate_tmp": {
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "ok": true,
+      "out": "456fdae6e47eb1c09a024bc471bb343d\naccepted_digest c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9\nwitness_sha256 2271d0629b002adbca0dc1a3a72ea03b3da9ecae9a5bca1e81b44f9ae95e46ef\nfuel 400\nmutants ['M01_tampered_step_fuel', 'M02_illegal_opcode', 'M03_corrupted_root', 'M04_declared_fuel_mismatch', 'M05_inconsistent_unify', 'M06_result_mismatch_rehashed', 'M07_skipped_unify_rewritten']",
+      "rc": 0
+    },
+    "C4_rust_wrong_class": {
+      "ok": true,
+      "out": "-------------------------------------------------------\nTARGET: /Users/victorianikolenko/kingfisher/fixtures/F002_specv1\n  [VERDICT] REJECTED: WRONG_FIXTURE_CLASS: rust checker is F001-only (no F001.corpus.bin)\n-----------------------------"
+    }
+  },
+  "f002_status": "F002_FROZEN",
+  "falsifiers": {
+    "F1_honest_misses_pin": {
+      "expect": false,
+      "fired": false,
+      "grok": "ACCEPT: /Users/victorianikolenko/kingfisher/fixtures/F002_specv1 -> Digest: c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "ind": "TARGET: /Users/victorianikolenko/kingfisher/fixtures/F002_specv1\n  join: 127 hits match corpus\n  declared c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9\n  spec-v1  c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9\n  gemini   c391d981b3c356ac9bb1c4ad9c01e0380fe5c833c8e9375491ca2d8d9bf6361d\n  [VERDICT] F002_FROZEN_VALID"
+    },
+    "F2_mutant_accepts": {
+      "expect": false,
+      "fired": false,
+      "mutants": [
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M01_tampered_step_fuel"
+        },
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M02_illegal_opcode"
+        },
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M03_corrupted_root"
+        },
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M04_declared_fuel_mismatch"
+        },
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M05_inconsistent_unify"
+        },
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M06_result_mismatch_rehashed"
+        },
+        {
+          "accept": false,
+          "grok_rc": 1,
+          "ind_rc": 1,
+          "name": "M07_skipped_unify_rewritten"
+        }
+      ]
+    },
+    "F3_status_moved_pin": {
+      "digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "expect": false,
+      "fired": false
+    },
+    "F4_checker_rejects_honest_frozen": {
+      "expect": false,
+      "fired": false,
+      "ind": "TARGET: /Users/victorianikolenko/kingfisher/fixtures/F002_specv1\n  join: 127 hits match corpus\n  declared c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9\n  spec-v1  c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9\n  gemini   c391d981b3c356ac9bb1c4ad9c01e0380fe5c833c8e9375491ca2d8d9bf6361d\n  [VERDICT] F002_FROZEN_VALID"
+    },
+    "F5_f001_moved": {
+      "expect": false,
+      "fired": false
+    }
+  },
+  "gate4": {
+    "arm_b_on_pin": true,
+    "closed": true,
+    "f002_frozen": true,
+    "note": "F002_TWO_BOUND frozen; Arm B (G70) already keeps c43b1eab. Rust stays F001-only."
+  },
+  "id": "G71",
+  "live_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+  "not_operator_2": true
+}

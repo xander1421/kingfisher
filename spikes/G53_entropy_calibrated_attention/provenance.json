@@ -1,0 +1,135 @@
+{
+ "spike": "G53_entropy_calibrated_attention",
+ "recorded_utc": "2026-08-19T00:43:39Z",
+ "note": "G53: Neural-Symbolic Entropic Scaled Attention achieves 0.2284 Filtered MRR on FB15k-237.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G53_entropy_calibrated_attention/run_g53.py",
+   "sha256": "031c3685a98916b80db50a352247d81e94c482801f0ccdeeacbf49200c517479",
+   "bytes": 19247,
+   "mtime": 1787099862,
+   "compared_ts": 1787099862,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G53_entropy_calibrated_attention/g53_results.json",
+   "sha256": "5a33dfd29043ae70c58a2e2b08201793bcc366c81322f4168bbefb1c825dc1a8",
+   "bytes": 1028,
+   "mtime": 1787100219,
+   "compared_ts": 1787100219,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_leak_free_invariant",
+   "must_fire_because": "Test set must have zero entity-pair overlap with train",
+   "can_fail_because": "partition leakage bug",
+   "null_must_contain": "leak_triples > 0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaks": 0
+   }
+  },
+  {
+   "name": "C2_g49_prior_reproduction",
+   "must_fire_because": "Prior baseline reproduces 0.1732 MRR within 0.001",
+   "can_fail_because": "unfiltered or modified prior calculation",
+   "null_must_contain": "divergent baseline",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "prior_mrr": 0.17322570711856575
+   }
+  },
+  {
+   "name": "C3_g51_bayesian_reproduction",
+   "must_fire_because": "G51 Bayesian reproduces 0.2274 MRR within 0.002",
+   "can_fail_because": "modified hyperparameter or broken rule mining",
+   "null_must_contain": "divergent G51 result",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "g51_mrr": 0.22744303163333
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_nesa_beats_g51",
+   "must_fire_because": null,
+   "can_fail_because": "nesa_mrr < g51_mrr",
+   "null_must_contain": "sub-baseline performance",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "nesa_mrr": 0.22837061890976829,
+    "g51_mrr": 0.22744303163333
+   },
+   "refutes": "that NESA attention cannot outperform fixed-beta Bayesian lift",
+   "fires_when": "nesa_mrr < g51_mrr",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_nesa_exceeds_prior_by_30pct",
+   "must_fire_because": null,
+   "can_fail_because": "rel_gain < 0.30",
+   "null_must_contain": "gain below 30%",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rel_gain": 0.3183413865556234
+   },
+   "refutes": "that rule attention is within prior noise",
+   "fires_when": "rel_gain < 0.30",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S52_realkg": {
+   "newest": 1786901224,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "NESA attention failing to beat fixed-beta Bayesian baseline on pair-disjoint split"
+}

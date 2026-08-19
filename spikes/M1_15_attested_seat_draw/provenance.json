@@ -1,0 +1,131 @@
+{
+ "spike": "M1_15_attested_seat_draw",
+ "recorded_utc": "2026-08-18T19:23:21Z",
+ "note": "M1.15: D1+ VRF seat draw + 3-domain operator attestation across 65 MeTTa jobs.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S57_hyperon_corpus",
+   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S57_hyperon_corpus": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_15_attested_seat_draw/run_attested_quorum.py",
+   "sha256": "8f18cf01799c9d7ea972f29fbf9011cab79fbd4c450591e80e62d0e475c8fb82",
+   "bytes": 9435,
+   "mtime": 1787081001,
+   "compared_ts": 1787081001,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/M1_15_attested_seat_draw/result.json",
+   "sha256": "d39e6e523dec1816a0c9f7b18f5b5110d8cc6a8bc2e76bc7091b0a39e2ec14be",
+   "bytes": 12139,
+   "mtime": 1787081001,
+   "compared_ts": 1787081001,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_vrf_seat_draw_entropy",
+   "must_fire_because": "Seat draw seeded with beacon + epoch root",
+   "can_fail_because": "unseeded draw",
+   "null_must_contain": "deterministic failure",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "root": "6afb946c8f8895900eae8db0955b6fcc0b92b5e5f782540a0687e504c256698e"
+   }
+  },
+  {
+   "name": "C2_operator_attestation_keys",
+   "must_fire_because": "Operator axis backed by distinct cryptographic pubkeys",
+   "can_fail_because": "unattested identity",
+   "null_must_contain": "single operator",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "operators": [
+     "op_android_keystore_c94e",
+     "op_darwin_secp256r1_a18f",
+     "op_linux_secp256r1_b82c"
+    ]
+   }
+  },
+  {
+   "name": "C3_6_axis_domain_independence",
+   "must_fire_because": "All 6 failure domain axes satisfy domain requirements",
+   "can_fail_because": "axis collapse",
+   "null_must_contain": "insufficient domains",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "binary": 3,
+    "manifest": 3,
+    "host": 3,
+    "os": 3,
+    "isa": 2,
+    "operator": 3
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_quorum_acceptance_rate",
+   "must_fire_because": null,
+   "can_fail_because": "accepted_jobs < 65",
+   "null_must_contain": "acceptance shortfall",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "accepted": 65,
+    "total": 65
+   },
+   "refutes": "that quorum fails on domain shortfall",
+   "fires_when": "accepted_jobs < 65",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S57_hyperon_corpus": {
+   "newest": 1786923851,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Quorum accepting under fewer than required independent failure domains on any axis",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

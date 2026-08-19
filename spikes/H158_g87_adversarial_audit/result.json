@@ -1,0 +1,96 @@
+{
+  "spike": "H158",
+  "timestamp": "2026-08-19 14:53:46",
+  "elapsed_sec": 134.73,
+  "reconstruction": {
+    "overall_mrr": 0.3136,
+    "choices": {
+      "distmult": 292,
+      "g64": 85,
+      "complex": 51,
+      "prior": 18
+    }
+  },
+  "g64_selection_audit": {
+    "n_g64_test_queries": 11269,
+    "g64_mrr": 0.2821,
+    "distmult_mrr": 0.21,
+    "complex_mrr": 0.2106,
+    "delta_vs_distmult": 0.0721,
+    "net_gain_mass": 812.9569
+  },
+  "concentration": {
+    "active_predicates": 57,
+    "top3_gain_mass": 310.5789,
+    "top3_share": 0.382,
+    "top5_predicates": [
+      {
+        "p": 50,
+        "count": 402,
+        "g64_mrr": 1.0,
+        "dm_mrr": 0.5452935115857703,
+        "net_gain": 182.79200834252035
+      },
+      {
+        "p": 6,
+        "count": 634,
+        "g64_mrr": 0.3078601531628562,
+        "dm_mrr": 0.19549443200050207,
+        "net_gain": 71.23986721693252
+      },
+      {
+        "p": 7,
+        "count": 242,
+        "g64_mrr": 0.4050414451451338,
+        "dm_mrr": 0.1713760666459195,
+        "net_gain": 56.54702159680986
+      },
+      {
+        "p": 129,
+        "count": 660,
+        "g64_mrr": 0.2910943443277387,
+        "dm_mrr": 0.209941227075695,
+        "net_gain": 53.561057386348836
+      },
+      {
+        "p": 58,
+        "count": 642,
+        "g64_mrr": 0.20861991072101524,
+        "dm_mrr": 0.12671119528913063,
+        "net_gain": 52.58539530726992
+      }
+    ]
+  },
+  "topology_breakdown": {
+    "topo_counts": {
+      "FF": 2264,
+      "BF": 2192,
+      "FB": 1302,
+      "BB": 978
+    },
+    "non_chain_rule_count": 4472,
+    "non_chain_share": 0.6639
+  },
+  "controls": {
+    "C1_reconstruct_g87": {
+      "ok": true
+    },
+    "C2_g64_key_count": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_g64_loses_to_dm": {
+      "fired": false
+    },
+    "F2_no_non_chain_rules": {
+      "fired": false
+    },
+    "F3_top3_concentration": {
+      "fired": false
+    }
+  }
+}
