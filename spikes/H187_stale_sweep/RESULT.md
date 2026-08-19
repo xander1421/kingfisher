@@ -154,3 +154,51 @@ not better news.
 | F1 | zero spikes would refuse today → the class is theoretical and this row closes WRONG | **did not fire** — 27 |
 | F2 | this recomputation disagrees with a real `certify` run → no count it produces means anything | **did not fire** — agrees both directions |
 | F3 | `provenance.json` does not record enough to reconstruct the inputs → those spikes are counted and NAMED as undecidable, never scored clean | **FIRED** — 21, all named in `sweep.json` |
+
+## Postscript, 40 minutes later: the class fired on this row's own origin spike
+
+`W5_epoch_bisect` — the spike whose two-day-old rot raised H187, repaired last
+cycle, and `CLEAN` in this cycle's own sweep — **went STALE while this row was
+being written**:
+
+    epoch_bisect.py predates W2_witnessed_trie source by 0.5h
+    (newest: spikes/W2_witnessed_trie/attack.json) [dep churn: 1 commits/24h]
+
+The trigger is `attack.json`, an **artifact** regenerated inside the dep
+directory by another lane's S37 cutover (`trie_witness.verify_completeness` v3,
+AGENT-1). No source W5 depends on changed. `newest_source_mtime` excludes the
+*checking* spike's declared artifacts and cannot exclude the *dep* spike's, so
+re-running any experiment inside a dep directory invalidates everything
+downstream of it. That is the G77/G76 mechanism again — and G77/G76 was offered
+above as an oddity. It is not an oddity; it is the dominant trigger, and it has
+now hit the spike this row is named after.
+
+**Two things this settles rather than argues.**
+
+1. **Demoting the W5 arm was right, and the reason arrived as an event.** Had it
+   stayed a pass/fail arm, `stalecheck --selfcheck` would be RED across the fleet
+   right now — reported by `selfcheckall.py` as a broken checker — because
+   somebody else re-ran an experiment in a directory this module never touches.
+   That is the `demo8 --selfcheck` failure exactly, and the rationale block
+   predicting it was written before it happened.
+2. **A repair is not durable even in the "quiet dep" mode.** The decomposition
+   above says the 10 churny rows cannot be durably cleared. W5's dep has a churn
+   of **1 commit in 24h** and it still re-rotted inside 40 minutes, off an
+   uncommitted artifact. So the honest statement is narrower than the table:
+   re-running clears staleness until the next time anyone touches the dep
+   directory *for any reason*, and the 24h churn count is a lower bound on how
+   often that happens, not a measure of it.
+
+## A defect this cycle found in its own selfcheck, in the arm added to close it
+
+`--selfcheck` scanned the real tree twice and took **29.4s** against
+`selfcheckall.py`'s 60s `PER_MODULE_TIMEOUT` — half the budget, on an arm that
+grows every time any lane lands a spike. It would have begun reporting TIMEOUT to
+the whole fleet at some unpredictable future spike count, and a TIMEOUT in that
+report is indistinguishable from a broken checker.
+
+The branch under test needs two directories and an expired clock, not 147 real
+records. Moved to a synthetic root: **29.4s → 1.4s**, and the budget is `-1`
+rather than `0` because `now > now + 0` is a coin flip on the first iteration and
+a control that fires only sometimes is not a control. Mutation-tested: deleting
+the truncation branch turns the arm red.

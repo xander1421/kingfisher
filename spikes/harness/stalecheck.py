@@ -382,14 +382,31 @@ def selfcheck():
     # DIRECTION 6 — THE TIME BOUND REPORTS TRUNCATION RATHER THAN A SHORT TOTAL.
     # A budget that silently returns whatever it managed is the failure this
     # whole module is about: a number that reads as coverage and is not.
-    rows, unscanned = scan(ROOT, max_seconds=0)
-    if not unscanned:
-        print('SELFCHECK FAILED: a zero-second budget must report unscanned dirs')
-        ok = False
-    rows, unscanned = scan(ROOT)
-    if unscanned:
-        print('SELFCHECK FAILED: an unbounded scan must not report truncation')
-        ok = False
+    #
+    # ON A SYNTHETIC ROOT, NOT ON `ROOT`. The first draft scanned the real tree
+    # twice and `--selfcheck` took 29.4s against `selfcheckall.py`'s 60s
+    # PER_MODULE_TIMEOUT -- half the budget, on an arm that grows every time any
+    # lane lands a spike. It would have started reporting TIMEOUT to the whole
+    # fleet at some unpredictable future spike count, and a TIMEOUT there is
+    # indistinguishable from a broken checker. The branch under test does not
+    # need 147 real records; it needs two directories and an expired clock.
+    with tempfile.TemporaryDirectory() as tmp:
+        sub = os.path.join(tmp, 'spikes')
+        for name in ('a', 'b', 'c'):
+            os.makedirs(os.path.join(sub, name))
+            if name != 'c':
+                json.dump({}, open(os.path.join(sub, name, 'provenance.json'), 'w'))
+        # -1, not 0: `now > now+0` is a coin-flip on the first iteration, and a
+        # control that fires only sometimes is not a control.
+        _rows, unscanned = scan(tmp, max_seconds=-1)
+        if not unscanned:
+            print('SELFCHECK FAILED: an already-expired budget must report '
+                  'unscanned dirs rather than a short total')
+            ok = False
+        _rows, unscanned = scan(tmp)
+        if unscanned:
+            print('SELFCHECK FAILED: an unbounded scan must not report truncation')
+            ok = False
 
     # DIRECTION 5 — REPORTED, NOT ASSERTED, and the demotion is the point. W5 is
     # the one real-tree datapoint (it certified ok=True on 2026-08-19), so it is
