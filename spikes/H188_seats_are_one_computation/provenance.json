@@ -1,0 +1,182 @@
+{
+ "spike": "H188_seats_are_one_computation",
+ "recorded_utc": "2026-08-19T16:14:45Z",
+ "note": "H188: attack on S91 -- five seats, one computation.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S91_multi_agent_quorum",
+   "head": "d64e2cd452e771a2e3e194c40aea05caf70428a5",
+   "clean": false,
+   "dirty_files": [
+    "spikes/S91_multi_agent_quorum/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/S91_multi_agent_quorum": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H188_seats_are_one_computation/result.json",
+   "sha256": "d0a8c1ac28602310d623f5692b4e3bd2d1116fdab7313b5ce0d59ea9198f8a66",
+   "bytes": 2160,
+   "mtime": 1787156085,
+   "compared_ts": 1787156085,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_reproduces_S91",
+   "must_fire_because": "arm0 must reproduce S91's committed adjudication and axes through S91's own main()",
+   "can_fail_because": "any drift between run.py and result.json, or a patch of mine leaking across arms, makes them differ",
+   "null_must_contain": "an arm0 whose numbers differ from the committed result.json",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "committed": {
+     "total_jobs": 74,
+     "valid_accepted": 69,
+     "attacks_rejected": 5,
+     "divergences": 0,
+     "bit_parity_pct": 100.0
+    },
+    "arm0": {
+     "total_jobs": 74,
+     "valid_accepted": 69,
+     "attacks_rejected": 5,
+     "divergences": 0,
+     "bit_parity_pct": 100.0
+    },
+    "axes_match": true
+   }
+  },
+  {
+   "name": "C2_tripwire_is_live",
+   "must_fire_because": "the negative control must trip the same tripwire, or arm A's silence is an inert probe",
+   "can_fail_because": "a Tripwire that raised on nothing would let reads_the_agent() return normally",
+   "null_must_contain": "a worker that reads agent['binary'] and is not caught",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "reader_tripped": true,
+    "same_reader_on_real_seat_ok": true
+   }
+  },
+  {
+   "name": "C3_axis_audit_responds",
+   "must_fire_because": "collapsing the operator strings to one must move the axis and fire S91's own F3, or arm D1 shows nothing -- an audit that never moves is not an audit",
+   "can_fail_because": "an axis count hard-wired to 5 would report 5 for the collapsed roster too",
+   "null_must_contain": "a collapsed roster still reporting operator=5",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "fictional_operator_axis": 5,
+    "collapsed_operator_axis": 1
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_seat_is_read",
+   "must_fire_because": null,
+   "can_fail_because": "execute_job_on_agent reads its `agent` argument for any of the 74 jobs",
+   "null_must_contain": "a seat read on at least one job",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "jobs_probed": 74,
+    "seat_reads": 0,
+    "tripwire_live": true
+   },
+   "refutes": "that S91's five seats are one computation",
+   "fires_when": "execute_job_on_agent reads its `agent` argument for any of the 74 jobs",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_digest_is_a_result",
+   "must_fire_because": null,
+   "can_fail_because": "S91's corpus digests are not ~injective on source, or the real chain's committed hashes do not collapse",
+   "null_must_contain": "a real chain whose distinct-hash count equals its job count",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "s91_distinct": 67,
+    "s91_jobs": 67,
+    "real_distinct": 18,
+    "real_jobs": 64
+   },
+   "refutes": "that S91 hashes job INPUTS rather than reduction RESULTS",
+   "fires_when": "S91's corpus digests are not ~injective on source, or the real chain's committed hashes do not collapse",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_pin_is_checked",
+   "must_fire_because": null,
+   "can_fail_because": "patching PIN_F001 to a wrong value moves valid_accepted or divergences",
+   "null_must_contain": "an adjudication that differs under a wrong pin",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "baseline": {
+     "total_jobs": 74,
+     "valid_accepted": 69,
+     "attacks_rejected": 5,
+     "divergences": 0,
+     "bit_parity_pct": 100.0
+    },
+    "wrong_pin": {
+     "total_jobs": 74,
+     "valid_accepted": 69,
+     "attacks_rejected": 5,
+     "divergences": 0,
+     "bit_parity_pct": 100.0
+    }
+   },
+   "refutes": "that F001/F002 'pin match' is expected == expected",
+   "fires_when": "patching PIN_F001 to a wrong value moves valid_accepted or divergences",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/S91_multi_agent_quorum": {
+   "newest": 1787152270,
+   "from": "spikes/S91_multi_agent_quorum/result.json"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "S91's worker reads its seat, or its pin is really compared, or its axis audit measures something observed",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

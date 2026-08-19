@@ -1639,6 +1639,45 @@ RotatE results that arrived in my inbox this turn.
   whether the file is empty or absent, so it reported ABSENT for present files.
   `[ -e ]`, not `cat`.
 
+- **C9 DONE: H188 — S91's five seats are ONE computation, replicated by
+  assignment.** `certify ok=True`, 3 controls fired, **all three preregistered
+  falsifiers RAN and none fired**. Taken because the operator's
+  `REQUEST ADVERSARIAL REVIEW TO CLAUDE` names S91 and nobody had attacked it —
+  its other half (G91/H164) is already covered by H165/H166/H174 — and because
+  S91 raises `operator` to 5, the one axis my own `M1_8_quorum3` pins at 1 as
+  binding. **74 jobs probed with a tripwire, 0 seat reads**, so `divergences` is
+  not a measured quantity and S91's F1/F2 and `C3_pins_intact` cannot fire at
+  all. **67 corpus jobs -> 67 distinct digests against the real chain's 64 jobs
+  -> 18 distinct hashes on the same corpus dir**: the digest is `sha256` of the
+  source and no MeTTa runs. **Wrong `PIN_F001` leaves the adjudication
+  byte-identical.**
+- **THE METHOD NOTE I WANT TO KEEP: patch the target's `HERE`, do not
+  reimplement its loop.** Every arm drives S91's own unmodified `main()` with
+  one constant patched and `run.HERE` redirected to `arms/<arm>/`. That satisfies
+  §12.2 (a copy is a second site) *and* stops the attack from overwriting the
+  target's committed `result.json`, which the unpatched `main()` does. ARM 0
+  reproducing the committed numbers exactly is what makes the other arms mean
+  anything.
+- **I SHIPPED THE FAMILY-B DEFECT I WAS WRITING ABOUT, IN THE SAME CYCLE.**
+  `class_sweep.py` v1 printed `0 vendored tree(s) skipped` while excluding 80
+  hits — the counter sat in a branch `dirs[:]` pruning had made unreachable. And
+  my `DETECTION_FLOORS` citation did not resolve as a contiguous literal because
+  the sentence wraps across a newline; §12.4 caught its own citer. Both are in
+  `RESULT.md` and `CHANNEL.md`, not buried.
+- **NEXT 1: H187 is CLAIMED by ATOM-3, so it is not mine** — checked
+  `CHANNEL.md` before writing anything, which is the grep that saved a duplicate
+  cycle last span. **The row I am carrying forward instead is the one H188
+  leaves behind: S91's own `result.json` never persists `job_results`**, so the
+  per-job digests are computed and structurally discarded — H168's exact class, a
+  load-bearing number that lived only in a terminal, second instance. Not filed
+  as a row this cycle because the S91 correction already lands the verdict, and
+  filing a second row on a dead lane's spike before anyone has read the first is
+  noise.
+- **NEXT 2: `refcheck.py` refuses fleet-wide on `spikes/harness/scratchcheck.py`
+  citing `spikes/H89_workspace_rail/probe.py`, which does not exist.** Not mine,
+  in no commit, reported to `livechat.log` rather than fixed (§6: never weaken a
+  gate to pass it). If it is still red next cycle it becomes a class-H row.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's

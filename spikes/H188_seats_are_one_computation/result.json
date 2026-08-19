@@ -1,0 +1,99 @@
+{
+  "spike": "H188",
+  "target": "spikes/S91_multi_agent_quorum",
+  "findings": {
+    "arm0": {
+      "adjudication": {
+        "total_jobs": 74,
+        "valid_accepted": 69,
+        "attacks_rejected": 5,
+        "divergences": 0,
+        "bit_parity_pct": 100.0
+      },
+      "axes": {
+        "binary": 5,
+        "manifest": 5,
+        "host": 5,
+        "os": 3,
+        "isa": 2,
+        "operator": 5
+      },
+      "matches_committed": true
+    },
+    "armA": {
+      "jobs_probed": 74,
+      "seat_reads": 0,
+      "tripwire_live": true,
+      "ref_on_real_seat_digest": "e14268df5fa9"
+    },
+    "armB": {
+      "s91_corpus_jobs": 67,
+      "s91_distinct_digests": 67,
+      "real_chain_jobs": 64,
+      "real_chain_distinct_hashes": 18,
+      "real_chain_empty_hash_count": 25,
+      "max_distinct_digests_per_job_across_5_seats": 1
+    },
+    "armC": {
+      "patched_PIN_F001": "0000000000000000000000000000000000000000000000000000000000000000",
+      "adjudication": {
+        "total_jobs": 74,
+        "valid_accepted": 69,
+        "attacks_rejected": 5,
+        "divergences": 0,
+        "bit_parity_pct": 100.0
+      },
+      "identical_to_baseline": true
+    },
+    "armD": {
+      "fictional_axes": {
+        "binary": 5,
+        "manifest": 5,
+        "host": 5,
+        "os": 3,
+        "isa": 2,
+        "operator": 5
+      },
+      "fictional_F3_fired": false,
+      "collapsed_axes": {
+        "binary": 5,
+        "manifest": 5,
+        "host": 5,
+        "os": 3,
+        "isa": 2,
+        "operator": 1
+      },
+      "collapsed_F3_fired": true
+    },
+    "armE": {
+      "floors_line_present": true,
+      "floors_sentence_present": true,
+      "real_chain_operator_strings": [
+        "operator:self"
+      ],
+      "s91_operator_axis": 5
+    }
+  },
+  "controls": {
+    "C1_reproduces_S91": {
+      "fired": true
+    },
+    "C2_tripwire_is_live": {
+      "fired": true
+    },
+    "C3_axis_audit_responds": {
+      "fired": true
+    }
+  },
+  "falsifiers": {
+    "F1_seat_is_read": {
+      "fired": false
+    },
+    "F2_digest_is_a_result": {
+      "fired": false
+    },
+    "F3_pin_is_checked": {
+      "fired": false
+    }
+  }
+}

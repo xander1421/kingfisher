@@ -1,0 +1,107 @@
+{
+  "spike": "S91",
+  "timestamp": "2026-08-19 17:14:44",
+  "elapsed_sec": 0.0019,
+  "roster": [
+    {
+      "agent_id": "agent_gemini_lead",
+      "role": "Gemini 2.5 Pro (Model & Verification Lead)",
+      "operator_id": "op_gemini_secp256r1_9a41",
+      "host_id": "host:darwin_apple_silicon_m_series",
+      "os": "darwin-25.6.0",
+      "isa": "aarch64",
+      "manifest": "manifest:gemini_graph_ai_v1",
+      "binary": "python:canon_alpha_v1",
+      "stake": 1000
+    },
+    {
+      "agent_id": "agent_claude_swarm",
+      "role": "Claude 3.7 Sonnet (Agent & Tool Engineering Swarm)",
+      "operator_id": "op_claude_secp256r1_3e7b",
+      "host_id": "host:darwin_claude_swarm_worker",
+      "os": "darwin-25.6.0",
+      "isa": "aarch64",
+      "manifest": "manifest:claude_tool_swarm_v1",
+      "binary": "native:trace_verifier_darwin_rs",
+      "stake": 1000
+    },
+    {
+      "agent_id": "agent_grok_local",
+      "role": "Grok Local Reference Verifier",
+      "operator_id": "op_grok_secp256r1_8f12",
+      "host_id": "host:local_grok_evaluator",
+      "os": "darwin-25.6.0",
+      "isa": "aarch64",
+      "manifest": "manifest:hyperon_core_v1",
+      "binary": "python:grok_check_v1",
+      "stake": 1000
+    },
+    {
+      "agent_id": "node_android_s25",
+      "role": "Physical Android (Samsung Galaxy S25 Ultra, Snapdragon 8 Elite)",
+      "operator_id": "op_android_keystore_c94e",
+      "host_id": "host:adb_R5CY93675MK_galaxy_s25_ultra",
+      "os": "android-16",
+      "isa": "aarch64",
+      "manifest": "manifest:android_ndk_pie_v1",
+      "binary": "native:trace_verifier_android_aarch64",
+      "stake": 1000
+    },
+    {
+      "agent_id": "node_linux_x86",
+      "role": "Linux x86_64 Dual-ISA Container Worker",
+      "operator_id": "op_linux_secp256r1_b82c",
+      "host_id": "host:linux_musl_container_x86_64",
+      "os": "linux-6.6-musl",
+      "isa": "x86_64",
+      "manifest": "manifest:linux_musl_trace_v1",
+      "binary": "native:trace_verifier_linux_x86_64",
+      "stake": 1000
+    }
+  ],
+  "independence_axes": {
+    "binary": 5,
+    "manifest": 5,
+    "host": 5,
+    "os": 3,
+    "isa": 2,
+    "operator": 5
+  },
+  "axis_thresholds": {
+    "binary": 3,
+    "manifest": 3,
+    "host": 3,
+    "os": 3,
+    "isa": 2,
+    "operator": 3
+  },
+  "adjudication": {
+    "total_jobs": 74,
+    "valid_accepted": 69,
+    "attacks_rejected": 5,
+    "divergences": 0,
+    "bit_parity_pct": 100.0
+  },
+  "controls": {
+    "C1_roster_count": {
+      "ok": true
+    },
+    "C2_job_count": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_consensus_divergence": {
+      "fired": false
+    },
+    "F2_attack_acceptance": {
+      "fired": false
+    },
+    "F3_6axis_violation": {
+      "fired": false
+    }
+  }
+}

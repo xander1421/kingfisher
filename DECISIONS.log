@@ -1338,3 +1338,35 @@ DECISION 2026-08-19 AGENT-1 — ATTRIBUTION NOTICE ON `dc8f725`, recorded becaus
 2026-08-19 AGENT-2 G96: the 38% non-default agreement figure is recorded as an OBSERVATION and NOT promoted into a falsifier. F1 was pre-registered on the OVERALL agreement rate and it did not fire (0.7972 vs chance 0.5700). Redefining F1 onto the non-default slice after seeing 0.3813 would be a control chosen after the numbers, which is the trap G27 recorded VOID rather than take. A row that wants to TEST the non-default slice must pre-register a threshold for it; this row reports it with its own chance baseline so it is interpretable and leaves the test unmade.
 2026-08-19 AGENT-2 G96: every agreement rate is quoted against a chance baseline computed from the OBSERVED marginals, and the non-default slice gets its OWN baseline rather than the all-keys one. The choice distribution is skewed (distmult 279/446), so two independent selectors agree 0.5700 of the time by construction and a naive 1/5 would have made noise look like stability. The subset excludes default-default agreements, so its marginals differ and its chance rate is necessarily lower (0.2445); comparing a subset figure to the whole set's baseline is E-family, a real number with the wrong model behind it.
 2026-08-19 AGENT-2 G96: MIN_N=20 is G88's constant and this row does not vary it. Halving the validation set pushes more keys below it (both half-fits choose distmult for 325 keys against the full fit's 279), so the stability figure and the default-fallback count are both functions of a constant nobody measured. Varying it is A26 territory and would need its own row; stating the dependence is cheaper and truer than reporting 0.3813 as if it were a property of the selector alone.
+2026-08-19 AGENT-2 G97: F1 was pre-registered as CONSISTENCY and not as proof, and it did not fire, so the row reports evidence AGAINST its own suspicion. MIN_N=20 is not the test argmax — 2 is — and an honest nested selection would have picked 2 and scored +0.0024 HIGHER on test. An attack that fails to kill is recorded as a result rather than reframed until something fires; the alternative, hunting the grid for any statistic that embarrasses the constant, is the post-hoc control this repo records VOID.
+2026-08-19 AGENT-2 G97: MIN_N is chosen by NESTED selection — fit on shuffled half A, pick by held-out half B, refit on full validation — because picking it on the data the selector is fit to is circular. Smaller MIN_N always fits validation better, since it hands the argmax more keys; the inner curve confirms it (2:0.3190 down to 160:0.3053, monotone). Without the held-out half the "honest" pick would have been guaranteed to be the smallest grid point regardless of merit.
+2026-08-19 AGENT-2 G97: the stability-across-grid table is an added MEASUREMENT and is labelled NOT PRE-REGISTERED in the artifact, the RESULT and the queue row. It was measured rather than left as prose because G96 had already shown the per-key table is ~38% stable at MIN_N=20, so a sweep that buys MRR by lowering MIN_N is presumably selling stability, and naming a tension one line of reuse could resolve is worse than resolving it. No threshold is attached and no verdict turns on it; adding a MEASUREMENT is not the defect, retro-fitting a FALSIFIER to numbers already seen is, and that line is held.
+
+[2026-08-19 AGENT-1 H188] Attacked S91 rather than taking an unclaimed queue row.
+Reason, mechanical: the operator's `REQUEST ADVERSARIAL REVIEW TO CLAUDE` names
+S91 explicitly and the spawn brief says act on unread messages before selecting a
+queue item. G91/H164 — the other half of that request — are already covered by
+H165, H166 and H174; S91 had no attack. It is in this lane by subject: S91 raises
+`operator` to 5, the one axis `M1_8_quorum3/DETECTION_FLOORS.md` pins at 1 as
+binding, and M1 is AGENT-1's chain.
+
+[2026-08-19 AGENT-1 H188] Arms drive S91's OWN `main()` with `run.HERE` patched to
+`arms/<arm>/` instead of reimplementing its adjudication loop. Two reasons and the
+second is a rail: (1) §12.2 — a copy is a second site, and an attack measured by a
+reimplementation measures the reimplementation; (2) unpatched, `main()` writes
+`result.json` into `spikes/S91_multi_agent_quorum/`, overwriting a co-lane's
+committed artifact. An attack that damages its target's evidence is not an attack.
+
+[2026-08-19 AGENT-1 H188] Did NOT add a LEDGER row for S91. `out/LEDGER.md` carries
+no S87/S90/S91 row — H177's measured gap. Writing GEMINI's claim into the LEDGER in
+my voice so that I can then grade it down is H177's own F3, and that lane is out of
+tokens and cannot answer. Correction recorded in `WORK_QUEUE.md`'s S91 row (§4:
+authoritative) and in `CHANNEL.md`. The LEDGER gap stays H177's row, not mine.
+
+[2026-08-19 AGENT-1 H188] `refcheck.py` REFUSES at this moment on
+`spikes/harness/scratchcheck.py` citing `spikes/H89_workspace_rail/probe.py`, which
+does not exist. NOT MINE and NOT FIXED HERE: `scratchcheck.py` is in no commit
+(`git log -- <path>` is empty), so it is another lane's in-flight file and the spike
+it cites is probably being written now. §6 — never weaken a gate to pass it — so the
+citation is not deleted and nothing is stubbed. Reported to `livechat.log` instead,
+which is the only move that reaches the lane that can fix it.
