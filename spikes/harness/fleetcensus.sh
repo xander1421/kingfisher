@@ -47,7 +47,10 @@ PLANTED-UPPER
   { echo 'DONE X1 planted-lower-1 body'; echo 'DONE X2 planted-lower-1 body'
     echo 'DONE X3 PLANTED-UPPER body';   echo 'DONE X4 PLANTED-UPPER body'
     echo 'DONE X5 (auditing session, CEO-authorised) body'
-    echo 'DONE X6 — body'; } > "$d/CHANNEL.md"
+    echo 'DONE X6 — body'
+    # X7/X8 carry ids the v1 COUNTER could not see. Deliberately ugly, because
+    # the two real ids that escaped it are `D1+` and `§8-honesty`.
+    echo 'DONE X7+ planted-lower-1 body'; echo 'DONE §8-x planted-lower-1 body'; } > "$d/CHANNEL.md"
   got=$(cd "$d" && awk '/^DONE /{print $3}' CHANNEL.md | grep -xE '[A-Za-z][A-Za-z0-9_-]*' | sort -u | tr '
 ' ' ')
   fail=0
@@ -57,7 +60,30 @@ PLANTED-UPPER
       echo "  BAD  C1 planted uppercase callsign MISSING"; fail=1;; esac
   case "$got" in *auditing*|*"—"*)  echo "  BAD  F1 PROSE became a callsign — the instrument manufactures lanes"; fail=1;; *)
       echo "  ok   F1 prose callsign-fields are not promoted to callsigns";; esac
-  [ "$fail" = 0 ] && echo "fleetcensus selfcheck: a planted callsign of EITHER case reaches the census, and prose does not"                   || echo "fleetcensus selfcheck: FAILED"
+  # C2 — H227. THE COUNT, NOT THE CALLSIGN SET. Every arm above reads the
+  # `signed` extraction; the headline number comes from a DIFFERENT expression
+  # (`grep -cE`) that no arm had ever touched, and its id class was
+  # `[A-Za-z0-9_.-]+`. So `D1+` and `§8-honesty` were dropped and the census
+  # under-reported BUILDER-1 8-for-9, GROK-LOCAL 66-for-67 and 126 DONE lines
+  # for 128 — under-reporting the very population it exists to warn about,
+  # which is the dangerous direction for a counting error. Meanwhile its own
+  # advisory prose hardcoded the correct 67, so the tool contradicted itself
+  # inside a single run for a day.
+  cnt=$(cd "$d" && grep -cE "^DONE [^ ]+ planted-lower-1( |\$)" CHANNEL.md)
+  if [ "$cnt" = 4 ]; then
+    echo "  ok   C2 the COUNT sees ids containing '+' and '§' (4/4)"
+  else
+    echo "  BAD  C2 count read $cnt of 4 — an id shape is dropped from the headline"; fail=1
+  fi
+  # and the negative control: the class that shipped must FAIL this fixture, or
+  # C2 is green against a defect that was never there.
+  old=$(cd "$d" && grep -cE "^DONE [A-Za-z0-9_.-]+ planted-lower-1( |\$)" CHANNEL.md)
+  if [ "$old" = 4 ]; then
+    echo "  BAD  C2-neg the SHIPPED class also reads 4 — the fixture cannot fire"; fail=1
+  else
+    echo "  ok   C2-neg the shipped class reads $old of 4, so the fixture does fire"
+  fi
+  [ "$fail" = 0 ] && echo "fleetcensus selfcheck: a planted callsign of EITHER case reaches the census, prose does not, and the COUNT sees every id shape"                   || echo "fleetcensus selfcheck: FAILED"
   exit "$fail"
 fi
 
@@ -77,7 +103,7 @@ signed=$(awk '/^DONE /{print $3}' CHANNEL.md \
 printf 'census at CHANNEL.md line %s\n\n' "$(wc -l < CHANNEL.md | tr -d ' ')"
 printf '%-20s %5s %5s %5s %5s %5s\n' CALLSIGN DONE ROST BRIEF LOCK STATE
 for cs in $(printf '%s\n%s\n' "$declared" "$signed" | sort -u); do
-  n=$(grep -cE "^DONE [A-Za-z0-9_.-]+ $cs( |\$)" CHANNEL.md)
+  n=$(grep -cE "^DONE [^ ]+ $cs( |\$)" CHANNEL.md)
   r=$(printf '%s\n' "$declared" | grep -qx "$cs" && echo yes || echo NO)
   b=$([ -f "prompts/$cs.md" ] && echo yes || echo NO)
   # LOCK PRESENCE IS NOT LIVENESS, and this tool shipped with that defect in it.
@@ -123,7 +149,7 @@ for cs in $dark; do
   case " $PINNED " in *" $cs "*) ;; *) newdark="$newdark $cs" ;; esac
 done
 nd=$(printf '%s' "$dark" | grep -c . )
-work=0; for cs in $dark; do work=$((work + $(grep -cE "^DONE [A-Za-z0-9_.-]+ $cs( |\$)" CHANNEL.md))); done
+work=0; for cs in $dark; do work=$((work + $(grep -cE "^DONE [^ ]+ $cs( |\$)" CHANNEL.md))); done
 printf 'declared %s · signed %s · DECLARED-DARK %s callsign(s) carrying %s DONE line(s)\n' \
   "$(printf '%s' "$declared" | grep -c .)" "$(printf '%s' "$signed" | grep -c .)" "$nd" "$work"
 [ "$nd" -gt 0 ] && echo "quorum over the roster is not quorum over the fleet — see H170"
