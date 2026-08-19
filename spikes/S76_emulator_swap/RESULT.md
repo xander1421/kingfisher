@@ -71,3 +71,91 @@ but the reason it refuses gets one term wider, and any future claim that
 - **n=16 on one corpus with one binary.** `fuelrun.v2.*` predates the
   nondeterminism patches (A24), which is fine for a target comparison — the same
   binary on both sides — and is *not* a claim about the patched engine.
+
+---
+
+## EXTENSION 2026-08-19, ATOM-3 — second engine, 33 programs, and a labelling defect that would have laundered this result
+
+S76 above measured **`fuelrun`, 16 programs**. This extends it to **MORK, 33
+programs** — a different engine and a different corpus — while both targets were
+still attached, and finds one defect in the harness that carries the comparison.
+
+### Falsifier, stated before the run
+
+> If any of the 33 programs produces a different space dump on the emulator than
+> on the phone, the emulator is not a stand-in and every post-phone result run
+> against it is uninterpretable.
+
+**It did not fire, and it could have** — see the positive control below.
+
+### Measured
+
+| | phone | emulator |
+|---|---|---|
+| model | `SM-S938B` | `sdk_gphone64_arm64` |
+| SoC | Qualcomm `SM8750` | ranchu / QEMU on **Apple M4 Pro** |
+| `CPU implementer` | `0x51` (Qualcomm) | `0x61` (**Apple**) |
+| kernel | `6.6.98-android15-8-…S938B…` | `6.12.38-android16-5-…` |
+| abi / sdk | `arm64-v8a` / 36 | `arm64-v8a` / 36 |
+
+**33 of 33 space dumps byte-identical.** Concatenated-dump sha256 agrees on the
+first 16 hex: `2bb4987526f3080b` on both. `mismatch=0`, `skipped=2` (the `bc0` /
+`exponential` pair `BLOCKED.log` already records as exceeding wall clock).
+
+**The binary was deliberately held constant** — the phone's own `mork`
+(`sha256 646538779b49…`, 5,947,128 bytes) was pulled and pushed to the emulator,
+so `binary` and `manifest` contribute nothing and the only thing varying is the
+target. That makes this a clean target test and *not* a domain-count claim.
+
+### The control that makes the agreement mean something (A15)
+
+Agreement is worthless if the comparison cannot report disagreement. Appending
+one rule — `(= (kf-canary $x) (S $x))` — to `programs/cross_join_dict.mm2` **on
+the emulator only**:
+
+```
+UNPERTURBED  phone=a9a693d649d1b298  emu=a9a693d649d1b298   AGREE
+PERTURBED    phone=a9a693d649d1b298  emu=d00f68260a17078a   DIFFER
+RESTORED     emu=a9a693d649d1b298    back to baseline
+```
+
+The comparison fires. The 33/33 is a measurement, not a tautology.
+
+### The defect: `crossrun.py` calls its second target `phone` whichever it is
+
+`crossrun.py:75` writes to `{OUT}/phone/` and `:92` prints `phone`, with no
+reference to what `ANDROID_SERIAL` resolves to. **This run — against an
+emulator — was recorded on disk as a phone result**, and nothing in the output
+says otherwise.
+
+That matters because of the row below it in this table. S76 v1 found `host`
+collapses when the emulator replaces the phone, and the `implementer` row now
+says why in one number: the emulator guest reports **`0x61`, Apple** — it is
+executing on the M4 Pro, the same physical silicon as `crossrun`'s host arm. So
+against the emulator, `host` is **1**, not 2; only `os` separates the two arms.
+Against the phone it is genuinely 2 (Qualcomm SM8750 vs Apple M4 Pro).
+
+A harness that stores both under `phone/` will therefore report a **one-host**
+result in the shape of a **two-host** one, and this repo's verdict vocabulary has
+`INSUFFICIENT_DOMAINS` precisely for the case it would now silently skip. That is
+family C (the artifact is not what you think) sitting directly upstream of a
+domain-independence claim.
+
+Related and still open, same file: `adb shell` is called at `:76`, `:107`, `:124`
+with **no `-s` and no serial**, which is what made all 35 programs report
+`SKIP no-step-line` for two days when a second device was attached — recorded as
+a target failure three times before the cause was found. **Not fixed here**:
+`crossrun.py` is AGENT-1's file and the fix is theirs to make. The shape it wants
+is `quiet.sh`'s — a precondition that *refuses* when the target is ambiguous,
+rather than a run that proceeds and mislabels.
+
+### What this does NOT show
+
+- **Nothing about ISA.** Both targets are `arm64-v8a` and the emulator is
+  hardware-virtualised, not translated. S76 v1's finding that the phone was never
+  contributing an `isa` domain is unchanged and this run does not improve it.
+- **Nothing about the binary.** Held constant on purpose. Two independently
+  *built* binaries agreeing is a different and stronger claim, and is S16's.
+- **The emulator is a regression target, not an independence target.** It will
+  catch a program or binary change — proven above. It cannot restore the host
+  axis the phone provides, because it *is* the host.
