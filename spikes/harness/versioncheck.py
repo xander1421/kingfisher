@@ -43,8 +43,34 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # `# <name>.sh v3 — ...`  in the first few lines
 HEADER = re.compile(r"^#\s*(\S+?)\s+v(\d+)\b")
-# `# ==== v3, H108 ... ` or `# v7, H183 ...`
-BLOCK = re.compile(r"^#\s*={0,6}\s*v(\d+)[,\s]")
+# A version BLOCK is a HEADING, not prose that mentions a version.
+#
+# CORRECTED 2026-08-19, same cycle, against v1's own published number. v1 used
+# `^#\s*={0,6}\s*v(\d+)[,\s]`, which has TWO defects that pull in opposite
+# directions and together produced a wrong count in three of four files:
+#   * `={0,6}` missed real banners -- `headcheck.sh:4` is
+#     `# ============================ v2, H70 ...`, twenty-eight `=`, so its
+#     genuine v2 block was INVISIBLE and the file read as "header ahead";
+#   * `v(\d+)[,\s]` matched ordinary PROSE -- `# v1 ran HEAD's refcheck.py over
+#     HEAD's files` (headcheck.sh:8) and `# v2 metric binding admits exactly one
+#     integer metric` (test_autoloop_local.sh:15) are sentences ABOUT a version,
+#     not blocks declaring one.
+# So v1 reported 4 drifted of 15. THE TRUE COUNT IS 1. A checker whose errors
+# run in both directions cannot be trusted in either.
+#
+# A block is now either a `=`-banner, or a version tagged with its H-id -- which
+# is MISSION_LOOP §12.7's own convention, since a bump must carry a rationale
+# block naming the defect it removes.
+BLOCK_BANNER = re.compile(r"^#\s*=+\s*v(\d+)\b")
+BLOCK_HID = re.compile(r"^#\s*v(\d+)\s*[,(]?\s*\(?H\d+")
+
+
+def block_version(line: str):
+    for p in (BLOCK_BANNER, BLOCK_HID):
+        m = p.match(line)
+        if m:
+            return int(m.group(1))
+    return None
 
 EXTS = (".sh", ".py", ".hook")
 # `cat > x <<'F'` ... `F` — a heredoc's CONTENT is data, not this file's comments.
@@ -108,7 +134,7 @@ def scan(root: str = None):
             if hdr is None:
                 continue          # no version header is not a defect; many files have none
             checked += 1
-            blocks = [int(m.group(1)) for ln in lines if (m := BLOCK.match(ln))]
+            blocks = [v for ln in lines if (v := block_version(ln)) is not None]
             if not blocks:
                 continue
             top = max(blocks)

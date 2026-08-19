@@ -74,6 +74,31 @@ python3 "$TOOL" "$TMP" 2>&1 | grep -q 'heredocfile.sh' \
   || ok "heredoc bodies ignored (fixtures are data, not metadata)"
 rm -f "$TMP/heredocfile.sh"
 
+# 9/10 — THE TWO DEFECTS THAT MADE v1's PUBLISHED COUNT WRONG, in both directions.
+#   a) a LONG `=` banner must be seen. headcheck.sh:4 has twenty-eight `=` and
+#      v1's `={0,6}` missed it, so a correct file read as "header ahead".
+#   b) PROSE mentioning a version must NOT count. `# v1 ran HEAD's refcheck.py`
+#      is a sentence about v1, not a block declaring it.
+cat > "$TMP/longbanner.sh" <<'F'
+#!/bin/sh
+# longbanner.sh v2 — current.
+# ============================ v2, H70 — the defect removed ==================
+F
+python3 "$TOOL" "$TMP" 2>&1 | grep -q 'longbanner.sh' \
+  && bad "a long =-banner was missed, so a correct file read as drifted" \
+  || ok "long =-banner recognised as a version block"
+
+cat > "$TMP/prosever.sh" <<'F'
+#!/bin/sh
+# prosever.sh v1 — current, and v1 is genuinely the newest.
+# v3 ran the old comparison and was wrong about it, which is prose, not a block.
+# v2 metric binding admits exactly one integer metric.
+F
+python3 "$TOOL" "$TMP" 2>&1 | grep -q 'prosever.sh' \
+  && bad "PROSE mentioning a version was counted as a version block" \
+  || ok "prose mentioning a version is not a block"
+rm -f "$TMP/longbanner.sh" "$TMP/prosever.sh"
+
 # clean tree exits 0
 rm -f "$TMP/sandboxstale.sh" "$TMP/aheadfile.sh"
 python3 "$TOOL" "$TMP" >/dev/null 2>&1; RC2=$?

@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-# check_live_launcher.sh v1 — A24 applied to a RUNNING PROCESS.
+# check_live_launcher.sh v3 — A24 applied to a RUNNING PROCESS.
+#
+# HEADER CORRECTED 2026-08-19 (H180, ATTACKER-1). It said v1 while the file
+# carried a v2 block (H59, ATOM-3) at ~:248 and a v3 block (H67, ATTACKER-1) at
+# ~:311 — so the one line written to answer "which version am I running?" was
+# two revisions stale, and MISSION_LOOP §12.7 asks for a bump WITH each block.
+# THE v3 BLOCK IS MY OWN LANE'S (H67), so this drift is mine and not a peer's.
+# Now enforced mechanically by `spikes/harness/versioncheck.py`; the rule alone
+# did not hold, which is the whole point of that module.
 #
 # THE DEFECT IT EXISTS FOR (H21, found 2026-08-17 by ATTACK cycle 18):
 # `run_loop.sh` was fixed at 11:52 and 12:00. Every live launcher started at
