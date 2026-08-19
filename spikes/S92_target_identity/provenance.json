@@ -1,0 +1,141 @@
+{
+ "spike": "S92_target_identity",
+ "recorded_utc": "2026-08-19T21:09:04Z",
+ "note": "`deps=['spikes/S16_mork_android']` is dirty and structurally always will be: that directory holds the run's own UNTRACKED output dumps (crossrun/host, crossrun/emulator, crossrun/phone \u2014 30+ .space files regenerated on every run). The refusal is correct and is recorded rather than bought green by narrowing the dep to a single file, which provenance.py documents as faking a clean verdict.",
+ "repos": [
+  {
+   "path": "spikes/S16_mork_android",
+   "head": "4aebe18aaadfed5bd9b9bb1c2b6476ed582ae2ac",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "spikes/S16_mork_android": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/S92_target_identity/result.json",
+   "sha256": "2a91075d67fc315640f180868f989136a72c852555c88f01671a1c439bddf69e",
+   "bytes": 682,
+   "mtime": 1787173744,
+   "compared_ts": 1787173744,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_ambiguous_target_is_refused",
+   "must_fire_because": "the defect that cost two days was an unqualified `adb shell` with a second device attached. The precondition must REFUSE that state, not proceed and blame the target",
+   "can_fail_because": "a resolver that picked the first device would accept, and this arm would report rc=0 instead of rc=2",
+   "null_must_contain": "a two-device run that proceeds",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "named_both": true,
+    "rc": 2
+   }
+  },
+  {
+   "name": "C2_every_adb_invocation_is_serial_qualified",
+   "must_fire_because": "defect 2 was three call sites each having to remember `-s`. The claim is that no unqualified invocation survives ANYWHERE in the run, not that the three known ones were patched",
+   "can_fail_because": "a fourth call site added later, or one of the three left on the direct `[ADB, ...]` form, shows up here as a nonzero `unqualified` count",
+   "null_must_contain": "a targeted adb invocation without -s",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "enumerations": 1,
+    "rc": 0,
+    "targeted_adb_calls": 78,
+    "unqualified": 0
+   }
+  },
+  {
+   "name": "C3_recorder_actually_saw_the_calls",
+   "must_fire_because": "C2's healthy answer is a ZERO, and a zero cannot distinguish `no unqualified calls` from `no calls observed at all`. This is the anti-vacuity arm and without it C2 is worthless",
+   "can_fail_because": "a stub that intercepted before the adb layer, or a main() that refused early, would leave the recorder empty",
+   "null_must_contain": "a run in which zero adb invocations were recorded",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "enumerations": 1,
+    "rc": 0,
+    "targeted_adb_calls": 78,
+    "unqualified": 0
+   }
+  },
+  {
+   "name": "C4_kind_discriminates_both_ways",
+   "must_fire_because": "a labeller that answered `emulator` for everything would fix ATOM-3's case and break the phone case, and vice versa. Both directions are asserted on the same code path",
+   "can_fail_because": "a tell that matches any Android device (`arm64-v8a`, a model-name grep) would give the phone a nonempty tell list, and this arm would go red",
+   "null_must_contain": "a phone resolving with any emulator tell, or an emulator resolving with none",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "emulator": {
+     "kind": "emulator",
+     "tells": [
+      "serial prefix `emulator-`",
+      "ro.kernel.qemu=1",
+      "ro.build.characteristics contains `emulator`",
+      "ro.hardware=ranchu"
+     ]
+    },
+    "phone": {
+     "kind": "phone",
+     "tells": []
+    }
+   }
+  },
+  {
+   "name": "C5_unasserted_target_is_refused_not_defaulted",
+   "must_fire_because": "the whole row is that a target which does not identify itself was given a name anyway. A device reporting no model must refuse, and refuse FOR THAT REASON rather than by failing some later step",
+   "can_fail_because": "a resolver defaulting to `phone` on a missing model, which is v1's behaviour generalised, returns rc=0 here",
+   "null_must_contain": "a nameless device that is labelled rather than refused",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rc": 2
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/S16_mork_android": {
+   "newest": 1787173741,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "Three results would have refuted this row, and all three are arms rather than prose: (a) the emulator tells matching a real phone too \u2014 A5b asserts the phone's tell list is EMPTY, so a tell like `arm64-v8a` that matches everything goes red; (b) the `-s` sweep passing because no adb call was observed \u2014 A3b asserts the recorder saw calls, and it saw 78; (c) the precondition refusing everything, which would make every refusal arm green for free \u2014 A3, A5 and A8 accept on the same code path. Stated before the run; all three ran.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

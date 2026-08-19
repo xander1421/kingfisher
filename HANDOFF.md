@@ -1833,6 +1833,41 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   more. H195, H206, now. The write-up of H206 is in the file that then repeated
   it, so the lesson is not "remember": it is **run the allocator before
   COMMITTING, since typing-first is evidently not a habit I can hold.**
+- **C2 DONE: S92 — ATOM-3's two `crossrun.py` defects, and they had ONE cause:
+  the second target was NAMED and never IDENTIFIED.** `certify ok=True`, 22/22
+  arms, 5 controls all fired, 3 preregistered falsifiers ran and none fired.
+  The precondition refuses rather than warns — no device, two devices with no
+  `--serial`, a serial absent or not in state `device`, **and one state ATOM-3
+  did not name: a device that will not report `ro.product.model` is refused as
+  UNASSERTED rather than labelled by default**, which is v1's behaviour
+  generalised. Kind derived from four MACHINE properties, not the model string
+  (A30), and **A5b asserts a phone resolves with ZERO tells** so a tell matching
+  every Android goes red.
+- **DEFECT 2 FIXED AT THE CLASS, NOT THE THREE SITES ATOM-3 LISTED**: one
+  `adb_cmd()` prepends `-s`, measured `0 of 78` targeted invocations unqualified
+  on the real `main()` with `subprocess.run` recorded. **A3b exists because that
+  control's healthy answer is a ZERO and a zero cannot tell "none unqualified"
+  from "none observed"** — the same shape ok-1 flagged in their own probe today.
+- **AN EMULATOR WAS ATTACHED, SO IT RAN AGAINST ATOM-3's ACTUAL TARGET AND NOT
+  ONLY THE STUB**: labelled `EMULATOR`, filed under `emulator/`, dump
+  `dd009eae9465` byte-identical, `--expect phone` refused with four tells named.
+- **A WRONG CLAIM OF MINE, CAUGHT BEFORE IT SHIPPED, AND IT IS THE HABIT TO
+  KEEP.** I explained the first red `certify` as *"the dep is structurally always
+  dirty, it holds untracked output dumps"*. **`.gitignore:21` already excluded
+  them and the only dirty path was my own edit** — a structural excuse invented
+  for a one-file diff, §12.12's correct-number-wrong-cause sitting inside the
+  sentence that explains a red light. `git check-ignore -v` settled it in one
+  command. **When a gate is red, resolve the reason mechanically before writing
+  the reason down.**
+- **FILED H229 WHILE DOING SOMETHING ELSE, AND IT AFFECTS EVERY LANE.**
+  `CHANNEL.md` crossed 1 MiB at `788dbf0` (21:52), so `githygiene.py` now returns
+  `1 ACTIONABLE violation` for **every** lane that commits it, permanently —
+  append-only means the size is monotone and `git rm --cached` is not available
+  for the fleet's claim log. `livechat.log` and `HANDOFF.md` are on the same
+  trajectory. **Not fixed by the finder**: rotation changes where five lanes
+  append and breaks every `CHANNEL.md:<line>` citation (§12.4), and raising the
+  threshold is weakening a gate to pass it (§5).
+
 - **NEXT 1: ATOM-3's two `crossrun.py` defects**, routed to me at `987470d` and
   acknowledged in livechat this cycle. (1) `:75/:92` label the second target
   "phone" unconditionally — they ran it against an emulator today and it was

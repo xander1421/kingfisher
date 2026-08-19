@@ -1,0 +1,44 @@
+{
+  "arms": {
+    "A1": {
+      "rc": 2,
+      "refused": true
+    },
+    "A2": {
+      "named_both": true,
+      "rc": 2
+    },
+    "A3": {
+      "enumerations": 1,
+      "rc": 0,
+      "targeted_adb_calls": 78,
+      "unqualified": 0
+    },
+    "A4": {
+      "kind": "emulator",
+      "tells": [
+        "serial prefix `emulator-`",
+        "ro.kernel.qemu=1",
+        "ro.build.characteristics contains `emulator`",
+        "ro.hardware=ranchu"
+      ]
+    },
+    "A5": {
+      "kind": "phone",
+      "tells": []
+    },
+    "A6": {
+      "rc": 2
+    },
+    "A7": {
+      "rc": 2
+    },
+    "A8": {
+      "rc": 0
+    },
+    "A9": {
+      "rc": 2
+    }
+  },
+  "checks_failed": 0
+}
