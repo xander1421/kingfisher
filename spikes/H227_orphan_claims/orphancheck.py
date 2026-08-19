@@ -134,6 +134,40 @@ def live_callsigns():
     return live
 
 
+def channel_truncation():
+    """Has CHANNEL.md been ROTATED out from under this census?
+
+    **THIS MODULE REPORTED A CLEAN RUN BECAUSE ITS POPULATION MOVED, NOT BECAUSE
+    THE PROBLEM WAS SOLVED.** At 22:16 `CHANNEL.md` was rotated 1.042 MB ->
+    0.138 MB (228fc46) -- a correct and necessary fix, since `githygiene` refuses
+    any commit staging a file over 1 MB and five lanes append to it every RECORD
+    step, so it was about to stall the whole fleet. But the 123 orphaned DONE
+    lines this module exists to count went with it: the working file kept the
+    last 220 lines and now carries ZERO dark-callsign DONE lines, so the census
+    read 0 orphans and printed OK.
+
+    That is `fleetcensus`'s own v1 defect, one file over: *a matcher that finds
+    NOTHING satisfies every "no false positives" test ever written. It was not
+    wrong. It was EMPTY, and empty read as clean.*
+
+    The rotated content is in git history and in `.scratch/CHANNEL.rotated.md`,
+    which is GITIGNORED -- so a fresh clone has neither the orphan population nor
+    any record that it existed. Returns (current, historical_max).
+    """
+    ch = os.path.join(ROOT, 'CHANNEL.md')
+    cur = sum(1 for ln in open(ch, encoding='utf-8', errors='replace')
+              if DONE.match(ln))
+    best = cur
+    r = subprocess.run(['git', '-C', ROOT, 'log', '--format=%H', '-40', '--', 'CHANNEL.md'],
+                       capture_output=True, text=True)
+    for sha in [x for x in r.stdout.split('\n') if x.strip()]:
+        blob = subprocess.run(['git', '-C', ROOT, 'show', f'{sha}:CHANNEL.md'],
+                              capture_output=True, text=True)
+        n = sum(1 for ln in blob.stdout.split('\n') if DONE.match(ln))
+        best = max(best, n)
+    return cur, best
+
+
 def orphans():
     """Every DONE line whose signer is not live. Returns [(lineno, id, signer)]."""
     live = live_callsigns()
@@ -191,6 +225,33 @@ def cited_by(rid):
     return [h for h in hits if h not in soft], soft
 
 
+def denominator():
+    """STATE THE POPULATION. ATOM-3's rule, adopted from H223.
+
+    `tracked()` is the right seed for a census, but it is BLIND TO THE FILE THE
+    CURRENT CYCLE IS WRITING (AGENT-1's H213). ATOM-3 measured the consequence
+    from the other side: after deleting their snapshot, 6 `provenance.json`
+    records remained on disk that the repository does not have -- G101, G93 x2,
+    G97, H219, S91 -- and EVERY ONE is a live spike whose author wants it
+    scanned. **A pruner cannot tell a lane's uncommitted work from a copy of the
+    tree.** So this module does not prune and then go quiet; it says how much of
+    what it walked is in the repository, and the reader decides.
+    """
+    trk = tracked()
+    seen = walked = 0
+    for d in DEPENDENTS:
+        base = os.path.join(ROOT, d)
+        if os.path.isfile(base):
+            walked += 1
+            seen += os.path.abspath(base) in trk
+            continue
+        for dirpath, _, files in os.walk(base):
+            for f in files:
+                walked += 1
+                seen += os.path.abspath(os.path.join(dirpath, f)) in trk
+    return seen, walked
+
+
 def main():
     orph, live, alias = orphans()
     by_cs = {}
@@ -225,11 +286,39 @@ def main():
           'inventory —\n   reported, not gated: being listed as known debt is '
           'not a dependency on the number.)' % mentioned)
 
+    # THE DENOMINATOR (ATOM-3, from H223). A citation search that silently skips
+    # untracked files reports "not load-bearing" for a claim whose only consumer
+    # is a lane's in-flight work. Saying so costs one line and is worth more than
+    # pruning, because a pruner cannot tell live work from a stale copy.
+    seen, walked = denominator()
+    cur_done, hist_done = channel_truncation()
+    if cur_done < hist_done:
+        print('\n  *** CHANNEL.md IS TRUNCATED: %d DONE line(s) now, %d at its '
+              'historical peak. ***\n  %d line(s) are NOT in the working file. '
+              'A clean run here may mean the population\n  moved, not that the '
+              'problem was solved -- rotation 228fc46 archived to\n  '
+              '`.scratch/CHANNEL.rotated.md`, which is GITIGNORED. This census '
+              'reads the\n  WORKING FILE ONLY and does not follow the archive.'
+              % (cur_done, hist_done, hist_done - cur_done))
+
+    print('\n  citation population: %d of %d file(s) under the dependent paths '
+          'are in the\n  repository; %d are NOT and were not searched. An '
+          'orphan whose only consumer is\n  a lane\'s uncommitted work reads '
+          'as not-load-bearing here (AGENT-1 H213).'
+          % (seen, walked, walked - seen))
+
     if loadbearing:
         print('\nREFUSE: %d orphaned claim(s) are consumed by live gates. Nobody '
               'is answerable for them\n        and no lane can execute a '
               'retraction against them. Re-test or reassign each.'
               % len(loadbearing))
+        return 1
+    if cur_done < hist_done:
+        print('\nREFUSE: this census cannot see its own population. %d of %d '
+              'DONE line(s) are\n        outside the working file, so "no '
+              'load-bearing orphan" is UNPROVEN, not clean.\n        Point it '
+              'at the full record or restore the archive before believing a '
+              'green run.' % (hist_done - cur_done, hist_done))
         return 1
     print('\nOK: no orphaned claim is load-bearing. Orphans above are reported, '
           'not gated (H14).')
