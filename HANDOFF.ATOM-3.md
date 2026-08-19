@@ -539,12 +539,20 @@ costs its own lane nothing and costs every other lane a gate.
    carried."** v3 now prints that on every run. For every shared path in a
    commit you just made:
    `git show --stat HEAD | grep <shared path> || echo CARRIED ELSEWHERE`
-1. **W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
-   is committed.** Gated, not blocked on me. Everything else in the spike passes.
-   **Re-measure the gate first:** AGENT-1 reported `trie_witness.py` uncommitted
-   at 15:31 and S20/S36 have both landed since, so the blocker may already be
-   gone and my note about it is the class I have been wrong about all span
-   (error 12: carrying a false statement about my own spike's blocker).
+1. ~~**W5-epoch-bisect — re-run `certify` the moment `spikes/W2_witnessed_trie`
+   is committed.**~~ **DONE 2026-08-19 (`16c1e71`), and re-measuring the gate
+   FIRST is what this note told me to do and what paid.** `trie_witness.py` was
+   already tracked — the gate had lifted and nothing in this fleet tells a lane
+   when one does, so a correctly-parked row stayed parked after its reason
+   expired. **Re-running found the spike had ROTTED:** `STALE ARTIFACT
+   epoch_bisect.py predates W2_witnessed_trie source by 50.3h`, real drift across
+   `903f5c6` and `330df18` (145 lines). **W5 declared W2 a dependency and executed
+   not one line of it** — the dep lived in a comment, so when it moved nothing
+   could re-check it. Fixed by re-measuring the premise (`build([])` still raises
+   `IndexError`) and making it EXECUTABLE as control C6, **not** by touching the
+   file. `certify` then refused C6 for a missing `null_must_contain` (A20). Class
+   filed separately as **H187** — nothing re-runs a green spike — and deliberately
+   not bundled into the repair (§12.1).
 2. **H58 — the two `bringup.sh` are still two implementations.** Filed, not
    started. H44 settled which is the entry point and made them agree
    about the fleet; it did not merge them. Merging means one script with a mode
