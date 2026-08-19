@@ -100,3 +100,8 @@ spikes/*/agent_android
 spikes/*/trace_verifier_android
 spikes/S30_speed_duel/bin/
 spikes/S87_content_addressed_corpus/store/blobs/
+
+# G94: regenerable — pdsplit.py materialises the corpus, the trainer makes the .npz
+spikes/G94_ensemble_pairdisjoint/corpus_pd/
+spikes/G94_ensemble_pairdisjoint/*.npz
+spikes/G94_ensemble_pairdisjoint/train_hist.json

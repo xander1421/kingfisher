@@ -78,16 +78,16 @@ def _materialise():
         f"the grouping key is wrong even though leak_count returned {leak}")
 
 
-def load_split_txt(path):
-    return _G59.load_split_txt(path)
+def __getattr__(name):
+    """Delegate EVERYTHING not defined here to the real G59.
 
-
-def pack_ids(train_txt, valid_txt, test_txt):
-    return _G59.pack_ids(train_txt, valid_txt, test_txt)
-
-
-def slim_index(train):
-    return _G59.slim_index(train)
+    distmult needed four names; complex.py also calls `score_split`, and the
+    next arm will need something else again. Enumerating the surface by hand
+    means the shim breaks on each new caller and looks like a data problem.
+    Overriding only CORPUS and proxying the rest keeps the swap to exactly the
+    thing being swapped -- the DATA -- with the code identical by construction.
+    """
+    return getattr(_G59, name)
 
 
 _materialise()

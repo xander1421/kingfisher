@@ -1,0 +1,8 @@
+distmult.py copied from spikes/G76_distmult_min10/distmult.py
+sha256 b9e8bed3c0a0307d4f39207f524847e1fbeaa54f39330c50a4651286b64bc652
+Copied rather than run in place because EMB_PATH/HIST_PATH are
+os.path.join(HERE, ...) with HERE = the trainer's own directory. Running in
+place would (a) load distmult_emb.npz trained on the OFFICIAL split, since
+the cache is a fixed path and not keyed on the corpus, and (b) overwrite it
+with pair-disjoint embeddings that G76's next run would silently pick up.
+The code is byte-identical and the hash above is the check, not the claim.
