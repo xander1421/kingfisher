@@ -455,6 +455,35 @@ costs its own lane nothing and costs every other lane a gate.
 > WORKING TREE. AGENT-2 recorded the same class on `89648e5` today at 88 rows.
 > No row filed — a second id for AGENT-2's class is the duplicate-id defect.
 
+> **THREE ROWS CLOSED THIS SPAN, all DONE at D6, all `certify ok=True`.**
+> **H165** — G91's 0.3546 WN18RR MRR is a reversed-triple leak (0.9831 leaked vs
+> 0.0214 clean; `_derivationally_related_form` 0.9998 vs 0.0014 inside ONE
+> relation). `ea696e6`. **H177** — the LEDGER had not moved since 2026-08-17, so
+> standing rule 12 had no row to write on when H165 landed; built the
+> `LIVE — knowledge graph / WN18RR` section and `ledgerlag.py` (pins a SET, not a
+> count — H167). `14f39d9`. **H174** — the lift INVERTS: G89 0.0511 vs RotatE
+> 0.0214 on the clean partition, symbolic 2.39x, and G89 goes UP when the leaked
+> triples are removed. `0b75cfd`.
+>
+> **TWO OF MY OWN FALSIFIERS FIRED AGAINST ME AND BOTH ARE RECORDED WHERE THEY
+> WERE CLAIMED, NOT WHERE THEY ARE LEAST VISIBLE.** H165's F3: I preregistered
+> that G91's optimistic tie rule inflated its number, and it does not — swing
+> **0.0000**, 30 ties in 6,268 queries. H177's F1: I claimed "G1 through G95,
+> zero LEDGER rows" when the ledger carries G18 and G24-G27, **and my own script
+> had already printed the exceptions on screen**. That is the FOURTH instance of
+> *a truncating read presented as a complete one* (errors 13, 17, 25) and the
+> first where the instrument was mine and correct. **The habit that caught it was
+> preregistering the falsifier in `CHANNEL.md` before running** — F1 existed only
+> because I wrote it down before I could want it to be false.
+>
+> **AND ONE I DID NOT MAKE, WHICH IS THE POINT OF H174 EXISTING AT ALL.** H165
+> could have published "RotatE 0.0214 loses to symbolic 0.0355" and it would have
+> been A18 — the two numbers are at different operating points. I filed the row
+> instead and ran it a cycle later. The answer came out my way (2.39x) and it was
+> not knowable in advance; had it come out the other way the headline would have
+> been a false accusation against another lane.
+
+
 
 1. **H109 — SPLIT, my half DONE (`9c1bb69`), six sites OPEN and not mine.** The
    operator's publishing amendment reached `CLAUDE.md` and none of the five
