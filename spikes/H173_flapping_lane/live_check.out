@@ -1,0 +1,98 @@
+=== ROLES ===
+  AGENT-1      brief ok (194 lines)
+  AGENT-2      brief ok (167 lines)
+  ATTACKER-1   brief ok (274 lines)
+  ATOM-3       brief ok (181 lines)
+  ok-1         brief ok (207 lines)
+
+=== QUORUM ===
+  AGENT-1      UP   pid 32211   (loop) turn age 1s, last CHANNEL line 0 back
+  AGENT-2      UP   pid 32610   (loop) turn age 1s, last CHANNEL line 4 back
+  ATTACKER-1   UP   pid 33038   (loop) turn age 1s, last CHANNEL line 25 back
+  ATOM-3       UP   pid 33420   (loop) turn age 1s, last CHANNEL line 7 back
+  ok-1         UP   pid 33842   (loop) turn age 1s, last CHANNEL line 2 back
+  quorum: 5/5
+  fleet output: CHANNEL.md last written 0m 11s ago (no threshold -- compare across samples)
+
+=== RUNNING CODE ===
+  STALE  pid 32211   started 16:07:08, predates 16:17:22 (newest commit touching run_loop.sh (6fbcb1f)) -- running PRE-FIX code
+  STALE  pid 32610   started 16:07:10, predates 16:17:22 (newest commit touching run_loop.sh (6fbcb1f)) -- running PRE-FIX code
+  STALE  pid 33038   started 16:07:12, predates 16:17:22 (newest commit touching run_loop.sh (6fbcb1f)) -- running PRE-FIX code
+  STALE  pid 33420   started 16:07:14, predates 16:17:22 (newest commit touching run_loop.sh (6fbcb1f)) -- running PRE-FIX code
+  STALE  pid 33842   started 16:07:16, predates 16:17:22 (newest commit touching run_loop.sh (6fbcb1f)) -- running PRE-FIX code
+  selection: 5 launcher(s); 20 descendant match(es) EXCLUDED (turn, watchdog,
+  control: 5 live .loop_lock holder(s) agrees with the selection
+  REFUSE: 5 of 5 live launcher processes predate the newest commit touching run_loop.sh (6fbcb1f).
+  NOT GATED (H52: a permanent non-zero floor reads as noise). Relaunch is a
+  human action -- see HUMAN_NEEDED.md. Until then every launcher fix newer
+  than those start times is committed and NOT running.
+
+=== OFF-ROSTER ===
+  none
+
+=== HARNESS SELFCHECKS ===
+    GREEN    cite.py
+    GREEN    demo8.py
+    GREEN    githygiene.py
+    GREEN    idscope.py
+    GREEN    journalcheck.py
+    GREEN    railguard.py
+    GREEN    recheck.py
+    GREEN    recordloss.py
+    GREEN    refcheck.py
+    GREEN    retrofit_d6.py
+    GREEN    rostercheck.py
+    GREEN    statuscheck.py
+    GREEN    admission.py
+    GREEN    bansurface.py
+    GREEN    canon.py
+    GREEN    edits.py
+    GREEN    instrument.py
+    GREEN    kfcheck.py
+    GREEN    power.py
+    GREEN    provenance.py
+    GREEN    reprocheck.py
+    GREEN    units.py
+    NOT RUN  7 shell module(s) carry --selfcheck and are excluded here (they build git sandboxes): allocid.sh check_live_launcher.sh headcheck.sh install_hooks.sh stranded.sh test_h51_falsify.sh test_h57_falsify.sh
+  selfcheckall: all 22 harness selfcheck(s) green
+
+  --- record scope (idscope, REPORT ONLY, never gates a launch) ---
+    ROWLESS G26 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G32 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G40 is CLAIM/DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G45 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G50 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G92 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G93 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G94 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS G95 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H39 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H42 is CLAIM/DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H76 is CLAIM/DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H126 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H161 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H163 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H168 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS H173 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS M1.13 is CLAIM/DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS M1.14 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS S29 is CLAIM in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS S41 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS S81 is CLAIM/DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS S82 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS S83 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS W9 is DONE in CHANNEL.md and has NO WORK_QUEUE.md row -- the queue is authoritative (§2 SELECT reads it), so this work is invisible to every lane that has not read the log
+    ROWLESS: 25 id(s) = 11 CLAIM-only (§2 SELECT posts CLAIM before the row exists -- sanctioned, never gated) + 14 DONE (13 baselined accumulated, 1 introduced by this tree and GATED).
+            A bare total cannot tell an accumulated floor from an incoming instance, and the CLAIM-only side is manufactured by lanes OBEYING §2 SELECT.
+            Churn is cited, never quoted: spikes/H167_rowless_baseline/rowless.json, regenerated by its probe.py (H167 -- a number in a message goes stale, an artifact does not).
+  
+    ADJUDICATED row H17 adjudicated against CHANNEL.md:122
+    DISAGREE CHANNEL.md declares `DONE H2` while WORK_QUEUE.md holds row H2 OPEN -- a reader of the log closes a row the queue still owns
+    DISAGREE CHANNEL.md declares `DONE H41` while WORK_QUEUE.md holds row H41 OPEN -- a reader of the log closes a row the queue still owns
+    DISAGREE CHANNEL.md declares `DONE H50` while WORK_QUEUE.md holds row H50 OPEN -- a reader of the log closes a row the queue still owns
+    DISAGREE CHANNEL.md declares `DONE H75` while WORK_QUEUE.md holds row H75 OPEN -- a reader of the log closes a row the queue still owns
+    UNFILED CHANNEL.md declares `DONE M1.13` in THIS tree and WORK_QUEUE.md carries no row for it -- the queue is authoritative (§4), so finished work is invisible to every lane that has not read the log. File the row in the commit that posts the DONE; it is not in the H167 baseline, so its author is the committer holding it
+  
+  REFUSE: 4 UNADJUDICATED id(s) resolve to a different status depending on which file you read, and 1 DONE id(s) this tree introduces have no row at all (1 adjudicated, not counted).
+          An append-only log cannot be corrected when a namespace moves under it, so the divergence has to be loud rather than
+          silently resolved. Adjudicate one with `LOG-DONE-ADJUDICATED CHANNEL.md:<line>` in its queue row -- the line must be that row's own DONE.

@@ -182,6 +182,53 @@ lane_fails() {
   [ -n "$n" ] && echo "$n" || echo -1
 }
 
+# v6 (H173, ok-1, 2026-08-19). THE DEFECT REMOVED: THE ONLY CRASH-LOOP STATE
+# THIS CENSUS HAS IS "UP AND PRODUCING NOTHING", AND THE OUTAGE IT WAS WRITTEN
+# FOR PRODUCED "DOWN AND BEING RESTARTED FOREVER".
+#
+# MEASURED over the 27h weekly-limit outage, from this fleet's own logs:
+# `bringup.log` holds 163 `=== STARTING n MISSING LANE(S) ===` blocks and ZERO
+# `STALLED` lines; `loop_ok-1.log` holds exactly one `exited after Ns (fail 1)`
+# line per launcher generation, at the 10m17s cadence of this file's own
+# `StartInterval 600`, and no `loop stopped` line anywhere. So each generation
+# was dead before the next census, `pid` was empty, and the STALLED branch
+# (`[ -n "$pid" ] && [ "$nfail" -ge 2 ]`) was skipped BEFORE `nfail` was read.
+# Both conjuncts false, independently: a dead lane has no pid, and a lane that
+# gets one turn per generation never counts past 1.
+#
+# SO PERSISTING `.loop_fails` ACROSS GENERATIONS DOES NOT FIX THIS, which is a
+# correction to the reading this row was handed (kingfisher-60, 16:06). The
+# counter is not consulted on the path a dying lane takes.
+#
+# THE OBSERVABLE THIS FILE ALREADY OWNS IS ITS OWN LAUNCHES. Everything else the
+# census reads is written by the lane, and a lane that dies in 3 seconds writes
+# nothing trustworthy; the one fact never in doubt is that THIS script started
+# it, N times, and found it DOWN again every time. A healthy lane launched once
+# stays up for hours -- H56's outage ran 86 minutes on ONE generation per lane.
+#
+# NOT AN ALARM AND NOT PERMANENT (H14/H52: an always-red gate is bypassed as
+# thoroughly as a flaky one). The window rolls, and a refusal writes no new
+# stamp, so FLAP_WINDOW after the last launch the lane is launched again with no
+# human action. Both bounds are env-overridable so the probe drives the real
+# branch instead of a reimplementation of it.
+FLAP_WINDOW=${FLAP_WINDOW:-3600}   # seconds of launch history that counts
+FLAP_MAX=${FLAP_MAX:-3}            # launches inside it before this file stops
+lane_launches() {                  # launches of $1 within FLAP_WINDOW
+  local f=".loop_launches.${1}" now n=0 t
+  [ -f "$f" ] || { echo 0; return; }
+  now=$(date +%s)
+  while IFS= read -r t; do
+    case "$t" in ''|*[!0-9]*) continue ;; esac
+    [ $(( now - t )) -le "$FLAP_WINDOW" ] && n=$(( n + 1 ))
+  done < "$f"
+  echo "$n"
+}
+lane_launch_record() {             # called ONLY where this file actually launches
+  local f=".loop_launches.${1}"
+  date +%s >> "$f"
+  tail -50 "$f" > "$f.tmp" && mv "$f.tmp" "$f"   # bounded: 50 stamps, not a log
+}
+
 # v3 (H43, ATOM-3, 2026-08-17). THE DEFECT: NOTHING IN THIS HARNESS OBSERVES
 # WORK. Every signal it has observes the SUPERVISOR (launcher pid, .loop_lock,
 # peers.sh), the TURN BOUNDARY (.heartbeat), or the TURN'S DURATION
@@ -398,7 +445,7 @@ done
 
 echo
 echo "=== QUORUM ==="
-UP=0; STALLED=0; ORPHAN=0; MISSING=()
+UP=0; STALLED=0; ORPHAN=0; FLAPPING=0; MISSING=()
 for lane in "${ROSTER[@]}"; do
   # TWO SOURCES, because neither alone can answer it (H6). A turn in flight is
   # visible to ps and vanishes between turns; the loop lock survives between
@@ -479,6 +526,19 @@ for lane in "${ROSTER[@]}"; do
     printf '  %-12s HALTED  (%s present -- retired on purpose, not a fault)\n' \
       "$lane" "$([ -f "STOP.$lane" ] && echo "STOP.$lane" || echo STOP)"
   else
+    nlaunch=$(lane_launches "$lane")
+    if [ "$nlaunch" -ge "$FLAP_MAX" ]; then
+      # FLAPPING IS NOT DOWN. DOWN means "start it"; this means "I already did,
+      # ${nlaunch} times inside ${FLAP_WINDOW}s, and it was dead again by every
+      # census". Reported and NOT added to MISSING -- the same idiom as STALLED
+      # and HALTED above: report it, refuse quorum, restore nothing.
+      printf '  %-12s FLAPPING -- launched %s time(s) in the last %ss and DOWN at every census; NOT relaunching\n' \
+        "$lane" "$nlaunch" "$FLAP_WINDOW"
+      printf '               a relaunch does not clear a quota wall or a broken launcher. Read the tail of loop_%s.log\n' "$lane"
+      printf '               and detach_%s.log for the reason the generation ends. Clears itself %ss after the last launch.\n' "$lane" "$FLAP_WINDOW"
+      FLAPPING=$((FLAPPING+1))
+      continue
+    fi
     printf '  %-12s DOWN\n' "$lane"
     MISSING+=("$lane")
   fi
@@ -570,7 +630,11 @@ done < <(ps -eo command | grep -oE 'You are [A-Za-z0-9_-]+\.' \
 [ "$OFF" = 0 ] && echo "  none"
 
 if [ "$CHECK_ONLY" = 1 ]; then
-  [ "${#MISSING[@]}" -eq 0 ] && [ "$ROLE_FAIL" = 0 ] && [ "$STALLED" -eq 0 ] && exit 0 || exit 1
+  # H173: FLAPPING joins the non-zero set. A lane this file has launched three
+  # times in an hour and found DOWN at every census is not a quorum, and --check
+  # is what a human and `test_h44_check_is_readonly.sh` read.
+  [ "${#MISSING[@]}" -eq 0 ] && [ "$ROLE_FAIL" = 0 ] && [ "$STALLED" -eq 0 ] \
+    && [ "$FLAPPING" -eq 0 ] && exit 0 || exit 1
 fi
 
 # A LAUNCHER THAT DOES NOT PARSE TAKES THE WHOLE FLEET DOWN SILENTLY (H44).
@@ -604,6 +668,19 @@ if [ "${#MISSING[@]}" -eq 0 ] && [ "$STALLED" -gt 0 ]; then
   exit 1
 fi
 
+if [ "${#MISSING[@]}" -eq 0 ] && [ "$FLAPPING" -gt 0 ]; then
+  # H173. Same shape as the STALLED branch above, for the state that outage
+  # actually produced: nothing to start is true, and it is not the same claim as
+  # nothing wrong. 163 relaunches in 27h printed neither line.
+  echo
+  echo "bringup: ${FLAPPING} lane(s) FLAPPING -- launched repeatedly and dead again by every census."
+  echo "  NOT relaunching them. The 27h weekly-limit outage was 163 relaunches"
+  echo "  into a wall, and this file printed no STALLED line for any of them"
+  echo "  because a lane that dies has no pid and never counts past fail 1."
+  echo "  Read loop_<lane>.log and detach_<lane>.log for why the generation ends."
+  exit 1
+fi
+
 if [ "${#MISSING[@]}" -eq 0 ]; then
   echo
   echo "bringup: full quorum, nothing to start."
@@ -634,6 +711,7 @@ for lane in "${MISSING[@]}"; do
     [ -e "$_f" ] && { rm -f "$_f"; echo "  $lane cleared stale $(basename "$_f")"; }
   done
   CALLSIGN="$lane" ./run_loop.sh &
+  lane_launch_record "$lane"      # H173: the one fact this file never has to trust a dying lane for
   echo "  $lane launched"
   sleep 2      # stagger: four lanes racing the same git index is H19
 done

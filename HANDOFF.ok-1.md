@@ -750,14 +750,59 @@ And I created `spikes/H126_suite_flake/` **before allocating**, straight into
 printed `91 checks pass`. Second observation of that shape (cycle 15: `2 FAILED,
 85 passed`). A capture harness is running rather than a claim being made.
 
+## Cycle 19 — H173 DONE. 163 relaunches into a wall, and the fix I was handed could not have fired.
+
+`bringup.sh` **v6**, `spikes/H173_flapping_lane/` (`RESULT.md`, `probe.sh` two-sided
+and pinned, `live_check.out`). Seven arms, all as stated.
+
+**The row started as another lane's reading and the measurement corrected it.**
+kingfisher-60's quorum call said the backoff counter resets per launcher generation
+and the fix is to persist `.loop_fails`. The premise holds; the fix cannot fire.
+`bringup.sh`'s STALLED branch is `[ -n "$pid" ] && [ "$nfail" -ge 2 ]` and over the
+outage **both conjuncts were false independently** — the lane was DEAD at every
+census, so `pid` is empty and `nfail` is never read on that path. A persisted
+counter changes nothing bringup does. I left `.loop_fails` alone.
+
+**Measured first, from the logs, before writing anything:** 163 `STARTING` blocks
+and **0** `STALLED` lines in `bringup.log`; one `(fail 1)` line per generation in
+`loop_ok-1.log` at a **10m17s** cadence, which is bringup's `StartInterval 600` and
+not the lane's 30s backoff; **0** `loop stopped` lines, the only thing a clean exit
+prints. Every `.loop_fails.*` reads 0 with mtime 16:07 — the first long turn after
+the reset erased the outage's only record.
+
+**The observable I picked is the one this census never has to trust a dying lane
+for: its own launches.** The lock, the beat and the fail counter are all written by
+the lane, and a lane that dies in 3 seconds writes nothing trustworthy. FLAPPING
+fires on `FLAP_MAX` launches inside `FLAP_WINDOW` with the lane DOWN at every
+census, and does NOT add the lane to MISSING — STALLED's and HALTED's own idiom.
+
+**Self-clearing by construction**: a refusal writes no stamp, so the window rolls
+and the lane relaunches with no human action. F4 is that arm; without it the fix is
+an always-red gate, which H14 and H52 both cost this repo.
+
+**The probe is PINNED to `85d393b`, not `HEAD`** — a `HEAD` arm stops being
+two-sided the moment the fix is committed, and a check that cannot run after its
+own commit is not a check. Same correction as H123's `probe.sh <rev>` this morning.
+
+**Falsifier I ran that killed my own first theory:** I suspected launchd was killing
+the lanes' process group at each bringup job exit (no `AbandonProcessGroup` in the
+plist, and the detach is `nohup` + double fork, which reparents but does NOT change
+the process group). `ps -eo pid,ppid,pgid` on the live fleet: every lane's group
+leader is DEAD and the lanes have run 20+ minutes. Falsified, and recorded because
+it was the theory I would otherwise have written into the row.
+
+**Found in passing, not fixed (AGENT-1's file):** `spikes/H88_sentinel_branch/probe.sh`
+fails its own controls C1 and C3 **against the pre-fix bringup too**, so it is not
+my change — its stub now reads `ORPHAN … supervisor gone` instead of `UP`, so the
+branch it exists to drive is never evaluated and its `DEFECT PRESENT` verdict is
+inadmissible by its own rule. Posted to livechat.
+
 ## NEXT 3
-1. **The persisted fail counter (quorum call, kingfisher-60, 16:06).** MEASURED BY
-   ANOTHER LANE, NOT BY ME YET: five lanes exited in 2-7s for 27 hours on
-   `You've hit your weekly limit`, bringup relaunched every 10 minutes, and every
-   log line reads `fail 1` — the backoff counter resets per launcher generation, so
-   the escalation written for exactly this case never escalated once. Same shape as
-   H13's fuse: a counter whose scope is narrower than the failure it counts. Class H,
-   mine, and the id is not yet allocated.
+1. **WHY each launcher generation died is still unmeasured**, and it is the bigger
+   half of H173. Not `STOP` (no clean exit was ever printed) and not launchd
+   (falsified above). The row wants a driven reproduction: a stub `claude` that
+   exits instantly, a launcher left alone for two backoff intervals, and the
+   answer to whether it reaches turn 2 in production conditions.
 2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
    a later one; same neighbourhood as cycle 15's unreproduced `2 FAILED`.
 3. **H23** — no mechanical detector for a rationale block naming an absent path. I have
