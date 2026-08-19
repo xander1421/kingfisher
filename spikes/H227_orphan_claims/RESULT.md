@@ -104,7 +104,90 @@ findings: `H203`'s `/adversarial_audit/...` strings are JSON key paths, and
 about the MECHANISM only — an unreproducible-by-clone, unretractable-by-anyone
 claim that happens to be true. If it differs, the live composite is wrong.*
 
-Result: recorded below when the run lands.
+### RESULT — G51 REPRODUCES. THE FALSIFIER DID NOT FIRE.
+
+Forced recompute in a clean `git archive HEAD` tree with the cache removed:
+1410 rules re-mined from 190,480 pair-disjoint train triples, all six arms
+re-evaluated (382 s).
+
+| arm | recomputed | published | |
+|---|---|---|---|
+| A_prior_alone | 0.1732 | 0.1732 | = |
+| B_rules_alone | 0.0950 | 0.0950 | = |
+| C_g50_additive | 0.1743 | 0.1743 | = |
+| D_bayesian_hybrid_beta10 | 0.2263 | 0.2263 | = |
+| **E_bayesian_scaled_beta01** | **0.2274** | **0.2274** | **=** |
+| F_bayesian_scaled_beta001 | 0.2175 | 0.2175 | = |
+
+Every Hits@1/3/10 matches too, and `controls`, `falsifiers`, `n_rules_2hop`,
+`n_test`, `n_train`, `seed` and `split` are identical. **AGENT-COORDINATOR's
+claim is CORRECT and is hereby independently re-derived by a live lane.** This
+row is therefore about the MECHANISM, exactly as the falsifier said it would be:
+an unretractable, clone-unreproducible claim that happens to be true.
+
+### RESULT — G54 ALSO REPRODUCES, AND IT IS THE HEADLINE'S ACTUAL SOURCE
+
+`G54` is what `--eval` names as `"source"`, so it matters more than G51. Forced
+recompute in the same clean tree, no cache path in this spike at all: corpus
+re-read (nt=272115, npred=237, nent=14505), split rebuilt
+(train=190480 dev=40818 test=40817 groups=212110, **leak=0**), 1410 rules
+re-mined, DEV and TEST re-scored. 628.7 s.
+
+| arm | recomputed | published |
+|---|---|---|
+| A_prior | 0.1732 | 0.1732 |
+| B_g51 | 0.2274 | 0.2274 |
+| **C_dev_gated** (headline) | **0.2313** | **0.2313** |
+| D_type | 0.1731 | 0.1731 |
+| E_analog | 0.1764 | 0.1764 |
+| F_dev_mix | 0.2327 | 0.2327 |
+
+Every Hits@1/3/10 matches, n=81,634 on every arm, and the frozen gate hashes to
+`56441adaa4427b6725be11fb186157d84e72203d1f55f0a43a745a08097cf261` — the same
+value the `DONE G54 GROK-2` line published. `F3 fired=True` and is recorded, as
+it was originally.
+
+**BOTH ORPHANED HEADLINE CLAIMS ARE NOW INDEPENDENTLY RE-DERIVED BY A LIVE
+LANE.** GROK-2's and AGENT-COORDINATOR's numbers are correct. What was missing
+was never the arithmetic — it was that nobody alive could answer for it.
+
+### THE WALL-CLOCK DEFECT, SECOND INSTANCE, WITH A DENOMINATOR
+
+G54's artifact hashes `411731fb…` against the published `67a5de04…`. Diffed
+field by field rather than eyeballed:
+
+**303 leaf fields. EXACTLY ONE DIFFERS: `elapsed_sec`, 628.72 vs 886.92.**
+
+Two spikes, two independent forced recomputes, and in both the single obstacle
+between an honest reproduction and a byte-identical artifact is a timing field.
+G51: all scientific fields identical, `elapsed_sec` 382.32 vs 367.91. G54:
+302 of 303 identical, `elapsed_sec` 628.72 vs 886.92.
+
+So `recheck` would report **DRIFTED** for both of these correct reproductions.
+**"Did it reproduce" and "does it hash the same" are different questions and
+only one of them is about the science** (AGENT-1). Filed by AGENT-1 as **H239**;
+count reconciled with them at **90** (recursive scope + nested key walk) — my
+own 73 was a strict subset produced by a one-level glob and a top-level-keys-only
+predicate, and I withdrew it.
+
+### AND THE RE-RUN FOUND A SECOND DEFECT THE CACHE WAS HIDING
+
+The recomputed `bayesian_lift.json` hashes `43495a11…`; the published one
+hashes `d694bd0f…`, which is what `provenance.json` records. **One field
+differs: `elapsed_sec`, 382.32 vs 367.91.** Wall clock.
+
+So the artifact hash of this result is a **one-time value**: an honest, correct
+re-run necessarily changes it, and `recheck` would report `DRIFTED`. That means
+**`recheck`'s DRIFTED signal cannot distinguish "the result changed" from
+"someone reproduced it correctly"** — and reproduction is the thing this mission
+most wants to encourage.
+
+Swept: **73 hashed `.json` artifacts embed a wall-clock or timestamp field.**
+Stated precisely, because not all 73 are the defect — `H86`'s `wall_citable`,
+`S84`'s `wall_us_citable` and `H203`'s `w9_falsifier_wallclock_term` are the
+MEASUREMENT and belong in the artifact. The defect is an *incidental* timing
+field inside a hashed result, and G51 is a demonstrated instance rather than an
+argued one, because the re-run exists.
 
 ## Limits
 
