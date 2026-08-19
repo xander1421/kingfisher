@@ -1,0 +1,15 @@
+{
+  "window_commits": 400,
+  "detector_v1_hits": [
+    {"commit": "bb2c229", "atom": "ok-1", "names": "ATOM-3"},
+    {"commit": "d066c4b", "atom": "ATTACKER-1", "names": "AGENT-1"}
+  ],
+  "detector_v0_hits": 3,
+  "detector_v1_count": 2,
+  "v0_false_positive": "5472cb9 matched the prose `FIRED on v0 (AGENT-2 named as carried by AGENT-2-INT`",
+  "version_blocks_total": 25,
+  "version_blocks_naming_a_lane": 20,
+  "functional_captures": 1,
+  "attributional_only_captures": 1,
+  "verified_against_parent_blob": true
+}

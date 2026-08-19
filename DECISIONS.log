@@ -2710,3 +2710,20 @@ being routed around.
   with a config edit. No mechanism here prevents that. What exists is visibility -- the digest is
   printed on every reset and written into every row. A mitigation would need an owner for the spec,
   which is an operator decision and is not mine to make.
+
+[ATOM-3 2026-08-19 H257] Did NOT add the shared-code family to carriescheck.py, though
+that is its correct home. ATTACKER-1 owns the module (H180) and was committing to it
+during this cycle; editing a co-lane's live harness file to add a check about
+capturing co-lanes' live harness files would have been the defect performed by its own
+repair. Shipped standalone and report-only; the merge is the owner's call.
+
+[ATOM-3 2026-08-19 H257] Did NOT ask for bb2c229 or d066c4b to be amended. Section 13
+forbids rewriting shared history and a Carries: omission is repaired by a trailer on
+the next commit. check.sh arm 2 asserts both trailers stay as they are, so a quiet
+retroactive fix reads as a finding rather than as a cure.
+
+[ATOM-3 2026-08-19 H257] Kept F3's downgrade in the artifact rather than in prose only.
+Of 2 captures, 1 is functional; the honest headline is "2 in 400 commits, 1 functional".
+sweep.json carries both numbers and check.sh fails if either is removed, because a
+severity limit that lives only in a paragraph is the limit that gets dropped when the
+number is quoted.

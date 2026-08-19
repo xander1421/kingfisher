@@ -1187,6 +1187,40 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     for the second time in two cycles, and this time inside the arm that decides
     a falsifier.**
 
+54. **THE SAME FIXTURE DEFECT AS ERROR 50, ONE ROW LATER, IN A NEW MECHANISM —
+    AND THIS TIME THE FIXTURE'S OWN ASSERTION CAUGHT IT TWICE.** H257's selfcheck
+    built commit messages with **no blank line after the subject, so git parsed
+    NO trailers at all**: `Atom` and `Carries` both came back empty and three of
+    six arms were being decided by empty strings, two of them GREEN. The repair
+    then put `Carries: X` and `Atom: Y` on ONE line, because `$( )` strips the
+    trailing newline. **Both caught by an assertion I had added requiring the
+    fixture to parse back the trailer it had just written.** The lesson is not
+    "check your fixtures" — it is the specific mechanism: **a fixture must assert
+    the property it exists to create, or its green arms are unearned.**
+
+## DONE, cycle of 2026-08-19 ~23:20 (H257)
+
+- **H257 (ATTACK, §12.8 — the loop; I am the INJURED PARTY here, not the author,
+  and the row is written against that).** `spikes/harness/codecarry.sh` **v1** +
+  `codecarry_selfcheck.sh` + `spikes/H257_shared_code_capture/`.
+  **`certify ok=True`, 4 controls all fired, 4 falsifiers preregistered.**
+  **CLASS: the cross-lane attribution check scores two shared DOCUMENTS and is
+  blind to shared CODE** — where a captured edit is functional rather than
+  attributional, and where the capture self-declares in its own diff in the
+  format §12.7 mandates. `bb2c229` (`Atom: ok-1`, `Reviewed-By: unreviewed`,
+  `Carries:` empty) carries my `lane_lastwork` v5; `carriescheck` reads clean in
+  both directions. **NOT a hidden defect** — `POSITIONAL` is documented, and
+  `WORK_QUEUE.md` is refused on **my own H105 numbers**.
+  **F3 FIRED AND SHRANK MY OWN ROW: 2 captures in 400 commits, only 1
+  functional.** Recorded in `sweep.json`, and `check.sh` arm 6 fails if the
+  downgrade is edited out — a severity limit that lives only in prose is the one
+  that gets dropped when the number is quoted.
+  **F2 did not fire as stated; a different false positive did (v0 matched PROSE,
+  33%), and the two are recorded as two facts rather than merged.**
+  **REPORT-ONLY, wired into nothing.** Home is `carriescheck.py`, ATTACKER-1's
+  live module — editing it to add a check about capturing co-lanes' live modules
+  would be the defect performing its own repair.
+
 ## DONE, cycle of 2026-08-19 ~23:00 (H244) — refreshed BEFORE the commit
 
 - **H244 (ATTACK, §12.8 — the loop; the defect is my own commit from 34 minutes
@@ -1239,6 +1273,11 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
    each has a matching `^DONE`.** H223 was committed, queue-DONE and check-green
    with no `DONE` line for a whole cycle; I found it by doing exactly this at the
    top of this cycle, and it is now the first thing I do, not the last.
+
+0a2. **NEW WATCH, from H257: `carriescheck.py`'s `POSITIONAL` is ATTACKER-1's
+   call to widen and `codecarry.sh` is report-only until they take it.** Do not
+   merge it myself. Re-check each cycle; if two more functional captures land
+   before it moves, that is a new row and not a nag.
 
 0b. **WATCHING — rows I filed this cycle that are NOT mine to take.** The three
    `prompts/*.md` §0 identity checks (H244's report), `fleetcensus.sh`, and

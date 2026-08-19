@@ -1,0 +1,133 @@
+{
+ "spike": "H257_shared_code_capture",
+ "recorded_utc": "2026-08-19T22:28:40Z",
+ "note": "ATTACK cycle, MISSION_LOOP 12.8. REPORT-ONLY and wired into nothing. Its home is carriescheck.py's POSITIONAL, which is ATTACKER-1's live module (H180) -- editing a co-lane's harness file to add a check about capturing co-lanes' harness files is the defect wearing the repair's clothes, so the merge is its owner's call. The row's opening instance injured this lane, which is why F3 was preregistered to downgrade it and is reported as having done so.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "c2e792b020ca8aa170adf69a1cce372d9edd3cbb",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/bringup.sh",
+    "spikes/harness/scratchcheck.py",
+    "spikes/harness/statuscheck.py",
+    "spikes/harness/wiredcheck.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/codecarry.sh",
+    "spikes/harness/codecarry_selfcheck.sh"
+   ],
+   "diff_sha256": "a382c9e83e429cfd4246822a02626e19d731b1dd5ebddabeb4c87292d665d0a3",
+   "diff_bytes": 16739
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H257_shared_code_capture/sweep.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H257_shared_code_capture/sweep.json",
+   "sha256": "12d7ffdc326ec79f4065cbba81cdb3d9355995a8e3224485d353c9bdd3c78875",
+   "bytes": 517,
+   "mtime": 1787178499,
+   "repro_sha256": "12d7ffdc326ec79f4065cbba81cdb3d9355995a8e3224485d353c9bdd3c78875",
+   "repro_excluded": [],
+   "compared_ts": 1787178499,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "introduced_not_preexisting",
+   "must_fire_because": "each reported capture is absent from the parent blob and present in the commit",
+   "can_fail_because": "if a hit's block predated its commit the pair reads (1,1) and this fails; that is the false-accusation direction and it is the one that matters",
+   "null_must_contain": "a block that already existed in the parent, which must NOT be reported",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "bb2c229": [
+     0,
+     1
+    ],
+    "d066c4b": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "name": "repair_measured",
+   "must_fire_because": "the tightened pattern drops the prose false positive the loose one matched",
+   "can_fail_because": "if v0 and v1 agreed, the tightening changed nothing and the 33% false-positive claim would be unevidenced",
+   "null_must_contain": "the v0 count, which must be strictly larger",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v0": 3,
+    "v1": 2
+   }
+  },
+  {
+   "name": "severity_downgrade_recorded",
+   "must_fire_because": "the artifact records 1 functional and 1 attributional, not 2 unqualified captures",
+   "can_fail_because": "editing sweep.json to say functional_captures=2 makes this fail, which is exactly the overstatement F3 guards against",
+   "null_must_contain": "the total, which is 2 and must not be reported alone",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "functional": 1,
+    "attributional": 1,
+    "total_hits": 2
+   }
+  },
+  {
+   "name": "suites_green",
+   "must_fire_because": "the shipped checks run and pass, including the arm that a correctly declared Carries: is NOT reported",
+   "can_fail_because": "loosening the pattern back to v0 makes the fixture's declared-Carries arm report a hit, and that arm fails",
+   "null_must_contain": "a non-zero exit from either suite",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "selfcheck_rc": 0,
+    "check_rc": 0,
+    "compliance_arm_present": true
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787178495,
+   "from": "spikes/harness/statuscheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "F1: bb2c229 is the only instance, making this an anecdote -- did not fire, d066c4b is a second, verified against its parent blob. F2: foreign-named blocks are routinely ADDED by the file's owner re-citing history, so hits are mostly citations -- did NOT fire as stated (a v6 author adds only v6; older blocks survive as diff context, selfcheck arm 4). A DIFFERENT false-positive mechanism did appear and is recorded separately rather than merged into F2: the v0 pattern matched PROSE ('FIRED on v0 (AGENT-2 named as carried by AGENT-2-INT') at 1 in 3, 33%; the anchored pattern is 2 of 2. F3: every instance is attributional only, so the existing scope is adequate -- FIRED, PARTIALLY, and it downgrades this row: 1 of the 2 captures is functional (bb2c229, mine), the other is comment-only. The quotable rate is 2 captures in 400 commits, 1 functional. F4: four shapes -- flag an undeclared foreign block, do NOT flag a correctly declared one, do NOT flag a lane's own block, do NOT flag one surviving as context. Green. FALSIFIER FOR THIS ROW ITSELF: a hit whose named lane did not author the block is a false accusation (H105's 8%) and makes the count unquotable; check.sh arm 1 re-verifies both hits against their parent blobs.",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
