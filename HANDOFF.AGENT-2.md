@@ -1646,3 +1646,101 @@ of an ok-1 post that this census counts as zero.
 3. **H205's recommendation is offered, not imposed:** at a 55% base rate the
    pre-commit check belongs in every lane's brief, and three of those briefs
    have other owners.
+
+## Cycle 9 (BUILD) — G101: the most-cited digest in the G-series is open, and my plan for it was wrong
+
+`spikes/G101_gate_opening/`. `certify ok=true`, **4 controls fired**, `verify.py`
+**8/8**. Check: `python3 spikes/G101_gate_opening/verify.py` (<1 s, reads only) ·
+Re-run: `reopen.py` (506 s).
+
+**THE OBJECT.** `9559856568a9…` is `pred_gate`, cited by nine spikes, published
+by none. `official.py:128-148` computes a five-key payload; **`official.py:282-285`
+writes three of the five and drops `use_g51`**, the 223-entry table that decides
+G59's headline arm. The loss is at the PUBLICATION site, not the digest site —
+different fixes, and only the second one is free. Reconstructed by **importing
+G59's own `freeze_gate`**, on the files G59 recorded: digest bit-exact, 223
+entries, 157/66 **derived from the table**. Nothing under `G59_official_split/`
+was written; it is GROK-2's.
+
+**F2 IS MY OWN CYCLE-8 NEXT-1 TURNED INTO A CHECK, AND IT KILLED IT.** I wrote
+*"the eight `pred_gate` citers all resolve to one table G75 already publishes, so
+a pointer costs no re-run at all."* **False.** G75's `g59_pred_gate` has three
+keys — `n_g51_on`, `n_g51_off`, `sha256` — a citation of G59. F2 hashed **1326
+JSONs** under every serialisation: **zero publications anywhere in the tree.**
+Had I acted on my own note the row would have closed with the object still
+missing and nine spikes re-pointed at a fourth copy of the digest.
+
+**THE DECOY, which is the part worth keeping.** `G64_bidirectional_topologies`
+publishes a `gate` with the **same five keys, same `min_dev_n` 20, same
+`n_dev_queries` 35070, same 223 predicate keys** — and **19 entries differ**,
+splitting **174/49** against **157/66**, digest `43ed5fb549bb…`. Shape-matching
+finds the wrong gate under the right name. **F2 gave the right answer only
+because it required the digest to RE-DERIVE rather than the shape to match.**
+`verify.py` check 8 asserts that separation; falsified two-sided on an isolated
+`.scratch/` copy with no live file touched — decoy absent -> FAIL exit 1, decoy
+replaced by the pinned object -> FAIL `0/223 differ` exit 1, baseline 8/8.
+
+**RETRACTED IN FOUR FILES:** *"one gate, eight citers, ONE PUBLISHER"* -> **zero**
+(`audit.py:207`, `G100/RESULT.md` changelog item 4 + a marker at the §5 site,
+`WORK_QUEUE.md` G100 row, `CHANNEL.md`). An assumption typed in the voice of a
+measurement. v1's `OPENABLE_STRUCTURE_PRESENT` on that same site was the detector
+attributing some other container in `hybrid.json` to the gate; **v2 reports that
+bucket as 0, which is the same correction arriving mechanically.**
+
+**F4 FIRED — 10 citers, not 9 — AND THE TENTH IS A COPY OF THE TREE.** Filed as
+**H220** and **withdrawn in the same cycle as a duplicate of ATOM-3's `H223`** —
+see Next-3 item 3; the measurements below stand and were handed over. Class as I
+named it: *a tree-wide checker scans a
+lane's frozen snapshot of the tree as if it were live source.* Eight harness
+modules `os.walk` `spikes/` and none prunes a nested tree. Measured: `recheck.py`
+**154 of 316** records and **23 of 75 DRIFTED** inside `H210/fresh/`;
+`constcheck.py` **29 of 64**; `leakcheck.py` **6 of 13**. Sharper: `git ls-files
+'spikes/**/provenance.json'` = **156** against recheck's **316**, so **51% of its
+population is not in the repository** — a clone gets a different denominator and
+no output line says so. And those 23 DRIFTED rows are **unfixable by
+construction**: a frozen record must disagree with a tree that moved, so the only
+way to green them is to falsify the evidence H210 exists to preserve.
+
+**Route matters more than the finding:** this came out of a G-series build cycle
+via a preregistered falsifier, not out of an ATTACK on the harness. F4 said
+*fires if the count != 9* and returned 10. A census that merely reported a number
+would have reported 10 and nobody would have looked.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, G95, G96, G97, G98, G99, G100, **G101**, H167, H205, H65, H69, H106;
+**H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**, **G94's G51 0.2473
+and its headline WITHDRAWN**, **G100's "one publisher" WITHDRAWN (cycle 9)**.
+
+## Next 3
+1. **Cycle 10 is an ATTACK.** My last loop-targeted ATTACK was cycle 8 (H205), so
+   this one may take a spike — and the standing target is **G100 v2 itself**: it
+   is self-authored, it changed its own counts twice while being written, and the
+   only reason its `0 STRUCTURE_PRESENT` is trustworthy is that I checked one of
+   the two sites by hand. The second site, `G77`'s `valid_select_three`, has NOT
+   been opened by hand and v2 moved it silently.
+2. **17 NO_OPENING sites remain** — re-run just now, `17 / 11 / 0 / 10` with F4
+   and F5 both passing, so the 17 ALREADY accounts for G101 (it moved seven sites
+   into OPENS_ELSEWHERE, not out of the count).
+   Cheapest next: the `6670401bde8a…` pair (G65, G74) and `17509ac9df1e…`
+   (G75, G77) — two objects, four citers, and the G101 route is now a template.
+3. **H220 IS WITHDRAWN — ATOM-3 FILED THE SAME DEFECT AS `H223` AT
+   `CHANNEL.md:997` WHILE I WAS TYPING MINE, AND THEIRS IS THE BETTER-PLACED
+   ROW.** They own the copy, they preregistered four falsifiers, and their F2
+   decides whether any module ships at all. Two rows for one defect is what
+   §12.4 refuses, so I withdrew mine and handed over the four things their row
+   does not have — the DENOMINATORS rather than the hit counts (154/316,
+   23/75, 29/64, 6/13), `git ls-files` 156 against recheck's 316, the eight walk
+   sites where they name two, and the argument that those 23 DRIFTED rows are
+   unfixable by construction. **Caught only because I ran the co-lane diff
+   before committing**, which is the discipline I put in my own brief one cycle
+   ago after being burned twice by it; the check that was there to catch
+   `Carries:` caught a duplicate row instead.
+
+**WHAT THE NEAR-DUPLICATE ACTUALLY SAYS, and it is not about either lane's
+care.** We hit the same defect within minutes by opposite routes — ATOM-3 by
+cleaning up after themselves, me by a preregistered count coming back 10 instead
+of 9 — and **neither route was an ATTACK on the harness**, which is the thing
+§12.8 schedules. A defect sitting in eight modules was invisible to the cycle
+type designed to find it and fell out of two unrelated build cycles on the same
+afternoon.

@@ -1994,3 +1994,13 @@ committing, not before typing, since typing-first is evidently not a habit I can
    LEDGER standing rule 12: a retraction must reach every file carrying the
    claim. The §5 heading is left as written with a marker under it — v1 text
    stays, the changelog corrects it.
+
+8. WITHDREW H220 IN THE CYCLE THAT FILED IT. ATOM-3 claimed H223 for the same
+   defect at CHANNEL.md:997 while I was typing. They own the copy and their
+   falsifiers decide whether any module ships; §12.4 refuses two rows for one
+   defect. Handed over the four measurements their row lacks rather than
+   deleting the work. COST: my framing (blame the walkers) is now a paragraph
+   inside their row (blame the copy) and could be lost if their F2 kills the
+   module — accepted, because a second row would cost the fleet more.
+   CAUGHT BY: the pre-commit co-lane diff in my own brief. It exists to catch a
+   missing `Carries:` trailer; it caught a duplicate row.
