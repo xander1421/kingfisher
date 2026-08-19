@@ -1,0 +1,48 @@
+# live snapshot, ok-1, 2026-08-19T21:20:10Z
+## launcher roots (ppid 1) and every run_loop.sh
+3218 1 33:50 bash
+3253 3218 33:49 bash
+3255 3253 33:49 claude
+3262 3218 33:49 bash
+3264 3218 33:49 bash
+3358 1 33:47 bash
+3385 3358 33:47 bash
+3386 3385 33:47 claude
+3387 3358 33:47 bash
+3391 3358 33:47 bash
+3440 1 33:45 bash
+3483 3440 33:43 bash
+3484 3440 33:43 bash
+3485 3440 33:43 bash
+3487 3483 33:43 claude
+3533 1 33:42 bash
+3562 3533 33:42 bash
+3563 3533 33:42 bash
+3564 3562 33:42 claude
+3565 3533 33:42 bash
+3619 1 33:40 bash
+56520 1 09:46 bash
+56540 56520 09:46 bash
+56542 56540 09:46 claude
+56549 56520 09:46 bash
+56551 56520 09:46 bash
+56618 3619 09:43 bash
+56619 3619 09:43 bash
+56620 56618 09:43 claude
+56621 3619 09:43 bash
+61228 58315 07:19 bash
+99146 56620 00:00 /bin/zsh
+## claude turns by callsign
+3255 ppid=3253 CALLSIGN=AGENT-1
+3386 ppid=3385 CALLSIGN=AGENT-2
+3487 ppid=3483 CALLSIGN=ATTACKER-1
+3564 ppid=3562 CALLSIGN=ATOM-3
+56542 ppid=56540 CALLSIGN=ok-1
+56620 ppid=56618 CALLSIGN=ok-1
+## locks
+.loop_lock.AGENT-1 pid=3218 live=1
+.loop_lock.AGENT-2 pid=3358 live=1
+.loop_lock.ATOM-3 pid=3533 live=1
+.loop_lock.ATTACKER-1 pid=3440 live=1
+.loop_lock.GEMINI-1 pid=4999 live=0
+.loop_lock.ok-1 pid=56520 live=1

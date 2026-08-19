@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 # usage: CALLSIGN=AGENT-2 ./run_loop.sh     (one terminal/tmux pane per agent)
 #
+# v11, 2026-08-19 (ok-1, H232). DEFECT REMOVED: THE CALLSIGN LOCK WAS WRITTEN
+# ONCE AND NEVER READ AGAIN, so it excluded a second launcher at t=0 and nothing
+# after it. A launcher that had lost the lock kept producing turns forever, and
+# `cat .loop_lock.<CS>` -- the one command every spawn brief tells a lane to
+# trust -- named the other one. Measured, `spikes/H232_two_lanes_one_lock/`:
+# 0 reads of $LOCK inside the turn loop (lines 433-635 of v10, extracted
+# mechanically, not by eye); a lock stolen from a running launcher bought 2 more
+# turns in 8 s with no message; and `ok-1` was live on TWO launcher roots with
+# one lock while four other callsigns had one each. The re-read is at the head of
+# the loop: a live foreign holder RETIRES this launcher, an absent or dead one is
+# RE-ACQUIRED. Check: `bash spikes/H232_two_lanes_one_lock/probe.sh` and
+# test_loop_gate.sh section 8c. NOTE H21: a launcher already running keeps v10's
+# behaviour until it is relaunched, so the live duplicate had to be retired by
+# hand and that is recorded rather than fixed by this edit.
+#
 # v10, 2026-08-17. Thirteen defects fixed; each one had ended or could end a lane
 # silently. Numbered so a stall can be diagnosed against this list. (7 and 8 are
 # numbered here by AGENT-1/H30; 7 is ATOM-3's self-detach, whose own rationale
@@ -431,6 +446,32 @@ echo 0 > "$FAILFILE"   # a count from a previous span is defect 5's class, armed
 # spawned by accident, survived being killed and is still running. Killing the
 # child is not killing the lane; this is.
 while [ ! -f STOP ] && [ ! -f "STOP.${CALLSIGN}" ]; do
+  # v11, H232 (ok-1, 2026-08-19). THE LOCK IS RE-READ EVERY TURN. Acquiring it
+  # above proved only that nobody held this callsign at t=0; nothing read it
+  # again, so a launcher that had LOST the lock kept producing turns forever and
+  # was invisible to `cat .loop_lock.<CS>` -- the one command every brief tells a
+  # lane to trust. MEASURED on v10, `spikes/H232_two_lanes_one_lock/probe.out`:
+  # steal the lock from a running launcher and it produced 2 more turns in the
+  # next 8 s and said nothing. Observed live in the same run: `ok-1` on TWO
+  # launcher roots (3619 and 56520) with one lock, four other callsigns on one
+  # each. Two lanes on one callsign share .loop_signal / .loop_exit /
+  # .loop_blocks -- either can consume the other's exit -- and sign each other's
+  # CHANNEL lines.
+  # LIVENESS IS pid + COMMAND, never pid alone, for the reason the acquire path
+  # states: this fleet burns ~1300 pids/minute and a false HELD retires a
+  # legitimate lane. ABSENT OR DEAD IS RE-ACQUIRED, NEVER FATAL -- a lock removed
+  # by a third party must not be able to kill the lane that owns it, which is the
+  # H16 shape (a stale file outliving its span) pointed the other way.
+  _lk=$(tr -dc '0-9' < "$LOCK" 2>/dev/null)
+  if [ "$_lk" != "$$" ]; then
+    if [ -z "$_lk" ] || ! ps -p "$_lk" -o command= 2>/dev/null | grep -q 'run_loop\.sh'; then
+      echo $$ > "$LOCK"
+      echo "[run_loop] $(date '+%H:%M:%S') ${CALLSIGN} re-acquired ${LOCK} (was ${_lk:-absent})" | tee -a "$LOG"
+    else
+      echo "[run_loop] $(date '+%H:%M:%S') ${CALLSIGN} RETIRING: ${LOCK} names live launcher pid ${_lk}, not me ($$); two lanes on one callsign share every per-lane state file" | tee -a "$LOG"
+      break
+    fi
+  fi
   rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK" ".loop_signal.${CALLSIGN}"
   date +%s > "$BEAT"
   started=$(date +%s)

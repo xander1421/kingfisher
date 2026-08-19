@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-# test_loop_gate.sh v7 — the check MISSION_LOOP §12.3 requires for the Stop hook.
+# test_loop_gate.sh v8 — the check MISSION_LOOP §12.3 requires for the Stop hook.
+#
+# v8 RATIONALE (§12.7) — ok-1, H232, 2026-08-19. DEFECT REMOVED: THIS SUITE
+# TESTED THE CALLSIGN LOCK AT t=0 AND NOWHERE ELSE. The H8 block below drives 20
+# simultaneous launchers and asserts ONE survivor, which is acquisition; nothing
+# read the lock again, and run_loop.sh v10 had zero reads of $LOCK inside its turn
+# loop, so a launcher that had LOST the lock kept producing turns forever. Live
+# that day: `ok-1` on two launcher roots with one lock. The new block drives both
+# directions -- a live foreign holder must retire the launcher, an ABSENT lock
+# must be re-acquired rather than kill the lane -- and carries a precondition
+# check, because "stopped producing turns" is otherwise passed by a launcher that
+# never started (a 644 copy dies at `nohup "$0"`, measured).
 #
 # v7 RATIONALE (§12.7) — ok-1, H219, 2026-08-19, ATTACK cycle 30 (§12.8: the loop
 # itself). DEFECT REMOVED: THIS SUITE COULD NOT SEE THAT THE PER-LANE KILL SWITCH
@@ -971,6 +982,72 @@ for lk in .loop_lock.*; do
   ps -p "$lkpid" -o command= 2>/dev/null | grep -q 'run_loop\.sh' && kill "$lkpid" 2>/dev/null
 done
 
+# --- CALLSIGN ALLOCATION, PART 2: THE LOCK AFTER t=0. ok-1, H232, 2026-08-19.
+# The block above proves a second launcher is refused AT LAUNCH, and that was the
+# whole of the mutual exclusion: v10 had ZERO reads of $LOCK inside its turn loop
+# (lines 433-635, extracted mechanically in spikes/H232_two_lanes_one_lock/
+# probe.sh, because reading a line range by eye is what §12.4 forbids). So a
+# launcher that had LOST the lock kept producing turns forever while
+# `cat .loop_lock.<CS>` -- the one command every spawn brief tells a lane to
+# trust -- named the other one. Observed live the day this was written: `ok-1` on
+# TWO launcher roots (3619, 56520) with one lock, four other callsigns on one
+# each, and the duplicate had to be retired by hand because a run_loop.sh edit
+# reaches a lane only at relaunch (H21).
+# BOTH DIRECTIONS ARE DRIVEN. A retire-on-mismatch that fires on an ABSENT lock
+# would let any third party -- bringup's stale-state clear, a stray rm, a probe --
+# kill a healthy lane, which is the same file outliving/undercutting its span that
+# H16 and H196 are about, pointed the other way.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* .loop_lock.* turns_L10.log
+mkdir -p bin prompts fake
+cp "$ROOT/run_loop.sh" ./run_loop.sh
+chmod +x ./run_loop.sh          # `nohup "$0"` EXECs the copy; 644 dies at exec
+printf '# scratch\n' > prompts/L10.md
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo turn >> turns_L10.log
+exit 0
+STUB
+chmod +x bin/claude
+: > turns_L10.log
+PATH="$T/bin:$PATH" CALLSIGN=L10 MAX_TURN=10 BACKOFF_STEP=1 bash ./run_loop.sh >/dev/null 2>&1
+n=200; while [ "$n" -gt 0 ] && [ "$(wc -l < turns_L10.log)" -lt 2 ]; do sleep 0.1; n=$((n-1)); done
+# PRECONDITION, and it is not decoration: with a 644 copy this launcher produces
+# no turns, and then "stopped producing turns" passes over a launcher that never
+# started -- an absence assertion won by being early, which is v2's own class.
+check "L10 launcher is producing turns before the lock is touched"           \
+      "$([ "$(wc -l < turns_L10.log)" -ge 2 ] && echo yes || echo no)" "yes"
+_l10=$(cat .loop_lock.L10 2>/dev/null)
+printf '#!/usr/bin/env bash\nsleep 30\nexit 0\n' > fake/run_loop.sh
+bash fake/run_loop.sh & thief=$!
+echo "$thief" > .loop_lock.L10
+_t1=$(wc -l < turns_L10.log); sleep 6; _t2=$(wc -l < turns_L10.log)
+check "a launcher that has LOST the lock stops producing turns"              \
+      "$([ "$_t2" -eq "$_t1" ] && echo stopped || echo running)" "stopped"
+check "  and names the pid that holds the callsign now"                      \
+      "$([ "$(grep -c "$thief" loop_L10.log 2>/dev/null)" -ge 1 ] && echo named || echo silent)" "named"
+kill "$thief" "$_l10" 2>/dev/null; pkill -f 'You are L10\.' 2>/dev/null
+# THE OTHER DIRECTION: an ABSENT lock is re-acquired, never fatal.
+rm -f .loop_lock.L11 turns_L11.log
+cat > bin/claude <<'STUB'
+#!/usr/bin/env bash
+echo turn >> turns_L11.log
+exit 0
+STUB
+chmod +x bin/claude
+printf '# scratch\n' > prompts/L11.md
+: > turns_L11.log
+PATH="$T/bin:$PATH" CALLSIGN=L11 MAX_TURN=10 BACKOFF_STEP=1 bash ./run_loop.sh >/dev/null 2>&1
+n=200; while [ "$n" -gt 0 ] && [ "$(wc -l < turns_L11.log)" -lt 2 ]; do sleep 0.1; n=$((n-1)); done
+rm -f .loop_lock.L11                     # the third-party delete
+_u1=$(wc -l < turns_L11.log); sleep 6; _u2=$(wc -l < turns_L11.log)
+check "a lane whose lock was DELETED keeps running"                          \
+      "$([ "$_u2" -gt "$_u1" ] && echo running || echo stopped)" "running"
+check "  and takes its own lock back"                                        \
+      "$(_p=$(cat .loop_lock.L11 2>/dev/null); [ -n "$_p" ] && ps -p "$_p" -o command= 2>/dev/null | grep -c 'run_loop\.sh' || echo 0)" "1"
+_l11=$(cat .loop_lock.L11 2>/dev/null); kill "$_l11" 2>/dev/null
+pkill -f 'You are L11\.' 2>/dev/null
+rm -f turns_L10.log turns_L11.log .loop_lock.L10 .loop_lock.L11
+
 # --- ADMISSION: THE ROSTER GATE. ok-1, H63, ATTACK cycle (§2, §12.8), 2026-08-17.
 # `roster.txt` is the fleet's sanction list, and run_loop.sh says why in its own
 # comment: *"a brief that the lane wrote for itself is not sanction to run.
@@ -1246,7 +1323,19 @@ cat > bin11/claude <<'STUB'
 n=$(( $(cat spans 2>/dev/null || echo 0) + 1 )); echo "$n" > spans
 echo "${CALLSIGN} $(cat ".loop_blocks.${CALLSIGN}" 2>/dev/null || echo ABSENT)" >> seen.log
 [ "$n" -ge 2 ] && touch "STOP.${CALLSIGN}"
-echo "You've hit your session limit"
+# NOT A VENDOR QUOTA STRING, and the wording is load-bearing (ok-1, H232 cycle,
+# 2026-08-19). This fixture used to print "You've hit your session limit" because
+# that is the sentence the real runaway printed. run_loop.sh then LEARNED to parse
+# it: the quota branch matches "hit your (weekly|usage|session|daily) limit",
+# finds no reset time in this stub's output, falls back to 1800 s and SLEEPS.
+# MEASURED: this suite hung with `sleep 1800` under its own launcher, twice per
+# run, and `spikes/harness/bringup.sh:195` runs this suite synchronously -- so the
+# fleet's preflight hung with it. The crash loop is this block's subject; the quota
+# path is a different subject and has NO check at all, because any fixture that
+# reaches it sleeps for at least 60 s (the parser's floor). Filed, not built here.
+# CLASS: a fixture that simulates a failure by printing a REAL vendor string
+# becomes an input to whatever later branch learns to parse that string.
+echo "stub: instant exit, no vendor message"
 exit 1
 STUB
 chmod +x bin11/claude

@@ -1,0 +1,25 @@
+H232 probe — launcher under test: /Users/victorianikolenko/kingfisher/.scratch/h232_prefix_launcher.sh (v10)
+A1 · turn loop is lines 433-635; $LOCK reads inside it: 0
+  PASS  fixture thief is indistinguishable from a launcher to ps
+  PASS  the launcher under test runs turns at all
+  PASS    and it recorded itself as the holder
+A2 · turns before steal        2, after 8s        4; lock now 42344 (the thief)
+  FAIL  a launcher that has lost the lock stops producing turns (want stopped, got running)
+  FAIL    and says which pid holds the callsign now (want 1, got 0)
+spikes/H232_two_lanes_one_lock/probe.sh: line 92: 42344 Terminated: 15          bash fake/run_loop.sh
+  PASS  the L233 launcher is producing turns before its lock is touched
+  PASS  a lane whose lock was DELETED keeps running
+  FAIL    and takes its own lock back (want 1, got 0)
+  PASS  a lock naming a live NON-launcher does not retire the lane
+spikes/H232_two_lanes_one_lock/probe.sh: line 118: 43963 Terminated: 15          sleep 30
+A3 · live fleet, callsign -> launcher roots / lock
+    callsign       roots with a turn in flight    lock
+    AGENT-1        [3218]                         3218
+    AGENT-2        [3358]                         3358
+    ATOM-3         [3533]                         3533
+    ATTACKER-1     [15094]                        15094
+    GEMINI-1       []                             4999
+    ok-1           [3619, 56520]                  56520   <-- TWO LANES ON ONE CALLSIGN
+    callsigns with more than one live root: 1
+
+probe: 6 passed, 3 failed

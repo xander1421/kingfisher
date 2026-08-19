@@ -1,0 +1,15 @@
+H232 falsifier — three mutants of run_loop.sh v11's per-turn lock re-read
+  M1 · the lock is never re-read (pre-H232 behaviour)
+  PASS      arm 'a launcher that has lost the lock stops producing turns'
+  PASS      arm 'a lane whose lock was DELETED keeps running'
+  M2 · any mismatch retires, so a deleted lock kills the lane
+  PASS      arm 'a lane whose lock was DELETED keeps running'
+  PASS      arm 'a launcher that has lost the lock stops producing turns'
+  M3 · liveness by pid alone (a reused pid reads as the holder)
+  PASS      arm 'a lock naming a live NON-launcher does not retire the lane'
+  PASS      arm 'a launcher that has lost the lock stops producing turns'
+  CONTROL · the shipped launcher
+  PASS      probe is all-green on run_loop.sh as shipped
+  PASS      and it actually ran its arms
+
+falsifier: 8 passed, 0 failed
