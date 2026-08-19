@@ -436,6 +436,30 @@ if [ -f spikes/harness/constcheck.py ]; then
   echo "  --- controls that cannot fail (constcheck, REPORT ONLY, never gates) ---"
   python3 spikes/harness/constcheck.py 2>&1 | sed 's/^/  /'
 fi
+
+# H210. Fourth instance of H103's class, one layer out from stalecheck's: that
+# one asks whether a CERTIFIED record still describes the tree, this one asks
+# whether a COMMITTED file can still run at all in a fresh clone. Two committed
+# attacks (H188, H200) load `spikes/S91_multi_agent_quorum/run.py`, which
+# `git ls-files` returns zero rows for -- measured by materialising HEAD with
+# `git archive` and watching H188's own repro die at FileNotFoundError.
+#
+# REPORT ONLY, and this one is emphatic about it: 1633 hits on day one is a
+# gate every lane learns to bypass (H14), the 44 executable deps belong to six
+# lanes, and 85.9 MB of the 87.3 MB it names CANNOT be committed at all (§13,
+# "commit the maker, not the artefact"). The remedy differs by size and the
+# decision is the dependent file's owner's, not a gate's.
+#
+# --ast-only: the 1457 TEXT-mode MENTIONS are suppressed here on purpose. A
+# mention is silenced by deleting the mention, which fixes nothing; only the
+# AST-resolved deps are ones whose fix is the fix. 6.7s, no bound needed -- it
+# reads tracked files and makes four git calls, none of which can block the way
+# stalecheck's per-record git calls can.
+if [ -f spikes/harness/depcheck.py ]; then
+  echo
+  echo "  --- tracked code whose dependency is NOT tracked (depcheck, REPORT ONLY, never gates) ---"
+  python3 spikes/harness/depcheck.py --ast-only 2>&1 | sed 's/^/  /'
+fi
 }
 
 # H95. Every exit path runs the harness selfchecks exactly once.

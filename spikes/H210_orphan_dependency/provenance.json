@@ -1,0 +1,209 @@
+{
+ "spike": "H210_orphan_dependency",
+ "recorded_utc": "2026-08-19T20:24:48Z",
+ "note": "H210: a tracked file whose dependency is not tracked. Report-only.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "987470d023c3763e0498a58774bcb861d82371a0",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/idscope.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/depcheck.py",
+    "spikes/harness/test_h207_falsify.sh"
+   ],
+   "diff_sha256": "316c169d70d404560a3b84449477548319a037a30ce2e24396be185303dff9fa",
+   "diff_bytes": 14728
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H210_orphan_dependency",
+   "head": "987470d023c3763e0498a58774bcb861d82371a0",
+   "clean": false,
+   "dirty_files": [
+    "spikes/H210_orphan_dependency/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H210_orphan_dependency": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H210_orphan_dependency/sweep.json",
+   "sha256": "c257a2884742e9383b19e34f04476d10af11bdcdb5ea90ec5831dbdb17ceffc5",
+   "bytes": 541129,
+   "mtime": 1787171088,
+   "compared_ts": 1787171088,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_sweep_is_four_sided",
+   "must_fire_because": "an inert sweep and a clean tree are indistinguishable (H124), so the instrument must produce BOTH verdicts on a constructed fixture, in the FILE shape and the DIRECTORY shape",
+   "can_fail_because": "the fixture tracked file or tracked directory is flagged, or either untracked case is not; every one of these was killed by a mutation before shipping",
+   "null_must_contain": "a tracked dependency and a tracked DIRECTORY, both of which the first version of this scan flagged",
+   "fired": true,
+   "detail": "F4, five checks, four-sided",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "flags an untracked FILE dependency": true,
+    "does NOT flag a tracked file": true,
+    "does NOT flag a tracked DIRECTORY": true,
+    "flags a wholly untracked directory": true,
+    "classifies a gitignored dep as DECLARED, not a defect": true
+   }
+  },
+  {
+   "name": "C2_detector_sees_its_motivating_case",
+   "must_fire_because": "error 36: my last detector could not see the instance it was written for, and its header argued the gap was a virtue",
+   "can_fail_because": "H188/attack.py -> S91/run.py absent from AST pairs, which would mean TEXT mode alone carries the finding",
+   "null_must_contain": "the motivating pair itself -- the one case the detector was written for",
+   "fired": true,
+   "detail": "AST mode, not TEXT",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "motivating_pair_in_AST": true,
+    "ast_pair_count": 176
+   }
+  },
+  {
+   "name": "C3_ignored_is_separated_from_untracked",
+   "must_fire_because": "a gitignored dep is a DECLARED absence; conflating it with an undeclared one inflates the rate F2 is decided on",
+   "can_fail_because": "zero hits classified IGNORED, which for a tree carrying `elders/` and `.scratch/` would mean `git check-ignore` never ran",
+   "null_must_contain": "at least one gitignored path, which this tree has by construction (`elders/`, `.scratch/`)",
+   "fired": true,
+   "detail": "git check-ignore --stdin",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ignored": 966,
+    "untracked": 1633
+   }
+  },
+  {
+   "name": "C4_v1_ignore_classifier_was_truncated",
+   "must_fire_because": "I claim v1 of this module mis-classified deps because `git check-ignore --stdin` aborted on a submodule path and its return code was never read; that claim needs its own observation",
+   "can_fail_because": "v1_rc in (0,1) and v1_missed == 0, i.e. the batch form never truncated and this whole repair is noise",
+   "null_must_contain": "agreement -- if git had exited 0/1 over the whole set, v1 and v2 would name the same ignored paths and v1 numbers would have stood",
+   "fired": true,
+   "detail": "v1 form re-run beside the fixed one",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "batch_rc": 0,
+    "v1_rc": 128,
+    "v1_missed": 43,
+    "v1_extra": 0,
+    "n_paths": 1295,
+    "n_submodule": 19
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_refutation_is_reproducible",
+   "must_fire_because": null,
+   "can_fail_because": "`python3 spikes/H188_*/attack.py` EXITS 0 inside a tree materialised from `git archive HEAD`",
+   "null_must_contain": "exit 0 -- the tree is a real checkout and the script is the one HEAD ships, so nothing in the setup forbids success",
+   "fired": false,
+   "detail": "F1",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "exit": 1,
+    "s91_in_archive": false,
+    "stderr_tail": [
+     "FileNotFoundError: [Errno 2] No such file or directory: '/Users/victorianikolenko/kingfisher/.scratch/H210/f1_tracked_tree/spikes/S91_multi_agent_quorum/run.py'"
+    ]
+   },
+   "refutes": "the row: if H188 runs from the tracked tree there is nothing here",
+   "fires_when": "`python3 spikes/H188_*/attack.py` EXITS 0 inside a tree materialised from `git archive HEAD`",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_class_is_one_anecdote",
+   "must_fire_because": null,
+   "can_fail_because": "the fleet-wide sweep finds at most ONE untracked executable (AST) dependency pair",
+   "null_must_contain": "a one-pair outcome, which the sweep can produce: F4 shows it reports exactly the pairs present",
+   "fired": false,
+   "detail": "F2",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "ast_pairs": 176,
+    "untracked_hits": 1633,
+    "files": 231
+   },
+   "refutes": "the CLASS: one pair means the rate is the deliverable and no module ships (ok-1 H23 precedent -- 41%/93%/0%, none shipped)",
+   "fires_when": "the fleet-wide sweep finds at most ONE untracked executable (AST) dependency pair",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_trackcheck_is_not_blind",
+   "must_fire_because": null,
+   "can_fail_because": "`trackcheck.py` live output names ANY S91 path",
+   "null_must_contain": "an S91 mention -- trackcheck prints every NEW untracked citation in full, so nothing truncates S91 out of its output",
+   "fired": false,
+   "detail": "F3",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "s91_mentions": 0,
+    "exit": 1,
+    "output_lines": 12
+   },
+   "refutes": "my sub-claim that my own module cannot see S91",
+   "fires_when": "`trackcheck.py` live output names ANY S91 path",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787171075,
+   "from": "spikes/harness/depcheck.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H210_orphan_dependency": {
+   "newest": 1787171075,
+   "from": "spikes/H210_orphan_dependency/sweep.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "H188 runs to completion from a tree materialised by `git archive HEAD` (F1), or the sweep finds exactly one executable pair (F2), or trackcheck already names S91 (F3).",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
