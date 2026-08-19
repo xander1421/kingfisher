@@ -203,6 +203,21 @@ def main():
     res["margin_over_null"] = {
         k: round(v[0] - null["mrr"], 4) for k, v in PUBLISHED.items()}
 
+    # C5, A20: the null must be CAPABLE of containing the effect. A prior that
+    # scores nothing above zero would give a near-zero MRR for a reason that has
+    # nothing to do with WordNet, and every margin below would be an artefact of
+    # the tie convention rather than a measurement.
+    share = null["queries_with_a_scored_target"] / null["n_queries"]
+    c["C5_null_is_not_degenerate"] = {
+        "why": "0.0256 is LOW. If it is low because the prior scores almost "
+               "nothing, this measures the tie convention, not frequency, and "
+               "every margin over it is meaningless (A20).",
+        "share_of_queries_with_target_scored": round(share, 4),
+        "uninformative_mrr_1_over_nent": round(1.0 / nent, 8),
+        "ratio_to_uninformative": round(null["mrr"] * nent, 1),
+        "ok": share > 0.10 and null["mrr"] > 10.0 / nent}
+    res["controls_ok"] = f"{sum(1 for v in c.values() if v.get('ok'))}/{len(c)}"
+
     res["elapsed_sec"] = round(time.time() - t0, 3)
     out = os.path.join(HERE, "null_wn.json")
     with open(out, "w") as fh:
@@ -214,7 +229,89 @@ def main():
     for k, v in f.items():
         print(f"  {k:30} fired={v['fired']}", flush=True)
     print(f"  wrote {out} in {res['elapsed_sec']}s", flush=True)
-    return 0
+
+    bad = [k for k, v in c.items() if not v.get("ok")]
+    if bad:
+        print("CONTROLS FAILED:", bad)
+        return 1
+
+    sys.path.insert(0, os.path.join(ROOT, "spikes", "harness"))
+    import kfcheck
+    from provenance import Control, Falsifier
+    controls = []
+    for name, why, canfail, null_must in (
+        ("C1_dataset_shape",
+         "a corpus swap under the same filenames would reprice every number "
+         "here and nothing else would notice",
+         "any of train/valid/test/rel differing from 86835/3034/3134/11",
+         "a differing count: the literals are WN18RR's documented shape"),
+        ("C2_null_is_not_a_ceiling",
+         "a null nothing beats is not a null, it is a ceiling, and would mean "
+         "the metric or the rank convention is broken rather than the models good",
+         "every published arm scoring at or below the null",
+         "a null above the best arm, which a broken convention would produce"),
+        ("C3_filter_index_populated",
+         "an empty filter index scores every arm optimistically and equally, "
+         "which reads as agreement between things that were never compared",
+         "a filter index with no more entries than keys",
+         "an empty index, which a wrong field order would produce"),
+        ("C4_null_reads_train_only",
+         "counting test triples into the prior is the exact leak this line of "
+         "work exists to remove",
+         "the prior being built from anything but train",
+         "train+test counts, which is what the leak would look like"),
+        ("C5_null_is_not_degenerate",
+         "0.0256 is low; if it is low because the prior scores almost nothing "
+         "then this measures the tie convention and every margin is an artefact",
+         "a null scoring the target above zero for under 10% of queries, or an "
+         "MRR within 10x of the uninformative 1/nent",
+         "a degenerate null, which an uninformative prior would genuinely give"),
+    ):
+        ctl = Control(name, why, can_fail_because=canfail,
+                      null_must_contain=null_must)
+        ctl.observe(c[name]["ok"], {k: v for k, v in c[name].items() if k != "ok"})
+        controls.append(ctl)
+
+    falsifiers = []
+    for name, refutes, fires_when, null_must in (
+        ("F1_null_beats_the_hybrid",
+         "G92's 0.3611 as evidence that the neuro-symbolic hybrid works",
+         "the frequency prior reaches 0.3611 MRR",
+         "a null at or above the hybrid, which is exactly what G49 found on "
+         "FB15k-237 and is therefore a live possibility here"),
+        ("F2_null_beats_rotate",
+         "G91's geometric arm as a contribution",
+         "the frequency prior reaches 0.3546 MRR",
+         "a null above RotatE, same reasoning as F1"),
+        ("F3_symbolic_beats_the_null",
+         "the reading that symbolic mining is useless, carried over from "
+         "FB15k-237 where the null beat it",
+         "the frequency prior lands at or below G89's 0.0355",
+         "a null above the symbolic arm, which FB15k-237's null did"),
+    ):
+        fl = Falsifier(name, refutes=refutes, fires_when=fires_when,
+                       null_must_contain=null_must)
+        fl.observe(f[name]["fired"],
+                   {k: v for k, v in f[name].items() if k != "fired"})
+        falsifiers.append(fl)
+
+    ok, problems = kfcheck.certify(
+        HERE, deps=[CORPUS],
+        artifacts=[os.path.join(HERE, "null_wn.py"),
+                   os.path.join(HERE, "null_wn.json")],
+        controls=controls, falsifiers=falsifiers,
+        captures=[("null_wn_json", json.dumps(res, sort_keys=True))],
+        falsifier="a frequency prior with no rules and no training reaching "
+                  "G92's 0.3611 on WN18RR, which would make this dataset's "
+                  "headline a marginal rather than a model result -- the "
+                  "outcome G49 found on FB15k-237",
+        allow_dirty=True,
+        note="G105: WN18RR had no measured null, so none of its four published "
+             "figures had a floor to be a margin over.")
+    print(f"\nD6 Provenance Certified: ok={ok}")
+    for pr in problems:
+        print(f"  PROBLEM: {pr}")
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":
