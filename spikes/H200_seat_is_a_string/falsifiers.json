@@ -1,0 +1,51 @@
+{
+  "F1": {
+    "a_None_agent_votes": true,
+    "detail": "output vector = sha16 of the result dict for a corpus, a frozen-pin and an adversarial job",
+    "distinct_output_vectors": 1,
+    "fires": false,
+    "seats_and_non_seats_probed": 8
+  },
+  "F2": {
+    "axes_clone": {
+      "binary": 1,
+      "host": 1,
+      "isa": 1,
+      "manifest": 1,
+      "operator": 1,
+      "os": 1
+    },
+    "axes_real": {
+      "binary": 5,
+      "host": 5,
+      "isa": 2,
+      "manifest": 5,
+      "operator": 5,
+      "os": 3
+    },
+    "fires": false,
+    "unanimous_in_both": true,
+    "votes_identical_under_a_collapsed_roster": true
+  },
+  "F3": {
+    "corrupted_pin_still_reported": "CANONICAL_PIN_MATCH",
+    "detail": "the arm returns job[\"expected\"], so the check is expected == expected and moves WITH any corruption",
+    "digest_equals_the_corrupted_expectation": true,
+    "fires": false
+  },
+  "F4": {
+    "artifacts_restored_byte_identical": true,
+    "divergence_line_under_one_cheating_seat": "Consensus Divergences:            74",
+    "fires": false,
+    "predicted_in_claim": "F4 does NOT fire: the adjudicator works and simply has nothing to adjudicate"
+  },
+  "F5": {
+    "any_control_reads_divergences": false,
+    "c1_expression": "len(ROSTER) == 5",
+    "c2_expression": "len(jobs) == 74",
+    "c3_expression_verbatim": "c3_ok = True",
+    "c3_is_a_literal": true,
+    "detail": "all three observe the FIXTURE (roster length, job count, the pin constants). None observes votes, digests, unanimity or divergences.",
+    "fires": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "files_scanned": 349,
+  "independence_shaped": [
+    {
+      "file": "spikes/G2_rule_learning/learn.py",
+      "function": "evaluate",
+      "line": 77,
+      "unused_parameter": "nodes"
+    },
+    {
+      "file": "spikes/H154_lan3/lan3.py",
+      "function": "http_code_from_phone",
+      "line": 229,
+      "unused_parameter": "agent"
+    },
+    {
+      "file": "spikes/S91_multi_agent_quorum/run.py",
+      "function": "execute_job_on_agent",
+      "line": 125,
+      "unused_parameter": "agent"
+    }
+  ],
+  "known_positive_present": true,
+  "other_unused_params": 71,
+  "recall_limit_constructed_and_missed": [
+    "label_only",
+    "no_parameter_at_all"
+  ],
+  "recall_note": "an unused PARAMETER is one shape of the defect, not the defect. A seat read only for a LABEL, or a loop with no seat parameter at all, collapses independence identically and is invisible here. The count below is a FLOOR and the two variants above are the proof."
+}

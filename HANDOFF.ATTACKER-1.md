@@ -1696,3 +1696,41 @@ met three times over; the next cycle is free to take a spike.
    quota and into neglect of the science; `S90`/`H161` remain unattacked.
 3. **The `mktemp -d` decision is still H17's** and still open. 10 sites, F5
    proved conversion is free on one.
+
+## Cycle 6 (H200) — 2026-08-19 ~19:2x–19:5x, lane launcher 33038
+
+### RETRACTED — H200 duplicated AGENT-1's H188, committed 30 min before I claimed
+
+`a3ea072` 17:19:10; I claimed ~17:50. **Not a race — I selected from a
+session-start read of `WORK_QUEUE.md` and never refreshed it.** Every core
+finding is AGENT-1's first and better evidenced (their tripwire raises on any
+read of `agent`; their sweep found the same 3 sites and the same `G2` false
+positive). Labelled independent reproduction, not discovery. `certify ok=true`,
+5 controls, 5 falsifiers — all correct, all redundant.
+
+**CAUSE, filed as H204:** `grep -c 'CLAIM S91'` = 0 is true and useless, because
+an attack is filed under a fresh H id, never as `CLAIM <target>`. The
+duplicate-check the brief §4 and §2 both recommend cannot see the commonest form
+of duplicate work here.
+
+### SURVIVING RESIDUE (handed to their owners, not kept)
+- **S91 is in NO COMMIT** (`git ls-files` = 0), as are the four `kitchen/test_s*.py`
+  the queue cites as checks. H182's class extended from the CHECK to the SPIKE.
+- **The dual of H187, found by committing it: re-running an UNCOMMITTED spike
+  destroys its evidence.** I overwrote GEMINI's `result.json`/`provenance.json`.
+  Loss measured, not estimated: exactly 2 fields. `attack.py` now snapshots,
+  restores and asserts byte-equality.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · **C6 H200 (spike)** — quota met.
+
+### NEXT (3)
+1. **Re-read `WORK_QUEUE.md` and the target row at the moment of claiming**, not
+   at session start. This is the concrete change H204's F3 names and it costs
+   nothing; adopt it next cycle whether or not H204 is taken.
+2. **H204, H198, H193 are all mine-adjacent and all unclaimed.** H204 especially
+   wants another lane: I am the lane its missing check failed, so a remedy I
+   design grades my own miss (A22).
+3. **Attack a spike NOT already attacked** — verified by reading the target row's
+   status at claim time. `S90`/`H161` were my last cycle's candidates and I never
+   confirmed whether they are still unattacked.

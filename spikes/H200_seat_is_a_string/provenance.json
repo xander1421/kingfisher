@@ -1,0 +1,221 @@
+{
+ "spike": "H200_seat_is_a_string",
+ "recorded_utc": "2026-08-19T16:55:05Z",
+ "note": "H200 \u2014 S91 five-seat quorum: the seat is a string. ATTACKER-1, 2026-08-19.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "503231f850cefb9392a45465f8767401d8332d71",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/constcheck.py",
+    "spikes/harness/fleetcensus.sh"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H200_seat_is_a_string/falsifiers.json",
+   "sha256": "568195d661742c9bb860b37f0dbc59818314a5e34455ff71811a95ab56ce8a17",
+   "bytes": 1558,
+   "mtime": 1787158504,
+   "compared_ts": 1787158504,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H200_seat_is_a_string/classsweep.json",
+   "sha256": "a21471ec1e4acbee4f7ead6a76af596a4ef0670d43ae740e700e024d4b279598",
+   "bytes": 951,
+   "mtime": 1787158505,
+   "compared_ts": 1787158505,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "s91_reproduces",
+   "must_fire_because": "a kill that cannot reproduce the result it kills is not a kill",
+   "can_fail_because": "any of the four reported lines differing from the published 69/69, 5/5, 0, True",
+   "null_must_contain": "the run must be capable of producing different numbers -- it does, under C3, where one altered seat moves divergences from 0 to 74",
+   "fired": true,
+   "detail": "S91 run.py re-executed at HEAD",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "All 6 Independence Axes Satisfied: True",
+    "Valid Jobs Unanimously Accepted:  69/69 (100.0%)",
+    "Adversarial Attacks Rejected:    5/5 (100.0%)",
+    "Consensus Divergences:            0"
+   ]
+  },
+  {
+   "name": "seat_never_read",
+   "must_fire_because": "the entire charge is that five votes are one computation repeated",
+   "can_fail_because": "any seat, or the None/{}/fake agents, producing a different output vector would raise the count above 1",
+   "null_must_contain": "the probe must be capable of returning MORE than one distinct vector -- it returns 74 distinct digests across jobs in the same run, so the collapse is across SEATS and not a flat instrument",
+   "fired": true,
+   "detail": "8 probes (5 real seats + None + {} + a fabricated seat) -> 1 distinct output vector; a None agent votes identically to the Gemini lead",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    8,
+    1
+   ]
+  },
+  {
+   "name": "adjudicator_still_works",
+   "must_fire_because": "distinguish the evidence from the conclusion: what dies is that anything was independently executed, NOT the adjudication logic",
+   "can_fail_because": "if one seat returning a wrong digest had still reported 0 divergences, the machinery would be broken too and this control would read 0",
+   "null_must_contain": "the adjudicator must be capable of reporting 0 -- it does, on every unmodified run, which is C1",
+   "fired": true,
+   "detail": "one seat forced to return a zero digest -> all 74 jobs flagged",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "Consensus Divergences:            74"
+   ]
+  },
+  {
+   "name": "artifacts_restored",
+   "must_fire_because": "S91 is UNTRACKED, so its artifacts have no committed copy; a probe that ran its main() and did not restore would destroy them again",
+   "can_fail_because": "attack.py asserts byte-equality after restoring and raises rather than continuing if it differs",
+   "null_must_contain": "the restore must be capable of FAILING -- the assertion compares bytes and raises, and the snapshot is taken before any patched run",
+   "fired": true,
+   "detail": "restored byte-identical; `git ls-files spikes/S91_multi_agent_quorum/` returns 0 files, which is why there was nothing to restore FROM",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    true,
+    0
+   ]
+  },
+  {
+   "name": "class_sweep_finds_its_known_positive",
+   "must_fire_because": "a sweep that cannot find the instance it was written for is inert and its zero would mean nothing (H85)",
+   "can_fail_because": "classsweep.py asserts the known positive is present and refuses the run otherwise",
+   "null_must_contain": "the sweep must be capable of returning nothing for a file -- it returns nothing for 341 of 344",
+   "fired": true,
+   "detail": "344 files, 3 independence-shaped hits of which 1 is this class and 2 are dead parameters; 2 constructed variants it cannot see, so the count is a FLOOR",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    349,
+    3,
+    2
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1",
+   "must_fire_because": null,
+   "can_fail_because": "`execute_job_on_agent` varies its output with the `agent` argument",
+   "null_must_contain": "the function must be capable of varying -- it varies across JOBS in the same probe, so a single output vector is a fact about seats",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"a_None_agent_votes\": true, \"detail\": \"output vector = sha16 of the result dict for a corpus, a frozen-pin and an adversarial job\", \"distinct_output_vectors\": 1, \"fires\": false, \"seats_and_non_seats_probed\": 8}"
+   ],
+   "refutes": "the seats are genuinely independent, my charge is false, row WITHDRAWN",
+   "fires_when": "`execute_job_on_agent` varies its output with the `agent` argument",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2",
+   "must_fire_because": null,
+   "can_fail_because": "replacing the roster with five identical seats CHANGES the verdict",
+   "null_must_contain": "the axes must be capable of moving, and they do: 5/5/5/3/2/5 -> all 1, while the votes do not move at all",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"axes_clone\": {\"binary\": 1, \"host\": 1, \"isa\": 1, \"manifest\": 1, \"operator\": 1, \"os\": 1}, \"axes_real\": {\"binary\": 5, \"host\": 5, \"isa\": 2, \"manifest\": 5, \"operator\": 5, \"os\": 3}, \"fires\": false, \"unanimous_in_both\": true, \"votes_identical_under_a_collapsed_roster\": true}"
+   ],
+   "refutes": "the consensus result does carry information about the roster and the \"carries none\" claim dies",
+   "fires_when": "replacing the roster with five identical seats CHANGES the verdict",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3",
+   "must_fire_because": null,
+   "can_fail_because": "corrupting the F001 pin makes the frozen-pin arm report a MISMATCH",
+   "null_must_contain": "the arm must be capable of reporting a mismatch -- it has a verdict field and a digest field, and both are observed",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"corrupted_pin_still_reported\": \"CANONICAL_PIN_MATCH\", \"detail\": \"the arm returns job[\\\"expected\\\"], so the check is expected == expected and moves WITH any corruption\", \"digest_equals_the_corrupted_expectation\": true, \"fires\": false}"
+   ],
+   "refutes": "the pin check can fail and that third of the charge is withdrawn",
+   "fires_when": "corrupting the F001 pin makes the frozen-pin arm report a MISMATCH",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4",
+   "must_fire_because": null,
+   "can_fail_because": "a genuinely cheating seat is NOT caught by the adjudicator",
+   "null_must_contain": "the adjudicator must be capable of reporting a nonzero count, and under the cheat it reports 74",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"artifacts_restored_byte_identical\": true, \"divergence_line_under_one_cheating_seat\": \"Consensus Divergences:            74\", \"fires\": false, \"predicted_in_claim\": \"F4 does NOT fire: the adjudicator works and simply has nothing to adjudicate\"}"
+   ],
+   "refutes": "the divergence machinery is ALSO broken, a different and larger finding that must not be conflated with this one",
+   "fires_when": "a genuinely cheating seat is NOT caught by the adjudicator",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F5",
+   "must_fire_because": null,
+   "can_fail_because": "any of the three controls responds to a change in the CONSENSUS rather than in the fixture",
+   "null_must_contain": "a control COULD read divergences -- the variable is in scope at the point the controls are constructed; none of the three reads it",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"any_control_reads_divergences\": false, \"c1_expression\": \"len(ROSTER) == 5\", \"c2_expression\": \"len(jobs) == 74\", \"c3_expression_verbatim\": \"c3_ok = True\", \"c3_is_a_literal\": true, \"detail\": \"all three observe the FIXTURE (roster length, job count, the pin constants). None observes votes, digests, unanimity or divergences.\", \"fires\": false}"
+   ],
+   "refutes": "S91's three controls are real controls and the A15 charge is wrong",
+   "fires_when": "any of the three controls responds to a change in the CONSENSUS rather than in the fixture",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787158500,
+   "from": "spikes/harness/constcheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if `execute_job_on_agent` had varied its output with the `agent` argument (F1), the five seats would be genuinely independent and this row would be withdrawn entirely. Eight probes including a None agent produced ONE distinct output vector.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
