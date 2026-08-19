@@ -1,0 +1,34 @@
+H114 — falsifying statuscheck.py v1 by breaking one property at a time
+
+  OK       positive control: unbroken --selfcheck exits 0, expected 0
+  DETECTED OFFER-FORM   (sentence assertions only, as v1 before F3 fired)
+  DETECTED HISTORY      (judge a journal whole, not only its NEXT blocks)
+  DETECTED H82          (the consumer stops skipping an unreadable row)
+  DETECTED QUEUE-FROM-HEAD (v1: judge the journal against the row's PREVIOUS status)
+  DETECTED PATH-NOT-STATUS (drop the filename guard)
+
+falsify: all five properties are DETECTED by v1's own --selfcheck.
+H114_status_decay/falsify.py         5 mutations, NO-OP: 0
+H85 — falsifying refcheck.py v7 by reverting each half on a copy
+
+  OK       positive control: unmutated --selfcheck exits 0, expected 0
+  DETECTED SCOPE  (v6: check 6 keyed to BASELINE_ROW_SHAPE)
+  DETECTED WIDTH  (v6: expected width hard-coded to 5)
+
+falsify: both halves of v7 are DETECTED by its own --selfcheck. Reverting either goes red and names which.
+H85_check6_scope/falsify.py          2 mutations, NO-OP: 0
+H94 — falsifying recordloss.py v1 by breaking one property at a time
+
+  OK       positive control: unbroken --selfcheck exits 0, expected 0
+  DETECTED INDEX-NOT-TREE (read the working tree, as refcheck/journalcheck do)
+  DETECTED KEY-NOT-LINE  (whole log lines as keys, the rule d278d01 measured false)
+  DETECTED WHOLE-FILE    (a deleted document loses nothing)
+  DETECTED RENAME-BLIND  (v1: --name-only, which reports only the destination)
+  DETECTED RENAME-OUT    (v2: a rename to an UNCOVERED path counted as survival)
+  DETECTED COVERAGE      (journals not recognised, only CHANNEL.md)
+
+falsify: all six properties are DETECTED by v1's own --selfcheck.
+H94_record_loss/falsify.py           6 mutations, NO-OP: 0
+H88_sentinel_branch/h98_falsify.py   EXCLUDED -- asserts `V3_LOOP in src` and `text != src`
+
+0/13 mutations across 3 unguarded drivers are NO-OPS against today source

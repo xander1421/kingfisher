@@ -1,0 +1,268 @@
+{
+ "spike": "H207_unclosed_claims",
+ "recorded_utc": "2026-08-19T20:25:23Z",
+ "note": "4 decidable-stale of 246 distinct CLAIM subjects; 13 in flight, 12 unkeyable, all counted never scored. Hand vocabulary said 32, shipped says 29, 3 rescued by RELEASE. test_h207_falsify.sh v2: 9 passed, 0 failed.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "987470d023c3763e0498a58774bcb861d82371a0",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/idscope.py",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/depcheck.py",
+    "spikes/harness/test_h207_falsify.sh"
+   ],
+   "diff_sha256": "316c169d70d404560a3b84449477548319a037a30ce2e24396be185303dff9fa",
+   "diff_bytes": 14728
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "spikes/H207_unclosed_claims/live_run.out",
+   "sha256": "af04574414d2454975021ce07cdafd710777b42611d214b7b11dcdf377095ad2",
+   "bytes": 7586,
+   "mtime": 1787171114,
+   "compared_ts": 1787171114,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/selfcheck.out",
+   "sha256": "72eaa3da0cedeee5e232637d47197cc4ace5e592ed8f28c07a1c95e96af12340",
+   "bytes": 2699,
+   "mtime": 1787171114,
+   "compared_ts": 1787171114,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/falsify.out",
+   "sha256": "5b2676289265cb9e944f03f59458592ed0d9d125fca21f2da6c63b39e08e9662",
+   "bytes": 715,
+   "mtime": 1787171115,
+   "compared_ts": 1787171115,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/guard_ab.out",
+   "sha256": "600ec8efe195b539540b54d219e17322a47ccce38f1a6715e6ec261e699bba1c",
+   "bytes": 679,
+   "mtime": 1787171115,
+   "compared_ts": 1787171115,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/guard_ab.sh",
+   "sha256": "e0a1d4b5a5a1068912cbb03b0a7b218e2b0c9bc8ff0c35f67836319aa777454d",
+   "bytes": 3879,
+   "mtime": 1787171123,
+   "compared_ts": 1787171123,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/reconcile.py",
+   "sha256": "173d94d03d17e77233cea703b7607e4348fcdd4b3260f0e3e54535ad8b3f6932",
+   "bytes": 4174,
+   "mtime": 1787171123,
+   "compared_ts": 1787171123,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/reconcile.out",
+   "sha256": "e2e258362f9bf0752bd3882dc5507a67ecdb0f92f44422f69b4512b9a3924264",
+   "bytes": 644,
+   "mtime": 1787171115,
+   "compared_ts": 1787171115,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/noop_probe.py",
+   "sha256": "2efeb75aae90a75a4f1597b02eadf8b24b74b1bda3c5c2a65dfb4bd61202d837",
+   "bytes": 2547,
+   "mtime": 1787171123,
+   "compared_ts": 1787171123,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "spikes/H207_unclosed_claims/noop_probe.out",
+   "sha256": "56deb1bfe4dfc63de811d59f859a6ca0d52c40bfe7b06f53dceef21f9a7f6573",
+   "bytes": 1936,
+   "mtime": 1787171123,
+   "compared_ts": 1787171123,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
+  "ro.build.id": "BP4A.251205.006",
+  "ro.product.model": "SM-S938B",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "sun",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "c0_module_green",
+   "must_fire_because": "the unmutated copy of idscope.py passes its own --selfcheck, so every red below is the mutation and not a broken module",
+   "can_fail_because": "idscope.py v5 is broken, which voids all 8 mutants",
+   "null_must_contain": "the C0 arm printing `bad` -- an unmutated copy that FAILS, which the suite prints and then exits 1 without running a mutant",
+   "fired": true,
+   "detail": "C0 arm of test_h207_falsify.sh v2",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "falsify_pass": 9,
+    "falsify_fail": 0
+   }
+  },
+  {
+   "name": "c1_v1_accuses_the_module",
+   "must_fire_because": "the SHIPPED-FOR-THREE-HOURS guard chain reports `suite stayed GREEN with the logic removed` for BOTH degenerate mutants -- a coverage gap alleged in a module that has none. This is the finding, so it is a control.",
+   "can_fail_because": "v1 already caught them, in which case there is no defect and this row is withdrawn",
+   "null_must_contain": "v1 returning `THE MUTANT IS EMPTY` or `does not COMPILE` for either mutant -- the whole v1 chain is reproduced verbatim in guard_ab.sh, so the null is reachable by running it",
+   "fired": true,
+   "detail": "guard_ab.out, v1 column",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v1_false_accusations": 2,
+    "mutants": [
+     "empty (sed d)",
+     "commented (sed s/^/#/)"
+    ]
+   }
+  },
+  {
+   "name": "c2_chains_agree_on_a_real_mutation",
+   "must_fire_because": "v1 and v2 both return `caught` on a real one-line mutation and both return `DID NOT APPLY` on no mutation at all, so v2 is a repair and not a different test wearing the same name",
+   "can_fail_because": "v2 changed the verdict on a genuine mutation, which would make the two columns incomparable",
+   "null_must_contain": "either chain returning something other than `caught` on the real mutation, or other than `DID NOT APPLY` on the unmutated copy",
+   "fired": true,
+   "detail": "guard_ab.out, rows 3 and 4",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v2_false_accusations": 0,
+    "real_mutation_both": "caught",
+    "no_mutation_both": "DID NOT APPLY"
+   }
+  },
+  {
+   "name": "c3_vocabulary_is_not_a_mute_button",
+   "must_fire_because": "the shipped closer vocabulary still leaves claims accused and closes strictly more subjects than the hand list -- a vocabulary that closed everything would explain the gap just as well and mean nothing",
+   "can_fail_because": "RELEASE closes every outstanding claim, i.e. the reconciliation is measuring a mute button",
+   "null_must_contain": "`CONTROL FAILED: the shipped vocabulary closes every claim` -- reconcile.py exits on that string rather than printing a table",
+   "fired": true,
+   "detail": "reconcile.out",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "hand_unclosed": 32,
+    "shipped_unclosed": 29,
+    "rescued_by_RELEASE": 3
+   }
+  },
+  {
+   "name": "c4_v4_is_silent",
+   "must_fire_because": "idscope.py v4 AS COMMITTED IN HEAD prints zero UNCLOSED-CLAIM lines and never names G31/H122/H69, while WORK_QUEUE.md calls all three DONE -- F1 evidence taken from the committed module, not from the v5 header that asserts it",
+   "can_fail_because": "v4 already reported this direction, in which case F1 fires, this is a routing problem and no code was owed",
+   "null_must_contain": "any `UNCLOSED-CLAIM` line, or any mention of G31/H122/H69, in the output of the v4 blob checked out of HEAD",
+   "fired": true,
+   "detail": "git show HEAD:spikes/harness/idscope.py, run on this tree",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v4_unclosed_claim_lines": 0,
+    "v4_mentions_G31_H122_H69": 0,
+    "queue_status_of_all_three": "DONE"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_already_reported",
+   "must_fire_because": null,
+   "can_fail_because": "an existing module already reports CLAIM-without-verdict; then this is a ROUTING problem and the contract should cite that tool instead",
+   "null_must_contain": "a nonzero count of UNCLOSED-CLAIM lines from v4, or a statuscheck/stranded run naming an unclosed CLAIM",
+   "fired": false,
+   "detail": "did NOT fire, as predicted: code was owed",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "v4_unclosed_claim_lines": 0,
+    "idscope_v4_rowless_filter": "i not in q drops a CLAIM on a row the queue ALREADY closed",
+    "statuscheck_scope": "status assertions in PROSE outside the queue",
+    "stranded_scope": "uncommitted FILES, not claims"
+   },
+   "refutes": "that a new direction was owed at all",
+   "fires_when": "an existing module already reports CLAIM-without-verdict; then this is a ROUTING problem and the contract should cite that tool instead",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_cannot_separate_stale_from_inflight",
+   "must_fire_because": null,
+   "can_fail_because": "the check cannot separate a STALE claim from one legitimately IN FLIGHT -- every lane has an open CLAIM by construction, so gating on it is an always-red gate (H14/H52/H73/H124)",
+   "null_must_contain": "in-flight-or-unfiled == 0, i.e. no lane holds an open CLAIM at the moment of the run, which would make a gate safe",
+   "fired": true,
+   "detail": "FIRED, as predicted. Ships REPORT-ONLY over the decidable subset; mutant m6_report_becomes_gate proves the arm cannot move the exit code",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "scored_decidable_stale": 4,
+    "counted_never_scored_inflight": 13,
+    "distinct_claim_subjects": 246,
+    "exit_code_contribution_of_this_arm": 0
+   },
+   "refutes": "that this can ship as a GATE",
+   "fires_when": "the check cannot separate a STALE claim from one legitimately IN FLIGHT -- every lane has an open CLAIM by construction, so gating on it is an always-red gate (H14/H52/H73/H124)",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_no_miss_constructible",
+   "must_fire_because": null,
+   "can_fail_because": "I cannot construct a stale claim the detector misses; then I have not looked hard enough (H194 was one cycle of exactly this)",
+   "null_must_contain": "unkeyable == 0 AND no constructible prose-named claim, i.e. every CLAIM subject in the log is id-shaped",
+   "fired": false,
+   "detail": "did NOT fire, as predicted: the prose-named claims are the hole, and they are COUNTED rather than silently dropped",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "unkeyable_subjects_counted_never_scored": 12,
+    "example_misses": "S57-fuel-branch, S52-correctness, verifier2-attack, refcheck-resolver-attack, journalcheck-scope-attack"
+   },
+   "refutes": "that the recall of this check has been measured at all",
+   "fires_when": "I cannot construct a stale claim the detector misses; then I have not looked hard enough (H194 was one cycle of exactly this)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_cannot_separate_stale_from_inflight"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787171075,
+   "from": "spikes/harness/depcheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "a run of idscope.py v4 as committed that names ANY of G31/H122/H69, or a sibling falsifier driver that already refused a degenerate mutant, would have refuted this row before a line was written",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

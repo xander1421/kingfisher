@@ -1,0 +1,7 @@
+MUTANT                 v1 VERDICT                                           v2 VERDICT
+empty                  suite stayed GREEN with the logic removed            THE MUTANT IS EMPTY -- the tool produced no program to test
+commented              suite stayed GREEN with the logic removed            exited 0 having printed NO suite output -- it never RAN the suite
+real mutation          caught                                               caught
+no mutation at all     THE MUTATION DID NOT APPLY                           THE MUTATION DID NOT APPLY
+
+H207 guard A/B: v1 accuses idscope.py on both degenerate mutants; v2 names the tool; both agree on a real mutation and on none

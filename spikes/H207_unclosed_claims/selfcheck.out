@@ -1,0 +1,42 @@
+  CATCHES the log closing a row the queue holds OPEN
+  CATCHES an OPEN row whose EVIDENCE cites a DONE neighbour
+  QUIET   on a row both records close
+  QUIET   on a row the queue closed and the log never announced
+  QUIET   on a closed row whose item cell contains an escaped pipe
+  QUIET   on a row closed as "REOPENED then DONE"
+  QUIET   on a two-column row whose verdict sits in the item cell
+  REFUSES on a real divergence
+  CATCHES a VALID adjudication (cited line is that row's own DONE) stops the refusal
+  CATCHES an UNADJUDICATED divergence still refuses
+  CATCHES a BARE marker with no line citation does not silence anything
+  CATCHES a citation to a line that is not a DONE line is named and counted
+  CATCHES a citation to ANOTHER row's DONE line is named and counted
+  CATCHES a citation past the end of the log is named and counted
+  CATCHES a pair with no divergence at all still exits 0
+  CATCHES an id CLAIMED with no queue row
+  QUIET   and ROWLESS alone does NOT change the exit code (the v3 ceiling: the floor is other lanes' rows)
+  CATCHES F3: a CLAIM posted before its row exists is NOT gated
+  CATCHES a DONE-rowless id THIS tree introduces refuses
+  CATCHES an accumulated DONE-rowless id does NOT gate the next committer (H72 scoping)
+  CATCHES a BASELINED DONE-rowless id does not gate
+  CATCHES and a NON-member of that same baseline still gates
+  CATCHES with no git context UNFILED reports without gating (v3 behaviour)
+  CATCHES an id DONE with no queue row
+  QUIET   on an id the queue does carry
+  QUIET   on prefix lines whose subject is not id-shaped
+  CATCHES both directions reported from one pass, and the old one still refuses
+  CATCHES a CLAIM whose row the queue calls DONE and which the log never closes
+  QUIET   and it REPORTS -- an unclosed claim alone never gates
+  QUIET   on a CLAIM the log closes
+  QUIET   on a CLAIM closed by RETRACTED, not DONE -- the vocabulary is plural
+  QUIET   on a RELEASE whose subject is not the first token
+  CATCHES on a RELEASE naming TWO subjects -- both close, not just the first
+  CATCHES a RELEASE does NOT close a row merely NAMED in its prose
+  QUIET   a CLAIM on an OPEN row is never ACCUSED -- that is a live cycle
+  CATCHES and it is COUNTED rather than dropped
+  QUIET   an unkeyable subject is never scored -- a ROLE never closes
+  CATCHES and it is COUNTED rather than dropped
+  CATCHES an unknown prefix naming an unclosed claim is reported as DRIFT
+  CATCHES a log containing CLAIM from which NONE parse is VOID, never 0 stale
+  QUIET   and a VOID run publishes no count at all
+selfcheck: both refusing directions fire, every quiet direction stays quiet, ROWLESS reports without gating, and it refuses

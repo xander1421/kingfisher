@@ -1,0 +1,13 @@
+H207 · every v5 arm must go RED when the logic it defends is removed
+
+  ok   C0 control: an UNMUTATED copy passes (so a red below is the mutation)
+  ok   c1_empty_mutant: harness says 'THE MUTANT IS EMPTY' instead of accusing the module
+  ok   c2_no_suite_output: harness says 'never RAN the suite' instead of accusing the module
+  ok   m1_release_first_token: suite goes RED and names it
+  ok   m2_release_not_a_closer: suite goes RED and names it
+  ok   m3_release_reads_prose: suite goes RED and names it
+  ok   m4_void_control_removed: suite goes RED and names it
+  ok   m5_accuses_live_cycles: suite goes RED and names it
+  ok   m6_report_becomes_gate: suite goes RED and names it
+
+RESULT: 9 passed, 0 failed

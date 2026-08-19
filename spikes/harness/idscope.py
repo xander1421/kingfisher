@@ -1,6 +1,62 @@
 #!/usr/bin/env python3
-"""idscope.py v4 — H27, H52, H103, H167. The queue and the append-only log must
-not disagree about whether a row is closed — in EITHER direction.
+"""idscope.py v5 — H27, H52, H103, H167, H207. The queue and the append-only log
+must not disagree about whether a row is closed — in EITHER direction.
+
+v5 CHANGELOG (H207, ATTACKER-1, 2026-08-19; §5 — corrected in place, nothing
+below this block edited).
+DEFECT REMOVED: **`CHANNEL.md` RECORDS THAT WORK WAS CLAIMED AND HAS NO
+MECHANISM THAT A CLAIM WAS EVER FINISHED, SO A `CLAIM` LINE ADVERTISES A HOLD
+FOREVER.** This lane's brief `prompts/ATTACKER-1.md` §0 already states the
+consequence in prose —
+*"CHANNEL is append-only with no retraction, so a CLAIM is evidence a callsign
+was once used, never that it is held now"* — and nothing checked it.
+
+WHY THIS MODULE AND NOT A NINTH CHECKER, and it is a measurement rather than a
+preference (F1, preregistered in `CHANNEL.md` before any code): **v4 CANNOT SEE
+THIS CASE AT ALL, and the reason is one line.** `rowless` filters on
+`i not in q`, so a CLAIM on a row the queue ALREADY CLOSED is dropped before
+any check runs. Live proof at H207: this lane's `H30` and `H122` are **DONE in
+`WORK_QUEUE.md` with no DONE line in `CHANNEL.md`**, and v4 is silent on both.
+`statuscheck.py` reads status assertions in PROSE outside the queue; `stranded.sh`
+reads uncommitted FILES. **F1 did not fire — no module reported this edge — so
+this is not a routing problem and code was owed.**
+
+**THE THIRD DIRECTION, and it is REPORT-ONLY BECAUSE F2 FIRED EXACTLY AS
+PREREGISTERED.** Every lane's current cycle has an open CLAIM *by construction*
+— §2 SELECT posts the CLAIM first — so a checker that gates on "claim without
+verdict" is an always-red gate, which is H14/H52/H73/H124 four times over. It
+therefore scores ONLY the mechanically decidable subset (the queue calls the row
+DONE) and **COUNTS the remainder instead of guessing it**, which is H186's
+excluded-and-counted discipline.
+
+**THE HOLE IS MEASURED, NOT CONSTRUCTED (F3, predicted not to fire, and it did
+not).** `log_ids`'s `ID` regex rejects any subject that is not `[A-Z]\\d+` — so
+**20 of 241 live CLAIM subjects are structurally invisible** to it
+(`attacker-lane`, `S57-fuel-branch`, `verifier2-attack`, `W5-epoch-bisect`, ...).
+`DONE W5-epoch-bisect` and `CLAIM W5` do not match on any key. They are reported
+UNKEYABLE and never scored: some are ROLE claims held for the lane's life and a
+role legitimately never closes.
+
+MEASURED FLEET-WIDE BEFORE THE FIX, and the worst offender is this lane by a
+factor of two: **32 of 235 CLAIM lines (14%) have no closing line.**
+ATTACKER-1 12/37 (32%) · AGENT-2 7/35 (20%) · ATOM-3 4/31 (13%) ·
+AGENT-1 2/39 (5%) · ok-1 2/25 (8%) · GROK-LOCAL 1/51 (2%). Recorded because
+A22 cuts the other way here: the lane writing the check is the lane it convicts.
+
+**THE VOCABULARY IS DERIVED FROM THE LOG, NEVER TYPED FROM MEMORY** — a name
+list typed from memory has now been wrong twice in this fleet in two days, both
+times passing a check that had matched ZERO fields. `CLOSERS` is pinned from a
+census of every line-initial prefix in `CHANNEL.md` (`DONE` 317, `RETRACTED` 3,
+`WITHDRAWN` 2). `CORRECTION`/`CORRECTED` (59) are deliberately NOT closers: a
+correction amends a claim's content and leaves the hold standing. **And because
+a pinned vocabulary goes stale silently, any OTHER prefix naming an unclosed
+claimed subject is reported as DRIFT rather than counted as still-open.**
+
+**THE CONTROL THAT MATTERS IS THE NON-EMPTINESS ONE.** If the CLAIM regex ever
+stops matching, this reports a perfectly clean fleet — the shape H178 and H205
+both failed on, twice, where the broken instrument gave the most reassuring
+possible answer. A log containing `CLAIM` from which this parses NONE is VOID,
+and the selfcheck constructs that case.
 
 v4 CHANGELOG (H167, AGENT-2, 2026-08-19; §5 — corrected in place, nothing below
 this block edited).
@@ -337,6 +393,79 @@ def log_ids(text):
     return out
 
 
+# Pinned from a census of every line-initial prefix in the live CHANNEL.md at
+# H207 -- DERIVED, never typed. See the v5 header for why CORRECTION is absent.
+CLOSERS = ('DONE', 'RETRACTED', 'WITHDRAWN')
+
+# RELEASE IS THE FLEET'S OWN, UNDOCUMENTED CLOSE MECHANISM, and this check's
+# DRIFT arm is what surfaced it -- on its first run, against its own author.
+# Seven live lines, four of which say in their own words that they exist to stop
+# a lane's SELECT skipping a row nobody holds ("releasing my own stale CLAIM",
+# "three stale CLAIMs of mine, released so no lane's SELECT skips a row I am not
+# working"). Without it this module ACCUSES `H109` of advertising a hold that
+# `CHANNEL.md:904` explicitly released.
+#
+# IT GETS ITS OWN RULE BECAUSE IT HAS NO GRAMMAR, and that irregularity is a
+# finding rather than an inconvenience: the subject is sometimes first
+# (`RELEASE H109 ATOM-3`), sometimes second (`RELEASE ATOM-3 H7`), sometimes
+# PLURAL (`RELEASE H192 H199 ATOM-3`), and once absent entirely
+# (`RELEASE ATOM-3 -- three stale CLAIMs of mine`). A first-token read -- the
+# rule every other prefix here uses -- captures `ATOM-3` from one line and
+# silently drops `H199` from another.
+#
+# So RELEASE takes every ID-SHAPED token in the line's LEADING RUN, up to the
+# first dash. Bounding it to the leading run is `queue_rows`'s own precedence
+# rule and it is not a nicety: these lines carry paragraphs of prose that name
+# OTHER rows, and reading the whole line would close them too -- the
+# correct-numbers-wrong-attribution failure CLAUDE.md names as unmechanisable.
+# Verified against all seven: no prose bleed, and the plural line yields both.
+# The subject-less line closes NOTHING, which under-closes and never over-closes.
+RELEASER = 'RELEASE'
+
+# A line-initial ALL-CAPS prefix and its first token. Deliberately looser than
+# log_ids: this must see the subjects that regex REJECTS, because an unkeyable
+# CLAIM still advertises a hold.
+PREFIXED = re.compile(r'^([A-Z][A-Z-]+)\s+(\S+)')
+
+
+def unclosed_claims(ltext, q):
+    """CLAIM subjects with no closing line anywhere in the log.
+
+    Returns (decidable_stale, in_flight, unkeyable, drift, n_subjects).
+    The split is the whole point: only `decidable_stale` is an accusation.
+    """
+    claimed, closed, other = [], set(), {}
+    for line in ltext.split('\n'):
+        m = PREFIXED.match(line)
+        if not m:
+            continue
+        pre, subj = m.group(1), m.group(2).strip('*` ')
+        if pre == 'CLAIM':
+            claimed.append(subj)
+        elif pre in CLOSERS:
+            closed.add(subj)
+        elif pre == RELEASER:
+            head = re.split(r'—|--', line)[0]
+            closed.update(t for t in (w.strip('*`,.') for w in head.split()[1:])
+                          if ID.match(t))
+        else:
+            other.setdefault(subj, set()).add(pre)
+    stale, inflight, unkeyable = [], [], []
+    for subj in sorted(set(claimed)):
+        if subj in closed:
+            continue
+        if not ID.match(subj):
+            unkeyable.append(subj)
+        elif q.get(subj) == 'DONE':
+            stale.append(subj)
+        else:
+            # OPEN, UNPARSEABLE, or no row at all. Undecidable: this is what a
+            # lane's live cycle looks like, and what ROWLESS already reports.
+            inflight.append(subj)
+    drift = sorted({p for s in stale + inflight for p in other.get(s, ())})
+    return stale, inflight, unkeyable, drift, len(set(claimed))
+
+
 def scan(queue_text=None, log_text=None, seen_done=None):
     qtext = (queue_text if queue_text is not None
              else open(os.path.join(ROOT, QUEUE), encoding='utf-8').read())
@@ -400,6 +529,36 @@ def scan(queue_text=None, log_text=None, seen_done=None):
               f'spikes/H167_rowless_baseline/rowless.json, regenerated by its '
               f'probe.py (H167 -- a number in a message goes stale, an artifact '
               f'does not).\n')
+
+    # ---- v5, H207: the THIRD direction ------------------------------------
+    # REPORT ONLY. It appends nothing to `problems` and cannot move the exit
+    # code -- see the header on why gating this is an always-red gate.
+    stale_c, inflight_c, unkeyable_c, drift, nclaims = unclosed_claims(ltext, q)
+    if nclaims == 0 and 'CLAIM' in ltext:
+        print('  UNCLOSED-CLAIM VOID: the log contains the string CLAIM and this '
+              'parsed NONE of them -- a broken subject regex reports a perfectly '
+              'clean fleet, so this refuses to publish a count rather than '
+              'publishing the reassuring one')
+    else:
+        for rid in stale_c:
+            print(f'  UNCLOSED-CLAIM {rid} is CLAIMed in {LOG} and never closed '
+                  f'there, while {QUEUE} marks the row DONE -- the log advertises '
+                  f'a hold on finished work, and §2 SELECT tells every lane to '
+                  f'skip what a lane holds')
+        if stale_c or inflight_c or unkeyable_c:
+            print(f'  UNCLOSED-CLAIM: {len(stale_c)} DECIDABLE-STALE (queue row '
+                  f'DONE, scored) + {len(inflight_c)} in-flight-or-unfiled '
+                  f'(COUNTED, NEVER SCORED -- §2 SELECT posts the CLAIM first, so '
+                  f'every lane manufactures one of these per cycle) + '
+                  f'{len(unkeyable_c)} unkeyable subject(s) not id-shaped '
+                  f'(counted, never scored: a ROLE claim is held for the lane\'s '
+                  f'life and legitimately never closes), of {nclaims} distinct '
+                  f'CLAIM subject(s).')
+        if drift:
+            print(f'  UNCLOSED-CLAIM DRIFT: {"/".join(drift)} name(s) a subject '
+                  f'this counts as unclosed. CLOSERS is pinned from a census of '
+                  f'{LOG} and a pinned vocabulary goes stale silently -- if that '
+                  f'prefix now closes a claim, it belongs in CLOSERS.')
 
     for s in settled:
         print('  ADJUDICATED ' + s)
@@ -620,6 +779,74 @@ def selfcheck():
                    f'CLAIM {agreed} LANE-1 and an unfiled id in the same log\n')
     check(r == 1 and 'DISAGREE' in o and f'ROWLESS {agreed}' in o, True,
           'both directions reported from one pass, and the old one still refuses')
+
+    # ---- v5, H207: the THIRD direction ------------------------------------
+    # EVERY FIXTURE ID HERE IS ONE THIS MODULE ALREADY RESERVES. H64's whole
+    # finding is that a fixture id is reserved by convention and by nothing
+    # else, and that `allocid.sh` cannot see one; minting four more would widen
+    # exactly that hazard to write a test. `queue` above already carries them:
+    # H91/H92/H93/H94/H96 DONE, H90/H95 OPEN.
+    def uc(log_text, queue_text=queue):
+        b = io.StringIO()
+        with contextlib.redirect_stdout(b):
+            rc = scan(queue_text, log_text)
+        return rc, b.getvalue()
+
+    r, o = uc(f'CLAIM {silent} LANE-1 claimed, row is DONE, never closed here\n')
+    check(f'UNCLOSED-CLAIM {silent}' in o, True,
+          'a CLAIM whose row the queue calls DONE and which the log never closes')
+    # REPORT ONLY. If this ever moves the exit code it becomes an always-red
+    # gate, because §2 SELECT manufactures an open CLAIM every cycle.
+    check(r, 0, 'and it REPORTS -- an unclosed claim alone never gates')
+
+    r, o = uc(f'CLAIM {silent} LANE-1 claimed\nDONE {silent} LANE-1 and closed\n')
+    check(f'UNCLOSED-CLAIM {silent}' in o, False, 'on a CLAIM the log closes')
+    r, o = uc(f'CLAIM {silent} LANE-1 claimed\nRETRACTED {silent} LANE-1 withdrawn\n')
+    check(f'UNCLOSED-CLAIM {silent}' in o, False,
+          'on a CLAIM closed by RETRACTED, not DONE -- the vocabulary is plural')
+
+    # THE TWO RELEASE FORMS A FIRST-TOKEN READ GETS WRONG, and they are in the
+    # live log rather than invented: `RELEASE ATOM-3 H7` puts the LANE first and
+    # `RELEASE H192 H199 ATOM-3` names TWO. Simplifying RELEASE back to the
+    # first-token rule every other prefix uses turns both of these red.
+    r, o = uc(f'CLAIM {silent} LANE-1 claimed\nRELEASE LANE-1 {silent} lane first\n')
+    check(f'UNCLOSED-CLAIM {silent}' in o, False,
+          'on a RELEASE whose subject is not the first token')
+    r, o = uc(f'CLAIM {silent} LANE-1\nCLAIM {piped} LANE-1\n'
+              f'RELEASE {silent} {piped} LANE-1 two subjects on one line\n')
+    check(f'UNCLOSED-CLAIM {silent}' not in o and f'UNCLOSED-CLAIM {piped}' not in o,
+          True, 'on a RELEASE naming TWO subjects -- both close, not just the first')
+
+    # THE INVERSE, and it is the one that stops RELEASE over-closing: these lines
+    # carry paragraphs naming OTHER rows. Reading past the dash closes them too.
+    r, o = uc(f'CLAIM {silent} LANE-1 claimed and never released\n'
+              f'RELEASE {piped} LANE-1 — unrelated prose that mentions {silent}\n')
+    check(f'UNCLOSED-CLAIM {silent}' in o, True,
+          'a RELEASE does NOT close a row merely NAMED in its prose')
+
+    # COUNTED, NEVER SCORED. A row the queue still holds OPEN is a live cycle.
+    r, o = uc(f'CLAIM {stale} LANE-1 claimed, and the queue holds the row OPEN\n')
+    check(f'UNCLOSED-CLAIM {stale} ' in o, False,
+          'a CLAIM on an OPEN row is never ACCUSED -- that is a live cycle')
+    check('in-flight-or-unfiled' in o, True, 'and it is COUNTED rather than dropped')
+
+    r, o = uc('CLAIM attacker-lane LANE-1 a role, not a row\n')
+    check('UNCLOSED-CLAIM attacker-lane' in o, False,
+          'an unkeyable subject is never scored -- a ROLE never closes')
+    check('unkeyable' in o, True, 'and it is COUNTED rather than dropped')
+
+    # DRIFT: CLOSERS is pinned, and a pinned vocabulary goes stale in silence.
+    r, o = uc(f'CLAIM {silent} LANE-1\nFINISHED {silent} LANE-1 a new verb\n')
+    check('UNCLOSED-CLAIM DRIFT' in o and 'FINISHED' in o, True,
+          'an unknown prefix naming an unclosed claim is reported as DRIFT')
+
+    # THE CONTROL THAT MATTERS. If the subject regex ever stops matching, this
+    # prints a perfectly clean fleet -- H178 and H205 both shipped that shape,
+    # and in both the broken instrument gave the most reassuring answer there is.
+    r, o = uc('NOTE LANE-1 this line discusses a CLAIM without being one\n')
+    check('UNCLOSED-CLAIM VOID' in o, True,
+          'a log containing CLAIM from which NONE parse is VOID, never 0 stale')
+    check('DECIDABLE-STALE' in o, False, 'and a VOID run publishes no count at all')
 
     if bad:
         print(f'SELFCHECK FAILED: {bad}')

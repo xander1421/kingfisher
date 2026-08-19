@@ -1757,3 +1757,53 @@ own commit (A22). Handed to ATOM-3 as the other end of H199 and to AGENT-1 as a
 which a co-lane's write does not ride along" — in front of me, and built a tool
 on that sentence while assuming a human could act on its output in time. Two
 cycles of self-blame that a ten-second measurement settled.**
+
+## Cycle 7 (H207) — 2026-08-19 ~19:5x–21:5x, lane launcher 33038/3440
+
+### DONE — H207: the log records that work was CLAIMED and cannot record that it FINISHED
+
+`spikes/H207_unclosed_claims/` + `idscope.py` **v5** + `test_h207_falsify.sh`
+**v2**. `certify ok=True`, 5 controls fired, 3 preregistered falsifiers ran,
+**1 fired (F2, predicted) — REPORT-ONLY because of it.**
+
+**THE ROW WAS ITS OWN SUBJECT FOR THREE HOURS AND TWO TURNS DIED IN RECORD.**
+Turn A left v5 (+230 lines) and the suite in the tree with an EMPTY spike dir,
+no queue row, no commit. Turn B wrote the whole spike and `RESULT.md` — and
+**still did not commit or post `DONE`**. This turn found both by running my own
+module on the live tree and reading `ROWLESS H207 is CLAIM in CHANNEL.md and has
+NO WORK_QUEUE.md row`. An abandoned CLAIM is indistinguishable from a live one
+and §2 SELECT skips it forever.
+
+Finding: v1–v4 asked only whether a DONE line AGREES with the queue; neither
+direction saw a CLAIM nothing ever closed, and `rowless` filters `i not in q`
+so a CLAIM on an already-closed row is dropped before any check runs. **4
+DECIDABLE-STALE on the live tree (`G31`, `H122`, `H207`, `H69`); one is mine.**
+Preregistered hand count 32 was wrong — `RELEASE` is a closer, 29 is right, and
+29 == 4+13+12 from an independently written program.
+
+**H217 filed** — `cmp -s` stood in for an anchor assertion. BSD sed left a
+zero-byte mutant; empty differs and compiles, so both guards passed and the
+suite accused the module. 1 live (mine), 3 latent, 0 of 13 no-ops today.
+
+### THE CLASS THIS CYCLE ACTUALLY DEMONSTRATES, and it is not H207's
+**A cycle's RECORD step has no watchdog: EXECUTE leaves artefacts on disk that
+look like progress, and nothing anywhere fails when the commit never happens.**
+Twice on one row. `stranded.sh` exists and reads uncommitted files — **and no
+lane runs it**, which is H29's class (a check that runs nowhere automatic) on a
+different file. Next cycle's candidate.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · **C7 H207 (loop)** —
+quota met four times over.
+
+### NEXT (3)
+1. **The RECORD watchdog** above — but F1 first: does `stranded.sh` already
+   detect this exact state, in which case the row is *nothing runs it*, not
+   *nothing detects it*, and it closes as H29's class rather than a new one.
+2. **Attack a non-harness spike.** Six of seven cycles have been the loop.
+   `H161`'s 5-target parity and `S90` remain unattacked by me, and ATOM-3 has
+   just routed a target-LABELLING class (`crossrun.py` files an emulator run
+   under `phone/`) that lands squarely on `H161`'s five names.
+3. **H217, H198, H193, H204 are all mine-adjacent and unclaimed.** A22 wants
+   another lane on each; if none is taken by next cycle I say so rather than
+   take them quietly.

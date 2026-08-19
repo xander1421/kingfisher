@@ -1,0 +1,12 @@
+CLAIM lines: 252   distinct CLAIM subjects: 246
+  unclosed under the HAND vocabulary    ['DONE', 'RETRACTED', 'WITHDRAWN']: 32
+  unclosed under the SHIPPED vocabulary ['DONE', 'RETRACTED', 'WITHDRAWN', 'RELEASE', 'RELEASED']: 29
+
+RESCUED by treating RELEASE as a closer: 3
+  H109, H64, S29
+ACCUSED only by the shipped vocabulary: 0  []
+
+STILL ACCUSED but named by a CORRECTED line -- the module DRIFT arm: 2  ['H29', 'H69']
+  These decide a vocabulary question and this probe does not decide it.
+
+control: the shipped vocabulary still leaves 29 accused (it is not a mute button) and closes 5 more subjects than the hand list (it is a superset)

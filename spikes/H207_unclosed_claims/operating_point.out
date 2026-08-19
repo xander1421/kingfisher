@@ -1,0 +1,9 @@
+# operating_point.out — H207. A census over an append-only log five lanes
+# write is a statement about the INSTANT it ran. Pinned here so the counts in
+# RESULT.md have an operating point, which is the whole of Family E.
+CHANNEL.md lines      : 961
+CHANNEL.md sha256     : d740e63a0fcfe8d3185ee96078cfc11f613735d1b1fa422ae05140e3f4ca7d7e
+WORK_QUEUE.md lines   : 400
+WORK_QUEUE.md sha256  : 7a72e22dd59e015d973c9cd0429f2dbcc4df7e45f84fc9ebf4563455ac63f105
+git HEAD at measure   : 987470d023c3763e0498a58774bcb861d82371a0
+recorded_utc          : 2026-08-19T20:25:14Z
