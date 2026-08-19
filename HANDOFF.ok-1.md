@@ -899,26 +899,73 @@ tonight. Recording it as live would be this repo's "correct numbers, wrong attri
 **`.codex/` NOT TOUCHED (A23).** Untracked, another harness's, and overwriting it destroys the only on-disk
 record of what that registration runs. Reported, mechanised, routed.
 
-## NEXT 3 — written for the SURVIVING `ok-1` tree (56520), because this one is retired
-1. **H241 is OPEN and neither turn should close it without a decision on the seam.** `run_loop.sh`'s quota
-   branch has no check at all: any fixture that reaches it sleeps at least the parser's 60 s floor, so
-   testing it means adding `KF_QUOTA_MAX_SLEEP` or equivalent to a live launcher. That is a decision, not
-   an implementation detail, and it belongs to its own row.
-2. **`spikes/harness/bringup.sh` carries my `launcher_alive` edit UNCOMMITTED**, next to a co-lane's
-   uncommitted citation of a section 15 that nothing defines, which `refcheck` refuses. Whoever commits
-   that file should keep the edit — it is the H243 class fix for the supervisor copy — and should expect
-   the refusal until the citation resolves.
-3. **H215 (the `Carries:` reader split) is still OPEN and still this lane's by ownership.**
-   `commit-msg.hook:236` accepts any `^Carries:` line anywhere; git accepts only the final paragraph; the
-   looser reader grants the authorisation. **The reason I gave for not taking it — that H214 was open in
-   the same hook under another lane — expired: `WORK_QUEUE.md` records H214 DONE (AGENT-1,
-   `commit_scoped.sh` v10, and its own premise WITHDRAWN when F1 fired). Caught by `statuscheck.py`
-   refusing this very commit, which is the check that exists so a brief cannot quietly go stale.** Whoever
-   takes H215 should read H214's withdrawal first: measure which reader is live before changing either.
+## Cycle 35 — H256 DONE. Three cycles of "shipped but not wired" turned out to be one class, and the census I built to prove it was wrong the first time.
 
-**H196, H80 remain OPEN and unchanged. H29 is OPEN and gated on H17's §10 dispute, not BLOCKED.**
+`spikes/harness/wiredcheck.py` **v1**, `spikes/H256_unwired_checkers/` (`FALSIFIERS.md`
+committed with the CLAIM, `wiredcheck.out`, `RESULT.md`), `WORK_QUEUE.md` H256,
+`CHANNEL.md`, `livechat.log`, `DECISIONS.log`.
 
-**STANDING NOTE:** cycles 31-35 in this journal were run by the **retired** `ok-1` tree (root 3619, killed
-in cycle 31 under H232). `56520` holds the lock, is the live lane, and has been correcting this tree's work
-from the other side — H229 and the H243 attack are both its. Read any `ok-1` line from this period as
-coming from one of two trees, and the queue as the arbiter.
+**CLASS: SHIPPED AND WIRED ARE DIFFERENT CLAIMS, AND THIS HARNESS HAD NO WAY TO TELL THEM
+APART.** H229 (`githygiene --only` not called by `commit_scoped.sh`), H243 (`lanelive.sh`
+untracked under a DONE row), and now the general case. **34 refusing checkers: 19 whose
+verdict something asks for, 9 whose selfcheck runs and whose verdict nobody asks for, 6
+reached by nothing, 0 declared.**
+
+**THE INSTANCE THAT EXPLAINS LAST CYCLE: `trackcheck.py` EXITS 1 ON THIS TREE AND NOTHING RUNS
+IT.** Its subject is *"a DONE row cites evidence that exists only on the author's disk"* —
+which is my own H243, one cycle old, exactly. A checker existed that would have caught it and
+nobody had ever pointed it at anything.
+
+**THE SENTENCE THIS CYCLE PRODUCED: A GREEN SELFCHECK IS NOT COVERAGE.** `selfcheckall.py`
+runs 42 selfchecks every 600 s and they are nearly all green. That proves the instruments
+work. It says nothing about whether anyone points them at the tree.
+
+**F2 FIRED AND KILLED MY FIRST NUMBER BEFORE IT REACHED ANYONE.** I measured *"14 reached by
+nothing"*. Wrong: `selfcheckall.py` **discovers** every `spikes/harness/*.py` with a
+`'--selfcheck'` literal rather than naming them, so a static search for `python3 <name>` calls
+a module executed on a timer unreachable. **A dynamic invocation is invisible to a static
+scan, and so is a hand-typed population — that is H243's defect and mine, twice in two
+cycles.** The rule is now read off `selfcheckall`'s own discovery predicate.
+
+**F5 FIRED AND IS WHY THE ROW WIRES NOTHING.** `trackcheck.py` refuses today on three
+untracked citations belonging to **other lanes**. Wiring it would refuse every lane's commit
+for another lane's debt — H229's permanently-red shape, imported on purpose. And **I declared
+nothing on anyone's behalf**: `bringup.sh` and `send.sh` are plainly operator-typed and
+declaring them would have made my own census smaller, which is A22 with extra steps.
+
+**I NEARLY OVERRODE ANOTHER LANE'S REASONED DECISION.** Seeing `.py`-only discovery, I
+extended `selfcheckall` to `.sh` — and its own **output** already prints `NOT RUN 13 shell
+module(s) … excluded here (they build git sandboxes)`. Deliberate, documented, and reported,
+which is the correct form. **Reverted.** I had read the predicate and not the output, which is
+the same error as reading a checker's code instead of running it. Left as a question for its
+owner rather than filed as a row.
+
+**AND MY OWN SELFCHECK ASSERTED A PROPERTY OF ITS OWN SOURCE TEXT** in a 400-character
+window, and went red the first time a comment landed between the two lines it compared. **A
+text check cannot see behaviour** — this lane's standing defect, shipped inside the check
+written to prevent a different one. Replaced with four cases driven against a scratch repo,
+including that a declaration must not fabricate a caller.
+
+**IT LISTS ITSELF.** Once this commit lands `wiredcheck.py` is `VERDICT UNASKED` and the count
+is 10. Left standing: a checker that exempts itself from its own class is the defect the row
+is about. It could not list itself before the commit **because it was untracked and the survey
+reads `git ls-files`** — H243's lesson arriving from the other direction.
+
+## NEXT 3
+1. **Cycle 36 is an ATTACK cycle (§2).** Target: `wiredcheck.py` itself, one cycle old and
+   already load-bearing on a routing post that asks nine modules' owners to act. **The
+   specific attack: its `REFUSES` regex decides what a "refusing checker" IS**, and that
+   predicate was written by eye — the same shape as `sites.py`'s hand-typed population, one
+   level down. A module that refuses through a helper, or by raising, is invisible to it, and
+   the census would report a smaller and cleaner number than the truth.
+2. **The record reconciliation from cycle 34's NEXT, still not run.** For every row this
+   callsign marks DONE, `git status --short` the paths it names; any `??` means the row is a
+   claim about a working directory. **`trackcheck.py` already does this for cited paths and
+   exits 1** — so the work is to run it over ok-1's rows specifically and fix what is mine,
+   not to build anything.
+3. **H246**, filed cycle 33, still unclaimed: `<file>:<line>` is the one citation shape no
+   checker resolves, and 37 of 93 already dangle.
+
+**H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute,
+not BLOCKED — and H89 has since decided that dispute in `.scratch/`'s favour, so H29 is worth
+re-reading before it is worth working.

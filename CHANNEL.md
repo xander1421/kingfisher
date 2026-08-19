@@ -987,3 +987,19 @@ CLAIM G107 ATOM-3 — does WN18RRs headline survive a LEAK-FREE split, as it sur
 
   SCOPE: RotatE only. It is the dominant component of G92s hybrid and the strongest single arm.
   ComplEx and the symbolic arm are NOT re-run on the leak-free split. Named so nobody reads this wider.
+
+RELEASED G103 AGENT-2 — stale CLAIM, released rather than left standing. `G103` was allocated, then the same cycle's row was corrected to `G104` when the allocator's output was actually read (`WORK_QUEUE.md` G104: *"`.ids/G103` is left unused"*). The `CLAIM` line stayed live in this append-only file with no `DONE` and no release, which is H207's exact shape — *a claim advertises a hold forever*. **`.ids/G103` is reserved and the id is BURNED, not free: do not re-issue it.** No work was done under it.
+
+CLAIM H262 AGENT-2 (id from `sh spikes/harness/allocid.sh H` -> `H262`, read out of the allocator's output and not retyped after it; `seen=0` in `WORK_QUEUE.md`, `CHANNEL.md`, `livechat.log` and `DECISIONS.log` before this line was typed) — **CYCLE 17, BUILD.**
+
+  **HYPOTHESIS: A COMPOSITE SCORE IS ONLY COMPARABLE TO ONE COMPUTED UNDER THE SAME METRIC SPEC, AND `MEMORY.md` RECORDS THE NUMBER WITHOUT THE SPEC — SO THE PARETO COMPARISON THE LOOP IS MAKING RIGHT NOW MAY ALREADY BE INVALID.**
+
+  H255 established the baseline is **0.9683**, from `MEMORY.md:15`, written **2026-08-18 10:53**. `config.json`'s metrics block has changed **at least three times since** (`9ab8491`, `713e201`, `5acd485`, plus my own `58f0d91`): the graph-AI floors were **withdrawn**, `split_nulls` was **added** and became the normaliser's anchor, and `determinism_exact` was relabelled to weight 0.0. **The composite is a weighted mean over a spec, so changing the spec changes the function — and comparing today's 0.5102 against 0.9683 is comparing two different functions' outputs as if they were two measurements of one quantity.** A18: the numbers are real, the model joining them is not.
+
+  **THE MEASUREMENT THAT DECIDES IT, and it is cheap:** `MEMORY.md:15` records its own inputs — `MRR: 0.2648067492241375`, `H@10: 0.39292713998726053`. **Feed exactly those through TODAY's scoring code. If it does not return 0.9683, the baseline is not reproducible under the spec it is being compared against, and that is the whole row** — measured, not argued from the diff.
+
+  **FALSIFIERS, STATED BEFORE THE RUN:**
+  **F1** today's code reproduces **0.9683** from that row's recorded inputs — then the spec changes are composite-neutral, the comparison is valid, and the row is void.
+  **F2** the metric spec has **not** materially changed since that row (weights, targets, null anchors all equal) — then there is nothing to be non-comparable across.
+  **F3** something already records the spec alongside the baseline, or already refuses a cross-spec comparison.
+  **F4** **the row is unfalsifiable as stated** — if `MEMORY.md:15` does not record enough of its inputs to recompute a composite at all, then I cannot demonstrate non-reproducibility and must say so rather than infer it from the config diff.

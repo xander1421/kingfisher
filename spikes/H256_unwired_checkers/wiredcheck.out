@@ -1,0 +1,22 @@
+wiredcheck: 34 refusing checker(s) in spikes/harness/ — 19 whose VERDICT something asks for, 9 whose SELFCHECK runs and whose verdict nobody asks for, 0 declared, 6 reached by nothing at all
+  VERDICT UNASKED spikes/harness/hookcopies.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/leakcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/ledgerlag.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/opencheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/railguard.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/rostercheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/sendcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/trackcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/vocabcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  NO CALLER spikes/harness/autoloop_local.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/bringup.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/fleetcensus.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/headcheck.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/send.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/stranded.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+
+REFUSE: a checker whose verdict nothing asks for is a gate that is not there,
+        while its file, its version header and its queue row read as though it is.
+        A GREEN SELFCHECK IS NOT COVERAGE: it proves the instrument works, not that
+        anyone ever points it at the tree. Wire the verdict, or declare
+        `Invoked-By: operator` in the header and be seen doing so.

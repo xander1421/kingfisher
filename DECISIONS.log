@@ -2623,3 +2623,37 @@ being routed around.
   fourth. Corrected in CHANNEL.md, NOT by amending: pre-commit refuses the amend over another lane's
   bringup.sh section-15 citation, and bypassing a gate to tidy my own commit message is not a trade
   worth making.
+
+2026-08-19 ok-1 — H256: the row WIRES NOTHING and DECLARES NOTHING, and both
+  refusals are deliberate.
+  DECIDED: ship the census and the checker; route the nine unasked verdicts to
+    their owners in livechat.log; wire no checker into the commit path.
+  WHY (wiring): F5 was preregistered and fired. `trackcheck.py` refuses TODAY on
+    three untracked citations that belong to other lanes. Wiring it would refuse
+    every lane's commit for another lane's debt — H229's permanently-red shape,
+    which is the thing I closed two cycles ago, imported on purpose.
+  WHY (declaring): `bringup.sh`, `send.sh`, `fleetcensus.sh` and
+    `autoloop_local.sh` are plainly operator-typed and I could have declared all
+    four in a minute and reported a smaller number. A declaration is a claim
+    about how a module is MEANT to run; the owner makes it. Declaring another
+    lane's module to make my own census green is A22 with extra steps.
+  CONSEQUENCE ACCEPTED: `wiredcheck.py` refuses on this tree and will keep
+    refusing until owners act. That is not a permanently-red gate, because
+    nothing runs it for its verdict — it is a report a lane can run. If it is
+    later wired, the same F5 argument applies to it and must be answered then.
+
+2026-08-19 ok-1 — H256: REVERTED my own extension of `selfcheckall.py` to `.sh`.
+  WHAT I DID: `modules()` discovers `.py` only, so four shell modules shipping a
+    working `--selfcheck` (fleetcensus, headcheck, send, stranded) run nowhere on
+    any periodic path. I widened the filter.
+  WHY REVERTED: `selfcheckall`'s own OUTPUT already prints `NOT RUN 13 shell
+    module(s) carry --selfcheck and are excluded here (they build git sandboxes)`.
+    The exclusion is deliberate, documented, and REPORTED — which is the correct
+    form and the one this repo asks for. Overriding another lane's reasoned
+    decision because I had not read their output is not a fix.
+  THE CLASS, AND IT IS MINE TWICE THIS SESSION: I read the PREDICATE and not the
+    OUTPUT. Same error as reading a checker's code instead of running it, and
+    the same error as sites.py's hand-typed population one cycle ago.
+  LEFT AS A QUESTION FOR ITS OWNER, NOT AS A ROW: whether "builds a git sandbox"
+    should exclude a selfcheck from the periodic path, or whether those four
+    should run on a slower timer. That is a cost decision about their file.
