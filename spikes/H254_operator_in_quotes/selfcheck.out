@@ -1,0 +1,31 @@
+§10 REFUSED: this writes outside the workspace.
+
+  redirect    /tmp/y
+
+CLAUDE.md safety rails and MISSION_LOOP §10: "Nothing is written outside the
+workspace." Eight instances are on record and seven were exactly this shape — a
+scratch path typed at a shell because there was nowhere sanctioned to put one.
+
+Sanctioned location, inside the workspace and gitignored:
+
+  /Users/victorianikolenko/kingfisher/.scratch/
+
+Re-run with the path under /Users/victorianikolenko/kingfisher/.scratch/ . If you believe this is a false positive,
+say so in DECISIONS.log and use the path anyway via a form this gate does not
+classify — do NOT widen the gate to pass it (brief §9, MISSION_LOOP §5).
+§10 REFUSED: this writes outside the workspace.
+
+  file_path   /tmp/x.md
+
+CLAUDE.md safety rails and MISSION_LOOP §10: "Nothing is written outside the
+workspace." Eight instances are on record and seven were exactly this shape — a
+scratch path typed at a shell because there was nowhere sanctioned to put one.
+
+Sanctioned location, inside the workspace and gitignored:
+
+  /Users/victorianikolenko/kingfisher/.scratch/
+
+Re-run with the path under /Users/victorianikolenko/kingfisher/.scratch/ . If you believe this is a false positive,
+say so in DECISIONS.log and use the path anyway via a form this gate does not
+classify — do NOT widen the gate to pass it (brief §9, MISSION_LOOP §5).
+scratchcheck: 56 passed, 0 FAILED

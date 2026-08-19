@@ -1,5 +1,28 @@
 #!/usr/bin/env python3
-# scratchcheck.py v3 — H89 (v1, v2), H194 (v3). ATTACKER-1, 2026-08-19.
+# scratchcheck.py v4 — H89 (v1, v2), H194 (v3), H254 (v4). ATTACKER-1, then ok-1.
+# ==== v4, H254 (ok-1, 2026-08-19) ====
+# DEFECT REMOVED: AN OPERATOR CHARACTER INSIDE QUOTES WAS READ AS AN OPERATOR, so
+# a word inside a SEARCH PATTERN was classified as a command. Measured, and it is
+# this gate refusing a read of its own subject:
+#
+#     grep -nE 'git |cp |mktemp|TMP' spikes/harness/test_h219_falsify.sh
+#     -> §10 REFUSED: this writes outside the workspace.   mktemp  $TMPDIR
+#
+# The `|` before `mktemp` is a regex alternation; `MKTEMP`'s anchor set treats any
+# `|` as a pipe. v3 already carries three commands of its author's that this gate
+# refused, under the heading "a gate that refuses the investigation of its own
+# rail is unusable" -- and all three are clean only because their token has a
+# SPACE before it, not because quoting is understood. This is the same class
+# reached by a pattern with no space.
+#
+# NOT A MASK OVER QUOTED SPANS. `_in_quotes`'s docstring records why that would
+# delete true positives: the PATH of a real write is very often quoted. v4 looks
+# only at the OPERATOR that puts a keyword in command position, and only at
+# whether that operator is live -- a backtick or `$(` inside DOUBLE quotes still
+# is, and `ls | mktemp` and `echo "$(mktemp -d)"` are asserted to keep firing.
+#
+# Check: `python3 spikes/harness/scratchcheck.py --selfcheck` (53 arms; three new
+# negatives, and the POSITIVES are what stop this being a widening).
 # ==== v3 ====
 # H194, AND IT IS AN ATTACK ON v2 BY ITS OWN AUTHOR FIFTEEN MINUTES AFTER
 # SHIPPING IT. DEFECT CLASS REMOVED: A PRECISION FIX MEASURED ONLY IN THE
@@ -290,6 +313,58 @@ def _in_quotes(cmd):
     return inside
 
 
+def _quote_kinds(cmd):
+    """Per character: the quote char it sits inside, or None. Same scanner as
+    `_in_quotes`, which returns only a boolean and cannot answer the question the
+    anchor rule needs: a backtick or `$(` inside DOUBLE quotes is still a command
+    substitution, and inside SINGLE quotes nothing is."""
+    kinds, q, esc = [None] * len(cmd), None, False
+    for i, c in enumerate(cmd):
+        if esc:
+            esc = False
+        elif c == chr(92) and q != chr(39):
+            esc = True
+        elif q is None and c in '"' + chr(39):
+            q = c
+        elif q == c:
+            kinds[i] = q
+            q = None
+            continue
+        kinds[i] = q
+    return kinds
+
+
+def _anchor_quoted(cmd, start, kinds):
+    """True when the operator that puts a keyword in COMMAND POSITION is itself
+    inside quotes (H254, ok-1, 2026-08-19).
+
+    MEASURED, and it is this gate refusing a READ of its own subject:
+
+        grep -nE 'git |cp |mktemp|TMP' spikes/harness/test_h219_falsify.sh
+        -> §10 REFUSED: this writes outside the workspace.  mktemp $TMPDIR
+
+    The `|` before `mktemp` is a regex alternation inside a quoted pattern, and
+    `MKTEMP`'s anchor set treats any `|` as a pipe -- so a word inside a search
+    pattern was read as a command. The module already carries three such cases
+    from H194 under the same heading ("a gate that refuses the investigation of
+    its own rail is unusable") and this is the fourth: the earlier three are clean
+    only because their token has a SPACE before it, not because quoting is
+    understood.
+
+    NOT a mask over quoted spans: `_in_quotes`'s docstring records why that would
+    delete true positives, since the PATH of a real write is very often quoted.
+    This looks only at the OPERATOR, and only at whether the operator is live.
+    """
+    if start >= len(kinds):
+        return False
+    q = kinds[start]
+    if q is None:
+        return False
+    if q == '"' and cmd[start] in '`$':
+        return False        # command substitution IS live inside double quotes
+    return True
+
+
 _in_quotes_real = _in_quotes
 
 
@@ -321,7 +396,10 @@ def write_targets(cmd):
         args = [a for a in m.group(1).split() if not a.startswith('-')]
         if args and outside(args[-1]):
             hits.append(('copy-dest', args[-1].strip('\'"')))
+    kinds = _quote_kinds(cmd)
     for m in MKTEMP.finditer(cmd):
+        if _anchor_quoted(cmd, m.start(), kinds):
+            continue                      # H254: a `|` inside quotes is not a pipe
         tail = m.group(1)
         tmpl = [a for a in tail.split() if not a.startswith('-')]
         if not tmpl:
@@ -336,6 +414,8 @@ def write_targets(cmd):
     # it would cost some and is the only reason it is a rule rather than a
     # documented limitation.
     m = CD_OUT.search(cmd)
+    if m and _anchor_quoted(cmd, m.start(), kinds):
+        m = None                          # H254: `cd` inside a search pattern
     if m and outside(m.group(1)) and WRITE_OP.search(cmd):
         hits.append(('cd-then-write', m.group(1).strip(chr(39) + '"')))
 
@@ -511,6 +591,14 @@ NEGATIVE = [
     # D4 (H194). Real commands from this cycle that the gate refused as writes.
     ('python3 scratchcheck.py --scan | grep -v mktemp', 'H194 D4 — my own command, refused'),
     ('grep -rn "mktemp -d" spikes/harness/', 'H194 D4 — mktemp inside a search pattern'),
+    # H254 (v4). THE FOURTH COMMAND OF MY OWN THIS GATE REFUSED, and the three
+    # above are clean only because their token has a SPACE before it: an
+    # alternation with none puts `mktemp` immediately after a `|` that the
+    # anchor set reads as a pipe.
+    ("grep -nE 'git |cp |mktemp|TMP' spikes/harness/test_h219_falsify.sh",
+     'H254 — a regex alternation is not a pipe'),
+    ("grep -n 'x|cd /etc && touch y' f.sh", 'H254 — the same for the cd rule'),
+    ("awk -F'|' '$2 ~ /mktemp/' WORK_QUEUE.md", 'H254 — awk field separator'),
     ('echo "use mktemp under .scratch" >> notes.md', 'H194 D4 — the word in in-workspace prose'),
     # H194 (v3). The `cd` rule must not fire without a write, or it becomes a
     # ban on changing directory. Measured at 0 false positives over 6,454 real
@@ -620,6 +708,20 @@ def selfcheck():
     t(not write_targets(esc_case), 'C7/M3 D1 reverted -> escaped-quote write goes MISSED')
     t(bool(write_targets(cd_case)), 'C7/M3 leaves the cd case alone')
     g['_in_quotes'] = _in_quotes_real
+
+    # M6 · v4 REVERTED (H254): the anchor rule off, i.e. an operator inside
+    # quotes is an operator again. The three H254 negatives must refuse, and the
+    # true positives must be untouched -- a mutation that reddens everything would
+    # prove only that the module runs.
+    alt_case = "grep -nE 'git |cp |mktemp|TMP' f.sh"
+    g6 = globals()
+    _real_anchor = g6['_anchor_quoted']
+    g6['_anchor_quoted'] = lambda cmd, start, kinds: False
+    t(bool(write_targets(alt_case)),
+      'C7/M6 v4 reverted -> a regex alternation refuses again (the reported defect)')
+    t(bool(write_targets('ls | mktemp')), 'C7/M6 leaves the real pipe firing')
+    g6['_anchor_quoted'] = _real_anchor
+    t(not write_targets(alt_case), 'C7/M6 restored')
 
     # M4 · D2 reverted: comment lines no longer dropped.
     _DROP_COMMENTS = False

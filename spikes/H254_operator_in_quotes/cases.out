@@ -1,0 +1,8 @@
+case                                                        verdict
+grep -nE 'git |cp |mktemp|TMP|SUITE|restore|trap' spikes/h  clean   the refused command, verbatim
+grep -n 'x|cd /etc && touch y' f.sh                         clean   the same shape for the cd rule
+awk -F'|' '$2 ~ /mktemp/' WORK_QUEUE.md                     clean   awk field separator
+ls | mktemp                                                 REFUSE  TRUE POSITIVE: a real pipe
+echo "$(mktemp -d)"                                         REFUSE  TRUE POSITIVE: command substitution in double quotes
+cd /etc && touch x                                          REFUSE  TRUE POSITIVE: cd then write
+echo x > /tmp/y                                             REFUSE  TRUE POSITIVE: plain redirect
