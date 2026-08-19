@@ -1,0 +1,42 @@
+{
+ "baseline_row_carries_withdrawn_2648": true,
+ "baseline_source_row": "| 2026-08-18 10:53 | Autoloop Driver | Full Suite | Automated Step | MRR: 0.2648067492241375, H@10: 0.39292713998726053 | **ACCEPTED** | Composite score: 0.9683 |",
+ "elapsed_sec": 0.09,
+ "live_baseline": 0.9683,
+ "parser_under_one_malformed_row": {
+  "live": {
+   "clean": 0.9683,
+   "malformed_between": 0.9683,
+   "malformed_first": 0.9683,
+   "problems_reported": [
+    "/Users/victorianikolenko/kingfisher/.scratch/H255_probe/MEMORY.md:1: accepted row whose composite score does not parse: 'n/a'"
+   ],
+   "writers_own_verdict": 0.97
+  },
+  "pre_fix": {
+   "clean": 0.9683,
+   "malformed_between": 0.5,
+   "malformed_first": null,
+   "writers_own_verdict": 0.5
+  },
+  "true_maximum": 0.9683
+ },
+ "reachability": {
+  "at_2x_both_nulls": 0.9876,
+  "far_beyond_2x_both_nulls": 0.9876,
+  "live_metrics_with_hygiene_and_determinism_repaired": 0.6531,
+  "objective_distinguishes_cap_from_beyond": false,
+  "perfect_candidate": 1.0,
+  "threshold_filtered_mrr": 0.3464,
+  "threshold_hits_at_10": 0.571
+ },
+ "spike": "H255",
+ "vocabularies": {
+  "intersect": false,
+  "reader_selects_on": "**ACCEPTED**",
+  "writer_emits": [
+   "KITCHEN_ELIGIBLE",
+   "KITCHEN_REJECTED"
+  ]
+ }
+}

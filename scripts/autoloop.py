@@ -316,8 +316,16 @@ def evaluate_suite(config):
     results["_invariants_passed"] = passed_invariants
 
     # Check Pareto condition against stored baseline in MEMORY.md
-    baseline_score = get_baseline_composite()
+    baseline_score, baseline_problems = get_baseline_composite()
     pareto_passed = True
+    for p in baseline_problems:
+        # H255: a record that does not parse is a BROKEN GATE, not a missing
+        # one. Reporting it without failing would be the exact thing §13.1
+        # calls "prose with extra steps".
+        print(f"     [BASELINE UNREADABLE] {p} -- the Pareto bar cannot be "
+              f"trusted while a row it scans is unparseable",
+              file=sys.stderr)
+        passed_invariants = False
     if baseline_score is not None:
         if norm_composite < baseline_score:
             print(f"     [PARETO VIOLATION] Candidate composite {norm_composite:.4f} < baseline {baseline_score:.4f} (Pareto regression)", file=sys.stderr)
@@ -331,23 +339,63 @@ def evaluate_suite(config):
     return results, errors
 
 
+# The verdicts `record_memory` writes that mean "this candidate was taken".
+# v4, H255: the reader selected on `**ACCEPTED**` while `main()` had been
+# changed to write `KITCHEN_ELIGIBLE` / `KITCHEN_REJECTED` (landed in 2d7fa92).
+# The two vocabularies do not intersect, so NO RUN OF THIS DRIVER COULD EVER
+# UPDATE THE BASELINE -- it was pinned to `MEMORY.md:15`, a hand-era row whose
+# own text records `MRR: 0.2648067492241375`, the WITHDRAWN leak-blend headline.
+# `ACCEPTED` is kept because those historical rows are the record.
+ACCEPTED_VERDICTS = ("**ACCEPTED**", "**KITCHEN_ELIGIBLE**")
+
+
 def get_baseline_composite():
-    """Reads the highest ACCEPTED composite score recorded in MEMORY_FILE."""
+    """Highest accepted composite in MEMORY_FILE, as (score, problems).
+
+    v4, H255. DEFECT REMOVED: the `try:` below used to span the whole
+    accumulation loop and the caller read a `None` return as PASS, so ONE
+    malformed row silently weakened the Pareto gate in two different
+    directions. Measured, not argued
+    (`spikes/H255_pareto_baseline/probe.py`), on a three-row fixture whose
+    true maximum is 0.9683:
+
+        malformed row FIRST    -> None   the gate VANISHES (absent read as clear)
+        malformed row BETWEEN  -> 0.5    the bar is silently LOWERED to a stale
+                                         earlier value, so a regression passes
+
+    A malformed row is now REPORTED and refuses, and the scan continues instead
+    of aborting, so one bad row cannot hide every row after it.
+
+    "No record at all" and "a record I could not read" are kept APART, which is
+    the same distinction H245 fixed one file over: a fresh clone with no
+    MEMORY.md legitimately has no baseline and must still run, while a present
+    record that does not parse is a broken instrument and must not pass.
+    """
     if not os.path.exists(MEMORY_FILE):
-        return None
+        return None, []          # no record yet: legitimate on a first run
     best_score = None
+    problems = []
     try:
         with open(MEMORY_FILE, "r") as f:
-            for line in f:
-                if "**ACCEPTED**" in line and "Composite score:" in line:
-                    parts = line.split("Composite score:")
-                    score_str = parts[1].strip().split()[0].rstrip("|").strip()
+            for n, line in enumerate(f, 1):
+                if "Composite score:" not in line:
+                    continue
+                if not any(v in line for v in ACCEPTED_VERDICTS):
+                    continue
+                parts = line.split("Composite score:")
+                score_str = parts[1].strip().split()[0].rstrip("|").strip()
+                try:
                     score = float(score_str)
-                    if best_score is None or score > best_score:
-                        best_score = score
-    except Exception:
-        pass
-    return best_score
+                except ValueError:
+                    problems.append(f"{MEMORY_FILE}:{n}: accepted row whose "
+                                    f"composite score does not parse: "
+                                    f"{score_str!r}")
+                    continue
+                if best_score is None or score > best_score:
+                    best_score = score
+    except OSError as e:
+        problems.append(f"{MEMORY_FILE}: unreadable: {e}")
+    return best_score, problems
 
 
 def record_memory(verdict, summary, delta_text):
@@ -437,6 +485,48 @@ def selfcheck():
         bad.append("a metric that WAS produced must not be reported missing")
     if not errors:
         bad.append("the refusal must remain in `errors`, or `is_eligible` loosens")
+
+    # ---- H255: the Pareto baseline parser, both weakening directions.
+    import tempfile
+    md = os.path.join(REPO_ROOT, ".scratch", "autoloop_selfcheck")
+    os.makedirs(md, exist_ok=True)
+    mem = os.path.join(md, "MEMORY.md")
+    real_mem = MEMORY_FILE
+
+    def baseline_of(text):
+        globals()["MEMORY_FILE"] = mem
+        try:
+            open(mem, "w").write(text)
+            return get_baseline_composite()
+        finally:
+            globals()["MEMORY_FILE"] = real_mem
+
+    GOOD = "| 1 | **ACCEPTED** | Composite score: 0.5000 |\n"
+    HIGH = "| 2 | **ACCEPTED** | Composite score: 0.9683 |\n"
+    KITCH = "| 3 | **KITCHEN_ELIGIBLE** | Composite score: 0.9700 |\n"
+    BAD = "| x | **ACCEPTED** | Composite score: n/a |\n"
+
+    s, p = baseline_of(GOOD + HIGH)
+    if s != 0.9683 or p:
+        bad.append(f"a clean record must parse to its maximum, got {s} {p}")
+    s, p = baseline_of(BAD + GOOD + HIGH)
+    if s != 0.9683:
+        bad.append(f"a malformed FIRST row must not hide the rows after it, got {s}")
+    if not p:
+        bad.append("a malformed row must be REPORTED, not silently skipped")
+    s, p = baseline_of(GOOD + BAD + HIGH)
+    if s != 0.9683:
+        bad.append(f"a malformed MIDDLE row must not lower the bar, got {s}")
+    s, p = baseline_of(KITCH + GOOD)
+    if s != 0.97:
+        bad.append(f"the writer's OWN verdict must count as accepted, got {s}")
+    globals()["MEMORY_FILE"] = os.path.join(md, "absent.md")
+    try:
+        s, p = get_baseline_composite()
+        if s is not None or p:
+            bad.append("an ABSENT record is a first run, not a broken one")
+    finally:
+        globals()["MEMORY_FILE"] = real_mem
 
     # ---- H251: the split-null gate's THIRD state, driven in both directions.
     # A branch that only ever refuses is worth as little as one that only ever

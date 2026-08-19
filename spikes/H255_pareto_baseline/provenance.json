@@ -1,0 +1,243 @@
+{
+ "spike": "H255_pareto_baseline",
+ "recorded_utc": "2026-08-19T22:19:36Z",
+ "note": "H255: the Pareto baseline cannot be moved by the loop, is pinned to a withdrawn number, and one malformed row silently removes or lowers it. The wedge half of the claim was refuted by its own F3.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/scripts",
+   "head": "1b8da4f4804a11ce842cc88f5bdee38bf305c19f",
+   "clean": false,
+   "dirty_files": [
+    "scripts/autoloop.py"
+   ],
+   "diff_sha256": "107261364e31364db047e9fd1e59f13e33ce1ca84d74c8f8a298cb92b4066e9f",
+   "diff_bytes": 6776
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H255_pareto_baseline/pareto_baseline.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H255_pareto_baseline/pareto_baseline.json",
+   "sha256": "8baa652715b058136957545b3988c03bbb221eb65ef236a77c58f151e849c196",
+   "bytes": 1247,
+   "mtime": 1787177976,
+   "repro_sha256": "8baa652715b058136957545b3988c03bbb221eb65ef236a77c58f151e849c196",
+   "repro_excluded": [],
+   "compared_ts": 1787177976,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_the_PRE_FIX_reader_cannot_see_the_writer_s_own_verdict",
+   "must_fire_because": "the whole row. Driven on the FROZEN pre-fix reader, because once the fix lands, a live-code check of this cannot fail and would report coverage it does not have",
+   "can_fail_because": "the pinned pre-fix reader returns a score for a KITCHEN_ELIGIBLE row, which would mean the baseline was never frozen",
+   "null_must_contain": "both readers' answers on the same row",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "row_written_by_record_memory": "| 3 | **KITCHEN_ELIGIBLE** | Composite score: 0.9700 |",
+    "PRE_FIX_reader_sees": 0.5,
+    "live_reader_sees": 0.97,
+    "writer_emits": [
+     "KITCHEN_ELIGIBLE",
+     "KITCHEN_REJECTED"
+    ],
+    "writer_can_emit_the_pre_fix_token": false,
+    "pinned_commit": "1b8da4f4804a11ce842cc88f5bdee38bf305c19f"
+   }
+  },
+  {
+   "name": "C2_the_live_baseline_comes_from_a_WITHDRAWN_number",
+   "must_fire_because": "a bar pinned to a retracted measurement is a different and worse fault than a bar that is merely stale",
+   "can_fail_because": "the row supplying the baseline does not carry the withdrawn 0.2648",
+   "null_must_contain": "the baseline and its source row",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "live_baseline": 0.9683,
+    "source_row": "| 2026-08-18 10:53 | Autoloop Driver | Full Suite | Automated Step | MRR: 0.2648067492241375, H@10: 0.39292713998726053 | **ACCEPTED** | Composite score: 0.9683",
+    "row_carries_the_withdrawn_0.2648": true
+   }
+  },
+  {
+   "name": "C3_ANTI_OVERCLAIM_the_bar_IS_reachable",
+   "must_fire_because": "I claimed the accept gate can never open. This arm exists to refute my own row, and it does",
+   "can_fail_because": "no candidate can reach the baseline, which would make the wedge claim true",
+   "null_must_contain": "the perfect-candidate composite and the bar",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "perfect_candidate_composite": 1.0,
+    "baseline": 0.9683,
+    "reachable": true
+   }
+  },
+  {
+   "name": "C4_one_malformed_row_FIRST_removes_the_bar_entirely",
+   "must_fire_because": "`except Exception: pass` spans the accumulation loop and the caller reads absent as CLEAR, so the Pareto gate vanishes rather than refusing",
+   "can_fail_because": "a malformed leading row still yields the true maximum",
+   "null_must_contain": "the baseline with and without the bad row",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "PRE_FIX_malformed_row_first": null,
+    "live_malformed_row_first": 0.9683,
+    "live_reports_the_bad_row": true,
+    "pre_fix_caller_treated_None_as": "PASS (pareto_passed stayed True)"
+   }
+  },
+  {
+   "name": "C5_one_malformed_row_BETWEEN_rows_LOWERS_the_bar",
+   "must_fire_because": "the quieter half: the scan aborts and returns the max of only the rows before the bad one, so a regression passes against a stale lower bar",
+   "can_fail_because": "a malformed middle row yields the true maximum or None rather than a stale value",
+   "null_must_contain": "the stale value and the true maximum",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "PRE_FIX_malformed_row_between": 0.5,
+    "live_malformed_row_between": 0.9683,
+    "true_maximum": 0.9683
+   }
+  },
+  {
+   "name": "C6_ANTI_INVERSION_a_clean_file_parses_correctly",
+   "must_fire_because": "a parser that returned None for everything would pass C4 and C5 without a defect existing",
+   "can_fail_because": "a clean two-row file does not return its max",
+   "null_must_contain": "the parsed maximum",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "PRE_FIX_clean": 0.9683,
+    "live_clean": 0.9683,
+    "live_problems_on_a_clean_file": []
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_the_writer_can_still_emit_ACCEPTED",
+   "must_fire_because": null,
+   "can_fail_because": "`ACCEPTED` appears as a verdict value the writer can be called with",
+   "null_must_contain": "the writer's verdict vocabulary",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "writer_emits": [
+     "KITCHEN_ELIGIBLE",
+     "KITCHEN_REJECTED"
+    ]
+   },
+   "refutes": "that the baseline is frozen",
+   "fires_when": "`ACCEPTED` appears as a verdict value the writer can be called with",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_something_else_updates_the_baseline",
+   "must_fire_because": null,
+   "can_fail_because": "a second writer of MEMORY.md or a second source of _baseline_score exists",
+   "null_must_contain": "the writers found",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "writers_of_MEMORY_FILE": [
+     "record_memory"
+    ],
+    "sources_of__baseline_score": [
+     "get_baseline_composite"
+    ],
+    "note": "grepped scripts/, .github/, spikes/harness/"
+   },
+   "refutes": "that a stale reader freezes anything",
+   "fires_when": "a second writer of MEMORY.md or a second source of _baseline_score exists",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_the_wedge_is_not_structural",
+   "must_fire_because": null,
+   "can_fail_because": "a candidate can reach a composite >= the baseline",
+   "null_must_contain": "the perfect composite and the threshold",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "perfect_candidate_composite": 1.0,
+    "baseline": 0.9683,
+    "threshold_filtered_mrr": 0.3464,
+    "threshold_hits_at_10": 0.571,
+    "composite_at_that_threshold": 0.9876
+   },
+   "refutes": "my own headline, that the accept gate can never open for any candidate",
+   "fires_when": "a candidate can reach a composite >= the baseline",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F4_the_KITCHEN_vocabulary_is_uncommitted",
+   "must_fire_because": null,
+   "can_fail_because": "KITCHEN_ELIGIBLE is absent from HEAD",
+   "null_must_contain": "the commit that introduced it",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "in_working_tree": true,
+    "landed_in": "2d7fa92"
+   },
+   "refutes": "that this is a landed defect rather than a lane's in-flight edit",
+   "fires_when": "KITCHEN_ELIGIBLE is absent from HEAD",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F3_the_wedge_is_not_structural"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "newest": 1787177886,
+   "from": "scripts/autoloop.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/scripts at 1b8da4f4: 1 modified. The build is NOT 1b8da4f4."
+ ],
+ "ok": false,
+ "falsifier": "the writer can emit the token the reader greps for, OR a candidate cannot reach the baseline at all",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
