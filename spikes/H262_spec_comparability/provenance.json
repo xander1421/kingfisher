@@ -1,0 +1,212 @@
+{
+ "spike": "H262_spec_comparability",
+ "recorded_utc": "2026-08-19T22:28:07Z",
+ "note": "H262: a composite is only comparable to one computed under the same metric spec; the baseline recorded the number without it.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/scripts",
+   "head": "6bb8a93d9ead832dc6683e25a9fe53fc68b76f79",
+   "clean": false,
+   "dirty_files": [
+    "scripts/autoloop.py"
+   ],
+   "diff_sha256": "dce9cd64488ad1e68ecf9abd584482d617f81fb1d7338b6470127c81764e309a",
+   "diff_bytes": 12118
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H262_spec_comparability/spec_comparability.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H262_spec_comparability/spec_comparability.json",
+   "sha256": "358d445cdd24ae5061df0a1d38184532c1ad5f0718c7eae1f5fc18cce66dd502",
+   "bytes": 735,
+   "mtime": 1787178487,
+   "repro_sha256": "358d445cdd24ae5061df0a1d38184532c1ad5f0718c7eae1f5fc18cce66dd502",
+   "repro_excluded": [],
+   "compared_ts": 1787178487,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_the_recorded_baseline_is_NOT_REPRODUCIBLE_today",
+   "must_fire_because": "the whole row, and it is measured one-sidedly on purpose: every unrecorded metric is granted a PERFECT score, so if the upper bound still falls short, no assignment of the missing inputs reproduces the recorded composite",
+   "can_fail_because": "today's code reproduces 0.9683 from that row's own inputs, which would make the comparison valid and this row void",
+   "null_must_contain": "the recorded value and today's upper bound",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "recorded": 0.9683,
+    "upper_bound_today": 0.7317,
+    "unrecorded_metrics_granted": "perfect scores"
+   }
+  },
+  {
+   "name": "C2_the_NEIGHBOURING_row_does_not_reproduce_either",
+   "must_fire_because": "one row failing to reproduce could be a typo in that row. Two rows failing is a changed function",
+   "can_fail_because": "the REJECTED row reproduces, which would point at a bad row rather than a bad model",
+   "null_must_contain": "its recorded value and today's",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "recorded": 0.4876,
+    "today": 0.5
+   }
+  },
+  {
+   "name": "C3_a_spec_change_RESETS_rather_than_compares",
+   "must_fire_because": "comparing across specs is the defect; refusing until a same-spec baseline exists DEADLOCKS, because no run can be accepted so no row can ever be written",
+   "can_fail_because": "rows under a foreign spec are still used as a bar, or the reset is not announced",
+   "null_must_contain": "the pareto status and whether it printed",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pareto_status": "ESTABLISHING_UNDER_NEW_SPEC",
+    "printed": true,
+    "named_the_digest": true
+   }
+  },
+  {
+   "name": "C4_THE_RESET_MAKES_NOTHING_ELIGIBLE",
+   "must_fire_because": "THIS ROW MOVES PARETO FAIL -> PASS. This is the arm that bounds that: a candidate failing invariants must stay ineligible, so the loosening cannot reach the accept path",
+   "can_fail_because": "a candidate with hygiene 0.0 becomes eligible once the ratchet resets",
+   "null_must_contain": "invariants, pareto and the conjunction",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "invariants_passed": false,
+    "pareto_passed": true,
+    "is_eligible_would_be": false
+   }
+  },
+  {
+   "name": "C5_ANTI_LOOSENING_a_same_spec_baseline_still_BITES",
+   "must_fire_because": "a reset that never ended would be a permanent removal of the Pareto gate dressed as a fix",
+   "can_fail_because": "a candidate below a same-spec baseline passes, or one above it fails",
+   "null_must_contain": "both verdicts",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "below_a_same_spec_baseline": false,
+    "above_a_same_spec_baseline": true,
+    "status_once_a_same_spec_row_exists": "COMPARED"
+   }
+  },
+  {
+   "name": "C6_a_NON_SCORING_field_does_not_change_the_digest",
+   "must_fire_because": "if prose in the config moved the digest, every doc edit would silently reset the ratchet -- the abuse path would be open by accident rather than by intent",
+   "can_fail_because": "adding a `why` string changes the digest",
+   "null_must_contain": "both digests",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "bare": "d3d81df886ca",
+    "with_prose": "d3d81df886ca"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_todays_code_reproduces_the_recorded_baseline",
+   "must_fire_because": null,
+   "can_fail_because": "the ACCEPTED row's recorded composite is reproduced from its own inputs today",
+   "null_must_contain": "recorded and recomputed",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "recorded": 0.9683,
+    "upper_bound_today": 0.7317
+   },
+   "refutes": "that the spec changes are composite-affecting",
+   "fires_when": "the ACCEPTED row's recorded composite is reproduced from its own inputs today",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_something_already_records_the_spec",
+   "must_fire_because": null,
+   "can_fail_because": "a spec identity is already stored beside the baseline before this change",
+   "null_must_contain": "what MEMORY.md rows carried",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "pre_change_rows_carry_spec": false,
+    "note": "checked the iteration log rows as they stand"
+   },
+   "refutes": "that this was missing",
+   "fires_when": "a spec identity is already stored beside the baseline before this change",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_the_row_is_unfalsifiable_as_stated",
+   "must_fire_because": null,
+   "can_fail_because": "MEMORY.md does not record enough inputs to bound a recomputation in EITHER direction",
+   "null_must_contain": "which inputs the row records",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "row_records": [
+     "filtered_mrr",
+     "hits_at_10"
+    ],
+    "row_omits": [
+     "hygiene_score",
+     "determinism_exact",
+     "witness_bandwidth_savings_pct",
+     "verifier_ram_bytes"
+    ],
+    "upper_bound_today": 0.7317,
+    "recorded": 0.9683,
+    "bound_is_one_sided_and_points": "below the recorded value"
+   },
+   "refutes": "that the demonstration is possible at all",
+   "fires_when": "MEMORY.md does not record enough inputs to bound a recomputation in EITHER direction",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/scripts": {
+   "newest": 1787178426,
+   "from": "scripts/autoloop.py"
+  }
+ },
+ "problems": [
+  "DIRTY TREE /Users/victorianikolenko/kingfisher/scripts at 6bb8a93d: 1 modified. The build is NOT 6bb8a93d."
+ ],
+ "ok": false,
+ "falsifier": "today's scoring code reproduces MEMORY.md's recorded composite from that row's own inputs, making the cross-spec comparison valid"
+}

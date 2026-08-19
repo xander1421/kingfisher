@@ -11,6 +11,7 @@ Implements the metric-driven goal loop:
 
 import argparse
 import datetime
+import hashlib
 import json
 import os
 import subprocess
@@ -316,8 +317,39 @@ def evaluate_suite(config):
     results["_invariants_passed"] = passed_invariants
 
     # Check Pareto condition against stored baseline in MEMORY.md
-    baseline_score, baseline_problems = get_baseline_composite()
+    spec_digest = metric_spec_digest(metrics_spec)
+    baseline_score, baseline_problems = get_baseline_composite(spec_digest)
     pareto_passed = True
+    pareto_status = "COMPARED"
+
+    # H262: a RATCHET RESET, and it is a policy choice so it says so out loud.
+    #
+    # When the metric spec changes, every earlier composite was produced by a
+    # different function. There is nothing to regress FROM, so the first run
+    # under a new spec ESTABLISHES the baseline rather than being compared to a
+    # stale one. The two alternatives are both worse: comparing anyway is the
+    # invalid comparison this row exists to stop, and refusing until a
+    # same-spec baseline exists DEADLOCKS -- no run can be accepted, so no row
+    # can be written, so no baseline can ever appear.
+    #
+    # THE ABUSE IS REAL AND IS WHY THE DIGEST IS PRINTED: editing the metric
+    # spec resets the ratchet, so a lane could clear a failing Pareto bar by
+    # changing a weight. The digest and the reset are both printed and both
+    # recorded, so the reset is visible in the log and in MEMORY.md rather than
+    # being a silent consequence of a config edit.
+    spec_changed = [p for p in baseline_problems if p.startswith("SPEC_CHANGED:")]
+    baseline_problems = [p for p in baseline_problems
+                         if not p.startswith("SPEC_CHANGED:")]
+    if spec_changed:
+        n = spec_changed[0].split(":", 1)[1]
+        pareto_status = "ESTABLISHING_UNDER_NEW_SPEC"
+        print(f"     [PARETO BASELINE RESET] metric spec is now {spec_digest}; "
+              f"{n} accepted row(s) in MEMORY.md were recorded under a "
+              f"DIFFERENT spec and are not comparable -- a composite is a "
+              f"weighted mean OVER a spec, so those are different functions' "
+              f"outputs. This run ESTABLISHES the baseline instead of being "
+              f"compared to one. Changing the spec resets the ratchet, which "
+              f"is why this line exists.", file=sys.stderr)
     for p in baseline_problems:
         # H255: a record that does not parse is a BROKEN GATE, not a missing
         # one. Reporting it without failing would be the exact thing §13.1
@@ -333,7 +365,9 @@ def evaluate_suite(config):
         else:
             print(f"     [PARETO PASS] Candidate composite {norm_composite:.4f} >= baseline {baseline_score:.4f}", file=sys.stderr)
     results["_pareto_passed"] = pareto_passed
+    results["_pareto_status"] = pareto_status
     results["_baseline_score"] = baseline_score
+    results["_metric_spec_digest"] = spec_digest
 
     print(f"\n=== Composite Score: {norm_composite:.4f} (Invariants: {'PASS' if passed_invariants else 'FAIL'}, Pareto: {'PASS' if pareto_passed else 'FAIL'}) ===\n", file=sys.stderr)
     return results, errors
@@ -348,8 +382,41 @@ def evaluate_suite(config):
 # `ACCEPTED` is kept because those historical rows are the record.
 ACCEPTED_VERDICTS = ("**ACCEPTED**", "**KITCHEN_ELIGIBLE**")
 
+# H262. Fields of a metric that change what a composite MEANS. Anything here
+# alters the weighted mean, so two composites computed under different values
+# are two different functions' outputs and are not comparable.
+SCORING_FIELDS = ("weight", "target", "min_acceptable", "max_acceptable",
+                  "direction", "null_baseline", "split_nulls")
 
-def get_baseline_composite():
+
+def metric_spec_digest(metrics_spec):
+    """Stable digest of the parts of `metrics` that determine a composite.
+
+    v5, H262. A COMPOSITE IS ONLY COMPARABLE TO ONE COMPUTED UNDER THE SAME
+    SPEC, and `MEMORY.md` recorded the number without it. Measured rather than
+    argued from the config diff: `MEMORY.md:15` states its own inputs
+    (`MRR: 0.2648067492241375, H@10: 0.39292713998726053`) and records
+    composite **0.9683**. Feeding exactly those through today's scoring code,
+    with every UNRECORDED metric granted a PERFECT score, returns **0.7317** --
+    so no assignment of the missing inputs reproduces 0.9683, and the
+    demonstration is one-sided in the only direction that matters. The
+    neighbouring row does not reproduce either (0.4876 -> 0.5).
+
+    The loop was therefore reporting `0.5102 < 0.9683 (Pareto regression)` as a
+    regression, when the two numbers come from different functions. A18: the
+    numbers are real and the model joining them is not.
+    """
+    canon = {}
+    for name, spec in sorted((metrics_spec or {}).items()):
+        if not isinstance(spec, dict):
+            canon[name] = spec
+            continue
+        canon[name] = {k: spec.get(k) for k in SCORING_FIELDS if k in spec}
+    blob = json.dumps(canon, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode()).hexdigest()[:12]
+
+
+def get_baseline_composite(spec_digest=None):
     """Highest accepted composite in MEMORY_FILE, as (score, problems).
 
     v4, H255. DEFECT REMOVED: the `try:` below used to span the whole
@@ -375,6 +442,7 @@ def get_baseline_composite():
         return None, []          # no record yet: legitimate on a first run
     best_score = None
     problems = []
+    incomparable = 0
     try:
         with open(MEMORY_FILE, "r") as f:
             for n, line in enumerate(f, 1):
@@ -382,6 +450,16 @@ def get_baseline_composite():
                     continue
                 if not any(v in line for v in ACCEPTED_VERDICTS):
                     continue
+                # H262: only rows recorded under the SAME metric spec are
+                # comparable. Rows with no `spec=` at all are every row written
+                # before this existed, so they are counted and reported rather
+                # than silently used or silently dropped -- silently using them
+                # is the defect, and silently dropping them would remove the
+                # Pareto bar without saying so, which is H255 all over again.
+                if spec_digest is not None:
+                    if f"spec={spec_digest}" not in line:
+                        incomparable += 1
+                        continue
                 parts = line.split("Composite score:")
                 score_str = parts[1].strip().split()[0].rstrip("|").strip()
                 try:
@@ -395,15 +473,19 @@ def get_baseline_composite():
                     best_score = score
     except OSError as e:
         problems.append(f"{MEMORY_FILE}: unreadable: {e}")
+    if spec_digest is not None and best_score is None and incomparable:
+        problems.append(
+            f"SPEC_CHANGED:{incomparable}")
     return best_score, problems
 
 
-def record_memory(verdict, summary, delta_text):
+def record_memory(verdict, summary, delta_text, spec_digest="unknown"):
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M")
     if not os.path.exists(MEMORY_FILE):
         return
 
-    row = f"| {now} | Autoloop Driver | Full Suite | Automated Step | {delta_text} | **{verdict}** | {summary} |\n"
+    row = (f"| {now} | Autoloop Driver | Full Suite | Automated Step | "
+           f"{delta_text} | **{verdict}** | {summary} spec={spec_digest} |\n")
     content = open(MEMORY_FILE, "r").read()
     if "## 1. Iteration History Log" in content:
         parts = content.split("## 1. Iteration History Log")
@@ -486,13 +568,60 @@ def selfcheck():
     if not errors:
         bad.append("the refusal must remain in `errors`, or `is_eligible` loosens")
 
-    # ---- H255: the Pareto baseline parser, both weakening directions.
-    import tempfile
+    # ---- H262: the metric-spec digest and the ratchet reset.
     md = os.path.join(REPO_ROOT, ".scratch", "autoloop_selfcheck")
     os.makedirs(md, exist_ok=True)
     mem = os.path.join(md, "MEMORY.md")
     real_mem = MEMORY_FILE
 
+    m_a = {"m": {"weight": 1.0, "target": 1.0, "direction": "maximize"}}
+    m_b = {"m": {"weight": 2.0, "target": 1.0, "direction": "maximize"}}
+    if metric_spec_digest(m_a) != metric_spec_digest(m_a):
+        bad.append("the spec digest must be stable for one spec")
+    if metric_spec_digest(m_a) == metric_spec_digest(m_b):
+        bad.append("changing a WEIGHT must change the spec digest")
+    if metric_spec_digest({"m": dict(m_a["m"], why="prose only")}) != metric_spec_digest(m_a):
+        bad.append("a non-scoring field must NOT change the digest")
+
+    def pareto(rows, spec):
+        globals()["MEMORY_FILE"] = mem
+        try:
+            open(mem, "w").write(rows)
+            cfg = {"evaluators": {"e": {"command": ev(
+                       'import json; print(json.dumps({"m": 0.5}))'),
+                       "timeout_sec": 30}},
+                   "metrics": spec}
+            b = _io.StringIO()
+            with contextlib.redirect_stderr(b):
+                r, _e = evaluate_suite(cfg)
+            return r, b.getvalue()
+        finally:
+            globals()["MEMORY_FILE"] = real_mem
+
+    dig_a = metric_spec_digest(m_a)
+    OLD_SPEC_ROW = "| 1 | **ACCEPTED** | Composite score: 0.9683 spec=deadbeef1234 |\n"
+    NEW_HIGH = f"| 2 | **ACCEPTED** | Composite score: 0.9000 spec={dig_a} |\n"
+    NEW_LOW = f"| 3 | **ACCEPTED** | Composite score: 0.1000 spec={dig_a} |\n"
+
+    r, log = pareto(OLD_SPEC_ROW, m_a)
+    if r.get("_pareto_status") != "ESTABLISHING_UNDER_NEW_SPEC":
+        bad.append("rows under a different spec must RESET the ratchet, not be compared")
+    if "[PARETO BASELINE RESET]" not in log:
+        bad.append("a ratchet reset must be PRINTED -- a silent reset is a silent loosening")
+    if dig_a not in log:
+        bad.append("the reset must name the new digest, or the abuse path is invisible")
+
+    # ANTI-LOOSENING: once a SAME-SPEC row exists, comparison resumes and bites.
+    r, log = pareto(OLD_SPEC_ROW + NEW_HIGH, m_a)
+    if r.get("_pareto_status") != "COMPARED":
+        bad.append("a same-spec row must end the reset")
+    if r.get("_pareto_passed") is not False:
+        bad.append("a candidate BELOW a same-spec baseline must still FAIL Pareto")
+    r, log = pareto(OLD_SPEC_ROW + NEW_LOW, m_a)
+    if r.get("_pareto_passed") is not True:
+        bad.append("a candidate ABOVE a same-spec baseline must PASS")
+
+    # ---- H255: the Pareto baseline parser, both weakening directions.
     def baseline_of(text):
         globals()["MEMORY_FILE"] = mem
         try:
@@ -582,7 +711,9 @@ def selfcheck():
               "non-dict payload is not, the happy path is unchanged, a kept "
               "refusal still fails invariants AND stays in `errors`, and the "
               "split-null gate distinguishes MEASURED-BUT-NOT-A-BAR from "
-              "NEVER-MEASURED from GATEABLE in both directions")
+              "NEVER-MEASURED from GATEABLE in both directions, and a metric "
+              "spec change RESETS the Pareto ratchet loudly while a same-spec "
+              "baseline still bites in both directions")
     return 1 if bad else 0
 
 
@@ -620,7 +751,8 @@ def main():
     verdict = "KITCHEN_ELIGIBLE" if is_eligible else "KITCHEN_REJECTED"
     summary = f"Kitchen Composite score: {results.get('_composite_score')}"
     delta = f"MRR: {results.get('filtered_mrr')}, H@10: {results.get('hits_at_10')}"
-    record_memory(verdict, summary, delta)
+    record_memory(verdict, summary, delta,
+                  spec_digest=results.get("_metric_spec_digest", "unknown"))
     print(f"[Autoloop Kitchen Complete] Candidate Status: {verdict} (NOTE: Autoloop evaluates kitchen Pareto; mission consensus is gated exclusively by independent-device digest match)")
     return 0
 

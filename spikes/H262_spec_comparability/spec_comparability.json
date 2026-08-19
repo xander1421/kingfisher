@@ -1,0 +1,33 @@
+{
+ "current_metric_spec_digest": "3df7bc4b430d",
+ "elapsed_sec": 0.15,
+ "gate_behaviour": {
+  "foreign_spec_only": {
+   "pareto_passed": true,
+   "pareto_status": "ESTABLISHING_UNDER_NEW_SPEC"
+  },
+  "same_spec_baseline_ABOVE_candidate": {
+   "pareto_passed": false,
+   "pareto_status": "COMPARED"
+  },
+  "same_spec_baseline_BELOW_candidate": {
+   "pareto_passed": true
+  }
+ },
+ "recomputation_of_MEMORY_rows": [
+  {
+   "recorded": 0.4876,
+   "reproduces": false,
+   "row": "2026-08-18 10:46 REJECTED",
+   "upper_bound_today": 0.5
+  },
+  {
+   "recorded": 0.9683,
+   "reproduces": false,
+   "row": "2026-08-18 10:53 ACCEPTED",
+   "upper_bound_today": 0.7317
+  }
+ ],
+ "reset_makes_a_failing_candidate_eligible": false,
+ "spike": "H262"
+}
