@@ -1,0 +1,214 @@
+{
+  "head": "9ae3da9fbea5bd5310262592195f133a15cf8c86",
+  "stamp": 1787156857,
+  "scan_seconds": 91.9,
+  "spike_dirs": 310,
+  "with_provenance": 147,
+  "clean": 99,
+  "stale": 27,
+  "undecidable": 21,
+  "stale_by_mode": {
+    "self": [
+      {
+        "spike": "M1_9_mutation",
+        "detail": "baseline.json predates M1_9_mutation source by 52.0h (newest: <HEAD commit>) [dep churn: 1 commits/24h SELF]"
+      },
+      {
+        "spike": "N1_prefilter_cost",
+        "detail": "gate_pre.json predates N1_prefilter_cost source by 0.4h (newest: <HEAD commit>) [dep churn: 0 commits/24h SELF]"
+      },
+      {
+        "spike": "S77_proof_bytes",
+        "detail": "probe_out.txt predates S77_proof_bytes source by 52.0h (newest: <HEAD commit>) [dep churn: 1 commits/24h SELF]"
+      },
+      {
+        "spike": "S79_absence_bytes",
+        "detail": "absence.json predates S79_absence_bytes source by 1.5h (newest: <HEAD commit>) [dep churn: 0 commits/24h SELF]"
+      }
+    ],
+    "churny": [
+      {
+        "spike": "G83_f003_draft",
+        "detail": "draft.py predates kitchen source by 1.1h (newest: <HEAD commit>) [dep churn: 4 commits/24h]"
+      },
+      {
+        "spike": "G95_selector_null",
+        "detail": "selector_null.json predates harness source by 0.6h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "G96_selector_stability",
+        "detail": "stability.json predates harness source by 0.5h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "G97_minn_sweep",
+        "detail": "minn_sweep.json predates harness source by 0.4h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "H112_rail_authorship",
+        "detail": "h112.json predates harness source by 29.4h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "H167_rowless_baseline",
+        "detail": "rowless.json predates harness source by 0.7h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "H180_carries_computed",
+        "detail": "result.json predates harness source by 0.6h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "H73_gate_scope",
+        "detail": "gate_scope.json predates harness source by 1.3h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "H86_stranded_cost",
+        "detail": "h86.json predates harness source by 29.7h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      },
+      {
+        "spike": "M1_8_quorum3",
+        "detail": "result.json predates harness source by 1.3h (newest: spikes/harness/scratchcheck.py) [dep churn: 21 commits/24h]"
+      }
+    ],
+    "quiet": [
+      {
+        "spike": "G43_repro_provenance",
+        "detail": "probe.py predates G36_repro_g34 source by 28.6h (newest: <HEAD commit>) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "G77_distmult_select",
+        "detail": "mix.py predates G76_distmult_min10 source by 0.3h (newest: spikes/G76_distmult_min10/distmult.json) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "G78_g77_slice",
+        "detail": "slice.py predates G76_distmult_min10 source by 0.3h (newest: spikes/G76_distmult_min10/distmult.json) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "M1_10_patchlive",
+        "detail": "patchlive.json predates fuelrun source by 51.8h (newest: <HEAD commit>) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "M1_12_detectors",
+        "detail": "detect.json predates M1_9_mutation source by 49.9h (newest: <HEAD commit>) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "M1_3c_ground_corpus",
+        "detail": "ground.json predates M1_8_quorum3 source by 50.7h (newest: <HEAD commit>) [dep churn: 2 commits/24h]"
+      },
+      {
+        "spike": "M1_7_transport",
+        "detail": "fuelrun.android predates hyperon-experimental source by 3.2h (newest: lib/src/metta/runner/builtin_mods/random.rs) [dep churn: 0 commits/24h]"
+      },
+      {
+        "spike": "M2_1_fleet",
+        "detail": "fuelrun.host predates hyperon-experimental source by 3.2h (newest: lib/src/metta/runner/builtin_mods/random.rs) [dep churn: 0 commits/24h]"
+      },
+      {
+        "spike": "S24_range_crossover",
+        "detail": "range_crossover.json predates S20_verify_kinds source by 0.3h (newest: <HEAD commit>) [dep churn: 0 commits/24h]"
+      },
+      {
+        "spike": "S26_cheat_attribution",
+        "detail": "cheat_attr.json predates M1_8_quorum3 source by 47.9h (newest: <HEAD commit>) [dep churn: 2 commits/24h]"
+      },
+      {
+        "spike": "S84_verify_cost",
+        "detail": "verifycost.json predates W2_witnessed_trie source by 50.4h (newest: <HEAD commit>) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "S85_verify_vs_reexec",
+        "detail": "crossover.json predates W5_epoch_bisect source by 0.8h (newest: <HEAD commit>) [dep churn: 1 commits/24h]"
+      },
+      {
+        "spike": "W9_bound_streaming_witness",
+        "detail": "bound_streaming.json predates M1_8_quorum3 source by 0.4h (newest: <HEAD commit>) [dep churn: 2 commits/24h]"
+      }
+    ],
+    "unknown": []
+  },
+  "undecidable_named": [
+    {
+      "spike": "G59_official_split",
+      "why": "recorded path absent now: official.py"
+    },
+    {
+      "spike": "G63_head_analog",
+      "why": "recorded path absent now: head_analog.py"
+    },
+    {
+      "spike": "G84_f003_python_gate",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "G85_f003_gate",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H100_falsifier_polarity",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H106_hook_install_race",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H148_fleet_scale",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H149_steal",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H150_d1_draw",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H151_phone_freeze",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H152_f001_feas",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H153_three_device",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H154_lan3",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H155_phone_f002",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H157_f003_adversarial_audit",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H187_stale_sweep",
+      "why": "no artifact paths recorded"
+    },
+    {
+      "spike": "H65_falsifier_prose",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "H89_workspace_rail",
+      "why": "recorded path absent now: harness"
+    },
+    {
+      "spike": "H94_record_loss",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "M1_1_android",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    },
+    {
+      "spike": "S38_runbook",
+      "why": "no deps recorded in source_mtimes (staleness never applied)"
+    }
+  ],
+  "note": "churn thresholds in stale_by_mode are a READING AID computed from the detail string, not a rule: 3+ commits/24h is where this tree separates spikes/harness (20) and kitchen (3) from everything else (0-2). The raw detail is kept so a reader can disagree and recompute."
+}

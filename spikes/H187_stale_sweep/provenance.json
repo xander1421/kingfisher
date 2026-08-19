@@ -1,0 +1,158 @@
+{
+ "spike": "H187_stale_sweep",
+ "recorded_utc": "2026-08-19T16:29:09Z",
+ "note": "measurement only; no spike is re-executed and none is repaired here",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "ac04a5e6140e1ca0a651f4bb461f5bdb8b46cffc",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/test_carriescheck.sh",
+    "spikes/harness/fleetcensus.sh",
+    "spikes/harness/scratchcheck.py",
+    "spikes/harness/stalecheck.py"
+   ],
+   "diff_sha256": "68229118008b1ca594855b4b0bf6c6edb3311ee884f9c0be34a32858b05b6a0e",
+   "diff_bytes": 775
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H187_stale_sweep/sweep.json",
+   "sha256": "1fe3d2a5bc7f2187cd32b476d088b7888ecdb85852c19d4ced252d960f0edeb5",
+   "bytes": 8179,
+   "mtime": 1787156949,
+   "compared_ts": 1787156949,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "agreement_with_real_certify",
+   "must_fire_because": "a recomputed verdict never compared against the thing it recomputes is an assertion, not a measurement (A15)",
+   "can_fail_because": "certify() and stalecheck.verdict() return different states for the same synthetic pair",
+   "null_must_contain": "the CLEAN arm -- a rule that always answered STALE would satisfy the stale arm on its own",
+   "fired": true,
+   "detail": "stalecheck --selfcheck, 6 arms incl. two real certify() runs",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    0,
+    "stalecheck --selfcheck: ok"
+   ]
+  },
+  {
+   "name": "mutation_kills_selfcheck",
+   "must_fire_because": "v1 shipped with the mtime second opinion -- half the rule -- unreached by any arm; deleting it left every check green",
+   "can_fail_because": "the synthetic cases never reach the second clock, so removing it changes no verdict",
+   "null_must_contain": "a green mutant, which is exactly what v1 produced and is how this control was earned",
+   "fired": true,
+   "detail": "second-opinion clause replaced with `if False:`",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    1
+   ]
+  },
+  {
+   "name": "undecidable_is_not_clean",
+   "must_fire_because": "scoring an unreconstructable record as clean is how a narrowed scope reads as coverage",
+   "can_fail_because": "no provenance.json on disk lacks source_mtimes or artifact paths",
+   "null_must_contain": "a run in which no record is missing inputs, which would make this control vacuous",
+   "fired": true,
+   "detail": "records that cannot be reconstructed at all",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    21,
+    "G59_official_split",
+    "G63_head_analog",
+    "G84_f003_python_gate",
+    "G85_f003_gate",
+    "H100_falsifier_polarity"
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "f1_class_is_theoretical",
+   "must_fire_because": null,
+   "can_fail_because": "every provenance.json on disk is fresher than its declared deps, i.e. the STALE count is 0",
+   "null_must_contain": "a tree in which every certified spike is fresh, which is the state the row denies",
+   "fired": false,
+   "detail": "STALE count; firing kills the row",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    27
+   ],
+   "refutes": "if zero spikes would refuse today the class is theoretical and H187 closes WRONG",
+   "fires_when": "every provenance.json on disk is fresher than its declared deps, i.e. the STALE count is 0",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "f2_instrument_disagrees",
+   "must_fire_because": null,
+   "can_fail_because": "certify() and stalecheck.verdict() return different states for the same synthetic input",
+   "null_must_contain": "a disagreement, which C1 is built to surface in both directions",
+   "fired": false,
+   "detail": "inverse of C1; firing voids the row",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0
+   ],
+   "refutes": "if this recomputation disagrees with a real certify run, no count it produces means anything",
+   "fires_when": "certify() and stalecheck.verdict() return different states for the same synthetic input",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "f3_undecidable_exists",
+   "must_fire_because": null,
+   "can_fail_because": "at least one provenance.json lacks source_mtimes or artifact paths and cannot be checked at all",
+   "null_must_contain": "zero undecidable records, i.e. every spike declaring deps and artifact paths",
+   "fired": true,
+   "detail": "FIRED = these records are uncheckable",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    21
+   ],
+   "refutes": "records that cannot be reconstructed are counted and NAMED rather than silently scored clean",
+   "fires_when": "at least one provenance.json lacks source_mtimes or artifact paths and cannot be checked at all",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "f3_undecidable_exists"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787156940,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "zero spikes would refuse if certify ran today (F1)",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

@@ -399,6 +399,27 @@ if [ -f spikes/harness/idscope.py ]; then
   echo "  --- record scope (idscope, REPORT ONLY, never gates a launch) ---"
   python3 spikes/harness/idscope.py 2>&1 | sed 's/^/  /'
 fi
+
+# H187. Same class as the H103 block above, one layer down and stated there
+# already: "a SELFCHECK is not a SCAN". `stalecheck.py` recomputes `certify`'s
+# staleness rule over every `provenance.json` on disk without re-executing
+# anything, and without it NOTHING re-runs a green spike -- W5 had been refusing
+# `STALE ARTIFACT ... 50.3h` for two days with nobody informed, because certify
+# runs when a lane EXECUTES a spike and a finished spike is never executed again.
+#
+# REPORT ONLY, and for the same two reasons the idscope block gives: it exits 1
+# on the shared tree today, and the party who trips it is a READER of somebody
+# else's spike while the only party who can clear it is the author (H14, H52).
+#
+# BOUNDED at 60s. The full scan is ~31s of git calls over ~145 records; launchd
+# re-runs bringup every 600s, and a blocked git call in an unbounded loop is
+# `selfcheckall.py`'s preregistered F3. A truncated scan prints PARTIAL and
+# exits 2 rather than a short total, so it cannot read as a clean bill.
+if [ -f spikes/harness/stalecheck.py ]; then
+  echo
+  echo "  --- certified-spike freshness (stalecheck, REPORT ONLY, never gates) ---"
+  python3 spikes/harness/stalecheck.py --max-seconds=60 2>&1 | sed 's/^/  /'
+fi
 }
 
 # H95. Every exit path runs the harness selfchecks exactly once.
