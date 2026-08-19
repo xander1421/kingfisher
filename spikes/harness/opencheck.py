@@ -1,9 +1,34 @@
 #!/usr/bin/env python3
-"""opencheck v1 — a digest you PUBLISH must be openable from the artifacts you publish.
+"""opencheck v2 — a digest you PUBLISH must be openable from the artifacts you publish.
 
   python3 spikes/harness/opencheck.py              # census over every spike
   python3 spikes/harness/opencheck.py --selfcheck  # two-sided, must exit 0
   python3 spikes/harness/opencheck.py <spike_dir>  # one spike
+
+v2 RATIONALE (§12.7) — THE DEFECT REMOVED: **TWO FALSE POSITIVES, BOTH FOUND BY
+CROSS-CHECKING AGAINST AN INDEPENDENTLY-WRITTEN DETECTOR RATHER THAN BY ANY ARM
+OF --selfcheck.** v1's 24 NO_OPENING sites were scored against `G100`'s 38-row
+audit: 11 agreed, 11 differed **exactly where the two rules are designed to
+differ** (G100's OPENS_ELSEWHERE is self-containment's NO_OPENING), and **2 were
+outright contradictions — G100 said OPENABLE_VERIFIED where v1 said
+NO_OPENING.** Both were mine:
+
+  1. `G61_lift_cap/cap/sha256` — the whole payload is **18** entries and
+     `MIN_TABLE` is 20, so v1 skipped the container without hashing it. The size
+     floor exists to avoid GUESSING which container is the table; the
+     self-describing form (`payload minus <digest key>`) involves no guess, so
+     the floor must not run there. v2 applies it to bare containers only.
+  2. `G98_pairdisjoint_null/selector_sha256` — the `mix.py {min_n,choice}` form
+     needs a `min_n`, and v1 looked for it **in the same dict as the table**.
+     G87/G88 emit `choice_min_n` at top level and G98 puts it under
+     `selector_mask`, so v1 found it for one and not the other. v2 searches the
+     artifact.
+
+**A DETECTOR'S OWN ARMS CANNOT FIND A FALSE POSITIVE IT WAS BUILT NOT TO SEE** —
+all 10 passed at v1 and the two sites were wrong anyway. What found them was a
+second detector, written for a different question, disagreeing. Counts moved
+24 -> **22** NO_OPENING in **16** spikes, and after the fixes the two censuses
+have **zero contradictions**.
 
 v1 RATIONALE (§12.7) — THE DEFECT REMOVED: **§12.10 debt, three rows deep and all
 three mine.** G99 named the class — A DIGEST PUBLISHED WITHOUT THE OBJECT IT PINS
@@ -149,7 +174,29 @@ def bulk(obj, depth=0):
     return 0
 
 
-def openings(objs):
+def min_ns(node, out, depth=0):
+    """Every `*min_n` integer ANYWHERE in the artifact.
+
+    Searched artifact-wide rather than read from the container being hashed:
+    G87/G88 emit `choice_min_n` at top level while G98 puts it under
+    `selector_mask`, so a per-container lookup finds it for one and not the
+    other. That asymmetry produced a false NO_OPENING on G98 -- see the v2
+    rationale.
+    """
+    if depth > 8:
+        return out
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k.endswith("min_n") and isinstance(v, int):
+                out.append(v)
+            min_ns(v, out, depth + 1)
+    elif isinstance(node, list):
+        for v in node[:100]:
+            min_ns(v, out, depth + 1)
+    return out
+
+
+def openings(objs, mins=()):
     """(blob, label) for every serialisation this repo is known to use.
 
     Each label names the form, so a verdict says HOW it opened rather than only
@@ -164,23 +211,30 @@ def openings(objs):
         # container's own length skipped exactly the form the repair uses, so
         # the detector could not see a repair of its own class. That is G100
         # v1's defect arriving in the module written to remove it.
-        if bulk(obj) < MIN_TABLE:
-            continue
-        yield json.dumps(obj, sort_keys=True), "bare sort_keys", size
+        big = bulk(obj) >= MIN_TABLE
+        if big:
+            yield json.dumps(obj, sort_keys=True), "bare sort_keys", size
+        # THE SIZE FLOOR DOES NOT APPLY TO THE SELF-DESCRIBING FORM. A container
+        # holding its own digest is unambiguous -- there is nothing to guess --
+        # and MIN_TABLE=20 produced a false NO_OPENING on G61, whose whole
+        # payload is 18 entries. A floor that exists to avoid guessing must not
+        # run where no guess is being made.
         if kind == "dict":
             for hk, hv in obj.items():
-                if is_hex64(hv):
+                if is_hex64(hv) and len(obj) >= 2:
                     yield (json.dumps({k: v for k, v in obj.items() if k != hk},
                                       sort_keys=True),
                            f"payload minus {hk}", size)
-            # G87/G88's mix.py form: the table wrapped with its min_n.
-            for mk, mv in obj.items():
-                if mk.endswith("min_n") and isinstance(mv, int):
-                    for tk, tv in obj.items():
-                        if isinstance(tv, dict) and len(tv) >= MIN_TABLE:
-                            yield (json.dumps({"min_n": mv, "choice": tv},
-                                              sort_keys=True),
-                                   f"mix.py {{min_n={mv},choice}}", len(tv))
+            if not big:
+                continue
+            # G87/G88's mix.py form: the table wrapped with its min_n, which is
+            # searched for artifact-wide (see min_ns).
+            for mv in dict.fromkeys(mins):
+                for tk, tv in obj.items():
+                    if isinstance(tv, dict) and len(tv) >= MIN_TABLE:
+                        yield (json.dumps({"min_n": mv, "choice": tv},
+                                          sort_keys=True),
+                               f"mix.py {{min_n={mv},choice}}", len(tv))
 
 
 def publish(payload, key="sha256"):
@@ -214,8 +268,11 @@ def check_spike(spike_dir):
             continue
         docs.append((p, d))
         containers(d, objs)
+    mins = []
+    for _p, _d in docs:
+        min_ns(_d, mins)
     index = {}
-    for blob, label, size in openings(objs):
+    for blob, label, size in openings(objs, mins):
         index.setdefault(hashlib.sha256(blob.encode()).hexdigest(),
                          (label, size))
     rows = []

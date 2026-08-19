@@ -1,0 +1,350 @@
+{
+ "broad": {
+  "n": 2139,
+  "no_opening": 2129,
+  "openable": 10,
+  "spikes": [
+   "G16_rules_in_metta",
+   "G43_repro_provenance",
+   "G54_slice_gated_lift",
+   "G56_gate_null",
+   "G59_official_split",
+   "G60_direction_gate",
+   "G61_lift_cap",
+   "G62_head_analog",
+   "G63_head_analog",
+   "G65_head_replace",
+   "G67_head_aa",
+   "G68_body_filter",
+   "G70_armb_specv1",
+   "G71_f002_freeze",
+   "G73_head_select4",
+   "G74_analog_only_slice",
+   "G75_complex_gate",
+   "G77_distmult_select",
+   "G78_g77_slice",
+   "G79_rotate_all_entity",
+   "G83_f003_draft",
+   "G84_f003_python_gate",
+   "G85_f003_gate",
+   "G95_selector_null",
+   "G96_selector_stability",
+   "G98_pairdisjoint_null",
+   "H107_autoloop_eval_and_witness_attack",
+   "H139_two_phone_scale",
+   "H140_two_phone_mutants",
+   "H141_weighted_split",
+   "H143_s25_affine",
+   "H144_reject_cost",
+   "H145_s25_two_workers",
+   "H146_s25_k_workers",
+   "H147_s25_emu",
+   "H148_fleet_scale",
+   "H149_steal",
+   "H150_d1_draw",
+   "H151_phone_freeze",
+   "H152_f001_feas",
+   "H153_three_device",
+   "H154_lan3",
+   "H155_phone_f002",
+   "H159_phone_desktop_distributed",
+   "H161_heterogeneous_device_consensus",
+   "H181_observed_is_selfdeclared",
+   "H188_seats_are_one_computation",
+   "H221_constant_control",
+   "H77_demo8",
+   "H88_sentinel_branch",
+   "M1_15_attested_seat_draw",
+   "M1_7_transport",
+   "M1_8_quorum3",
+   "M1_9_mutation",
+   "S20_verify_kinds",
+   "S22_soak_device",
+   "S26_cheat_attribution",
+   "S28_inprocess_concurrency",
+   "S30_speed_duel",
+   "S36_witnessed_job",
+   "S5_hdc_prototype",
+   "S73_epoch_commitment",
+   "S74_epoch_chain",
+   "S77_proof_bytes",
+   "S79_absence_bytes",
+   "S7_toploc_adapt",
+   "S85_verify_vs_reexec",
+   "W2_witnessed_trie",
+   "W6_incremental_witness",
+   "W7_streaming_witness",
+   "W9_bound_streaming_witness"
+  ]
+ },
+ "dep_dirt_at_run_time": [
+  " M spikes/harness/constcheck.py",
+  " M spikes/harness/fleetcensus.sh",
+  " M spikes/harness/opencheck.py",
+  " M spikes/harness/test_loop_gate.sh",
+  "?? spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+  "?? spikes/harness/test_h219_falsify.sh"
+ ],
+ "gate_wired_into_certify": false,
+ "known_positions": {
+  "G101": [
+   "OPENABLE",
+   "OPENABLE"
+  ],
+  "G59": [
+   "NO_OPENING"
+  ]
+ },
+ "narrow": {
+  "n": 30,
+  "no_opening": 22,
+  "openable": 8,
+  "spikes": [
+   "G54_slice_gated_lift",
+   "G56_gate_null",
+   "G59_official_split",
+   "G60_direction_gate",
+   "G61_lift_cap",
+   "G62_head_analog",
+   "G63_head_analog",
+   "G65_head_replace",
+   "G67_head_aa",
+   "G68_body_filter",
+   "G73_head_select4",
+   "G74_analog_only_slice",
+   "G75_complex_gate",
+   "G77_distmult_select",
+   "G95_selector_null",
+   "G96_selector_stability"
+  ]
+ },
+ "narrow_rows": [
+  [
+   "spikes/G54_slice_gated_lift/slice_gated.json",
+   "/gate/sha256",
+   "56441adaa4427b6725be11fb186157d84e72203d1f55f0a43a745a08097cf261",
+   "NO_OPENING",
+   "largest container published here is 28"
+  ],
+  [
+   "spikes/G56_gate_null/gate_null.json",
+   "/gate/sha256",
+   "12a58f76160a4f1f9c92796de2491783b643ce429f597df2b7be2472c75e497a",
+   "NO_OPENING",
+   "largest container published here is 18"
+  ],
+  [
+   "spikes/G59_official_split/official.json",
+   "/gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 26"
+  ],
+  [
+   "spikes/G60_direction_gate/dir_gate.json",
+   "/pred_gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 20"
+  ],
+  [
+   "spikes/G60_direction_gate/dir_gate.json",
+   "/dir_gate/sha256",
+   "748bde7f7b10f820a222b36f66e7591034f41f11bc8ca7c6aedd876d61893d91",
+   "NO_OPENING",
+   "largest container published here is 20"
+  ],
+  [
+   "spikes/G61_lift_cap/lift_cap.json",
+   "/cap/sha256",
+   "cd8cfe45b1e2b652097b80585fb8577c52b9fe2c901f1b8eca38e166bf10b464",
+   "OPENABLE",
+   "payload minus sha256 over 7 entries"
+  ],
+  [
+   "spikes/G61_lift_cap/lift_cap.json",
+   "/pred_gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 18"
+  ],
+  [
+   "spikes/G62_head_analog/head_analog.json",
+   "/pred_gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 18"
+  ],
+  [
+   "spikes/G63_head_analog/head_analog.json",
+   "/gate/sha256",
+   "1d43d45761384ee788d146b3d0680b871888068d4e30a1d747809ac25c7f4c2b",
+   "NO_OPENING",
+   "largest container published here is 16"
+  ],
+  [
+   "spikes/G64_bidirectional_topologies/g64_results.json",
+   "/gate/sha256",
+   "43ed5fb549bbb2b2a05e78ea04cc87631c8b67333d0c159db6305b241ff88350",
+   "OPENABLE",
+   "payload minus sha256 over 6 entries"
+  ],
+  [
+   "spikes/G65_head_replace/replace.json",
+   "/pred_gate/sha256",
+   "1d43d45761384ee788d146b3d0680b871888068d4e30a1d747809ac25c7f4c2b",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G65_head_replace/replace.json",
+   "/head_choice/sha256",
+   "6670401bde8a44a6dca1ba4d610672313219cf6a2cb0e8283a9027d903cb7603",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G67_head_aa/aa.json",
+   "/pred_gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G67_head_aa/aa.json",
+   "/head_choice/sha256",
+   "3a68ff18f3e7cec5210b374e7812f7c14cc362cb6305dc331d9b2c51316880ce",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G68_body_filter/body.json",
+   "/gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 28"
+  ],
+  [
+   "spikes/G73_head_select4/select.json",
+   "/pred_gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G73_head_select4/select.json",
+   "/head_choice/sha256",
+   "6b16b2d9ad6ddb0e3ffea73275d91eca16e2c4d4d259807da1b7e0cac5852b27",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G74_analog_only_slice/slice.json",
+   "/reconstructed_choice/sha256",
+   "6670401bde8a44a6dca1ba4d610672313219cf6a2cb0e8283a9027d903cb7603",
+   "NO_OPENING",
+   "largest container published here is 28"
+  ],
+  [
+   "spikes/G74_analog_only_slice/slice.json",
+   "/reconstructed_choice/expected_sha256",
+   "6670401bde8a44a6dca1ba4d610672313219cf6a2cb0e8283a9027d903cb7603",
+   "NO_OPENING",
+   "largest container published here is 28"
+  ],
+  [
+   "spikes/G74_analog_only_slice/slice.json",
+   "/pred_gate/sha256",
+   "1d43d45761384ee788d146b3d0680b871888068d4e30a1d747809ac25c7f4c2b",
+   "NO_OPENING",
+   "largest container published here is 28"
+  ],
+  [
+   "spikes/G75_complex_gate/hybrid.json",
+   "/valid_select_dir/sha256",
+   "17509ac9df1ea03725161559a59c22764e4b0cc7a44d19f980dfbdbba1063cae",
+   "OPENABLE",
+   "mix.py {min_n=20,choice} over 446 entries"
+  ],
+  [
+   "spikes/G75_complex_gate/hybrid.json",
+   "/valid_select_pred/sha256",
+   "91977b73dfb960a5a886a779531df8377d00902855590eaeb9617fc2c769adce",
+   "OPENABLE",
+   "mix.py {min_n=20,choice} over 223 entries"
+  ],
+  [
+   "spikes/G75_complex_gate/hybrid.json",
+   "/g59_pred_gate/sha256",
+   "9559856568a9639f6626824db55f1b46431a1fa501a4a66c8e141538528bc609",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G77_distmult_select/select.json",
+   "/valid_select_four/sha256",
+   "db2e8614dbe9a1308c61cb8229359a60c15f9852918bd9acf6acfc4fa988c4e4",
+   "OPENABLE",
+   "mix.py {min_n=20,choice} over 446 entries"
+  ],
+  [
+   "spikes/G77_distmult_select/select.json",
+   "/valid_select_three/sha256",
+   "17509ac9df1ea03725161559a59c22764e4b0cc7a44d19f980dfbdbba1063cae",
+   "NO_OPENING",
+   "largest container published here is 2201"
+  ],
+  [
+   "spikes/G87_bidirectional_neurosymbolic/result.json",
+   "/choice_sha256",
+   "fc24b73b651981f2ef72707ac5f9cc75bec65e7482d7d2682629a33b66baaef2",
+   "OPENABLE",
+   "mix.py {min_n=20,choice} over 446 entries"
+  ],
+  [
+   "spikes/G88_5way_hybrid/result.json",
+   "/choice_sha256",
+   "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
+   "OPENABLE",
+   "mix.py {min_n=20,choice} over 446 entries"
+  ],
+  [
+   "spikes/G95_selector_null/selector_null.json",
+   "/selector_sha256",
+   "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
+   "NO_OPENING",
+   "largest container published here is 1000"
+  ],
+  [
+   "spikes/G96_selector_stability/stability.json",
+   "/full_selector_sha256",
+   "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02",
+   "NO_OPENING",
+   "largest container published here is 27"
+  ],
+  [
+   "spikes/G98_pairdisjoint_null/pairdisjoint_null.json",
+   "/selector_sha256",
+   "835f496ac6742c11cda7713b65ca57e09bf898b12fe6f7be4af2466bc5ea37fa",
+   "OPENABLE",
+   "mix.py {min_n=20,choice} over 474 entries"
+  ]
+ ],
+ "rule": "a digest you publish must open from the artifacts you publish",
+ "selfcheck": {
+  "arms": [
+   "ok    A1 a dropped object is FLAGGED",
+   "ok    A2 the same digest with its object is NOT flagged",
+   "ok    A3 an artifact with no digest produces no rows",
+   "ok    A4 a file digest is out of population",
+   "ok    A5 a one-entry perturbation does NOT open the digest",
+   "ok    A7 a mutated digest recorded under controls/ is NOT reported",
+   "ok    A8 publish() output opens, and it refuses to re-hash itself",
+   "ok    A6 a directory holding a repo root is pruned",
+   "ok    F4a G101 opens from its own artifacts",
+   "ok    F4b G59 does NOT open from its own artifacts"
+  ],
+  "returncode": 0
+ },
+ "spike": "H226"
+}

@@ -2044,3 +2044,26 @@ against `HOST`. The identity appears once on the `target` line and once in `cros
    with the diagnosis BEFORE they were applied. Rejected: `--no-verify`, which
    bypasses the gate rather than the defect, and waiting, which was tried — the
    owner rewrote constcheck.py over my edit mid-cycle and the refusal returned.
+
+================================================================================
+2026-08-19 AGENT-2 cycle 10 (BUILD) — H226, and the decision that was bound in advance
+================================================================================
+9.  PREREGISTERED BOTH BRANCHES OF THE GATE DECISION IN CHANNEL BEFORE WRITING
+    THE DETECTOR. F1 small blast radius -> wire the certify refusal; F2 large ->
+    report-only plus the write-site helper. Measured 16 spikes, F2 fired, gate
+    not wired. Without the preregistration this reads as "I built a gate and
+    then decided not to turn it on", which is indistinguishable from flinching.
+10. DID NOT TAKE allow_dirty=True. It is the designed acknowledgement and it
+    would have made certify green. On a five-lane tree spikes/harness is almost
+    never quiet, so taking it once means taking it always, which is H216's
+    state. COST: this row ships with ok=False and a reader has to read why.
+11. REPORTED TWO POPULATIONS RATHER THAN PICKING ONE. Broad 2129 is alarmism,
+    narrow 22 is flattery, and the boundary is a name-based judgement. Both
+    predicates are in the source so a reader can move the line themselves.
+12. CROSS-CHECKED AGAINST G100 INSTEAD OF TRUSTING 10/10 ARMS. That is what
+    found the two false positives; no arm could have. The general form: when two
+    detectors in the tree ask overlapping questions, score them against each
+    other and treat every contradiction as one of them being wrong.
+13. PRUNED A NESTED REPO ROOT BY THE PROPERTY, NOT A NAME LIST, AND SAID IT IS
+    ATOM-3's H223 TO DESIGN. Declining to make their row worse is not the same
+    as pre-empting their remedy.

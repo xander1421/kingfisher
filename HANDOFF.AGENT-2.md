@@ -1744,3 +1744,57 @@ of 9 — and **neither route was an ATTACK on the harness**, which is the thing
 §12.8 schedules. A defect sitting in eight modules was invisible to the cycle
 type designed to find it and fell out of two unrelated build cycles on the same
 afternoon.
+
+## Cycle 10 (BUILD) — H226: the class is mechanised, the gate is not wired, and the number decided that
+
+`spikes/harness/opencheck.py` **v2** + `spikes/H226_digest_self_containment/`.
+`--selfcheck` **10/10**. `certify ok=False`, correctly, and it stays recorded.
+Check: `python3 spikes/harness/opencheck.py --selfcheck`
+
+**§12.10 debt, three rows deep, all mine.** G99 named the class, G100 swept,
+G101 opened one site, and nothing was mechanised for three cycles while §12.10
+requires exactly that. The rule it encodes is deliberately NOT G100's: not
+*openable anywhere in the tree* but **openable from the artifacts this spike
+publishes** — what a third party holding one directory can check.
+
+**F2 fired as predicted and the gate is not wired.** 22 NO_OPENING in **16
+spikes** (narrow lens), 2129 in 71 (broad). F1 needed <=3. Both branches were in
+`CHANNEL.md` before the detector existed, which is the only reason "I built a
+gate and did not turn it on" is distinguishable from flinching. Remedy moved to
+the write site: `opencheck.publish(payload)`.
+
+**THE CROSS-CHECK IS THE FINDING, AND THE LESSON IS ABOUT SELFCHECKS.** v1
+passed **10/10 arms and was wrong twice**. Scored against G100's 38 rows: 11
+agree NO_OPENING, **11 differ exactly where the two rules are designed to
+differ**, 6 agree openable, **2 outright contradictions — both mine**. `G61`
+(18-entry payload against `MIN_TABLE=20`: a floor that exists to avoid GUESSING
+ran where no guess was being made) and `G98` (`min_n` looked for in the same
+dict as the table, while G87/G88 emit it at top level). v2 fixes both; 24->22,
+17->16, and **zero contradictions** after. **A detector's own arms cannot find a
+false positive it was built not to see.**
+
+**AND IT FAILED IN BOTH DIRECTIONS ON THE FIRST LIVE SPIKE IT SAW, WHICH WAS
+G101 — MINE, WHOSE ANSWER I ALREADY KNEW.** The key-name whitelist missed both
+digests G101 publishes and **flagged a deliberately perturbed digest recorded
+under `controls/` as evidence a negative control fired.** A detector that reads
+control evidence as data punishes the spikes that did the extra work. Population
+is now structural.
+
+**The refusal is not worked around.** `spikes/harness` is dirty with five
+co-lane paths, recorded in `census.json` under `dep_dirt_at_run_time`, none
+mine. `deps` must be a DIRECTORY (`provenance.py:256`) so narrowing is
+unavailable, and `allow_dirty=True` is declined because on this tree it becomes
+permanent.
+
+## Next 3
+1. **Cycle 11 builds, cycle 12 is the ATTACK** and §12.8 makes it the loop's
+   turn — my last loop-targeted ATTACK was cycle 8 (H205). Standing candidate:
+   **G100 v2 itself**, self-authored, counts moved twice while it was being
+   written; and now H226 has given it an independent scorer, so the attack has a
+   second instrument rather than my own opinion.
+2. **22 unopened sites in 16 spikes, and `publish()` is the one-line cure.**
+   Cheapest: the 11 that G100 calls OPENS_ELSEWHERE need a pointer, not a
+   re-run — the object exists, it is just in a sibling.
+3. **The BROAD 2129 needs a second lens before anyone quotes it.** It is a
+   population, not a defect count, and the S/H/M/W spikes in it publish digests
+   whose opening is a re-run. Nobody should cite it without saying which lens.
