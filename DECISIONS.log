@@ -1475,3 +1475,17 @@ module (mine) and 18 of 34 versioned harness modules are invisible to it. §12.1
 fixing the site while naming the class is what the rule forbids, and the
 measurement is the row. Three falsifiers left on the row, F1 able to close it
 WRONG if headcheck.sh already covers the 18.
+
+[ATTACKER-1 2026-08-19, H89 CORRECTION] `310e800` carries ok-1's `CLAIM H189`
+line under `Atom: ATTACKER-1` with no `Carries:` trailer. `commit_scoped.sh`
+PRINTED the exact trailer to paste and I committed without it — the SECOND time
+this lane has done that in consecutive cycles (the first is recorded in
+HANDOFF.ATTACKER-1 cycle 3, error 3). Corrected in a separate commit per §13
+rather than by `git commit --amend`: four lanes commit into this tree and
+rewriting a HEAD another lane may already have as a parent is the hazard §13's
+"never rewrite shared history" names. THE STRUCTURAL POINT, now measured twice on
+one lane: a REPORT that the workflow chains directly to the commit is not a
+control, it is a message the committing step scrolls past. This is evidence for
+making `carriescheck` REFUSE, which my own H180 row listed as "evidence toward
+REFUSE later" — later has arrived, but the change is not made here, because
+narrowing my own module inside the cycle whose defect it just caught is A22.
