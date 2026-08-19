@@ -1,0 +1,181 @@
+{
+ "spike": "G104_null_in_the_loop",
+ "recorded_utc": "2026-08-19T21:39:02Z",
+ "note": "G104: the no-rules prior on the loop's own split, recomputed through the evaluator's composition.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants",
+   "head": "2c9507c8dc8c13af29b533abfcfb0c234fbe87b4",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split",
+   "head": "2c9507c8dc8c13af29b533abfcfb0c234fbe87b4",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop/null_in_the_loop.json",
+   "sha256": "1ddfcf51afe8cfc25802576c29c560e92832ca2c00a4e607d07056090dc7d83c",
+   "bytes": 693,
+   "mtime": 1787175542,
+   "compared_ts": 1787175542,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_split_does_not_leak",
+   "must_fire_because": "the null must be measured on the same leak-free split as the metric it bounds, or it is not its null",
+   "can_fail_because": "pair_disjoint_split stops being pair-disjoint",
+   "null_must_contain": "the measured leak count",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak_count": 0
+   }
+  },
+  {
+   "name": "C2_both_halves_of_every_query_are_scored",
+   "must_fire_because": "a null scored on tail queries only would be half a measurement compared against a full one",
+   "can_fail_because": "n_queries != 2 * n_test",
+   "null_must_contain": "n_queries and n_test",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 81634,
+    "n_test": 40817
+   }
+  },
+  {
+   "name": "C3_ties_are_not_scored_at_their_best_position",
+   "must_fire_because": "a prior that abstains ties on most of the entity set; ranking a tie at its top turns abstention into skill",
+   "can_fail_because": "a target with count 0 receives rank 1",
+   "null_must_contain": "the rank of a zero-count target",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rank_of_zero_count_target": 7254.0,
+    "nent": 14505
+   }
+  },
+  {
+   "name": "C4_mrr_cannot_exceed_hits10",
+   "must_fire_because": "MRR is a mean of 1/rank and every query contributing more than 0.1 to it is inside the top 10, so MRR > Hits@10 is not a surprising result but an arithmetic impossibility",
+   "can_fail_because": "a rank function that returns a rank below 1",
+   "null_must_contain": "both quantities",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr": 0.173226,
+    "hits10": 0.285518
+   }
+  },
+  {
+   "name": "C5_an_untied_winner_is_rank_1",
+   "must_fire_because": "the first version returned 0.5 here and nothing else in the run could see it",
+   "can_fail_because": "the tied-block midpoint is computed off by one",
+   "null_must_contain": "the rank returned",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rank": 1.0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_null_does_not_reproduce_through_this_path",
+   "must_fire_because": null,
+   "can_fail_because": "|null - 0.1732| > 0.0005",
+   "null_must_contain": "both values and the difference",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "recomputed": 0.173226,
+    "g49_published": 0.1732,
+    "abs_diff": 2.6e-05,
+    "tolerance": 0.0005
+   },
+   "refutes": "that G49's null and the evaluator's split are the same object",
+   "fires_when": "|null - 0.1732| > 0.0005",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_the_system_is_not_below_its_null",
+   "must_fire_because": null,
+   "can_fail_because": "filtered_mrr >= null mrr",
+   "null_must_contain": "both numbers and the signed gap",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "filtered_mrr": 0.1358,
+    "null_mrr": 0.173226,
+    "signed_gap": -0.037426
+   },
+   "refutes": "the whole row; the status string would be fine",
+   "fires_when": "filtered_mrr >= null mrr",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the null does not reproduce through the evaluator's own composition, OR the system is not in fact below it",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

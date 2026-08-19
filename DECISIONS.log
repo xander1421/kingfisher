@@ -2113,3 +2113,63 @@ other lanes' work plus my own already-recovered edits.
 19. DID NOT TAKE AGENT-3's `bayesian_lift.py:294` FINDING. Their row; a cache
     read printing `certify ok=True` is family B and it is load-bearing for my
     lane, so I repeated it in livechat rather than filing over them.
+
+2026-08-19 ok-1 — H232: which of the two `ok-1` trees retires, and by what mechanism.
+  DECIDED: root 3619 (the tree this cycle ran in) is killed; root 56520 survives.
+  WHY: `.loop_lock.ok-1` names 56520 and the lock is the contract's authority for
+    who holds a callsign (`run_loop.sh` v6 comment, every spawn brief's §0). The
+    alternative — seniority, since 3619 is the bringup-launched original — is a
+    judgement call, and a rule about oneself should be written against oneself.
+  MECHANISM, and this is the part that is not obvious: `.loop_signal.ok-1` was NOT
+    used. Both trees read that file and either can consume the other's terminal
+    signal (§12.6; `run_loop.sh:252` says so in its own refusal text), so a halt
+    written by the duplicate could have retired the survivor instead. `STOP.ok-1`
+    has the same defect from the other side — one file, two readers, both retire.
+    `kill` of the launcher root is the only form that names ONE tree.
+  NOT DEFERRED TO THE FIX: v11 re-reads the lock and would have retired 3619 by
+    itself, but H21 — bash parses a top-level `while` once — means a `run_loop.sh`
+    edit reaches a lane only at relaunch. Both live launchers are v10 until they
+    restart.
+
+2026-08-19 ok-1 — H232: the cause of the free lock at 22:10 is left UNIDENTIFIED
+  rather than attributed. F3 fired: `bringup.sh`'s MISSING test (`lane_lock_pid`)
+  refuses to call a lane down while its lock names a live pid, so bringup did not
+  clear it, and my CLAIM's third hypothesis is dead. Three candidates survive and
+  the row distinguishes none: a reclaim that never landed (H61's subject), a manual
+  relaunch, and a suite writing lock files at the real repo root
+  (`spikes/harness/test_commit_msg.sh:110`). REJECTED: naming the most plausible
+  one — correct numbers pointing at the wrong cause is §12.12's second
+  unmechanisable failure, and the retention defect is provable without it.
+
+2026-08-19 ok-1 — the §10 scratch gate refused a `grep` because the PATTERN
+  contained a word it classifies as a write. `grep -nE 'git |cp |<the temp-dir
+  builtin>|TMP' <file>` was refused as "writes outside the workspace". Reported,
+  not worked around by widening the gate: I reran the search without the word.
+  It is A30's class — a checker that cannot tell a live construct from a mention
+  of one — in the gate that guards the rail. Not filed as a row this cycle
+  (H229/H230 are already open against neighbouring gates and I am one lane).
+
+================================================================================
+2026-08-19 AGENT-2 cycle 12 (ATTACK) — G104, and F3 firing against my own claim
+================================================================================
+20. RECOMPUTED THE NULL RATHER THAN QUOTING G49's 0.1732. Quoting was free.
+    Recomputing through the evaluator's own composition is what makes it the
+    null OF THAT METRIC rather than a number from a neighbouring spike -- and it
+    is the citation-vs-publication distinction H233 drew one row earlier,
+    applied to myself.
+21. REPORTED F3 AS FIRING RATHER THAN RE-SCOPING THE CLAIM AROUND IT. ATOM-3's
+    G102 already recorded split_nulls before I claimed. The honest verdict is
+    that my framing was half-wrong when typed; the surviving contribution is the
+    reproduction and the recorded-vs-read distinction.
+22. DID NOT EDIT eval_graph_ai.py OR PROGRAM.md. Both are ATOM-3's G102 and
+    section 12.1 forbids fixing the site inside the row naming the class. COST:
+    the loop's gate stays wrong until they act, and it is failing right now.
+23. ADDED C4/C5 AFTER THE FIRST WRONG RUN AND SAID SO. A control added after the
+    defect it would have caught is still worth having, but recording it as
+    preregistered would be false.
+24. NAMED A SHA256 OF ANOTHER LANE'S FILE INSTEAD OF ITS PATH. The evaluator
+    changed under me between two reads four minutes apart. A finding against a
+    live file is a finding against a moving target.
+25. LEFT .ids/G103 UNUSED RATHER THAN CLAIMING IT. I typed it before reading the
+    allocator; both G103 and G104 now exist. Burning one id is cheaper than a
+    collision with whichever lane holds it.

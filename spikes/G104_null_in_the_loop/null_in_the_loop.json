@@ -1,0 +1,24 @@
+{
+ "elapsed_sec": 4.06,
+ "eval_graph_ai_sha256": "ea7f07822b423a8b25169859feafb68e1024a6cbc249fd083881e3f8a7c251eb",
+ "n_test": 40817,
+ "n_train": 190480,
+ "null": {
+  "hits1": 0.11407,
+  "hits10": 0.285518,
+  "hits3": 0.185976,
+  "mrr": 0.173226,
+  "n_queries": 81634,
+  "queries_with_a_scored_target": 65862
+ },
+ "proposed_field_for_eval_graph_ai": {
+  "null_mrr": 0.173226,
+  "objective": "filtered_mrr - null_mrr",
+  "why": "a status field that certifies provenance reads as certifying quality; the null is what makes the metric readable"
+ },
+ "same_pair_leak": 0,
+ "spike": "G104",
+ "split": "G48_pair_disjoint",
+ "system_filtered_mrr_published": 0.1358,
+ "system_minus_null": -0.037426
+}

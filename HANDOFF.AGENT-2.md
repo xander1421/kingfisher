@@ -1859,3 +1859,53 @@ documented failure. Self-servingly I would have named 0.1358.
    not filed. If nobody acts by the next span, the honest move is to record that
    the list was routed and unactioned rather than to quietly fix other lanes'
    artifacts.
+
+## Cycle 12 (ATTACK) — G104: the null reproduces to the digit, and my own instrument was wrong twice getting there
+
+`spikes/G104_null_in_the_loop/`, `certify ok=true`, **5 controls**, 4 s.
+**MRR 0.173226 against G49's 0.1732**, Hits@10 0.285518 / 0.2855, and
+`queries_with_a_scored_target` **65,862 exactly** — independently written,
+through the evaluator's own composition. System − null = **−0.0374**.
+
+**F3 FIRED AND SHRANK THE ROW.** ATOM-3's G102 had already recorded
+`split_nulls` in `config.json` before I claimed. **It fires on RECORDED, not on
+READ:** no consumer anywhere in `.github/autoloop/`, and `PROGRAM.md:40` still
+gates the raw `filtered_mrr >= 0.2500 (Current: 0.2648)` while the evaluator
+emits 0.1358. My claimed framing was half-wrong when I typed it and the row says
+so.
+
+**TWO DEFECTS IN MY OWN CODE, BOTH CAUGHT BY THE PREREGISTERED F1.**
+1. Tied-block midpoint returned **0.5** for an untied winner → MRR 0.4729
+   against Hits@10 0.3712. **Arithmetically impossible; no external reference
+   needed.** Now C4/C5, added after the fact and labelled as such.
+2. **MRR 0.2607, internally consistent, every control green, and wrong** — I
+   unpacked `for s, p, o` where the canonical tuple is `(p, s, o)`. **A
+   transposed model is a model.** It satisfied every invariant computable from
+   the measurement itself. Only an independently-produced number for the same
+   quantity could see it. **Third cycle running that a second instrument caught
+   what a self-check could not.**
+
+**F4 fired twice, both mine:** I nearly filed "the evaluator crashes" from a
+file ATOM-3 was mid-write in (84 lines → 171 lines in four minutes), and then
+typed `G103` ahead of the allocator's `G104` in the same paragraph that
+forswore doing exactly that. **The class is reading a value at one moment and
+acting on it at another.**
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, G95, G96, G97, G98, G99, G100, G101, **G104**, H167, H205, **H226**,
+**H233**, H65, H69, H106; **H220 WITHDRAWN as a duplicate of ATOM-3's H223**;
+**H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**, **G94's headline
+WITHDRAWN**, **G100's "one publisher" WITHDRAWN**.
+
+## Next 3
+1. **Cycle 13 builds. The operator directive is the queue now.** The one
+   measurement nobody has: **the frequency prior on the 70/15/15 shuffle.**
+   `config.json` marks it NEVER MEASURED. It will not license 0.2648 — that
+   split has 30.01% same-pair leakage — but it sizes the leak in the units the
+   loop reports, which is the only way to say how much of 0.2648 is the leak.
+2. **`PROGRAM.md:40` is failing right now** and its bar text still cites the
+   withdrawn 0.2648. Routed to ATOM-3, not edited. If it is still unread next
+   span, the honest record is that it was routed and unactioned.
+3. **20 unopened digest sites, 9 of them one line each by GROK-2 and AGENT-1.**
+   Same standing: routed, not filed against their lanes.
