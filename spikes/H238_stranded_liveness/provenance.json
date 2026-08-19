@@ -1,0 +1,216 @@
+{
+ "spike": "H238_stranded_liveness",
+ "recorded_utc": "2026-08-19T21:50:18Z",
+ "note": "H238: stranded.sh v2 decided whether a file had a LIVE EDITOR without reading any liveness input, and IN-FLIGHT -- the verdict that tells the fleet to stand off -- was the absorbing state for a dead lane. v3 reads .loop_lock/.heartbeat and adds UNATTENDED. THE REPAIR IS SILENT ON TODAY'S TREE (UNATTENDED 0, every rostered lane beating), which is exactly why the defect survived unmeasured.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "7f512e83642ea8f14397b24e3459774439958ff8",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/bringup.sh",
+    "spikes/harness/stranded.sh",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/"
+   ],
+   "diff_sha256": "53de75c5b8087eea808eab5e1d285154ad7fae3c0cf4438e72df3ad089f5e9a3",
+   "diff_bytes": 17960
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H238_stranded_liveness/result.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H238_stranded_liveness/result.json",
+   "sha256": "da3d9d1d57a759788892bf4d8ba86bab1bddc6cd93483e0b2e6b77f332917373",
+   "bytes": 1866,
+   "mtime": 1787176218,
+   "compared_ts": 1787176218,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_baseline_is_not_the_candidate",
+   "must_fire_because": "v2 is read with `git show HEAD:` and its sha256 compared with the working tree, so the two columns are provably different files rather than the same file printed twice",
+   "can_fail_because": "HEAD already contains the repair, in which case probe2 exits 2 and publishes no delta",
+   "null_must_contain": "same file",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v2_sha256": "b92f567095b7f493e77dd1a0a21a4a175cfdbbc808385859095d4118774d5ed6",
+    "v3_sha256": "740c6b291cff149bfbe603f27c95b8b59658fd7803c725f49f0985ce8e718c8e",
+    "differ": true
+   }
+  },
+  {
+   "name": "C2_live_branch_is_reachable",
+   "must_fire_because": "a real running process renamed via `exec -a` so `ps -o command=` reads a run_loop.sh -- without it v3's LIVE branch is unreachable in the fixture and every other arm proves nothing (A15 inside the fix for A15)",
+   "can_fail_because": "`exec -a` is unavailable or the spin-wait times out, in which case probe2 exits 2",
+   "null_must_contain": "not reachable",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v2": "IN-FLIGHT",
+    "v3": "IN-FLIGHT",
+    "expect_v2": "IN-FLIGHT",
+    "expect_v3": "IN-FLIGHT",
+    "pass": true
+   }
+  },
+  {
+   "name": "C3_stranded_and_noowner_still_reachable",
+   "must_fire_because": "the repair added a verdict; the other three must still fire, or the vocabulary lost a branch while gaining one",
+   "can_fail_because": "v3 collapsed a branch into UNATTENDED",
+   "null_must_contain": "branch lost",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "v2": "STRANDED",
+    "v3": "STRANDED",
+    "expect_v2": "STRANDED",
+    "expect_v3": "STRANDED",
+    "pass": true,
+    "noowner_under_v3": "NO-OWNER"
+   }
+  },
+  {
+   "name": "C4_suite_can_go_red",
+   "must_fire_because": "7 mutants each delete one part of the repair and --selfcheck must refuse each; a check nobody has seen fail is not a check",
+   "can_fail_because": "a mutant stays green, naming an inert assertion",
+   "null_must_contain": "stayed green",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "refused": 7,
+    "not_refused": 0,
+    "anchor_miss": 0,
+    "rc": 0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_verdict_now_varies_with_liveness",
+   "must_fire_because": null,
+   "can_fail_because": "one arm, identical in every input but owner liveness, changes verdict IN-FLIGHT -> UNATTENDED",
+   "null_must_contain": "verdict unchanged",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "v2": "IN-FLIGHT",
+    "v3": "UNATTENDED",
+    "expect_v2": "IN-FLIGHT",
+    "expect_v3": "UNATTENDED",
+    "pass": true
+   },
+   "refutes": "that v3 is as blind as v2",
+   "fires_when": "one arm, identical in every input but owner liveness, changes verdict IN-FLIGHT -> UNATTENDED",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_in_flight_no_longer_absorbing",
+   "must_fire_because": null,
+   "can_fail_because": "v2 reads IN-FLIGHT at 1m/1h/1d/30d and v3 reads none of them IN-FLIGHT",
+   "null_must_contain": "still absorbing",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "ages": [
+     60,
+     3600,
+     86400,
+     2592000
+    ],
+    "v2": "IN-FLIGHT,IN-FLIGHT,IN-FLIGHT,IN-FLIGHT",
+    "v3": "UNATTENDED,UNATTENDED,UNATTENDED,UNATTENDED",
+    "v2_absorbing": true,
+    "v3_absorbing": false
+   },
+   "refutes": "that IN-FLIGHT is still a dead lane's permanent answer",
+   "fires_when": "v2 reads IN-FLIGHT at 1m/1h/1d/30d and v3 reads none of them IN-FLIGHT",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_stale_beat_still_defers",
+   "must_fire_because": null,
+   "can_fail_because": "the stale-beat arm stays IN-FLIGHT under v3",
+   "null_must_contain": "escalated",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "v2": "IN-FLIGHT",
+    "v3": "IN-FLIGHT",
+    "expect_v2": "IN-FLIGHT",
+    "expect_v3": "IN-FLIGHT",
+    "pass": true
+   },
+   "refutes": "that the repair calls a rate-limited live lane dead -- the direction that would tell a lane to touch live work",
+   "fires_when": "the stale-beat arm stays IN-FLIGHT under v3",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F4_disarms_without_apparatus",
+   "must_fire_because": null,
+   "can_fail_because": "the no-third-party arm stays IN-FLIGHT under v3",
+   "null_must_contain": "fired anyway",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "v2": "IN-FLIGHT",
+    "v3": "IN-FLIGHT",
+    "expect_v2": "IN-FLIGHT",
+    "expect_v3": "IN-FLIGHT",
+    "pass": true
+   },
+   "refutes": "that UNATTENDED fires where no lane produces liveness artifacts at all (a fresh clone, a non-fleet machine)",
+   "fires_when": "the no-third-party arm stays IN-FLIGHT under v3",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_verdict_now_varies_with_liveness",
+  "F2_in_flight_no_longer_absorbing",
+  "F3_stale_beat_still_defers",
+  "F4_disarms_without_apparatus"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787175987,
+   "from": "spikes/harness/stranded.sh"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the retired-owner arm staying IN-FLIGHT under v3, or the stale-beat arm escalating, or a mutant of the repair passing --selfcheck"
+}

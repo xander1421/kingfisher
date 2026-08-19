@@ -1932,3 +1932,105 @@ C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 · C8 H
    be measured on it** — a live fleet never produces the fixture. It needs a
    constructed dead-lane repo in scratch, two-sided. That is the cycle, not a
    paragraph.
+
+## Cycle 10 — H238. The stand-off verdict was the one a dead lane produced.
+
+`spikes/harness/stranded.sh` **v3** + `spikes/H238_stranded_liveness/`.
+`certify ok=True`, **4 controls all fired, 4 falsifiers all fired, 7/7 mutants
+refused**, `--selfcheck` green.
+
+**This closes cycle 9's NEXT 1 and it closes it by MEASURING it, not by
+repeating it.** That item had been carried as an unmeasured hypothesis for two
+cycles — cycle 8 asserted it, cycle 9 recorded that it *"cannot be measured on
+this tree"* because a live fleet never produces a dead lane. It was measured on
+a constructed one.
+
+> **CLASS: A CLASSIFIER WHOSE ONE JOB IS TO DECIDE WHETHER A FILE HAS A LIVE
+> EDITOR DECIDED IT WITHOUT READING ANY LIVENESS INPUT — AND ITS
+> BENEFIT-OF-THE-DOUBT BRANCH WAS THE ABSORBING STATE FOR THE EXACT FAILURE IT
+> WAS BUILT FOR.**
+
+- **KEPT, in full.** F1: hold every input fixed and vary only owner liveness —
+  verdicts identical **and the whole reports byte-identical**. F2: IN-FLIGHT at
+  1m / 1h / 1d / 30d. F3 (the control that had to fail) fired — STRANDED and
+  NO-OWNER stayed reachable in the same fixture, so the green is not an inert
+  rig. F4: the dead lane's file IS in the scan set, so the classifier was the
+  binding constraint and not reachability.
+- **§12.2 GREP: the class has exactly ONE real site, and I said so.** 27 other
+  files match the stand-off vocabulary and every one is prose in a comment.
+  `idscope.py`'s `in-flight-or-unfiled` is COUNTED-NEVER-SCORED by design;
+  `constcheck.py`'s is a population note; `pre-commit.hook:210` is static advice.
+  Manufacturing siblings would have made the sweep look productive and taught
+  the other lanes to grep for the wrong thing.
+- **FIXED under §12.9** (*either rower may fix one*), not routed — the failure
+  mode is the whole fleet standing off a dead lane's file forever, and a routed
+  row leaves that armed while it waits. ATOM-3 owns the module and is named in
+  `livechat.log`.
+
+### The two decisions that were mine and are recorded as decisions, not features
+
+1. **No heartbeat-age threshold.** The obvious death signal is a stale beat and
+   it is wrong here: `run_loop.sh:668` sleeps a rate-limited lane up to 22 h by
+   design. Any age cutoff is refuted by a HEALTHY lane, and the error direction
+   is the dangerous one (H19/H66). Presence only; a stale beat still defers, and
+   `--selfcheck` asserts that so the shortcut cannot be quietly taken back.
+2. **UNATTENDED disarms when no roster lane shows any artifact.** NONE is also
+   what a fresh clone and a pre-heartbeat launcher generation look like. A check
+   that cannot tell NO SIGNAL from NO APPARATUS is family A — the family of the
+   defect it repairs. Cost stated in `DECISIONS.log`: on a swept machine a truly
+   dead lane's file reads IN-FLIGHT again, and the run PRINTS that it is
+   disarmed rather than reporting a reassuring zero.
+
+### The published limit, which is the most important line here
+
+**On today's tree v3 changes nothing.** `STRANDED 7 · IN-FLIGHT 9 ·
+UNATTENDED 0 · NO-OWNER 1171`, no disarm notice, so the branch is **armed and
+silent** — every rostered lane is beating. A repair whose only evidence were a
+live-tree run would be indistinguishable from one never wired in. Hence the
+fixture and the seven mutants.
+
+### Error of mine this cycle
+
+`probe2.sh`'s first `OBS F2` put a `case` inside `$( )`. The pattern's own `)`
+closed the substitution, so **the probe emitted a malformed observation and
+still exited 0**. `certify_h238.py` refused to parse it, which is the only
+reason it was caught — a probe reporting success over an unreadable measurement
+is family B, inside the instrument written to catch family B. Fixed at the site
+with the note left there. I also wrote a second, INERT guard for it (a loop over
+an `obs.txt` that is never written) and deleted it rather than shipping it:
+certify already refuses on its `need` list, and a second copy of a gate is a
+second thing to drift.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 · C8 H221 ·
+C9 H230 (loop) · **C10 H238 (loop)** — quota met, two consecutive.
+
+### NEXT (3)
+1. **`refcheck.py` REFUSES on this tree and neither refusal is mine.**
+   `spikes/harness/bringup.sh:246` cites a section 15 of `test_loop_gate.sh`
+   whose sections stop at **12**; `HANDOFF.md` cites the deleted
+   `inbox/AGENT-1.md`. Both are in other lanes' UNCOMMITTED work so H19/H66
+   forbid touching them — reported in `livechat.log` instead. **If both are
+   still red in two cycles, that is a row about a gate the whole fleet reads as
+   someone else's problem, and it is mine to file then.**
+
+   **AND IT CAUGHT ME FIRST, WHICH IS THE POINT.** The first draft of this entry
+   quoted that citation in its own marker form, so `refcheck` refused MY commit
+   for MY file: **quoting a dangling citation propagates it.** That is CLAUDE.md's
+   first unmechanisable failure — claim decay across documents — arriving through
+   the one channel I would have called safe, a faithful quote inside a report of
+   the defect. Rewritten as prose so the marker is not re-emitted. The gate was
+   not weakened and nothing was excluded to pass it.
+2. **`selfcheckall.py` runs 22 python modules and DECLARES 11 shell modules
+   NOT RUN**, `stranded.sh` among them — *"they build git sandboxes"*. The
+   declaration is honest, so this is not a hidden gap; but `--selfcheck` on
+   `stranded.sh` now takes seconds and shells out to nothing dangerous, so the
+   exclusion may be broader than its reason. **Measure the 11 before proposing
+   anything** — an exclusion list justified for 11 files by a property true of
+   3 is the shape I keep finding.
+3. **`demo8.py` is still the 1-of-33 red in `selfcheckall`**, still for cycle
+   9's traced reason (its positive control reads S36's committed record, which
+   names a dirty S20). Two lanes' in-flight edits reddening a third spike's
+   harness selfcheck. Not filed, not mine to fix — but if it is still red after
+   S20 lands, the row is *a selfcheck whose verdict depends on other lanes'
+   uncommitted state*, and that one IS harness.

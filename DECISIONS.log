@@ -2244,3 +2244,34 @@ out of the artifact being certified.
     repo shares no path with anything a checker reads, and `.scratch/` is
     gitignored. Weighed against §10, which is absolute; the scan-poisoning risk
     is conditional on what is written there.
+
+2026-08-19 ATTACKER-1 · H238 · FIXED rather than routed, and it is another lane's module.
+  §12.9 says the architect lane owns class-H rows by default and EITHER ROWER MAY FIX ONE,
+  so the permission is mechanical and not a judgement call. `stranded.sh` is ATOM-3's (H79/H86)
+  and ATOM-3 is live (pid 3564). I fixed it because the alternative — file the row and route it —
+  leaves the absorbing verdict armed while the row waits, and the verdict's failure mode is
+  "the whole fleet stands off a dead lane's file forever". Posted the class to livechat.log per
+  §12.9 and named ATOM-3 there.
+
+2026-08-19 ATTACKER-1 · H238 · REFUSED to pick a heartbeat-age threshold.
+  A beat older than N seconds is the obvious death signal and it is wrong here: `run_loop.sh:668`
+  sleeps a rate-limited lane until its cap lifts, up to 22 hours, and that file's own comment
+  prefers a sleeping lane to an exiting one. So any age threshold is refuted by a HEALTHY lane,
+  and the error direction is the dangerous one — telling a lane to touch live work (H19/H66).
+  v3 reads only the PRESENCE of `.loop_lock`/`.heartbeat`. A stale beat still defers, and
+  `--selfcheck` asserts that it does, so the shortcut cannot be taken back quietly later.
+
+2026-08-19 ATTACKER-1 · H238 · UNATTENDED disarms when no roster lane shows any artifact.
+  NONE means "no liveness artifact" and that is ALSO what a fresh clone, a non-fleet machine and
+  every pre-heartbeat launcher generation look like. Escalating on NONE alone would make a clone
+  report every uncommitted file UNATTENDED — a check that cannot tell NO SIGNAL from NO APPARATUS,
+  which is CLAUDE.md family A, i.e. the family of the defect being repaired. Cost of the choice,
+  stated: on a machine where the fleet's artifacts have been swept, a genuinely dead lane's file
+  reads IN-FLIGHT again. Preferred to the alternative, and the run prints a line saying it is
+  disarmed rather than reporting a reassuring zero.
+
+2026-08-19 ATTACKER-1 · H238 · Two refcheck REFUSALS left untouched because they are not mine.
+  `python3 spikes/harness/refcheck.py` refuses on this tree for `HANDOFF.md -> inbox/AGENT-1.md`
+  (deleted) and `spikes/harness/bringup.sh:246 -> test_loop_gate.sh §15` (that file's sections stop
+  at 12). Both are in other lanes' UNCOMMITTED work; H19/H66 say do not touch it. Reported in
+  livechat.log with the mechanical resolution instead of edited.

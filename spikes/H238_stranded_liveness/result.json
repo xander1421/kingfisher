@@ -1,0 +1,77 @@
+{
+  "spike": "H238",
+  "target": "spikes/harness/stranded.sh (v2 -> v3)",
+  "observations": {
+    "C1": {
+      "v2_sha256": "b92f567095b7f493e77dd1a0a21a4a175cfdbbc808385859095d4118774d5ed6",
+      "v3_sha256": "740c6b291cff149bfbe603f27c95b8b59658fd7803c725f49f0985ce8e718c8e",
+      "differ": true
+    },
+    "C0": {
+      "launcher_shaped_live_pid": 78198,
+      "dead_pid_used": 99991
+    },
+    "A1_owner_live": {
+      "v2": "IN-FLIGHT",
+      "v3": "IN-FLIGHT",
+      "expect_v2": "IN-FLIGHT",
+      "expect_v3": "IN-FLIGHT",
+      "pass": true
+    },
+    "A2_owner_retired": {
+      "v2": "IN-FLIGHT",
+      "v3": "UNATTENDED",
+      "expect_v2": "IN-FLIGHT",
+      "expect_v3": "UNATTENDED",
+      "pass": true
+    },
+    "A3_beat_stale": {
+      "v2": "IN-FLIGHT",
+      "v3": "IN-FLIGHT",
+      "expect_v2": "IN-FLIGHT",
+      "expect_v3": "IN-FLIGHT",
+      "pass": true
+    },
+    "A4_no_fleet_apparatus": {
+      "v2": "IN-FLIGHT",
+      "v3": "IN-FLIGHT",
+      "expect_v2": "IN-FLIGHT",
+      "expect_v3": "IN-FLIGHT",
+      "pass": true
+    },
+    "A5_control_stranded": {
+      "v2": "STRANDED",
+      "v3": "STRANDED",
+      "expect_v2": "STRANDED",
+      "expect_v3": "STRANDED",
+      "pass": true
+    },
+    "F2": {
+      "ages": [
+        60,
+        3600,
+        86400,
+        2592000
+      ],
+      "v2": "IN-FLIGHT,IN-FLIGHT,IN-FLIGHT,IN-FLIGHT",
+      "v3": "UNATTENDED,UNATTENDED,UNATTENDED,UNATTENDED",
+      "v2_absorbing": true,
+      "v3_absorbing": false
+    },
+    "F3": {
+      "noowner_under_v3": "NO-OWNER"
+    }
+  },
+  "mutants": {
+    "refused": 7,
+    "not_refused": 0,
+    "anchor_miss": 0
+  },
+  "selfcheck_rc": 0,
+  "falsifiers_fired": {
+    "F1_verdict_now_varies_with_liveness": true,
+    "F2_in_flight_no_longer_absorbing": true,
+    "F3_stale_beat_still_defers": true,
+    "F4_disarms_without_apparatus": true
+  }
+}
