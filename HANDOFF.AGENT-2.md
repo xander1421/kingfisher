@@ -1953,3 +1953,72 @@ transposed model passed every self-consistency test it had.
    produced a method that beats 0.1732 leak-free — G51/G54's 0.2313 does, and
    it is a different method. **The next build should be aimed at that gap, not
    at another audit.**
+
+## Cycle 14 (BUILD) — H245: the loop's runner could not tell a refusal from a crash
+
+`scripts/autoloop.py` **v2** + `--selfcheck`, `spikes/H245_evaluator_refusal_vs_crash/`,
+`certify ok=true`, **6 controls**, 3 falsifiers preregistered, none fired.
+
+`run_evaluator` returned on `p.returncode != 0` **before `json.loads` was
+reached**. `eval_hygiene.main()` prints a full payload and ends
+`return 0 if all_ok else 1`, so `--eval` threw away `hygiene_score 0.0`,
+verdict `VIOLATED` and two named violations, then printed *"invariants fail
+because it could not be checked, NOT because it regressed"*. **Both halves of
+that sentence were false.** Family B.
+
+| | pre-fix | live |
+|---|---|---|
+| ran and REFUSED (payload, exit 1) | dropped | **KEPT** |
+| CRASHED / truncated / exit-2-no-payload | dropped | dropped |
+| exit 0 + `error` key | dropped | dropped |
+| ran and PASSED | KEPT | KEPT |
+| JSON that is a **list** | **KEPT** | dropped |
+
+**F4 fired: this is a SITE, not the class I claimed.** 28 `returncode` call
+sites swept; `railguard`/`recordloss` wrap git (rule is right there),
+`selfcheckall.py:122` already handles both directions and cites H72. What
+generalises is *read the channel the verdict is carried on* — exit code for a
+boolean, payload for a number.
+
+**The part I would keep: C6 came from reading the CALLER, not from any arm.**
+My first fix returned payload-only and all seven arms went green;
+`is_eligible = invariants and not errors and pareto` means that would have moved
+an evaluator refusing **with in-bounds metrics** from REJECTED to ELIGIBLE. v2
+returns both. **Composite 0.5953 -> 0.5102** — stricter, not looser.
+
+Also this cycle: **G104 C4 CORRECTED** — `mrr <= hits10` is false at `h=0` and
+gave AGENT-3 ten false positives across 370 arms. Tight bound
+`MRR <= h + (1-h)/11` adopted from AGENT-3, checked in both directions, G104
+re-certified. And a **misattribution in my own commit `27ebe66`** posted to
+`CHANNEL.md` rather than amended, because `HEAD` had moved to another lane.
+
+## Next 3
+1. **Cycle 15 builds, cycle 16 is the ATTACK and §12.8 makes it the loop's
+   turn** (last loop-targeted ATTACK was cycle 8, H205; H245 was a BUILD on the
+   loop, which does not discharge it). Standing candidate, evidence in hand:
+   the CLASS behind `bayesian_lift.py:294` — *a generator that silently returns
+   a cached artifact while `certify` prints ok=true over it* — never swept
+   across `spikes/`.
+2. **RETRACTED, MINE, AND IT REACHED THE OPERATOR: "the loop's objective is a
+   negative-lift number, so it will optimise toward whatever recovers the
+   leak."** I wrote a version of this in cycle 13's Next-3 and AGENT-3 relayed
+   it to the operator *in my terms and attributed to me*, including the clause
+   *"a different method from the one the evaluator scores"*. **The evaluator
+   scores exactly that method.** `eval_graph_ai.py:4-7` prefers G54 over G51 by
+   design and `:126` publishes `source: G54_slice_gated_lift`; the live `--eval`
+   emits `filtered_mrr 0.2313`, `split pair_disjoint`, gated against its own
+   null 0.1732 for **+0.0581**. So the loop's objective is **positive-lift on
+   the honest split**, not negative.
+   **What survives, and it is a different sentence:** the *mined rule* line
+   (G34/G64's five classes, 0.1358) loses to that same null by −0.0374 and is
+   **not what the loop scores** — `config.json`'s `not_a_bar` block already
+   records it as "the mined line's FAILING STANDING". Claim decay, CLAUDE.md's
+   first untoolable failure: "the mined system is below its null" became "the
+   loop's objective is below its null" in two documents and one relay.
+3. **`config.json` `split_nulls.shuffle_70_15_15` still reads `null_mrr: null`
+   / "NEVER MEASURED — one run, claimed by AGENT-2", and I measured it in cycle
+   13: G106 = 0.172163.** `autoloop.py`'s own comment already cites that number
+   while the data table says it was never measured. ATOM-3 also routed me
+   WN18RR's official null (G105 = 0.0256) for a `wn18rr_official` entry, and
+   `grep -ic wn18` across every evaluator is still **0**. That is a small,
+   entirely-mine edit and it is the cheapest thing on this list.
