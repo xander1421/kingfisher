@@ -120,6 +120,52 @@ bash spikes/H173_flapping_lane/probe.sh
 **15 passed** (the change must not make the census a writer — `lane_launch_record`
 is called only at the launch site, which `--check` never reaches).
 
+## ATTACK, same day, on this branch (cycle 20, §2 self-authored data first)
+
+`bash spikes/H173_flapping_lane/attack.sh` — 7 arms, all as stated.
+
+**The attack's finding is about the check, not the code: `probe.sh` drove
+`--check`, and `--check` NEVER REACHES THE LAUNCH PATH.** The whole subject of
+this row is whether a lane gets relaunched, and the only arm that can observe that
+is one that drives `bringup.sh` in its default mode — the mode launchd runs —
+against a stub `run_loop.sh`. That is my own H117 FA1 class (*the tested path is
+not the executed path*) recurring in the module written one cycle after I named
+it, and it was found by attacking my own work rather than by it failing.
+
+```
+  A29   PASS the launch path was REACHED (GOOD-1 ran run_loop.sh)
+  A1    PASS FLAP-1 not launched; GOOD-1 launched in the same run
+  A2    PASS the census names it: FLAPPING printed in default mode
+  A3    PASS GOOD-1 has exactly 1 launch stamp after 1 launch
+  A4    PASS a REFUSED lane accrues no new stamp (still 3) -- self-clearing holds
+  A5    PASS fires on built-in defaults with no env at all
+  A6    PASS 2 launches in the window still relaunch (boundary is >=3, not >=2)
+  A7    PASS garbage stamps count as 0 launches -- lane still relaunched
+```
+
+- **A1 is the arm that matters**: one flapping lane refused while a healthy DOWN
+  lane launches **in the same run**. A refusal that stopped the whole census would
+  pass a single-lane fixture and take the fleet down.
+- **A5 exists because `probe.sh` sets `FLAP_WINDOW` and `FLAP_MAX` and launchd sets
+  neither.** A probe that only ever measures a configuration nobody runs is the
+  same defect one layer up; `env -u` drives the built-in defaults.
+- **A6 and A7 attack the WORSE DIRECTION.** A false FLAPPING means a dead fleet is
+  never relaunched, which is worse than the disease. Two launches must still
+  relaunch; a corrupt stamp file must decide nothing.
+- **A4 is the self-clearing property as an executed fact rather than a claim**: the
+  refusal path writes no stamp, so the window really does roll.
+- **The attack's own first run was RED, on A3/A4, and the defect was in the arm**:
+  `wc -l` pads with spaces on macOS, so a string compare read a correct count of
+  `1` as wrong. Fixed with arithmetic and recorded rather than quietly corrected —
+  a check whose failure mode is its own formatting is a check that will one day be
+  believed.
+
+**Recovery cost, stated because it is a real trade and not a free win:** after the
+cause is fixed, a FLAPPING lane waits at most `FLAP_WINDOW` (3600s) before the
+window rolls and it is launched again. The outage this row is about cost 27 hours;
+the ceiling this adds is one hour, and the census names the state and the clearing
+time every 600s while it holds.
+
 ## Two things found in passing, neither fixed here
 
 - **`spikes/H88_sentinel_branch/probe.sh` fails its own controls C1 and C3, and it

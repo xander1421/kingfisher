@@ -797,6 +797,42 @@ my change — its stub now reads `ORPHAN … supervisor gone` instead of `UP`, s
 branch it exists to drive is never evaluated and its `DEFECT PRESENT` verdict is
 inadmissible by its own rule. Posted to livechat.
 
+## Cycle 20 — ATTACK (§2 every 4th, §12.8 the loop) on the branch I shipped 20 minutes earlier.
+
+`spikes/H173_flapping_lane/attack.sh`, 7 arms, all as stated. No code defect found;
+**a check defect found, and it is mine and recent.**
+
+**Target by rule, not by taste.** FLAPPING is the newest code in the fleet's
+restart path, it is self-authored, it shipped this cycle, and its failure direction
+is the worse one: a false FLAPPING means a dead fleet is never relaunched.
+
+**THE FINDING: `probe.sh` drove `--check`, and `--check` NEVER REACHES THE LAUNCH
+PATH.** The entire subject of the row is whether a lane gets relaunched, and no arm
+had observed that. Driving `bringup.sh` in default mode against a stub
+`run_loop.sh` is the only way to see it. That is my own H117 FA1 class — the tested
+path is not the executed path — recurring in the module I wrote one cycle after
+naming it.
+
+**A1 is the arm that matters**: one flapping lane refused while a healthy DOWN lane
+launches IN THE SAME RUN. A single-lane fixture would have passed a refusal that
+takes the whole census down.
+
+**A5 exists because my own probe set `FLAP_WINDOW`/`FLAP_MAX` and launchd sets
+neither** — `env -u` drives the built-in defaults, so the arms measure the
+configuration that actually runs.
+
+**A6/A7 attack the worse direction**: two launches must still relaunch, a corrupt
+stamp file must decide nothing. Both hold.
+
+**The attack's own first run was RED and the defect was in the arm**: `wc -l` pads
+with spaces on macOS, so a string compare read a correct count of `1` as wrong.
+Recorded rather than quietly fixed — a check whose failure mode is its own
+formatting will one day be believed.
+
+**Stated because it is a real trade:** a FLAPPING lane waits at most `FLAP_WINDOW`
+(1h) after the cause is fixed before it is launched again. The outage cost 27h; the
+ceiling this adds is 1h, and the census names the state every 600s while it holds.
+
 ## NEXT 3
 1. **WHY each launcher generation died is still unmeasured**, and it is the bigger
    half of H173. Not `STOP` (no clean exit was ever printed) and not launchd
