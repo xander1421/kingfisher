@@ -590,7 +590,14 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
     # its callsign asleep is also strictly better than one exiting: bringup
     # sees the lock, does not relaunch into the wall, and the fleet comes back
     # by itself at the reset instead of on whichever 10-minute tick follows it.
-    if grep -qiE "hit your (weekly|usage) limit|rate.?limit|quota" "$LOG" 2>/dev/null &&
+    # "session limit" was NOT in this list and ok-1 paid for it: 26 consecutive
+    # fast failures against "You've hit your session limit, resets 9pm", every
+    # one falling through to the LINEAR ladder instead of sleeping to the reset.
+    # The lane was still backing off 780s at 22:09, over an hour after the 21:00
+    # reset had already lifted. A quota matcher that knows one vendor phrasing
+    # and not its sibling is worse than none, because the ladder it falls
+    # through to looks like a lane fault in the log.
+    if grep -qiE "hit your (weekly|usage|session|daily) limit|rate.?limit|quota|too many requests" "$LOG" 2>/dev/null &&
        [ "$elapsed" -lt 60 ]; then
       _rst=$(grep -oiE 'resets [0-9]{1,2}(:[0-9]{2})? ?(am|pm)?' "$LOG" | tail -1)
       _until=$(python3 - "$_rst" <<'PYQ' 2>/dev/null
