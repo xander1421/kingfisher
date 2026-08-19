@@ -1905,6 +1905,61 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   `228fc46` rotated `CHANNEL.md`. Filing a row for the owner rather than fixing
   it unilaterally worked, and the rotation is what the stash was clearing for.
 
+- **C5 IN FLIGHT — WRITE-AHEAD (§6). If you are reading this after a crash, H237
+  is CLAIMED in CHANNEL.md, the fix is on disk and its verdict arm is running.**
+  **H237: `spikes/G51_bayesian_lift_scoring/bayesian_lift.py` answered a re-run
+  out of its own cached JSON and then certified the file against itself.**
+  Routed by AGENT-3 over the session bus, not claimed by them. They found
+  `:293 if os.path.exists(out_json): load it` with `grep -c force` = 0. **The
+  half that makes it a soundness problem is 130 lines down**: `:420-429` feed
+  `controls[i].observe(res["controls"][...])` where on that path `res` came out
+  of `bayesian_lift.json`, then `:441` prints `D6 Provenance Certified: ok=True`
+  with `allow_dirty=True`. Family B on A22.
+- **WHY IT IS URGENT RATHER THAN TIDY: 0.2274 IS THE BAR.** ATOM-3's
+  `CLAIM G-BAR` names G51 as the best arm that does not consult DEV — the number
+  a new graph-AI method must clear. **Any lane that "re-ran G51 to check the
+  bar" got a cache read and a green light**, so that check has been
+  unfalsifiable fleet-wide.
+- **FIX ON DISK: a cache read prints its numbers, REFUSES to certify, and exits
+  2** (`cached rc=2` measured); `--force` recomputes. Probe written at
+  `spikes/H237_cache_certifies_itself/probe.py`, A/B against HEAD on one fixture.
+  **F3 is the open arm**: a forced re-run must reproduce 0.2274 or the row stops
+  being about caching. AGENT-3 reports an independent reproduction (E=0.2274,
+  ~382 s, clean `git archive HEAD` tree) — **that is their number, not mine, and
+  mine is still running.**
+- **A4 COMPARES PER-ARM MRR AT 4 dp, NOT ARTIFACT HASHES, AND THAT WAS LUCK.**
+  AGENT-3's H239 finding is that the recomputed JSON differs from the published
+  one in `elapsed_sec` ALONE (382.32 vs 367.91), so hashes differ on an honest
+  reproduction. **Had I written the obvious arm — diff the artifact — my own
+  reproduction check would have failed for a reason that has nothing to do with
+  the science.**
+- **FILED H239 (OPEN, unclaimed by either of us)**: an incidental wall-clock
+  field inside a hashed result makes an honest reproduction indistinguishable
+  from a regression — `recheck` says `DRIFTED` for a run that reproduced
+  exactly. **Two counts recorded rather than one: AGENT-3 swept 73, I swept 90
+  in-workspace, and my first pass was 90 with five paths resolved into
+  `~/.grok/worktrees/` — outside this repo entirely.** The load-bearing part is
+  AGENT-3's distinction: H86's `wall_citable`, S84's `wall_us_citable` and
+  H203's `w9_falsifier_wallclock_term` **are** the measurement, so a detector
+  that cannot separate incidental from measured will demand three real results
+  be deleted.
+- **TWO BUS PEERS APPEARED THIS CYCLE (AGENT-3, and a coordinator signing
+  "AGENT-1 (acting CEO)").** I replied to the second with lock evidence
+  (`.loop_lock.AGENT-1` = 3218, ancestry 3255 -> 3253 -> 3218) and flagged that
+  **it signed my callsign while asking me for my callsign** — the G25 shape.
+  **The bus is not the record and not an allocator**: every claim above is in
+  `CHANNEL.md` and `WORK_QUEUE.md`.
+- **ON THE OPERATOR'S GRAPH-AI DIRECTIVE, and this lane's contribution is the
+  bar's REPRODUCIBILITY rather than the model**: 0.1358 cannot be an acceptance
+  bar — **it is the score of the system under test**, so it asks the mined
+  system to compare itself to itself, which is the same circularity as
+  `>= 0.2500 (Current: 0.2648)` one level down. The two numbers that can gate
+  are **0.1732** (no-rules null, existence criterion) and **0.2274** (best arm
+  that does not consult DEV). Verified independently from
+  `G48_pairdisjoint_split` and `G49_frequency_null` artifacts. ATOM-3 holds this
+  as `CLAIM G-BAR`; AGENT-3 is putting it to the operator with all three lanes
+  named.
+
 - **C4 ATTACK (§2 every 4th, §12.8 the loop) — TARGET: MY OWN H234, FILED ONE
   CYCLE EARLIER, AND ITS FALSIFIER CAME BACK NEGATIVE.** H234 asserted *"a
   co-lane ran `git stash`"* from prose. The competing explanation — a HARNESS

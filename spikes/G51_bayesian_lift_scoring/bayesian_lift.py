@@ -291,11 +291,38 @@ def main():
     t0 = time.time()
     out_json = os.path.join(HERE, "bayesian_lift.json")
     
-    # If cached results exist, load them to avoid redundant 4-minute re-evaluation
-    if os.path.exists(out_json):
+    # ==== H237, 2026-08-19, AGENT-1 — A CACHE READ MAY NOT CERTIFY ==========
+    # DEFECT REMOVED: THIS FUNCTION ANSWERED A RE-RUN FROM DISK AND THEN
+    # CERTIFIED THE FILE AGAINST ITSELF.
+    #
+    # The cache load below is fine and stays -- the evaluation is minutes long
+    # and re-reading it to inspect a number is legitimate. What was not fine is
+    # 130 lines further down: `controls[i].observe(res["controls"][...])` and
+    # the same for falsifiers, where on this path `res` came out of
+    # `bayesian_lift.json`. Every control then observed a verdict it had just
+    # read from the artifact it was certifying, and the run printed
+    # `D6 Provenance Certified: ok=True` having computed nothing. Family B (the
+    # instrument reports fiction) sitting on A22 (a party supplying the input to
+    # a check on itself). There was also no way to ask for a real run:
+    # `grep -c force` was 0.
+    #
+    # ROUTED BY AGENT-3 OVER THE SESSION BUS. They reported the cache read; the
+    # observe-your-own-artifact half is what makes it a soundness problem, and
+    # it matters now because 0.2274 is the number ATOM-3's `CLAIM G-BAR` names
+    # as THE REAL BAR -- so any lane that "re-ran G51 to check the bar" got a
+    # cache read and a green light.
+    #
+    # THE FIX REFUSES, IT DOES NOT WARN: a cached run still prints its numbers
+    # and exits NONZERO without certifying. `--force` recomputes.
+    #
+    # Check: python3 spikes/H237_cache_certifies_itself/probe.py
+    CACHED = os.path.exists(out_json) and "--force" not in sys.argv
+    if CACHED:
         with open(out_json, "r") as f:
             res = json.load(f)
         print("Loaded existing benchmark results from bayesian_lift.json")
+        print("NOTE: this is a CACHE READ. It will NOT be certified -- "
+              "re-run with --force to produce a certifiable result.")
     else:
         nt, npred, nent, tri = load_raw_triples()
         train, dev, test, n_groups = pair_disjoint_split(tri, SEED)
@@ -427,6 +454,16 @@ def main():
     ]
     falsifiers[0].observe(res["falsifiers"]["F1_strictly_beats_prior"]["fired"], res["falsifiers"]["F1_strictly_beats_prior"])
     falsifiers[1].observe(res["falsifiers"]["F2_beats_additive_g50"]["fired"], res["falsifiers"]["F2_beats_additive_g50"])
+
+    if CACHED:
+        # REFUSE. A control that observes a value read out of the artifact it is
+        # certifying has not observed anything, and a green light here is worth
+        # less than no light at all.
+        print("\nD6 Provenance: REFUSED — these numbers were LOADED, not computed.")
+        print("  Every control below would observe a verdict read from "
+              "bayesian_lift.json, i.e. certify the artifact against itself.")
+        print("  Re-run with:  python3 bayesian_lift.py --force")
+        return 2
 
     ok, problems = kfcheck.certify(
         HERE,
