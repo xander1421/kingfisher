@@ -1,0 +1,17 @@
+  A1   PASS decoy NAMED run_loop.sh holds the lock -> surv=0 parent=2 (the observed 0/2/0)
+  A2   PASS same process under another NAME -> stale, reclaimed, surv=1 parent=1 (healthy)
+  C1   PASS the two seeds produce DIFFERENT outcomes (0 vs 1), so the seed is what is being measured
+  C2   PASS live .loop_lock.* unchanged
+
+  WHAT THIS DOES AND DOES NOT SHOW.
+  SHOWN: run_loop.sh's holder check is satisfied by ANY live process whose
+  command names run_loop.sh. The lock records a pid and nothing else, and the
+  callsign it guards is only in the filename, so a pid that has been reused by
+  another lane's launcher reads as MY live holder and refuses a legitimate
+  lane. This machine runs 5 lanes and the launcher's own comment records
+  ~1300 pids/min, wrapping macOS's pid space in ~75 min -- so the reused pid
+  does not have to be lucky, it has to land on any one of them.
+  NOT SHOWN: that this is what happened in the H178 capture. A construction
+  that reproduces a signature is not evidence that the signature had that
+  cause. probe.sh samples the unforced case and says so separately.
+H189 attack: all arms as stated

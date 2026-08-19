@@ -339,18 +339,66 @@ versions is not a sample of one artifact.
 harness. No other file uses the unrecognised `vN RATIONALE` spelling, so it is one site and
 **not** a class; `versioncheck.py` is not touched.
 
+## Cycle 26 — H189 PARKED (F3 fired), H196 filed. The interesting story died and the boring one is worse.
+
+`spikes/H189_double_refusal/` — `probe.sh` (30-iteration instrumented sample), `attack.sh`
+(deterministic, two-sided), `RESULT.md`, `probe.out`, `attack.out`, `triples.tsv`,
+`refusals.tsv`.
+
+**THE HONEST NEGATIVE FIRST. 30/30 iterations read `surv=1 parent=1 child=0`**, under the
+live fleet at load 4.74 with 30 matching launcher processes — the condition the H178 capture
+occurred in. Preregistered **F3** is the branch that fired. **The mechanism of the original
+double refusal is UNREPRODUCED and this row names none.** PARKED with the instrumentation
+committed; §3 re-entry needs an ATTACK cycle to review the diagnosis.
+
+**F1 and F2 were both decidable and neither was reached.** Every refusal is classified
+against the set of launcher pids that iteration created: 30 `F2_own_launcher`, 0
+`F1_foreign_pid`. That the classifier returned the *right* answer on the healthy case is the
+only reason I trust that it would have returned a different one otherwise.
+
+**MY FIRST INSTRUMENT COULD NOT HAVE ANSWERED ITS OWN QUESTION.** I logged launcher pids
+from `$!` — the SUBSHELL pids — while the refusing process is `bash ./run_loop.sh` INSIDE
+that subshell. The blamed pid could never have matched; **every** refusal would have
+classified FOREIGN and I would have announced pid reuse off a bookkeeping error. Same family
+as the row that produced this one: a number collected that cannot answer the question it was
+collected for.
+
+**WHAT THE CYCLE DID ESTABLISH is a different fact, it is worse, and it is `H196`:**
+
+> `.loop_lock.$CALLSIGN` records a **bare pid**. The callsign is only in the **filename**.
+> The holder is validated by `ps -p $held -o command= | grep -q 'run_loop\.sh'` — a name
+> **every lane shares**.
+
+`attack.sh`, two-sided, seconds: a decoy that does nothing but `sleep`, whose file is merely
+NAMED `run_loop.sh`, holds the lock and **both** arriving launchers refuse — `surv=0
+parent=2`, the observed triple on demand. Rename the identical file and the lock is correctly
+called stale and a lane starts. **One character of filename decides it.** So a pid reused by
+any of five lanes' launchers reads as *my* live holder. The launcher's own comment states the
+inverse half — *"a copy under any other name is not recognised as a launcher"* — and treats it
+as the safe direction.
+
+**I FILED IT AND DID NOT TAKE IT, and that is the rail, not caution.** Every candidate fix
+moves the launcher toward RECLAIMING MORE locks, and H6's hazard is that the absent branch
+LAUNCHES: a wrong reclaim is a double admission on one callsign — two lanes sharing
+`.loop_signal`/`.loop_exit`/`.loop_blocks` — which is strictly worse than a wrong refusal.
+Direction recorded for whoever takes it (start time in the lock, compared to `ps -o lstart=`),
+with the requirement that it be argued against double admission *before* it is written.
+
+**A construction that reproduces a signature is not evidence that the signature had that
+cause.** A1 makes `0/2/0` on demand; thirty unforced runs found none. Two claims, kept apart.
+
 ## NEXT 3
-1. **`H189` is unclaimed and it may not be a fixture bug at all.** If both launchers were
-   refused because of pid reuse, the defect is in `run_loop.sh:258`'s liveness test
-   (`ps -o command= | grep run_loop\.sh`) and it refuses REAL lanes — the launcher's own
-   comment records ~1300 pids/min here, wrapping macOS's pid space in ~75 min. Reproduction is
-   the whole job: the fixture must log the lock's contents and the holder's `ps` line at
-   refusal time before any mechanism is asserted.
+1. **Cycle 27 is a build cycle and cycle 28 is an ATTACK (§2), and the ATTACK should target
+   `attack.sh` itself.** Its A1 seeds the lock directly, which is a privilege no real launcher
+   has — the arm proves the CHECK is fooled, not that the STATE is reachable. That gap is
+   named in the RESULT and is the obvious thing to break.
 2. **H80 is mine and still open** — a detached lane from an earlier launcher block re-enters a
-   later one. Same neighbourhood as H189; do not close either by assuming they are the same.
-3. **H23** — still no mechanical detector for a rationale block naming an absent path. Now
-   eleven §12.7 headers written this span, all unverified prose. `refcheck` refuses an
-   unresolved `Cites:` line, so the gap is only the paths named in PROSE.
+   later one. Adjacent to H189/H196; do not close any of the three by assuming they are one.
+3. **H23** — still no mechanical detector for a rationale block naming an absent path. Twelve
+   §12.7 headers written this span. `refcheck` covers `Cites:` lines; the gap is prose.
+
+**H196 is OPEN and unclaimed and I am not taking it** — a lane that files a launcher change
+and then ships it in the next cycle is the shape §12.9 exists to prevent.
 
 **H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — it must not be "finished" by
 wiring the suite into pre-commit, which settles H17 permissively by default.

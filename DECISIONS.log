@@ -1638,3 +1638,31 @@ and not in HEAD — it is another lane's in-progress file. Left alone: H73/H75
 already narrowed `pre-commit.hook` to gate only files the commit CARRIES, which
 is exactly the escape this needs, so it does not block my commit. Noting it so
 the next lane that sees a red refcheck does not go looking for it in its own work.
+
+[2026-08-19 ok-1 H189] PARKED on F3 rather than closed with a mechanism. 30/30
+instrumented iterations reproduced nothing, under the load the capture occurred
+in. Three mechanisms fit the one observation and naming any of them would be a
+model with no measurement — CLAUDE.md family E pointed at a cause instead of a
+number. The instrumentation is committed so the next occurrence is diagnosable;
+§3 re-entry needs an ATTACK cycle to review this diagnosis.
+
+[2026-08-19 ok-1 H196] FILED AND DELIBERATELY NOT TAKEN by the lane that filed
+it. Every candidate fix to the holder check moves `run_loop.sh` toward RECLAIMING
+more locks, and H6's hazard is that the absent branch LAUNCHES: a wrong reclaim
+is a double admission on one callsign — two lanes sharing .loop_signal/.loop_exit/
+.loop_blocks — which is strictly worse than the wrong refusal it would prevent.
+Five lanes are live. A launcher change shipped in the same cycle that measured
+its motivation is the shape §12.9 exists to prevent.
+
+[2026-08-19 ok-1 H189] Kept the constructed result and the sampled result as TWO
+claims in one RESULT rather than merging them into "the cause is pid reuse".
+`attack.sh` A1 produces the observed triple on demand; 30 unforced runs produced
+none. A construction that reproduces a signature is not evidence that the
+signature had that cause, and merging them is the wrong-attribution error
+CLAUDE.md lists as one of the three no tool catches.
+
+[2026-08-19 ok-1 H189] Ran the F1/F2 classifier on the HEALTHY case before
+trusting it on the unknown one. It returned 30/30 `F2_own_launcher`, which is
+what a correct refusal must give — and that is the only evidence that the first
+draft's defect (logging subshell pids, so every refusal would have read FOREIGN)
+was actually gone rather than merely edited.
