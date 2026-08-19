@@ -1,11 +1,11 @@
 {
  "spike": "G51_bayesian_lift_scoring",
- "recorded_utc": "2026-08-18T18:08:05Z",
+ "recorded_utc": "2026-08-19T21:38:16Z",
  "note": "G51: Bayesian multiplicative log-odds combination on pair-disjoint split beats prior baseline (0.2274 vs 0.1732 MRR).",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/S52_realkg",
-   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "head": "2c9507c8dc8c13af29b533abfcfb0c234fbe87b4",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -22,25 +22,25 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring/bayesian_lift.py",
-   "sha256": "f2e6ac1ce7eb0aab8bb602d39800cfad5aff9834f67eab76e5b08206fe5fd4ec",
-   "bytes": 18465,
-   "mtime": 1787075943,
-   "compared_ts": 1787075943,
-   "compared_clock": "mtime"
+   "sha256": "7850064e3d06141b49fed250117b3ddb1d015f010fcd8120076d6f9235e4bc39",
+   "bytes": 20604,
+   "mtime": 1787175076,
+   "compared_ts": 1787175369,
+   "compared_clock": "last-commit"
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring/bayesian_lift.json",
-   "sha256": "d694bd0f37f0e6c427fb2b68e89f81ee5f9664770d832c8793d0cac2aac92c82",
+   "sha256": "19e3e8fc10636b7c503d88f01976e22bc34d0be64625d6d80e37e0dd307fd31f",
    "bytes": 2152,
-   "mtime": 1787075899,
-   "compared_ts": 1787075899,
+   "mtime": 1787175496,
+   "compared_ts": 1787175496,
    "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
  "toolchain": {
-  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
-  "cargo_ndk": "cargo-ndk 4.1.2",
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },

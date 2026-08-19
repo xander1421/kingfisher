@@ -86,5 +86,5 @@
       "description": "Fires if Bayesian hybrid does not outperform G50 additive by >= +0.0050 MRR"
     }
   },
-  "elapsed_sec": 367.91
+  "elapsed_sec": 399.21
 }

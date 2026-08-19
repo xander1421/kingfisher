@@ -36,7 +36,15 @@ REPO = os.path.abspath(os.path.join(ROOT, ".."))
 G51 = os.path.join(ROOT, "G51_bayesian_lift_scoring")
 # The fixture must sit DIRECTLY under spikes/, because the script resolves
 # `../harness`, `../G36_repro_g34` and `../S52_realkg` relative to its own file.
-FIX = os.path.join(ROOT, ".h237_fixture")
+# TWO fixture dirs, not one, and both directly under `spikes/`. The script
+# declares `bayesian_lift.py` in its own `artifacts=[...]`, so a copy named
+# `pre.py` certifies ok=False for a FIXTURE reason -- which is how the first
+# run of this probe reported A1 red while the transcript plainly showed the
+# defect (loaded from cache, reached certify). An arm that goes red for a
+# reason other than the one it names is worth no more than one that goes
+# green for the wrong reason.
+FIX_PRE = os.path.join(ROOT, ".h237_pre")
+FIX_POST = os.path.join(ROOT, ".h237_post")
 
 fail = 0
 obs = {}
@@ -53,26 +61,38 @@ def ck(name, got, want):
 
 # H216's lesson, and it was ok-1's: a killed process never runs its cleanup, so
 # clear any stale fixture at START as well as in the finally.
-shutil.rmtree(FIX, ignore_errors=True)
-os.makedirs(FIX)
-try:
+for d in (FIX_PRE, FIX_POST):
+    shutil.rmtree(d, ignore_errors=True)
+    os.makedirs(d)
     shutil.copy(os.path.join(G51, "bayesian_lift.json"),
-                os.path.join(FIX, "bayesian_lift.json"))
+                os.path.join(d, "bayesian_lift.json"))
+try:
+    # PINNED, NOT `HEAD` — and the first draft of this probe said `HEAD`, which
+    # is H218's class landing in my own instrument the same evening I fixed it
+    # there. Once the fix was committed, `HEAD` WAS the fix, so the "pre-fix" arm
+    # ran the post-fix script and A1 reported the defect as absent. A pre-fix arm
+    # that silently becomes a second post-fix arm is the worst possible failure
+    # for an A/B: it reports the defect gone the moment the fix lands, whether or
+    # not the fix works.
+    PRE_FIX = "330df18"      # last commit of bayesian_lift.py before H237
     head_src = subprocess.run(
-        ["git", "show", "HEAD:spikes/G51_bayesian_lift_scoring/bayesian_lift.py"],
+        ["git", "show", f"{PRE_FIX}:spikes/G51_bayesian_lift_scoring/bayesian_lift.py"],
         capture_output=True, text=True, cwd=REPO).stdout
-    open(os.path.join(FIX, "pre.py"), "w").write(head_src)
+    if "os.path.exists(out_json)" not in head_src:
+        sys.exit(f"VOID: {PRE_FIX} does not carry the cache branch this row is "
+                 "about; the pre-fix arm would measure nothing")
+    open(os.path.join(FIX_PRE, "bayesian_lift.py"), "w").write(head_src)
     shutil.copy(os.path.join(G51, "bayesian_lift.py"),
-                os.path.join(FIX, "post.py"))
+                os.path.join(FIX_POST, "bayesian_lift.py"))
 
-    def run(script):
-        p = subprocess.run([sys.executable, script], cwd=FIX,
+    def run(d):
+        p = subprocess.run([sys.executable, "bayesian_lift.py"], cwd=d,
                            capture_output=True, text=True)
         return p.returncode, p.stdout + p.stderr
 
     # ------------------------------------------------------------- A1 (pre) --
-    rc_pre, out_pre = run("pre.py")
-    ck("A1 PRE-FIX certifies a run that only READ the file",
+    rc_pre, out_pre = run(FIX_PRE)
+    ck("A1 PRE-FIX (330df18) certifies a run that only READ the file",
        "D6 Provenance Certified: ok=True" in out_pre, True)
     ck("A1b ...and it did load rather than compute",
        "Loaded existing benchmark results" in out_pre, True)
@@ -83,7 +103,7 @@ try:
                              "Loaded existing benchmark results" in out_pre}
 
     # ------------------------------------------------------------ A2 (post) --
-    rc_post, out_post = run("post.py")
+    rc_post, out_post = run(FIX_POST)
     ck("A2 POST-FIX refuses to certify a cache read",
        "D6 Provenance: REFUSED" in out_post, True)
     ck("A2b ...and certifies nothing at all",
@@ -99,7 +119,7 @@ try:
     # THE MECHANISM, not just the outcome: on the cached path the values fed to
     # `Control.observe` are read out of the artifact being certified. Assert the
     # identity rather than describing it.
-    cached = json.load(open(os.path.join(FIX, "bayesian_lift.json")))
+    cached = json.load(open(os.path.join(FIX_PRE, "bayesian_lift.json")))
     ctrl_keys = sorted(cached.get("controls", {}))
     fals_keys = sorted(cached.get("falsifiers", {}))
     ck("A3 the artifact carries the very control verdicts the run observes",
@@ -131,7 +151,8 @@ try:
               "reproduction arm did not run and is NOT reported as passing")
         obs["A4_reproduction"] = {"ran": False}
 finally:
-    shutil.rmtree(FIX, ignore_errors=True)
+    for d in (FIX_PRE, FIX_POST):
+        shutil.rmtree(d, ignore_errors=True)
 
 with open(os.path.join(HERE, "result.json"), "w") as fh:
     json.dump({"checks_failed": fail, "arms": obs}, fh, indent=2, sort_keys=True)

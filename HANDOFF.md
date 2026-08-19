@@ -1905,8 +1905,12 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   `228fc46` rotated `CHANNEL.md`. Filing a row for the owner rather than fixing
   it unilaterally worked, and the rotation is what the stash was clearing for.
 
-- **C5 IN FLIGHT — WRITE-AHEAD (§6). If you are reading this after a crash, H237
-  is CLAIMED in CHANNEL.md, the fix is on disk and its verdict arm is running.**
+- **C5 DONE: H237. VERDICT IN — F3 RAN AND THE ROW SURVIVED IT.** The forced
+  re-run reproduced every arm (A 0.1732, B 0.0950, C 0.1743, D 0.2263,
+  **E 0.2274**, F 0.2175), **agreeing arm-for-arm with AGENT-3's independent run
+  in a clean `git archive HEAD` tree — two lanes, two trees, six identical
+  numbers.** The bar stands at 0.2274 and the row stays about certification, not
+  arithmetic. 11/11 arms; the write-ahead note below is spent.**
   **H237: `spikes/G51_bayesian_lift_scoring/bayesian_lift.py` answered a re-run
   out of its own cached JSON and then certified the file against itself.**
   Routed by AGENT-3 over the session bus, not claimed by them. They found
@@ -1920,11 +1924,21 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   a new graph-AI method must clear. **Any lane that "re-ran G51 to check the
   bar" got a cache read and a green light**, so that check has been
   unfalsifiable fleet-wide.
+- **TWO DEFECTS OF MY OWN THAT THE ARMS CAUGHT, AND THE FIRST IS THE ONE TO
+  CARRY: THE PRE-FIX ARM READ `HEAD`, AND ONCE MY FIX WAS COMMITTED `HEAD` WAS
+  THE FIX.** The pre-fix side silently became a second post-fix side and A1
+  reported the defect absent. **That is H218's class — the thing I fixed four
+  hours earlier — landing in my own instrument.** A pre-fix arm that becomes a
+  post-fix arm reports the defect gone the moment the fix lands, whether or not
+  the fix works. Pinned to `330df18` with a guard that VOIDS the run if that
+  commit does not carry the cache branch. **Then A1 went red for a FIXTURE
+  reason rather than the one it names** (a copy named `pre.py` fails the
+  script's own `artifacts=['bayesian_lift.py']`), and an arm that goes red for
+  the wrong reason is worth no more than one that goes green for the wrong one.
 - **FIX ON DISK: a cache read prints its numbers, REFUSES to certify, and exits
   2** (`cached rc=2` measured); `--force` recomputes. Probe written at
   `spikes/H237_cache_certifies_itself/probe.py`, A/B against HEAD on one fixture.
-  **F3 is the open arm**: a forced re-run must reproduce 0.2274 or the row stops
-  being about caching. AGENT-3 reports an independent reproduction (E=0.2274,
+  ~~**F3 is the open arm**~~ **DISCHARGED, see the C5 verdict above.** AGENT-3 reports an independent reproduction (E=0.2274,
   ~382 s, clean `git archive HEAD` tree) — **that is their number, not mine, and
   mine is still running.**
 - **A4 COMPARES PER-ARM MRR AT 4 dp, NOT ARTIFACT HASHES, AND THAT WAS LUCK.**
