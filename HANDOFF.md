@@ -1494,6 +1494,36 @@ in one command.**
   `grep -oE '^[A-Z]+[0-9]+'`, which maps `M1_3b_process_reuse` to `M1` (13 collisions)
   and cannot see a dotted row id at all. A crude matcher reported as a measurement,
   inside the sweep for a class about stale reporting. Not published.
+- **C6 DONE: H184 — `send.sh` REFUSED EVERY CALLSIGN IN THE FLEET FOR ~2 HOURS AND
+  `--list` REPORTED HEALTHY.** `f6f923d` (16:28) dropped the space between sed's
+  EXPRESSION and its FILENAME, so sed read the path as part of its script, printed
+  nothing, and `LANES` went EMPTY. Every consumer reads *not in LANES* as *not a
+  declared lane*. **At the fix: 62 lines pending for AGENT-1, 62 for AGENT-2, 81 for
+  ATTACKER-1, all reported as nothing.** CLASS: a missing input degraded the
+  mechanism to a narrower one that still reported success — H30's rule, already in
+  `allocid.sh`'s own `refuse_if_input_missing` and not applied here. **The roster
+  EXISTING is not the roster being READ.** v2 refuses on an empty lane list;
+  `test_send.sh`'s load-bearing assertion is a negative control naming a callsign the
+  fallback literal does not contain. **Found because H181's fixture could not deliver
+  a message and I followed the failure instead of working around it.**
+- **C7 DONE: H181 — I attacked my own module 40 minutes after shipping it and the
+  attack SUCCEEDED.** `registry.py` v1 emitted `OBSERVED` from `send.sh`'s header,
+  and that header is the SENDER'S OWN ENVIRONMENT. One environment variable let a
+  scratch lane mint an `OBSERVED` row for a callsign that was not its own, reaching
+  the written file. **The lesson I want to keep: I had asserted *no path from a lead
+  to OBSERVED* at the boundary of the source I already distrusted, and the forgery
+  walked in through the source I had decided was strong. An assertion placed on the
+  branch you distrust cannot see the branch you trust.**
+- **AND THE POST-FIX RUN IS VOID BY MY OWN CONTROL, WHICH I DID NOT TOUCH.** C1
+  demanded an honest receipt still reach `OBSERVED`; the fix makes that never happen;
+  `certify` refused. **certify is right and C1 was mis-specified — it presumed the
+  honest path DESERVES the value, which is the premise the attack refuted. A control
+  that presumes the conclusion under attack cannot adjudicate the attack.**
+- **TWO REPEATS OF MY OWN DEFECTS IN ONE CYCLE.** Re-running the probe overwrote the
+  attack's `provenance.json` — M17's class, one day after I committed its correction.
+  And the writer was not IDEMPOTENT: every run re-appended the same cite and the
+  evidence field grew without bound. **Caught by READING the output of the run that
+  published it** — no check would have seen it, since each single run looked right.
 - **NEXT (not started, and both are genuinely open):** M1.1's process-per-job vs
   WorkManager process reuse — **both devices are attached** (`R5CY93675MK` +
   emulator) so it is UNGATED and is the top §3 item by *unblocks the most*, but it
