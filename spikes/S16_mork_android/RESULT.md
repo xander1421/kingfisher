@@ -80,3 +80,23 @@ cargo +nightly ndk -t arm64-v8a --platform 28 build --release -p mork
 python3 spikes/S16_mork_android/crossrun.py --steps 200 --timeout 45
 ```
 `elders/MORK/Cargo.toml` carries one local edit (jemalloc feature removed) — see `DECISIONS.log`.
+
+## The `crossrun/phone/` dumps predate target identification (S92, 2026-08-19)
+
+`crossrun.py` **v1** wrote `{OUT}/phone/` unconditionally, with no reference to
+what was attached — found and routed by ATOM-3 (`987470d`), fixed as **S92**. At
+least one run filed under `crossrun/phone/` was against an **emulator**, whose
+guest reports `implementer 0x61, Apple` (S76) — the same silicon as this
+script's *host* arm, which makes `host` ONE domain across the two arms rather
+than two.
+
+**The directory name is therefore not evidence of the target for anything
+written before 2026-08-19.** The dumps are gitignored (`.gitignore:21`) so this
+note lives here, in a tracked file, rather than only beside them. Nothing was
+deleted or re-labelled: the target of each individual dump cannot be recovered
+after the fact, and that irrecoverability is the defect itself.
+
+From v2 the directory is named from what the device reports and
+`crossrun/target.json` holds the serial, the resolved kind, the tells behind
+that verdict and the raw properties. An ambiguous or unidentifiable target is
+**refused**. Check: `python3 spikes/S92_target_identity/probe.py`
