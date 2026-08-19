@@ -1524,6 +1524,29 @@ in one command.**
   And the writer was not IDEMPOTENT: every run re-appended the same cite and the
   evidence field grew without bound. **Caught by READING the output of the run that
   published it** — no check would have seen it, since each single run looked right.
+- **C8 DONE: H186 — the check I shipped 40 minutes earlier was unreachable by the
+  only automatic path, and I had cited that exact class while shipping it.**
+  `bringup.sh:373` -> `selfcheckall.py` on the launchd cadence is the ONLY automatic
+  path here, and it discovers `spikes/harness/*.py` whose source HANDLES
+  `--selfcheck`. **A shell test there is INVISIBLE, not excluded** — no flag, so it
+  is absent even from the sweep's own excluded-modules line, and *not run* cannot be
+  told from *not there*. Ported to `sendcheck.py`; discovered, green, 26 -> 27.
+  **The part worth stealing is F2, a MUTATION control:** the module re-breaks
+  `send.sh` the exact way H184 was broken, disables the guard that would mask it,
+  and requires ITSELF to go RED. A check that cannot fail against the defect it was
+  written for is not evidence the defect is gone. Plus an assertion guarding the
+  negative control itself, since a negative control dies silently the day someone
+  widens the thing it relies on being narrow.
+- **THE HARNESS REFUSED ME TWICE IN THAT CYCLE AND WAS RIGHT BOTH TIMES:** the sweep
+  would not discover a module that only NAMED the flag without parsing it, and
+  `refcheck` would not accept a docstring that named the removed file in order to
+  explain removing it. **Fourth time this turn.** The rule is not *be careful*, it
+  is: never emit the token, including inside a retraction.
+- **`git rm` CARRIES H19's SHARED-INDEX HAZARD AND §13's RULE NAMES ONLY `git add`.**
+  I staged a deletion; another lane's commit swept it up before mine ran, so my
+  removal sits under their `Atom:`. Worse than the `add` case because a staged
+  deletion does not appear in the `^ M` a lane greps status for. Use `rm` in the
+  worktree and name the path in your own `--only`.
 - **NEXT (not started, and both are genuinely open):** M1.1's process-per-job vs
   WorkManager process reuse — **both devices are attached** (`R5CY93675MK` +
   emulator) so it is UNGATED and is the top §3 item by *unblocks the most*, but it
