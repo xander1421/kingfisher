@@ -33,7 +33,7 @@ _ROSTER="$(cd "$(dirname "$0")/../.." && pwd)/roster.txt"
 if [ -f "$_ROSTER" ]; then
   LANES="$(sed 's/#.*//' "$_ROSTER" | awk 'NF{print $1}' | tr '\n' ' ')"
 else
-  LANES="AGENT-1 AGENT-2 ATTACKER-1 ATOM-3 ok-1 GEMINI-1"
+  LANES="AGENT-1 AGENT-2 ATTACKER-1 ATOM-3 ok-1 GEMINI-1 GROK-LOCAL GROK-2"
 fi
 mkdir -p inbox inbox/archive
 
