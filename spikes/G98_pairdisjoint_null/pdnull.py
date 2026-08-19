@@ -582,6 +582,13 @@ def main() -> int:
                'selector_sha256': mask['sha256'], 'counts': counts,
                'selector_mask': {k: mask[k] for k in
                                  ('min_n', 'n_keys', 'n_small_default')},
+               # v2, 2026-08-19, G100. DEFECT REMOVED, AND IT IS MINE: v1
+               # published `selector_sha256` with the counts and WITHOUT the
+               # per-key table the digest is taken over -- the exact class this
+               # file's own RESULT.md §8 raises against G88, shipped in the same
+               # artifact that raises it. `mask['choice']` is the object hashed
+               # at mix.py:124, emitted rather than rebuilt.
+               'selector_choice': mask['choice'],
                'n_keys': len(keys), 'n_test_triples': n_test,
                'single_arm_mrr': {k: round(v, 6) for k, v in singles.items()},
                'best_single_arm': best_single,

@@ -1,11 +1,11 @@
 {
  "spike": "G98_pairdisjoint_null",
- "recorded_utc": "2026-08-19T16:36:32Z",
+ "recorded_utc": "2026-08-19T16:59:54Z",
  "note": "G98 finishes G94. G95/G96/G97 all measured G88's valid-select argmax on the OFFICIAL FB15k-237 split, of which G48 measured 30.0% of test to have a train edge on the same unordered entity pair. G98 runs G88's own selector and G95's own null over the pair-disjoint split, with ComplEx and RotatE retrained on it under their own published protocols and G94's DistMult inherited. The symbolic arm is mined in process from the pair-disjoint train set, because G94's was a copied cache mined on the official one.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd",
-   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "head": "503231f850cefb9392a45465f8767401d8332d71",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,7 +13,7 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid",
-   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "head": "503231f850cefb9392a45465f8767401d8332d71",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -21,14 +21,16 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
-   "head": "4521ace417ccd1908abdf6dad1c668bb0df24f49",
+   "head": "503231f850cefb9392a45465f8767401d8332d71",
    "clean": false,
    "dirty_files": [
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/constcheck.py",
     "spikes/harness/fleetcensus.sh",
-    "spikes/harness/stalecheck.py"
+    "spikes/harness/test_h202_falsify.sh"
    ],
-   "diff_sha256": null,
-   "diff_bytes": 0
+   "diff_sha256": "53638c15fef494decaa31dc825cc9cd38ff60c0064e5559555e0a4c14c63de24",
+   "diff_bytes": 6374
   }
  ],
  "manifests": {
@@ -51,10 +53,10 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G98_pairdisjoint_null/pairdisjoint_null.json",
-   "sha256": "254edb452747962ab20b4eb4b355e2f97a5f5835c6db1a6675e4f8079936c914",
-   "bytes": 12039,
-   "mtime": 1787157392,
-   "compared_ts": 1787157392,
+   "sha256": "474e38a503865c824df4aed6b18e11ff6bd242b1a1e9a169d37b51a42a99e808",
+   "bytes": 23110,
+   "mtime": 1787158794,
+   "compared_ts": 1787158794,
    "compared_clock": "mtime"
   }
  ],
@@ -237,18 +239,19 @@
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
-   "newest": 1787152328,
+   "newest": 1787158311,
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/harness": {
-   "newest": 1787157225,
-   "from": "spikes/harness/stalecheck.py"
+   "newest": 1787158757,
+   "from": "spikes/harness/fleetcensus.sh"
   }
  },
  "problems": [],
  "ok": true,
  "falsifier": "If the mix were not above the p95 of 1000 multiset-preserving label permutations of its own selector on a split that cannot leak, then G95's verdict would be a statement about the leak rather than about selection, and the ensemble thread would be refuted where it matters.",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

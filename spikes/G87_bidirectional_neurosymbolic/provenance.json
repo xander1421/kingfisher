@@ -1,11 +1,11 @@
 {
  "spike": "G87_bidirectional_neurosymbolic",
- "recorded_utc": "2026-08-19T13:50:18Z",
+ "recorded_utc": "2026-08-19T16:58:31Z",
  "note": "G87: 4-Way Neuro-Symbolic Hybrid with Bidirectional 4-Topology Mining on Official FB15k-237.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
-   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "head": "503231f850cefb9392a45465f8767401d8332d71",
    "clean": false,
    "dirty_files": [
     "corpus/fb15k237/"
@@ -24,10 +24,10 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G87_bidirectional_neurosymbolic/result.json",
-   "sha256": "87b30cdbf7bfcf085588859df2b21abcd6470f5c977d8ef303bcbf69e759063b",
-   "bytes": 1100,
-   "mtime": 1787147418,
-   "compared_ts": 1787147418,
+   "sha256": "3f9242e7f26057e0262fa476284b627f116a48a151c19a8ebf5ed21c50ad8b30",
+   "bytes": 12945,
+   "mtime": 1787158711,
+   "compared_ts": 1787158711,
    "compared_clock": "mtime"
   }
  ],
@@ -38,14 +38,7 @@
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
-  "ro.build.id": "BP41.250822.007",
-  "ro.product.model": "sdk_gphone64_arm64",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C1_test_size",
@@ -166,6 +159,7 @@
  "ok": true,
  "falsifier": "4-way neuro-symbolic mix with G64 performs below baseline",
  "carried_from_previous_record": [
-  "falsifier"
+  "falsifier",
+  "carried_from_previous_record"
  ]
 }

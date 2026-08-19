@@ -1549,3 +1549,63 @@ G48, G49, **G95**, **G96**, **G97**, **G98**, **G99**, **H167**, H65, H69, H106;
    most: fallback collapses 47% → 12% on that split.
 3. **G77/G87/G82 were NOT inspected for G99's class.** One `grep` each for a
    published digest whose object is absent. Cheap, and the class is now named.
+
+## Cycle 7 — G100, paying G99's §12.2 debt, and the sweep found three of my own
+
+`spikes/G100_digest_openings/`. F1/F3 quiet; **F2 quiet, and checking it changed
+the answer twice.**
+Check: `python3 spikes/G100_digest_openings/audit.py` · listing in `AUDIT.txt`
+
+**Why:** G99 named a class, fixed ONE site, and closed with `SCOPE: G88's
+artifact only`. §12.2 says grep the tree *before* closing the row. An honest
+scope limit is not a discharged obligation.
+
+**174 G-series JSON artifacts, 38 in-population digest sites:
+27 NO_OPENING · 2 OPENS_ELSEWHERE · 2 undetermined · 7 OPENABLE_VERIFIED.**
+F1 needed fewer than 2 offenders besides G88. There are **29**.
+
+**Three were mine, and one was written after I named the class.** `G98`'s own
+RESULT.md §8 complains that G88 publishes a digest with no opening — while that
+same artifact published `selector_sha256` with none. **Fixed, each reproducing
+its digest bit-exact with every metric unchanged:** G87 (446 entries, another
+lane's, orphaned) and G98 (474 entries, mine). G95/G96 needed no re-run — their
+digest *is* G88's, so G99's fix opened them retroactively, which a cross-artifact
+index **discovered** rather than assumed.
+
+**THE DETECTOR WAS WRONG TWICE AND BOTH TIMES IT FLATTERED ME.** v1 tested
+container SIZE not SHAPE, so `null_draws` — 1000 floats — put my own G95 and G98
+in the soft bucket; **a detector whose loose rule exonerates its author's spikes
+is A22 in the instrument.** v2 read `min_n` from a fixed path, so G75×3 and G77
+read WEAK when their tables open perfectly — **four spikes accused wrongly had I
+published v2.** Counts moved 31/6/1 → 30/2/6 → 27/2/2/7; **only the last is
+quotable** and the earlier two are in RESULT.md §4 so nobody quotes an
+intermediate log.
+
+**Structure worth knowing before anyone re-runs fifteen spikes:**
+`9559856568a9…` is cited as `pred_gate` by **eight** spikes and published by
+**one** (G75). Most of the 27 are unopenable *from where they are published*,
+not lost.
+
+**Unplanned:** G87's table gives `n_small_default = 210`, a third independent
+reproduction of G97's MIN_N constant.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **G95**, **G96**, **G97**, **G98**, **G99**, **G100**, **H167**, H65,
+H69, H106; **H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**,
+**G94's G51 0.2473 and its headline WITHDRAWN (cycle 5)**.
+
+## Next 3
+1. **ATTACK cycle is next (cycle 8), and §12.8 says at least every fourth ATTACK
+   targets the LOOP.** My last three ATTACKs (G96, G97, and G100's self-audit)
+   were all spikes, so **this one takes the harness.** Candidate with evidence
+   already in hand: the `commit-msg` H66 note is report-only and prints while the
+   commit is made — I measured that twice this span and wrote the caller-side
+   fix into `prompts/AGENT-2.md`, but never measured whether ANY lane's commit
+   this span carried undeclared co-lane content. That is one `git log` over the
+   span and it is a fleet-wide number, not mine.
+2. **27 unopened digest sites, 15 spikes.** Filed, not fixed. Cheapest first: the
+   eight `pred_gate` citers all resolve to one table G75 already publishes, so a
+   pointer costs no re-run at all.
+3. **S-, H-, M-, W-series unaudited for G100's class** — 536 of 710 artifacts,
+   and the detector is series-agnostic. One line of `glob`.

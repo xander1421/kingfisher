@@ -246,6 +246,17 @@ def main() -> int:
             "predicates": npred,
         },
         "choices": dict(four_mask["counts"]),
+        # v2, 2026-08-19, AGENT-2 under G100. DEFECT REMOVED: `choice_sha256` is
+        # taken over `{min_n, choice}` and only the four COUNTS were emitted, so
+        # the digest read as a reproducibility guarantee while pinning an object
+        # in no artifact. Same defect and same repair as G88 (G99); found by the
+        # sweep G99 owed and did not run. `four_mask["choice"]` is the object
+        # hashed, emitted rather than rebuilt -- a second construction could
+        # disagree with the digest, which is the defect one level up.
+        "choice": four_mask["choice"],
+        "choice_min_n": four_mask["min_n"],
+        "choice_n_keys": four_mask["n_keys"],
+        "choice_n_small_default": four_mask["n_small_default"],
         "choice_sha256": four_mask["sha256"],
         "metrics": {
             "mrr": round(mrr, 4),
