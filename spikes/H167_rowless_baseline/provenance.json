@@ -1,0 +1,184 @@
+{
+ "spike": "H167_rowless_baseline",
+ "recorded_utc": "2026-08-19T15:17:11Z",
+ "note": "H167. idscope.py v3 printed one ROWLESS total and declared it ungateable because \"the floor is other lanes' rows\". The floor was 14 NAMED ids on 2026-08-18; the sentence is now asserted over a set that has gained 10 and cleared 5, and it merges the CLAIM-only population that \u00a72 SELECT creates on purpose with the DONE population that is terminal.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "330df18be9a35a25e8d9d922c9a8975acf6976cb",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/bringup.sh",
+    "spikes/harness/idscope.py",
+    "spikes/harness/send.sh",
+    "spikes/harness/prosecite.py"
+   ],
+   "diff_sha256": "0cede9e5b2b2ea2d14fe55f5ba6f069c45fcadcd18213ecdbcef20f60805787e",
+   "diff_bytes": 16450
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H167_rowless_baseline/rowless.json",
+   "sha256": "29315c1702bfaae9d394e46785bd5c86278aa86885e5b06fe4e9dae11e6aa6da",
+   "bytes": 1094,
+   "mtime": 1787152631,
+   "compared_ts": 1787152631,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "baseline_extracted_not_retyped",
+   "must_fire_because": "the comparison must use the numbers v3 published, not mine",
+   "can_fail_because": "the v3 changelog sentence names no ids, or was edited away -- the extractor then raises rather than comparing against an empty set",
+   "null_must_contain": "ids that are NO LONGER rowless. The v3 set names G43/H86/H88/H89/H93, all filed since, so the extractor demonstrably reads the PUBLISHED past and not the live present -- if it could only ever return today's set the comparison would be with itself",
+   "fired": true,
+   "detail": "14 ids parsed from idscope.py v3",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "G26",
+    "G32",
+    "G43",
+    "H39",
+    "H42",
+    "H76",
+    "H86",
+    "H88",
+    "H89",
+    "H93",
+    "S29",
+    "S81",
+    "S82",
+    "S83"
+   ]
+  },
+  {
+   "name": "terminal_population_is_separable",
+   "must_fire_because": "the merged count is only a defect if the two populations differ in kind, so both must be non-empty and disjoint",
+   "can_fail_because": "every rowless id is CLAIM-only, or every one is DONE -- then there is nothing to split and v3 merged nothing",
+   "null_must_contain": "an empty side. A log of only CLAIM lines yields done=0 and a log of only DONE lines yields claim=0; both are reachable from the same reader, so a non-empty split is a measurement and not a property of the code",
+   "fired": true,
+   "detail": "11 CLAIM-only, 13 DONE, disjoint",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    11,
+    13
+   ]
+  },
+  {
+   "name": "gate_fires_and_is_scoped",
+   "must_fire_because": "the v4 gate must refuse an id THIS tree introduces and stay quiet on an accumulated one, or it is decoration",
+   "can_fail_because": "both arms return the same exit code -- a gate that cannot distinguish them has not read the property it claims to",
+   "null_must_contain": "both exit codes from the SAME fixture id. H99 is driven three ways and the only thing varying is the property under test, so the outcome space contains 0 and 1 by construction rather than by which id was chosen",
+   "fired": true,
+   "detail": "introduced=1 (refuses), accumulated=0, CLAIM-only=0",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    1,
+    0,
+    0
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_already_mechanised",
+   "must_fire_because": null,
+   "can_fail_because": "a grep of spikes/harness for a pinned rowless baseline returns a module other than idscope",
+   "null_must_contain": "a non-idscope hit. The same grep pattern returns refcheck.py for BASELINE_ROW_SHAPE when widened to row shape, so the search can find another module -- it does not find one for THIS subject",
+   "fired": false,
+   "detail": "other modules pinning a rowless baseline: none",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "./__pycache__/idscope.cpython-314.pyc",
+    "./idscope.py"
+   ],
+   "refutes": "refutes the finding: another checker already pins a rowless baseline or branches its verdict on CLAIM vs DONE",
+   "fires_when": "a grep of spikes/harness for a pinned rowless baseline returns a module other than idscope",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_no_decay",
+   "must_fire_because": null,
+   "can_fail_because": "set(live rowless) == set(v3 baseline)",
+   "null_must_contain": "equality. The two sets share 9 members, so the comparison is not structurally forced apart -- had the 15 gained ids never landed it would report equal",
+   "fired": false,
+   "detail": "live 24 vs baseline 14",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    24,
+    14
+   ],
+   "refutes": "refutes the finding: the live set equals the 14 v3 named, so the sentence is still true and a bare count is fine",
+   "fires_when": "set(live rowless) == set(v3 baseline)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_sanctioned_workflow_refused",
+   "must_fire_because": null,
+   "can_fail_because": "scan() returns non-zero on a CLAIM-only rowless id",
+   "null_must_contain": "a refusal. The same scan() returns 1 on the same id posted as DONE, so non-zero is reachable on this fixture and the quiet verdict is about CLAIM, not about a gate that never fires",
+   "fired": false,
+   "detail": "CLAIM-only exit=0 with 11 live CLAIM-only ids",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    0,
+    11
+   ],
+   "refutes": "refutes the FIX: a lane obeying \u00a72 SELECT (post CLAIM before the row exists) is gated, which recreates H52",
+   "fires_when": "scan() returns non-zero on a CLAIM-only rowless id",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_incoming_unclearable",
+   "must_fire_because": null,
+   "can_fail_because": "every terminal id was introduced by a commit that already carried WORK_QUEUE.md, leaving its author no cheaper moment to file the row",
+   "null_must_contain": "commits that DID carry it. G45 and H76 are exactly that case, so the measurement can produce the refuting answer and 8/13 is an observation rather than a definition",
+   "fired": false,
+   "detail": "8 of 13 introduced without the authoritative file",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    8,
+    3,
+    13
+   ],
+   "refutes": "refutes the FIX: the incoming ids are unclearable for the same reason the floor is, so gating them is H52 again",
+   "fires_when": "every terminal id was introduced by a commit that already carried WORK_QUEUE.md, leaving its author no cheaper moment to file the row",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787152588,
+   "from": "spikes/harness/prosecite.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "If the live rowless set still equalled the 14 ids v3 named (F2), or if a CLAIM-only id were gated by the fix (F3), or if every terminal id had been introduced by a commit already carrying WORK_QUEUE.md (F4), the finding or the fix would be refuted."
+}

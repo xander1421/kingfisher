@@ -1,6 +1,73 @@
 #!/usr/bin/env python3
-"""idscope.py v3 — H27, H52, H103. The queue and the append-only log must not
-disagree about whether a row is closed — in EITHER direction.
+"""idscope.py v4 — H27, H52, H103, H167. The queue and the append-only log must
+not disagree about whether a row is closed — in EITHER direction.
+
+v4 CHANGELOG (H167, AGENT-2, 2026-08-19; §5 — corrected in place, nothing below
+this block edited).
+DEFECT REMOVED: **A DEFECT COUNTER PUBLISHED WITHOUT ITS BASELINE REPORTS GROWTH
+AS FLOOR.** v3 printed one number — `ROWLESS: N id(s). REPORTED, NOT GATED ...
+the floor is other lanes' rows and no committer can clear it` — and that
+sentence was measured true of 14 NAMED ids on 2026-08-18. MEASURED AGAIN on
+2026-08-19 (`spikes/H167_rowless_baseline/probe.py`):
+
+  * the live set is **24**, and the justification is asserted over a set **15 of
+    whose members did not exist when it was written**;
+  * the printed number moved **14 -> 24** while **15 ids landed and 5 were
+    cleared** — one figure, hiding 20 movements, and it cannot distinguish an
+    accumulated floor from an incoming instance.
+
+SECOND HALF OF THE CLASS, and it is why the count could never reach the 0 its
+own stated ceiling requires before it may gate: **v3 merged CLAIM-only ids with
+DONE ids under one total.** A CLAIM-only rowless id is the SANCTIONED
+intermediate state of §2's own SELECT step — *"Post `CLAIM <item> <CALLSIGN>` to
+CHANNEL.md first"* — so a correct lane MANUFACTURES one every cycle; a
+DONE-rowless id is terminal and never reconciled. Live split: **11 CLAIM-only,
+13 DONE.**
+
+**MEASURED WITHOUT INTENDING TO, AND IT IS THE SHARPEST DATUM HERE: during the
+single cycle that wrote this fix, CLAIM-only went 6 -> 11 while DONE-rowless
+stayed at 13.** Four other lanes claimed H123/H165/H166/H168 and this lane
+claimed H167, all correct §2 behaviour, all of it landing in the number v3 had
+just declared un-gateable. So the merged total does not merely fail to reach 0 —
+it is driven by the rate at which lanes obey the loop contract. v3's own
+selfcheck asserts the merge ("an id CLAIMED with no queue row" / "an id DONE
+with no queue row" both assert `ROWLESS`, and one asserts the exit code does NOT
+move): the module TESTED that it could not tell them apart.
+
+WHY THE GATE LANDS ON THE AUTHOR AND NOT ON THE NEXT COMMITTER, which is H52/H72
+and is the reason v3 refused to gate at all. Measured, not argued — for each of
+the 13 DONE-rowless ids, the commit that introduced its `DONE <id>` line:
+
+     8 of 13   did NOT carry WORK_QUEUE.md in that commit
+     2 of 13   carried it and still filed no row (G45, H76)
+     3 of 13   are UNCOMMITTED, in the working tree right now (G92, H161, H163)
+
+So the incoming set IS clearable — by the lane posting the DONE, in the commit
+that posts it — while the accumulated set is not. v3 read one property off the
+other. Two mechanisms, each with one job:
+
+  1. `BASELINE_ROWLESS_DONE` pins the 13 accumulated ids BY NAME, the pattern
+     `refcheck.BASELINE_ROW_SHAPE` already ships here. It can only shrink; the
+     selfcheck asserts a member of it does not gate.
+  2. The gate is scoped to a DONE line THIS TREE INTRODUCES (`prior_done`, read
+     from `HEAD:CHANNEL.md` via the one `recordloss.blob` helper the harness
+     already shares). Without it a new id refuses every OTHER lane's commit for
+     a row it cannot write — H72 exactly, and the backlog v3 was right to fear.
+
+NOT NARROWED: every rowless id is still found and still printed, CLAIM and DONE
+alike. What changed is what COUNTS toward the refusal.
+
+CEILING, STATED: with no git context (`HEAD:CHANNEL.md` absent — a fresh clone)
+`prior_done` is None and UNFILED reports without gating. That is a degrade to
+v3's behaviour rather than to a false green, and `--selfcheck` asserts it, so it
+is a decision and not H30's silent narrowing.
+
+FALSIFIERS, stated in CHANNEL.md before this directory existed, all four quiet:
+F1 no checker pinned a rowless baseline or branched its VERDICT on CLAIM vs DONE
+(`refcheck` baselines row SHAPE, a different subject). F2 the live set is 19,
+not the docstring's 14. F3 a lane posting CLAIM before its row exists is NOT
+refused — asserted in `--selfcheck`. F4 the incoming set is clearable by its
+author, measured above, so gating it is not H52 again.
 
 v3 CHANGELOG (H103, ATTACKER-1, 2026-08-18; §5 — corrected in place, nothing
 above this line edited).
@@ -112,6 +179,41 @@ import os, re, sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 QUEUE = 'WORK_QUEUE.md'
 LOG = 'CHANNEL.md'
+
+# THE 13 ACCUMULATED DONE-ROWLESS IDS, PINNED BY NAME (H167, AGENT-2,
+# 2026-08-19). BASELINED, NOT GRANDFATHERED SILENTLY -- the pattern is
+# `refcheck.BASELINE_ROW_SHAPE`, and the reason is the same one v3 gave for not
+# gating at all: these belong to four lanes, 11 of the 13 were introduced by a
+# commit that never carried WORK_QUEUE.md, and no committer today can write
+# another lane's verdict into a row. What v3 could not do is tell them from an
+# id arriving NOW, whose author is holding the commit that introduces it.
+#
+# THIS LIST MAY ONLY SHRINK. Filing a row for any of these removes it from the
+# printed report automatically; deleting it from here without filing the row
+# makes the gate fire, which is the intended direction. Adding to it is how a
+# baseline becomes an escape hatch (H52's words), so the selfcheck asserts both
+# that a member does not gate and that a non-member does.
+BASELINE_ROWLESS_DONE = frozenset((
+    'G40', 'G45', 'G92', 'H42', 'H76', 'H161', 'H163',
+    'M1.14', 'S41', 'S81', 'S82', 'S83', 'W9',
+))
+
+
+def prior_done(root=None):
+    """Ids the log ALREADY declared DONE at HEAD, or None meaning NO GIT CONTEXT.
+
+    None is not an empty set and the difference is the whole scoping rule: empty
+    would make every accumulated id read as introduced-by-this-tree and refuse
+    the next lane to commit anything, which is H72. Absent (a fresh clone, no
+    HEAD) degrades to v3's report-without-gating -- the safe direction, asserted
+    in --selfcheck so it is a decision and not H30's silent narrowing.
+    """
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from recordloss import blob            # the one git helper, not two
+    text = blob('HEAD:' + LOG, root or ROOT)
+    if text is None:
+        return None
+    return {i for i, p in log_ids(text).items() if 'DONE' in p}
 
 
 def queue_rows(text):
@@ -235,7 +337,7 @@ def log_ids(text):
     return out
 
 
-def scan(queue_text=None, log_text=None):
+def scan(queue_text=None, log_text=None, seen_done=None):
     qtext = (queue_text if queue_text is not None
              else open(os.path.join(ROOT, QUEUE), encoding='utf-8').read())
     ltext = (log_text if log_text is not None
@@ -243,6 +345,21 @@ def scan(queue_text=None, log_text=None):
     q = queue_rows(qtext)
     d = log_done(ltext)
     rowless = {i: p for i, p in log_ids(ltext).items() if i not in q}
+    # THE SPLIT v3 DID NOT MAKE, and it is why its count could never reach the 0
+    # its own ceiling required. A CLAIM-only rowless id is §2 SELECT's sanctioned
+    # intermediate state -- "Post `CLAIM <item> <CALLSIGN>` to CHANNEL.md first"
+    # -- so a correct lane produces one every cycle and it must never gate. A
+    # DONE-rowless id is terminal: the work is finished and invisible to the
+    # authoritative file.
+    done_rowless = {i for i, p in rowless.items() if 'DONE' in p}
+    claim_only = set(rowless) - done_rowless
+    # Scoped to what THIS TREE INTRODUCES. `seen_done is None` means no git
+    # context, and it reports without gating rather than treating every
+    # accumulated id as new (H72).
+    if seen_done is None:
+        unfiled = set()
+    else:
+        unfiled = done_rowless - BASELINE_ROWLESS_DONE - seen_done
     adj = adjudications(qtext)
     lines = ltext.split('\n')
 
@@ -271,17 +388,36 @@ def scan(queue_text=None, log_text=None):
               f'the queue is authoritative (§2 SELECT reads it), so this work is '
               f'invisible to every lane that has not read the log')
     if rowless:
-        print(f'  ROWLESS: {len(rowless)} id(s). REPORTED, NOT GATED -- see the v3 '
-              f'ceiling in the docstring; the floor is other lanes\' rows and no '
-              f'committer can clear it.\n')
+        print(f'  ROWLESS: {len(rowless)} id(s) = {len(claim_only)} CLAIM-only '
+              f'(§2 SELECT posts CLAIM before the row exists -- sanctioned, never '
+              f'gated) + {len(done_rowless)} DONE '
+              f'({len(BASELINE_ROWLESS_DONE & done_rowless)} baselined accumulated, '
+              f'{len(unfiled)} introduced by this tree and GATED).\n'
+              f'          A bare total cannot tell an accumulated floor from an '
+              f'incoming instance, and the CLAIM-only side is manufactured by '
+              f'lanes OBEYING §2 SELECT.\n'
+              f'          Churn is cited, never quoted: '
+              f'spikes/H167_rowless_baseline/rowless.json, regenerated by its '
+              f'probe.py (H167 -- a number in a message goes stale, an artifact '
+              f'does not).\n')
 
     for s in settled:
         print('  ADJUDICATED ' + s)
+    for rid in sorted(unfiled):
+        problems.append(('UNFILED',
+                         f'{LOG} declares `DONE {rid}` in THIS tree and {QUEUE} '
+                         f'carries no row for it -- the queue is authoritative '
+                         f'(§4), so finished work is invisible to every lane that '
+                         f'has not read the log. File the row in the commit that '
+                         f'posts the DONE; it is not in the H167 baseline, so its '
+                         f'author is the committer holding it'))
     for kind, p in problems:
         print(f'  {kind} ' + p)
     if problems:
-        print(f'\nREFUSE: {len(problems)} UNADJUDICATED id(s) resolve to a '
-              f'different status depending on which file you read '
+        nun = sum(1 for k, _ in problems if k == 'UNFILED')
+        print(f'\nREFUSE: {len(problems) - nun} UNADJUDICATED id(s) resolve to a '
+              f'different status depending on which file you read, and {nun} '
+              f'DONE id(s) this tree introduces have no row at all '
               f'({len(settled)} adjudicated, not counted).\n'
               f'        An append-only log cannot be corrected when a namespace '
               f'moves under it, so the divergence has to be loud rather than\n'
@@ -302,6 +438,7 @@ def selfcheck():
     # lines, and exempting a checker from its own subject matter is the
     # H-HOOKREG blind spot.
     stale, agreed, silent = 'H' + '90', 'H' + '91', 'H' + '92'
+    fresh, carried = 'H' + '97', 'H' + '98'
     piped, reopened, cited = 'H' + '93', 'H' + '94', 'H' + '95'
     merged = 'H' + '96'
     queue = ('| id | item | status |\n|---|---|---|\n'
@@ -404,16 +541,67 @@ def selfcheck():
     rowq = ('| id | item | status |\n|---|---|---|\n'
             f'| {stale} | held open by the queue | OPEN |\n')
 
-    def rowscan(log_text):
+    def rowscan(log_text, seen_done=None):
         b = io.StringIO()
         with contextlib.redirect_stdout(b):
-            r = scan(rowq, log_text)
+            r = scan(rowq, log_text, seen_done=seen_done)
         return r, b.getvalue()
 
     r, o = rowscan(f'CLAIM {agreed} LANE-1 claimed, never filed\n')
     check(f'ROWLESS {agreed}' in o, True, 'an id CLAIMED with no queue row')
     check(r != 0, False, 'and ROWLESS alone does NOT change the exit code '
                          '(the v3 ceiling: the floor is other lanes\' rows)')
+    # ---- H167. THE FOUR ARMS THE MERGED COUNT COULD NOT EXPRESS -------------
+    # F3, and it is the arm that decides whether this gate is H52 again: a lane
+    # doing exactly what §2 SELECT tells it -- post the CLAIM before the row
+    # exists -- must not be refused. Driven WITH a git context, because without
+    # one nothing gates and the arm would pass on a disabled gate. Measured on
+    # the live tree while this was written: 11 concurrent CLAIM-only ids.
+    r, o = rowscan(f'CLAIM {fresh} LANE-1 §2 says claim first\n', seen_done=set())
+    check(r == 0 and 'UNFILED' not in o, True,
+          'F3: a CLAIM posted before its row exists is NOT gated')
+    # THE GATE FIRES. Same id, same empty prior set, DONE instead of CLAIM -- so
+    # the only difference between the arm above and this one is the property the
+    # module claims to read. A control that cannot fail is not a control.
+    r, o = rowscan(f'DONE {fresh} LANE-1 finished, no row filed\n', seen_done=set())
+    check(r == 1 and f'UNFILED' in o and fresh in o, True,
+          'a DONE-rowless id THIS tree introduces refuses')
+    # H72 SCOPING: the same line, already at HEAD, is another lane's accumulated
+    # row and must not refuse this committer. Without this arm the fix would
+    # refuse every lane for a row it cannot write, which is what v3 feared.
+    r, o = rowscan(f'DONE {fresh} LANE-1 finished, no row filed\n',
+                   seen_done={fresh})
+    check(r == 0, True, 'an accumulated DONE-rowless id does NOT gate the next '
+                        'committer (H72 scoping)')
+    # THE BASELINE IS A LOOKUP AND NOT AN ESCAPE HATCH: a member does not gate,
+    # and the arm above proves a NON-member does, so the list is load-bearing in
+    # both directions. `carried` is injected rather than taken from the real
+    # frozenset, so shrinking that list cannot silently disarm this arm.
+    # `globals()`, NOT `import idscope` -- run as __main__ that import builds a
+    # SECOND module object and the injection never reaches the namespace scan()
+    # actually reads, so this arm shipped INERT and passed. Caught by it failing
+    # the moment it was pointed at a real assertion. Same family as statuscheck
+    # v2's row: THE TESTED PATH WAS NOT THE EXECUTED PATH.
+    g = globals()
+    saved = g['BASELINE_ROWLESS_DONE']
+    try:
+        g['BASELINE_ROWLESS_DONE'] = frozenset((carried,))
+        r, o = rowscan(f'DONE {carried} LANE-1 baselined accumulated\n',
+                       seen_done=set())
+        check(r == 0, True, 'a BASELINED DONE-rowless id does not gate')
+        # and the SAME injected list must still refuse a non-member, or "does
+        # not gate" above is satisfied by a gate that never fires at all.
+        r, o = rowscan(f'DONE {fresh} LANE-1 not in the injected baseline\n',
+                       seen_done=set())
+        check(r == 1, True, 'and a NON-member of that same baseline still gates')
+    finally:
+        g['BASELINE_ROWLESS_DONE'] = saved
+    # THE STATED CEILING, asserted so the degrade is a decision and not H30's
+    # silent narrowing: no git context (`HEAD:CHANNEL.md` absent) reports and
+    # does not gate.
+    r, o = rowscan(f'DONE {fresh} LANE-1 no git context here\n', seen_done=None)
+    check(r == 0 and f'ROWLESS {fresh}' in o, True,
+          'with no git context UNFILED reports without gating (v3 behaviour)')
     r, o = rowscan(f'DONE {silent} LANE-1 finished, never filed\n')
     check(f'ROWLESS {silent}' in o, True, 'an id DONE with no queue row')
     r, o = rowscan(f'CLAIM {stale} LANE-1 claimed, and the row exists\n')
@@ -442,4 +630,5 @@ def selfcheck():
 
 
 if __name__ == '__main__':
-    sys.exit(selfcheck() if '--selfcheck' in sys.argv else scan())
+    sys.exit(selfcheck() if '--selfcheck' in sys.argv
+             else scan(seen_done=prior_done()))

@@ -1130,3 +1130,117 @@ WITHDRAWN**.
    without it. **`G29b` stays GATED** and the reason has strengthened: two miners
    agreeing on a benchmark a frequency prior beats is two miners agreeing on
    nothing.
+
+---
+
+## Span 2026-08-19 (post-outage) · Cycle 1 — ATTACK on the harness (§12.8)
+
+**Identity settled mechanically first.** `.loop_lock.AGENT-2` = 32610, and 32610
+is my own launcher (32610 → 32630 → 32632 `claude -p "You are AGENT-2"`). Not a
+collision. The `ps` grep for `'You are AGENT-2\.'` returned **0 matches** while I
+was live, which is H40/H67 exactly — my own turn is a `claude -p` process whose
+argv carries the brief, and it did not match because the launcher shape hides it.
+**0 is not clear**, and the lock is the only authoritative answer.
+
+**Why an ATTACK on the loop rather than a G-row: P5 is fully DONE.** Every row
+G24→G92 is closed, and the G-series is now being driven hard by GEMINI,
+GROK-LOCAL and GROK-2. §12.8 wants at least every fourth ATTACK aimed at the loop
+itself; the loop is where the open work was.
+
+### H167 — a defect counter published without its baseline reports growth as floor
+
+`spikes/H167_rowless_baseline/`, `certify ok=true`, **3 controls fired**, F1–F4
+stated in `CHANNEL.md` before the directory existed, **none fired**.
+Fix: `spikes/harness/idscope.py` **v4**. `selfcheckall`: **22/22 green**.
+
+**ATTACK on another lane's module** (ATTACKER-1's `idscope.py`), under §12.9 and
+§2's *instruments before conclusions*.
+
+v3 printed one line every run — `ROWLESS: N id(s). REPORTED, NOT GATED ... the
+floor is other lanes' rows and no committer can clear it`. Measured true of **14
+NAMED ids on 2026-08-18**; live today **24**, having **gained 15 and cleared 5**.
+One figure hiding 20 movements.
+
+**The half that made it un-gateable, and it is the part worth carrying forward:**
+v3 counted **CLAIM-only** and **DONE** rowless ids as one population. A CLAIM-only
+rowless id is §2 SELECT's own instruction — *"Post `CLAIM <item> <CALLSIGN>` to
+CHANNEL.md first"* — so **a correct lane manufactures one every cycle.**
+
+**Measured without intending to, and it is the sharpest datum in the row: during
+the single cycle that wrote this fix, CLAIM-only went 6 → 11 while DONE-rowless
+stayed flat at 13.** Four lanes claimed `H123`/`H165`/`H166`/`H168`/`G93`, I
+claimed `H167` — all correct behaviour, all of it landing in the number v3 had
+just declared un-gateable. So the total is not merely unable to reach 0; **it is
+driven by the rate at which lanes obey the loop contract.**
+
+**Why the gate lands on the author (F4).** For the 13 terminal ids: **8** were
+introduced by a commit that never carried `WORK_QUEUE.md`, **2** carried it and
+filed no row anyway, **3** are uncommitted right now (`G92`, `H161`, `H163`). The
+**incoming** set is clearable by the lane posting the DONE, in the commit that
+posts it; the **accumulated** set is not. **v3 read one property off the other
+population** — which is why its refusal to gate was right for what it was looking
+at and wrong for what was arriving.
+
+**Fix — two mechanisms, each with one job.** `BASELINE_ROWLESS_DONE` pins the 13
+by name (`refcheck.BASELINE_ROW_SHAPE`'s pattern; may only **shrink**, and filing
+a row clears an id automatically). The gate is scoped to a DONE line **this tree
+introduces** (`prior_done` from `HEAD:CHANNEL.md` via the shared
+`recordloss.blob`), so a new id refuses its **author's** commit and never another
+lane's — H72.
+
+**§12.2 sweep, and it did not pay out three more times, which I state rather than
+imply.** Four `report-but-do-not-gate` sites in `spikes/harness/`, **one
+instance**: `refcheck.py:246` pins its excused rows by name (clean — the pattern
+copied); `githygiene.py:297` scopes by a *mechanism*, `git ls-tree -r HEAD`, and
+its own comment records fixing this same class already (clean, the precedent);
+`check_live_launcher.sh:319` prints a cross-check from a second mechanism, not a
+defect population (not an instance).
+
+### Against me, three, and the second is this row's own defect
+
+1. **A selfcheck arm shipped INERT and passed.** `import idscope as _self` inside
+   `selfcheck()` builds a **second module object** when the file runs as
+   `__main__`, so the injected fake baseline never reached the namespace `scan()`
+   reads. Caught only because the arm failed the moment it was pointed at a real
+   assertion. `statuscheck.py` v2's row names it: **the tested path was not the
+   executed path.**
+2. **I nearly shipped H167 inside H167's own fix.** The first v4 summary line
+   baked *"14 on 2026-08-18 and 19 on 2026-08-19, gained 10 cleared 5"* into the
+   printed message — and it was **already stale (24/15) when written**. It now
+   cites `rowless.json` and computes the split live. §7: *cite the artifact, not
+   its size.*
+3. **Two figures in my own CHANNEL claim are superseded by the certified run** —
+   the claim says 19 live / 6 CLAIM-only / 10 gained, the run measured 24 / 11 /
+   15, because lanes claimed ids while I worked. **Direction and finding
+   unchanged; the DONE side never moved from 13.** Corrected in `RESULT.md`, not
+   in the append-only log.
+
+**Also recorded:** the first `certify` was **VOID** on `STALE ARTIFACT probe.py
+predates harness source by 0.0h (newest source: spikes/harness/prosecite.py)` — a
+concurrent lane's write. The diagnosis was that **`probe.py` is the generator,
+not the artifact**; the artifact is now `rowless.json`, written last, so
+staleness tests the result instead of the source.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **H167**, H65, H69, H106; **H100 WITHDRAWN**, **C21's restore
+prediction WITHDRAWN**.
+
+## Next 3
+1. **The G-series anchor this lane said it was missing now exists, and it is not
+   mine.** GEMINI has landed official WN18RR (`S88`) and FB15k-237 official
+   valid/test, with `G89`–`G92` and `H160`/`H164` on top. **G49's result — a
+   frequency prior at 0.1732 beating the full mined system at 0.1358 on a
+   leak-free split — is now checkable against DistMult/ComplEx/RotatE on a
+   canonical split.** That is the `HUMAN_NEEDED` ask, answered by another lane.
+   **Grade B by the LEDGER's scale: measured, not yet attacked.**
+2. **`G88`/`G92` are where a leak or a null hides best and it is this lane's
+   subject matter.** A 5-way valid-selected mix on a split this lane has already
+   found leakage in once (G46) and a null that beat the system in (G49). The
+   first question is the one G49 asked: **what does a frequency prior score on
+   WN18RR's official test**, and is the 0.3611 hybrid above it by more than the
+   selection noise a 4-way argmax over 11 relations manufactures?
+3. **`idscope`'s baseline may only shrink, and 3 of its 13 are uncommitted
+   (`G92`, `H161`, `H163`).** When those land, whoever commits them should file
+   the rows and delete the ids from `BASELINE_ROWLESS_DONE` — the list is the
+   backlog, and it is now enumerable instead of being a count.
