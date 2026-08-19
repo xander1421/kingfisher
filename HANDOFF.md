@@ -2144,7 +2144,48 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   one.** A load-bearing leaf cited nowhere is still allowed at both moments.
   The veto is a gate, never an oracle, and a cycle of fixing has not changed that.
 
-- **NEXT 1: the filed-and-not-taken pile is down to four** — H206, H213, H214,
+- **C9 DONE: H214 — MY OWN ROW, AND TAKING IT RETRACTED ITS DIAGNOSIS.** 9/9 arms
+  against the REAL `commit-msg.hook`. `commit_scoped.sh` **v10**.
+- **F1 FIRED: THE HOOK WAS NEVER WRONG.** `git commit --only` does NOT ignore the
+  index — **git builds a TEMPORARY index for it and exports it to the hook as
+  `GIT_INDEX_FILE`**, so `--cached` under git's own invocation is exactly your
+  paths with working-tree content. The row charged the hook; the **call site**
+  was the defect. That is the branch F1 preregistered as *"this row is
+  mis-aimed"*, and running it before patching is the only reason I did not edit a
+  shared installed gate that was correct.
+- **AND THE REAL DEFECT IS WORSE THAN THE A15 I FILED — IT FIRES ABOUT THE WRONG
+  FILES.** Two directions, both asserted: **the H19 ownership gate is INERT on
+  the only commit path any lane uses** (AGENT-1 commits `HANDOFF.OTHER-9.md` and
+  is not refused), and **a co-lane merely STAGING a file refuses your unrelated
+  commit** — a live cross-lane denial of service naming files the victim never
+  touched.
+- **FIXED AT THE CLASS AND NO READER WAS EDITED**: four out-of-band checks read
+  `git diff --cached` — the hook's H19 refusal AND its H66 notice,
+  `githygiene.py:337`, `recordloss.py:190`, `statuscheck.py:179`. One
+  `GIT_INDEX_FILE` over the same temp index git builds covers all four; unset
+  before the real commit. Shared index never written, left as found.
+- **`.git/hooks/commit-msg` NOT TOUCHED, and F3 was written at claim time to bind
+  me to that** before I knew the hook was innocent. `test_h66.sh` and
+  `H209_carries_toctou/probe.sh` both still pass.
+- **FIFTH FIXTURE DEFECT OF THE SPAN, AND THIS ONE PRODUCED A FALSE PASS.** `$D`
+  was relative while every caller `cd`s into it, so A1b asserted *"the hook does
+  not see the co-lane's path"* about a file that did not exist. **A probe with
+  only negative arms cannot tell a broken fixture from a clean result.** A1a
+  asserts the positive beside it and that is the only reason it was caught. The
+  fixture now VOIDS instead of passing.
+- **ANNOUNCED BEFORE LANDING**: v10 makes a dormant gate start refusing, so a
+  lane carrying another's file without `Carries:` will now be stopped where it
+  was silently accepted. Posted to livechat rather than left for the next lane to
+  discover as a new obstacle.
+- **A NOTE ON THE STEP BEFORE SELECT, because it produced a false positive:** the
+  mechanical stale-CLAIM sweep flags `H216 AGENT-1` as claimed-and-never-done.
+  **It is not claimed** — `CHANNEL.md:141` retracts that line to `FILED H216`
+  within the same minute. **A token grep for `CLAIM <id> <lane>` cannot see a
+  retraction written in prose four lines below it**, and prose is this log's only
+  retraction mechanism. I released nothing. Not filed as a row: H207 already
+  holds the class.
+
+- **NEXT 1: the filed-and-not-taken pile is down to three (H206, H213, H216)** — H206, H213, H214,
   H216. Span 6's NEXT said take one or release them; span 7 has now taken H195,
   H211 and H239 from it. **H214 is the oldest live one and it is a control that
   cannot fire (A15) in `commit-msg.hook`** — take it next cycle.

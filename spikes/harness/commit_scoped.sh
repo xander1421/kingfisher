@@ -1,5 +1,51 @@
 #!/bin/sh
-# commit_scoped.sh v9 — 2026-08-19, AGENT-1 (H209).
+# commit_scoped.sh v10 — 2026-08-19, AGENT-1 (H214).
+#
+# ==== v10, H214 — EVERY OUT-OF-BAND INDEX CHECK HERE SCORED THE SHARED =======
+# ==== INDEX, WHICH IS ANOTHER LANE'S STAGING AREA, NOT THIS COMMIT ==========
+# DEFECT REMOVED: this script runs four checks that read `git diff --cached`
+# BEFORE committing, and then commits `--no-verify --only` from the WORKING
+# TREE. Run out of band there is no commit in progress, so `--cached` resolves
+# against `.git/index` -- the index FIVE LANES SHARE -- and not against the
+# paths being committed. MEASURED, both invocations, one fixture
+# (`spikes/H214_index_scope/probe.sh`):
+#
+#   real `git commit --only mine.txt`  -> hook sees `mine.txt`      (correct)
+#   this script's direct call          -> hook sees `theirs.txt`    (a co-lane's)
+#
+# THE ROW I FILED FOR THIS WAS MIS-AIMED AND ITS OWN F1 SAID SO FIRST. H214
+# asserted the notice "scores the index while the commit reads the working
+# tree", i.e. that the HOOK was wrong. It is not: git builds a TEMPORARY index
+# for `--only` and exports it as GIT_INDEX_FILE, so under git's own invocation
+# `--cached` IS the working-tree content of exactly your paths. The hook is
+# correct and the CALL SITE was wrong -- which is the branch F1 preregistered as
+# "the row is mis-aimed". Retracted in the row, in place.
+#
+# AND THE REAL DEFECT IS WORSE THAN THE ONE I FILED. "A control that cannot
+# fire" (A15) was the charge; the measurement shows it can fire, ABOUT THE WRONG
+# FILES. Two live directions, not one:
+#   * FALSE NEGATIVE -- the H19 ownership gate, which exists to stop one lane
+#     committing another's journal, is INERT on the only commit path anyone
+#     uses, because your paths are not in the object it reads.
+#   * FALSE POSITIVE -- a co-lane staging `HANDOFF.OTHER.md` makes that gate
+#     REFUSE *your* unrelated commit. One lane can block another by staging.
+#
+# FIXED AT THE CLASS, NOT AT THE SITE: all FOUR readers are corrected by one
+# env var, because the defect was never in any of them. `commit-msg` (two gates
+# inside it), `githygiene.py:337`, `recordloss.py:190` and `statuscheck.py:179`
+# all read `git diff --cached`; this now builds the same temporary index git
+# builds for `--only` and exports GIT_INDEX_FILE across all four. The shared
+# index is not written, not read for the verdict, and is left exactly as found.
+# GIT_INDEX_FILE is UNSET before the real commit, so `git commit --only` builds
+# its own as it always did.
+#
+# NOT TOUCHED, DELIBERATELY: `.git/hooks/commit-msg`. It is a SHARED INSTALLED
+# gate every live lane executes on every commit, the measurement says it was
+# right all along, and editing it under a row about racing shared objects would
+# be the joke writing itself. F3 of this row, stated at claim time and honoured.
+#
+# Check that fails when this breaks (§12.3):
+#   sh spikes/H214_index_scope/probe.sh   (both invocations, both directions)
 #
 # ==== v9, H209 — THE CHECK WAS RIGHT ABOUT *WHICH* OBJECT AND COULD NOT BE ==
 # ==== RIGHT ABOUT *WHEN* ===================================================
@@ -227,6 +273,23 @@ cd "$ROOT"
 echo "== paths this commit carries =="
 for p in "$@"; do echo "    $p"; done
 
+# H214. THE TEMPORARY INDEX GIT ITSELF BUILDS FOR `--only`, built here so the
+# four out-of-band `git diff --cached` readers below score THIS COMMIT instead
+# of whatever a co-lane happens to have staged. Inside the workspace (§10);
+# removed on every exit path including a refusal.
+KF_IX="$ROOT/.scratch/.commit_scoped_index.$$"
+mkdir -p "$ROOT/.scratch"
+trap 'rm -f "$KF_IX"' EXIT INT TERM HUP
+if git rev-parse --verify -q HEAD >/dev/null; then
+  GIT_INDEX_FILE="$KF_IX" git read-tree HEAD
+else
+  GIT_INDEX_FILE="$KF_IX" git read-tree --empty
+fi
+# `-A` so an untracked path and a deletion are both represented, which is what
+# `--only` commits. This writes KF_IX and never `.git/index`.
+GIT_INDEX_FILE="$KF_IX" git add -A -- "$@"
+export GIT_INDEX_FILE="$KF_IX"
+
 echo "== githygiene.py (index-scoped, already correct) =="
 python3 spikes/harness/githygiene.py || { echo "REFUSED by githygiene" >&2; exit 1; }
 
@@ -238,6 +301,10 @@ python3 spikes/harness/statuscheck.py || { echo "REFUSED by statuscheck" >&2; ex
 
 echo "== commit-msg trailer gate, run DIRECTLY (this is what --no-verify drops) =="
 .git/hooks/commit-msg "$MSG" || { echo "REFUSED by commit-msg" >&2; exit 1; }
+
+# H214. Back to the real index: `git commit --only` must build its own, and
+# every check that needed the scoped one has run.
+unset GIT_INDEX_FILE
 
 echo "== tree-wide document checkers, reported in full, scoped for the verdict =="
 # TEST SEAM, deliberately inert outside DRY_RUN. The scoping predicate is the
