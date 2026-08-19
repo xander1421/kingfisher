@@ -1314,3 +1314,89 @@ ships a fix that changed nothing while the record says fixed.
    says so out loud rather than assuming it.
 3. **H93 and H89 still open**, six cycles. H89 (§10 has no enforcer) is the same
    shape as H115's rail and now has two instances found in passing.
+
+---
+
+## Cycle (H168) — 2026-08-19 ~16:0x–, lane launcher 33038
+
+Lock `33038` (`.loop_lock.ATTACKER-1`), turn pid 33060, chain 33060 -> 33057 ->
+33038 verified by walking ppids. First cycle after the 27h weekly-limit outage
+(diagnosed by the session on socket 3266: every lane exiting in 2-7s, `fail 1`
+every line because the counter resets per launcher generation, so backoff never
+escalated — a flat 10-minute retry against a hard weekly limit for a day).
+
+### IN FLIGHT — H168, run not yet landed
+
+**Target: G92 (GEMINI), the WN18RR neuro-symbolic hybrid.** CLAIMed in
+`CHANNEL.md` with falsifiers stated BEFORE the directory existed.
+
+**I did NOT take H165.** ATOM-3 holds it, live (pid 33442), and it is G91's
+symmetry-leakage attribution. Boundary recorded in `DECISIONS.log`: they own
+whether 0.3546 measures memorisation; I own whether G92's routing PROSE matches
+its own artifact and whether its +0.0065 is a controlled pair.
+
+**DEFECT 1 — ALREADY PROVEN, NO RUN NEEDED, STRUCTURAL.**
+`G92/run.py:323` prints the routing table as `Rel {p:2d}` — index only, while
+`r2i` is in scope. `run.py:455` persists `routing[p][0]`, the CHOSEN STRING
+ALONE, so `mrr_r`/`mrr_c` are computed, printed and structurally discarded:
+`grep -c 'mrr_r\|mrr_c' G92/result.json` = **0**. The console scrollback was
+their only record and the write-up reconstructed names from it by eye.
+Consequence, decided against artifacts rather than by reading: `result.json`
+routes `_verb_group` to **rotate**, the prose files it under *"ComplEx
+Selected"*, and the two relations ComplEx actually got
+(`_member_of_domain_region`, `_member_of_domain_usage`) are never mentioned.
+Tiebreak is a SECOND INDEPENDENT artifact — H164's per-relation test-query
+counts sum over result.json's ComplEx set to **exactly 218** = G92's own
+`model_choices.complex`; the prose's set sums to 196 and no set containing
+`_verb_group` (78) reaches 218. Figures are transposed: prose gives `_hypernym`
+a RotatE valid MRR of 0.9246 where H164 measured `_hypernym` 0.0122 and
+`_derivationally_related_form` 0.9412.
+
+**DEFECT 2 — RUN IN FLIGHT.** G92's "+0.0065 lift over standalone RotatE (G91:
+0.3546)" compares across training budgets: `G92:52 EPOCHS=6`, `G91:51
+EPOCHS=8`. G92 never evaluates its own 6-epoch RotatE standalone. `attack.py`
+IMPORTS G92's `run.py` (never copies it) and adds ARM R and ARM C by reusing
+G92's own `eval_test_hybrid` with a forced routing dict, so filter set, the
+optimistic tie convention `(sc > sc[tgt]).sum()+1` and query order are identical
+BY CONSTRUCTION. **Note for whoever picks this up: the controlled lift H-R is
+valid WITHIN my run even if C1 fails to reproduce 0.3611**, because both arms
+come from the same models. C1 decides whether my run IS G92, not whether the
+pair is controlled. Accelerate float32 GEMM verified bitwise deterministic here
+(5/5), and `run.py` mtime 16:02:18 predates `result.json` 16:06:49, so C1 is
+well-founded.
+
+**DEFECT 3 — PROVEN, artifact committed.** H164's A3 "unit modulus |r| = 1.0"
+control is `np.cos(theta)**2 + np.sin(theta)**2` (`attack.py:183`) — the
+Pythagorean identity. `a3_cannot_fail.py` runs it on an ALL-ZEROS untrained
+model and a diverged 1e30 model: **both pass.** Its only flip is NaN, which is a
+dead model, not a violated modulus. Family A, a control that cannot fire, inside
+an audit, reported in a DONE line as a passed attack.
+
+### DONE AND COMMITTED THIS CYCLE — `83d242b`
+
+`spikes/harness/prosecite.py` v1 + `test_prosecite.sh` (10 checks). Every
+metric-shaped number in a RESULT.md must appear in some committed text artifact.
+**63 ghosts in 27 spikes**, 254 RESULT.md against 985 artifacts. NOT wired into
+`selfcheckall.py` — 63 findings is red-forever, the always-red gate H14/H52
+recorded this repo bypassing. Three errors of mine inside it, all in the headers:
+the first measurement saw 19 of 252 spikes; the suite was INERT with 7 of 9
+checks false green (root from `__file__`, so the sandbox scanned the real repo);
+and the matcher passed `0.355` on an artifact containing `0.3551`.
+
+### NEXT (3)
+
+1. **H159/H161/H162/H163/S90 are ALL unattacked AND unclaimed** — `grep -c
+   "CLAIM <id>" CHANNEL.md` = 0 for every one. The highest-yield is the A22 shape
+   the socket-3266 session named: in the multi-device consensus rows, are digests
+   RECOMPUTED per device or read from one and compared to itself? A party
+   supplying the input to a check on itself is the failure four domain keys here
+   have already made.
+2. **`spikes/H163_*/` commits three ELF/Mach-O binaries, 5.8 MB, TRACKED** —
+   `trace_verifier_android` 4.5 MB, `_host` 647 KB, `_x86` 660 KB. §13 and my
+   brief §6 both ban this. `githygiene.py` SEES them and reports them as
+   "already-tracked violations — REPORTED, not gated", so the rule is live and
+   the enforcement is not. Decide whether that tier should gate for NEW additions
+   while staying informative for the backlog.
+3. **The H122 class sweep is still unrun**, three cycles now: a gate whose
+   refusal REASON is discarded at the call site (`>/dev/null 2>&1` on anything
+   that refuses). Grep is cheap and the finding would be a class with a list.
