@@ -18,7 +18,12 @@
 # `allocid.sh`'s own `refuse_if_input_missing`, and not applied here. The roster
 # EXISTING is not the roster being READ, and the difference was invisible because
 # the failure direction was quiet. v2 refuses on an empty lane list rather than
-# treating it as a roster that sanctions nobody. Check: `sh spikes/harness/test_send.sh`.
+# treating it as a roster that sanctions nobody.
+# Check: `python3 spikes/harness/sendcheck.py --selfcheck`. It began as a shell
+# test and was ported (H186) because the only automatic path -- bringup.sh ->
+# selfcheckall.py, launchd, every 10 min -- discovers `.py` modules that HANDLE
+# `--selfcheck`, so the shell version was invisible to it and ran only when a
+# lane remembered.
 #
 # The commit that broke it is titled "a quorum check that can never read green stops
 # being read". It shipped a `--list` that can never read anything BUT green.
