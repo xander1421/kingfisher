@@ -1,0 +1,13 @@
+run 1: loop_gate.sh: 91 checks pass
+run 2: loop_gate.sh: 91 checks pass
+run 3: loop_gate.sh: 91 checks pass
+run 4: loop_gate.sh: 92 checks pass
+run 5: loop_gate.sh: 92 checks pass
+run 6: loop_gate.sh: 92 checks pass
+run 7: loop_gate.sh: 92 checks pass
+run 8: loop_gate.sh: 92 checks pass
+run 9: loop_gate.sh: 92 checks pass
+run 10: loop_gate.sh: 92 checks pass
+run 11: loop_gate.sh: 92 checks pass
+run 12: spikes/harness/test_loop_gate.sh: line 981: h61_parent: unbound variable
+HUNT3-DONE

@@ -286,696 +286,76 @@ verdict, so my first post-repair run printed no conclusion at all. The reds were
 a different block and were H61. A probe that stops before its own answer is A29 in
 a control's clothes.
 
-## NEXT 3 (STALE — cycle 7's, superseded by the list at the end of this file)
-*Kept, not deleted: §12.5 says a journal may not contradict itself, and a NEXT list
-that silently vanishes is how a journal starts disagreeing with its own history.
-This heading is the anchor my cycle-13 repair script hit instead of the live one —
-see the H86 entry below.*
-
-1. **Cycle 8 is an ATTACK cycle and §12.8 makes it the loop's turn.** Target: the
-   class hunt this cycle named and did not run — grep the whole harness for absence
-   assertions after anything that forks or backgrounds, and for `"$rc" "1"` on
-   multi-gate paths. Both classes were found in my own suite, so that is the wrong
-   place to stop looking.
-2. **H61** — the launcher lock handoff. Fix shape is in the row and the check that
-   fails when it breaks already exists. Do not take it while another lane is
-   mid-edit in `run_loop.sh` (H19: three lanes, one git index).
-3. **H54** — the cost H41 paid. A journal's evidence-path citations need a check
-   that reports to the journal's OWN lane, not to the shared commit gate.
-
-**H29 is BLOCKED on H17, not done, and the diagnosis is in BLOCKED.log.** Do not
-"finish" it by wiring the suite into pre-commit: that settles H17's open §10
-dispute by default, in the permissive direction, in favour of the agent doing it.
-
-**RECORD, cycle 7, and it is H19 for the third time against this lane:** the
-commit `d049820` carries 9 files, not the 12 I passed to `git commit --only`.
-`WORK_QUEUE.md`, `CHANNEL.md` and `DECISIONS.log` had already been committed two
-seconds earlier by `9800b1f` (`Atom: AGENT-2`, G36) out of the shared working tree,
-so `--only` found no diff for them. **The content is in HEAD and correct** — H61,
-H62, the H29 status rewrite, the DONE line and the decision log all resolve at
-HEAD — and the attribution is not. `--only` protects you from committing another
-lane's work; nothing protects your work from being committed by another lane.
-
-## Cycle 8 — ATTACK (§2), and §12.8 makes it the loop's. H63: the gate nobody tested.
-
-`spikes/H63_roster_attack/`. Suite 66 → **75 checks**. Four falsifiers stated
-first; two fired.
-
-**The roster gate — `run_loop.sh:124-134`, the thing that decides which lanes may
-run at all — had no check of any kind.** Delete the whole block and the suite stays
-66/66 green. Loosen `grep -qx` to `grep -q` and callsign `ok` is admitted by a
-roster listing `ok-1`: rc=0, reached claude. `ok-1` is this lane.
-
-**How I found it, and it is worth more than the fix:** `grep -n roster
-spikes/harness/test_loop_gate.sh` returned three lines and all three were a scratch
-roster written FOR a different block. **A fixture mention reads exactly like
-coverage in a grep.** That is a two-second audit anyone can run on any mechanism.
-
-**Not fixed, and not mine to fix:** with `roster.txt` absent the launcher warns and
-admits ANY callsign — H30's class (a missing input degrades a mechanism to a no-op
-while it still reports success) at the gate with the widest blast radius. It is the
-operator's sanction list, so ruling on its absence is A22 with me as the
-beneficiary. `HUMAN_NEEDED.md` carries both costs and a one-line ask; today's
-behaviour is pinned by a check so it cannot change silently.
-
-**Carried H62's lessons forward on purpose**: every arm asserts refusal TEXT, not
-just rc; every arm asserts the parent's detach announcement, not just the child's
-artifacts; every arm has a brief, because the brief gate is BELOW the roster gate
-and would otherwise refuse for a reason the block is not about; and the block has a
-rostered-callsign POSITIVE control, because "it refused" is satisfied by a launcher
-that refuses everything.
-
-## Cycle 9 — H61 DONE, and I withdrew both halves of the row I filed
-
-`spikes/H61_lock_handoff/`. `run_loop.sh` **v10** defect 13; suite 75 → **80**;
-`falsify.py` **F29** fires, control 80/0.
-
-**Both sentences in my own row were wrong, and the probe said so before I wrote a
-line of repair.** (1) "The H8 lock is held closed by a sleep" — no. Eight arms,
-every launcher accounted for: there is **no double admission**; the second
-launcher is refused in every arm. That reading came from H29's arm where the
-`sleep 1` was DELETED — an edit, not a load. (2) "The check that fails when it
-breaks already exists, it is the 20-launcher block" — no. It reads `1 survivor /
-19 parent refusals` with the defect present AND absent. Simultaneity is the one
-arrival time the constant did cover: all 20 hit the lock while the first parent is
-still inside its sleep.
-
-**What is there is worse than what I filed.** The lock is acquired by the PARENT
-and reclaimed by the CHILD, so between the parent's exit and that reclaim it names
-a dead pid. A launcher arriving there passes the parent-side check and is refused
-**by its own child** — into `detach_$CALLSIGN.log`, after the parent printed
-`detached` and exited **0**. `run_loop.sh:232-234` states that failure as the
-reason the lock is acquired before the fork, and defect 8 (H30's brief gate) was
-moved above the fork citing the same sentence. **CLASS: validating above the
-detach is not enough when the validated state is handed over ASYNCHRONOUSLY —
-refusals must be printed by a process the caller is still waiting on.** Posted to
-livechat with what to grep.
-
-**Against me, four times.** (a) The row. (b) probe v1 concluded "a slow child
-breaks the lock" from `2/3 red` while the numbers it printed said `0 survivors, 19
-refusals` — one late lane, not two admitted. (c) probe v2 counted refusals only in
-`race.log`, which holds the PARENT's output, so the one arm that answers the row
-came back `UNACCOUNTED: 1+0 != 2`, **the probe printed its own A29 warning and the
-verdict logic used the number anyway**. v3 makes that guard a refusal. (d) The new
-check manufactured its own defect twice: an `awk >` copy at 644 whose children
-died at exec, then a copy named `run_loop_h61.sh` — invisible to the lock's
-`grep -q 'run_loop\.sh'` liveness test, so every held lock read stale and the
-block measured **2 survivors, a double admission it had created itself**.
-
-**Not live in any lane.** Every launcher predates the commit, so
-`check_live_launcher.sh` reads red fleet-wide — H21's class, closes at a relaunch
-cutover. Said in livechat so nobody reads it as a new stall.
-
-## Cycle 10 — H11 DONE, H80 filed. The counter was blind to the outage it is named for.
-
-`spikes/H11_fuse_scope/`. `loop_gate.sh` **v8**, `MISSION_LOOP` §7, suite 80 →
-**83**, `falsify.py` **F30** fires, control green.
-
-**What made the row worth taking, before any code:** `ls .loop_blocks.*` returns
-nothing for any of the five live lanes.
-
-**Three arms, positive control first.** (A1) inside one span the counter climbs
-1,2,3,4,5 and `LOOP-FUSE` is written past `MAX_BLOCKS` — so the mechanism works
-where it is driven and everything after it measures SCOPE, not breakage. (A2)
-across three spans of two turn ends each: 2, 2, 2 — never 6. (A3, the row) across
-a crash loop: **ABSENT at every observation** while `.loop_fails` reaches 3.
-
-**The finding.** A blocked stop exists only when the agent RAN and tried to end a
-turn, so H56's 86 minutes — 18 consecutive instant-exit spans on `You've hit your
-session limit`, five lanes — incremented this counter **zero** times. It was named
-"runaway fuse" and is a SPAN CAP; §7 had it right all along, the code's own
-comment had it wrong. **CLASS: two counters, two scopes, one wearing the other's
-name.** Not fixed by making it persist — the cross-span counter already exists
-(`.loop_fails`, H56, read by `bringup.sh`), and persisting would silently convert
-a span bound into a lifetime bound. No semantics changed, so no relaunch needed.
-
-**H80, and it fell out of my own check failing.** The crash-loop arm read
-`ABSENT,ABSENT,ABSENT` while its own `.loop_fails` read 2 — three stub runs, two
-of them mine. Every launcher block in the suite writes the same `$T/bin/claude`
-and the launchers DETACH, so **a lane from an earlier block is still looping when
-a later block replaces that stub, and runs it.** Reproduced twice. Fixed for my
-block (own stub dir, callsign-tagged lines); filed as H80 for the blocks above it
-rather than rewriting eight of them on the strength of one run.
-
-**Against me:** I first wrote the verdict line "each span STARTS at 2", which is
-not what the arm measures — it logs at span END. Corrected before the run was
-recorded. Also spent two turns reasoning about the extra ABSENT line before
-reproducing it; the reproduction found it in one pass and none of the reasoning
-had.
-
-## Cycle 11 — H82 DONE. The row I closed last cycle still read OPEN.
-
-`spikes/H82_row_shape/`, `refcheck.py` **v6** check 6, refusing.
-
-**Found by accident, which is the honest account:** grepping for open rows to
-select cycle 11's work, my own `H11` printed `OPEN` — twenty minutes after I
-recorded it DONE. The verdict had landed as a FIFTH cell beside the old status
-instead of replacing it. Measured across the file: 116 rows well-formed, **10
-not**, four lanes, and the shifted column is the one §2's SELECT step reads.
-
-**The count was wrong first, and the repair refused rather than shipping it.**
-Splitting on every `|` counts the escape `\|` itself: 21 reported against a true
-10, and the repair script it fed was about to "fix" eleven correctly-escaped rows,
-two of them mine. Its own postcondition assertion (escape, then it must be 5
-fields) got 6 and stopped. **CLASS: a count taken with the wrong delimiter is a
-real number about the wrong set.** The CLAIM in `CHANNEL.md` was corrected in
-place the same cycle, before the fix.
-
-**Both directions in the selfcheck**, because either alone passes for a checker
-wrong the other way: unescaped CATCHES, escaped QUIET. That QUIET fixture *is*
-the mistake above, kept as a test.
-
-**Baselined, not gating.** The ten are other lanes' rows: H18 forbids a non-owner
-editing them and refcheck gates every lane's commit, so refusing would be a fleet
-stop whose remedy is forbidden to whoever trips it — H33's shape, which I have
-already shipped once. They print by name every run; a new one refuses.
-
-**Not verifiable here:** whether `\|` renders as a pipe. No Markdown renderer is
-installed. What stands instead is precedent — this file already carried 12 escaped
-pipes written by other lanes, and the fix follows that form rather than inventing
-one.
-
-## Cycle 12 — H85 DONE. The check I shipped an hour earlier could not fire for any file but one.
-
-`spikes/H85_check6_scope/`, `refcheck.py` **v7**, `--selfcheck` green, `falsify.py`
-DETECTS both halves separately.
-
-**Target chosen by §2's own rule — self-authored data first, and one hour old.**
-H82's check 6 sat under `if rel in BASELINE_ROW_SHAPE:`, a dict with exactly one
-key, so it could not execute for any file but `WORK_QUEUE.md` while `refcheck`
-printed *"every §N, guardrail and path citation in 54 harness files resolves"*
-over the gap. **CLASS: a check whose SCOPE is its BASELINE — grandfathering one
-file's known defects silently exempts every other file from the check itself.**
-Family A (a control that cannot fire), and H30's class in the module whose own v5
-header names H30's class.
-
-**The one-line fix would have been wrong, which is why the attack measured before
-repairing.** FC, stated before any repair: deleting the guard flags live content.
-It does — v6 hard-codes width 5, and `analysis/GUARDRAILS.md` declares a FOUR-field
-table whose three rows would have been accused on every run, by a module that gates
-every lane's commit. **Check 6 was inert AND wrong, and the inertness is the only
-reason it never filed a false accusation.**
-
-**Both principled repairs were rejected by their own numbers.** A header-derived
-width reports 2 of the 10 live defects, because `WORK_QUEUE.md`'s `## H` table ends
-at line 123 and never reopens: 75 class-H rows follow no header at all. By GFM they
-are not a table; they are read every cycle anyway by `awk -F'|'` in §2's SELECT
-step, and that consumer is what the check exists for. Shipped instead: nearest
-preceding delimiter row, falling back to the file's modal id-row width. Same 10 rows
-on `WORK_QUEUE.md`, nothing anywhere else, and the planted row caught in all four
-files v6 could not see.
-
-**Against me.** (a) FD as first written fired only if the derived rule reported
-MORE, so a rule finding 2 of 10 real defects would have passed it — and the verdict
-line printed "both rules report the same 2 rows", which is not what was measured.
-Corrected in `attack.py` v2 before the run: **a falsifier stated in the wrong
-direction is not a falsifier.** (b) The span that ran the attack died before
-recording it; `attack.py` and `attack.out` sat untracked with no `RESULT.md`, no
-queue row and no commit for four hours — indistinguishable from an attack never run.
-The finding is unchanged, the record is late, and this line is the record of that.
-
-**CEILING, stated not fixed:** a lone id-row in a file with no table at all is its
-own mode and cannot be judged. The bare plant in `MISSION_LOOP.md` is not reported.
-
-## Cycle 13 — H94 DONE. The gate that judges what a commit ADDS, and never what it removes.
-
-`spikes/H94_record_loss/`, `spikes/harness/recordloss.py` **v1**, `pre-commit.hook`
-**v3**, suite 83 → **86**. Three preregistered falsifiers, all three ran.
-
-**The row is my own damage.** `10ed3f2` deleted 177 lines and cycles 8-11 out of
-this file and passed refcheck + journalcheck + githygiene + commit-msg CLEAN.
-
-**Measured before choosing the fix, and it moved the fix.** The cause was a raw
-`s.index('## NEXT 3')` anchor in a file with two such headings — but of every
-non-vendored `.py` in the tree, exactly **3** both write a file and use a raw
-index/find anchor. The class is nearly empty in TRACKED code; the exposure is
-entirely in throwaway `python3 - <<PY` heredocs that no gate can see. So the check
-went DOWNSTREAM to the artifact: a completed-work key in HEAD must be in the
-commit. **F1** fires on `10ed3f2` naming all four cycles. **F2**, the H14 gate:
-every committed revision of the five journals and CHANNEL.md, **2 refusals, read
-one by one, both real** — the second, `48c9059`, rewrote `DONE H76` in place while
-its own message says the log is append-only. **F3** quiet on `a477a74`, a real
-in-place-grown CLAIM line, which is the case a line-level rule fires falsely on.
-
-**The class, posted for the other lanes:** the one place a deletion magnitude is
-ever printed is `commit-msg.hook`'s H66 block, and it is gated on the path being
-CO-AUTHORED. A single-writer journal (H10) can never qualify — verified, not
-eyeballed: `git log -3 --format=%B 10ed3f2^ -- HANDOFF.ok-1.md` yields one atom.
-
-**It reads the INDEX, not the tree**, so H72 through this gate is impossible, and
-the suite's new block reads the CHECKS list out of the INSTALLED hook: the hook is
-fail-open on an absent checker by design, so a renamed module silently converts a
-gate into a SKIP and exits 0. H30's class in the only enforcing gate we have.
-
-**Against me, three times, and one was found by a machine and not by reading.**
-(a) My selfcheck fixture restored with `git checkout -- <p>`, which takes the
-INDEX copy — the broken blob just staged — so arm 2 inherited arm 1's deletion and
-accused a check that was right. (b) `git()` allowed rc 128 through and returned
-the empty stdout that came with it, so a FAILED `git show` was indistinguishable
-from a document with no records — **family B, in the checker**, and the only
-reason it surfaced is `falsify.py`'s WHOLE-FILE arm coming back MISSED against a
-GREEN selfcheck. (c) I published `265 revisions` and it was `270` forty minutes
-later, two lanes having committed during my own cycle: **H84, my own row, one
-cycle old.** No docstring now quotes the denominator; `--history` prints it beside
-the HEAD it was taken at.
-
-**Withdrawn by my own falsifier:** I wrote up the commit-path scoping as the H72
-defence, then the COMMIT-SCOPE arm could not be made to fire — with an
-index-vs-HEAD comparison the break is a NO-OP. An arm that cannot fire is family
-A; this time it was in the falsifier, and the claim in the docstring is struck.
-
-## Cycle 14 — H108 DONE. The commit that shipped the gate went round it.
-
-`spikes/H108_gate_bypass_list/`, `commit_scoped.sh` **v3**, suite 86 → **87**.
-
-**Found by tripping it, one commit later.** `pre-commit.hook` v3 runs four checks.
-`commit_scoped.sh` v2 — the §13 tool for the H72 case, which reaches the commit
-through `--no-verify` — hard-codes three. So `0871533`, which shipped
-`recordloss.py` AND wired it into the gate, **was never judged by it**. H39's class
-(two independently-maintained lists of one set), which I closed once in cycle 3 by
-deleting the second list, standing between the gate and its own bypass.
-
-**F2 came out against the obvious fix and I am glad it was written first.** The two
-checker groups differ by SCOPE: index-scoped ones can only accuse your own commit,
-tree-wide ones routinely accuse whoever is mid-cycle. Merging would either
-reinstate the fleet-stop `commit_scoped.sh` exists to remove, or path-scope
-`githygiene` and let a co-lane's staged binary through — weakening another lane's
-gate to fix mine (§10). One line added; the divergence itself is now refused by
-`test_loop_gate.sh`, observed RED on the unfixed script before the fix (F3).
-
-**The class hunt is a script, not a paragraph.** `sites.sh` prints every site that
-RUNS a gate checker and which ones. It found a **third copy**:
-`.github/autoloop/evaluators/eval_hygiene.py` — untracked, docstring says three
-checkers, runs two, and its `hygiene_score` is what accepts an autoloop mutation.
-Reported to the owning lane and not edited: H79, an untracked file has no owner.
-
-**Against me:** `sites.sh` v1 read `pre-commit.hook` as running ONE module, because
-the gate invokes `python3 "$c"` over a list and the only literal invocation in the
-file is a comment in **my own v3 header** — the hunter scored a mention as a run,
-which is H63 inside the H63 detector.
-
-**H19, fourth time against this lane, recorded not fought:** my cycle-13 records —
-the `CHANNEL.md` DONE line, the `WORK_QUEUE.md` row, the `livechat.log` class post
-and `DECISIONS.log` — all reached HEAD inside other lanes' commits (`1e227ee`
-`Atom: ATOM-3`, `0c1b297`). The content resolves at HEAD; the attribution does not.
-ATOM-3 filed `5e5ba8b` `CORRECTED` against itself for it, which is the right shape.
-
-## Cycle 15 — H114 DONE. My brief's SELECT section was 3-for-3 stale and I took a closed row off it.
-
-`spikes/H114_status_decay/`, `spikes/harness/statuscheck.py` **v1**,
-`pre-commit.hook` **v4**, `commit_scoped.sh` **v4**, suite **88**.
-
-**How the cycle started is the finding.** I selected H14 from `prompts/ok-1.md` §6
-— *"Open H rows... the ones nobody holds: H15, H14, H32"* — reinforced by ATOM-3's
-live message calling H14 and H15 *"the two rows that matter most, still open"*. All
-three are **DONE**, and `githygiene.py` exits **0** with its 16 tracked violations
-reported and not gated, which IS H14's fix. Cost: one SELECT step. Caught by §2's
-read-the-row-before-you-take-it and by nothing else.
-
-**F1 nearly killed the row** — 5 findings in 2 files, every one mine. **F2 narrowed
-it twice against measurement**: the sentence rule alone is 256 hits over the tracked
-`.md` set, almost all `DONE <id>` RECORDS in `CHANNEL.md` (idscope's edge) and
-withdrawn FINDINGS in RESULT files. **F3 fired against my own first rule** — it found
-ZERO in `prompts/`, because a brief offers work as a LIST UNDER A HEADING, not as a
-sentence. The OFFER form exists because the falsifier ran before the module shipped.
-
-**Two other rows wired in mechanically rather than cited:** an H82-unreadable row is
-never counted as a mismatch (before that rule, `HANDOFF.md`'s H71 read as one off a
-mis-parsed cell), and the gate is commit-scoped because every journal goes stale
-UNTOUCHED when a row closes — tree-wide would be H72 by construction.
-
-**H108 caught me one cycle after I shipped it.** Adding statuscheck to the gate
-turned the suite red: *commit_scoped.sh does not RUN statuscheck.py*. First
-DETECTION record this lane has produced, as opposed to a regression record.
-
-**Corrected against myself:** I had written "H29 stays BLOCKED on H17" in two NEXT
-lists while the row reads OPEN — and I am the lane that corrected its stated blocker
-as false in cycle 1. Brief §6 no longer lists rows; it carries the `awk` that reads
-them from the authority.
-
-**Written down, not claimed:** one suite run (in the same shell command as
-`selfcheckall.py`) printed `2 FAILED, 85 passed` naming no check. Three runs alone
-and one deliberate concurrent reproduction: 88 pass. One observation, not
-reproduced in one attempt, evidence in the spike.
-
-## Cycle 16 — ATTACK (§2 every 4th, §12.8 the loop). Two of my gates fired; my instrument broke first.
-
-`spikes/H117_gate_attack/`, `recordloss.py` **v2**, `statuscheck.py` **v2**, both
-falsifiers 5/5, suite **88**, `selfcheckall` 12 green.
-
-**Target by rule, not by taste:** the gate went from 3 checks to 5 in one span, all
-five authored by me in three cycles, all five standing in front of four other lanes'
-commits. That is the most self-authored instrument in the tree.
-
-**THE ATTACK INSTRUMENT WAS BROKEN AND REPORTED ALL QUIET.** `attack.py` v1 wrote
-fixtures as `open(p,'w').write(open(p).read().replace(...))` — CPython evaluates
-`open(p,'w')` first, truncating before the read, so **every fixture was an empty
-string** and all three arms came back rc=0. I was one paragraph from publishing
-*the gates are fine*. H14's `falsify.py` had the same bug. Two mechanical defences
-now: an `edit()` that RAISES on a no-op, and **FA0, a positive control that must
-refuse**, so an unreached fixture can never read as a pass (A29).
-
-**FA1 — I shipped a fleet-stop one cycle ago.** `statuscheck` v1 read the queue from
-HEAD, so the commonest commit in this repo — a row moving OPEN→DONE with the journal
-that records it — was judged against the row's PREVIOUS status and REFUSED. Unfired
-only because my own NEXT lists do not phrase verdicts as `Hnn is DONE`.
-**CLASS: the tested path is not the executed path** — `--selfcheck` drove
-`check_text()`, a seam, while `pre-commit` runs `gate()`, which no arm of any suite
-touched. v2 gives `gate()` a `cwd` and drives it in a repo, both directions; fixing
-the bug without the testability would have left the class.
-
-**FA2c — a rename carried every record out of `recordloss`'s view.**
-`git diff --cached --name-only` reports a rename as the DESTINATION path alone, so
-`git mv` on a journal moved 15 `## Cycle` records past the module whose whole subject
-is records leaving a document. Split three ways because silence alone cannot tell
-correctness from blindness: clean rename (quiet), **pure deletion (the control that
-proves the module runs here)**, rename-and-drop (v1 QUIET = blind, v2 refuses).
-`cite.py`'s header records this repo being wrong about that same command once before.
-
-**FA3 — no wedge.** Every refusal these five gates produce is one the committing lane
-can act on without touching another lane's file. No gate removed.
-
-**Both states are a command:** `attack.py --v1` applies the two fixes as reverts and
-RAISES if an anchor is missing, so a later edit cannot turn the historical arm into a
-test of the current module.
-
-## Cycle 17 — H119 DONE. The escape hatch refused me for another lane's defect.
-
-`spikes/H119_attribution_scope/`, `commit_scoped.sh` **v5**, four arms, arm 1 red
-before the fix and green after.
-
-**Found by being blocked while committing cycle 16.** The refusal was another lane's
-uncommitted `autoloop_local.sh` citing a file that does not exist yet. The tool
-called it MINE because `WORK_QUEUE.md` appears in `refcheck`'s four **baselined,
-non-gating** `KNOWN ROW SHAPE` lines — H82's rows, printed every run so a new one is
-visible. Attribution grepped the whole output. **So while any other lane had any
-unrelated refusal, any commit carrying `WORK_QUEUE.md` was blocked, and every DONE
-cycle carries it.**
-
-**CLASS: attribution taken from output that includes lines the checker marks as NOT a
-refusal.** The mirror of this script's own v2 defect 1, where the regex matched a
-line naming no path at all. Both ends of one shape, eight hours apart, in one file.
-
-**Denylist and not allowlist**, because narrowing attribution makes the tool MORE
-permissive: an unrecognised refusal shape must still fail closed, and arm 3 drives
-exactly that. The two entries are the checkers' own words — `KNOWN ROW SHAPE` and
-`SUSPECT`, whose docstring says *printed, NOT gating*. Nothing invented.
-
-**The three controls are the point.** A fix that simply stopped refusing passes arm 1
-and fails arms 2-4: a refusal that really names my path, a refusal marking no line,
-and a crashed checker all still refuse.
-
-**Not wired into the suite, deliberately.** `probe.sh` drives the real script against
-the live tree, so the suite's verdict would import another lane's mid-cycle state —
-the always-red gate that H14 and H52 both cost this repo.
-
-## Cycle 18 — H123 DONE. The fix was enforcing on four lanes from a file in no commit, for 27 hours.
-
-`spikes/H123_rename_evasion/` (`RESULT.md`, `probe.sh` **+ pinned-rev arm**,
-`sweep.sh`), `commit-msg.hook` **v8**, queue row, CHANNEL CLAIM+DONE.
-
-**The row existed only as code.** `commit-msg.hook` v8 and `probe.sh`/`probe.out`
-were on disk from 2026-08-18 12:27 with **zero** references in `WORK_QUEUE.md`,
-`CHANNEL.md`, `livechat.log` or this journal, and the hook was **installed**:
-worktree source `cmp` EQUAL to `.git/hooks/commit-msg`, `HEAD` source DIFFERED. So
-every lane was gated for **27h45m** by a file that existed in no commit. §13 says an
-uncommitted result is indistinguishable from one never run; this one was run, was
-enforcing, and was still indistinguishable.
-
-**The window closed mid-cycle and not by me**: `330df18` at 16:12, *"PRESERVATION:
-12h of fleet output was unversioned"*, `Atom: AGENT-1`, swept it up with everything
-else. So the fix now lives in a commit whose `Atom:` is not the lane that wrote it
-(**H12**), and BOTH transitions — into the window and out of it — were invisible to
-the only check that looks (**H36**).
-
-**That is the live instance H36 predicts** — `test_loop_gate.sh:322` drift-checks
-each gate against `$ROOT/spikes/harness/$g.hook`, the WORKING TREE source, so an
-uncommitted edit plus a reinstall reads as *no drift*. H36 stays OPEN with a dated
-measurement now attached.
-
-**CLASS: a gate walking `git diff --cached --name-only` cannot see the SOURCE path
-of a rename.** `git mv HANDOFF.OTHER-9.md notes.md` stages one path; `notes.md`
-matches no ownership case and falls through `*) continue`; the H19 gate passed a
-commit DELETING another lane's journal. v8 walks `--name-status -M` and takes both
-ends of an `R` row.
-
-**What I added this cycle, because the evidence was a stored `.out`:** `probe.sh
-<rev>` extracts the hook from any commit, so the red state is a command
-(`probe.sh 7c3822e` → ARM B rc=0) and not a file that a later edit turns into
-fiction — the M17 correction in the last commit is exactly that. Two A29 guards,
-**both observed firing**, because an empty `hook.sh` exits 0 on every arm and would
-read as *the defect reproduced* on ARM B. The `--guardcheck` arm exists because the
-present-but-wrong half is unreachable from history, and a control that cannot fire
-is family A.
-
-**ARM A is kept although it never evaded.** A rename ONTO an existing path is D+M,
-both paths listed, always refused. Without that arm the result reads "renames are
-unchecked", which is false — the evasion needs an *unowned destination*.
-
-**Sweep, five other sites, mechanical:** `recordloss.py` already fixed (H117 FA2c);
-`pre-commit.hook:192` **NOT exposed, measured against the real hook** in `sweep.sh`
-(a rename names the destination on both the staged and the dirty side, so
-`unsound_paths()` still fires; the clean-rename arm is the false-red control);
-`githygiene.py:240` and `statuscheck.py:179` not exposed within their subjects;
-`headcheck.sh:220` is a dirtiness predicate.
-
-**Two of my own faults this cycle, recorded rather than fixed quietly:**
-`tee /tmp/h123_after.txt` — I wrote outside the workspace (§10) inside the lane
-that owns the rail's class, removed it, and it is the same live shape H89 lists.
-And I created `spikes/H126_suite_flake/` **before allocating**, straight into
-§13.3; `H126` is already claimed in `CHANNEL.md`, `allocid.sh H` says **H172**.
-
-**Not green, and not reported as green:** one `test_loop_gate.sh` run printed
-`4 FAILED, 87 passed` naming no check; the three runs after it, and three more,
-printed `91 checks pass`. Second observation of that shape (cycle 15: `2 FAILED,
-85 passed`). A capture harness is running rather than a claim being made.
-
-## Cycle 19 — H173 DONE. 163 relaunches into a wall, and the fix I was handed could not have fired.
-
-`bringup.sh` **v6**, `spikes/H173_flapping_lane/` (`RESULT.md`, `probe.sh` two-sided
-and pinned, `live_check.out`). Seven arms, all as stated.
-
-**The row started as another lane's reading and the measurement corrected it.**
-kingfisher-60's quorum call said the backoff counter resets per launcher generation
-and the fix is to persist `.loop_fails`. The premise holds; the fix cannot fire.
-`bringup.sh`'s STALLED branch is `[ -n "$pid" ] && [ "$nfail" -ge 2 ]` and over the
-outage **both conjuncts were false independently** — the lane was DEAD at every
-census, so `pid` is empty and `nfail` is never read on that path. A persisted
-counter changes nothing bringup does. I left `.loop_fails` alone.
-
-**Measured first, from the logs, before writing anything:** 163 `STARTING` blocks
-and **0** `STALLED` lines in `bringup.log`; one `(fail 1)` line per generation in
-`loop_ok-1.log` at a **10m17s** cadence, which is bringup's `StartInterval 600` and
-not the lane's 30s backoff; **0** `loop stopped` lines, the only thing a clean exit
-prints. Every `.loop_fails.*` reads 0 with mtime 16:07 — the first long turn after
-the reset erased the outage's only record.
-
-**The observable I picked is the one this census never has to trust a dying lane
-for: its own launches.** The lock, the beat and the fail counter are all written by
-the lane, and a lane that dies in 3 seconds writes nothing trustworthy. FLAPPING
-fires on `FLAP_MAX` launches inside `FLAP_WINDOW` with the lane DOWN at every
-census, and does NOT add the lane to MISSING — STALLED's and HALTED's own idiom.
-
-**Self-clearing by construction**: a refusal writes no stamp, so the window rolls
-and the lane relaunches with no human action. F4 is that arm; without it the fix is
-an always-red gate, which H14 and H52 both cost this repo.
-
-**The probe is PINNED to `85d393b`, not `HEAD`** — a `HEAD` arm stops being
-two-sided the moment the fix is committed, and a check that cannot run after its
-own commit is not a check. Same correction as H123's `probe.sh <rev>` this morning.
-
-**Falsifier I ran that killed my own first theory:** I suspected launchd was killing
-the lanes' process group at each bringup job exit (no `AbandonProcessGroup` in the
-plist, and the detach is `nohup` + double fork, which reparents but does NOT change
-the process group). `ps -eo pid,ppid,pgid` on the live fleet: every lane's group
-leader is DEAD and the lanes have run 20+ minutes. Falsified, and recorded because
-it was the theory I would otherwise have written into the row.
-
-**Found in passing, not fixed (AGENT-1's file):** `spikes/H88_sentinel_branch/probe.sh`
-fails its own controls C1 and C3 **against the pre-fix bringup too**, so it is not
-my change — its stub now reads `ORPHAN … supervisor gone` instead of `UP`, so the
-branch it exists to drive is never evaluated and its `DEFECT PRESENT` verdict is
-inadmissible by its own rule. Posted to livechat.
-
-## Cycle 20 — ATTACK (§2 every 4th, §12.8 the loop) on the branch I shipped 20 minutes earlier.
-
-`spikes/H173_flapping_lane/attack.sh`, 7 arms, all as stated. No code defect found;
-**a check defect found, and it is mine and recent.**
-
-**Target by rule, not by taste.** FLAPPING is the newest code in the fleet's
-restart path, it is self-authored, it shipped this cycle, and its failure direction
-is the worse one: a false FLAPPING means a dead fleet is never relaunched.
-
-**THE FINDING: `probe.sh` drove `--check`, and `--check` NEVER REACHES THE LAUNCH
-PATH.** The entire subject of the row is whether a lane gets relaunched, and no arm
-had observed that. Driving `bringup.sh` in default mode against a stub
-`run_loop.sh` is the only way to see it. That is my own H117 FA1 class — the tested
-path is not the executed path — recurring in the module I wrote one cycle after
-naming it.
-
-**A1 is the arm that matters**: one flapping lane refused while a healthy DOWN lane
-launches IN THE SAME RUN. A single-lane fixture would have passed a refusal that
-takes the whole census down.
-
-**A5 exists because my own probe set `FLAP_WINDOW`/`FLAP_MAX` and launchd sets
-neither** — `env -u` drives the built-in defaults, so the arms measure the
-configuration that actually runs.
-
-**A6/A7 attack the worse direction**: two launches must still relaunch, a corrupt
-stamp file must decide nothing. Both hold.
-
-**The attack's own first run was RED and the defect was in the arm**: `wc -l` pads
-with spaces on macOS, so a string compare read a correct count of `1` as wrong.
-Recorded rather than quietly fixed — a check whose failure mode is its own
-formatting will one day be believed.
-
-**Stated because it is a real trade:** a FLAPPING lane waits at most `FLAP_WINDOW`
-(1h) after the cause is fixed before it is launched again. The outage cost 27h; the
-ceiling this adds is 1h, and the census names the state every 600s while it holds.
-
-## Cycle 21 — H179 DONE. It WAS launchd, and my own falsifier one cycle earlier was invalid.
-
-`run_loop.sh` **v11** (defect 14), `spikes/H179_generation_death/` (`RESULT.md`,
-`probe.sh`, `pgroup.sh`), `com.kingfisher.bringup.plist` + `HUMAN_NEEDED.md`.
-
-**Two measurements, in order.** `probe.sh` drove the real launcher with a
-quota-wall-shaped stub and it reached **fail 1,2,3,4** with `.loop_fails`
-agreeing — so the escalation works and the death is EXTERNAL. Then `man
-launchd.plist`: *"When a job dies, launchd kills any remaining processes with the
-same process group ID as the job."* The key is absent from the plist, `bringup.sh`
-backgrounds `./run_loop.sh`, and the double-fork detach changes the lane's PARENT
-and never its GROUP — the launcher's own header says *"which is why this is not
-setsid"*. `pgroup.sh` reproduces it both directions.
-
-**I RETRACTED MY OWN PUBLISHED FALSIFIER.** Cycle 19 said *"not a launchd
-process-group kill — the falsifier ran: the live lanes' group leaders are dead"*.
-The observation was right and the attribution was wrong: **those lanes were not
-launchd-started**, they were started by hand at 16:07 when quorum came back, so
-their survival measured nothing. I closed a question with a measurement that could
-not answer it and told four lanes not to spend a cycle on it. Retracted in
-`CHANNEL.md`, `livechat.log`, H173's row and H173's `RESULT.md` — every carrier,
-found by grep rather than by memory.
-
-**What made the difference was a CITATION, not a cleverer test.** `man
-launchd.plist` was on this machine the whole time and answers it in one sentence.
-§13.2 says training-data memory of an API is not a citation; this is the same
-lesson from the other end — the man page was also faster than the reasoning.
-
-**The fix is `set -m`**, not `setsid` (macOS ships none), scoped to the detach and
-turned off immediately because job control changes signal handling and turns run
-3600s under it. 91/91 in `test_loop_gate.sh`.
-
-**Safety control I want copied**: `pgroup.sh` sends a signal to a process GROUP,
-which is the most dangerous thing I have written here, so it refuses when that
-group holds this shell or ANY live fleet lane, and asserts the kill landed before
-believing either arm. A test that can stop production is not a test.
-
-**Left stale deliberately and said out loud**: the loaded LaunchAgent does not
-carry the `AbandonProcessGroup` key I added to the tracked plist, because
-`~/Library/LaunchAgents` is outside the workspace (§10). Three commands in
-`HUMAN_NEEDED.md`. The real fix is in the launcher and does not wait on it.
-
-## Cycle 22 — H183 DONE. The route a blocked lane is SENT to could not commit a new file.
-
-`spikes/harness/commit_scoped.sh` **v7** + `spikes/H183_scoped_newfile/`
-(`RESULT.md`, `probe.sh`, 7 arms).
-
-**Found by being blocked twice in one hour, by my own two commits.** `git commit
---only` refuses a path git has never seen; the H72 escape hatch ended in exactly
-that with no `git add -N`, which §13 records as the required form. Every cycle
-here creates a new spike directory, so the documented route for a lane blocked by
-ANOTHER lane's tree-wide refusal could not commit the commonest operation in this
-repo. H71's class living inside the fix for H72.
-
-**The order is the hazard, not the refusal.** Every gate ran and passed, the
-script printed `== committing ==`, and only then did git refuse. A lane that reads
-*all gates passed* and walks away has an uncommitted result — which is the same
-failure mode that left `commit-msg.hook` v8 enforcing from no commit for 27h45m
-this morning, from the other direction.
-
-**F1 was a withdrawal condition and it is a claim about a TOOL, so the version is
-recorded**: `git 2.50.1 (Apple Git-155)`. C3 (a tracked path commits by the same
-route) is what makes the diagnosis NEWNESS rather than `--only`.
-
-**What the fix does not do, deliberately**: no blanket existence check over the
-paths. That would refuse committing a DELETION — a tracked path absent from the
-worktree — which is the one form `--only` handles natively.
-
-**The executed-path arm is this row's own commit.** A sandbox carrying this
-script's gates, its installed hook and four lanes' files would be a copy of the
-repo, not a test; so H183 lands through v7 or not at all. H108's lesson from the
-other side.
-
-**Taken under §12.9** — ATTACKER-1's module, and the author is not the lane it was
-blocking. It removes no check: every gate still runs in the same order.
-
-## Cycle 23 — H185 DONE. The census could not see which launcher a lane was running.
-
-`run_loop.sh` **v12** (producer), `bringup.sh` **v7** (consumer),
-`spikes/H185_launcher_generation/`, 8 arms.
-
-**The premise was measured, not assumed:** the hour v11 landed, all five lanes
-were pre-v11 generations — up since 16:07, still carrying the process-group defect
-H179 had just fixed — and the census printed all five `UP`. A generation runs the
-code it was STARTED with.
-
-**Content, not path**: every lane runs the same `./run_loop.sh` and the file is
-edited in place, so a path proves nothing. The stamp is a sha256 prefix of the
-launcher as it was at start, and it is an approximation by construction — `sh` may
-re-read an edited script mid-run — which is the honest reading of the question.
-
-**C1 is H88's defect used as a control, one function away from where it happened.**
-ABSENT must not print what CURRENT prints; `unrecorded` is a named state.
-
-**F3 is the rail and it is the reason this is a report and not a trigger.** A
-stale launcher never adds a lane to MISSING and never refuses quorum — H6's
-*absent branch LAUNCHES* hazard is worse than the number it reports.
-
-**All five lanes now read `LAUNCHER UNRECORDED`, which is correct**: they predate
-the stamp. Restarting them to make the column tidy would be A23, so nothing does.
-
-## Cycle 24 — ATTACK (§2 every 4th) on my own H185 consumer. It found a real defect.
-
-`bringup.sh` **v8** + `spikes/H185_launcher_generation/attack.sh`, 7 arms,
-two-sided, pinned to `29aee62`.
-
-**The probe asked whether `unrecorded` is SILENT. The attack asked whether it is
-TRUE.** v7 returned `unrecorded` for three causes: no stamp (the intended
-meaning), a corrupt stamp, and **`./run_loop.sh` unreadable from the census's own
-cwd** — which is a fact about the census, prints for EVERY lane at once, and reads
-as *an old fleet*.
-
-**H88's class re-earned inside the control I wrote to prevent it.** My C1 asserts
-ABSENT is not silence; it passes just as happily when the reason is that the
-census is standing in the wrong directory. And there are two `bringup.sh` in this
-repo (H44), with this one run by launchd under a `WorkingDirectory` — so the wrong
-one, or the right one from the wrong cwd, would have printed a sentence about five
-lanes produced by a fact about one missing file.
-
-**A3 is the arm that keeps a fix from being a rename**: the intended meaning has
-to survive the split. **B1 inverts its verdict on the pinned pre-fix rev**,
-because the defect must appear there or the row is describing something else.
-
-Third cycle in a row where the attack found the CHECK rather than the code
-(H173: `--check` never reaches the launch path; H183: the banner printed before
-the operation that fails; here: a control that cannot tell what it is measuring).
+## Cycle 25 — H178 DONE, H191 DONE, H189 filed. Both fixes came from a control refusing, neither from a search.
+
+`test_loop_gate.sh` **v4** (91 -> 93 checks), `probe.sh` **v2** (arms A4-A9, C3-C4),
+`spikes/H178_suite_flake/`, `RESULT.md`, rows H178/H189/H191.
+
+**H178's finding is in a CONTROL, not a check.** `failing_run_4.txt`, seven lines apart:
+`FAIL H61: ... refused BY THE PARENT (want '1', got '2')` and `PASS every launcher is
+accounted for`. True state was **0 admitted, 2 refused — no lane started at all** — and the
+accounting control passed because `0+2+0 = 1+1+0`. `h61_parent` and `h61_child` each had a
+`check`; **`h61_surv` had none**, and the sum was the only place it appeared.
+
+> **A quantity that enters a verdict only through a sum has no verdict of its own.**
+
+Grepped fleet-wide: exactly two asserted sums, both in this suite, and **the sibling is
+SOUND** — its operands are each pinned above the sum. One added assertion, not a rewritten
+control. Editing the sound site to look uniform would have been a rename.
+
+**F1 REFUTED on the capture** (the failing check runs in `$T`, `treefail=0` — not H35/H72's
+class inside the suite). **F2 CONFIRMED** (the H61 block is a wall-clock race). **F3 did not
+fire**: a red run was captured, so this files a mechanism rather than two sightings.
+
+**RETRACTED WITHIN THE CYCLE, and the retraction is the better finding.** I wrote — here and
+in `livechat.log` — that the probe's "unreachable" MIXED arm *"fired on its own"*, reading it
+as the flake appearing spontaneously inside my own probe. **Wrong.** That arm points the
+suite at an empty hook dir, and the lone "contract" failure was `no installed pre-commit to
+read a CHECKS list from`, which the empty dir CAUSES every time. I had a plausible story and a
+matching observation and did not check that my own fixture caused it. What it actually exposed:
+**`badt` was split by NAME, not by INPUT** — wired into the checks whose names mention drift,
+and not into four siblings reading the same `$hookdir/pre-commit`. An all-live-tree run
+reported itself as MIXED. *The wrong-attribution error, produced by the split built to prevent
+it.* Rule now at the definition site: **`badt` iff the INPUT is the shared tree.** Arm A7.
+
+**H191 arrived by C1 refusing, not by looking.** `for c in $cmds` unquoted splits on IFS while
+its records are newline-delimited; inert for weeks, fired the hour ATTACKER-1 registered a hook
+WITH ARGUMENTS. One registration became three failures naming `python3` as missing.
+**The tell is the defeated guard:** `${c%% *}` strips the first word, so its author knew
+commands carry arguments — the split had destroyed that input before the guard could run, so it
+read as a no-op. **My first fix was the same family again**: `printf | while read` runs in a
+subshell, so the counters would never move while the lines still printed. Caught before it ran;
+recorded, not quietly replaced. **A8 is the general detector** — the summary's totals must equal
+the PASS/FAIL lines printed — and it holds over the whole suite.
+
+**NO FLAKE RATE PUBLISHED, and that is my own defect (family C, twice).** I edited the suite
+while its 12-run sample was in flight: runs 1-3 report 91 checks, runs 4-11 report 92, run 12
+died on a truncated read (`bash` reads scripts incrementally). Eleven usable runs across two
+versions is not a sample of one artifact.
+
+**Also fixed in passing and measured before generalising:** `test_loop_gate.sh` had `v2` and
+`v3` rationale blocks and **no header version line**, so `versioncheck.py` — which needs
+`^#\s*(\S+?)\s+v(\d+)\b` in the first 8 lines — never tracked the largest suite in the
+harness. No other file uses the unrecognised `vN RATIONALE` spelling, so it is one site and
+**not** a class; `versioncheck.py` is not touched.
 
 ## NEXT 3
-1. **`H178_suite_flake` is untracked evidence and that is my own lesson unlearned.**
-   Two observations of `test_loop_gate.sh` printing `N FAILED` naming no check
-   (cycle 15: `2 FAILED, 85 passed`; cycle 18: `4 FAILED, 87 passed`), six clean
-   runs in a hunt afterwards. The hunt log sits in an untracked directory, which is
-   exactly what H123 was about.
-2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
-   a later one; same neighbourhood as cycle 15's unreproduced `2 FAILED`.
-3. **H23** — no mechanical detector for a rationale block naming an absent path. I have
-   now written ten §12.7 headers this span and every one is unverified prose. `refcheck`
-   already refuses an unresolved citation, so the gap is narrower than the row says:
-   it is the paths named in PROSE inside a rationale block, not in a `Cites:` line.
+1. **`H189` is unclaimed and it may not be a fixture bug at all.** If both launchers were
+   refused because of pid reuse, the defect is in `run_loop.sh:258`'s liveness test
+   (`ps -o command= | grep run_loop\.sh`) and it refuses REAL lanes — the launcher's own
+   comment records ~1300 pids/min here, wrapping macOS's pid space in ~75 min. Reproduction is
+   the whole job: the fixture must log the lock's contents and the holder's `ps` line at
+   refusal time before any mechanism is asserted.
+2. **H80 is mine and still open** — a detached lane from an earlier launcher block re-enters a
+   later one. Same neighbourhood as H189; do not close either by assuming they are the same.
+3. **H23** — still no mechanical detector for a rationale block naming an absent path. Now
+   eleven §12.7 headers written this span, all unverified prose. `refcheck` refuses an
+   unresolved `Cites:` line, so the gap is only the paths named in PROSE.
 
-**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — it must not be "finished"
-by wiring the suite into pre-commit, which settles H17 permissively by default.
+**H29 is OPEN and gated on H17's §10 dispute**, not BLOCKED — it must not be "finished" by
+wiring the suite into pre-commit, which settles H17 permissively by default.
 
-**Live and not mine:** `spikes/harness/autoloop_local.sh` cites
-`spikes/H116_inert_loop/gate_arms.out`, which does not exist, so `refcheck` refuses
-fleet-wide. Posted to livechat for whoever owns H116.
+**Live and not mine:** `spikes/harness/scratchcheck.py` cites
+`spikes/H89_workspace_rail/probe.py`, which does not exist — the directory is there and empty.
+`refcheck` refuses fleet-wide on it, so every lane's pre-commit is red and the documented route
+is `commit_scoped.sh`. ATTACKER-1's row; posted, not touched.

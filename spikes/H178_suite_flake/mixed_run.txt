@@ -1,0 +1,91 @@
+loop_gate.sh contract:
+  PASS  no signal refuses the stop
+  PASS  per-lane signal ends turn
+  PASS    leaves exit marker
+  PASS    consumes the signal
+  PASS  bare signal is REFUSED
+  PASS    no marker written
+  PASS  L2 cannot exit on a bare signal
+  PASS    L1 can still exit properly
+  PASS  malformed signal refuses
+  PASS    malformed is removed
+  PASS  other lane cannot consume
+  PASS    victim's signal intact
+  PASS    no marker leaked to L2
+  PASS  fuses count per lane
+  PASS  fuse releases the loop
+  PASS    fuse marker written
+  PASS  STOP outranks the contract
+  PASS  no callsign is not gated
+  PASS    writes no 'unknown' fuse
+  PASS    writes no fuse at all
+  PASS    writes no 'unknown' marker
+  PASS    leaves the planted signal
+  PASS  no callsign cannot steal exit
+  PASS    lane signal untouched
+  PASS  fuse counts 20/20 under concurrency
+  PASS  corrupt fuse file recovers
+  PASS  reg .claude/settings.json resolves to an executable
+  PASS  reg spikes/S51_multicore/.claude/settings.json resolves to an executable
+  PASS  refusal names a path the hook obeys (.loop_signal.L7)
+  PASS    launcher's turn actually ran (else 'cleared' means nothing)
+  PASS  launcher clears a stale signal before the turn
+  PASS  launcher refuses a callsign with no spawn brief
+  PASS    and the CALLER sees it, not detach_L10.log
+  PASS    refusal names the file to write
+  PASS    it never reached the turn
+  PASS    and never detached an unbriefed lane
+  PASS    and announced no detach (synchronous, unlike the child's artifacts)
+  FAIL  commit-msg gate matches its working-tree source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)
+  FAIL  pre-commit gate matches its working-tree source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)
+  FAIL  pre-push gate matches its working-tree source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)
+  FAIL  no installed pre-commit to read a CHECKS list from (sh spikes/harness/install_hooks.sh)
+  PASS  commit gate refuses another lane's journal
+  PASS    ... unless Carries: names it
+  PASS    ... and accepts the atom's OWN journal
+  PASS  hostile callsign handled: L"6 (refused)
+  PASS  hostile callsign handled: L\6 (refused)
+  PASS  hostile callsign handled: L 6 (refused)
+  PASS  hostile callsign handled: ../L6 (refused)
+  PASS  hostile callsign handled: $(touch pwned) (refused)
+  PASS  hostile callsign handled: L`6 (refused)
+  PASS  hostile callsign handled: L6 (refused)
+  PASS    no callsign was executed
+  PASS    launcher refuses what the hook will not gate
+  PASS    and refuses for THAT reason, not an earlier gate's
+  PASS    launcher never reached claude
+  PASS    and announced no detach (the PARENT prints it, so this cannot race)
+  PASS    hostile callsigns left no state
+  PASS  fixture holder is indistinguishable from a launcher to ps
+  PASS  second launcher on a HELD callsign refuses
+  PASS    names the holding pid
+  PASS    and never reached claude
+  PASS    holder's lock is left intact
+  PASS  dead holder's lock is reclaimed
+  PASS    lock no longer names the dead pid
+  PASS  a reused pid that is not a launcher does not hold a callsign
+/Users/victorianikolenko/kingfisher/spikes/harness/test_loop_gate.sh: line 766: 66477 Terminated: 15          bash fake/run_loop.sh
+/Users/victorianikolenko/kingfisher/spikes/harness/test_loop_gate.sh: line 766: 66569 Terminated: 15          sleep 30
+  PASS  unrostered callsign is refused
+  PASS    refusal names the roster, not just a code
+  PASS    and the unrostered lane never reached claude
+  PASS    and announced no detach (unrostered)
+  PASS    a ROSTERED callsign is admitted (else the gate just says no)
+  PASS  a callsign that is a SUBSTRING of a rostered one is refused
+  PASS    and it never reached claude either
+  PASS  roster ABSENT admits any callsign (FAIL-OPEN — measured, not chosen)
+  PASS    and says so out loud
+  PASS  20 simultaneous launchers on one callsign leave ONE survivor
+  PASS    the other 19 are refused as HELD
+  PASS    every launcher is accounted for
+  PASS  H61: the slow-child injection reached the launcher copy
+  PASS  H61: a launcher arriving in the handoff window is refused BY THE PARENT
+  PASS    and not in the detach log the caller never reads
+  PASS    and the parent does not warn about an unclaimed lock
+  PASS    and exactly one launcher reached the turn
+  PASS    every launcher is accounted for
+  PASS  the span cap counts two turn ends per span and does NOT accumulate
+  PASS    and a crash loop increments it NOT AT ALL
+  PASS    while .loop_fails counts every one of those spans
+
+loop_gate.sh: 4 FAILED, 82 passed — 3 of the failures are LIVE-TREE observations, 1 are contract checks

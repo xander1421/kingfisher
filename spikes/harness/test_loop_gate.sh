@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test_loop_gate.sh — the check MISSION_LOOP §12.3 requires for the Stop hook.
+# test_loop_gate.sh v4 — the check MISSION_LOOP §12.3 requires for the Stop hook.
 #
 # Written 2026-08-17 because the loop machinery had NO test of any kind while it
 # was the only thing standing between the fleet and a silent stall. Two defects
@@ -51,6 +51,42 @@
 # handoff, while the row that named the defect cited it as the check that would
 # catch it. 75 -> 80 checks; the new block asserts WHERE a refusal is printed.
 #
+# v4, H178 + H191 — ok-1, 2026-08-19. THREE DEFECTS REMOVED. Written as ONE when
+# the block was drafted and corrected here, because the other two were found by
+# this row's own probe AFTER the header was written, and a header that
+# contradicts its file is §12.5's class.
+#   (a) the accounting control below, detailed at length;
+#   (b) `badt` split by NAME rather than by INPUT, so an all-live-tree run
+#       reported itself as MIXED — the wrong-attribution error produced by the
+#       split built to prevent it. Rule now stated at the definition site:
+#       a verdict is `badt` iff its INPUT is the shared working tree.
+#   (c) H191, the settings.json registration loop: `for c in $cmds` splits on
+#       WHITESPACE while its records are NEWLINE-delimited, so one registration
+#       carrying arguments became three failures naming `python3` as missing.
+#       Detail at the site; the defeated `${c%% *}` guard is the evidence.
+# (a) IN FULL: A QUANTITY THAT ENTERS A VERDICT ONLY THROUGH A SUM HAS NO VERDICT
+# OF ITS OWN, so an error in it is exactly cancellable by an equal and opposite
+# error in the other addends. The H61 block asserted `h61_parent` (=1) and
+# `h61_child` (=0) individually and then asserted `h61_surv + h61_parent +
+# h61_child` = 2 — and `h61_surv`, the count of launchers that actually reached
+# the turn, appeared NOWHERE ELSE. MEASURED, not reasoned: the captured red run
+# `spikes/H178_suite_flake/failing_run_4.txt` reads
+#     FAIL  H61: ... refused BY THE PARENT (want '1', got '2')
+#     PASS    every launcher is accounted for
+# on the same fixture, seven lines apart. The true state was 0 admitted and 2
+# refused — NO LANE STARTED AT ALL — and the accounting control, whose comment
+# says it exists so that "a launcher that is neither admitted nor refused
+# invalidates both counts", passed on it because 0+2+0 = 1+1+0.
+#   CLASS, for the fleet-wide grep: an asserted expression whose operands are not
+#   each separately asserted. `grep -n 'check .*\$((' spikes/harness/*.sh` finds
+#   exactly two sites, both here. The sibling at the 20-launcher block is SOUND
+#   and is left alone: its survivor count and its refusal count are each pinned
+#   by their own `check` above the sum, which is precisely what this block was
+#   missing. So the repair is one added assertion, not a rewritten control.
+# NOT FIXED HERE AND FILED INSTEAD (H189): *why* both launchers were refused.
+# One capture in 19 observed runs. The mechanism is unresolved and the new
+# assertion is what will name it next time instead of hiding it in a sum.
+#
 # usage: bash spikes/harness/test_loop_gate.sh
 # exit 0 = all pass. Non-zero = the loop contract is not enforceable as written.
 set -u
@@ -97,10 +133,32 @@ for lane in L1 L2 L3 L4 L5 L6 L7 L8 L9; do
   printf '# %s — scratch lane brief for test_loop_gate.sh\n' "$lane" > "prompts/$lane.md"
 done
 
-pass=0 fail=0
+pass=0 fail=0 treefail=0
 ok()   { pass=$((pass+1)); printf '  PASS  %s\n' "$1"; }
 bad()  { fail=$((fail+1)); printf '  FAIL  %s\n' "$1"; }
+# H178 (ok-1, 2026-08-19). MOST OF THIS SUITE RUNS IN $T. A MINORITY READS THE
+# SHARED WORKING TREE -- installed gates vs their sources, and every tracked
+# settings.json -- and four other lanes edit those files as their NORMAL
+# mid-cycle state. So a red run has two very different meanings and printed one
+# sentence for both: "the loop contract is not enforceable as written", when the
+# actual event may be that another lane is between an edit and a reinstall.
+# NOT WEAKENED: `badt` fails the suite exactly as `bad` does -- the drift checks
+# are H36's and they are the ones that matter. It is COUNTED SEPARATELY so a red
+# run says which kind it is, in the summary, without reading 91 lines.
+badt() { fail=$((fail+1)); treefail=$((treefail+1)); printf '  FAIL  %s\n' "$1"; }
 check(){ if [ "$2" = "$3" ]; then ok "$1"; else bad "$1 (want '$3', got '$2')"; fi; }
+# v4, H178. CORRECTED BY THIS ROW'S OWN PROBE, IN THE MECHANISM THIS ROW SHIPPED.
+# `badt` was wired into the DRIFT checks only, and the four sibling verdicts that
+# read the SAME input -- `$hookdir/pre-commit`, the INSTALLED copy -- kept plain
+# `bad`. So an all-live-tree run reported itself as MIXED ("1 are contract
+# checks"), which is the wrong-attribution error the tri-branch exists to
+# prevent, produced by the tri-branch. Observed, not reasoned:
+# `spikes/H178_suite_flake/mixed_run.txt` is that run and its lone "contract"
+# failure is `no installed pre-commit to read a CHECKS list from`.
+# THE RULE THE SPLIT ACTUALLY FOLLOWS, stated so the next verdict can be placed:
+# a check is `badt` iff its INPUT is the shared working tree, not iff its name
+# mentions drift.
+checkt(){ if [ "$2" = "$3" ]; then ok "$1"; else badt "$1 (want '$3', got '$2')"; fi; }
 
 # A launcher that DOES launch DETACHES, so the artifacts a launcher check wants to
 # see are written by a child after the parent has already exited. `sleep 1` was
@@ -277,13 +335,37 @@ import json, re, sys
 print('\n'.join(re.findall(r'"command"\s*:\s*"([^"]+)"', open(sys.argv[1]).read())))
 PYEOF
 )
-  for c in $cmds; do
+  # v4, H191 -- A VALUE SPLIT ON WHITESPACE WHOSE RECORDS ARE NEWLINE-DELIMITED,
+  # and the tell was sitting in the loop body the whole time. `for c in $cmds`
+  # is unquoted, so it splits on IFS -- spaces -- while the python above emits
+  # ONE COMMAND PER LINE. The moment a hook was registered WITH ARGUMENTS
+  # (`python3 .../scratchcheck.py --hook`, ATTACKER-1, H89) that single correct
+  # registration became THREE checks, three failures, and the suite reported
+  # `python3` as "missing or not executable".
+  #   THE DEFEATED GUARD IS THE EVIDENCE: `${c%% *}` strips the first word, so
+  # its author knew commands carry arguments. The outer split had already
+  # destroyed what that guard existed to handle, and it read as a no-op for
+  # weeks. A guard downstream of the split that breaks it is worth more than the
+  # symptom -- grep your own for `for x in $(...)` over anything line-shaped.
+  #   `command -v` REPLACES `[ -x ]` AND THIS DOES NOT WEAKEN THE GATE: an
+  # interpreter found on PATH does resolve, which is the question being asked,
+  # and `[ -x python3 ]` was answering a different one. The `$` refusal is
+  # deliberately still tested against the WHOLE command line, so an env var in an
+  # ARGUMENT is refused exactly as before -- an unresolvable reference is
+  # unresolvable wherever it sits (§12.4).
+  #   AND THE FIRST DRAFT OF THIS FIX WAS `printf ... | while read`, WHICH IS THE
+  # SAME FAMILY AGAIN: a pipeline runs its right side in a SUBSHELL, so every
+  # ok/badt inside would have incremented a copy of pass/fail/treefail and the
+  # parent would have printed the old totals. A check that cannot report its
+  # verdict. Caught before it ran, by the arm below asserting the count MOVES.
+  while IFS= read -r c; do
+    [ -n "$c" ] || continue
     case "$c" in
       *'$'*) check "reg $sj resolves without env" "env-var-in-path" "literal-path" ;;
-      *) if [ -x "${c%% *}" ]; then ok "reg $sj resolves to an executable"
-         else bad "reg $sj resolves to an executable (missing or not executable: $c)"; fi ;;
+      *) if command -v "${c%% *}" >/dev/null 2>&1; then ok "reg $sj resolves to an executable"
+         else badt "reg $sj resolves to an executable (missing or not executable: ${c%% *} in: $c)"; fi ;;
     esac
-  done
+  done <<< "$cmds"
 done
 
 # --- THE REFUSAL MESSAGE IS AN INSTRUCTION, so test it as one. H16, 2026-08-17.
@@ -392,6 +474,12 @@ rm -f .loop_signal* .loop_exit.* .loop_blocks.* stale_reached_turn run_loop.sh l
 # enforced one. Install with `sh spikes/harness/install_hooks.sh`.
 hookdir=$(cd "$ROOT" && git rev-parse --git-path hooks 2>/dev/null)
 case "$hookdir" in /*) ;; *) hookdir="$ROOT/$hookdir" ;; esac
+# H178 SEAM. The live-tree accounting added to the summary is a BRANCH, and a
+# branch nothing drives is prose. `KF_TEST_HOOKDIR` points this block at a
+# directory the probe controls, so spikes/H178_suite_flake/probe.sh can drive
+# THIS suite -- not a copy of it -- into the all-live-tree state and read the
+# summary it prints. Unset in every real run, including the ones above and below.
+hookdir="${KF_TEST_HOOKDIR:-$hookdir}"
 # Both gates, by list. AGENT-1/H15 added `pre-commit`; checking only the one
 # gate that existed when this check was written is how an installer ships with a
 # hook it does not install.
@@ -421,9 +509,9 @@ for g in commit-msg pre-commit pre-push; do
   if [ ! -f "$src" ]; then
     bad "$g.hook source is missing from spikes/harness"
   elif [ ! -x "$hookdir/$g" ]; then
-    bad "$g gate matches its working-tree source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
+    badt "$g gate matches its working-tree source (NOT INSTALLED — sh spikes/harness/install_hooks.sh)"
   elif ! cmp -s "$src" "$hookdir/$g"; then
-    bad "$g gate matches its working-tree source (DRIFTED from spikes/harness/$g.hook)"
+    badt "$g gate matches its working-tree source (DRIFTED from spikes/harness/$g.hook)"
   else
     ok "$g gate matches its working-tree source (what install_hooks.sh would copy)"
   fi
@@ -440,7 +528,7 @@ for g in commit-msg pre-commit pre-push; do
     if sh -n "$hookdir/$g" 2>/dev/null; then
       ok "  $g installed gate PARSES"
     else
-      bad "  $g installed gate DOES NOT PARSE -- it refuses every commit from
+      badt "  $g installed gate DOES NOT PARSE -- it refuses every commit from
         every lane: $(sh -n "$hookdir/$g" 2>&1 | head -1)"
     fi
   fi
@@ -479,16 +567,16 @@ if [ -r "$installed_pc" ]; then
     n_checks=$((n_checks+1))
     [ -f "$ROOT/$c" ] || { n_missing=$((n_missing+1)); printf '  info  gate names a check that is not there: %s\n' "$c"; }
   done
-  check "every check the installed pre-commit names EXISTS (else it SKIPs, green)" \
+  checkt "every check the installed pre-commit names EXISTS (else it SKIPs, green)" \
         "$n_missing" "0"
   [ "$n_checks" -ge 4 ] && ok "the installed pre-commit runs $n_checks checks" \
-    || bad "the installed pre-commit runs $n_checks checks (want >= 4)"
+    || badt "the installed pre-commit runs $n_checks checks (want >= 4)"
   # H94 by name: the record-loss gate is the one whose absence is invisible --
   # it fires only on a commit that REMOVES a completed record, so an inert copy
   # looks exactly like a fleet that never lost one.
   case "$pc_checks" in
     *recordloss.py*) ok "the record-loss gate (H94) is wired into pre-commit" ;;
-    *) bad "the record-loss gate (H94) is NOT wired into pre-commit" ;;
+    *) badt "the record-loss gate (H94) is NOT wired into pre-commit" ;;
   esac
   # H108. THE BYPASS PATH MUST RUN WHAT THE GATE RUNS. `commit_scoped.sh` is the
   # §13 escape hatch for H72 -- another lane's tree state refusing your commit --
@@ -509,10 +597,10 @@ if [ -r "$installed_pc" ]; then
     done
     check "the §13 bypass runs every check the gate runs (H108)" "$n_absent" "0"
   else
-    bad "no commit_scoped.sh to compare the gate's CHECKS list against (H108)"
+    badt "no commit_scoped.sh to compare the gate's CHECKS list against (H108)"
   fi
 else
-  bad "no installed pre-commit to read a CHECKS list from (sh spikes/harness/install_hooks.sh)"
+  badt "no installed pre-commit to read a CHECKS list from (sh spikes/harness/install_hooks.sh)"
 fi
 
 # --- THE COMMIT GATE MUST REFUSE ANOTHER LANE'S FILES. ATTACKER-1, H19.
@@ -927,6 +1015,14 @@ check "  and not in the detach log the caller never reads"                      
 # shortened or the child stopped reclaiming.
 check "  and the parent does not warn about an unclaimed lock"                   \
       "$(grep -c 'has not claimed' race.log)" "0"
+# v4, H178. THE SUM BELOW IS NOT A VERDICT ON `h61_surv` AND WAS THE ONLY PLACE
+# IT APPEARED. 0 admitted + 2 refused sums to the same 2 as 1 admitted + 1
+# refused, and the red run in spikes/H178_suite_flake/failing_run_4.txt is that
+# exact state passing this control seven lines under the check it contradicts.
+# Pinned on its own, in the direction that matters: the fixture is worthless if
+# no lane ever started, and that is a different report from "refused twice".
+check "  and exactly one launcher reached the turn"                              \
+      "$h61_surv" "1"
 # Same accounting rule as the block above, for the same reason: 1 survivor is not
 # evidence on its own, and here the two refusal counts are the finding, so a
 # launcher that is neither admitted nor refused invalidates both of them.
@@ -1020,5 +1116,17 @@ if [ "$fail" -eq 0 ]; then
   echo "loop_gate.sh: ${pass} checks pass"
   exit 0
 fi
-echo "loop_gate.sh: ${fail} FAILED, ${pass} passed — the loop contract is not enforceable as written"
+# H178: the count is DATA-DEPENDENT -- the settings.json block iterates over
+# tracked files and their commands -- so a changed TOTAL is not the same event as
+# a failure, and two sightings of "N FAILED" were read as one thing.
+if [ "$treefail" -gt 0 ] && [ "$treefail" -eq "$fail" ]; then
+  echo "loop_gate.sh: ${fail} FAILED, ${pass} passed — ALL of them are LIVE-TREE observations"
+  echo "  (installed gates vs their sources, tracked settings.json). Another lane"
+  echo "  between an edit and a reinstall produces exactly this. The contract checks,"
+  echo "  which run in \$T, all passed. Re-run before reading it as a regression."
+elif [ "$treefail" -gt 0 ]; then
+  echo "loop_gate.sh: ${fail} FAILED, ${pass} passed — ${treefail} of the failures are LIVE-TREE observations, $((fail - treefail)) are contract checks"
+else
+  echo "loop_gate.sh: ${fail} FAILED, ${pass} passed — the loop contract is not enforceable as written"
+fi
 exit 1

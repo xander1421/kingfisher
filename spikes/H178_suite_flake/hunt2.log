@@ -1,0 +1,5 @@
+run 1: loop_gate.sh: 91 checks pass
+run 2: spikes/harness/test_loop_gate.sh: line 1045: treefail: unbound variable
+run 3: loop_gate.sh: 91 checks pass
+run 4: loop_gate.sh: 1 FAILED, 90 passed — the loop contract is not enforceable as written
+CAPTURED run 4 (full output kept)
