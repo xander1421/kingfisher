@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mission bring-up at login. THE HALF bringup.sh DOES NOT HAVE.
+
+  bringup.sh answers "what should be running, and is it?". Nothing answers
+  "who asks that question after a restart?". On 2026-08-17 the answer was
+  "a human, forty minutes later, and only because someone thought to look" —
+  ATOM-3 was still missing, `ok-1` had been writing to the shared git index
+  for eleven minutes, and the 7-minute cycle was gone.
+
+  WHY launchd AND NOT CRON. The cron used for the autonomous cycle is
+  CronCreate, whose jobs are session-only and in-memory — the tool's own
+  contract says they are gone when the Claude session ends. A restart
+  therefore CANNOT be survived by that mechanism, by design, and job
+  1f972d10 was never going to come back. launchd RunAtLoad is the platform's
+  own answer and needs no daemon of ours.
+
+  INSTALL (one command, not run for you — it persists across reboots):
+    cp com.kingfisher.bringup.plist ~/Library/LaunchAgents/
+    launchctl load -w ~/Library/LaunchAgents/com.kingfisher.bringup.plist
+
+  RUN IT NOW WITHOUT REBOOTING:
+    launchctl start com.kingfisher.bringup
+
+  REMOVE:
+    launchctl unload -w ~/Library/LaunchAgents/com.kingfisher.bringup.plist
+
+  INVOKED VIA /bin/bash, NOT /bin/sh, AND THAT IS LOAD-BEARING. bringup.sh
+  carries a `#!/bin/sh` shebang but uses bash arrays and process substitution
+  (`done < <(...)`, line 35). Under /bin/sh it dies with "syntax error near
+  unexpected token `<'" -- which happened on the first launchd run of this
+  agent, into bringup.log, while the same script run by hand from an
+  interactive bash worked perfectly. A harness that works in your shell and
+  fails under launchd is almost always this or PATH.
+
+  PATH IS SET EXPLICITLY AND THAT IS NOT OPTIONAL. launchd hands a job a
+  minimal PATH — typically /usr/bin:/bin:/usr/sbin:/sbin — which does not
+  contain /opt/homebrew/bin, where `claude` and `python3` live on this
+  machine. A LaunchAgent that works by hand and fails at login is almost
+  always this, and it fails silently into StandardErrorPath.
+
+  THIS LAUNCHES AUTONOMOUS LANES AT EVERY LOGIN. bringup.sh's default mode
+  starts every roster lane that is down; they run with
+  --dangerously-skip-permissions against the shared git index. If you would
+  rather a restart produce only a written census and leave starting to a
+  human, add <string>--check</string> after the script path.
+
+  bringup.sh's flag interface has changed twice while this file was being
+  written (--start, then --check). If a login produces no lanes, read
+  bringup.log first and check the flag still means what this comment says.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.kingfisher.bringup</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/victorianikolenko/kingfisher/bringup.sh</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/victorianikolenko/kingfisher</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>HOME</key>
+    <string>/Users/victorianikolenko</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- Re-reconcile every 10 minutes, not only at login. Adopted from the
+       net.kingfisher.bringup agent another lane installed at 13:42, which had
+       this and was merged into this file. It replaces the CronCreate cycle that
+       died with the restart and, by that tool's own contract, could never have
+       survived one: those jobs are session-only and in-memory. A lane that dies
+       mid-day is now picked up within 10 minutes instead of at next login. -->
+  <key>StartInterval</key>
+  <integer>600</integer>
+
+  <!-- Not KeepAlive. bringup.sh is a reconciler that exits; KeepAlive would
+       respawn it in a tight loop forever. run_loop.sh is the thing that keeps
+       a lane alive, and it already self-detaches and backs off. -->
+  <key>KeepAlive</key>
+  <false/>
+
+  <!-- H179, 2026-08-19 (ok-1). `man launchd.plist`: "When a job dies, launchd
+       kills any remaining processes with the same process group ID as the job.
+       Setting this key to true disables that behavior." This key was ABSENT, so
+       it defaulted to false, and bringup.sh's `CALLSIGN=$lane ./run_loop.sh &`
+       leaves each lane in this job's process group -- the double-fork detach
+       changes the lane's PARENT, never its GROUP. So every lane launchd started
+       was killed when this job exited, 10-30s later, inside its first backoff.
+       That is the 27h outage: 163 relaunches, each logging exactly ONE
+       `(fail 1)` line, at this file's 600s cadence rather than the lane's 30s
+       backoff. Reproduced in spikes/H179_generation_death/pgroup.sh.
+
+       THE REAL FIX IS IN run_loop.sh v11 (`set -m` around the detach, so a lane
+       gets its own process group whatever starts it). This key is defence in
+       depth for anything else this job spawns, and it CHANGES NOTHING UNTIL A
+       HUMAN RE-INSTALLS: the loaded copy lives in ~/Library/LaunchAgents, which
+       is outside the workspace (§10). Logged in HUMAN_NEEDED.md. -->
+  <key>AbandonProcessGroup</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/victorianikolenko/kingfisher/bringup.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/victorianikolenko/kingfisher/bringup.log</string>
+</dict>
+</plist>

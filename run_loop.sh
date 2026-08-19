@@ -296,9 +296,35 @@ LOCK=".loop_lock.${CALLSIGN}"
 #     Sleeping longer would have been a bigger bet, not a fix: a duration cannot
 #     be right on a box whose load it does not measure. The wait is on the
 #     condition -- the lock no longer names me -- and is bounded.
+# 14. THE DETACH REPARENTED THE LANE AND LEFT IT IN THE LAUNCHER'S PROCESS
+#     GROUP, SO launchd KILLED EVERY LANE IT STARTED (v11, 2026-08-19, H179,
+#     ok-1). `man launchd.plist`, AbandonProcessGroup: *"When a job dies, launchd
+#     kills any remaining processes with the same process group ID as the job."*
+#     `com.kingfisher.bringup.plist` does not set that key, so it defaults to
+#     false; `bringup.sh` runs `CALLSIGN=$lane ./run_loop.sh &`; and the double
+#     fork below changes the lane's PARENT, never its process GROUP -- the
+#     comment above says so itself ("which is why this is not setsid"). So every
+#     lane launchd started died when the bringup job exited, 10-30s later, inside
+#     its first backoff.
+#
+#     THAT IS THE 27-HOUR OUTAGE'S MECHANISM, and it explains the one number that
+#     did not fit: 163 relaunches, each logging exactly ONE `(fail 1)` line, at a
+#     10m17s cadence which is bringup's `StartInterval 600` and not the lane's
+#     30s backoff. MEASURED BOTH WAYS: `spikes/H179_generation_death/probe.sh`
+#     drives this launcher with an instantly-exiting stub and it escalates fine
+#     (fail 1,2,3,4), so the death was external; `pgroup.sh` reproduces the kill.
+#
+#     `set -m` is the portable form. macOS ships no `setsid` binary, and with
+#     monitor mode on, a background job is placed in its OWN process group -- so
+#     the group signal that reaps the job's children cannot name the lane. It is
+#     scoped to the detach and turned off immediately: job control changes signal
+#     handling, and this launcher runs 3600s turns under it.
+#     Cites: man:launchd.plist "AbandonProcessGroup"
 if [ -z "${KF_DETACHED:-}" ]; then
   export KF_DETACHED=1
+  set -m
   ( nohup "$0" "$@" >>"detach_${CALLSIGN:-unset}.log" 2>&1 & ) &
+  set +m
   _h61=0
   while [ "$_h61" -lt 100 ]; do                  # bounded: 10 s, then report
     [ "$(cat "$LOCK" 2>/dev/null)" = "$$" ] || break

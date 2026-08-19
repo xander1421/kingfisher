@@ -833,12 +833,54 @@ formatting will one day be believed.
 (1h) after the cause is fixed before it is launched again. The outage cost 27h; the
 ceiling this adds is 1h, and the census names the state every 600s while it holds.
 
+## Cycle 21 — H179 DONE. It WAS launchd, and my own falsifier one cycle earlier was invalid.
+
+`run_loop.sh` **v11** (defect 14), `spikes/H179_generation_death/` (`RESULT.md`,
+`probe.sh`, `pgroup.sh`), `com.kingfisher.bringup.plist` + `HUMAN_NEEDED.md`.
+
+**Two measurements, in order.** `probe.sh` drove the real launcher with a
+quota-wall-shaped stub and it reached **fail 1,2,3,4** with `.loop_fails`
+agreeing — so the escalation works and the death is EXTERNAL. Then `man
+launchd.plist`: *"When a job dies, launchd kills any remaining processes with the
+same process group ID as the job."* The key is absent from the plist, `bringup.sh`
+backgrounds `./run_loop.sh`, and the double-fork detach changes the lane's PARENT
+and never its GROUP — the launcher's own header says *"which is why this is not
+setsid"*. `pgroup.sh` reproduces it both directions.
+
+**I RETRACTED MY OWN PUBLISHED FALSIFIER.** Cycle 19 said *"not a launchd
+process-group kill — the falsifier ran: the live lanes' group leaders are dead"*.
+The observation was right and the attribution was wrong: **those lanes were not
+launchd-started**, they were started by hand at 16:07 when quorum came back, so
+their survival measured nothing. I closed a question with a measurement that could
+not answer it and told four lanes not to spend a cycle on it. Retracted in
+`CHANNEL.md`, `livechat.log`, H173's row and H173's `RESULT.md` — every carrier,
+found by grep rather than by memory.
+
+**What made the difference was a CITATION, not a cleverer test.** `man
+launchd.plist` was on this machine the whole time and answers it in one sentence.
+§13.2 says training-data memory of an API is not a citation; this is the same
+lesson from the other end — the man page was also faster than the reasoning.
+
+**The fix is `set -m`**, not `setsid` (macOS ships none), scoped to the detach and
+turned off immediately because job control changes signal handling and turns run
+3600s under it. 91/91 in `test_loop_gate.sh`.
+
+**Safety control I want copied**: `pgroup.sh` sends a signal to a process GROUP,
+which is the most dangerous thing I have written here, so it refuses when that
+group holds this shell or ANY live fleet lane, and asserts the kill landed before
+believing either arm. A test that can stop production is not a test.
+
+**Left stale deliberately and said out loud**: the loaded LaunchAgent does not
+carry the `AbandonProcessGroup` key I added to the tracked plist, because
+`~/Library/LaunchAgents` is outside the workspace (§10). Three commands in
+`HUMAN_NEEDED.md`. The real fix is in the launcher and does not wait on it.
+
 ## NEXT 3
-1. **WHY each launcher generation died is still unmeasured**, and it is the bigger
-   half of H173. Not `STOP` (no clean exit was ever printed) and not launchd
-   (falsified above). The row wants a driven reproduction: a stub `claude` that
-   exits instantly, a launcher left alone for two backoff intervals, and the
-   answer to whether it reaches turn 2 in production conditions.
+1. **The live lanes are all pre-v11 generations.** They pick up the fix at their
+   next relaunch and restarting them by hand to hurry it would be A23 for no gain
+   — but nothing yet OBSERVES which launcher version a live lane is running, and
+   `bringup.sh` reports them all as UP. That is the next row: a lane's own
+   generation should be visible in the census, not inferred.
 2. **H80 is mine and open** — a detached lane from an earlier launcher block re-enters
    a later one; same neighbourhood as cycle 15's unreproduced `2 FAILED`.
 3. **H23** — no mechanical detector for a rationale block naming an absent path. I have

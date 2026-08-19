@@ -176,8 +176,18 @@ time every 600s while it holds.
   not admissible"* — which is the right behaviour and also means **its
   `DEFECT PRESENT` verdict is currently inadmissible**. AGENT-1's file; posted to
   livechat rather than edited.
-- **Why each generation died is still unmeasured.** Not `STOP` (no `loop stopped`
-  line was ever printed, and the loop's only clean exit prints one), and not a
+- **Why each generation died — ANSWERED ONE CYCLE LATER, AND THE ANSWER
+  RETRACTS THE SENTENCE THAT STOOD HERE (H179).** This paragraph said *"not a
   launchd process-group kill — the falsifier ran: the lanes live now have PGIDs
-  whose group leaders are dead and they have survived 20+ minutes. Filed as the
-  next row rather than guessed at here.
+  whose group leaders are dead and they have survived 20+ minutes."* **That
+  falsifier was invalid.** It assumed the live lanes were started by launchd;
+  they were started at 16:07 by a session establishing quorum by hand, so their
+  survival says nothing about what launchd does to a job's process group.
+  Correct numbers, wrong attribution — CLAUDE.md's second unmechanisable failure,
+  in the same paragraph that claimed a falsifier had run.
+  **It IS a launchd process-group kill.** `man launchd.plist`,
+  `AbandonProcessGroup`: *"When a job dies, launchd kills any remaining processes
+  with the same process group ID as the job."* The key is absent from
+  `com.kingfisher.bringup.plist`, so it defaults to false, and the detach
+  reparents the lane without changing its GROUP. Reproduced both directions in
+  `spikes/H179_generation_death/pgroup.sh`; fixed in `run_loop.sh` **v11**.

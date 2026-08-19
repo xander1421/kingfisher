@@ -6,7 +6,11 @@ Append, never stop. Each entry: what · why the agent can't · artifact · ask.
    `proposed/hyperon-nondeterminism/` — README (correctness framing, 40%
    wrong cardinality), 3 patches applying clean to `3f76dc4`, 319 tests pass,
    S57 corpus 0 rows differing. **Ask: open the issue + PR.**
-2. **Post the MORK issue-#2 comment (U2).** Same rail. Artifact pending.
+2. **Post the MORK issue-#2 comment (U2).** Same rail. Artifact:
+   `proposed/mork-license/ISSUE_2_COMMENT.md` (paste-ready; files
+   `LICENSE.proposed` + `Cargo.toml.patch` already sit beside it).
+   **Ask: paste the comment on trueagi-io/MORK#2. Do not apply the
+   patch from this workspace.**
 3. **File the DAS concurrency report.** Artifact:
    `proposed/das-concurrency/` — opens with a question ("was the async path
    meant to be restored?"), 1 patch, model-validated 50/50 vs 0/8.
@@ -405,3 +409,82 @@ is a **proxy** for an official-split evaluation and is not a substitute for one.
 **The ask, one line.** May the official FB15k-237 valid/test splits be fetched
 into `corpus/` with a `CITATIONS.md` entry — and if not, should G30's external
 comparison be recorded as permanently unavailable rather than pending?
+
+**ANSWERED 2026-08-19 (GROK-2, operator: get it from git AND TEST).** Fetched
+`DeepGraphLearning/KnowledgeGraphEmbedding@2e440e0` `data/FB15k-237` into
+`corpus/fb15k237/`. `triples.bin` **is** official train (pred-count bag match).
+Official test same-pair leak **0/20466**. Scored: prior 0.2334, G51 0.2585,
+valid-gated **0.2679**. Literature compare stays **unavailable** (G35). Evidence
+`spikes/G59_official_split/`.
+
+---
+
+## Operator answers 2026-08-19 (GROK-LOCAL recorded; operator was unsure)
+
+Asked as multiple choice. Operator picked **no publishing**, **pushes OK /
+Actions later**, and “do the correct thing / validate empirically” on the
+rest. Applied as evidence, not as a freeze:
+
+- **F001 stays `F001_DRAFT`.** Unsure is not `F001 = 590d8769` and not
+  `F001 = 8c46ea20`. Live pin remains the measured `590d8769…`.
+- **operator stays 1.** Keep refusing. No attestation root, no chain.
+- **D4:** numbering gap on disk. §7 not amended (LOOP-DONE).
+- **§8 item 2:** left UNPROVEN. Empirically 2026-08-19: `demo8.py`
+  CLAIMED 3 · UNPROVEN 4; ConceptNet still only in the gate line;
+  `spikes/S52_realkg/triples.bin` is FB15k-237 official TRAIN (272,115).
+  Did not edit `MISSION_LOOP.md`.
+- **Official split:** not fetched. `python3 spikes/G46_split_leakage/leak.py`
+  reproduced all **0.2648**, same-pair **0.5318**, no-same-pair **0.1503**,
+  leak **30.0%**, controls 3/3. Literature comparison stays UNAVAILABLE.
+- **Publishing:** none. Artifacts stay in `proposed/`.
+- **Actions:** stay OFF (re-enable is a later explicit yes).
+- **Panic:** keep `AGREED_FAILURE` unpaid. `test_adjudicate.py` 36/36.
+
+---
+
+## Operator 2026-08-19 later: “i dont want to decide. this is your mission”
+
+Applied from evidence, not from a freeze-target string:
+
+- **F001_FROZEN** at `590d8769…`. Pin unmoved (`grok_check` ACCEPT same digest). Did not retarget `8c46ea20…`.
+- **§7** names D1+, D2, D3, D5, D6. D4 is a numbering gap. No D4 spec written.
+- **§8 item 2** names FB15k-237 train. Still UNPROVEN (TRAIN; not M1.8 CIDs).
+- **operator stays 1.** No chain. No public P2P. Actions OFF. No publishing.
+
+---
+
+## ok-1 2026-08-19 (H179): one `launchctl` command, and it is the 27-hour outage
+
+**WHAT.** Re-install the LaunchAgent so the loaded copy carries the
+`AbandonProcessGroup` key added to the tracked `com.kingfisher.bringup.plist`:
+
+```sh
+cp com.kingfisher.bringup.plist ~/Library/LaunchAgents/
+launchctl unload -w ~/Library/LaunchAgents/com.kingfisher.bringup.plist
+launchctl load   -w ~/Library/LaunchAgents/com.kingfisher.bringup.plist
+```
+
+**WHY AN AGENT CANNOT.** `~/Library/LaunchAgents` is outside the workspace and
+MISSION_LOOP §10 forbids writing there. The in-repo plist is therefore edited and
+the loaded one is stale until you run the above — stated plainly rather than left
+as drift (H36 is the row about exactly that gap).
+
+**AND THE FILE WAS UNTRACKED UNTIL NOW.** `git ls-files
+com.kingfisher.bringup.plist` returned **0** when this was written: the
+LaunchAgent that starts the whole fleet every 600s existed in no commit. It is
+committed with this row.
+
+**WHY IT MATTERS.** `man launchd.plist`: *"When a job dies, launchd kills any
+remaining processes with the same process group ID as the job."* The key was
+absent, so it defaulted to false, and every lane launchd started sat in the
+bringup job's process group and was killed 10-30s later, inside its first
+backoff. That is the 27h weekly-limit outage's mechanism: 163 relaunches, each
+logging exactly ONE `(fail 1)` line, at the 600s cadence of this job and not the
+lane's 30s backoff. Reproduced both ways in `spikes/H179_generation_death/`.
+
+**THIS IS NOT URGENT AND NOT THE FIX.** `run_loop.sh` **v11** already makes a lane
+take its own process group whatever starts it (`set -m` around the detach,
+because macOS ships no `setsid`), and that is live and measured. The plist key is
+defence in depth for anything else this job spawns.
+
+**ONE-LINE ASK.** Run the three commands above next time you are at the machine.
