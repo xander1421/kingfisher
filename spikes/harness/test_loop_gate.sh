@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
-# test_loop_gate.sh v6 — the check MISSION_LOOP §12.3 requires for the Stop hook.
+# test_loop_gate.sh v7 — the check MISSION_LOOP §12.3 requires for the Stop hook.
+#
+# v7 RATIONALE (§12.7) — ok-1, H219, 2026-08-19, ATTACK cycle 30 (§12.8: the loop
+# itself). DEFECT REMOVED: THIS SUITE COULD NOT SEE THAT THE PER-LANE KILL SWITCH
+# WAS UNIMPLEMENTED IN THE ONE COMPONENT THAT ENDS A TURN. `STOP.$CALLSIGN` was
+# taught to `run_loop.sh:433`, to both `bringup.sh` copies and to `MISSION.md:303`
+# as the operator's documented way to retire ONE lane (H31) — and never to the
+# hook. v6 mentioned the string only inside a LAUNCHER-span fixture, never as a
+# hook input, so section 8 asserted the fleet-wide `STOP` and read as covering the
+# switch. Measured pre-fix, `spikes/H219_stop_asymmetry/probe_prefix.out`: the
+# hook refused `STOP.L1` under lane L1 **20 times out of 20** while fleet-wide
+# `STOP` was honoured on attempt 0, so a per-lane retirement arrived only when
+# `MAX_TURN`'s watchdog (3600 s) killed the turn — logged as a wedged turn, not as
+# a retirement. Section 8b drives both directions and reads the ORDER out of the
+# gate, and `spikes/harness/test_h219_falsify.sh` reddens each of the three.
+# CLASS (§12.2): a per-lane state name taught to one reader while a second reader
+# of the same state keeps the global-only spelling. Third instance — bare
+# `.loop_signal` (hook v5) and one shared `.loop_blocks` are the first two, both
+# in this hook's own header.
 #
 # Written 2026-08-17 because the loop machinery had NO test of any kind while it
 # was the only thing standing between the fleet and a silent stall. Two defects
@@ -363,6 +381,26 @@ rm -f .loop_signal* .loop_exit.* .loop_blocks.*
 touch STOP
 check "STOP outranks the contract"  "$(blocked L4)" "exit"
 rm -f STOP
+
+# 8b · H219, ok-1, 2026-08-19. THE PER-LANE KILL SWITCH, which section 8 above
+#      reads as covering and does not: it drives the FLEET-WIDE file. Both
+#      directions are driven because the repair must not become a glob —
+#      `STOP.*` would satisfy the first check and let one lane's retirement stop
+#      all five, which is H31's own defect restored from the other end.
+rm -f .loop_signal* .loop_exit.* .loop_blocks.* STOP STOP.L4b STOP.L5b
+touch STOP.L4b
+check "own-lane STOP ends the turn"        "$(blocked L4b)" "exit"
+check "  another lane's STOP does not"     "$(blocked L5b)" "block"
+rm -f STOP.L4b
+# READ OUT OF THE GATE, not driven, and that is not laziness: relocating the read
+# ABOVE the callsign whitelist is behaviourally INVISIBLE — a refused callsign and
+# an allowed stop are both `exit` — so a behavioural check cannot see it. $LANE is
+# interpolated into a filename here exactly as it is into EXIT_MARK and BLOCKS.
+_wl=$(grep -n 'case "\$LANE" in' "$T/gate.sh" | head -1 | cut -d: -f1)
+_st=$(grep -n 'STOP\.\${LANE}' "$T/gate.sh" | head -1 | cut -d: -f1)
+check "  per-lane STOP read sits below the charset whitelist" \
+      "$([ -n "$_wl" ] && [ -n "$_st" ] && [ "$_st" -gt "$_wl" ] && echo below || echo ABOVE-OR-ABSENT)" \
+      "below"
 
 # 9 · §12.6 FAIL CLOSED ON IDENTITY — the case v3 shipped broken and that THIS
 #     TEST COULD NOT SEE, because every check above sets CALLSIGN. v3 defaulted

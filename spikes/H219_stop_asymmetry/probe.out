@@ -1,0 +1,38 @@
+H219 · the stop switch has two spellings; until v9 each had one reader
+     gate under test: /Users/victorianikolenko/kingfisher/.claude/hooks/loop_gate.sh
+     hook version: v9
+
+  PASS  A3 no stop switch at all: the hook refuses the stop
+  PASS  A1 CONTROL fleet-wide STOP: the hook allows the stop
+  PASS  A2 per-lane STOP.L1 also allows the stop for L1
+  PASS  A4 another lane's STOP.L2 does not stop L1
+  PASS  A5 hostile callsign leaves no span-cap file
+  PASS  A6 the per-lane STOP read is below the callsign whitelist
+  PASS  B1 under fleet-wide STOP the turn ends on the first attempt
+  PASS  B2 under per-lane STOP the turn ends on the first attempt
+  MEASURED  B2 span cap after that attempt: absent
+
+C1 · every STOP read in the launcher (this decides WHEN a stop is delivered)
+    433:while [ ! -f STOP ] && [ ! -f "STOP.${CALLSIGN}" ]; do
+    launcher STOP reads: 1 total, 1 inside a `while` condition
+  PASS  C1 the launcher consults the switch only BETWEEN turns
+
+C2 · every harness file that reads the stop switch, and which spellings
+    .claude/hooks/loop_gate.sh             fleet-wide=1 per-lane=1
+    run_loop.sh                            fleet-wide=1 per-lane=1
+    bringup.sh                             fleet-wide=2 per-lane=2
+    spikes/harness/bringup.sh              fleet-wide=1 per-lane=4
+
+C3 · THE CLASS SWEEP: a per-lane state name still read at a BARE spelling
+    .loop_signal     bare sites: 0
+    .loop_exit       bare sites: 0
+    .loop_blocks     bare sites: 0
+    .heartbeat       bare sites: 0
+    .loop_fails      bare sites: 0
+    .loop_lock       bare sites: 0
+    .loop_turn_gen   bare sites: 0
+    .loop_launcher   bare sites: 1
+        bringup.sh:618  unreadable)   lnote=' LAUNCHER UNREADABLE -- .loop_launcher exis
+    -> 1 bare site(s) across 8 per-lane state names.
+
+probe: 9 passed, 0 failed

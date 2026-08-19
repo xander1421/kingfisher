@@ -95,9 +95,23 @@ four times in one day (15, 21, 23, 26). A citation to a number that changes is
 stale by construction; cite the artifact, not its size.
 
 - **STOP file exists** → finish the current write, `echo LOOP-HALT > .loop_signal.$CALLSIGN`.
-- **LOOP-DONE** → M1-DEMO (§8) passes AND D1–D6 exist as written specs AND
-  HUMAN_NEEDED.md holds a current digest. Write the signal, then a 15-line
-  closing summary.
+  **Either spelling: fleet-wide `STOP`, or `STOP.$CALLSIGN` for one lane** (H31,
+  `MISSION.md:303`). *Added 2026-08-19 (ok-1, H219) with the hook's v9, and the
+  omission was not cosmetic: this bullet was the only place the contract told a
+  lane what a stop looks like, so a lane resolving it mechanically checked `STOP`
+  and never its own. `.claude/hooks/loop_gate.sh` had the identical gap in code —
+  measured, `spikes/H219_stop_asymmetry/probe_prefix.out`: under `STOP.<lane>`
+  the hook refused the stop 20 times out of 20 while the fleet-wide file was
+  honoured on attempt 0. The launcher's single stop read is its `while`
+  condition, so the switch is consulted BETWEEN turns and the hook is the only
+  thing that ends one; a per-lane stop therefore arrived when `MAX_TURN`'s
+  watchdog killed the turn, up to an hour later, logged as a wedged turn rather
+  than as a retirement.*
+- **LOOP-DONE** → M1-DEMO (§8) passes AND D1+, D2, D3, D5, D6 exist as written
+  specs (D4 was a numbering gap — D2 called itself last P0 item; DECISIONS 81
+  lists D1+/D3/D6; no D4 spec was ever written. Operator 2026-08-19: mission
+  decides from evidence) AND HUMAN_NEEDED.md holds a current digest. Write the
+  signal, then a 15-line closing summary.
 - **LOOP-IDLE** → every remaining queue item is BLOCKED_ON_HUMAN. Write the
   digest first, then the signal.
 - **LOOP-FUSE** is written by the hook itself, not by the agent, when blocked
@@ -116,7 +130,7 @@ stale by construction; cite the artifact, not its size.
 
 ## 8 · M1-DEMO — what "built" means for this loop
 - [ ] 3 physical devices + 1 coordinator, real transport (no adb)
-- [ ] Real corpus loaded (ConceptNet slice) via content-addressed shards
+- [ ] Real corpus loaded (FB15k-237 train, 272,115 triples) via content-addressed shards
 - [ ] Jobs admitted under the versioned ban surface (build-enforced)
 - [ ] Quorum-3 with stake-weighted seat draw per D1+ (coordinator
       emulating the spec, concession recorded)

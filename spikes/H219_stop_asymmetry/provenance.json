@@ -1,0 +1,330 @@
+{
+ "spike": "H219_stop_asymmetry",
+ "recorded_utc": "2026-08-19T21:06:27Z",
+ "note": "H219 \u2014 the per-lane kill switch had one reader and the hook was not it. ok-1, ATTACK cycle 30, 2026-08-19.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "339a17cdb2d09c05929262f5bb66a1e4805134f4",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/constcheck.py",
+    "spikes/harness/refcheck.py",
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/test_h219_falsify.sh"
+   ],
+   "diff_sha256": "eab4a2ee397ad1fe2839eaf87ddbd320c07ed0271c3bcef93c3c87cfa440442f",
+   "diff_bytes": 11701
+  },
+  {
+   "path": ".claude/hooks",
+   "head": "339a17cdb2d09c05929262f5bb66a1e4805134f4",
+   "clean": false,
+   "dirty_files": [
+    ".claude/hooks/loop_gate.sh"
+   ],
+   "diff_sha256": "bea57d0112cf970addb816ec2ac278be4e51ad400b95bef7fbc521b0dbd63b9d",
+   "diff_bytes": 3333
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  ".claude/hooks": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H219_stop_asymmetry/probe.sh",
+   "sha256": "63551e5b88e73c4326a532b27e031d7cfe64f2188375692aac6e807f3fcea542",
+   "bytes": 10598,
+   "mtime": 1787173587,
+   "compared_ts": 1787173587,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H219_stop_asymmetry/probe.out",
+   "sha256": "6572da63245dd2d5dd125218c1d960f196f1154f25219615443034512f8ec01f",
+   "bytes": 1846,
+   "mtime": 1787173586,
+   "compared_ts": 1787173586,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H219_stop_asymmetry/probe_prefix.out",
+   "sha256": "a3b8702b663a884c6d4b175ac9b771031f29a1fa23eb0dad05c5b8be6ba020b8",
+   "bytes": 1950,
+   "mtime": 1787173587,
+   "compared_ts": 1787173587,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H219_stop_asymmetry/falsify.out",
+   "sha256": "3ccacba1c3f638bad9de319c39510a7c66c804bd4482dd067a2db88e7e857adf",
+   "bytes": 836,
+   "mtime": 1787173570,
+   "compared_ts": 1787173570,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "probe_reaches_the_hook",
+   "must_fire_because": "a probe that cannot show it reached its target has produced no evidence either way (A29)",
+   "can_fail_because": "a gate copy that is not a hook, or a ROOT rewrite that silently no-opped, returns one verdict for every input and A3 or A1 goes red",
+   "null_must_contain": "the hook must be capable of BOTH verdicts in the same run, and it gives them: A3 (no switch) is `block` and A1 (fleet-wide STOP) is `exit`",
+   "fired": true,
+   "detail": "both baseline arms green in the same run, against v9",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     "PASS",
+     "A3 no stop switch at all: the hook refuses the stop"
+    ],
+    [
+     "PASS",
+     "A1 CONTROL fleet-wide STOP: the hook allows the stop"
+    ]
+   ]
+  },
+  {
+   "name": "defect_present_at_head_absent_after",
+   "must_fire_because": "the row claims a defect in a shipped file; one red run proves nothing unless the SAME instrument is green on the repair",
+   "can_fail_because": "if the pre-fix hook had honoured STOP.<lane>, A2 and B2 would be green at HEAD and the row dies",
+   "null_must_contain": "the pre-fix run must be capable of passing -- it passes 6 of its 9 arms, including both baselines, so the 3 failures are specific and not a dead probe",
+   "fired": true,
+   "detail": "v8: 6 pass 3 fail; v9: 9 pass 0 fail -- the three are A2 (own STOP refused), A6 (no such line) and B2 (20 of 20 attempts refused)",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     "v8",
+     6,
+     3
+    ],
+    [
+     "v9",
+     9,
+     0
+    ]
+   ]
+  },
+  {
+   "name": "repair_is_not_a_glob",
+   "must_fire_because": "H31's own defect restored from the other end would pass the row's headline check and stop all five lanes",
+   "can_fail_because": "a `STOP*` or `STOP.*` read makes A4 report `exit` and the suite check reports (want block, got exit)",
+   "null_must_contain": "the cross-lane arm must be capable of `exit` -- the M2 glob mutant makes it exactly that, which is falsifier arm A2",
+   "fired": true,
+   "detail": "A4 green on the shipped hook, and the glob mutant reddens the suite's cross-lane check while leaving the own-lane check green",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     "PASS",
+     "A4 another lane's STOP.L2 does not stop L1"
+    ],
+    [
+     [
+      "A2",
+      "PASS",
+      "a STOP.* glob turns 8b's SECOND check RED \u2014 one retirement cannot stop five"
+     ],
+     [
+      "A2b",
+      "PASS",
+      "and the own-lane check stays green, so A2 is about the glob"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "suite_checks_have_been_red_on_purpose",
+   "must_fire_because": "\u00a75: a control that cannot fail is not a control, and you state the input that makes it fail",
+   "can_fail_because": "if any of the three mutants left the suite green, that arm reports FAIL and names which check is inert",
+   "null_must_contain": "the suite must be capable of passing on the same inputs -- falsifier arm A0 runs it on the shipped hook and it reports its own check count",
+   "fired": true,
+   "detail": "M1 deleted / M2 globbed / M3 relocated: 3 mutants, 3 distinct checks reddened, 12 of 12 falsifier arms as stated",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    [
+     [
+      "C1",
+      "PASS"
+     ],
+     [
+      "C1b",
+      "PASS"
+     ],
+     [
+      "A1",
+      "PASS"
+     ],
+     [
+      "C2",
+      "PASS"
+     ],
+     [
+      "C2b",
+      "PASS"
+     ],
+     [
+      "A2",
+      "PASS"
+     ],
+     [
+      "A2b",
+      "PASS"
+     ],
+     [
+      "C3",
+      "PASS"
+     ],
+     [
+      "C3b",
+      "PASS"
+     ],
+     [
+      "A3",
+      "PASS"
+     ],
+     [
+      "A0",
+      "PASS"
+     ],
+     [
+      "A0b",
+      "PASS"
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "class_sweep_prints_its_hits",
+   "must_fire_because": "the sweep is the \u00a712.2 half of this row: fix the CLASS, and say what else is in it",
+   "can_fail_because": "a sweep whose pattern the local grep rejects returns 0 for every name; v1 did exactly that and the count is now computed in python",
+   "null_must_contain": "the sweep must be capable of a NON-zero -- it reports 1 and prints the line, which is how the hit was identified as a message string",
+   "fired": true,
+   "detail": "one hit, printed with its text: bringup.sh:618 is `.loop_launcher` inside a MESSAGE STRING, not a read -- so the live count is 0 and the raw count is 1, and both are on the page",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "-> 1 bare site(s) across 8 per-lane state names."
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1",
+   "must_fire_because": null,
+   "can_fail_because": "the pre-fix hook returns `exit` for STOP.<own lane>",
+   "null_must_contain": "the pre-fix hook must be capable of `exit` -- it gives exactly that for the fleet-wide file in the same run (A1)",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    [
+     "FAIL",
+     "A2 per-lane STOP.L1 also allows the stop for L1 (want 'exit', got 'block')"
+    ]
+   ],
+   "refutes": "the hook already honours the per-lane form through a path I had not read, and the row dies",
+   "fires_when": "the pre-fix hook returns `exit` for STOP.<own lane>",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2",
+   "must_fire_because": null,
+   "can_fail_because": "a turn under STOP.<own lane> ends within the 20-attempt bound",
+   "null_must_contain": "the bound must be capable of being reached -- B1 reaches it at attempt 0 under the fleet-wide file",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    [
+     "FAIL",
+     "B2 under per-lane STOP the turn ends on the first attempt (want '0', got 'no')"
+    ]
+   ],
+   "refutes": "the asymmetry exists but costs nothing, because the turn ends promptly anyway",
+   "fires_when": "a turn under STOP.<own lane> ends within the 20-attempt bound",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3",
+   "must_fire_because": null,
+   "can_fail_because": "A1 and A2 agree on the pre-fix hook",
+   "null_must_contain": "both arms read the SAME hook in the SAME run, so agreement is reachable and is what the repaired hook produces",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    [
+     "PASS",
+     "A1 CONTROL fleet-wide STOP: the hook allows the stop"
+    ],
+    [
+     "FAIL",
+     "A2 per-lane STOP.L1 also allows the stop for L1 (want 'exit', got 'block')"
+    ]
+   ],
+   "refutes": "there is no asymmetry to report: both spellings give the same verdict",
+   "fires_when": "A1 and A2 agree on the pre-fix hook",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4",
+   "must_fire_because": null,
+   "can_fail_because": "test_loop_gate.sh drives a per-lane STOP through the hook before v7",
+   "null_must_contain": "the suite has a STOP section (8) that is driven and green, so a per-lane check there would have been found by the same grep that found section 8",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    []
+   ],
+   "refutes": "the case is already covered and the row dies",
+   "fires_when": "test_loop_gate.sh drives a per-lane STOP through the hook before v7",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787173541,
+   "from": "spikes/harness/constcheck.py"
+  },
+  ".claude/hooks": {
+   "newest": 1787172779,
+   "from": ".claude/hooks/loop_gate.sh"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if the pre-fix hook had returned `exit` for STOP.<own lane> (F1), or if a turn under it had ended within the bound (F2), or if the two spellings had agreed (F3), or if the suite had already driven a per-lane STOP through the hook (F4), this row is withdrawn. Measured at HEAD: block, 20-of-20 refused, disagreed, and the only STOP.$CALLSIGN in the suite is a launcher span fixture.",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

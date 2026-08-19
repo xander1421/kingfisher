@@ -3,6 +3,7 @@
 # v7 (ok-1, H13) locks the span-cap increment; see section 4's block.
 # v8 (ok-1, H11) renames that counter: it is a SPAN CAP, not a runaway
 # fuse. Measured, not renamed by taste -- section 4 carries the numbers.
+# v9 (ok-1, H219) teaches section 1 the PER-LANE kill switch. See section 1b.
 # Terminal signals are FILES, not prose: to end legally, the agent must
 # write exactly LOOP-DONE, LOOP-HALT, or LOOP-IDLE into .loop_signal.$CALLSIGN.
 # Bare .loop_signal is NO LONGER ACCEPTED -- see v5 below.
@@ -23,7 +24,9 @@ ROOT="/Users/victorianikolenko/kingfisher"
 cd "$ROOT" 2>/dev/null || true
 cat >/dev/null   # consume hook payload; no transcript parsing since v2
 
-# 1 · Human kill switch (never auto-removed; human rm's it to resume)
+# 1 · Human kill switch, FLEET-WIDE (never auto-removed; human rm's it to resume)
+# The per-lane spelling is section 1b, below the callsign guard, because the lane
+# name has not been established or validated yet at this point in the file.
 [ -f STOP ] && exit 0
 
 # 2 · FAIL CLOSED ON LANE IDENTITY.  v4, 2026-08-17.
@@ -54,6 +57,35 @@ LANE="$CALLSIGN"
 # Whitelist, because a blacklist of path and quote metacharacters is the kind of
 # thing that is right until someone finds the character it forgot.
 case "$LANE" in (*[!A-Za-z0-9._-]*) exit 0 ;; esac
+
+# 1b · PER-LANE kill switch. v9, 2026-08-19 (ok-1, H219).
+#
+# THE DEFECT: `STOP.$CALLSIGN` retires ONE lane (H31, DONE 2026-08-17) and was
+# taught to `run_loop.sh:433` and to both bring-ups. It was NOT taught to this
+# hook -- section 1 read the fleet-wide `STOP` and nothing else, which was this
+# file's only STOP read. H31 was verified against the launcher FILE and never
+# against the hook, so the row closed with half its switch installed. §12.2, the
+# site and not the class, inside a row whose whole subject is per-lane state.
+#
+# WHY IT COSTS A WHOLE TURN AND NOT A MOMENT, measured in
+# spikes/H219_stop_asymmetry/probe.out:
+#   * fleet-wide STOP  -> the hook ALLOWS the stop on attempt 0;
+#   * STOP.L1, same lane -> REFUSED 20 times out of 20, span cap climbing to 20.
+# The launcher's ONLY stop read is its `while` condition (`run_loop.sh:433`,
+# grepped, 1 of 1), so it is consulted BETWEEN turns -- and this hook is the
+# only thing that ends a turn. A lane under a per-lane stop is therefore told to
+# run another cycle every time it tries to stop, and the retirement arrives when
+# MAX_TURN's watchdog kills the turn (default 3600 s), logged as a wedged turn
+# rather than as a retirement. The operator's documented way to retire one lane
+# (`MISSION.md:303`) was an hour late and looked like a fault.
+#
+# ORDER IS DELIBERATE: this is BELOW the whitelist above, because $LANE is
+# interpolated into a filename here exactly as it is into EXIT_MARK and BLOCKS.
+# NOT A GLOB: `STOP.*` or `STOP*` would let one lane's retirement stop all five,
+# which is the H31 defect restored from the other end. probe.sh arm A4 asserts
+# another lane's STOP.L2 leaves L1 running, and the suite carries the same check.
+[ -f "STOP.${LANE}" ] && exit 0
+
 EXIT_MARK=".loop_exit.${LANE}"
 BLOCKS=".loop_blocks.${LANE}"
 

@@ -1,0 +1,5 @@
+  C1   PASS M1 mutation applied: the per-lane read is gone
+  C1b  PASS M1 mutant still parses as bash
+  R1   PASS deleting the per-lane read turns 8b RED, naming the check
+  C2   PASS M2 mutation applied: the read is now a glob over every lane
+  C2b  PASS M2 mutant still parses as bash
