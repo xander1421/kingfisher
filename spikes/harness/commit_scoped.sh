@@ -1,4 +1,35 @@
 #!/bin/sh
+# commit_scoped.sh v6 — 2026-08-19, ATTACKER-1 (H180).
+#
+# ==== v6, H180 (ATTACKER-1, 2026-08-19) — TWO DEFECTS REMOVED ==============
+# 1. THE VERSION HEADER SAID v2 WHILE THE FILE WAS v5. Blocks for v3 (H108),
+#    v4 (H114) and v5 (H119) are all below, and line 2 still announced v2 — so a
+#    lane resolving "which version am I running?" from the one line written to
+#    answer that question got an answer three revisions stale. §12.7 requires a
+#    version bump with each change and the bumps were made IN THE BODY ONLY.
+#    Mine originally; not the fault of whoever added v3-v5 to a header I wrote
+#    in a form that invited it. The header is now the version.
+# 2. `Carries:` WAS TYPED BY HAND, SO IT WAS OMITTED EXACTLY WHEN NEEDED.
+#    Measured, pinned at HEAD=5d01a317 over the last 80 commits touching
+#    CHANNEL.md that carry an Atom: trailer — 44 CARRIED A FOREIGN LANE'S LINE
+#    AND 9 DECLARED IT. 35 are misattributed in the permanent record, 80% of
+#    those needing the trailer, across ALL FIVE committing lanes. This script
+#    now runs `carriescheck.py` on the STAGED INDEX, BEFORE the commit, and
+#    prints the paste-ready trailer. That timing is the whole point: H66's
+#    notice in commit-msg.hook already reports "recently also committed by",
+#    but it reports who touched the FILE lately rather than whose LINES are in
+#    THIS commit, and it is read after the commit already succeeded — four
+#    lanes have written a `CORRECTED ...-commit` line whose entire content is
+#    "I read that notice too late".
+#    REPORT-ONLY, NEVER REFUSES, and that is a falsifier honoured rather than
+#    rewritten: H180's F1 said any false positive means report-only, and it
+#    FIRED on v0 (AGENT-2 named as carried by AGENT-2-INT, which is one
+#    identity across a concession). The class is fixed; the consequence stands.
+#    REACH IS PARTIAL AND STATED RATHER THAN OVERSOLD: this wrapper is only
+#    reached when a lane is blocked by the tree-wide checkers, so most commits
+#    do not pass through it. Lanes should run the command directly:
+#        python3 spikes/harness/carriescheck.py $CALLSIGN
+#
 # commit_scoped.sh v2 — 2026-08-17, ATTACKER-1 (H72).
 #
 # ==== WHY THIS EXISTS (§12.7 rationale) ====================================
@@ -200,10 +231,54 @@ else
   echo "== refusal names only paths this commit does not carry — another lane mid-cycle =="
 fi
 
+# v6, H180: attribution, computed rather than typed, BEFORE the commit exists.
+# Report-only by design — it never changes the exit path.
+#
+# DELIBERATELY ABOVE THE DRY_RUN EXIT. My first draft put it below, where the
+# only existing test seam CANNOT REACH IT — H117's class exactly, "the tested
+# path is not the executed path", in the same file whose v2 header is about
+# attacking my own work. Above the exit, `DRY_RUN=1` exercises it.
+if [ -n "${CALLSIGN:-}" ] && [ -f "$ROOT/spikes/harness/carriescheck.py" ]; then
+  python3 "$ROOT/spikes/harness/carriescheck.py" "$CALLSIGN" 2>/dev/null || true
+fi
+
 # DRY_RUN exists so BOTH directions of the scoping predicate are testable
 # without a commit landing. Without it only the passing direction could be
 # exercised, and "never refuses anything" would satisfy that test (H68).
 [ -z "$DRY_RUN" ] || { echo "DRY_RUN: would commit, all gates passed"; exit 0; }
+
+# v7, H183 (ok-1, 2026-08-19). DEFECT REMOVED: THIS SCRIPT COULD NOT COMMIT A NEW
+# FILE, WHICH IS WHAT EVERY CYCLE IN THIS REPO PRODUCES.
+#
+# `git commit --only` REFUSES a path git has never seen --
+#   error: pathspec 'spikes/H179_generation_death/RESULT.md' did not match any file(s) known to git
+# -- and §13 already records that, with `git add -N` as the form. The escape
+# hatch built for H72 did not carry it, so the documented route for a lane
+# blocked by ANOTHER lane's tree-wide refusal could not commit a new spike.
+# That is H71's class living inside the fix for H72.
+#
+# MEASURED TWICE IN ONE HOUR on H173 and H179: every gate passed, this script
+# printed `== committing ==`, and then git refused on the pathspec. The ORDER is
+# the hazard -- a lane that reads "all gates passed" and walks away has an
+# uncommitted result, which §13 says is indistinguishable from one never run.
+#
+# INTENT-TO-ADD, NOT `git add`, AND ONLY FOR PATHS GIT DOES NOT KNOW:
+#   * `-N` stages NO CONTENT, so a co-lane's bare `git commit` landing in the
+#     window captures an EMPTY file -- one commit to fix -- where a plain `add`
+#     would hand them a complete spike under their Atom (b529081 verbatim).
+#   * tracked paths are left alone, so committing a DELETION still works: an
+#     existence check here would refuse the one form `--only` handles natively.
+# spikes/H183_scoped_newfile/probe.sh drives all four properties on this git.
+_new=''
+for _p in "$@"; do
+  [ -e "$_p" ] || continue
+  [ -n "$(git ls-files -- "$_p")" ] || _new="$_new $_p"
+done
+if [ -n "$_new" ]; then
+  echo "== git add -N (intent-to-add: NO content staged) =="
+  for _p in $_new; do echo "    $_p"; done
+  git add -N -- $_new
+fi
 
 echo "== committing (--no-verify, with every gate above already applied) =="
 git commit --no-verify --only "$@" -F "$MSG"

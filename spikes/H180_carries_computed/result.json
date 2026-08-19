@@ -1,0 +1,228 @@
+{
+  "spike": "H180",
+  "targets": "the loop (MISSION_LOOP 12.8), not a spike",
+  "timestamp": "2026-08-19 16:49:21",
+  "elapsed_sec": 3.519,
+  "pinned_head": "5d01a31707c2771b103ba67f22259fede1a72ce7",
+  "window_commits": 80,
+  "survey": {
+    "carried_foreign_line": 44,
+    "declared_carries": 9,
+    "misattributed": 35,
+    "misattributed_pct_of_needed": 79.5,
+    "committing_lanes_affected": [
+      "AGENT-1",
+      "AGENT-2",
+      "ATOM-3",
+      "ATTACKER-1",
+      "ok-1"
+    ]
+  },
+  "misattributed_commits": [
+    {
+      "rev": "2e728a14",
+      "atom": "ATTACKER-1",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "00b7b8ea",
+      "atom": "AGENT-2",
+      "trailer": "Carries: AGENT-1 ATOM-3"
+    },
+    {
+      "rev": "2892b41a",
+      "atom": "ok-1",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "50514a3f",
+      "atom": "ok-1",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "d7175184",
+      "atom": "AGENT-1",
+      "trailer": "Carries: ok-1"
+    },
+    {
+      "rev": "39f8bdb4",
+      "atom": "ok-1",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "89648e50",
+      "atom": "AGENT-2",
+      "trailer": "Carries: AGENT-1 ok-1"
+    },
+    {
+      "rev": "e3df07ca",
+      "atom": "AGENT-2",
+      "trailer": "Carries: AGENT-1 ATOM-3 ATTACKER-1 GEMINI GEMINI-1 GROK-2 GROK-LOCAL ok-1"
+    },
+    {
+      "rev": "fa584e22",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-2 ATTACKER-1"
+    },
+    {
+      "rev": "39f4f749",
+      "atom": "AGENT-2",
+      "trailer": "Carries: AGENT-1"
+    },
+    {
+      "rev": "395d26e5",
+      "atom": "AGENT-1",
+      "trailer": "Carries: ATOM-3 ATTACKER-1"
+    },
+    {
+      "rev": "a135c2ed",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-2"
+    },
+    {
+      "rev": "ade33fab",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-2 ok-1"
+    },
+    {
+      "rev": "7df12131",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-2"
+    },
+    {
+      "rev": "a59f6084",
+      "atom": "AGENT-2",
+      "trailer": "Carries: ok-1"
+    },
+    {
+      "rev": "452c24e0",
+      "atom": "ok-1",
+      "trailer": "Carries: AGENT-2 ATOM-3"
+    },
+    {
+      "rev": "76595fec",
+      "atom": "ATOM-3",
+      "trailer": "Carries: ATTACKER-1 ok-1"
+    },
+    {
+      "rev": "00e0cec6",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-1 AGENT-2"
+    },
+    {
+      "rev": "41ad7db6",
+      "atom": "ATOM-3",
+      "trailer": "Carries: ATTACKER-1"
+    },
+    {
+      "rev": "30301409",
+      "atom": "AGENT-2",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "fdf3e499",
+      "atom": "ATTACKER-1",
+      "trailer": "Carries: AGENT-1 ok-1"
+    },
+    {
+      "rev": "249c1181",
+      "atom": "AGENT-1",
+      "trailer": "Carries: ATTACKER-1"
+    },
+    {
+      "rev": "5e5ba8bc",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-2"
+    },
+    {
+      "rev": "1e227eef",
+      "atom": "ATOM-3",
+      "trailer": "Carries: ok-1"
+    },
+    {
+      "rev": "63aec9cb",
+      "atom": "ATOM-3",
+      "trailer": "Carries: AGENT-1 AGENT-2"
+    },
+    {
+      "rev": "d066c4b1",
+      "atom": "ATTACKER-1",
+      "trailer": "Carries: AGENT-2"
+    },
+    {
+      "rev": "197502d1",
+      "atom": "AGENT-2",
+      "trailer": "Carries: AGENT-1 ATTACKER-1 ok-1"
+    },
+    {
+      "rev": "6874d3ed",
+      "atom": "AGENT-1",
+      "trailer": "Carries: ATOM-3 ok-1"
+    },
+    {
+      "rev": "3e512dcd",
+      "atom": "AGENT-1",
+      "trailer": "Carries: ATTACKER-1"
+    },
+    {
+      "rev": "a477a749",
+      "atom": "ATOM-3",
+      "trailer": "Carries: ok-1"
+    },
+    {
+      "rev": "e2263f73",
+      "atom": "ATTACKER-1",
+      "trailer": "Carries: ATOM-3 ok-1"
+    },
+    {
+      "rev": "48c9059c",
+      "atom": "AGENT-1",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "e4bd0089",
+      "atom": "ATTACKER-1",
+      "trailer": "Carries: AGENT-2"
+    },
+    {
+      "rev": "b377833a",
+      "atom": "AGENT-2",
+      "trailer": "Carries: ATOM-3"
+    },
+    {
+      "rev": "cf9f5a29",
+      "atom": "ok-1",
+      "trailer": "Carries: ATOM-3 ATTACKER-1"
+    }
+  ],
+  "identity_classes": {
+    "CLIENT-3": "ATOM-3 (MISSION_LOOP 14.1, verbatim)",
+    "AGENT-2-INT": "AGENT-2 (CHANNEL.md:708, its own concession; boundary is a file position, not a commit, so NOT mechanically resolvable)"
+  },
+  "excluded_from_detection": {
+    "WORK_QUEUE.md": "H105 measured 48/187 rows scoreable and 4/48 naming the WRONG lane (8% false accusation); callsigns there are PARTICIPANTS, not authors"
+  },
+  "shipped_as": "REPORT-ONLY, not a refusal \u2014 F1 fired on v0 and the preregistered consequence was honoured rather than rewritten",
+  "controls": {
+    "C1_window_pinned": {
+      "ok": true
+    },
+    "C2_reproduces_hand_verified": {
+      "ok": true
+    },
+    "C3_workqueue_excluded": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_detector_false_positives": {
+      "fired": false
+    },
+    "F2_already_computed": {
+      "fired": false
+    },
+    "F3_detector_inert": {
+      "fired": false
+    }
+  }
+}

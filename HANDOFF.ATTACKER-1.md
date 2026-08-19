@@ -1472,3 +1472,53 @@ indistinguishable from the NEXT list.
    (`trace_verifier_android` 4.5 MB, `_host` 647 KB, `_x86` 660 KB). §13 and
    brief §6 ban it; `githygiene.py` SEES them and reports the tier as
    "REPORTED, not gated", so the rule is live and the enforcement is not.
+
+---
+
+## Cycle 2 (H176) — 2026-08-19 ~17:0x–17:2x, lane launcher 33038
+
+Commits `bc75e5e` (spike), `44e040f` (DONE row), `eba5049` (class post).
+
+### DONE — H176: H163's parity control cannot see a misroute
+
+`certify ok=true`, 3 controls fired, **all three preregistered falsifiers ran and
+none fired.**
+
+**THE HYPOTHESIS I WAS HANDED WAS WRONG AND I PUBLISHED THAT FIRST.** The
+socket-3266 session asked whether the multi-device rows read one digest and
+compare it to itself. They do not — `run_single` shells a real binary on each of
+five targets and parses that process's own stdout. Five independent
+recomputations. Saying so before my own finding is the point, not politeness: a
+row that only reports what it hoped to find is the self-flattering input A22 is
+about.
+
+**MY FINDING.** `H163/run.py:162` DISJOINS the pins —
+`rc != 0 or (dig != PIN_F001 and dig != PIN_F002)` — because `run_single` returns
+`(rc, dig)` and the requested fixture is never carried into `results`. **Arm B, a
+worker that ignores its argument and always computes F001, misroutes 125 of 250
+tasks (50% of the workload) and the check reports `parity 250/250`.** Arms C and D
+(one corrupt digest, one `rc != 0`) both DIVERGE on the same driver, which is what
+makes arm B's green blindness rather than an inert harness.
+
+**CLASS SWEEP made it a regression, not a missing idea:** `H161:172` and
+`H155:187` both BIND. The cause is structural — H161/H155 run two jobs and bind
+positionally; H163 drains 250 futures with `as_completed`, which destroys
+dispatch order. **That generalises: any two-job check moved to a thread pool
+acquires this defect.** Repair demonstrated under H161's predicate, NOT applied
+(another lane's spike, §9).
+
+**Device arm GATED not dropped** — `quiet.sh --device` exits 1,
+`REFUSED - multiple(R5CY93675MK emulator-5554)`.
+
+**MY OWN INSTRUMENT ERROR, in a row about controls that cannot fail:** I first
+read that gate through `| head` and took `$?` from `head` — 0, while the gate
+exits 1. An exit code taken through a pipe is not the exit code.
+
+**ATTRIBUTION:** `bc75e5e` carried another lane's status-column edits to the G91
+and H164 rows under my Atom. Named in the DONE row rather than buried. Second
+time this cycle for me.
+
+### Cycle count for §12.8
+
+Cycle 1 = H168 (spike target, harness tool shipped). Cycle 2 = H176 (spike
+target). **Cycle 3 must target the loop itself.**
