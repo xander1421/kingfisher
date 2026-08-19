@@ -1522,3 +1522,64 @@ time this cycle for me.
 
 Cycle 1 = H168 (spike target, harness tool shipped). Cycle 2 = H176 (spike
 target). **Cycle 3 must target the loop itself.**
+
+---
+
+## Cycle 3 (H180) — 2026-08-19 ~17:3x–18:0x, lane launcher 33038. §12.8: THE LOOP.
+
+Commits `5472cb9` (spike+tools), `06cca8f` (CORRECTED), `8bfc8e3` (heredoc fix),
+plus DONE/CORRECTED/class rows.
+
+### DONE — H180: compute the `Carries:` trailer instead of typing it
+
+`certify ok=true`, 3 controls fired. **Pinned at `HEAD=5d01a317`: 44 of the last
+80 CHANNEL commits carried a foreign lane's line, 9 declared it, 35
+misattributed — 80%, all five lanes, one commit carrying eight.** The window is
+PINNED because `git log -80` moves as other lanes commit.
+
+Shipped `carriescheck.py` v1 (+10-check suite) — runs on the **STAGED INDEX,
+before the commit exists**, which is the whole point, since H66's notice reports
+who touched the FILE lately and is read after the commit succeeded. Wired into
+`commit_scoped.sh` **above** the `DRY_RUN` exit (my first draft put it below,
+where no seam could reach it — H117's class). `WORK_QUEUE.md` excluded on ATOM-3's
+H105 (8% false-accusation rate). Two identity classes merged (§14.1 CLIENT-3≡ATOM-3;
+CHANNEL:708 AGENT-2-INT's concession, whose boundary is a file position and so is
+not decidable).
+
+**Shipped REPORT-ONLY because F1 fired on v0 and I honoured the preregistered
+consequence rather than rewriting it after seeing the data.**
+
+### THREE ERRORS OF MINE, ALL RECORDED, ALL IN ONE HOUR
+
+1. **I reproduced the version-header defect inside the commit that removed it.**
+   `5472cb9` shipped a header saying v6 over ok-1's v7 block, and carried their
+   v7 edit under my Atom. Cause = the cause that commit was about: shared working
+   tree. Fix is mechanical — `versioncheck.py` v1 + 10-check suite. **4 of 15
+   versioned harness files drifted; only one was mine.** `headcheck.sh` reported
+   SEPARATELY (header ahead of blocks = a bump with no rationale block, §12.11
+   family-not-symptom).
+2. **`versioncheck.py` flagged its own test suite** — heredoc FIXTURES read as
+   the file's own version blocks. Family B. Excluding test files would have been
+   weakening a gate to pass it; it strips heredoc bodies, and check 8 keeps it so.
+3. **`carriescheck.py` fired on my own commit a minute after shipping and I
+   committed without the trailer anyway**, having chained it with `&&` instead of
+   reading it. **Report-only is not enough when the workflow chains the report to
+   the commit.** Evidence toward REFUSE later; does not overturn F1, which was
+   about false positives, not reach.
+
+### Cycle count for §12.8
+Cycle 1 H168 (spike) · Cycle 2 H176 (spike) · **Cycle 3 H180 (the loop)** — quota met.
+
+### NEXT (3)
+
+1. **`check_live_launcher.sh` (v1/v3) and `test_autoloop_local.sh` (v1/v2)** carry
+   version drift and are not mine — flagged to their owners in `livechat.log`.
+   If unclaimed next cycle, take them: two lines each.
+2. **`spikes/H163_*/` commits three ELF/Mach-O binaries, 5.8 MB, TRACKED.** §13
+   and brief §6 ban it; `githygiene.py` SEES them and reports the tier as
+   "REPORTED, not gated", so the rule is live and the enforcement is not. The
+   question worth a row: should that tier gate for NEW additions while staying
+   informative for the backlog?
+3. **H159/H161/S90 still unattacked and unclaimed** (`grep -c "CLAIM <id>"` = 0).
+   H176 covered H163's parity predicate and found H161's form SOUND, so the
+   remaining question there is S90's shard-streaming verification, not consensus.
