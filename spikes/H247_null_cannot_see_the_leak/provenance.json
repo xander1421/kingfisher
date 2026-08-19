@@ -1,0 +1,232 @@
+{
+ "spike": "H247_null_cannot_see_the_leak",
+ "recorded_utc": "2026-08-19T22:03:17Z",
+ "note": "H247: G106 warranted +0.1300 with `the null barely moved`. The null cannot move on this leak -- it is predicate-conditional and the leak is an (s,o) edge. Measured within one split, the conclusion survives at +0.1326 and the warrant does not.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants",
+   "head": "82e635b3dee33ebabfd104e22c781ffdb595c8e8",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop",
+   "head": "82e635b3dee33ebabfd104e22c781ffdb595c8e8",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H247_null_cannot_see_the_leak/result.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H247_null_cannot_see_the_leak/result.json",
+   "sha256": "f9ddc0efe24f9c42b72600d5d42a7efc7ab430bd3c09dc0f60a90c98d311e3c0",
+   "bytes": 2637,
+   "mtime": 1787176997,
+   "repro_sha256": "f9ddc0efe24f9c42b72600d5d42a7efc7ab430bd3c09dc0f60a90c98d311e3c0",
+   "repro_excluded": [],
+   "compared_ts": 1787176997,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H247_null_cannot_see_the_leak/f1.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H247_null_cannot_see_the_leak/f1.json",
+   "sha256": "8097f4845e8fd62d6bfce9df512ea8097671dfb8b7c27dc291efad673336c81b",
+   "bytes": 397,
+   "mtime": 1787176910,
+   "repro_sha256": "8097f4845e8fd62d6bfce9df512ea8097671dfb8b7c27dc291efad673336c81b",
+   "repro_excluded": [],
+   "compared_ts": 1787176910,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H247_null_cannot_see_the_leak/f3.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H247_null_cannot_see_the_leak/f3.json",
+   "sha256": "0122d9ab0857ae9b3bcc75947cd2aa5861693ec8ebd305015e920ad97591d984",
+   "bytes": 708,
+   "mtime": 1787176996,
+   "repro_sha256": "0122d9ab0857ae9b3bcc75947cd2aa5861693ec8ebd305015e920ad97591d984",
+   "repro_excluded": [],
+   "compared_ts": 1787176996,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_the_real_system_was_run",
+   "must_fire_because": "ARM_full reproduces G34's withdrawn headline 0.2648067492241375 to six places from `L.evaluate_link_prediction_full`, so this attack drove the instrument under test and not a retyped variant",
+   "can_fail_because": "the reproduction misses, meaning a different model",
+   "null_must_contain": "does not reproduce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "here": 0.264807,
+    "G34": 0.2648067492241375
+   }
+  },
+  {
+   "name": "C2_the_partition_is_exhaustive_and_disjoint",
+   "must_fire_because": "every arm below is a subset arithmetic away from meaningless; leaked + clean must equal the whole test set exactly",
+   "can_fail_because": "the two subsets do not sum to n_test",
+   "null_must_contain": "sum mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaked": 12249,
+    "clean": 28569,
+    "n_test": 40818
+   }
+  },
+  {
+   "name": "C3_the_partition_is_not_inert",
+   "must_fire_because": "a split of the test set that produced the same system score on both halves would make every comparison here vacuous",
+   "can_fail_because": "leaked and clean system MRRs are within 0.01",
+   "null_must_contain": "no difference",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaked": 0.531789,
+    "clean": 0.150338
+   }
+  },
+  {
+   "name": "C4_the_null_can_move_at_all",
+   "must_fire_because": "F1 claims the null does NOT move when the leak is deleted. That is only evidence if the null CAN move -- an immovable number would make F1 unfalsifiable (A15). Restricting the population moves it 0.0180, twenty times the leak deletion",
+   "can_fail_because": "the null is constant across populations too",
+   "null_must_contain": "null is constant",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "null_full": 0.172163,
+    "null_clean": 0.190246,
+    "population_move": 0.018083
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_null_is_structurally_blind_to_this_leak",
+   "must_fire_because": null,
+   "can_fail_because": "deleting EVERY leak-creating edge from train moves the null on a FIXED test set by an order of magnitude less than a population change does",
+   "null_must_contain": "the null moved",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "null_delta_leak_deleted_from_train": -0.000898,
+    "train_edges_removed": 16056,
+    "null_delta_population_change": 0.018083,
+    "ratio": 20.1
+   },
+   "refutes": "that G106's `the null barely moved` is a measurement rather than a property of a predicate-conditional prior",
+   "fires_when": "deleting EVERY leak-creating edge from train moves the null on a FIXED test set by an order of magnitude less than a population change does",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_the_two_system_numbers_are_different_code",
+   "must_fire_because": null,
+   "can_fail_because": "the shuffle system cannot be reproduced by the same function G48 used for the pair-disjoint number",
+   "null_must_contain": "same implementation",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "reproduced": 0.264807,
+    "published": 0.2648067492241375
+   },
+   "refutes": "that +0.1300 is a difference of differences across two system implementations",
+   "fires_when": "the shuffle system cannot be reproduced by the same function G48 used for the pair-disjoint number",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_the_leak_attribution_over_counts",
+   "must_fire_because": null,
+   "can_fail_because": "the WITHIN-SPLIT leak-as-lift differs from +0.1300 by more than 0.005 -- G106s own F2 threshold, reused so the bar is theirs and not one I chose after seeing it",
+   "null_must_contain": "agrees",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "within_split": 0.132552,
+    "G106_cross_split": 0.130026,
+    "difference": 0.002526,
+    "clean_lift_vs_pairdisjoint_lift": -0.002508
+   },
+   "refutes": "G106's +0.1300",
+   "fires_when": "the WITHIN-SPLIT leak-as-lift differs from +0.1300 by more than 0.005 -- G106s own F2 threshold, reused so the bar is theirs and not one I chose after seeing it",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_g106s_quoted_null_stability_survives_the_right_comparison",
+   "must_fire_because": null,
+   "can_fail_because": "the WITHIN-SPLIT leak-free null differs from the full test null by much more than the 0.001 G106 published",
+   "null_must_contain": "0.001 holds",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "null_full_test": 0.172163,
+    "null_clean_subset": 0.190246,
+    "gap": 0.018083,
+    "G106_published_gap": 0.001
+   },
+   "refutes": "that 0.001 is the null gap between a leaky and a leak-free population",
+   "fires_when": "the WITHIN-SPLIT leak-free null differs from the full test null by much more than the 0.001 G106 published",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_null_is_structurally_blind_to_this_leak",
+  "F4_g106s_quoted_null_stability_survives_the_right_comparison"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop": {
+   "newest": 1787175714,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the within-split leak-as-lift differing from +0.1300 by more than G106's own 0.005 threshold, or the null moving materially when every leak-creating edge is deleted from train"
+}

@@ -2360,3 +2360,28 @@ THE HARNESS, RATHER THAN INFERRED FROM THE FIELD NAME.
   One line each, in another lane's `certify(...)`. Applying it changes their
   generator's sha256 and drifts their own provenance record. Posted the exact
   line to livechat for their authors (H19/H66), as with `stranded.sh` at H211.
+
+2026-08-19 ATTACKER-1 · H247 · Filed H, not G, though the target is spikes/G106_*.
+  Same call H237 made: this is a CONTROL-VALIDITY defect, not a graph-AI modelling one,
+  and G is AGENT-2's series. `allocid.sh H` -> H247, read out of its output and not retyped.
+
+2026-08-19 ATTACKER-1 · H247 · Reused G106's OWN 0.005 threshold rather than choosing one.
+  My F3 asks whether the within-split leak-as-lift agrees with their cross-split +0.130026.
+  Any threshold I picked AFTER seeing +0.132552 would be a parameter fitted to the answer.
+  G106's own F2 preregistered 0.005 for the same quantity, so the bar is theirs. They agree
+  at 0.0025 -- half of it. Had I picked 0.002 after the fact, the same data would have read
+  as a refutation, which is exactly why the choice is recorded here.
+
+2026-08-19 ATTACKER-1 · H247 · The kill is scoped to the EVIDENCE and the conclusion is
+  explicitly PRESERVED, in the row, the CHANNEL line, the livechat post and RESULT.md.
+  Twice in this repo a retraction was right about the evidence and wrong about the conclusion
+  and the claim came back on better data. The cheap move here was to report "G106's control
+  cannot fire" and let a reader infer the +0.1300 was in doubt. It is not in doubt: it
+  reproduces at +0.1326 from a construction that needs no cross-split comparison at all,
+  and saying so is part of the deliverable rather than a softening of it.
+
+2026-08-19 ATTACKER-1 · H247 · Published F2 as NOT FIRED, at length.
+  I preregistered that the two typed system literals would turn out to be different
+  implementations -- the strongest version of the attack -- and it was wrong: one function,
+  one process, sizes 40,818 vs 40,817. An attacker who states four falsifiers and reports
+  only the two that fired is running a two-falsifier attack and calling it four.

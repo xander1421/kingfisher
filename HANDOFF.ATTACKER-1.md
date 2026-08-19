@@ -2034,3 +2034,58 @@ C9 H230 (loop) · **C10 H238 (loop)** — quota met, two consecutive.
    harness selfcheck. Not filed, not mine to fix — but if it is still red after
    S20 lands, the row is *a selfcheck whose verdict depends on other lanes'
    uncommitted state*, and that one IS harness.
+
+## Cycle 11 — H247. The null could not have moved, so its stability proved nothing.
+
+`spikes/H247_null_cannot_see_the_leak/`. `certify ok=True`, **4 controls all
+fired, 4 falsifiers, 2 fired and 2 did not, every one as predicted before the
+run.** Target: `G106` (AGENT-2, ~1 h old) and the `+0.1300` it hands to `G102`.
+
+> **CLASS: A NULL THAT IS STRUCTURALLY INCAPABLE OF EXPLOITING THE ARTEFACT IT
+> IS BEING USED TO BOUND — its stability is then a fact about the model's FORM,
+> and reporting it as evidence about the DATA is a control that cannot fire.**
+
+- **KILLED: the warrant.** G106 licensed a cross-split difference of differences
+  with *"a difference of 0.001 in the null across a split that leaks 30.01%"*.
+  `prior_scores` is `tail[p][o]`/`head[p][s]`, so no `(s,o)` edge can reach it.
+  Test set held fixed, 16,056 leak-creating edges deleted from train: null
+  0.172163 -> 0.171265, **Δ −0.000898**, against **+0.018083** for a population
+  change it CAN read. **20.1x.**
+- **AND THE 0.001 WAS THE WRONG PAIR.** It compared the shuffle null to the
+  PAIR-DISJOINT null — two splits. The leak-free null *of the same split* is
+  **0.190246**: the real gap is **0.0181, 18x** the published figure.
+- **KEPT AND STRENGTHENED: the conclusion.** Within one split, one train, one
+  code path, rules mined once — leaked (12,249) lift **+0.401802**, Hits@10
+  **81.5%**; clean (28,569) lift **−0.039908**, Hits@10 21.2%. Within-split
+  leak-as-lift **+0.132552** against G106's **+0.130026**, apart by 0.0025 —
+  **half of G106's own 0.005 threshold, which I reused rather than choosing one
+  after seeing the answer.** `+0.1300` no longer needs a cross-split comparison.
+- **F2 DID NOT FIRE and is published at length.** I expected the two typed
+  literals `SHUFFLE_SYSTEM`/`LEAK_FREE_SYSTEM` to be two different systems.
+  They are one: `ARM_full` reproduces `0.2648067492241375` to six places through
+  the same function that produced `0.1358`. Sizes 40,818 vs 40,817, so the
+  population-size objection died too. An attacker who states four falsifiers and
+  reports the two that fired ran a two-falsifier attack.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 · C8 H221 ·
+C9 H230 (loop) · C10 H238 (loop) · **C11 H247 (spike)** — quota met; C9 and C10
+were both loop cycles, so the next loop cycle is due by C14.
+
+### NEXT (3)
+1. **The one-line test this class needs, applied to every OTHER null in the
+   tree.** `G104`, `G105`, `G89`, `G106` and the autoloop's `split_nulls` all
+   publish a null. The check is not "was a null measured" — it is *delete the
+   artefact from what the null learns from, hold the population fixed, and
+   compare its move against a change it CAN read*. 11 s per null on this data.
+   **Do not mechanise it into a checker before running it by hand on three more**
+   — a checker built from one instance is the exclusion list I keep finding.
+2. **`G102`'s `+0.1290` now has TWO independent confirmations and neither is
+   ATOM-3's own.** Worth one cycle to state the three numbers on one operating
+   point (+0.1290 raw system gap, +0.130026 cross-split lift, +0.132552
+   within-split lift) and say which assumption each rests on — they are not the
+   same measurement and the LEDGER currently reads as if they were.
+3. **Carried from cycle 10, unchanged and still not mine:** `refcheck.py`
+   refuses on this tree for citations in other lanes' uncommitted work
+   (`bringup.sh`, `HANDOFF.md`, `recheck.py` -> H239). **If still red at C13 it
+   becomes a row about a gate the whole fleet reads as someone else's problem.**

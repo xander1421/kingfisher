@@ -1,0 +1,34 @@
+{
+ "arms": {
+  "clean": {
+   "lift": -0.039908,
+   "n": 28569,
+   "null_mrr": 0.190246,
+   "system_hits10": 0.212118,
+   "system_mrr": 0.150338
+  },
+  "full": {
+   "lift": 0.092644,
+   "n": 40818,
+   "null_mrr": 0.172163,
+   "system_hits10": 0.392927,
+   "system_mrr": 0.264807
+  },
+  "leaked": {
+   "lift": 0.401802,
+   "n": 12249,
+   "null_mrr": 0.129987,
+   "system_hits10": 0.814638,
+   "system_mrr": 0.531789
+  }
+ },
+ "clean_lift_vs_pairdisjoint_lift": -0.002508,
+ "elapsed_sec": 85.96,
+ "quoted_from_G106_not_measured_here": {
+  "g106_leak_as_lift": 0.130026,
+  "pair_disjoint_lift": -0.0374,
+  "pair_disjoint_null": 0.1732,
+  "pair_disjoint_system": 0.1358
+ },
+ "within_split_leak_as_lift": 0.132552
+}

@@ -1,0 +1,83 @@
+{
+  "spike": "H247",
+  "target": "spikes/G106_shuffle_null/ (AGENT-2)",
+  "observations": {
+    "F1": {
+      "n_test": 40818,
+      "n_leaked": 12249,
+      "n_clean": 28569,
+      "leak_rate": 0.3001,
+      "null_mrr_full_test": 0.172163,
+      "null_mrr_leaked_subset": 0.129987,
+      "null_mrr_clean_subset": 0.190246,
+      "subset_gap": -0.060259,
+      "n_train": 190480,
+      "n_train_leak_edges_removed": 16056,
+      "null_mrr_same_test_leakfree_train": 0.171265,
+      "null_delta_when_leak_deleted_from_train": -0.000898,
+      "elapsed_sec": 11.58
+    },
+    "ARM_full": {
+      "n": 40818,
+      "system_mrr": 0.264807,
+      "null_mrr": 0.172163,
+      "lift": 0.092644,
+      "system_hits10": 0.392927
+    },
+    "ARM_leaked": {
+      "n": 12249,
+      "system_mrr": 0.531789,
+      "null_mrr": 0.129987,
+      "lift": 0.401802,
+      "system_hits10": 0.814638
+    },
+    "ARM_clean": {
+      "n": 28569,
+      "system_mrr": 0.150338,
+      "null_mrr": 0.190246,
+      "lift": -0.039908,
+      "system_hits10": 0.212118
+    },
+    "F3": {
+      "arms": {
+        "full": {
+          "n": 40818,
+          "system_mrr": 0.264807,
+          "null_mrr": 0.172163,
+          "lift": 0.092644,
+          "system_hits10": 0.392927
+        },
+        "leaked": {
+          "n": 12249,
+          "system_mrr": 0.531789,
+          "null_mrr": 0.129987,
+          "lift": 0.401802,
+          "system_hits10": 0.814638
+        },
+        "clean": {
+          "n": 28569,
+          "system_mrr": 0.150338,
+          "null_mrr": 0.190246,
+          "lift": -0.039908,
+          "system_hits10": 0.212118
+        }
+      },
+      "quoted_from_G106_not_measured_here": {
+        "pair_disjoint_system": 0.1358,
+        "pair_disjoint_null": 0.1732,
+        "pair_disjoint_lift": -0.0374,
+        "g106_leak_as_lift": 0.130026
+      },
+      "within_split_leak_as_lift": 0.132552,
+      "clean_lift_vs_pairdisjoint_lift": -0.002508,
+      "elapsed_sec": 85.96
+    }
+  },
+  "falsifiers_fired": {
+    "F1_null_is_structurally_blind_to_this_leak": true,
+    "F2_the_two_system_numbers_are_different_code": false,
+    "F3_the_leak_attribution_over_counts": false,
+    "F4_g106s_quoted_null_stability_survives_the_right_comparison": true
+  },
+  "verdict": "G106 CONCLUSION CONFIRMED AND STRENGTHENED; ITS STATED WARRANT WITHDRAWN. The +0.1300 reproduces at +0.1326 from a within-split construction needing no cross-split difference of differences. The `0.001 null stability` that was offered as its warrant is a property of the prior s form (leak deleted from train: 0.0009) and is not the gap it was read as (right comparison: 0.0180)."
+}

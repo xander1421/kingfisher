@@ -1,0 +1,15 @@
+{
+ "elapsed_sec": 11.58,
+ "leak_rate": 0.3001,
+ "n_clean": 28569,
+ "n_leaked": 12249,
+ "n_test": 40818,
+ "n_train": 190480,
+ "n_train_leak_edges_removed": 16056,
+ "null_delta_when_leak_deleted_from_train": -0.000898,
+ "null_mrr_clean_subset": 0.190246,
+ "null_mrr_full_test": 0.172163,
+ "null_mrr_leaked_subset": 0.129987,
+ "null_mrr_same_test_leakfree_train": 0.171265,
+ "subset_gap": -0.060259
+}
