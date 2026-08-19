@@ -106,14 +106,38 @@ def check_cross_device_metta():
     host_cols = host_lines[0].split("\t")
     host_fuel, host_raw, host_canon, host_alpha = host_cols[4], host_cols[5], host_cols[6], host_cols[7]
 
-    p_devs = subprocess.run(["adb", "devices"], capture_output=True, text=True)
+    # A PREFLIGHT MUST NOT DIE ON THE ABSENCE IT EXISTS TO DETECT (H248,
+    # AGENT-2). `adb` is not present on every host, and an unguarded
+    # `subprocess.run` raises FileNotFoundError, so this evaluator CRASHED on
+    # exactly the condition it is here to report. Before H245 that crash was
+    # indistinguishable from a refusal, because `run_evaluator` returned on a
+    # non-zero exit before parsing -- so "no adb installed" and "the determinism
+    # check failed" produced the same event.
+    try:
+        p_devs = subprocess.run(["adb", "devices"], capture_output=True, text=True)
+    except (FileNotFoundError, OSError) as e:
+        return None, f"not_measured_adb_not_installed ({type(e).__name__})", {
+            "fuel_host": host_fuel, "canon_host": host_canon}
+
     devices = []
     for line in p_devs.stdout.strip().split("\n")[1:]:
         parts = line.strip().split()
         if len(parts) >= 2 and parts[1] == "device":
             devices.append(parts[0])
 
-    if not devices or not os.path.exists(dev_bin):
+    # ONE REASON STRING FOR TWO CAUSES IS A CONFIDENT WRONG ANSWER, and this
+    # one was mine. `not devices or not os.path.exists(dev_bin)` reported
+    # `not_measured_no_adb_device` whether the phone was unplugged OR the
+    # aarch64-linux-android binary had never been cross-compiled. I hit the
+    # second case myself while the emulator was booting, read "no device
+    # attached", and only noticed because `adb devices` in the next shell
+    # listed emulator-5554. A reason a reader cannot act on is family B: it is
+    # well formed, it is confident, and it names the wrong thing.
+    if not devices and not os.path.exists(dev_bin):
+        return None, "not_measured_no_device_and_no_device_binary", {
+            "fuel_host": host_fuel, "canon_host": host_canon,
+            "dev_bin_expected": dev_bin}
+    if not devices:
         # NOT MEASURED is not DIVERGENCE. This returned 0.0, which the config
         # reads against min_acceptable 1.0, so the run reported
         # DIVERGENCE_DETECTED -- "host and device disagree on MeTTa fuel" --
@@ -126,8 +150,15 @@ def check_cross_device_metta():
         # invariant for the honest reason -- it could not be checked, rather
         # than it regressed. Those are opposite situations and must not share
         # a number.
-        return None, "not_measured_no_adb_device", {"fuel_host": host_fuel,
-                                                    "canon_host": host_canon}
+        return None, "not_measured_no_adb_device_attached", {
+            "fuel_host": host_fuel, "canon_host": host_canon}
+    if not os.path.exists(dev_bin):
+        # A DEVICE ANSWERED AND THERE IS NOTHING TO PUSH TO IT. Distinct from
+        # every case above and the one most likely to be misread as a hardware
+        # problem when it is a build problem.
+        return None, "not_measured_device_binary_missing", {
+            "fuel_host": host_fuel, "canon_host": host_canon,
+            "devices_seen": devices, "dev_bin_expected": dev_bin}
 
     serial = "R5CY93675MK" if "R5CY93675MK" in devices else devices[0]
     dev_tmp = "/data/local/tmp/kftest"
@@ -253,6 +284,76 @@ def selfcheck():
     finally:
         if os.path.exists(tmp):
             os.remove(tmp)
+    # H260 — THE FOUR *NOT MEASURED* REASONS, EACH DRIVEN. A reason string
+    # nobody has seen fire is a guess about what the code does. These four are
+    # the states this evaluator is most often in on a machine that is not this
+    # one, and before H260 two of them were one string and a third was a
+    # traceback. Each arm copies the module BESIDE the original -- `repo_root`
+    # is `__file__`-relative, and a copy in a scratch dir exits early at
+    # `missing_host_bin_or_probe` without ever reaching the adb code, which is
+    # how the first run of this check passed four arms that had not run.
+    import re as _re
+    _HERE = os.path.dirname(os.path.abspath(__file__))
+    _shim = os.path.join(_HERE, '_h260_shim')
+    os.makedirs(_shim, exist_ok=True)
+    _adb = os.path.join(_shim, 'adb')
+    with open(_adb, 'w') as fh:
+        fh.write('#!/bin/sh\necho "List of devices attached"\necho ""\n')
+    os.chmod(_adb, 0o755)
+    _made = []
+
+    def _variant(name, patch_devbin):
+        t = os.path.join(_HERE, f'_h260_{name}.py')
+        v = src
+        if patch_devbin:
+            m = _re.search(r'^(\s*)dev_bin = .*$', v, _re.M)
+            if not m:
+                return None
+            v = v[:m.start()] + m.group(1) + 'dev_bin = "/nonexistent/threadrun"' + v[m.end():]
+        with open(t, 'w', encoding='utf-8') as fh:
+            fh.write(v)
+        _made.append(t)
+        return t
+
+    def _scope(mod, path_mode):
+        env = dict(os.environ)
+        if path_mode == 'noadb':
+            env['PATH'] = '/nonexistent-bin'
+        elif path_mode == 'shim':
+            env['PATH'] = _shim + os.pathsep + env['PATH']
+        r = subprocess.run([sys.executable, mod], capture_output=True, text=True, env=env)
+        try:
+            return json.loads(r.stdout).get('scope', '')
+        except json.JSONDecodeError:
+            return f'(no json, rc={r.returncode})'
+
+    try:
+        for label, name, patch, pm, expect in [
+            ('adb not installed',         'noadb',   False, 'noadb', 'not_measured_adb_not_installed'),
+            ('no device, binary present', 'nodev',   False, 'shim',  'not_measured_no_adb_device_attached'),
+            ('device up, binary missing', 'nobin',   True,  'real',  'not_measured_device_binary_missing'),
+            ('no device AND no binary',   'neither', True,  'shim',  'not_measured_no_device_and_no_device_binary'),
+        ]:
+            mod = _variant(name, patch)
+            if mod is None:
+                print(f'  FAIL   dev_bin anchor missing, arm proves nothing: {label}')
+                bad += 1
+                continue
+            got = _scope(mod, pm)
+            if expect in got:
+                print(f'  RED    {label} -> {expect}')
+            else:
+                print(f'  MISSES {label} -> {got[:70]}')
+                bad += 1
+    finally:
+        for t in _made:
+            if os.path.exists(t):
+                os.remove(t)
+        if os.path.exists(_adb):
+            os.remove(_adb)
+        if os.path.isdir(_shim):
+            os.rmdir(_shim)
+
     if bad:
         print(f'SELFCHECK FAILED: {bad}')
         return 1
