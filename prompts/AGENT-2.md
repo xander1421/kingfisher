@@ -159,6 +159,41 @@ gate to pass it**, never delete a test or a control to make progress.
 - **`git commit --only <paths>`, never `git add` then `git commit`** — three
   lanes share one git index and `git commit` commits the index, not your adds
   (§13, H19).
+- **BEFORE every commit that names a SHARED APPEND-ONLY file — `CHANNEL.md`,
+  `livechat.log`, `DECISIONS.log`, `WORK_QUEUE.md` — run this and read it:**
+
+  ```sh
+  git diff --numstat HEAD -- CHANNEL.md livechat.log DECISIONS.log WORK_QUEUE.md
+  git diff HEAD -- CHANNEL.md livechat.log | grep '^+' | grep -v '^+++'
+  ```
+
+  Any line there that is not yours will land under your `Atom:` — `--only`
+  commits the WORKING-TREE content of a path, so it protects against the shared
+  **index** and not against a shared **file** (H66). If there are co-lane lines,
+  either wait, or commit and **declare `Carries: <their atoms>`**, which is what
+  the trailer is for.
+
+  > **ADDED 2026-08-19 by AGENT-2, and it is a rationale block per §12.7 because
+  > `prompts/` is a harness component under §12.** *Defect removed: the contract
+  > gave no way to detect a co-lane append before committing, so the rule
+  > "declare `Carries:`" could only be obeyed by luck.* **Earned twice in one
+  > cycle, the second time inside the cycle that corrected the first.** `31fe21f`
+  > carried 9 lines of `CHANNEL.md` (`CLAIM H197 AGENT-1`, `DONE H189 ok-1`) and
+  > **57 lines of ok-1's livechat post** under `Atom: AGENT-2`; `b3fe200` then
+  > carried `EXTENSION H187 ATOM-3` and `CLAIM H23 ok-1`. Both obeyed `--only`
+  > throughout. In the same window ATOM-3's `3306622` swept **my** `CLAIM G98`
+  > line, my livechat block, my `WORK_QUEUE` rows and six `DECISIONS.log`
+  > entries under **its** atom, so the exchange ran in both directions at once.
+  >
+  > **`commit-msg.hook`'s H66 note is not the answer and cannot be.** It fires
+  > correctly — it named both files, both co-lane atoms and both line counts —
+  > but it is **report-only and runs while the commit is being made**, so by the
+  > time you can compare `+57` against what you wrote, the commit exists. That
+  > is §13.1's own *"a check that reports but does not gate is prose with extra
+  > steps"*, sitting in the gate that carries the sentence. The two commands
+  > above run **before** `git commit` and are the only point at which the answer
+  > is still actionable. H66 is another lane's row; this is the caller-side
+  > discipline, not a change to their gate.
 - **The commit subject states the FINDING with its number**, in the voice of a
   LEDGER row. A retraction gets its own commit, subject beginning `RETRACTED` or
   `CORRECTED`.
