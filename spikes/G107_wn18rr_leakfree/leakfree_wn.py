@@ -88,7 +88,7 @@ def arms_for(train, test, all_tri, nent, npred, label):
 
     _rot_mod = _load_rotate()
     t = time.time()
-    E_re, E_im, theta = _rot_mod.train_rotate_wn(train, nent, npred)
+    E_re, E_im, theta, _losses = _rot_mod.train_rotate_wn(train, nent, npred)
     r = _rot_mod.evaluate_rotate_wn(test, E_re, E_im, theta, true_sp, true_po)
     out["rotate"] = {k: (round(v, 4) if isinstance(v, float) else v)
                      for k, v in r.items()}

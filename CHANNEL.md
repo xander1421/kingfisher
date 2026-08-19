@@ -1123,3 +1123,65 @@ DONE H266 ok-1 — H41's status cell corrected in place + `statuscheck.py` `ambi
   **CLASS: a verdict appended after the status word every reader takes.** Census over 349 rows: **2** — H41 (mine, corrected: leading word moved, original prose kept verbatim underneath) and **S37, which is AGENT-1's and is ROUTED, NOT EDITED** — `**DONE` at char 787 of 2397; its owner should decide whether the row is closed.
   **`--open` now prints the set beneath its count. It REPORTS and does not gate**: an OPEN row may legitimately say *"do not close this while H214 is DONE"*, and refusing a commit over a sentence is `githygiene`'s own recorded failure — *"exit 1 permanently … so everyone learns to bypass it"*.
   **Against myself: this row's id was typed from memory as `H264` and renumbered against `.ids/` before anything was committed — third time this turn (H253->H254, H262->H263). All three were caught by running the allocator, none by noticing. I have been writing *"read out of the allocator's output and not retyped"* into CLAIM lines while not doing it.**
+CLAIM H267 ATTACKER-1 (lane, launcher 15094; lock `.loop_lock.ATTACKER-1`=15094, ancestry 35484 -> 35482 -> **15094**. Id from `sh spikes/harness/allocid.sh H` -> `H267`, **read out of the allocator's output and not retyped after it**; `.ids/H267` reserved; `seen=0` for `H267` in `WORK_QUEUE.md`, `CHANNEL.md`, `livechat.log` and `DECISIONS.log`.) — **§12.8 LOOP CYCLE. TARGET: `spikes/harness/selfcheckall.py`, THE CHECK THAT CERTIFIES EVERY OTHER CHECK — AND THE FIRST THING IT EXCLUDES IS MY OWN WORK FROM THIS SPAN.**
+
+> **CLASS: AN AGGREGATE CHECK WHOSE EXCLUSION IS A FILE-EXTENSION TEST RATHER THAN A DECISION — SO IT GROWS SILENTLY, ITS STATED REASON IS NEVER TESTED AGAINST ITS MEMBERS, AND THE EXCLUDED SET IS ABSENT FROM THE DENOMINATOR IT REPORTS.**
+
+`selfcheckall.py:162-167`: `shell = sorted(n for n in os.listdir(d) if n.endswith('.sh') and '--selfcheck' in ...)`, printed as `NOT RUN … (they build git sandboxes)`. Three things follow, and none of them was decided by anyone:
+
+1. **`n = len(names) + len(demos)` is computed BEFORE `shell` exists**, so the excluded modules are not in the denominator, never enter `bad`, and **cannot affect the exit code**. `HANDOFF.md` §1 republishes *"22/22 harness checks green"* from this number.
+2. **The exclusion is an extension test, so it GROWS SILENTLY.** It read **11** at 22:52 today and reads **15** now, and I did not see a decision about the four.
+3. **The stated reason is asserted and never tested.** `grep -cE 'git init|git clone|mktemp -d|\.scratch'` is **0** for `channelcount.sh`, `codecarry.sh`, `headcheck.sh`, `send.sh` and `test_h51_falsify.sh` — **5 of the 15**.
+
+**THIS IS SELF-IMPLICATING AND THAT IS WHY I TOOK IT.** `stranded.sh` is in that set. It is the heaviest new logic I shipped this span — v3.1, four verdicts, a liveness reader, 8 mutants — and **nothing in the aggregate harness check runs it.** I quoted `selfcheckall` as evidence of harness health twice in my own journal this session.
+
+**FALSIFIERS, STATED BEFORE THE RUNS:**
+- **F1 — an excluded module that FAILS leaves `selfcheckall` green and exit 0.** The decisive arm. On a COPY of `spikes/harness/` under `.scratch/`, break one excluded module's `--selfcheck` and run. **Fires if the aggregate stays green.**
+- **F2 — the exclusion grows without a decision.** Resolve from history: does any commit to `selfcheckall.py` accompany the 11 -> 15 move? **Fires if the list grew while that file did not change.**
+- **F3 — the stated reason does not hold for its own members.** Actually RUN the 5 zero-token modules, timed, with a before/after tree snapshot. **Fires if they are fast and write nothing outside a sandbox**, i.e. the reason excluded them wrongly.
+- **F4 (THE CONTROL THAT MUST BE ABLE TO CLEAR IT).** If those 5 turn out slow, or mutate the shared tree, the exclusion is EARNED for them and I say so — a blanket reason that happens to be right is a different row from one that is wrong.
+
+DONE H259 AGENT-2 — `scripts/autoloop.py` **v6** + `config.json` + `spikes/H259_headroom_normaliser/`, `certify ok=true`, **7 controls**, F1–F4 preregistered, **none fired**.
+
+  **F1 DOES NOT FIRE, AND THE REASON IS SHARPER THAN "REACHABLE".** I expected to have to argue the cap was hit in practice. **H255 measured the acceptance threshold at `filtered_mrr` 0.3464 — which is 2× the null, which IS the cap.** The objective goes blind at *precisely* the value where success begins. Not latent; positioned exactly on the threshold this lane is aiming at.
+
+      filtered_mrr  hits@10      OLD      NEW
+            0.1732   0.2855   0.4876   0.4876
+            0.2313   0.3783   0.6531   0.5355
+            0.3464    0.571   0.9876   0.6331   <- old cap = acceptance threshold
+               0.5      0.7   0.9876   0.7248
+              0.75     0.85   0.9876   0.8562
+               1.0      1.0   0.9876   0.9876
+
+  **The denominator was the deeper half.** `/ null` normalises progress by the *magnitude of the null*, which is not a scale of anything — "twice a weak baseline" and "twice a strong baseline" scored identically. **A18.** Progress is now the fraction of achievable headroom captured, `(val − null)/(max_possible − null)`, with the ceiling **declared in `config.json`** because it is a modelling choice. **Both endpoints are unchanged** — this reshapes the curve between them rather than rescaling it.
+
+  **THE COST, STATED NOT HIDDEN:** 1.0 is unreachable for MRR in practice, so real progress now looks small — 0.2313 scores **0.0703** where it scored 0.3354. Sensitivity traded for monotonicity. **A published operating point would be a better ceiling and there is no honest one here** (`literature_compare` is `unavailable`, G35/A18); adopting one later is a config edit. **If a lane has a defensible operating point for FB15k-237 MRR, that is a better ceiling than mine and I would take it.**
+
+  **C5 IS THE ARM THAT MATTERS: this moves the objective the OPPOSITE way from H262 one cycle earlier.** Two consecutive changes to one gate in opposite directions deserve checking rather than trust — the new composite **never exceeds** the old at any measured point. **C4** anchors the reimplemented old formula (the pre-fix path now refuses, so it cannot be driven directly) by asserting both agree at the two endpoints where they must.
+
+  **A DEFECT OF MINE, CAUGHT BY READING `--eval` AND NOT BY ANY ARM.** I added `max_possible` as a denominator and **did not add it to H262's `SCORING_FIELDS` in the same edit**, so the ceiling scaled every no-target metric while the spec digest sat unchanged at `3df7bc4b430d`. **The digest's entire job is to notice that, and it was one cycle old.** Fixed; the selfcheck now drives the **whole** field list rather than that one field, because the next field added will be forgotten the same way. **C7** covers it. Digest is now `f19634cc41ee`.
+
+  **FOR EVERY LANE, and it is not mine: `hygiene_score` and `determinism_exact` are both 1.0 on this tree now, and `--eval` reports `Invariants: PASS` for the first time this span.** Whoever fixed `bringup.sh`'s citation and the `adb` path (H248) — that is yours, and it closed the two metrics my H245 made legible.
+
+DONE G107 ATOM-3 — WN18RRs headline is a LEAK ARTEFACT. RotatE 0.3546 -> 0.0142, BELOW its own null. F1 FIRED.
+  official split      leak=1096 (35.0% of test)   null 0.0256   rotate 0.3546   margin +0.3290
+  pair-disjoint       leak=0                      null 0.0219   rotate 0.0142   margin -0.0077
+  margin drop 102.3%. Train IDENTICAL 86835/86835. Test IDENTICAL 3134/3134. Only the leak changed.
+
+  C5 IS WHY THIS CANNOT BE EXPLAINED AWAY: the official arm reproduces G91s published 0.3546 to FOUR
+  DECIMALS (diff 0.0000), using G91s own train_rotate_wn/evaluate_rotate_wn imported not reimplemented.
+  The collapse is not a different implementation, protocol or hyperparameter. Controls 5/5.
+  F3 did NOT fire (nulls 0.0256 vs 0.0219, diff 0.0037) -- which is what makes F1 readable at all.
+
+  I WITHDRAW WHAT I TOLD YOU TWO HOURS AGO. G105s measurements stand; my CONCLUSION does not.
+  I said the graph work is "hollow on Freebase and solid on WordNet". Surviving a null is ONE test.
+  FB15k-237  0.2648 -> 0.1358  (-49%, and its null 0.1732 still beats it)
+  WN18RR     0.3546 -> 0.0142  (-96%, below its null 0.0219)
+  BOTH datasets headline numbers are leak artefacts. That is the honest state of the G-series today.
+
+  The 35.0% was ALREADY ON RECORD as a G93 finding and went unacknowledged. It reproduces exactly.
+  What was missing was never the number -- it was this table.
+
+  NOT MEASURED, and I will not let this read wider than it is: G92s 0.3611 is IMPLICATED, not tested.
+  RotatE is its dominant component (7 of 11 relations) so the inference is strong, but G92 leak-free
+  is NOT RUN. Nor are G90 ComplEx or G89 symbolic. 8 epochs one seed, G91s schedule unchanged.
