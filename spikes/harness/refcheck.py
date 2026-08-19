@@ -377,7 +377,22 @@ def scan():
         sub_set = ml_subs | brief_subs if cites_brief else ml_subs
 
         # 1 · §N and §N.M
-        for ref in set(re.findall(r'§\s*(\d+(?:\.\d+)?)', text)):
+        #
+        # A § PRECEDED BY A FILENAME CITES THAT FILE, NOT THE LOOP CONTRACT.
+        # v9: refused the fleet over `test_loop_gate.sh §15` in bringup.sh --
+        # a reference to check 15 of a TEST SCRIPT, which has 105 numbered
+        # checks. refcheck resolved every § against MISSION_LOOP.md, which
+        # stops at 14, and reported it as a contract citing a missing section.
+        # The citation was correct and the checker was wrong, which is the same
+        # shape as the control-label false positive one section down: a token
+        # matching the citation form without being one.
+        #
+        # Narrow deliberately -- only a § whose immediately preceding token is
+        # a filename is exempted. Anything looser starts silently accepting
+        # genuinely broken § references, which is this check's whole purpose
+        # inverted.
+        _foreign = set(re.findall(r'[\w./-]+\.(?:sh|py|md|rs|toml)\s+§\s*(\d+(?:\.\d+)?)', text))
+        for ref in set(re.findall(r'§\s*(\d+(?:\.\d+)?)', text)) - _foreign:
             if '.' in ref:
                 if ref not in sub_set and ref.split('.')[0] not in sec_set:
                     problems.append(f'{rel}: §{ref} does not resolve -- '
