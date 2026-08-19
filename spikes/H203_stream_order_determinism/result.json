@@ -1,0 +1,60 @@
+{
+  "spike": "H203",
+  "per_spike": {
+    "W7_streaming_witness": {
+      "n_hashes": 16,
+      "differ_across_hashseeds": [],
+      "n_differ": 0,
+      "n_hashes_moved_vs_HEAD": 10,
+      "invariants_checked": [
+        "/downstream_queries/completeness_verified",
+        "/falsifier_fired",
+        "/streaming_benchmark/total_events"
+      ],
+      "invariants_changed_vs_HEAD": [],
+      "invariant_values": {
+        "/downstream_queries/completeness_verified": true,
+        "/falsifier_fired": false,
+        "/streaming_benchmark/total_events": 1000
+      }
+    },
+    "W9_bound_streaming_witness": {
+      "n_hashes": 13,
+      "differ_across_hashseeds": [],
+      "n_differ": 0,
+      "n_hashes_moved_vs_HEAD": 3,
+      "invariants_checked": [
+        "/adversarial_audit/bound_fork_rejected",
+        "/adversarial_audit/bound_inflation_defeated",
+        "/adversarial_audit/mismatch_rejected",
+        "/adversarial_audit/unbound_fork_vulnerable",
+        "/adversarial_audit/unbound_inflation_vulnerable",
+        "/continuous_reduction_stream/all_72b",
+        "/downstream_queries/completeness_verified",
+        "/falsifier_fired"
+      ],
+      "invariants_changed_vs_HEAD": [
+        "/falsifier_fired"
+      ],
+      "invariant_values": {
+        "/adversarial_audit/bound_fork_rejected": true,
+        "/adversarial_audit/bound_inflation_defeated": true,
+        "/adversarial_audit/mismatch_rejected": true,
+        "/adversarial_audit/unbound_fork_vulnerable": true,
+        "/adversarial_audit/unbound_inflation_vulnerable": true,
+        "/continuous_reduction_stream/all_72b": true,
+        "/downstream_queries/completeness_verified": true,
+        "/falsifier_fired": false
+      }
+    }
+  },
+  "w9_falsifier_wallclock_term": {
+    "median_latency_us_now": 208.42,
+    "threshold_us": 500.0,
+    "headroom_ratio": 2.4,
+    "committed_at_HEAD_us": 508.71
+  },
+  "n_hashes_differing_across_hashseeds": 0,
+  "n_invariants_changed_vs_HEAD": 1,
+  "n_hashes_moved_vs_HEAD": 13
+}

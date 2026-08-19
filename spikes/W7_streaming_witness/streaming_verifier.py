@@ -334,13 +334,19 @@ def generate_metta_reduction_stream(corpus_dir, total_events=1000):
         elif roll < 0.90:
             # 30% Retraction: forgotten atom, intermediate state rewrite, or overwritten truth value
             if len(live_set) > 10:
-                k = rnd.choice(list(live_set))
+                # SORTED, H203. `list(live_set)` is a set of BYTES, and CPython
+                # randomises bytes/str hashing per process -- so the RNG was
+                # perfectly seeded while the SEQUENCE IT INDEXES INTO was not,
+                # and this spike published a different chain head every run
+                # despite recording 'seed': SEED. Measured in
+                # spikes/H197_hashseed_commitment/ before this fix.
+                k = rnd.choice(sorted(live_set))
                 stream.append((StreamOpType.RETRACT, k))
                 live_set.remove(k)
         else:
             # 10% Term Rewrite / Update: Retract old truth, Insert updated truth
             if len(live_set) > 10:
-                old_k = rnd.choice(list(live_set))
+                old_k = rnd.choice(sorted(live_set))
                 stream.append((StreamOpType.RETRACT, old_k))
                 live_set.remove(old_k)
                 new_k = old_k + b'_upd'

@@ -9,10 +9,10 @@
   "continuous_reduction_stream": {
     "all_72b": true,
     "final_live_atoms": 308,
-    "final_root": "2e8132b588e8efb1dbade3c2ac55665b69bb8813f44a91877f61d0b8b8f28835",
-    "mean_us": 120.1,
-    "median_us": 38.5,
-    "p95_us": 75.04,
+    "final_root": "cd1b5639bd1e5e99426e482817e7bb139826e80060ca6069d8ed877e094b742f",
+    "mean_us": 15.42,
+    "median_us": 14.71,
+    "p95_us": 21.17,
     "total_stream_events": 1001
   },
   "downstream_queries": {
@@ -22,15 +22,15 @@
     "membership_tested": 30,
     "membership_verified": 30
   },
-  "falsifier_fired": true,
+  "falsifier_fired": false,
   "seed": 20260818,
   "sqlite_shardstore_stream": {
-    "final_chain_head": "4609c3f91fcffe3a1ff5dbc9895cf0b74c067a9e1bfa65a4f3f69f7fc2640fa6",
+    "final_chain_head": "b077f0e1d9ce82609ece01a83297c0530ed986d482182346748bf9e16350e43b",
     "final_live_atoms": 1218,
     "final_root": "d91f57d71361495b310616f3447369ed62eb85f11d47346c67f24892c631ad50",
-    "mean_latency_us": 1163.44,
-    "median_latency_us": 508.71,
-    "p95_latency_us": 3610.04,
+    "mean_latency_us": 396.41,
+    "median_latency_us": 211.54,
+    "p95_latency_us": 1150.31,
     "sampled_records": [
       {
         "added_atoms": 57,
@@ -46,7 +46,7 @@
         "root": "5df50e7f8e2ea4c59ecdf25930a5dc33fffd60d6be97c4ef179c0e0854c4d31b",
         "seq": 1,
         "shard_witness_bytes": 15877,
-        "transition_time_us": 1489.83,
+        "transition_time_us": 566.46,
         "verifier_memory_bytes": 72
       },
       {
@@ -63,7 +63,7 @@
         "root": "5ef115ac525ff81265e5398326aed9750374840db1a594cb12bda77378adaf32",
         "seq": 10,
         "shard_witness_bytes": 20020,
-        "transition_time_us": 1573.44,
+        "transition_time_us": 611.65,
         "verifier_memory_bytes": 72
       },
       {
@@ -80,7 +80,7 @@
         "root": "f9412671cf734f5fa22f64cdcd7a923cbd302345c34612c3eb12faca68f9726a",
         "seq": 20,
         "shard_witness_bytes": 4835,
-        "transition_time_us": 236.67,
+        "transition_time_us": 90.35,
         "verifier_memory_bytes": 72
       },
       {
@@ -97,24 +97,24 @@
         "root": "3e0040fb50c980a52363344ed6e7cdbd18d81db30914b340838290ec37ca6470",
         "seq": 40,
         "shard_witness_bytes": 26683,
-        "transition_time_us": 2140.54,
+        "transition_time_us": 473.81,
         "verifier_memory_bytes": 72
       },
       {
-        "added_atoms": 18,
-        "bandwidth_saving_pct": 77.4,
-        "chain_head": "4609c3f91fcffe3a1ff5dbc9895cf0b74c067a9e1bfa65a4f3f69f7fc2640fa6",
-        "cid": "bafkreiacgk7j3jrli6z7y4fvswcd3nu2ukyirfa24iurw2ehwodkrqfbu4",
-        "cum_full_snapshot_bytes": 5642995,
-        "cum_witness_bytes": 1275568,
+        "added_atoms": 9,
+        "bandwidth_saving_pct": 77.38,
+        "chain_head": "b077f0e1d9ce82609ece01a83297c0530ed986d482182346748bf9e16350e43b",
+        "cid": "bafkreidpqhb2dvlek5gu3yp7g6p53qygbbu2m5nsmlg7tnzggzx634svoq",
+        "cum_full_snapshot_bytes": 5649007,
+        "cum_witness_bytes": 1277940,
         "full_space_bytes": 129062,
-        "hash_bytes": 46863,
-        "hash_calls": 261,
+        "hash_bytes": 23803,
+        "hash_calls": 120,
         "live_atoms": 1218,
         "root": "d91f57d71361495b310616f3447369ed62eb85f11d47346c67f24892c631ad50",
         "seq": 63,
-        "shard_witness_bytes": 18816,
-        "transition_time_us": 1249.42,
+        "shard_witness_bytes": 10051,
+        "transition_time_us": 164.85,
         "verifier_memory_bytes": 72
       }
     ],

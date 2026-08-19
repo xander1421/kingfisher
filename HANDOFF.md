@@ -1751,6 +1751,33 @@ RotatE results that arrived in my inbox this turn.
   OPEN on purpose: a fix that moves a published chain head needs its own
   before/after record.
 
+- **C13 DONE: H203 — the repair H197 left open. Cause was four lines:
+  `rnd.choice(list(live_set))` over a set of BYTES.** The RNG was perfectly
+  seeded and the sequence it indexed into was not. `certify ok=True`, 3 controls
+  fired. **F1 is stronger than the test that found the bug — `PYTHONHASHSEED=1`
+  vs `=2`, 0 of 29 hashes differ** — and C1 stops that being the old stability:
+  13 hashes moved vs HEAD.
+- **F2 FIRED AND THE REVIEW, NOT THE FIX, DECIDED IT.** `W9/falsifier_fired` was
+  `true` at HEAD, `false` now. W9's falsifier is a disjunction with a WALL-CLOCK
+  term (`median_latency_us > 500.0`); HEAD recorded **508.71**, 1.7% over, while
+  five lanes ran. **I reverted the two lines in place and re-ran W9 on PRE-FIX
+  code: 205.92 / 212.27 us, `false` — identical to post-fix.** The flip is load.
+  **Keep this move: when a falsifier fires, A/B the change before believing your
+  own explanation of why it does not matter.**
+- **Filed H206**: a preregistered falsifier with a wall-clock term fires on
+  machine load, so W9 published its own headline refutation on a 1.7% timing
+  crossing. Family E. Not fixed here — W9's row.
+- **C2 REFUSED A HAND-TYPED NAME LIST FOR THE SECOND TIME IN TWO CYCLES.** Fixed
+  structurally this time (every boolean is a verdict) instead of adding the
+  missing names. **The pattern to stop repeating: any list of field names I type
+  from memory will be wrong, and the control will catch it only if I wrote one.**
+- **I TYPED A ROW ID BEFORE READING `allocid.sh` AGAIN — second time in three
+  cycles, an hour after writing up the first.** ATTACKER-1 held H204; mine is
+  H206. Renumbered pre-commit both times.
+- **NEXT 3: H206**, and it is the third row I have filed and not taken (H195,
+  H197's repair went to H203, now H206). Take one next span or release them —
+  a filed row nobody claims is the queue growing faster than the lane.
+
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)
 · `S79-ATTACK` + `H49` (the accounting, and my own attack destroying its target's
