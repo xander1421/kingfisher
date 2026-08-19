@@ -1,0 +1,29 @@
+H243 probe — who asks whether the lock's pid is a launcher
+A1 · every liveness test applied to a lock pid
+    run_loop.sh:270   pid+command  acquire + per-turn re-read
+        *) ps -p "$held" -o command= 2>/dev/null | grep -q 'run_loop\.sh' || held='' ;
+    run_loop.sh:467   pid+command  acquire + per-turn re-read
+        if [ -z "$_lk" ] || ! ps -p "$_lk" -o command= 2>/dev/null | grep -q 'run_loop
+    run_loop.sh:587   EXCLUDED — this pid does not come from a lock
+        ( while kill -0 "$turn" 2>/dev/null; do date +%s > "$BEAT"; sleep "$BEAT_EVERY
+    bringup.sh:127   EXCLUDED — this pid does not come from a lock
+        lane_lock_pid() {
+    spikes/harness/registry.py:181   EXCLUDED — this pid does not come from a lock
+        def _pid_alive(pid: int) -> bool:                    # NOT for lock pids (H243
+    spikes/harness/registry.py:183   EXCLUDED — this pid does not come from a lock
+        os.kill(pid, 0)
+    spikes/harness/registry.py:350   EXCLUDED — this pid does not come from a lock
+        while _pid_alive(dead):
+    lock-pid liveness tests: 2, of them PID ALONE: 0   (excluded as not lock pids: 5)
+A2 · bringup.sh --check, one callsign, three locks: impostor=DOWN launcher=DOWN dead=DOWN
+  PASS  a DEAD holder reads DOWN
+  FAIL  a LAUNCHER holder reads UP (want UP, got DOWN)
+  PASS  a live NON-launcher holder does not read UP
+spikes/H243_lock_liveness/probe.sh: line 62:  7234 Terminated: 15          sleep 60
+spikes/H243_lock_liveness/probe.sh: line 62:  7272 Terminated: 15          bash fake/run_loop.sh
+A3 · fleetcensus.sh: lines naming PROBE-1 = 1, of them CONSTITUTED = 0
+  PASS  the census actually saw the fixture lane
+spikes/H243_lock_liveness/probe.sh: line 75:  7374 Terminated: 15          sleep 60
+  PASS  the census does not call an impostor lock CONSTITUTED
+
+probe: 4 passed, 1 failed

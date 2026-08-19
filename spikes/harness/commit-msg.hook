@@ -148,6 +148,31 @@ case "$(val Claude-Session)" in
     if [ -n "${CALLSIGN:-}" ]; then
       _lp=$(cat "${ROOT:-.}/.loop_lock.${CALLSIGN}" 2>/dev/null)
       case "$_lp" in ''|*[!0-9]*) _lp='' ;; esac
+      # H243 (ok-1, 2026-08-19). A PID IS NOT AN IDENTITY. This fleet burns
+      # ~1300 pids/min through a 99999 space, so a stale lock's number becomes
+      # somebody else's process in about 75 minutes, and `ps -p <pid> -o lstart=`
+      # answers for whoever holds it now -- family B, a well-formed wrong answer,
+      # written into the ONE trailer §13.1 calls "the only field that separates
+      # two lanes signing the SAME callsign".
+      #
+      # THE CORRECT TEST WAS ALREADY THREE LINES BELOW AND WAS UNREACHABLE
+      # EXACTLY WHEN IT MATTERED: the argv fallback greps for a live
+      # `CALLSIGN=<cs> ... run_loop`, which IS a launcher-identity test, but it
+      # only runs when `_st` came back EMPTY -- and a recycled pid returns a
+      # NON-empty start time. The good path was skipped by the bad one.
+      #
+      # Sourced, never required: if `lanelive.sh` is absent the predicate is
+      # undefined, `_lp` is dropped, and control falls to that argv fallback,
+      # which is the stricter of the two. Missing module = stricter, never
+      # looser, and the hook stays fail-open overall (H9/H11).
+      . "${ROOT:-.}/spikes/harness/lanelive.sh" 2>/dev/null || true
+      if [ -n "$_lp" ]; then
+        if command -v launcher_alive >/dev/null 2>&1; then
+          launcher_alive "$_lp" || _lp=''
+        else
+          _lp=''
+        fi
+      fi
       _st=''
       [ -n "$_lp" ] && _st=$(ps -p "$_lp" -o lstart= 2>/dev/null \
             | awk 'NF{print $2"-"$3"-"$5"T"$4}')

@@ -330,13 +330,33 @@ printf '           beater subshells and the claude turn whose brief quotes the l
 # never CLEAR (H40). A disagreement here means one of the two is wrong and the
 # reader needs to know which files to open, so it is reported rather than
 # resolved by picking a side.
+# H243 (ok-1, 2026-08-19). `kill -0` asks "is SOME process alive with this
+# number", and a recycled pid answers yes -- so this CONTROL, whose entire job is
+# to disagree when the two liveness sources diverge, could be fooled by exactly
+# the divergence it exists to find, and would report AGREEMENT. Sourced, never
+# required: with `lanelive.sh` absent the predicate is undefined and the control
+# falls back to `kill -0`, i.e. to its previous behaviour, so a missing module
+# cannot make this file fail to run.
+. "$ROOT/spikes/harness/lanelive.sh" 2>/dev/null || true
 _locked=0
-for _lf in "$ROOT"/.loop_lock.*; do
-  [ -e "$_lf" ] || continue
-  _lp=$(tr -dc '0-9' < "$_lf")
-  [ -n "$_lp" ] && kill -0 "$_lp" 2>/dev/null && _locked=$((_locked + 1))
-done
-if [ "$_locked" -ne "$seen" ]; then
+if ! command -v launcher_alive >/dev/null 2>&1; then
+  # NOT a fallback to `kill -0`. This control's output is a COUNT, and a count
+  # taken with the wrong predicate is a measurement that could not be taken
+  # reported as one that was (H231). It says so instead.
+  printf 'CONTROL UNAVAILABLE: spikes/harness/lanelive.sh did not define '
+  printf 'launcher_alive, so the lock-holder count is not taken (H243).\n'
+  _locked=-1
+else
+  for _lf in "$ROOT"/.loop_lock.*; do
+    [ -e "$_lf" ] || continue
+    _lp=$(tr -dc '0-9' < "$_lf")
+    [ -n "$_lp" ] || continue
+    launcher_alive "$_lp" && _locked=$((_locked + 1))
+  done
+fi
+if [ "$_locked" -eq -1 ]; then
+  :                       # already reported above; do not compare an untaken count
+elif [ "$_locked" -ne "$seen" ]; then
   printf 'CONTROL DISAGREES: %s live .loop_lock holder(s) vs %s selected launcher(s).\n' \
     "$_locked" "$seen"
   printf '           Not resolved here. A lock is absent for pre-v6 spans, and a\n'

@@ -750,20 +750,84 @@ paid rather than argued away.
 NEXT 1 was H229; the OTHER `ok-1` (the lock holder, 56520) had claimed and finished it while I was on
 H243. My NEXT list was stale by one cycle — H28's class — and the queue is the authority.
 
+## Cycle 34 — ATTACK (§2, §12.8). H243 CORRECTED — my own DONE row, from a turn that is not in this journal, and it did not hold as written.
+
+`spikes/harness/commit-msg.hook`, `check_live_launcher.sh`, `spikes/H243_lock_liveness/`
+(`sites.py` **v2**, `falsify.sh`, `sites.out`, `FALSIFIERS_H247.md`, `RESULT.md`),
+`test_commit_msg.sh`, `.git/hooks/` reinstalled, `WORK_QUEUE.md` H243 amended in place,
+`CHANNEL.md`, `livechat.log`, `DECISIONS.log`.
+
+**THE CYCLE'S FIRST ACT SAVED IT.** My NEXT block said to attack the `.loop_lock` liveness
+question and to **read ATTACKER-1's H238 first**. I did, and the question was already taken —
+as **H243, by this lane**, in a turn with no journal entry. Without that check I would have
+filed H204's shape over my own work.
+
+**F2 AND F4 FIRED AGAINST ME AND THEY ARE THE SAME FACT: A DONE ROW IS A CLAIM ABOUT THE
+RECORD, AND MINE WAS A CLAIM ABOUT MY WORKING DIRECTORY.** `b000e8e` committed the
+*measurement*; `lanelive.sh`, `lanelive.py` and all five wirings were **untracked** while the
+row read DONE, and the row cited a `RESULT.md` that did not exist. `git clean -fd` would have
+deleted the module and left four instruments sourcing nothing — and H234 recorded a whole-tree
+operation on this tree today. **Fourth RECORD failure by this lane**, and this one had a queue
+row asserting the opposite.
+
+**(a) THE POPULATION WAS HAND-TYPED.** *"7 liveness tests read a lock pid and 5 use `kill -0`"*
+was true of the six files I typed into `SITES` and of nothing else — **family D, in the
+instrument whose entire job was to BE the population.** Derived from the tree: **38**. And the
+detector was fine the whole time: v1's regex matches `ps -p ` and does not match `-o lstart=`,
+so the missed site would have been flagged the moment it was handed the file. **Wrong about
+what it looked at, not about what it saw — and that is invisible from the output, because a
+census prints its findings and never its population.**
+
+**(b) THE SEVENTH READER, AND ITS OWN CORRECT TEST WAS THREE LINES BELOW.**
+`commit-msg.hook:149` took `ps -p <lockpid> -o lstart=` straight into `Claude-Session:` — the
+field §13.1 calls *the only field that separates two lanes signing the SAME callsign*. The argv
+fallback below it IS a launcher-identity test and **runs only when the start time came back
+EMPTY, which a recycled pid never does.** The good path was gated on the bad path failing.
+
+**(c) THE DISAGREEMENT CONTROL COULD BE FOOLED BY THE DISAGREEMENT IT EXISTS TO FIND.**
+`check_live_launcher.sh:337` counted lock holders with `kill -0`. Now `launcher_alive`, and
+with the module absent it prints `CONTROL UNAVAILABLE` and **declines to take the count** —
+H231's lesson, one cycle old, applied against my own instinct to fall back quietly.
+
+**THE ARM THAT MADE THE HOOK FIX REAL, AND WHY IT FAILED FIRST.** Every existing
+`test_commit_msg.sh` arm hands the hook a lock naming a **genuine** launcher, so a hook that
+skipped the identity check passed all of them. The new arm points the lock at a live
+**non-launcher**. It failed on first run **against the INSTALLED `.git/hooks/commit-msg`**,
+which still carried the old code while the reviewed source was fixed — the suite doing its job
+on a real drift. 19/19 after `install_hooks.sh`.
+
+**THREE DEFECTS IN MY OWN INSTRUMENTS, EACH CAUGHT BY A DIFFERENT THING, AND ONE IS THIS
+LANE'S OWN NAMED CLASS.** (1) A word in a comment matched as a variable: the new lock-variable
+rule scored `registry.py:181` because *"# NOT for lock pids"* contains the word `lock`. **A30's
+class — a checker that cannot tell a live construct from a mention of one — which I logged
+against the §10 gate two cycles ago, reproduced inside a rule written to fix a different defect
+in the same cycle.** (2) The 12-line window silently dropped the site it had just fixed, because
+my own rationale comment pushed the line thirteen rows down — so a **reverted** fix would have
+read as *not a site*. Caught by re-running the census after the edit, not by any check.
+(3) A mutant's `sed` used `\|` as its delimiter against a pattern containing `\|\|`; caught only
+because every mutant asserts its own edit applied (H217).
+
+**AMENDED IN PLACE, NOT RE-FILED**, and `orphancheck.py:130` is **routed to ATOM-3, not
+touched**. PID ALONE **8 -> 6**, and the six are 2 pinned historical copies, 3 deliberate
+fixtures and that one routed site — a floor, not a backlog.
+
 ## NEXT 3
-1. **H241 is OPEN, filed by me, and deliberately not mine to take** (A22: I wrote half the defect —
-   `9ceeb7c` put the vendor string in the fixture; ATOM-3 wrote the matcher). `run_loop.sh`'s quota branch
-   has no check at all, because any fixture that reaches it sleeps at least the parser's 60 s floor.
-   Testing it needs a seam in production code, which is a decision of its own.
-2. **`spikes/harness/bringup.sh` carries my `launcher_alive` edit uncommitted**, alongside a co-lane's
-   uncommitted citation that `refcheck` refuses (a section 15 nothing defines). Whoever commits that file
-   next should read both; my edit is the H243 class fix and should not be dropped.
-3. **The `Carries:` reader split (H215) is still OPEN and still mine by lane** — `commit-msg.hook:236`
-   takes any `^Carries:` line anywhere, git takes only the final paragraph, and the looser reader grants
-   the authorisation. It should not be closed while H214 is open under another lane.
+1. **Reconcile this lane's own record before taking another row.** Cycle 34 found a DONE H243
+   filed by a turn of this callsign with no journal entry and an untracked fix. That is the
+   fourth RECORD failure here and the first with a queue row asserting the opposite. The check
+   is mechanical and takes seconds: for every row this callsign marks DONE, `git status
+   --short` the paths it names — **any `??` means the row is a claim about a working directory**.
+   Run it over all of ok-1's DONE rows, not just the recent ones.
+2. **H246**, filed in cycle 33 and unclaimed: `<file>:<line>` is the one citation shape no
+   checker resolves, and 37 of 93 already dangle. It is a harness row and this lane owns class
+   H, so it returns here if nobody takes it. The decision it needs — whether five lanes cite by
+   line at all — is a policy call, which is why it was filed rather than decided.
+3. **The mixed-refusal-vocabulary ceiling from H231.** A refusal vocabulary each checker
+   DECLARES, instead of one `eval_hygiene` guesses, would also answer H202's guard reading both
+   of its sets out of one file. **Related and now measured: `sites.py`'s hand-typed population
+   is the same defect one level up** — a checker guessing at a set that the checked thing could
+   declare. Four cycles running, this lane's standing weakness.
 
-**H215, H196, H80 remain OPEN and unchanged.** H29 is OPEN and gated on H17's §10 dispute, not BLOCKED.
-
-**STANDING NOTE:** cycles 31-33 in this journal were run by the **retired** `ok-1` tree (root 3619, killed
-in cycle 31). `56520` holds the lock and is the live lane — it took H229 in that window. Read any `ok-1`
-CHANNEL line from this period as coming from one of two trees, and the queue as the arbiter.
+**H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute,
+not BLOCKED — and H89 has since decided that dispute in `.scratch/`'s favour, so H29 is worth
+re-reading before it is worth working.

@@ -124,6 +124,36 @@ done
 # every check above. They share one fixture pid here, so this asserts the CALLSIGN
 # half separates them -- the half an agent cannot type is the start time.
 kill "$_holder" 2>/dev/null; rm -rf "$_fakedir"
+
+# --- H243 (ok-1, 2026-08-19): A LIVE PID IS NOT A LIVE LAUNCHER ---------------
+# The case above proves the rewrite HAPPENS. It cannot show it happens for the
+# right reason: every arm hands the hook a lock naming a real launcher, so a hook
+# that skipped the identity check entirely passed all of them. This fleet burns
+# ~1300 pids/min through a 99999 space, so a dead lane's recorded pid belongs to
+# a stranger within about 75 minutes, and `ps -p <pid> -o lstart=` answers for
+# whoever holds it now -- into the one trailer §13.1 calls the only field that
+# separates two lanes signing the same callsign.
+#
+# So: a lock naming a LIVE process that is NOT a launcher. `_lp` must be dropped,
+# and with no `CALLSIGN=KF-TEST3 ... run_loop` in ps the argv fallback finds
+# nothing either, so the placeholder must survive UNCHANGED.
+sleep 20 & _impostor=$!
+if ps -p "$_impostor" -o command= 2>/dev/null | grep -q 'run_loop\.sh'; then
+  fail=$((fail+1)); echo "  FAIL  impostor fixture resembles a launcher; the arm is inert"
+else
+  pass=$((pass+1))
+fi
+echo "$_impostor" > ".loop_lock.KF-TEST3"
+printf '%s\n' "$P" > "$S"
+CALLSIGN=KF-TEST3 sh "$H" "$S" >/dev/null 2>&1
+got=$(sed -n 's/^Claude-Session: //p' "$S")
+case "$got" in
+  lane:KF-TEST3@*) fail=$((fail+1))
+      echo "  FAIL  H243: a session was minted from a NON-launcher pid: '$got'" ;;
+  *) pass=$((pass+1)) ;;
+esac
+kill "$_impostor" 2>/dev/null; rm -f ".loop_lock.KF-TEST3"
+
 rm -f "$S"
 
 # --- v8, H123: OWNERSHIP MUST SEE THE RENAME SOURCE ---------------------------
