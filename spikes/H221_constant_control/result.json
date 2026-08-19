@@ -1,0 +1,351 @@
+{
+  "spike": "H221",
+  "target": "spikes/H161_heterogeneous_device_consensus/run.py",
+  "c3_pins_intact_is_constant": true,
+  "c1_device_health_passes_with_device_absent": true,
+  "kitchen_test_is_tautology": true,
+  "reproduced_endpoints": {
+    "macos_host_arm64": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    },
+    "macos_rosetta_x86": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+    }
+  },
+  "sweep": {
+    "files": 4387,
+    "folded_live_sites": 22,
+    "distinct_files": 21,
+    "literal_sites_constcheck_already_sees": 33,
+    "sites": [
+      {
+        "site": "spikes/G59_official_split/official.py:358",
+        "verdict": "True",
+        "binding": "260: c5_ok = True  # filter built on train+valid+test; n recorded"
+      },
+      {
+        "site": "spikes/G66_all_entity_distmult/distmult.py:731",
+        "verdict": "True",
+        "binding": "573: c5_ok = lit == \"unavailable\""
+      },
+      {
+        "site": "spikes/G72_complex_all_entity/complex.py:621",
+        "verdict": "True",
+        "binding": "481: c5_ok = lit == \"unavailable\""
+      },
+      {
+        "site": "spikes/G86_length1_lift_mining/run.py:221",
+        "verdict": "True",
+        "binding": "210: c3_ok = True"
+      },
+      {
+        "site": "spikes/G87_bidirectional_neurosymbolic/mix.py:220",
+        "verdict": "True",
+        "binding": "209: c3_ok = True"
+      },
+      {
+        "site": "spikes/G88_5way_hybrid/mix.py:231",
+        "verdict": "True",
+        "binding": "220: c3_ok = True"
+      },
+      {
+        "site": "spikes/G89_wn18rr_symbolic_mining/run.py:327",
+        "verdict": "True",
+        "binding": "318: c3_ok = True"
+      },
+      {
+        "site": "spikes/G90_complex_wn18rr/run.py:303",
+        "verdict": "True",
+        "binding": "294: c3_ok = True"
+      },
+      {
+        "site": "spikes/G91_rotate_wn18rr/run.py:323",
+        "verdict": "True",
+        "binding": "314: c3_ok = True"
+      },
+      {
+        "site": "spikes/G92_wn18rr_hybrid/run.py:426",
+        "verdict": "True",
+        "binding": "416: c3 = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+      },
+      {
+        "site": "spikes/G93_transitive_wn18rr/run.py:382",
+        "verdict": "True",
+        "binding": "372: c3 = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+      },
+      {
+        "site": "spikes/G93_wn18rr_hybrid/run.py:620",
+        "verdict": "True",
+        "binding": "611: c3_ok = True"
+      },
+      {
+        "site": "spikes/H157_f003_adversarial_audit/attack.py:189",
+        "verdict": "False",
+        "binding": "148: f2 = False  # Fuel table downgrade produced no collision"
+      },
+      {
+        "site": "spikes/H158_g87_adversarial_audit/attack.py:225",
+        "verdict": "True",
+        "binding": "216: c3_ok = True"
+      },
+      {
+        "site": "spikes/H159_phone_desktop_distributed/run.py:221",
+        "verdict": "True",
+        "binding": "212: c3_ok = True"
+      },
+      {
+        "site": "spikes/H161_heterogeneous_device_consensus/run.py:227",
+        "verdict": "True",
+        "binding": "215: c3_pins = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+      },
+      {
+        "site": "spikes/H162_iroh_vs_http_duel/run.py:272",
+        "verdict": "True",
+        "binding": "263: c3_ok = (footprint_ratio > 10.0)"
+      },
+      {
+        "site": "spikes/H162_iroh_vs_http_duel/run.py:285",
+        "verdict": "False",
+        "binding": "276: f3 = footprint_ratio < 10.0"
+      },
+      {
+        "site": "spikes/H163_tri_device_p2p_swarm/run.py:186",
+        "verdict": "True",
+        "binding": "176: c3_pins = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+      },
+      {
+        "site": "spikes/H164_rotate_wn18rr_adversarial_audit/attack.py:200",
+        "verdict": "True",
+        "binding": "191: c3_ok = True"
+      },
+      {
+        "site": "spikes/H176_parity_cannot_see_misroute/attack.py:164",
+        "verdict": "True",
+        "binding": "149: c1_ok = PIN_F001 != PIN_F002"
+      },
+      {
+        "site": "spikes/S91_multi_agent_quorum/run.py:251",
+        "verdict": "True",
+        "binding": "242: c3_ok = True"
+      }
+    ]
+  },
+  "falsifiers": {
+    "F1_c3_can_fail": false,
+    "F2_c1_refuses_absent_device": false,
+    "F3_duplicate_of_H201": false,
+    "F4_single_site": false,
+    "F5_number_does_not_reproduce": false,
+    "F6_kitchen_sees_fabrication": false
+  },
+  "observations": {
+    "A1_c3": [
+      {
+        "verdict_as_shipped": true,
+        "referent_on_disk": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+        "referent_equals_pin": true,
+        "verdict_after_referent_corrupted": true,
+        "verdict_after_pin_definition_edited": false,
+        "intervention": "whole fixture referent replaced with 0*64"
+      }
+    ],
+    "A2_c1": [
+      {
+        "battery_when_device_absent": {
+          "temperature_c": null,
+          "level_pct": null,
+          "status": null
+        },
+        "temp_used_when_absent": 0.0,
+        "c1_passes_when_absent": true,
+        "battery_when_45C": {
+          "temperature_c": 45.0,
+          "level_pct": 100,
+          "status": 5
+        },
+        "temp_used_when_hot": 45.0,
+        "c1_passes_when_hot": false,
+        "mechanism": "`.get(...,0.0)` never fires; `or 0.0` converts None to 0.0"
+      }
+    ],
+    "A3_sweep": [
+      {
+        "files": 4387,
+        "skipped_trees": [
+          "spikes/H210_refutation_outlives_target/fresh"
+        ],
+        "skipped_files": 0,
+        "unparseable": 0,
+        "folded_total": 22,
+        "folded_live": 22,
+        "literal_total": 33,
+        "sites": [
+          {
+            "site": "spikes/G59_official_split/official.py:358",
+            "verdict": "True",
+            "binding": "260: c5_ok = True  # filter built on train+valid+test; n recorded"
+          },
+          {
+            "site": "spikes/G66_all_entity_distmult/distmult.py:731",
+            "verdict": "True",
+            "binding": "573: c5_ok = lit == \"unavailable\""
+          },
+          {
+            "site": "spikes/G72_complex_all_entity/complex.py:621",
+            "verdict": "True",
+            "binding": "481: c5_ok = lit == \"unavailable\""
+          },
+          {
+            "site": "spikes/G86_length1_lift_mining/run.py:221",
+            "verdict": "True",
+            "binding": "210: c3_ok = True"
+          },
+          {
+            "site": "spikes/G87_bidirectional_neurosymbolic/mix.py:220",
+            "verdict": "True",
+            "binding": "209: c3_ok = True"
+          },
+          {
+            "site": "spikes/G88_5way_hybrid/mix.py:231",
+            "verdict": "True",
+            "binding": "220: c3_ok = True"
+          },
+          {
+            "site": "spikes/G89_wn18rr_symbolic_mining/run.py:327",
+            "verdict": "True",
+            "binding": "318: c3_ok = True"
+          },
+          {
+            "site": "spikes/G90_complex_wn18rr/run.py:303",
+            "verdict": "True",
+            "binding": "294: c3_ok = True"
+          },
+          {
+            "site": "spikes/G91_rotate_wn18rr/run.py:323",
+            "verdict": "True",
+            "binding": "314: c3_ok = True"
+          },
+          {
+            "site": "spikes/G92_wn18rr_hybrid/run.py:426",
+            "verdict": "True",
+            "binding": "416: c3 = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+          },
+          {
+            "site": "spikes/G93_transitive_wn18rr/run.py:382",
+            "verdict": "True",
+            "binding": "372: c3 = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+          },
+          {
+            "site": "spikes/G93_wn18rr_hybrid/run.py:620",
+            "verdict": "True",
+            "binding": "611: c3_ok = True"
+          },
+          {
+            "site": "spikes/H157_f003_adversarial_audit/attack.py:189",
+            "verdict": "False",
+            "binding": "148: f2 = False  # Fuel table downgrade produced no collision"
+          },
+          {
+            "site": "spikes/H158_g87_adversarial_audit/attack.py:225",
+            "verdict": "True",
+            "binding": "216: c3_ok = True"
+          },
+          {
+            "site": "spikes/H159_phone_desktop_distributed/run.py:221",
+            "verdict": "True",
+            "binding": "212: c3_ok = True"
+          },
+          {
+            "site": "spikes/H161_heterogeneous_device_consensus/run.py:227",
+            "verdict": "True",
+            "binding": "215: c3_pins = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+          },
+          {
+            "site": "spikes/H162_iroh_vs_http_duel/run.py:272",
+            "verdict": "True",
+            "binding": "263: c3_ok = (footprint_ratio > 10.0)"
+          },
+          {
+            "site": "spikes/H162_iroh_vs_http_duel/run.py:285",
+            "verdict": "False",
+            "binding": "276: f3 = footprint_ratio < 10.0"
+          },
+          {
+            "site": "spikes/H163_tri_device_p2p_swarm/run.py:186",
+            "verdict": "True",
+            "binding": "176: c3_pins = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+          },
+          {
+            "site": "spikes/H164_rotate_wn18rr_adversarial_audit/attack.py:200",
+            "verdict": "True",
+            "binding": "191: c3_ok = True"
+          },
+          {
+            "site": "spikes/H176_parity_cannot_see_misroute/attack.py:164",
+            "verdict": "True",
+            "binding": "149: c1_ok = PIN_F001 != PIN_F002"
+          },
+          {
+            "site": "spikes/S91_multi_agent_quorum/run.py:251",
+            "verdict": "True",
+            "binding": "242: c3_ok = True"
+          }
+        ]
+      }
+    ],
+    "A4_constcheck": [
+      {
+        "rc": 1,
+        "names_h161": false,
+        "live_literal_verdicts": 35
+      }
+    ],
+    "A5_reproduce": [
+      {
+        "endpoints": {
+          "macos_host_arm64": {
+            "f001_rc": 0,
+            "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+            "f002_rc": 0,
+            "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+            "match": true
+          },
+          "macos_rosetta_x86": {
+            "f001_rc": 0,
+            "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+            "f002_rc": 0,
+            "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+            "match": true
+          }
+        },
+        "pins": {
+          "F001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+          "F002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+        },
+        "control_corrupt_byte": 15,
+        "control_rc": 1,
+        "control_digest": "",
+        "control_moved": true
+      }
+    ],
+    "A6_kitchen": [
+      {
+        "rc_unmutated": 0,
+        "out_unmutated": "h161: Heterogeneous Multi-Device Consensus verified (5/5 live endpoints match including iOS, Android, and macO",
+        "rc_fabricated_digests": 0,
+        "out_fabricated": "h161: Heterogeneous Multi-Device Consensus verified (5/5 live endpoints match including iOS, Android, and macO",
+        "rc_match_flag_cleared": 1,
+        "out_flag": "SELFCHECK FAILED: ['endpoint samsung_s25_ultra did not match golden pins']",
+        "intervention": "every digest in every endpoint -> 0*64, `match` left true"
+      }
+    ]
+  }
+}

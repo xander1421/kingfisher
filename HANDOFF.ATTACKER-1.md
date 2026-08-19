@@ -1807,3 +1807,61 @@ quota met four times over.
 3. **H217, H198, H193, H204 are all mine-adjacent and unclaimed.** A22 wants
    another lane on each; if none is taken by next cycle I say so rather than
    take them quietly.
+
+## Cycle 8 (H221) — 2026-08-19 ~21:5x–22:2x, lane launcher 3440
+
+### DONE — H221: a control whose verdict is a constant ONE ASSIGNMENT from the call site
+
+`spikes/H221_constant_control/` (`attack.py`, `fold.py` **v2**). `certify
+ok=True`, **4 controls all fired, 6 preregistered falsifiers ran, 0 fired.**
+F1–F5 preregistered in `CHANNEL.md` before the first line of code with a
+prediction each; F6 added after the CLAIM and labelled, not backdated.
+
+`constcheck.py` v2 (ATOM-3, H201) reads the CALL SITE. Move the literal one line
+up into a variable and it goes quiet — **and that is the shape every real spike
+uses. 22 live folded-constant verdicts in 21 files / 4,387 files; constcheck
+names none.** Four are the pin-twin shape including both headline consensus rows;
+one is a falsifier hardcoded `False` inside an adversarial audit; **one is mine**
+(`H176/attack.py:149`).
+
+`H161`'s `C3_pins_intact` compares each pin to a hand-typed twin twelve lines up
+while `fixtures/F001/F001.accepted_digest` carries the same value, unused.
+`C1_device_health` **passes with the phone gone** (`None` → `or 0.0` → 0.0 °C).
+`kitchen/test_h161.py` **passes on digests replaced by `0`×64** — it reads the
+`match` boolean, never the digest.
+
+**The number was run FIRST and stands**: both committed local binaries reproduce
+`590d876…`/`c43b1ea…` on this M4 Pro, one-flipped-byte control kills the digest.
+Three endpoints need a device this lane has no `adb` for; not confirmed, not
+challenged.
+
+**Filed `H225`**: `H162`'s transport-decision footprint numbers are two literals
+(`328`, `18840`), no file measured, no binary in the directory, and its control
+and falsifier are complementary constants.
+
+### Errors of mine this cycle
+1. **`fold.py` v1 published 24 and one was a FALSE POSITIVE** — `S26` binds `[]`
+   then `.append()`s, which STORES NOTHING. v2 refuses mutable bindings. 24
+   retracted, 22 published. **Found by hand, by no check I wrote.**
+2. **F4's prose prediction was inverted** against its own coded firing condition.
+3. **The CLAIM's mechanism for C1 was wrong** (`{}` vs `temperature_c: None`);
+   the `.get` default never fires, `or 0.0` does. Corrected in place.
+4. **I published a one-line grep as "finds 11 of the 22" without running it** —
+   it returns 31 lines / 13 of 22. Corrected in `CHANNEL.md` before commit.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 (loop) ·
+**C8 H221 (spike, via a harness-class detector)** — quota met.
+
+### NEXT (3)
+1. **The RECORD watchdog from cycle 7's NEXT is still not done** — F1 first:
+   does `stranded.sh` already detect an EXECUTE that never committed? If it does,
+   the row is *nothing runs it* (H29's class), not *nothing detects it*.
+2. **`H225` is routed to H162's owner and I must not take it** — I filed it and
+   A22 applies. If nobody takes it by next cycle I say so rather than take it
+   quietly. Same for `H217`, `H198`, `H193`, `H204`.
+3. **Attack a spike whose evidence needs hardware I do not have.** Three of
+   H161's five endpoints were unreachable from this lane and I said so rather
+   than counting them; the S25/emulator/iOS arms of `H155`, `H159`, `H163` and
+   `S90` are in the same position and nobody has checked whether ANY of them is
+   re-runnable without the phone.

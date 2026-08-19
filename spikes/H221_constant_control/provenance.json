@@ -1,0 +1,401 @@
+{
+ "spike": "H221_constant_control",
+ "recorded_utc": "2026-08-19T21:07:19Z",
+ "note": "H221: H161 C3 compares each pin to a hand-typed twin of itself and C1 passes at 0.0C when the phone is gone",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H221_constant_control/result.json",
+   "sha256": "c547be69c9a2f77712c021a17e7542a2e7d9454b4e698ea41d98ecb12cf3e56c",
+   "bytes": 12081,
+   "mtime": 1787173639
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C0_folder_is_live",
+   "must_fire_because": "editing PIN_F001 flips the folded verdict to False, so the folder evaluates rather than asserts",
+   "can_fail_because": "the folder is a stub that always reports True",
+   "null_must_contain": "verdict did not move",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "verdict_as_shipped": true,
+    "referent_on_disk": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "referent_equals_pin": true,
+    "verdict_after_referent_corrupted": true,
+    "verdict_after_pin_definition_edited": false,
+    "intervention": "whole fixture referent replaced with 0*64"
+   }
+  },
+  {
+   "name": "C1_thermal_arm_is_live",
+   "must_fire_because": "a stub adb reporting 45.0C makes H161 C1 False, so the stub is really consulted",
+   "can_fail_because": "PATH interception does not reach the subprocess",
+   "null_must_contain": "stub ignored",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "battery_when_device_absent": {
+     "temperature_c": null,
+     "level_pct": null,
+     "status": null
+    },
+    "temp_used_when_absent": 0.0,
+    "c1_passes_when_absent": true,
+    "battery_when_45C": {
+     "temperature_c": 45.0,
+     "level_pct": 100,
+     "status": 5
+    },
+    "temp_used_when_hot": 45.0,
+    "c1_passes_when_hot": false,
+    "mechanism": "`.get(...,0.0)` never fires; `or 0.0` converts None to 0.0"
+   }
+  },
+  {
+   "name": "C2_verifier_reads_its_input",
+   "must_fire_because": "one flipped byte in F001.corpus.bin moves the digest, so a reproduction is a measurement and not a constant",
+   "can_fail_because": "the verifier ignores the corpus",
+   "null_must_contain": "digest did not move",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "endpoints": {
+     "macos_host_arm64": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+     },
+     "macos_rosetta_x86": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+     }
+    },
+    "pins": {
+     "F001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+     "F002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+    },
+    "control_corrupt_byte": 15,
+    "control_rc": 1,
+    "control_digest": "",
+    "control_moved": true
+   }
+  },
+  {
+   "name": "C3_kitchen_check_is_not_dead",
+   "must_fire_because": "clearing one `match` flag makes kitchen/test_h161.py fail while the unmutated copy passes",
+   "can_fail_because": "the test passes on everything",
+   "null_must_contain": "test never fails",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rc_unmutated": 0,
+    "out_unmutated": "h161: Heterogeneous Multi-Device Consensus verified (5/5 live endpoints match including iOS, Android, and macO",
+    "rc_fabricated_digests": 0,
+    "out_fabricated": "h161: Heterogeneous Multi-Device Consensus verified (5/5 live endpoints match including iOS, Android, and macO",
+    "rc_match_flag_cleared": 1,
+    "out_flag": "SELFCHECK FAILED: ['endpoint samsung_s25_ultra did not match golden pins']",
+    "intervention": "every digest in every endpoint -> 0*64, `match` left true"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_c3_can_fail",
+   "must_fire_because": null,
+   "can_fail_because": "corrupting F001.accepted_digest moves the verdict",
+   "null_must_contain": "verdict moved",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "verdict_as_shipped": true,
+    "referent_on_disk": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "referent_equals_pin": true,
+    "verdict_after_referent_corrupted": true,
+    "verdict_after_pin_definition_edited": false,
+    "intervention": "whole fixture referent replaced with 0*64"
+   },
+   "refutes": "that C3_pins_intact cannot fail through pin drift",
+   "fires_when": "corrupting F001.accepted_digest moves the verdict",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_c1_refuses_absent_device",
+   "must_fire_because": null,
+   "can_fail_because": "C1 is False under a device-not-found adb",
+   "null_must_contain": "C1 refused",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "battery_when_device_absent": {
+     "temperature_c": null,
+     "level_pct": null,
+     "status": null
+    },
+    "temp_used_when_absent": 0.0,
+    "c1_passes_when_absent": true,
+    "battery_when_45C": {
+     "temperature_c": 45.0,
+     "level_pct": 100,
+     "status": 5
+    },
+    "temp_used_when_hot": 45.0,
+    "c1_passes_when_hot": false,
+    "mechanism": "`.get(...,0.0)` never fires; `or 0.0` converts None to 0.0"
+   },
+   "refutes": "that C1_device_health passes with the device gone",
+   "fires_when": "C1 is False under a device-not-found adb",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_duplicate_of_H201",
+   "must_fire_because": null,
+   "can_fail_because": "constcheck names H161",
+   "null_must_contain": "H161 named",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rc": 1,
+    "names_h161": false,
+    "live_literal_verdicts": 35
+   },
+   "refutes": "that constcheck v2 is blind to these two controls",
+   "fires_when": "constcheck names H161",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4_single_site",
+   "must_fire_because": null,
+   "can_fail_because": "the fold finds folded verdicts in <=1 file",
+   "null_must_contain": "one file only",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "files": 4387,
+    "skipped_trees": [
+     "spikes/H210_refutation_outlives_target/fresh"
+    ],
+    "skipped_files": 0,
+    "unparseable": 0,
+    "folded_total": 22,
+    "folded_live": 22,
+    "literal_total": 33,
+    "sites": [
+     {
+      "site": "spikes/G59_official_split/official.py:358",
+      "verdict": "True",
+      "binding": "260: c5_ok = True  # filter built on train+valid+test; n recorded"
+     },
+     {
+      "site": "spikes/G66_all_entity_distmult/distmult.py:731",
+      "verdict": "True",
+      "binding": "573: c5_ok = lit == \"unavailable\""
+     },
+     {
+      "site": "spikes/G72_complex_all_entity/complex.py:621",
+      "verdict": "True",
+      "binding": "481: c5_ok = lit == \"unavailable\""
+     },
+     {
+      "site": "spikes/G86_length1_lift_mining/run.py:221",
+      "verdict": "True",
+      "binding": "210: c3_ok = True"
+     },
+     {
+      "site": "spikes/G87_bidirectional_neurosymbolic/mix.py:220",
+      "verdict": "True",
+      "binding": "209: c3_ok = True"
+     },
+     {
+      "site": "spikes/G88_5way_hybrid/mix.py:231",
+      "verdict": "True",
+      "binding": "220: c3_ok = True"
+     },
+     {
+      "site": "spikes/G89_wn18rr_symbolic_mining/run.py:327",
+      "verdict": "True",
+      "binding": "318: c3_ok = True"
+     },
+     {
+      "site": "spikes/G90_complex_wn18rr/run.py:303",
+      "verdict": "True",
+      "binding": "294: c3_ok = True"
+     },
+     {
+      "site": "spikes/G91_rotate_wn18rr/run.py:323",
+      "verdict": "True",
+      "binding": "314: c3_ok = True"
+     },
+     {
+      "site": "spikes/G92_wn18rr_hybrid/run.py:426",
+      "verdict": "True",
+      "binding": "416: c3 = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+     },
+     {
+      "site": "spikes/G93_transitive_wn18rr/run.py:382",
+      "verdict": "True",
+      "binding": "372: c3 = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+     },
+     {
+      "site": "spikes/G93_wn18rr_hybrid/run.py:620",
+      "verdict": "True",
+      "binding": "611: c3_ok = True"
+     },
+     {
+      "site": "spikes/H157_f003_adversarial_audit/attack.py:189",
+      "verdict": "False",
+      "binding": "148: f2 = False  # Fuel table downgrade produced no collision"
+     },
+     {
+      "site": "spikes/H158_g87_adversarial_audit/attack.py:225",
+      "verdict": "True",
+      "binding": "216: c3_ok = True"
+     },
+     {
+      "site": "spikes/H159_phone_desktop_distributed/run.py:221",
+      "verdict": "True",
+      "binding": "212: c3_ok = True"
+     },
+     {
+      "site": "spikes/H161_heterogeneous_device_consensus/run.py:227",
+      "verdict": "True",
+      "binding": "215: c3_pins = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+     },
+     {
+      "site": "spikes/H162_iroh_vs_http_duel/run.py:272",
+      "verdict": "True",
+      "binding": "263: c3_ok = (footprint_ratio > 10.0)"
+     },
+     {
+      "site": "spikes/H162_iroh_vs_http_duel/run.py:285",
+      "verdict": "False",
+      "binding": "276: f3 = footprint_ratio < 10.0"
+     },
+     {
+      "site": "spikes/H163_tri_device_p2p_swarm/run.py:186",
+      "verdict": "True",
+      "binding": "176: c3_pins = (PIN_F001 == \"590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f\" and"
+     },
+     {
+      "site": "spikes/H164_rotate_wn18rr_adversarial_audit/attack.py:200",
+      "verdict": "True",
+      "binding": "191: c3_ok = True"
+     },
+     {
+      "site": "spikes/H176_parity_cannot_see_misroute/attack.py:164",
+      "verdict": "True",
+      "binding": "149: c1_ok = PIN_F001 != PIN_F002"
+     },
+     {
+      "site": "spikes/S91_multi_agent_quorum/run.py:251",
+      "verdict": "True",
+      "binding": "242: c3_ok = True"
+     }
+    ]
+   },
+   "refutes": "that this is a class rather than one bug",
+   "fires_when": "the fold finds folded verdicts in <=1 file",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F5_number_does_not_reproduce",
+   "must_fire_because": null,
+   "can_fail_because": "a committed local binary misses a pinned digest",
+   "null_must_contain": "digest mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "endpoints": {
+     "macos_host_arm64": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+     },
+     "macos_rosetta_x86": {
+      "f001_rc": 0,
+      "f001_digest": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+      "f002_rc": 0,
+      "f002_digest": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9",
+      "match": true
+     }
+    },
+    "pins": {
+     "F001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+     "F002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+    },
+    "control_corrupt_byte": 15,
+    "control_rc": 1,
+    "control_digest": "",
+    "control_moved": true
+   },
+   "refutes": "that H161 parity evidence stands",
+   "fires_when": "a committed local binary misses a pinned digest",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F6_kitchen_sees_fabrication",
+   "must_fire_because": null,
+   "can_fail_because": "the test fails on fabricated digests",
+   "null_must_contain": "fabrication caught",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rc_unmutated": 0,
+    "out_unmutated": "h161: Heterogeneous Multi-Device Consensus verified (5/5 live endpoints match including iOS, Android, and macO",
+    "rc_fabricated_digests": 0,
+    "out_fabricated": "h161: Heterogeneous Multi-Device Consensus verified (5/5 live endpoints match including iOS, Android, and macO",
+    "rc_match_flag_cleared": 1,
+    "out_flag": "SELFCHECK FAILED: ['endpoint samsung_s25_ultra did not match golden pins']",
+    "intervention": "every digest in every endpoint -> 0*64, `match` left true"
+   },
+   "refutes": "that the only standing check is a tautology",
+   "fires_when": "the test fails on fabricated digests",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": "reads H161 and fixtures/ read-only; the folder is in this spike dir and is hashed as the artifact set",
+ "problems": [],
+ "ok": true,
+ "falsifier": "C3 moving under a corrupted F001.accepted_digest, or C1 refusing a device-not-found adb, or the two committed local binaries missing the pinned digests",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}
