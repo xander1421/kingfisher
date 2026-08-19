@@ -1,0 +1,187 @@
+{
+ "spike": "H166_rotation_ablation_discriminates",
+ "recorded_utc": "2026-08-19T15:29:26Z",
+ "note": "H166: H164's A2 arm removes the only per-relation parameter, so its collapse cannot attribute the score to rotation (A25/A20).",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "f86d84cfc4041f835d5553a72daf9ef06d31c2c9",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr",
+   "head": "f86d84cfc4041f835d5553a72daf9ef06d31c2c9",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H164_rotate_wn18rr_adversarial_audit",
+   "head": "f86d84cfc4041f835d5553a72daf9ef06d31c2c9",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H164_rotate_wn18rr_adversarial_audit": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H166_rotation_ablation_discriminates/result.json",
+   "sha256": "4ccba3ebeb2626ac86abac4d7dd88e023675fe317f8b671a3b26281b6d0bac64",
+   "bytes": 2775,
+   "mtime": 1787153366,
+   "compared_ts": 1787153366,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_reproduces_G91",
+   "must_fire_because": "my re-run must reproduce G91's 0.3546 to 4 dp or nothing downstream is about G91 at all",
+   "can_fail_because": "seed, numpy version or protocol drift between G91's run and mine",
+   "null_must_contain": "a headline MRR that is not 0.3546",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "mrr_a0": 0.3546,
+    "g91_published": 0.3546
+   }
+  },
+  {
+   "name": "C2_arm_is_an_involution",
+   "must_fire_because": "A25 applied to my OWN arm: if r is not an involution the arm is not the thing I named it after",
+   "can_fail_because": "a quantisation that leaves |r| != 1 or r*r != 1 beyond 1e-6",
+   "null_must_contain": "modulus or square error above tolerance",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "modulus_err": 0.0,
+    "square_err": 1.7484555314695172e-07,
+    "tol": 1e-06
+   }
+  },
+  {
+   "name": "C3_scope_and_pins",
+   "must_fire_because": "6,268 queries and F001/F002 pins unmoved",
+   "can_fail_because": "a corrupted split or a pin edit",
+   "null_must_contain": "wrong query count or moved pins",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_queries": 6268,
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_involution_loses",
+   "must_fire_because": null,
+   "can_fail_because": "honest MRR - involution MRR >= 0.05",
+   "null_must_contain": "an involution arm that keeps the score",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "honest": 0.3546,
+    "involution": 0.3513,
+    "drop": 0.0034
+   },
+   "refutes": "my claim that continuous rotation is not what carries G91's score",
+   "fires_when": "honest MRR - involution MRR >= 0.05",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_shuffle_discriminates",
+   "must_fire_because": null,
+   "can_fail_because": "shuffling a rotation-free involution model leaves MRR >= 0.05",
+   "null_must_contain": "a rotation-free model that survives shuffling",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "shuffled_involution_mrr": 0.0038,
+    "threshold": 0.05
+   },
+   "refutes": "my claim that H164's A2 cannot separate 'rotation is the mechanism' from 'the relation parameter matters'",
+   "fires_when": "shuffling a rotation-free involution model leaves MRR >= 0.05",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_involution_loses_drf",
+   "must_fire_because": null,
+   "can_fail_because": "involution MRR on that relation < 0.50",
+   "null_must_contain": "that relation collapsing under involution",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "drf_involution_mrr": 0.9414,
+    "threshold": 0.5
+   },
+   "refutes": "my account of _derivationally_related_form as an involution-shaped relation",
+   "fires_when": "involution MRR on that relation < 0.50",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G91_rotate_wn18rr": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H164_rotate_wn18rr_adversarial_audit": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "a rotation-free involution model that BOTH loses the score and survives shuffling would refute this row entirely"
+}

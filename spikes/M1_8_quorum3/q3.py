@@ -300,6 +300,48 @@ def adjudicate(envs):
             k, n, dispatched, returned, domains
     return 'NO_QUORUM', None, n, dispatched, returned, 0
 
+
+def dissenters(envs):
+    """WHO disagreed -- the defendant the verdict does not name (M1.13).
+
+    NOT added to `adjudicate`'s return, deliberately. Its arity is asserted by
+    `test_adjudicate.py` ("arity uniform at 6") and both production callers
+    unpack a fixed six names (`v, k, n, disp, ret, dom = adjudicate(envs)`),
+    so appending a seventh field is the exact shape of the 5-vs-6 defect
+    recorded at the NO_RESULTS branch above -- which took the coordinator down
+    with a ValueError while the suite stayed green, because the test exercised
+    the function differently from the caller. The defendant therefore travels
+    as a ROW FIELD, next to the envelopes it is derived from.
+
+    ABSENCE IS NOT DISSENT, and this is the whole content of the function.
+    A worker whose key is None did not ANSWER; it did not DISAGREE. S26's
+    `cheat_attr.dissenters()` -- which the M1.13 sidecar calls directly --
+    computes `kk != k` over the raw key list, so on a quorum of three honest
+    answers plus one silent worker it returns that silent worker as the
+    dissenter. MEASURED, not read: blanking `phone`'s result member on a
+    live-key row makes it name `['phone']`. On a NO_RESULTS row it is saved by
+    coincidence -- the no-majority sentinel and the did-not-answer sentinel are
+    both None, so `None != None` is False -- which is one sentinel carrying two
+    meanings in the branch that cannot tell them apart (H88). A field that a
+    protocol pays or slashes on must never accuse a worker of lying for being
+    offline; REDUCED_QUORUM already refuses a short quorum, and that is the
+    correct handling of a worker that vanished.
+
+    Named ONLY under a real majority (n >= 2). Under NO_QUORUM every live key
+    is a plurality of one, so there is no majority to dissent FROM and naming
+    one invents a defendant out of a tie; under NO_RESULTS there is nothing to
+    dissent from at all. Both return [].
+    """
+    ks = [key(e) for e in envs]
+    live = [k for k in ks if k is not None]
+    if not live:
+        return []
+    k, n = Counter(live).most_common(1)[0]
+    if n < 2:
+        return []
+    return [e.get('worker') for e, kk in zip(envs, ks)
+            if kk is not None and kk != k]
+
 def stage_device(android_bin):
     subprocess.run(['adb', 'shell', f'mkdir -p {DEVDIR}/corpus'], check=True)
     subprocess.run(['adb', 'push', android_bin, DEVDIR + '/'],
@@ -518,6 +560,10 @@ def main():
     print(f'\n{"program":56} {"verdict":14} {"agree":5} fuel')
     for p, v, n, k, envs, disp, ret, dom in rows:
         flag = '' if v == 'UNANIMOUS' else '   <<<'
+        # M1.13: a verdict with no defendant cannot be paid or slashed on.
+        accused = dissenters(envs)
+        if accused:
+            flag += ' dissent=' + ','.join(str(w) for w in accused)
         fuel = (k[1] if k and k[1] is not None else '-')
         # agreed/returned(dispatched) -- a shrunken quorum must be visible
         shape = f'{n}/{ret}' + (f'({disp})' if ret != disp else '')
@@ -604,6 +650,7 @@ def main():
                'rows': [{'program': p, 'verdict': v, 'agree': n,
                          'key': k, 'envelopes': e,
                          'dispatched': d, 'returned': r, 'domains': dm,
+                         'defendants': dissenters(e),
                          'domains_per_class': next(
                              (x.get('_per_class') for x in e if x), None)}
                         for p, v, n, k, e, d, r, dm in rows]},

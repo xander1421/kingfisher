@@ -1,0 +1,20 @@
+=== H166: does the phase-shuffle arm discriminate rotation? ===
+Training RotatE on WN18RR (nent=40943, npred=11, dim=64, epochs=8)...
+  Epoch 1/8: loss=12.5360 (67.09s)
+  Epoch 2/8: loss=4.5687 (124.01s)
+  Epoch 3/8: loss=2.7077 (296.69s)
+  Epoch 4/8: loss=2.1107 (108.02s)
+  Epoch 5/8: loss=1.8510 (46.32s)
+  Epoch 6/8: loss=1.7142 (48.50s)
+  Epoch 7/8: loss=1.6280 (140.87s)
+  Epoch 8/8: loss=1.5690 (59.37s)
+RotatE trained in 890.87s. Loss: 12.5360 -> 1.5690
+A0 honest theta            MRR 0.3546
+A1 involution {0,pi}       MRR 0.3513  (|r|-1 0.00e+00, |r*r-1| 1.75e-07)
+A2 shuffled (H164's arm)   MRR 0.0020
+A3 shuffled involution     MRR 0.0038
+
+_derivationally_related_form: honest 0.9412 -> involution 0.9414
+
+D6 Provenance Certified: ok=True
+=== H166 completed in 895.10s ===

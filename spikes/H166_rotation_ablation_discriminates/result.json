@@ -1,0 +1,127 @@
+{
+  "spike": "H166",
+  "timestamp": "2026-08-19 16:29:26",
+  "elapsed_sec": 894.08,
+  "attacks": "H164 A2 phase-causality claim (not H164's arithmetic, not H165's leakage half)",
+  "arms": {
+    "A0_honest": {
+      "mrr": 0.3546,
+      "theta": "learned, continuous"
+    },
+    "A1_involution": {
+      "mrr": 0.3513,
+      "theta": "quantised to nearest of {0, pi}",
+      "rotation_removed": true,
+      "per_relation_parameter_kept": true
+    },
+    "A2_shuffled_h164": {
+      "mrr": 0.002,
+      "theta": "U(-pi,pi), seed 999 (H164's arm)",
+      "h164_published": 0.002
+    },
+    "A3_shuffled_involution": {
+      "mrr": 0.0038,
+      "theta": "resampled from {0, pi}, seed 999",
+      "rotation_removed": true
+    }
+  },
+  "involution_check": {
+    "modulus_err": 0.0,
+    "square_err": 1.7484555314695172e-07,
+    "tol": 1e-06
+  },
+  "derivationally_related_form": {
+    "honest_mrr": 0.9412,
+    "involution_mrr": 0.9414
+  },
+  "breakdown_involution": {
+    "_hypernym": {
+      "queries": 2502,
+      "mrr": 0.0047,
+      "mrr_mass": 11.67,
+      "mass_share_pct": 0.53
+    },
+    "_derivationally_related_form": {
+      "queries": 2148,
+      "mrr": 0.9414,
+      "mrr_mass": 2022.19,
+      "mass_share_pct": 91.84
+    },
+    "_member_meronym": {
+      "queries": 506,
+      "mrr": 0.0118,
+      "mrr_mass": 5.96,
+      "mass_share_pct": 0.27
+    },
+    "_has_part": {
+      "queries": 344,
+      "mrr": 0.0025,
+      "mrr_mass": 0.86,
+      "mass_share_pct": 0.04
+    },
+    "_instance_hypernym": {
+      "queries": 244,
+      "mrr": 0.039,
+      "mrr_mass": 9.52,
+      "mass_share_pct": 0.43
+    },
+    "_synset_domain_topic_of": {
+      "queries": 228,
+      "mrr": 0.0141,
+      "mrr_mass": 3.21,
+      "mass_share_pct": 0.15
+    },
+    "_also_see": {
+      "queries": 112,
+      "mrr": 0.5983,
+      "mrr_mass": 67.01,
+      "mass_share_pct": 3.04
+    },
+    "_verb_group": {
+      "queries": 78,
+      "mrr": 0.9744,
+      "mrr_mass": 76.0,
+      "mass_share_pct": 3.45
+    },
+    "_member_of_domain_region": {
+      "queries": 52,
+      "mrr": 0.0162,
+      "mrr_mass": 0.84,
+      "mass_share_pct": 0.04
+    },
+    "_member_of_domain_usage": {
+      "queries": 48,
+      "mrr": 0.0055,
+      "mrr_mass": 0.26,
+      "mass_share_pct": 0.01
+    },
+    "_similar_to": {
+      "queries": 6,
+      "mrr": 0.7222,
+      "mrr_mass": 4.33,
+      "mass_share_pct": 0.2
+    }
+  },
+  "controls": {
+    "C1_reproduces_G91": {
+      "ok": true
+    },
+    "C2_arm_is_an_involution": {
+      "ok": true
+    },
+    "C3_scope_and_pins": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_involution_loses": {
+      "fired": false
+    },
+    "F2_shuffle_discriminates": {
+      "fired": false
+    },
+    "F3_involution_loses_drf": {
+      "fired": false
+    }
+  }
+}
