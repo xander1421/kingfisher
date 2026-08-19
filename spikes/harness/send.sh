@@ -1,6 +1,28 @@
 #!/usr/bin/env bash
 # send.sh — address a message to a lane BY CALLSIGN, delivered into its next turn.
 #
+# v2, 2026-08-19 (AGENT-1, H184). DEFECT REMOVED: **THIS SCRIPT REFUSED EVERY
+# CALLSIGN IN THE FLEET FOR ~2 HOURS AND ITS OWN STATUS COMMAND REPORTED HEALTHY.**
+# `f6f923d` (16:28) dropped the space between the sed EXPRESSION and its FILENAME:
+#     sed 's/#.*//'"$_ROSTER"        <- one argument, not two
+# so sed read `s/#.*///Users/.../roster.txt` as its script, refused with "bad flag
+# in substitute command", printed nothing, and LANES became EMPTY. Every consumer
+# reads "not in LANES" as "not a declared lane", so `send.sh AGENT-2 ...` answered
+# `'AGENT-2' is not a declared lane ()` -- with the empty parens printing the whole
+# evidence and nobody reading it -- and `--list` walked an empty loop and printed
+# `(nothing pending)`. MEASURED AT THE FIX: 62 lines pending for AGENT-1, 62 for
+# AGENT-2, 81 for ATTACKER-1, all reported as nothing.
+#
+# CLASS, which is the part worth carrying: **a missing input degraded the mechanism
+# to a narrower one that still reported success.** H30's rule, already written into
+# `allocid.sh`'s own `refuse_if_input_missing`, and not applied here. The roster
+# EXISTING is not the roster being READ, and the difference was invisible because
+# the failure direction was quiet. v2 refuses on an empty lane list rather than
+# treating it as a roster that sanctions nobody. Check: `sh spikes/harness/test_send.sh`.
+#
+# The commit that broke it is titled "a quorum check that can never read green stops
+# being read". It shipped a `--list` that can never read anything BUT green.
+#
 # WHY THIS EXISTS. Lanes had no addressable channel. What existed:
 #   * livechat.log — append-only prose, broadcast, and a lane only sees it if it
 #     happens to re-read the file. No addressing, no delivery guarantee.
@@ -31,9 +53,27 @@ cd "$(cd "$(dirname "$0")/../.." && pwd)"
 # Read the sanction file; the literal survives only as a no-roster fallback.
 _ROSTER="$(cd "$(dirname "$0")/../.." && pwd)/roster.txt"
 if [ -f "$_ROSTER" ]; then
-  LANES="$(sed 's/#.*//'"$_ROSTER" | awk 'NF{print $1}' | tr '\n' ' ')"
+  # H184: the space after the sed EXPRESSION is load-bearing. Without it the shell
+  # concatenates expression and filename into ONE argument -- sed then reads
+  # `s/#.*///Users/.../roster.txt` as its script, refuses with "bad flag in
+  # substitute command", writes nothing to stdout, and LANES becomes EMPTY.
+  LANES="$(sed 's/#.*//' "$_ROSTER" | awk 'NF{print $1}' | tr '\n' ' ')"
 else
   LANES="AGENT-1 AGENT-2 ATTACKER-1 ATOM-3 ok-1"
+fi
+
+# H184, AND THIS IS THE CLASS RATHER THAN THE TYPO. An empty LANES must REFUSE.
+# Every consumer below treats "not in LANES" as "not a declared lane", so an empty
+# list is indistinguishable from a roster that sanctions nobody: `send.sh X` refuses
+# every callsign, and `--list` walks an empty loop and prints "(nothing pending)" --
+# a FALSE GREEN over a dead channel, which is the one reading nobody investigates.
+# Same rule allocid.sh already states for its own inputs (H30): a missing input must
+# not silently degrade a mechanism to a narrower one that still reports success.
+# The roster existing is not the same as the roster being READ.
+if [ -z "$(printf '%s' "$LANES" | tr -d '[:space:]')" ]; then
+  echo "send.sh: lane list is EMPTY after reading $_ROSTER -- refusing rather than" >&2
+  echo "         reporting every callsign undeclared and every inbox quiet (H184)." >&2
+  exit 3
 fi
 mkdir -p inbox inbox/archive
 
