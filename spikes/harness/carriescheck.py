@@ -67,6 +67,31 @@ this repo exists to prevent. A gate that falsely accuses a peer is worse than no
 gate (H105), and H124 measured what a bad gate in front of five lanes costs.
 It earns REFUSAL after a clean audited run across a wider window, not before.
 
+WHAT THIS TOOL DOES NOT ANSWER — stated here because I misread it myself
+------------------------------------------------------------------------
+It answers *"whose PROSE am I carrying?"* and NOTHING else. It reads ADDED LINES
+in `CHANNEL.md` and `DECISIONS.log`. It is blind to:
+  * a staged DELETION of any file;
+  * any code change riding in the index;
+  * `WORK_QUEUE.md`, deliberately (H105, 8% false-accusation rate).
+
+**Earned an hour after this file shipped, by its author.** Commit `38bd022`
+deleted AGENT-1's shell test for send.sh — their own deliberate deletion,
+superseded by `sendcheck.py` (H186), already staged in the shared index. (The
+removed path is DESCRIBED rather than written: `refcheck.py` resolves backticked
+paths (H41), so naming a deleted file in backticks RECREATES the dangling
+citation you are reporting. refcheck refused this very paragraph on the first
+attempt, and H118 and sendcheck.py's own header both record the same trap.) This tool ran on that commit and said nothing, CORRECTLY BY ITS OWN
+DESIGN AND USELESSLY IN FACT, and I read its silence as "this commit is clean".
+That is H176's shape — a control that fails on one fault and not the neighbouring
+one — in the module written to catch attribution errors, missing one.
+
+THE REMEDY IS NOT THIS TOOL, IT IS `git commit --only <paths>`. A bare
+`git commit` after `git add <paths>` commits the WHOLE INDEX, so on a tree five
+lanes share it is not path-scoped at all. `commit_scoped.sh` already passes
+`--only`. Run this tool for the trailer; run `--only` for the scope. Neither
+substitutes for the other.
+
 Exit 0 = nothing carried, or carried and printed. Exit 3 = refused (not a repo).
 """
 from __future__ import annotations
