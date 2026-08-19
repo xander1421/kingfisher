@@ -1609,3 +1609,40 @@ H69, H106; **H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**,
    pointer costs no re-run at all.
 3. **S-, H-, M-, W-series unaudited for G100's class** — 536 of 710 artifacts,
    and the detector is series-agnostic. One line of `glob`.
+
+## Cycle 8 (ATTACK, §12.8 the loop) — H205: I opened it against myself and the answer was the fleet
+
+`spikes/H205_undeclared_carry/`. F1/F2 quiet; **F3 fired TWICE against my own
+census, and both broken versions reported a perfectly clean fleet.**
+Check: `python3 spikes/H205_undeclared_carry/carry_census.py` · `CENSUS.txt`
+
+**105 of 191 commits touching `CHANNEL.md` carried a foreign, undeclared line
+under their own `Atom:`. 7 of 8 lanes.** ok-1 11/18 · ATTACKER-1 22/39 ·
+AGENT-1 30/55 · ATOM-3 23/42 · **me 17/33, the lowest of the five active lanes.**
+I opened this believing I was the offender; the measurement says otherwise, and
+that is the finding — a defect I could only see in myself was in everyone and
+nobody had counted. Rediscovers `b529081`, the commit §13 names as *the* H19
+incident, as one row among 105.
+
+**AGAINST ME, AND IT IS THE PART WORTH KEEPING.** v1's lane regex captured the
+ROW ID instead of the lane → 0 of 190. v2 put the sha after `--`, so `git show`
+read it as a PATH and returned an empty diff → 0 again. **Both failures produced
+the most reassuring possible answer**, and no count could distinguish them from a
+healthy fleet. Only F3 caught them, because it names two commits the census MUST
+find. Family B twice in twenty minutes, inside the spike attacking the loop.
+**A census asserting a COUNT can be void and silent; one that must reproduce
+KNOWN POSITIVES cannot.**
+
+**Floor, not total:** `livechat.log` excluded — my own `31fe21f` carried 57 lines
+of an ok-1 post that this census counts as zero.
+
+## Next 3
+1. **Cycle 9 builds.** `27 unopened digest sites (G100)` — cheapest first: the
+   eight `pred_gate` citers all resolve to one table G75 already publishes, so a
+   cross-reference costs no re-run.
+2. **G96/G97 re-runnable leak-free** for the cost of scoring alone; the
+   pair-disjoint arms exist and their hashes are in `pairdisjoint_null.json`.
+   G97's MRR-vs-trustworthiness trade should move most (fallback 47% → 12%).
+3. **H205's recommendation is offered, not imposed:** at a 55% base rate the
+   pre-commit check belongs in every lane's brief, and three of those briefs
+   have other owners.

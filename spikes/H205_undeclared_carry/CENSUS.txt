@@ -1,0 +1,124 @@
+roster from Atom: trailers (11): ['AGENT-1', 'AGENT-1,', 'AGENT-2', 'AGENT-2-INT', 'ATOM-3', 'ATTACKER-1', 'agent-1', 'corpus-composition', 'harness-hardening', 'mutation-detection', 'ok-1']
+
+H205 — CHANNEL.md lines carried under another lane's Atom, undeclared
+commits touching CHANNEL.md with an Atom: trailer: 191
+commits carrying a FOREIGN, UNDECLARED CHANNEL line: 105
+
+  7d65055c2  Atom: ATTACKER-1   carried {'AGENT-2': 1}
+  247b11923  Atom: ATTACKER-1   carried {'AGENT-1': 1, 'ATOM-3': 1}
+  4a99f15ea  Atom: ok-1         carried {'ATOM-3': 1, 'AGENT-2': 1}
+  b3fe20085  Atom: AGENT-2      carried {'ok-1': 1}
+  31fe21f65  Atom: AGENT-2      carried {'ok-1': 1, 'AGENT-1': 1}
+  310e80046  Atom: ATTACKER-1   carried {'ok-1': 1}
+  a3ea072fc  Atom: AGENT-1      carried {'AGENT-2': 2, 'ATTACKER-1': 1}
+  38bd02238  Atom: ATTACKER-1   carried {'ATOM-3': 1}
+  16c1e719f  Atom: ATOM-3       carried {'AGENT-1': 1}
+  29aee62cc  Atom: ok-1         carried {'AGENT-2': 1}
+  d26e1d25a  Atom: ATOM-3       carried {'ok-1': 1}
+  54bec307a  Atom: ATTACKER-1   carried {'ATOM-3': 1, 'ok-1': 2}
+  d7f9efc78  Atom: ok-1         carried {'AGENT-1': 1}
+  0b75cfd08  Atom: ATOM-3       carried {'AGENT-2': 1}
+  2e728a146  Atom: ATTACKER-1   carried {'ATOM-3': 1}
+  00b7b8eab  Atom: AGENT-2      carried {'AGENT-1': 1, 'ATOM-3': 1}
+  44e040f2e  Atom: ATTACKER-1   carried {'ok-1': 1}
+  2892b41a4  Atom: ok-1         carried {'ATOM-3': 1}
+  50514a3f7  Atom: ok-1         carried {'ATOM-3': 1}
+  d7175184e  Atom: AGENT-1      carried {'ok-1': 1}
+  8829e8a11  Atom: ATTACKER-1   carried {'ATOM-3': 1, 'AGENT-2': 1}
+  44a040ec4  Atom: AGENT-2-INT  carried {'AGENT-2': 1}
+  89648e501  Atom: AGENT-2      carried {'ok-1': 1, 'AGENT-1': 1}
+  e3df07cab  Atom: AGENT-2      carried {'ATTACKER-1': 2, 'ok-1': 1, 'ATOM-3': 2, 'AGENT-1': 1}
+  fa584e22b  Atom: ATOM-3       carried {'AGENT-2': 1, 'ATTACKER-1': 1}
+  395d26e5f  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  a135c2ed5  Atom: ATOM-3       carried {'AGENT-2': 1}
+  ade33fabf  Atom: ATOM-3       carried {'ok-1': 2}
+  7df121314  Atom: ATOM-3       carried {'AGENT-2': 1}
+  a59f60841  Atom: AGENT-2      carried {'ok-1': 1}
+  452c24e0e  Atom: ok-1         carried {'AGENT-2': 1, 'ATOM-3': 1}
+  76595fecd  Atom: ATOM-3       carried {'ok-1': 1, 'ATTACKER-1': 1}
+  00e0cec6f  Atom: ATOM-3       carried {'AGENT-2': 1, 'AGENT-1': 1}
+  41ad7db65  Atom: ATOM-3       carried {'ATTACKER-1': 1}
+  fdf3e4995  Atom: ATTACKER-1   carried {'ok-1': 1, 'AGENT-1': 1}
+  b8e27b141  Atom: ok-1         carried {'AGENT-1': 1}
+  249c11817  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  b6983ad1a  Atom: AGENT-2      carried {'ok-1': 1}
+  5e5ba8bce  Atom: ATOM-3       carried {'AGENT-2': 1}
+  1e227eefd  Atom: ATOM-3       carried {'ok-1': 1}
+  63aec9cb8  Atom: ATOM-3       carried {'AGENT-1': 2, 'AGENT-2': 1}
+  d066c4b18  Atom: ATTACKER-1   carried {'AGENT-2': 1}
+  197502d18  Atom: AGENT-2      carried {'ok-1': 1, 'ATTACKER-1': 2, 'AGENT-1': 1}
+  64af5af39  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  6874d3eda  Atom: AGENT-1      carried {'ATOM-3': 1, 'ok-1': 1}
+  3e512dcdb  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  a477a7492  Atom: ATOM-3       carried {'ok-1': 1}
+  e2263f731  Atom: ATTACKER-1   carried {'ATOM-3': 1, 'ok-1': 1}
+  9d3c3156c  Atom: ATOM-3       carried {'ATTACKER-1': 1}
+  48c9059cb  Atom: AGENT-1      carried {'ATOM-3': 1}
+  e4bd0089f  Atom: ATTACKER-1   carried {'AGENT-2': 1}
+  b377833aa  Atom: AGENT-2      carried {'ATOM-3': 1}
+  cf9f5a29b  Atom: ok-1         carried {'ATTACKER-1': 1, 'ATOM-3': 1}
+  143ff64ec  Atom: AGENT-1      carried {'AGENT-2': 1, 'ok-1': 1}
+  164ea5983  Atom: AGENT-1      carried {'ATOM-3': 1}
+  3361c189b  Atom: ATOM-3       carried {'ATTACKER-1': 1, 'AGENT-1': 1}
+  20f8496dc  Atom: AGENT-1      carried {'ATOM-3': 1}
+  46766e934  Atom: ATOM-3       carried {'ATTACKER-1': 1}
+  e2f8aed6e  Atom: AGENT-1      carried {'ATOM-3': 1}
+  97f63aa12  Atom: ATOM-3       carried {'ok-1': 1, 'AGENT-1': 1, 'ATTACKER-1': 1}
+  41cd65b20  Atom: AGENT-1      carried {'ATOM-3': 1}
+  82c5a9fe6  Atom: ATOM-3       carried {'ok-1': 1}
+  ea3341243  Atom: ATOM-3       carried {'AGENT-1': 1, 'AGENT-2': 1}
+  3eb816b22  Atom: AGENT-2      carried {'ATTACKER-1': 1}
+  4d7009ddd  Atom: ATTACKER-1   carried {'AGENT-2': 1}
+  624e4a5a6  Atom: AGENT-2      carried {'ATOM-3': 1, 'AGENT-1': 1, 'ATTACKER-1': 1}
+  99cc3a95c  Atom: ATOM-3       carried {'AGENT-2': 1, 'ok-1': 1}
+  d90e08197  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  8ef758d88  Atom: ATTACKER-1   carried {'ok-1': 1, 'ATOM-3': 1}
+  b496fd167  Atom: ATOM-3       carried {'AGENT-2': 1}
+  0b4c38fda  Atom: AGENT-2      carried {'ATOM-3': 1, 'AGENT-1': 1}
+  a5bccb4b5  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  807960442  Atom: AGENT-2      carried {'ATOM-3': 1}
+  549b19813  Atom: ATOM-3       carried {'AGENT-1': 1}
+  92e837ecd  Atom: AGENT-1      carried {'ATTACKER-1': 1, 'ATOM-3': 1}
+  1f5f6ab1a  Atom: ok-1         carried {'ATOM-3': 1}
+  903f5c680  Atom: AGENT-1      carried {'ATOM-3': 1}
+  0f089995d  Atom: AGENT-1      carried {'ATOM-3': 1}
+  853a77c99  Atom: ok-1         carried {'AGENT-2': 2, 'ATOM-3': 1}
+  25bd22212  Atom: AGENT-2      carried {'ATTACKER-1': 1}
+  90e3b686b  Atom: ok-1         carried {'AGENT-2': 1}
+  de87f7f07  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  f41ac986e  Atom: AGENT-2      carried {'AGENT-1': 1, 'ok-1': 1, 'ATTACKER-1': 1}
+  32e0766ef  Atom: AGENT-1      carried {'ATTACKER-1': 1, 'ok-1': 2}
+  76e8ac1e7  Atom: AGENT-2      carried {'ok-1': 1, 'ATOM-3': 1, 'AGENT-1': 1}
+  3ebe0df4b  Atom: ATTACKER-1   carried {'AGENT-2': 1}
+  829d57b9a  Atom: AGENT-2      carried {'ok-1': 3, 'AGENT-1': 1, 'ATOM-3': 2}
+  15ee3713f  Atom: AGENT-1      carried {'ATTACKER-1': 1, 'AGENT-2': 1, 'ok-1': 2}
+  f3338e8c5  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  a80283e0b  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  a6e467e9b  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  a186332cb  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  e5c92bb7a  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  5ab129373  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  1ca9bfad4  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  2024b6dbc  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  809812d14  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  384483946  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  15f3959e3  Atom: AGENT-1      carried {'ATTACKER-1': 1}
+  2e7e418ac  Atom: ATTACKER-1   carried {'AGENT-1': 1}
+  6e6983172  Atom: AGENT-1      carried {'ATOM-3': 1}
+  9fcbfd80b  Atom: AGENT-1      carried {'AGENT-2': 1, 'ATTACKER-1': 1}
+  b529081fe  Atom: AGENT-1      carried {'AGENT-2': 1, 'ATTACKER-1': 1}
+  b5590a232  Atom: AGENT-1      carried {'ATTACKER-1': 2}
+  83196ec7b  Atom: agent-1      carried {'ATOM-3': 2}
+
+by carrying lane:
+   30 /  55 commits   AGENT-1
+   23 /  42 commits   ATOM-3
+   22 /  39 commits   ATTACKER-1
+   17 /  33 commits   AGENT-2
+   11 /  18 commits   ok-1
+    1 /   1 commits   AGENT-2-INT
+    1 /   2 commits   agent-1
+
+lanes that have done it: 7 of 8 committing lanes
+
+F3 control — the two instances confirmed by hand: both detected
