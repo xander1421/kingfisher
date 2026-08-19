@@ -1,0 +1,65 @@
+=== H168: ATTACK on G92 routing names + uncontrolled lift ===
+    G92 module: /Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid/run.py
+    G92 EPOCHS=6 SEED=79 DIM=64
+Training RotatE (dim=64, epochs=6)...
+Training ComplEx (dim=64, epochs=6)...
+Selecting optimal model per relation on validation set...
+  Rel  0: chosen=complex | RotatE valid MRR=0.3088, ComplEx valid MRR=0.4565
+  Rel  1: chosen=rotate  | RotatE valid MRR=0.9246, ComplEx valid MRR=0.0005
+  Rel  2: chosen=rotate  | RotatE valid MRR=0.0029, ComplEx valid MRR=0.0001
+  Rel  3: chosen=rotate  | RotatE valid MRR=0.0101, ComplEx valid MRR=0.0029
+  Rel  4: chosen=rotate  | RotatE valid MRR=0.0850, ComplEx valid MRR=0.0020
+  Rel  5: chosen=rotate  | RotatE valid MRR=0.0264, ComplEx valid MRR=0.0002
+  Rel  6: chosen=complex | RotatE valid MRR=0.0253, ComplEx valid MRR=0.2751
+  Rel  7: chosen=complex | RotatE valid MRR=0.0010, ComplEx valid MRR=0.6030
+  Rel  8: chosen=complex | RotatE valid MRR=0.0127, ComplEx valid MRR=0.8333
+  Rel  9: chosen=rotate  | RotatE valid MRR=0.0623, ComplEx valid MRR=0.0001
+  Rel 10: chosen=rotate  | RotatE valid MRR=0.8453, ComplEx valid MRR=0.3594
+
+Evaluating Hybrid on 3134 test triples (6,268 queries)...
+
+Evaluating Hybrid on 3134 test triples (6,268 queries)...
+
+Evaluating Hybrid on 3134 test triples (6,268 queries)...
+
+=========== H168: NAMED ROUTING TABLE (G92 printed `Rel {idx}` only) ===========
+relation                         idx   routed   validR   validC    qs    testR
+_hypernym                          3   rotate   0.0101   0.0029  2502   0.0116
+_derivationally_related_form       1   rotate   0.9246   0.0005  2148   0.9394
+_member_meronym                    5   rotate   0.0264   0.0002   506   0.0401
+_has_part                          2   rotate   0.0029   0.0001   344   0.0119
+_instance_hypernym                 4   rotate   0.0850   0.0020   244   0.0799
+_synset_domain_topic_of            9   rotate   0.0623   0.0001   228   0.0228
+_also_see                          0  complex   0.3088   0.4565   112   0.1572
+_verb_group                       10   rotate   0.8453   0.3594    78   0.7913
+_member_of_domain_region           6  complex   0.0253   0.2751    52   0.0247
+_member_of_domain_usage            7  complex   0.0010   0.6030    48   0.0045
+_similar_to                        8  complex   0.0127   0.8333     6   0.0067
+
+--- G92 RESULT.md prose vs this run -------------------------------------------
+  [BAD] _hypernym                      prose:  rotate/0.9246   measured:  rotate/0.0101
+  [BAD] _instance_hypernym             prose:  rotate/0.8453   measured:  rotate/0.0850
+  [BAD] _member_meronym                prose:  rotate/0.0850   measured:  rotate/0.0264
+  [OK ] _also_see                      prose: complex/0.3088   measured: complex/0.3088
+  [OK ] _similar_to                    prose: complex/0.0010   measured: complex/0.0127
+  [BAD] _verb_group                    prose: complex/0.0127   measured:  rotate/0.8453
+
+--- where each quoted number actually lives ------------------------------------
+  0.9246 (prose attributes to _hypernym) -> actually ['_derivationally_related_form']
+  0.8453 (prose attributes to _instance_hypernym) -> actually ['_verb_group']
+  0.0850 (prose attributes to _member_meronym) -> actually ['_instance_hypernym']
+  0.3088 (prose attributes to _also_see) -> actually ['_also_see']
+  0.0010 (prose attributes to _similar_to) -> actually ['_has_part', '_hypernym', '_member_of_domain_usage', '_similar_to']
+  0.0127 (prose attributes to _verb_group) -> actually ['_has_part', '_hypernym', '_member_meronym', '_member_of_domain_region', '_member_of_domain_usage', '_similar_to']
+
+=========== H168: THE LIFT, AS A CONTROLLED PAIR ===========
+  ARM H  hybrid                     MRR = 0.3611  H@1=0.3486 H@10=0.3878
+  ARM R  RotatE only, SAME 6 epochs MRR = 0.3473  H@1=0.3419 H@10=0.3586
+  ARM C  ComplEx only, SAME 6 epochs MRR = 0.0231  H@1=0.0108 H@10=0.0501
+  controlled lift (H - R)           = +0.0138
+  G92 published lift (G92 - G91@8ep)= +0.0065
+  routing moved 218 of 6268 queries (3.48%)
+
+D6 Provenance Certified: ok=True
+
+=== H168 completed in 287.24s ===

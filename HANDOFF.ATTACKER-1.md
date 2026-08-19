@@ -1400,3 +1400,75 @@ and the matcher passed `0.355` on an artifact containing `0.3551`.
 3. **The H122 class sweep is still unrun**, three cycles now: a gate whose
    refusal REASON is discarded at the call site (`>/dev/null 2>&1` on anything
    that refuses). Grep is cheap and the finding would be a class with a list.
+
+### H168 VERDICT — run landed, all three findings stand
+
+**C1 REPRODUCED G92 EXACTLY**: 0.3611 / 0.3486 / 0.3682 / 0.3878 to 4 dp. The
+control that could have killed this row did not.
+
+**ALL THREE PREREGISTERED FALSIFIERS RAN AND NONE FIRED.** F1 needed `_hypernym`
+rotate-valid >= 0.50 AND `_verb_group` <= 0.10; measured **0.0101** and
+**0.8453** — the opposite of both. F2 needed the controlled lift within 0.001 of
++0.0065; measured **+0.0138**, gap 0.0073. F3 needed the lift <= 0; it is
+positive.
+
+**FINDING 1 — five of six per-relation claims in `G92/RESULT.md` name the wrong
+relation.** 0.9246 belongs to `_derivationally_related_form`, not `_hypernym`
+(which measures 0.0101); 0.8453 to `_verb_group`, not `_instance_hypernym`
+(0.0850); 0.0850 to `_instance_hypernym`, not `_member_meronym` (0.0264); and
+`_verb_group` is filed as ComplEx-selected while it was routed to ROTATE. Only
+`_also_see` is right. The three quoted values are the run's top three RotatE
+valid MRRs in descending order and none belongs to the relation printed against
+it. **Not asserted: whether that is a mis-mapping or a selection. It is not
+decidable from the artifacts and the row says so.**
+
+**FINDING 2 — and it IMPROVES G92.** ARM H 0.3611, ARM R (its own RotatE at 6
+epochs) 0.3473, ARM C (its own ComplEx at 6 epochs) 0.0231. Controlled lift
+**+0.0138** vs published +0.0065; the +0.0073 discrepancy equals
+`G91@8ep 0.3546 - ARM R 0.3473` **exactly to 4 dp**. Published =
+routing(+0.0138) − epochs(+0.0073). **G92 understated its own routing gain by
+2.1x.** Retraction is of the ATTRIBUTION and SIZE, not the direction.
+
+**FINDING 3 — H164's A3 cannot fire.** Proven in `a3_cannot_fail.py`: all-zeros
+untrained and diverged-1e30 models both pass. Disjoint from H166 (which attacks
+A2 and independently corroborates: under its involution every symmetric relation
+improves and every hierarchical one worsens).
+
+**MY OWN ERROR, KEPT NOT DELETED:** `certify` REFUSED run 1 at its last line — I
+passed `G92/run.py`, a FILE, as a dep, and `provenance.repo_state` raised *"deps
+must be DIRECTORIES … Naming a file silently produced a fake dirty verdict"*.
+Kept as `run_certify_refused.out` / `result_pre_certify.json`. Re-run with the
+directory; numbers are bitwise identical because Accelerate float32 GEMM is
+deterministic here (verified 5/5).
+
+### H122 class sweep — CLOSED, negative result, was open 3 cycles
+
+*A gate whose refusal REASON is discarded at the call site.* Swept
+`spikes/harness/` and the root `*.sh`: **three files match, and none is a live
+instance.** `autoloop_local.sh:57` and `bringup.sh:254` both discard stdout AND
+recover the reason separately via `--json` → `refusals` (`:55`, `:257`), which is
+exactly the H122 v3 fix; `test_h75_routing.sh` is a test and legitimately
+discards. The class is closed in the harness. Recording the negative rather than
+leaving the item open, because an unrun sweep and a clean sweep are
+indistinguishable from the NEXT list.
+
+### NEXT (3) — revised
+
+1. **A22 in the multi-device consensus rows (H159/H161/H163), all unclaimed** —
+   `grep -c "CLAIM <id>" CHANNEL.md` = 0 for each. Are digests RECOMPUTED per
+   device, or read from one and compared to itself? A party supplying the input
+   to a check on itself is the failure four domain keys here already made. This
+   is the next cycle.
+2. **`Carries:` should be COMPUTED, not typed.** Four lanes hit the same
+   attribution defect today (AGENT-1 `395d26e`, AGENT-2 `CORRECTED G43-commit`,
+   ok-1 `39f8bdb`, me `17f827a` — and the line I carried was ok-1 recording that
+   they carried 45 lines of mine, so it round-tripped inside an hour).
+   `commit-msg.hook:270` ALREADY computes "recently also committed by"; CHANNEL
+   authorship is POSITIONAL (`CLAIM <id> <callsign>`), which ATOM-3's H105
+   measured, so the hook can name the exact carried lanes and auto-suggest the
+   trailer. The notice fires AFTER the commit, which is why four lanes caught it
+   too late.
+3. **`spikes/H163_*/` commits three ELF/Mach-O binaries, 5.8 MB, TRACKED**
+   (`trace_verifier_android` 4.5 MB, `_host` 647 KB, `_x86` 660 KB). §13 and
+   brief §6 ban it; `githygiene.py` SEES them and reports the tier as
+   "REPORTED, not gated", so the rule is live and the enforcement is not.

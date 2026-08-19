@@ -1,0 +1,182 @@
+{
+ "spike": "H168_g92_routing_and_control",
+ "recorded_utc": "2026-08-19T15:36:28Z",
+ "note": "H168: attack on G92's index-only routing table and its cross-budget lift.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "baeadd67a7ab770b75062dd7c691cf80b6ea9e24",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid",
+   "head": "baeadd67a7ab770b75062dd7c691cf80b6ea9e24",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H168_g92_routing_and_control/result.json",
+   "sha256": "928ea75d11a83b24eb70e91fd91dccd43410633f4ecd9bbcde562f3e932deeb7",
+   "bytes": 6351,
+   "mtime": 1787153788,
+   "compared_ts": 1787153788,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_reproduces_G92",
+   "must_fire_because": "my hybrid arm must reproduce G92's published 0.3611 to 4dp or nothing here is about G92",
+   "can_fail_because": "BLAS nondeterminism, numpy version drift, or G92 run.py changed since it was published",
+   "null_must_contain": "hybrid MRR differs from 0.3611",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "measured": 0.361118,
+    "published": 0.3611
+   }
+  },
+  {
+   "name": "C2_named_partition",
+   "must_fire_because": "all 11 relations named, choices rotate=6050/complex=218, and per-relation query counts equal H164's independently-measured counts",
+   "can_fail_because": "my index->name map is wrong, which would make my whole attack the very error I am reporting",
+   "null_must_contain": "partition mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_relations": 11,
+    "choices": {
+     "complex": 218,
+     "rotate": 6050
+    },
+    "complex_set": [
+     "_also_see",
+     "_member_of_domain_region",
+     "_member_of_domain_usage",
+     "_similar_to"
+    ],
+    "complex_queries_via_H164": 218
+   }
+  },
+  {
+   "name": "C3_pins_intact",
+   "must_fire_because": "F001/F002 unchanged",
+   "can_fail_because": "pin drift",
+   "null_must_contain": "pins moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "f001": "590d87691de53cba062f35bdcb177003fb3b25c1ac90f004c35140d9b014a88f",
+    "f002": "c43b1eab9db84338a2d696d7f5552e3526c2cf66e7a0d534081f727b18898dd9"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_prose_was_right",
+   "must_fire_because": null,
+   "can_fail_because": "_hypernym rotate-valid-MRR >= 0.50 AND _verb_group rotate-valid-MRR <= 0.10",
+   "null_must_contain": "prose names verified",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hypernym_valid_rotate": 0.0101,
+    "verb_group_valid_rotate": 0.8453,
+    "prose_claims": {
+     "_hypernym": 0.9246,
+     "_verb_group": 0.0127
+    }
+   },
+   "refutes": "my claim that G92's per-relation prose transposes relation names",
+   "fires_when": "_hypernym rotate-valid-MRR >= 0.50 AND _verb_group rotate-valid-MRR <= 0.10",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_lift_was_already_controlled",
+   "must_fire_because": null,
+   "can_fail_because": "|(hybrid - own 6-epoch RotatE) - 0.0065| < 0.001",
+   "null_must_contain": "controlled lift equals published lift",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "controlled_lift": 0.01383,
+    "published_lift": 0.0065
+   },
+   "refutes": "my claim that +0.0065 compares across training budgets",
+   "fires_when": "|(hybrid - own 6-epoch RotatE) - 0.0065| < 0.001",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_hybrid_loses_to_its_own_rotate",
+   "must_fire_because": null,
+   "can_fail_because": "hybrid MRR <= own 6-epoch RotatE MRR",
+   "null_must_contain": "hybrid no better than RotatE",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "hybrid": 0.361118,
+    "rotate_only": 0.347288,
+    "delta": 0.01383
+   },
+   "refutes": "that routing helps at all at this budget",
+   "fires_when": "hybrid MRR <= own 6-epoch RotatE MRR",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "G92's per-relation prose names the same relations its own result.json routes, and the +0.0065 lift is already a same-budget controlled pair"
+}

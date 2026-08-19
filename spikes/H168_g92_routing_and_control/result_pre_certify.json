@@ -1,0 +1,252 @@
+{
+  "spike": "H168",
+  "attacks": "G92",
+  "timestamp": "2026-08-19 16:30:53",
+  "elapsed_sec": 982.37,
+  "g92_module": "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid/run.py",
+  "g92_hyperparams": {
+    "epochs": 6,
+    "seed": 79,
+    "dim": 64,
+    "lr": 0.1
+  },
+  "g91_epochs_for_comparison": 8,
+  "arms": {
+    "H_hybrid": {
+      "mrr": 0.3611,
+      "hits1": 0.3486,
+      "hits3": 0.3682,
+      "hits10": 0.3878
+    },
+    "R_rotate_only_same_budget": {
+      "mrr": 0.3473,
+      "hits1": 0.3419,
+      "hits3": 0.3475,
+      "hits10": 0.3586
+    },
+    "C_complex_only_same_budget": {
+      "mrr": 0.0231,
+      "hits1": 0.0108,
+      "hits3": 0.031,
+      "hits10": 0.0501
+    }
+  },
+  "lift": {
+    "controlled_H_minus_R": 0.01383,
+    "g92_published_vs_g91": 0.0065,
+    "g91_mrr_at_8_epochs": 0.3546,
+    "queries_routed_away_from_rotate": 218
+  },
+  "named_routing_table": {
+    "_also_see": {
+      "idx": 0,
+      "routed_to": "complex",
+      "valid_mrr_rotate": 0.3088,
+      "valid_mrr_complex": 0.4565,
+      "test_queries": 112,
+      "test_mrr_hybrid": 0.5331,
+      "test_mrr_rotate_only": 0.1572
+    },
+    "_derivationally_related_form": {
+      "idx": 1,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.9246,
+      "valid_mrr_complex": 0.0005,
+      "test_queries": 2148,
+      "test_mrr_hybrid": 0.9394,
+      "test_mrr_rotate_only": 0.9394
+    },
+    "_has_part": {
+      "idx": 2,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.0029,
+      "valid_mrr_complex": 0.0001,
+      "test_queries": 344,
+      "test_mrr_hybrid": 0.0119,
+      "test_mrr_rotate_only": 0.0119
+    },
+    "_hypernym": {
+      "idx": 3,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.0101,
+      "valid_mrr_complex": 0.0029,
+      "test_queries": 2502,
+      "test_mrr_hybrid": 0.0116,
+      "test_mrr_rotate_only": 0.0116
+    },
+    "_instance_hypernym": {
+      "idx": 4,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.085,
+      "valid_mrr_complex": 0.002,
+      "test_queries": 244,
+      "test_mrr_hybrid": 0.0799,
+      "test_mrr_rotate_only": 0.0799
+    },
+    "_member_meronym": {
+      "idx": 5,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.0264,
+      "valid_mrr_complex": 0.0002,
+      "test_queries": 506,
+      "test_mrr_hybrid": 0.0401,
+      "test_mrr_rotate_only": 0.0401
+    },
+    "_member_of_domain_region": {
+      "idx": 6,
+      "routed_to": "complex",
+      "valid_mrr_rotate": 0.0253,
+      "valid_mrr_complex": 0.2751,
+      "test_queries": 52,
+      "test_mrr_hybrid": 0.2608,
+      "test_mrr_rotate_only": 0.0247
+    },
+    "_member_of_domain_usage": {
+      "idx": 7,
+      "routed_to": "complex",
+      "valid_mrr_rotate": 0.001,
+      "valid_mrr_complex": 0.603,
+      "test_queries": 48,
+      "test_mrr_hybrid": 0.5674,
+      "test_mrr_rotate_only": 0.0045
+    },
+    "_similar_to": {
+      "idx": 8,
+      "routed_to": "complex",
+      "valid_mrr_rotate": 0.0127,
+      "valid_mrr_complex": 0.8333,
+      "test_queries": 6,
+      "test_mrr_hybrid": 0.8889,
+      "test_mrr_rotate_only": 0.0067
+    },
+    "_synset_domain_topic_of": {
+      "idx": 9,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.0623,
+      "valid_mrr_complex": 0.0001,
+      "test_queries": 228,
+      "test_mrr_hybrid": 0.0228,
+      "test_mrr_rotate_only": 0.0228
+    },
+    "_verb_group": {
+      "idx": 10,
+      "routed_to": "rotate",
+      "valid_mrr_rotate": 0.8453,
+      "valid_mrr_complex": 0.3594,
+      "test_queries": 78,
+      "test_mrr_hybrid": 0.7913,
+      "test_mrr_rotate_only": 0.7913
+    }
+  },
+  "prose_audit": [
+    {
+      "relation": "_hypernym",
+      "prose_says_routed_to": "rotate",
+      "actually_routed_to": "rotate",
+      "routing_matches": true,
+      "prose_quotes_rotate_valid_mrr": 0.9246,
+      "measured_rotate_valid_mrr": 0.0101,
+      "number_matches": false
+    },
+    {
+      "relation": "_instance_hypernym",
+      "prose_says_routed_to": "rotate",
+      "actually_routed_to": "rotate",
+      "routing_matches": true,
+      "prose_quotes_rotate_valid_mrr": 0.8453,
+      "measured_rotate_valid_mrr": 0.085,
+      "number_matches": false
+    },
+    {
+      "relation": "_member_meronym",
+      "prose_says_routed_to": "rotate",
+      "actually_routed_to": "rotate",
+      "routing_matches": true,
+      "prose_quotes_rotate_valid_mrr": 0.085,
+      "measured_rotate_valid_mrr": 0.0264,
+      "number_matches": false
+    },
+    {
+      "relation": "_also_see",
+      "prose_says_routed_to": "complex",
+      "actually_routed_to": "complex",
+      "routing_matches": true,
+      "prose_quotes_rotate_valid_mrr": 0.3088,
+      "measured_rotate_valid_mrr": 0.3088,
+      "number_matches": true
+    },
+    {
+      "relation": "_similar_to",
+      "prose_says_routed_to": "complex",
+      "actually_routed_to": "complex",
+      "routing_matches": true,
+      "prose_quotes_rotate_valid_mrr": 0.001,
+      "measured_rotate_valid_mrr": 0.0127,
+      "number_matches": true
+    },
+    {
+      "relation": "_verb_group",
+      "prose_says_routed_to": "complex",
+      "actually_routed_to": "rotate",
+      "routing_matches": false,
+      "prose_quotes_rotate_valid_mrr": 0.0127,
+      "measured_rotate_valid_mrr": 0.8453,
+      "number_matches": false
+    }
+  ],
+  "quote_provenance": {
+    "_hypernym": [
+      "_derivationally_related_form"
+    ],
+    "_instance_hypernym": [
+      "_verb_group"
+    ],
+    "_member_meronym": [
+      "_instance_hypernym"
+    ],
+    "_also_see": [
+      "_also_see"
+    ],
+    "_similar_to": [
+      "_has_part",
+      "_hypernym",
+      "_member_of_domain_usage",
+      "_similar_to"
+    ],
+    "_verb_group": [
+      "_has_part",
+      "_hypernym",
+      "_member_meronym",
+      "_member_of_domain_region",
+      "_member_of_domain_usage",
+      "_similar_to"
+    ]
+  },
+  "h164_test_mrr_rotate_cross_check": {
+    "_hypernym": 0.0122,
+    "_derivationally_related_form": 0.9412,
+    "_verb_group": 0.8799
+  },
+  "controls": {
+    "C1_reproduces_G92": {
+      "ok": true
+    },
+    "C2_named_partition": {
+      "ok": true
+    },
+    "C3_pins_intact": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_prose_was_right": {
+      "fired": false
+    },
+    "F2_lift_was_already_controlled": {
+      "fired": false
+    },
+    "F3_hybrid_loses_to_its_own_rotate": {
+      "fired": false
+    }
+  }
+}

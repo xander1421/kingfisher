@@ -1,0 +1,17 @@
+H164 A3 gate: max|cos^2(theta)+sin^2(theta) - 1| < 1e-05
+
+theta handed to the control              max err   verdict
+trained-like uniform(-pi,pi) f32       1.192e-07   passes
+ALL ZEROS (never trained at all)       0.000e+00   passes
+diverged huge 1e8                      0.000e+00   passes
+diverged huge 1e30                     0.000e+00   passes
+tiny 1e-30                             0.000e+00   passes
+float64 instead of float32             2.220e-16   passes
+adversarial 1e7 random f32             1.192e-07   passes
+
+NaN theta: max err = nan; `nan < 1e-05` is False
+  -> the control DOES flip on NaN, but a NaN embedding is a dead model,
+     not a violated unit modulus. The stated fault is still unreachable.
+
+VERDICT: an untrained all-zeros model and a diverged 1e30 model BOTH pass.
+A3 measures np.cos/np.sin, not G91. It is zero evidence about the model.
