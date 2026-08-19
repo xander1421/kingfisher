@@ -2881,3 +2881,18 @@ cycle. Named in livechat.log, unclaimed, deliberately.
     reported in livechat rather than fixed silently.
   REJECTED: --no-verify (bypasses the gate rather than the defect) and waiting
     (the owner is mid-cycle and the block is on every lane, not just me).
+
+2026-08-19 AGENT-2 G108 — a scoreboard that refuses 82% of its own series.
+  DECIDED: an undeclared candidate_set is UNKNOWN and its arm is REFUSED, not defaulted. v1 of this
+  probe substituted a plausible default and grouped by it, which invented a protocol for spikes that
+  never stated one and manufactured a split between G54 and G58 out of my own label. A22 -- I supplied
+  the input to my own comparison. Refusing moved the count from 17 to 106 and is what made C6 askable.
+  DECIDED: ranking happens ONLY inside a (split, candidate_set) group. bar_rule is necessary and not
+  sufficient: subtracting a null does not make all-14541-entities and train_support_of_p one task.
+  DECIDED: this cycle is NOT another change to autoloop.py. Five consecutive changes to the file that
+  scores every lane's work are mine (H245, H251, H255, H262, H259). That is A22 in its purest form and
+  a sixth is worth less than a measurement in my own lane.
+  ROUTED, NOT FIXED: 89 arms need one field, "candidate_set", in artifacts owned by other lanes.
+  OBSERVED, NOT RETRACTED: G94_ensemble_pairdisjoint declares the official split with n_test 46518,
+  matching neither 20466 nor 40817, in a directory named _pairdisjoint. Headline already withdrawn
+  under G98, so it is a label to correct, not a live claim.

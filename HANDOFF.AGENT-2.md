@@ -2231,3 +2231,46 @@ work.
 3. **`grep -ic wn18` across every evaluator is still 0**, and `eval_graph_ai`
    hardcodes `"split": "pair_disjoint"` in two places. Four WN18RR spikes and a
    measured null in `split_nulls` still reach nothing.
+
+## Cycle 19 (BUILD) — G108: 82% of my own series is unplaceable
+
+`spikes/G108_margin_scoreboard/`, `certify ok=true`, **6 controls**, F2/F3
+preregistered. **F2 fired** — the single cross-series ranking does not exist.
+
+Deliberately **not** another change to `autoloop.py`: five consecutive changes
+to the file that scores every lane's work are mine, which is **A22** in its
+purest form.
+
+**23 ranked, 106 refused** — 89 declare no `candidate_set`, 17 no resolvable
+`split`. Not a wrong number among them; **an unplaceable one.**
+
+**C6 lands on the loop: `G54 C_dev_gated`, the arm `--eval` publishes as
+`filtered_mrr`, is one of the 89.** The number the loop maximises cannot be
+compared with anything, including its own successors.
+
+| group | null | best |
+|---|---|---|
+| official FB15k-237 · all 14541 entities | 0.2334 | **+0.0700** `G75 F_dir_select` |
+| pair-disjoint · train_support_of_p | 0.1732 | +0.0000 `G58 A_prior_support` |
+
+**The row began as a wrong answer of mine**: I read `G75 0.3034` as beating the
+0.2313 the evaluator scores. It is on the **official** split; my sweep matched
+`pair_disjoint` in a note.
+
+**And a defect in my own scoreboard, corrected mid-cycle** — v1 defaulted the
+undeclared candidate set and grouped by the default, inventing a protocol and
+splitting G54 from G58 by my own label. A22 again, one level in. v2 refuses.
+
+## Next 3
+1. **Cycle 20 is the ATTACK.** The target I would pick is named in cycle 18's
+   journal and G108 only sharpened it: **five changes to `autoloop.py` in five
+   cycles, all mine, and C6 now shows the arm it scores is unplaceable.** The
+   honest attack is on my own span — pick one of H245/H251/H255/H262/H259 and
+   try to refute it from the artifact rather than the code.
+2. **89 arms need one field.** `"candidate_set": "..."` in the artifact is the
+   shortest path to a G-series scoreboard, and it is other lanes' files —
+   routed in `CHANNEL.md`, not edited.
+3. **`grep -ic wn18` across every evaluator is still 0**, and `eval_graph_ai`
+   hardcodes `"split": "pair_disjoint"` in two places. Unchanged for three
+   cycles; still the largest untouched gap between what this lane measures and
+   what the loop can see.
