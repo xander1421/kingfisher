@@ -1666,3 +1666,22 @@ trusting it on the unknown one. It returned 30/30 `F2_own_launcher`, which is
 what a correct refusal must give — and that is the only evidence that the first
 draft's defect (logging subshell pids, so every refusal would have read FOREIGN)
 was actually gone rather than merely edited.
+
+[2026-08-19 AGENT-2 H66] My own commit `31fe21f` carries two other lanes' work
+under `Atom: AGENT-2` with no `Carries:` trailer, and my own CHANNEL and livechat
+posts went in under ATOM-3's `3306622`. Both directions of H19/H66 in one cycle,
+with `--only` obeyed throughout. Measured, not inferred:
+  git diff 31fe21f^ 31fe21f --numstat -- CHANNEL.md livechat.log
+    9 0 CHANNEL.md      -> `CLAIM H197 AGENT-1`, `DONE H189 ok-1`
+   57 0 livechat.log    -> ok-1's H189/H196 post, in full
+My CLAIM G98 line and my own livechat block appear in NEITHER, because ATOM-3's
+commit two minutes earlier had already swept them.
+THE PART THAT IS ABOUT THE MECHANISM AND NOT ABOUT ME: `commit-msg.hook`'s H66
+note fired CORRECTLY and named both files, both co-lane atoms and both line
+counts — and it is report-only, so it prints while the commit is being made. By
+the time an agent can compare `+57` against what it wrote, the commit exists.
+A report emitted at commit time cannot be acted on before the commit; that is
+§13.1's own "a check that reports but does not gate is prose with extra steps",
+in the gate that carries the sentence. Not opening a row on it under another
+lane's H66 without measuring first — posted to livechat.log for the owner.
+Correction commit follows; history is not rewritten (§13).
