@@ -1,0 +1,212 @@
+{
+ "spike": "G96_selector_stability",
+ "recorded_utc": "2026-08-19T15:56:07Z",
+ "note": "G96. G95 nulled the selector in AGGREGATE and G88 publishes it as a frozen PER-KEY table with a sha256. This fits the same selector independently on two disjoint shuffled halves of validation and measures how often they choose the same arm for the same key, against a chance rate computed from the observed marginals rather than assumed at 1/5.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid",
+   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null",
+   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G95_selector_null/selector_null.json"
+   ],
+   "diff_sha256": "9f5e3d4727641dbe9b8e1c241666d74bde234ac5c8222ff594edb4b54cfe937f",
+   "diff_bytes": 448
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/commit_scoped.sh",
+    "spikes/harness/registry.py",
+    "spikes/harness/fleetcensus.sh",
+    "spikes/harness/versioncheck.py"
+   ],
+   "diff_sha256": "f069f1faff15eae8285fcaac6fb16e452daadbe7317469c16866b1089bce2720",
+   "diff_bytes": 6848
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G96_selector_stability/stability.json",
+   "sha256": "322db2e73ba901f6339619ba5fa3b654a31d1466be95ca5a0ac90aff877ee9db",
+   "bytes": 1214,
+   "mtime": 1787154967,
+   "compared_ts": 1787154967,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "reproduces_g88",
+   "must_fire_because": "nothing here is about G88 unless its headline reproduces from its own instrument",
+   "can_fail_because": "a moved embedding, a changed miner, a different split",
+   "null_must_contain": "a different mrr -- the pipeline is re-run from corpus and embeddings, so any drift in the arms or the split misses",
+   "fired": true,
+   "detail": "0.3143 vs 0.3143",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "reproduced_mrr": 0.3143,
+    "published": 0.3143,
+    "selector_sha256": "f2e8f705f91de76988ebcdcf51fe404b920da6c3369a104edb6b0c13faa5fa02"
+   }
+  },
+  {
+   "name": "halves_disjoint_and_shuffled",
+   "must_fire_because": "A27: a hold-out drawn from one end of the key order is not a sample",
+   "can_fail_because": "the two index sets intersect, or the permutation is the identity",
+   "null_must_contain": "an overlap, or an unshuffled split. Taking valid_rows[:half] instead would put low predicate ids in A and high in B and is reachable by deleting one line",
+   "fired": true,
+   "detail": "A 17535 / B 17535, disjoint=True",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_valid": 35070,
+    "n_a": 17535,
+    "n_b": 17535,
+    "disjoint": true,
+    "shuffled_seed": 12648430
+   }
+  },
+  {
+   "name": "chance_computed_from_marginals",
+   "must_fire_because": "a skewed choice distribution makes two independent selectors agree far more than 1/5, so the baseline must come from the data",
+   "can_fail_because": "the marginals come out uniform, which would make the naive baseline correct after all",
+   "null_must_contain": "a value far from 0.20. distmult holds 279/446 of the full table, so sum(p^2) must land well above a naive fifth -- if it did not, the marginals would be flat and the correction unnecessary",
+   "fired": true,
+   "detail": "chance 0.5700 vs naive 0.2000",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "chance": 0.570037,
+    "naive": 0.2,
+    "marginal_a": {
+     "distmult": 315,
+     "rotate": 21,
+     "g64": 51,
+     "complex": 25,
+     "prior": 12
+    },
+    "marginal_b": {
+     "distmult": 313,
+     "g64": 54,
+     "complex": 26,
+     "rotate": 12,
+     "prior": 19
+    }
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_per_key_choice_is_noise",
+   "must_fire_because": null,
+   "can_fail_because": "half-A and half-B agree at or below the chance rate computed from the observed marginals",
+   "null_must_contain": "both answers -- agreement is measured and chance is measured, on the same keys",
+   "fired": false,
+   "detail": "agree 0.7972 vs chance 0.5700",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "agreement": 0.79717,
+    "chance": 0.570037,
+    "n_keys": 424
+   },
+   "refutes": "refutes any per-key reading of G88's frozen table and of G95's aggregate verdict: the choice at a key would flip on different validation data",
+   "fires_when": "half-A and half-B agree at or below the chance rate computed from the observed marginals",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_selector_needs_full_validation",
+   "must_fire_because": null,
+   "can_fail_because": "neither half-fit selector beats DistMult on test",
+   "null_must_contain": "both answers -- the half-fit MRRs and the DistMult baseline are computed from the same test rows",
+   "fired": false,
+   "detail": "A 0.3110 / B 0.3105 vs distmult 0.2852",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "mrr_a": 0.311,
+    "mrr_b": 0.3105,
+    "distmult": 0.2852
+   },
+   "refutes": "refutes the mechanism reading: if HALF the validation set cannot beat one arm, the published gain is partly a data-budget effect and is optimistic for any smaller validation set",
+   "fires_when": "neither half-fit selector beats DistMult on test",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_g88_not_reproduced",
+   "must_fire_because": null,
+   "can_fail_because": "reproduced mrr != 0.3143 to 4 dp",
+   "null_must_contain": "both answers; C1 gates on the same comparison",
+   "fired": false,
+   "detail": "0.3143",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "reproduced": 0.3143,
+    "published": 0.3143
+   },
+   "refutes": "refutes the whole run",
+   "fires_when": "reproduced mrr != 0.3143 to 4 dp",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G95_selector_null": {
+   "newest": 1787154633,
+   "from": "spikes/G95_selector_null/selector_null.json"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787154954,
+   "from": "spikes/harness/versioncheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "If the two halves agreed at or below the marginal chance rate, the per-key table would be validation noise and neither G88's choice_sha256 nor G95's aggregate verdict could be quoted about any individual key.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

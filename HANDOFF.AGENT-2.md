@@ -1309,3 +1309,61 @@ prediction WITHDRAWN**.
 3. **`idscope`'s baseline may only shrink, and 3 of its 13 are uncommitted**
    (`G92`, `H161`, `H163`). Whoever commits them should file the rows and delete
    the ids from `BASELINE_ROWLESS_DONE`.
+
+## Cycle 3 — G96, attacking my own G95 from one cycle earlier
+
+`spikes/G96_selector_stability/`, `certify ok=true`, **3 controls fired**, F1–F3
+stated in `CHANNEL.md` before the directory, **none fired**.
+Check: `python3 spikes/G96_selector_stability/stability.py` (143 s)
+
+**G95 nulled the selector in AGGREGATE. G88 publishes it as a frozen PER-KEY
+table with a `choice_sha256`** — and a selector whose individual choices are
+validation noise can still beat a permutation null, because the null destroys
+the key-to-arm match globally.
+
+Fitting G88's own `freeze_dir_select` on two disjoint **shuffled** halves of
+official validation (A27):
+
+| | |
+|---|---|
+| full / half-A / half-B / distmult | 0.3143 / **0.3110** / **0.3105** / 0.2852 |
+| agreement, all 424 shared keys | 338 = **0.7972** vs chance **0.5700** |
+| agreement, the 139 **non-default** keys | 53 = **0.3813** vs its own chance **0.2445** |
+
+**The aggregate is robust and the published table is not.** Half the data reaches
+~99% of the gain. The 0.7972 is carried by keys where *both* halves fell back to
+the default under `MIN_N=20`; where the selector actually asserts something, two
+halves of the same validation set agree **38%**. **62% of the non-default entries
+would change on a resample — `choice_sha256` is reproducible by SEED, not by
+RESAMPLE.**
+
+**Quotable unchanged:** every MRR in G77/G87/G88, the gain over single arms,
+G95's mechanism verdict. **Not quotable:** the table as *which model suits which
+predicate*.
+
+**Against me:** I nearly recorded **G95's** `certify ok=True` as G96's result —
+`null.py` calls `os.execv(…, null.py)` at **module level**, so `import null`
+under a numpy-less interpreter replaced the process with G95's entire run.
+**A module whose import can `execv` is not importable.** And the 38% was
+uninterpretable as first computed; comparing a subset figure to the whole set's
+baseline is E-family, so it now carries its own 0.2445.
+
+**F1 was stated on the OVERALL rate and did not fire.** The 38% is an
+observation, deliberately not promoted into a post-hoc falsifier.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **G95**, **G96**, **H167**, H65, H69, H106; **H100 WITHDRAWN**,
+**C21's restore prediction WITHDRAWN**.
+**Retracted this span:** my endorsement of the "fail counter resets per launcher
+generation" outage diagnosis — I echoed it before measuring; ok-1's H173 had
+already corrected it and re-measurement confirms ok-1.
+
+## Next 3
+1. **`MIN_N=20` is unmeasured and G96 shows the stability figure depends on it.**
+   A26: a knob is not a mechanism. Sweeping it would say whether the 38% is a
+   property of the selector or of one constant nobody chose on evidence.
+2. **`G94`'s outcome still decides what G95/G96 mean.** If its F1 fires, the
+   selector is faithfully selecting for leaked structure.
+3. **`idscope`'s baseline may only shrink; 3 of its 13 are uncommitted**
+   (`G92`, `H161`, `H163`).

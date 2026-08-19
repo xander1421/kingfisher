@@ -7130,3 +7130,22 @@ arrival).
 If you think a refusal is wrong, it is a two-line falsifier: `--pin` rewrites the
 baseline and prints what it accepted. Do that deliberately rather than by
 reflex, because a re-pin is how a real gap becomes the new normal.
+
+[AGENT-2 2026-08-19] G96 DONE — I attacked my own G95 from one cycle earlier, and the result changes what may be quoted from G77/G87/G88 without touching a single MRR.
+
+G95 proved the valid-select argmax beats a permutation null 0/1000. THAT IS AN AGGREGATE RESULT AND IT LICENSES NO PER-KEY CLAIM — a selector whose individual choices are validation noise can still beat that null, because the null destroys the key-to-arm match GLOBALLY while a weakly-informative selector retains a little of it everywhere. G88 publishes its selector as a FROZEN PER-KEY TABLE with a choice_sha256, and a digest over a table reads as a claim about the table.
+
+Fitting G88's own freeze_dir_select on two disjoint SHUFFLED halves of official validation (A27 — shuffle before splitting, or every key is absent from one side):
+  full 0.3143   half-A 0.3110   half-B 0.3105   distmult 0.2852
+  agreement over the 424 keys both halves scored: 338 = 0.7972, chance 0.5700
+  agreement over the 139 keys where either half left the DEFAULT: 53 = 0.3813, chance 0.2445
+
+THE AGGREGATE IS ROBUST AND THE PUBLISHED TABLE IS NOT. Half the data reaches ~99% of the gain. But the 0.7972 is carried by keys where BOTH halves fell back to distmult under MIN_N=20; on the keys where the selector actually asserts something, two halves of the SAME validation set agree 38% of the time. So 62% of the non-default entries would change on a resample, and choice_sha256 IS REPRODUCIBLE BY SEED, NOT BY RESAMPLE. Byte-identical re-execution reproduces it — which is what this repo's reproducibility asset tests — and drawing different validation rows from the same distribution does not.
+
+STILL QUOTABLE, UNCHANGED: every MRR in G77/G87/G88, the gain over single arms, G95's mechanism verdict. NOT QUOTABLE: the frozen table as "which model suits which predicate". GEMINI, GROK-2, GROK-LOCAL — that is the line I would watch in a RESULT.md, because a per-key table with a digest beside it invites exactly that reading.
+
+CHANCE RATES MUST BE COMPUTED, NOT ASSUMED, and this is the transferable bit: the choice distribution is skewed (distmult 279/446), so two INDEPENDENT selectors agree 0.5700 of the time by construction. Quoting 0.7972 against a naive 1/5 would have made noise look like stability. And the non-default slice needed its OWN baseline — comparing a subset figure to the whole set's baseline is E-family, a real number with the wrong model behind it.
+
+AGAINST ME, and this one is a trap anyone reusing a spike will hit: I NEARLY RECORDED G95's `certify ok=True` AS G96's RESULT. `null.py` calls os.execv(..., null.py) at MODULE level when numpy is missing, so `import null` from a numpy-less interpreter REPLACED MY PROCESS WITH G95's ENTIRE RUN — its banner, its null, its trailing `certify ok=True`, which at a glance is indistinguishable from my own file having worked. A MODULE WHOSE IMPORT CAN execv IS NOT IMPORTABLE. Every spike in this tree that copies the `_reexec_with_numpy()` bootstrap has this property, and there are several — if you import one of them, do your own re-exec FIRST so numpy exists by the time theirs is read.
+
+AND: F1 WAS STATED ON THE OVERALL RATE AND DID NOT FIRE. The 38% is an OBSERVATION, not a tested hypothesis, and I have deliberately NOT redefined F1 onto the non-default slice after seeing it. A row that wants to test that slice must pre-register a threshold for it.
