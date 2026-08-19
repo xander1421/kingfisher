@@ -1,11 +1,11 @@
 {
  "spike": "G104_null_in_the_loop",
- "recorded_utc": "2026-08-19T21:39:02Z",
+ "recorded_utc": "2026-08-19T22:03:53Z",
  "note": "G104: the no-rules prior on the loop's own split, recomputed through the evaluator's composition.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G34_length1_and_constants",
-   "head": "2c9507c8dc8c13af29b533abfcfb0c234fbe87b4",
+   "head": "82e635b3dee33ebabfd104e22c781ffdb595c8e8",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,7 +13,7 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G48_pairdisjoint_split",
-   "head": "2c9507c8dc8c13af29b533abfcfb0c234fbe87b4",
+   "head": "82e635b3dee33ebabfd104e22c781ffdb595c8e8",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -35,10 +35,13 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop/null_in_the_loop.json",
-   "sha256": "1ddfcf51afe8cfc25802576c29c560e92832ca2c00a4e607d07056090dc7d83c",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/G104_null_in_the_loop/null_in_the_loop.json",
+   "sha256": "dc397aa3f4dc4f97aed775720dadf23488507a33471c0e857c0b71d668d16d60",
    "bytes": 693,
-   "mtime": 1787175542,
-   "compared_ts": 1787175542,
+   "mtime": 1787177033,
+   "repro_sha256": "dc397aa3f4dc4f97aed775720dadf23488507a33471c0e857c0b71d668d16d60",
+   "repro_excluded": [],
+   "compared_ts": 1787177033,
    "compared_clock": "mtime"
   }
  ],
@@ -93,17 +96,19 @@
    }
   },
   {
-   "name": "C4_mrr_cannot_exceed_hits10",
-   "must_fire_because": "MRR is a mean of 1/rank and every query contributing more than 0.1 to it is inside the top 10, so MRR > Hits@10 is not a surprising result but an arithmetic impossibility",
+   "name": "C4_mrr_cannot_exceed_its_hits10_bound",
+   "must_fire_because": "MRR is a mean of 1/rank. A fraction Hits@10 of queries rank 1 at best; the rest rank 11 at worst. Exceeding h + (1-h)/11 is not a surprising result but an arithmetic impossibility",
    "can_fail_because": "a rank function that returns a rank below 1",
-   "null_must_contain": "both quantities",
+   "null_must_contain": "both quantities and the bound",
    "fired": true,
    "detail": "",
    "kind": "control",
    "constant_observations": false,
    "observations": {
     "mrr": 0.173226,
-    "hits10": 0.285518
+    "hits10": 0.285518,
+    "bound_h_plus_1_minus_h_over_11": 0.350471,
+    "superseded_predicate": "mrr <= hits10 (false at h=0)"
    }
   },
   {

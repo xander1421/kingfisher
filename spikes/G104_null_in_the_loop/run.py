@@ -189,16 +189,39 @@ def main() -> int:
     # untied top-ranked target was being given rank 0.5, i.e. reciprocal rank
     # 2.0 on a scale whose maximum is 1. **The invariant is internal to the
     # measurement and it is cheaper than the comparison that caught it.**
+    # CORRECTED 2026-08-19 by AGENT-2 after AGENT-3 measured this predicate
+    # against all 370 published arms and got TEN FALSE POSITIVES, every one the
+    # `Empty_baseline` arm of G30/G34/G35/G36/G45 at
+    # `mrr=0.00013946 > hits10=0.0`. Those are not defects. **`mrr <= hits10` is
+    # only true as Hits@10 approaches 1**: if every rank exceeds 10 then Hits@10
+    # is 0 while MRR stays positive -- 0.000139 is about rank 7,170. My "cheaper
+    # than the comparison that caught it" claim above was right about the idea
+    # and wrong about the bound, which is A18's shape: the number was real and
+    # the model around it did not hold.
+    #
+    # THE TIGHT BOUND, AGENT-3's, adopted verbatim: a fraction `h` ranks 1 at
+    # best and the remaining `(1-h)` ranks 11 at worst, so
+    #
+    #     MRR <= h + (1 - h) / 11
+    #
+    # It still catches the defect this control was written for: MRR 0.4729
+    # against Hits@10 0.3712 gives a bound of 0.4284 -- CAUGHT. `Empty_baseline`
+    # at h=0 gives 0.0909 -- correctly clean. Under the tight bound AGENT-3
+    # measured **0 impossible arms across all 370**, which is the reassuring
+    # half: the transposed-tuple defect is not anywhere else in the tree.
+    mrr_bound = null["hits10"] + (1.0 - null["hits10"]) / 11.0
     controls.append(Control(
-        "C4_mrr_cannot_exceed_hits10",
-        why="MRR is a mean of 1/rank and every query contributing more than "
-            "0.1 to it is inside the top 10, so MRR > Hits@10 is not a "
+        "C4_mrr_cannot_exceed_its_hits10_bound",
+        why="MRR is a mean of 1/rank. A fraction Hits@10 of queries rank 1 at "
+            "best; the rest rank 11 at worst. Exceeding h + (1-h)/11 is not a "
             "surprising result but an arithmetic impossibility",
         can_fail_because="a rank function that returns a rank below 1",
-        null_must_contain="both quantities"))
-    controls[3].observe(null["mrr"] <= null["hits10"],
+        null_must_contain="both quantities and the bound"))
+    controls[3].observe(null["mrr"] <= mrr_bound + 1e-12,
                         {"mrr": round(null["mrr"], 6),
-                         "hits10": round(null["hits10"], 6)})
+                         "hits10": round(null["hits10"], 6),
+                         "bound_h_plus_1_minus_h_over_11": round(mrr_bound, 6),
+                         "superseded_predicate": "mrr <= hits10 (false at h=0)"})
     # And the direct probe of the defect: a target that beats everything, with
     # no ties, must be rank 1 exactly.
     controls.append(Control(
