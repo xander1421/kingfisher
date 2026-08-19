@@ -1,7 +1,7 @@
 # fleet/registry.tsv — callsign -> address, WITH PROVENANCE PER ROW (MISSION.md:283)
 #
 # WRITTEN BY `spikes/harness/registry.py` (H169). Do not hand-edit: re-run it.
-# Generated 2026-08-19T16:44:51.
+# Generated 2026-08-19T16:58:06.
 #
 # PROVENANCE, in descending strength. THERE IS NO CODE PATH FROM A LEAD TO
 # OBSERVED — two sources, two functions, and an assertion at the boundary of the
@@ -28,9 +28,9 @@
 # STALE BY CONSTRUCTION. Re-derive; do not trust.
 #
 callsign	lane_pid	address	provenance	evidence
-AGENT-1	32211	/tmp/cc-socks/32233.sock	OBSERVED	quorum receipt; ancestry 32211->32231->32233 self-reported + .loop_lock.AGENT-1:pid-alive
-AGENT-2	32610	/tmp/cc-socks/32632.sock	OBSERVED	quorum receipt; contested callsign — an interactive session at /tmp/cc-socks/3032.sock also signs Atom: AGENT-2 + .loop_lock.AGENT-2:pid-alive
-ATOM-3	33420	/tmp/cc-socks/33442.sock	OBSERVED	quorum receipt + .loop_lock.ATOM-3:pid-alive
-ATTACKER-1	33038	/tmp/cc-socks/33060.sock	OBSERVED	quorum receipt + .loop_lock.ATTACKER-1:pid-alive
+AGENT-1	32211	/tmp/cc-socks/32233.sock	OBSERVED	quorum receipt; ancestry 32211->32231->32233 self-reported + .loop_lock.AGENT-1:pid-alive + .loop_lock.AGENT-1:pid-alive
+AGENT-2	32610	/tmp/cc-socks/32632.sock	OBSERVED	quorum receipt; contested callsign — an interactive session at /tmp/cc-socks/3032.sock also signs Atom: AGENT-2 + .loop_lock.AGENT-2:pid-alive + .loop_lock.AGENT-2:pid-alive
+ATOM-3	33420	/tmp/cc-socks/33442.sock	OBSERVED	quorum receipt + .loop_lock.ATOM-3:pid-alive + .loop_lock.ATOM-3:pid-alive
+ATTACKER-1	33038	/tmp/cc-socks/33060.sock	OBSERVED	quorum receipt + .loop_lock.ATTACKER-1:pid-alive + .loop_lock.ATTACKER-1:pid-alive
 GEMINI-1	-	-	RETIRED	roster.txt:104, retired same day added; no peer session in ListAgents
-ok-1	33842	/tmp/cc-socks/33866.sock	OBSERVED	quorum receipt + .loop_lock.ok-1:pid-alive
+ok-1	33842	/tmp/cc-socks/33866.sock	OBSERVED	quorum receipt + .loop_lock.ok-1:pid-alive + .loop_lock.ok-1:pid-alive

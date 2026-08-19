@@ -52,6 +52,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OBSERVED = "OBSERVED"
+CLAIMED = "argv"          # H181: a header the sender wrote about itself
 LEAD_VALUES = ("lock", "argv")
 HDR = re.compile(r"^──── message to (\S+), from (\S+) ────$")
 COLS = ("callsign", "lane_pid", "address", "provenance", "evidence")
@@ -73,12 +74,30 @@ def declared_lanes(root: Path = None) -> list:
 
 
 def receipts(root: Path = None) -> dict:
-    """OBSERVED rows, and the ONLY producer of them.
+    """Rows derived from delivered messages. **NOT `OBSERVED` — see H181.**
 
-    A delivered message is a message that actually arrived, which is the spec's
-    definition verbatim. Every row cites the file and line it came from — an
-    observation that cannot name its evidence is a declaration wearing an
-    observation's name (A22).
+    v1 emitted `OBSERVED` here and was WRONG, and the module was attacked by its
+    own author 40 minutes after it landed. `MISSION.md:283` reserves `OBSERVED`
+    for *"a message actually ARRIVED from that address ... the only proof of
+    reachability"*. A delivered message does prove ARRIVAL — but the IDENTITY in
+    the header is `send.sh:62`'s `FROM="${CALLSIGN:-$(whoami)@interactive}"`,
+    i.e. **the sender's own environment**. MEASURED, not argued
+    (`spikes/H181_observed_is_selfdeclared/`): a scratch lane exported one
+    environment variable, sent one message, and minted an `OBSERVED` row for a
+    callsign that was not its own — reaching the written file, no privilege
+    beyond a lane's own tree.
+
+    That is A22 exactly: the party being attested supplied the input to the
+    attestation. And the spec already has the right word for it — *"`argv` means a
+    process CLAIMS the callsign and is a LEAD, NEVER AN ADDRESS"*. A header a lane
+    writes about itself is a claim, so it is recorded as one.
+
+    **Consequence, stated rather than hidden: NO function in this module can now
+    emit `OBSERVED`.** Every `OBSERVED` row in the file is hand-attested by a lane
+    that witnessed an arrival it did not author, and `merge()` preserves those.
+    That is the honest state of the evidence, not a regression — v1's stronger
+    label was forgeable, and a forgeable proof of reachability is worse than an
+    admitted claim because it is spent as if it were evidence.
     """
     root = root or ROOT
     lanes = set(declared_lanes(root))
@@ -103,8 +122,9 @@ def receipts(root: Path = None) -> dict:
                 "callsign": sender,
                 "lane_pid": "-",
                 "address": f"inbox/{sender}.md",
-                "provenance": OBSERVED,
-                "evidence": f"{rel}:{i}",
+                # H181: self-declared by the sender. A claim, never an address.
+                "provenance": CLAIMED,
+                "evidence": f"{rel}:{i} (sender-declared)",
             })
     return found
 
@@ -136,6 +156,19 @@ def leads(root: Path = None) -> dict:
             f"leads() produced {row['provenance']!r} — there is no path from a "
             f"lead to OBSERVED and this assertion is that path's absence")
     return out
+
+
+def _assert_no_derived_observation(rows: dict) -> None:
+    """H181. NEITHER derivation path may emit OBSERVED, not just `leads()`.
+
+    v1 asserted this of the weak source only, which is why the forgery walked in
+    through the source I had already decided was the strong one. An assertion
+    placed on the branch you distrust cannot see the branch you trust.
+    """
+    for cs, row in rows.items():
+        assert row["provenance"] != OBSERVED, (
+            f"derived row for {cs} claims OBSERVED; nothing mechanical here can "
+            f"earn it (H181)")
 
 
 def _pid_alive(pid: int) -> bool:
@@ -239,6 +272,7 @@ def build(root: Path = None) -> tuple:
             row = dict(row, lane_pid=prior["lane_pid"],
                        evidence=f"{row['evidence']} + {prior['evidence']}")
         derived[cs] = row
+    _assert_no_derived_observation(derived)
     rows, kept = merge(parse_existing(path), derived)
     return path, rows, kept
 
@@ -313,10 +347,12 @@ def selfcheck() -> int:
         (tmp / "inbox" / "archive" / "LANE-B.log").write_text(
             "\n──── message to LANE-B, from LANE-A ────\nhello\n")
         rc = receipts(tmp)
-        ck(rc.get("LANE-A", {}).get("provenance") == OBSERVED,
-           f"C1 planted receipt becomes OBSERVED (got {rc.get('LANE-A')})")
+        ck(rc.get("LANE-A", {}).get("provenance") == CLAIMED,
+           f"C1 planted receipt becomes a CLAIM, non-vacuously (got {rc.get('LANE-A')})")
+        ck(rc.get("LANE-A", {}).get("provenance") != OBSERVED,
+           "H181 a sender-declared header never reaches OBSERVED")
         ck("inbox/archive/LANE-B.log:2" in rc.get("LANE-A", {}).get("evidence", ""),
-           f"C2 the OBSERVED row cites file:line (got {rc.get('LANE-A', {}).get('evidence')})")
+           f"C2 the row cites file:line (got {rc.get('LANE-A', {}).get('evidence')})")
 
         # F3 — a receipt from a callsign nobody sanctioned invents no standing.
         (tmp / "inbox" / "archive" / "LANE-C.log").write_text(
@@ -341,7 +377,8 @@ def selfcheck() -> int:
     if bad:
         print("SELFCHECK FAILED:", bad)
         return 1
-    print("registry: OBSERVED has exactly one producer, and a planted receipt reaches it")
+    print("registry: nothing mechanical earns OBSERVED; a planted receipt is recorded "
+          "as the CLAIM it is (H181)")
     return 0
 
 
@@ -354,6 +391,7 @@ def _build_in(root: Path) -> tuple:
             row = dict(row, lane_pid=prior["lane_pid"],
                        evidence=f"{row['evidence']} + {prior['evidence']}")
         derived[cs] = row
+    _assert_no_derived_observation(derived)
     rows, kept = merge(parse_existing(path), derived)
     return path, rows, kept
 

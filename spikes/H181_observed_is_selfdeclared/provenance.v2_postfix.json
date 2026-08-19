@@ -1,0 +1,151 @@
+{
+ "spike": "H181_observed_is_selfdeclared",
+ "recorded_utc": "2026-08-19T15:56:15Z",
+ "note": "H181: OBSERVED in registry.py v1 rests on the sender's own CALLSIGN.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "d26e1d25ad7191a5195345a4e9eea5239164a98e",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/commit_scoped.sh",
+    "spikes/harness/registry.py",
+    "spikes/harness/fleetcensus.sh",
+    "spikes/harness/versioncheck.py"
+   ],
+   "diff_sha256": "35282c1b3ad3b574c20ee19fc392ffd43bcf304786a9a599453df2cf27ca1695",
+   "diff_bytes": 7437
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H181_observed_is_selfdeclared/result.json",
+   "sha256": "de9440881ebd78b1002c6eb59d589b0ab5fb1c58912f68a93216c306f32a555e",
+   "bytes": 1199,
+   "mtime": 1787154975,
+   "compared_ts": 1787154975,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_honest_still_observed",
+   "must_fire_because": "a module hardened into observing nothing passes every forgery test ever written",
+   "can_fail_because": "a fix that filters out genuine receipts too",
+   "null_must_contain": "an honest receipt that does not reach OBSERVED",
+   "fired": false,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "row": {
+     "callsign": "LANE-ATTACKER",
+     "lane_pid": "-",
+     "address": "inbox/LANE-ATTACKER.md",
+     "provenance": "argv",
+     "evidence": "inbox/LANE-VICTIM.md:2 (sender-declared)"
+    }
+   }
+  },
+  {
+   "name": "C2_no_privilege_needed",
+   "must_fire_because": "the forgery must use nothing a lane does not already have",
+   "can_fail_because": "needing root, git write, or another lane's tree",
+   "null_must_contain": "a forgery requiring privilege",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "privilege": "one environment variable, own tree"
+   }
+  },
+  {
+   "name": "C3_selfcheck_unmodified",
+   "must_fire_because": "the module's 10 assertions must pass with no assertion edited",
+   "can_fail_because": "a probe that breaks the module it attacks",
+   "null_must_contain": "registry --selfcheck failing",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rc": 0
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_header_has_uncontrolled_field",
+   "must_fire_because": null,
+   "can_fail_because": "the header carries a pid, socket or lock token",
+   "null_must_contain": "a header field the sender cannot set",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "header": "\u2500\u2500\u2500\u2500 message to LANE-VICTIM, from LANE-ATTACKER \u2500\u2500\u2500\u2500",
+    "uncontrolled": []
+   },
+   "refutes": "that the sender controls the whole header",
+   "fires_when": "the header carries a pid, socket or lock token",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_forgery_failed",
+   "must_fire_because": null,
+   "can_fail_because": "the forged row does not reach OBSERVED",
+   "null_must_contain": "a forged receipt refused",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "forged_row": {
+     "callsign": "LANE-VICTIM",
+     "lane_pid": "-",
+     "address": "inbox/LANE-VICTIM.md",
+     "provenance": "argv",
+     "evidence": "inbox/LANE-ATTACKER.md:2 (sender-declared)"
+    }
+   },
+   "refutes": "that registry.py launders a self-declaration into OBSERVED",
+   "fires_when": "the forged row does not reach OBSERVED",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_forgery_failed"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787154975,
+   "from": "spikes/harness/registry.py"
+  }
+ },
+ "problems": [
+  "CONTROL C1_honest_still_observed DID NOT FIRE -- run is VOID, not negative. (a module hardened into observing nothing passes every forgery test ever written)"
+ ],
+ "ok": false,
+ "falsifier": "a forged receipt refused by receipts(), or a header field the sender cannot control, would refute this row",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

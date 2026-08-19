@@ -1,0 +1,42 @@
+{
+  "spike": "H181",
+  "attacks": "spikes/harness/registry.py v1 (H169), same lane, 40 minutes older",
+  "send_sh_from": "FROM=\"${CALLSIGN:-$(whoami)@interactive}\"  (send.sh:62)",
+  "header": "\u2500\u2500\u2500\u2500 message to LANE-VICTIM, from LANE-ATTACKER \u2500\u2500\u2500\u2500",
+  "honest_row": {
+    "callsign": "LANE-ATTACKER",
+    "lane_pid": "-",
+    "address": "inbox/LANE-ATTACKER.md",
+    "provenance": "OBSERVED",
+    "evidence": "inbox/LANE-VICTIM.md:2"
+  },
+  "forged_row": {
+    "callsign": "LANE-VICTIM",
+    "lane_pid": "-",
+    "address": "inbox/LANE-VICTIM.md",
+    "provenance": "OBSERVED",
+    "evidence": "inbox/LANE-ATTACKER.md:2"
+  },
+  "forged_row_reached_file": true,
+  "privilege_required": "one environment variable",
+  "controls": {
+    "C1_honest_still_observed": {
+      "ok": true
+    },
+    "C2_no_privilege_needed": {
+      "ok": true
+    },
+    "C3_selfcheck_unmodified": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_header_has_uncontrolled_field": {
+      "fired": false
+    },
+    "F2_forgery_failed": {
+      "fired": false
+    }
+  },
+  "elapsed_sec": 0.08
+}
