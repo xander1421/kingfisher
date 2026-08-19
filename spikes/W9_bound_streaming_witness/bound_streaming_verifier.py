@@ -21,7 +21,7 @@ The falsifier FIRES if:
 4. Cumulative witness bandwidth >= Cumulative full state snapshot bandwidth for sequence depth >= 20.
 """
 
-import os, sys, json, time, hashlib, struct, statistics, copy, random, sqlite3
+import os, sys, json, time, hashlib, struct, statistics, copy, random, sqlite3, subprocess
 from collections import defaultdict
 from enum import Enum
 
@@ -698,6 +698,65 @@ def benchmark_downstream_queries(final_root_hex, final_keys):
     }
 
 
+# ---------------------------------------------------------- H206: operating point
+def latency_operating_point(quiet_path=None):
+    """Is a wall-clock latency verdict ASSERTABLE on this host right now?
+
+    `quiet_path` exists ONLY so the check can drive the refusing branch without
+    touching `spikes/quiet.sh`, which five lanes share. The probe's first draft
+    renamed the real file for the duration of one arm -- H234's class, in a
+    cycle whose own row is about not being the hazard you filed.
+
+    -> {'citable': bool, 'reason': str, 'loadavg_1m': float, 'limit': float}
+
+    ==== WHY (§12.7 rationale) =============================================
+    DEFECT REMOVED (H206): term 3 of this spike's falsifier was
+    `median_latency_us > 500.0`, evaluated unconditionally, so THE PUBLISHED
+    VERDICT ON THIS SPIKE'S HEADLINE CLAIM WAS A FUNCTION OF WHO ELSE WAS
+    RUNNING. Measured: 508.71 us with five lanes live -- a 1.7% threshold
+    crossing -- against 205.92-212.27 us idle from the SAME CODE (H203's A/B).
+    The two artifacts in this directory still disagree because of it:
+    `provenance.json` records `falsifiers_fired: [F_bound_streaming_advantage]`
+    at median 508.71, and `bound_streaming.json` records `falsifier_fired: false`
+    at median 211.54. One says the headline claim was REFUTED and the other says
+    it stands. Family E: a threshold on a load-dependent quantity, published
+    without its operating point.
+
+    NOTHING NEW IS INVENTED HERE. `spikes/quiet.sh` already decides exactly this
+    question and already REFUSES rather than warns; S84 (`wall_us_citable`) and
+    H86 (`wall_citable`) already record their timing citability from it. This is
+    that pattern applied to a spike that was quoting a timing as a VERDICT rather
+    than as a number, which is the stronger case for it.
+
+    IT DOES NOT WEAKEN THE FALSIFIER (§5) -- read the disjunction. The latency
+    term still fires when it is assertable; the other four terms are memory,
+    two logic outcomes and a byte count, all deterministic and untouched. What
+    changes is that a term which could not tell "the system is slow" from "the
+    machine was busy" no longer answers as though it could. An unassertable term
+    is recorded UNASSERTED and is visible in the artifact; it is never silently
+    read as "did not fire".
+    """
+    q = quiet_path or os.path.join(REPO_ROOT, 'spikes', 'quiet.sh')
+    try:
+        load1 = os.getloadavg()[0]
+    except (OSError, AttributeError):
+        load1 = -1.0
+    limit = (os.cpu_count() or 4) / 4.0
+    if not os.path.exists(q):
+        return {'citable': False, 'loadavg_1m': load1, 'limit': limit,
+                'reason': f'{q} is absent, so no party here can assert the '
+                          f'operating point; the latency term is UNASSERTED '
+                          f'rather than assumed quiet'}
+    p = subprocess.run(['sh', q, '--host'], capture_output=True, text=True,
+                       cwd=REPO_ROOT)
+    out = ((p.stdout or '') + (p.stderr or '')).strip().replace('\n', ' ')[:300]
+    if p.returncode != 0:
+        return {'citable': False, 'loadavg_1m': load1, 'limit': limit,
+                'reason': f'spikes/quiet.sh REFUSES on this host: {out}'}
+    return {'citable': True, 'loadavg_1m': load1, 'limit': limit,
+            'reason': f'spikes/quiet.sh admits this host: {out}'}
+
+
 # ---------------------------------------------------------------- Main Execution
 def main():
     print("=== Spike W9: Cryptographically Bound Streaming Witness & Shard Index Integration ===")
@@ -852,20 +911,46 @@ def main():
     })
 
     # Pre-registered Falsifier
+    # H206. The latency term is CONDITIONED ON ITS OPERATING POINT. It still
+    # fires when it can be asserted; when it cannot, it is UNASSERTED and says
+    # so, instead of answering with a number that is partly about the machine.
+    _op = latency_operating_point()
+    _lat_exceeds = shard_res['median_latency_us'] > 500.0
+    _lat_term = _op['citable'] and _lat_exceeds
+    latency_term = {
+        'threshold_us': 500.0,
+        'statistic': 'median',
+        'median_latency_us': shard_res['median_latency_us'],
+        # BOTH statistics are published because the claim says "sub-500us
+        # latency" and does not say WHICH. On the idle run the median is
+        # 211.54 and the p95 is 1150.31 -- 2.3x the bound. A claim that is true
+        # of one statistic and false of another in the SAME run is not a claim
+        # until it names the statistic, and that is the same family E defect as
+        # the missing operating point, one level in.
+        'p95_latency_us': shard_res['p95_latency_us'],
+        'p95_exceeds_threshold': shard_res['p95_latency_us'] > 500.0,
+        'citable': _op['citable'],
+        'operating_point': {'loadavg_1m': _op['loadavg_1m'],
+                            'quiet_limit': _op['limit'],
+                            'reason': _op['reason']},
+        'verdict': ('EXCEEDED' if _lat_term else
+                    'WITHIN' if _op['citable'] else 'UNASSERTED'),
+    }
     falsifier_fired = (
         not all_72b or
         not audit_res['bound_fork_rejected'] or
         not audit_res['bound_inflation_defeated'] or
-        shard_res['median_latency_us'] > 500.0 or
+        _lat_term or
         shard_res['records'][19]['cum_witness_bytes'] >= shard_res['records'][19]['cum_full_snapshot_bytes']
     )
     F = Falsifier(
         'F_bound_streaming_advantage',
         refutes='that cryptographically bound streaming witness verification achieves O(1) memory, sub-500us latency, bandwidth reduction, and complete fork/inflation resistance',
-        fires_when='verifier memory > 128 bytes, or fork injection succeeds, or inflation succeeds, or median shard transition latency > 500us, or witness bandwidth >= full snapshot at depth >= 20',
+        fires_when='verifier memory > 128 bytes, or fork injection succeeds, or inflation succeeds, or MEDIAN shard transition latency > 500us AT AN ASSERTED QUIET OPERATING POINT (H206: unassertable load -> that term is UNASSERTED, never silently "did not fire"), or witness bandwidth >= full snapshot at depth >= 20',
         null_must_contain='a verifier with memory bloat, fork vulnerability, or excessive latency'
     )
     F.observe(falsifier_fired, {
+        'latency_term': latency_term,
         'verifier_resident_bytes': 72,
         'fork_injection_defeated': audit_res['bound_fork_rejected'],
         'inflation_defeated': audit_res['bound_inflation_defeated'],
@@ -895,6 +980,7 @@ def main():
             },
             'continuous_reduction_stream': stream_res,
             'downstream_queries': query_res,
+            'latency_term': latency_term,
             'falsifier_fired': falsifier_fired
         }, f, indent=2, sort_keys=True)
 

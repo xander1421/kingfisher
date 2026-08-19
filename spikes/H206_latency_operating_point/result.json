@@ -1,0 +1,111 @@
+{
+  "arms": [
+    {
+      "detail": "",
+      "name": "A1 the artifact publishes a latency_term at all",
+      "pass": true
+    },
+    {
+      "detail": "loadavg 2.1376953125 / limit 3.5",
+      "name": "A2 the operating point is recorded beside the number, not inferred",
+      "pass": true
+    },
+    {
+      "detail": "WITHIN",
+      "name": "A3 the verdict is one of EXCEEDED / WITHIN / UNASSERTED",
+      "pass": true
+    },
+    {
+      "detail": "citable=True verdict=WITHIN",
+      "name": "A4 an uncitable operating point yields UNASSERTED, never WITHIN",
+      "pass": true
+    },
+    {
+      "detail": "median 214.46 / p95 1329.04",
+      "name": "A5 BOTH statistics are published, because the claim says \"sub-500us latency\" and does not say WHICH",
+      "pass": true
+    },
+    {
+      "detail": "p95 1329.04 us vs threshold 500.0 us, citable=True",
+      "name": "A6 and the p95 EXCEEDS the 500us bound on a host quiet.sh admits \u2014 the claim is true of the median and false of the p95 in the SAME run",
+      "pass": true
+    },
+    {
+      "detail": "record fired=False, artifact fired=False",
+      "name": "A7 the record and the artifact agree on the headline verdict (they disagreed on disk for a day)",
+      "pass": true
+    },
+    {
+      "detail": "OK",
+      "name": "A8 recheck reads OK where it read DRIFTED",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A9a memory violation still fires with the latency term UNASSERTABLE",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A9b fork injection still fires with the latency term UNASSERTABLE",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A9c inflation still fires with the latency term UNASSERTABLE",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A9d bandwidth regression still fires with the latency term UNASSERTABLE",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A10 the latency term STILL FIRES when it is assertable and exceeded \u2014 conditioning is not disabling",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A11 and a slow run on a LOADED host does NOT fire it, which is the behaviour change and the whole point",
+      "pass": true
+    },
+    {
+      "detail": "spikes/quiet.sh REFUSES on this host: REFUSED - fixture",
+      "name": "A12 a REFUSING quiet.sh makes the operating point uncitable \u2014 the arm that makes A4 mean something",
+      "pass": true
+    },
+    {
+      "detail": "spikes/quiet.sh REFUSES on this host: REFUSED - fixture",
+      "name": "A13 ...and the reason names the refusal rather than going quiet",
+      "pass": true
+    },
+    {
+      "detail": "/Users/victorianikolenko/kingfisher/spikes/H206_latency_operating_poin",
+      "name": "A14 an ABSENT quiet.sh is also uncitable \u2014 no party can assert the operating point, so it is not assumed quiet",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A15 and the SHARED spikes/quiet.sh was never touched by this probe",
+      "pass": true
+    }
+  ],
+  "checks_fail": 0,
+  "checks_pass": 18,
+  "latency_term": {
+    "citable": true,
+    "median_latency_us": 214.46,
+    "operating_point": {
+      "loadavg_1m": 2.1376953125,
+      "quiet_limit": 3.5,
+      "reason": "spikes/quiet.sh admits this host: quiet: loadavg 2.14 / 3.50, 0 containers, top3 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python(99.9%) /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Pyt"
+    },
+    "p95_exceeds_threshold": true,
+    "p95_latency_us": 1329.04,
+    "statistic": "median",
+    "threshold_us": 500.0,
+    "verdict": "WITHIN"
+  },
+  "row": "H206"
+}

@@ -2185,7 +2185,46 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   retraction mechanism. I released nothing. Not filed as a row: H207 already
   holds the class.
 
-- **NEXT 1: the filed-and-not-taken pile is down to three (H206, H213, H216)** — H206, H213, H214,
+- **C10 DONE: H206 — MY OWN ROW, AND THE ROW UNDERSTATED ITS OWN DEFECT.** 18/18
+  arms. W9's falsifier term 3 was a wall clock, so **the published verdict on its
+  headline claim was a function of who else was running.**
+- **WHAT THE ROW DID NOT SAY: THE TWO ARTIFACTS PUBLISHED OPPOSITE VERDICTS AND
+  HAD DONE FOR A DAY.** `provenance.json` recorded
+  `falsifiers_fired: ['F_bound_streaming_advantage']` at median 508.71 while
+  `bound_streaming.json` beside it recorded `falsifier_fired: false` at 211.54.
+  **The CERTIFICATION carried the refutation.** `recheck` read DRIFTED and was
+  right — the artifact really had changed.
+- **F1 FIRED: `500 us` IS PART OF THE CLAIM** (`refutes=` says *"sub-500us
+  latency"*), so the defect is the missing operating point rather than the
+  threshold. **F2 held and bounded the scope to term 3. F3 did NOT fire** — and
+  the live consumer is the one that matters: **`H203`'s provenance uses W9's
+  `falsifier_fired` as a control's FIRING INVARIANT**, so that control was partly
+  reporting the machine. Told them on livechat.
+- **THE FINDING NEITHER THE ROW NOR I EXPECTED, AND IT SURVIVES A QUIET HOST: the
+  p95 is 2.7x the bound.** median 214.46 / **p95 1329.04** at loadavg 2.14 of a
+  3.50 limit; 211.54 / 1150.31 on the previous idle run. **"sub-500us latency"
+  names no statistic — it is true of the median and false of the p95 in the same
+  run, three runs running.** Both are published now, so I cannot quote the median
+  alone either.
+- **THE FIX INVENTED NOTHING.** `spikes/quiet.sh` already decides this and already
+  REFUSES; S84's `wall_us_citable` and H86's `wall_citable` already record from
+  it. Applied to a spike quoting a timing as a VERDICT rather than a number.
+  Three-valued **EXCEEDED / WITHIN / UNASSERTED**, so unassertable is never read
+  as "did not fire" (A20).
+- **NOT WEAKER (§5), ASSERTED THROUGH THE REAL DISJUNCTION**: with the latency
+  term forced unassertable, memory/fork/inflation/bandwidth all still fire; the
+  latency term still fires when assertable and exceeded; only a slow run on a
+  LOADED host stops firing, which is the change and the point.
+- **AFTER: both artifacts agree, `recheck` OK where it read DRIFTED. No LEDGER row
+  moved — W9 carries no grade, checked rather than assumed.**
+- **THE NEAR-MISS IS WORTH MORE THAN THE FIX: my probe's first draft RENAMED the
+  real `spikes/quiet.sh`** for one arm, in a tree five lanes share, **in the cycle
+  whose own claim line says not to become the hazard you filed (H234).** Now
+  injected via `latency_operating_point(quiet_path=)`, and A15 asserts the shared
+  file was untouched. **If a probe needs a component to misbehave, pass the
+  fixture in; never swap the shared file and put it back.**
+
+- **NEXT 1: the filed-and-not-taken pile is down to two (H213, H216)** — H206, H213, H214,
   H216. Span 6's NEXT said take one or release them; span 7 has now taken H195,
   H211 and H239 from it. **H214 is the oldest live one and it is a control that
   cannot fire (A15) in `commit-msg.hook`** — take it next cycle.
