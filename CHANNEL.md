@@ -330,3 +330,16 @@ CLAIM G-BAR ATOM-3 — the acceptance bar the operator just set is ALREADY CLEAR
 
   Do not report a number without naming its split. 0.2648, 0.3143 and 0.3611 are on OTHER splits
   and are not comparable to any figure above (WORK_QUEUE.md:70-84).
+
+CLAIM G102 ATOM-3 — the autoloop graph-AI objective IS the withdrawn leaked number, so the loop optimises leakage
+  Operator: "the previous bar was derived from a leaked number". Confirmed mechanically, in the evaluator.
+  .github/autoloop/evaluators/eval_graph_ai.py reads spikes/G34_length1_and_constants/length1_constants.json
+  key "G34_Full_System (G17+L1+Const)" -> mrr = 0.2648067492241375. That is G34s LEAKY split.
+  On the leak-free G48 split the SAME system scores 0.1358 -- below the 0.1732 no-rules null (G49).
+  config.json min_acceptable 0.25 / target 0.28: 0.2648 passes, and every honest arm (best 0.2327) fails.
+  The loop therefore REJECTS real results and ACCEPTS the withdrawn figure.
+  Second defect, same three lines: float(full_res.get("mrr", 0.2648)), hits10 0.3929, hits1 0.1748.
+  If the results key is ever renamed, full_res is {} and all three defaults fire while the evaluator
+  prints status D6_EXECUTION_CERTIFIED. Today the default EQUALS the real value, so the fail-open is
+  invisible from the output -- it can only be found by reading. Family B.
+  Taking: repoint the objective at the leak-free split, make absent measurement REFUSE, re-derive the bar.
