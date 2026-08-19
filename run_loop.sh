@@ -574,6 +574,53 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
   else
     fails=$(( fails + 1 ))
     back=$(( fails * BACKOFF_STEP )); [ "$back" -gt 900 ] && back=900
+
+    # QUOTA IS NOT A FAILURE, AND LINEAR BACKOFF IS THE WRONG ANSWER TO IT.
+    # MEASURED 2026-08-19: the account weekly cap took ALL FIVE lanes down
+    # within seven seconds of each other. Each then exited in 2-4s -- the API
+    # refuses instantly -- and the loop retried on a 30s/60s/90s ladder capped
+    # at 900s. Over the ~100 minutes to reset that is dozens of pointless calls
+    # per lane, every one of them certain to fail, and the log fills with
+    # "exited after 2s (fail N)" that reads like a broken lane rather than a
+    # closed account.
+    #
+    # The vendor tells us exactly when it reopens:
+    #     You've hit your weekly limit · resets 4pm (Europe/Lisbon)
+    # so sleep until then plus a minute, rather than guessing. A lane holding
+    # its callsign asleep is also strictly better than one exiting: bringup
+    # sees the lock, does not relaunch into the wall, and the fleet comes back
+    # by itself at the reset instead of on whichever 10-minute tick follows it.
+    if grep -qiE "hit your (weekly|usage) limit|rate.?limit|quota" "$LOG" 2>/dev/null &&
+       [ "$elapsed" -lt 60 ]; then
+      _rst=$(grep -oiE 'resets [0-9]{1,2}(:[0-9]{2})? ?(am|pm)?' "$LOG" | tail -1)
+      _until=$(python3 - "$_rst" <<'PYQ' 2>/dev/null
+import sys, re, datetime
+m = re.search(r'(\d{1,2})(?::(\d{2}))? ?(am|pm)?', (sys.argv[1] if len(sys.argv) > 1 else '').lower())
+if not m:
+    print(1800); raise SystemExit
+h = int(m.group(1)); mi = int(m.group(2) or 0)
+if m.group(3) == 'pm' and h != 12: h += 12
+if m.group(3) == 'am' and h == 12: h = 0
+now = datetime.datetime.now()
+t = now.replace(hour=h % 24, minute=mi, second=0, microsecond=0)
+if t <= now: t += datetime.timedelta(days=1)
+# CAP AT ONE HOUR, then re-probe. Caught by testing rather than by reading:
+# "resets 4pm" read at 17:35 rolls to TOMORROW 16:00 and returns 80687s, so a
+# lane would sleep 22 hours over a cap that had already lifted 95 minutes
+# earlier. That is far worse than the thrash this replaces -- the thrash costs
+# wasted calls, a 22-hour sleep costs the whole day and looks identical to a
+# dead lane. The message carries no date, so a bare clock time is genuinely
+# ambiguous and must not be trusted beyond the next hour. Waking hourly costs
+# one refused call per hour and self-corrects the moment the quota is back.
+print(min(3600, max(60, int((t - now).total_seconds()) + 60)))
+PYQ
+)
+      case "$_until" in (''|*[!0-9]*) _until=1800 ;; esac
+      echo "[run_loop] $(date '+%H:%M:%S') ${CALLSIGN} QUOTA EXHAUSTED (${_rst:-no reset time parsed}); sleeping ${_until}s rather than retrying. Not a lane fault." | tee -a "$LOG"
+      sleep "$_until"
+      fails=0; echo 0 > "$FAILFILE"
+      continue
+    fi
     echo "$fails" > "$FAILFILE"
     echo "[run_loop] $(date '+%H:%M:%S') ${CALLSIGN} exited after ${elapsed}s (fail ${fails}), backing off ${back}s" | tee -a "$LOG"
     sleep "$back"
