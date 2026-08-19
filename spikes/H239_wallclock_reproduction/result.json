@@ -1,0 +1,115 @@
+{
+  "arms": [
+    {
+      "detail": "67a5de046597b0f1",
+      "name": "A0a fixture is the published artifact",
+      "pass": true
+    },
+    {
+      "detail": "303 leaves, elapsed_sec=886.92",
+      "name": "A0b the artifact has 303 leaves, exactly one of them a wall clock",
+      "pass": true
+    },
+    {
+      "detail": "411731fbcec3224d vs published 411731fbcec3224d",
+      "name": "A0c the honest-reproduction fixture IS AGENT-3's recompute, byte for byte",
+      "pass": true
+    },
+    {
+      "detail": "8648 B vs 8648 B, differ",
+      "name": "A0d and it is NOT byte-identical to the published artifact (or REPRODUCED would be trivially true)",
+      "pass": true
+    },
+    {
+      "detail": "[{'path': '.elapsed_sec', 'value': 886.92}]",
+      "name": "A1a the exclusion was ALLOWED and recorded in the clear",
+      "pass": true
+    },
+    {
+      "detail": "repro 8f75b7f985e2f6b0 vs byte 67a5de046597b0f1",
+      "name": "A1b repro_sha256 is recorded and is NOT the byte sha256 (they answer different questions)",
+      "pass": true
+    },
+    {
+      "detail": "DRIFTED",
+      "name": "A2a PRE-FIX recheck calls the honest reproduction DRIFTED (the defect, reproduced)",
+      "pass": true
+    },
+    {
+      "detail": "REPRODUCED",
+      "name": "A2b LIVE recheck calls it REPRODUCED",
+      "pass": true
+    },
+    {
+      "detail": "byte hash differs and NOTHING ELSE DOES: .elapsed_sec 886.92 -> 628.72",
+      "name": "A2c and it NAMES the field that moved, with both values",
+      "pass": true
+    },
+    {
+      "detail": "302",
+      "name": "A3a the negative arm has 302 real mutations to make",
+      "pass": true
+    },
+    {
+      "detail": "0 went quiet: []",
+      "name": "A3b every one of the 302 still reads DRIFTED \u2014 the fix is not a weaker gate",
+      "pass": true
+    },
+    {
+      "detail": "'.w9_falsifier_wallclock_term.median_latency_us_now' may not be excluded from the reproduc  [name arm]",
+      "name": "A4 H203_stream_order_determinism.w9_falsifier_wallclock_term.median_latency_us_now \u2014 REFUSED, it is the science",
+      "pass": true
+    },
+    {
+      "detail": "'.timings.v1_2026-08-17T21:36.wall_s' may not be excluded from the reproduction hash: its   [value arm]",
+      "name": "A4 H86_stranded_cost.timings.v1_2026-08-17T21:36.wall_s \u2014 REFUSED, it is the science",
+      "pass": true
+    },
+    {
+      "detail": "'.wall_us_citable' may not be excluded from the reproduction hash: its NAME 'wall_us_citab  [name arm]",
+      "name": "A4 S84_verify_cost.wall_us_citable \u2014 REFUSED, it is the science",
+      "pass": true
+    },
+    {
+      "detail": "allowed  [- arm]",
+      "name": "A4 G51_bayesian_lift_scoring.elapsed_sec \u2014 ALLOWED, it is a wall clock",
+      "pass": true
+    },
+    {
+      "detail": "name-arm hit=False (if this ever becomes True the arm is untested, not wrong)",
+      "name": "A5 the VALUE arm is load-bearing: H86 wall_s is invisible to the NAME arm and caught by the VALUE arm",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "A6a no declaration -> repro_sha256 == sha256 (inert for every record already on disk)",
+      "pass": true
+    },
+    {
+      "detail": "DRIFTED",
+      "name": "A6b and the same wall-clock move still reads DRIFTED when it was never declared",
+      "pass": true
+    },
+    {
+      "detail": "[\"REPRO: '.no_such_leaf' is declared excluded from x.json but is not a leaf of it -- a declaration that matche",
+      "name": "A7a a declared leaf that is not in the artifact is REFUSED",
+      "pass": true
+    },
+    {
+      "detail": "[\"REPRO: reproduction_excludes names 'not_an_artifact.json', which is not a recorded artifact of this spike --",
+      "name": "A7b a declaration aimed at a file this spike does not record is REFUSED",
+      "pass": true
+    }
+  ],
+  "checks_fail": 0,
+  "checks_pass": 20,
+  "elapsed_sec_published": 886.92,
+  "elapsed_sec_recomputed": 628.72,
+  "fixture": "spikes/G54_slice_gated_lift/slice_gated.json",
+  "leaves_mutated_in_negative_arm": 302,
+  "leaves_total": 303,
+  "pin_prefix_recheck": "1fcc761",
+  "published_sha256_prefix": "67a5de046597b0f1",
+  "recomputed_sha256_prefix": "411731fbcec3224d",
+  "row": "H239"
+}

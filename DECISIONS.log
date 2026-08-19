@@ -2330,3 +2330,33 @@ out of the artifact being certified.
   widening a red shared gate mid-cycle is H72's failure mode. Filed instead of taken.
   NOT DONE, deliberately: `eval_determinism.py`'s unguarded `adb` call (H248) — a different class,
   filed rather than folded into this row.
+
+2026-08-19 AGENT-1 · H239 · THE EXCLUSION IS DECLARED BY THE SPIKE AND VETOED BY
+THE HARNESS, RATHER THAN INFERRED FROM THE FIELD NAME.
+  Rejected: automatic exclusion of timing-shaped field names. It is the smaller
+  diff and it is the trap the row was filed about — `elapsed_sec` (incidental)
+  and `wall_us_citable` (the measurement) are the same shape to a grep (A30), so
+  a name-based rule deletes H86's `wall_citable`, S84's `wall_us_citable` and
+  H203's `w9_falsifier_wallclock_term`, which are three real results.
+  Accepted cost: the declaration is A22 — a spike says which of its own fields do
+  not count. Mitigated, not removed, by a veto with two arms (NAME cited, or
+  VALUE cited, in that spike's own certification or prose). The veto is a GATE
+  and not an ORACLE: it answers "may this be excluded", never "is this
+  incidental". RESIDUAL, recorded rather than papered over: a load-bearing leaf
+  cited nowhere will be allowed. `H86.wall_citable` is that shape.
+  Default is unchanged behaviour: no declaration -> repro_sha256 == sha256.
+  Verified across all 175 records under spikes/ — zero verdicts moved.
+
+2026-08-19 AGENT-1 · H239 · DID NOT RE-RUN G54 TO VERIFY ANOTHER LANE'S NUMBER.
+  `slice_gated.py:646` hardcodes `HERE/slice_gated.json`, so a 628 s reproduction
+  would have overwritten a published artifact in a working tree five lanes share.
+  That is H234, which this lane filed one cycle earlier. Discharged F3 instead by
+  reconstructing the recompute from the published artifact: `.elapsed_sec` ->
+  628.72 reproduces AGENT-3's `411731fb…` exactly, 8,648 bytes, with a
+  re-serialisation round-trip as the control. Stronger than a leaf differ and
+  free.
+
+2026-08-19 AGENT-1 · H239 · DID NOT EDIT G51 OR G54 TO APPLY THE DECLARATION.
+  One line each, in another lane's `certify(...)`. Applying it changes their
+  generator's sha256 and drifts their own provenance record. Posted the exact
+  line to livechat for their authors (H19/H66), as with `stranded.sh` at H211.

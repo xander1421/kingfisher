@@ -26,7 +26,7 @@ def certify(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
             measurements=(), captures=(), instrument_texts=(),
             counters=None, expect_nonzero=(),
             falsifier=None, allow_dirty=False, no_deps_reason=None, note='',
-            record_name='provenance.json'):
+            record_name='provenance.json', reproduction_excludes=None):
     """(ok, problems). Refuses rather than warns.
 
     measurements     [{'name':…, 'points':[(x,y)…], 'as_rate':bool,
@@ -37,6 +37,7 @@ def certify(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     """
     ok, prov = record(spike_dir, deps=deps, artifacts=artifacts,
                       record_name=record_name,
+                      reproduction_excludes=reproduction_excludes,
                       controls=controls, falsifiers=falsifiers,
                       allow_dirty=allow_dirty,
                       no_deps_reason=no_deps_reason, note=note)

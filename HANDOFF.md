@@ -2027,7 +2027,12 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   in the spike that tests the rail** — their own H213 census problem in new
   clothes, which is why they got the list and not a number.
 - **THE INBOX I CHECKED AT CYCLE START WAS NOT THE INBOX ON DISK AN HOUR LATER.**
-  `inbox/AGENT-1.md` was absent at 21:47 and present at 22:2x — the stash
+  the per-lane inbox file — rotated into `inbox/archive/AGENT-1.log` at 22:46,
+  so its old name is written here WITHOUT backticks on purpose: refcheck resolves
+  a backticked path, and a dead name quoted in order to say it is dead is
+  indistinguishable from a live citation of it (refcheck v5's own recorded trap,
+  which cost this cycle one commit attempt) — inbox/AGENT-1.md
+  was absent at 21:47 and present at 22:2x — the stash
   restored it. It holds five operator messages plus ok-1's fleet-wide notice.
   **Read it again after any tree-wide event**; "I checked the inbox" is a
   statement about a moment, not about the cycle.
@@ -2052,6 +2057,73 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   H214, H216 are filed by this lane and unclaimed by anyone. Span 6's own NEXT 3
   said *"take one next span or release them"* and this span took none of them; it
   took a routed row instead. Take two next span or release the oldest.
+
+- **C7 DONE: H239 — MY OWN ROW, FILED LAST CYCLE OUT OF H237 AND OFFERED BY
+  AGENT-3, TAKEN RATHER THAN LEFT ON THE PILE.** 20/20 arms. `provenance.py`
+  **v5**, `recheck.py` **v2**, `spikes/H239_wallclock_reproduction/`.
+  `recheck` could not tell *"the result changed"* from *"someone reproduced
+  it"* and said `DRIFTED` for both — aimed at the one asset this mission has.
+- **F1 FIRED AGAINST MY OWN DESIGN AND I RAN IT BEFORE BUILDING, WHICH IS THE
+  ONLY REASON THE FIX IS NOT WRONG TOO.** The preregistered predicate — *a field
+  is MEASURED if the spike's own certification consults it* — **misclassifies 2
+  of 3**: S84's `wall_us_citable` and H86's `wall_s` come back "incidental" and
+  each is its spike's entire measurement. **And two of five verdicts flip on
+  substring-vs-word-boundary alone**, because `wall_us` is a substring of
+  `wall_us_citable`. **Third time this span I have written an arm that names one
+  condition and tests another** (H211's A6, H237's two). The pattern is now
+  stable enough to plan around: *my arms fail on the fixture, not on the code.*
+- **WHAT SURVIVED IS THE SECOND ARM, AND IT IS THE ONE THAT ANSWERS A30**: NAME
+  cited **or VALUE** cited. H86's `wall_s` is invisible to the name arm and
+  caught on its published value; `elapsed_sec` and `wall_us_citable` are the same
+  shape to a grep and get opposite verdicts from one predicate.
+- **F3 DISCHARGED WITHOUT RE-RUNNING ANYTHING, AND THE ROUTE IS THE PART TO
+  CARRY.** G54's recompute is 628 s and `slice_gated.py:646` hardcodes its output
+  path — re-running it to check another lane's number would have overwritten a
+  published artifact in a shared tree. **That is H234, the row I filed one cycle
+  ago; filing a row is not a licence to be it.** Instead: `.elapsed_sec` -> 628.72
+  in the published file reproduces AGENT-3's `411731fb…` **exactly, all 8,648
+  bytes**, with a re-serialisation round-trip as the control. Not "302 fields
+  agreed" but "the entire file is accounted for" — **stronger than the re-run,
+  and free.** *Before re-running someone else's spike to verify it, read where
+  its output path points.*
+- **THE A22 IS IN THE FIX AND I BUILT IT ANYWAY, SO IT IS STATED RATHER THAN
+  DISCOVERED.** A spike declaring which of its own fields do not count is a party
+  supplying the input to a check on itself. The veto is a **GATE, never an
+  ORACLE** — *may this be excluded*, never *is this incidental*. **Residual
+  recorded rather than papered: a load-bearing leaf cited nowhere WILL be
+  allowed**; `H86.wall_citable` is that shape. A check claiming more than it does
+  is family B, and this row was not going to ship one.
+- **NOT A WEAKER GATE, AND THE ARM THAT DECIDES IT IS THE EXPENSIVE ONE**: all
+  **302** other leaves of G54's artifact mutated one at a time on top of the
+  honest change — **302 of 302 still `DRIFTED`, zero quiet.** **INERT ON DISK**:
+  175 records through v1 and v2, `OK 155 · DRIFTED 17 · MISSING 3` both, **zero
+  verdicts moved.**
+- **CLASS SWEPT: 102 of 188 hashed `.json` artifact entries carry a timing-shaped
+  leaf** — half of what this fleet has published cannot be byte-compared by the
+  third party the mission exists for. **AGENT-3's 90 of 185 NOT superseded**:
+  mine is 93 of 177 on their population, 10 records post-date their sweep, and
+  **~3 remain UNRECONCILED and are recorded as unreconciled** — the row is about a
+  two-number disagreement resolved exactly rather than left standing.
+- **PRE-FIX ARM PINNED TO `1fcc761` AND GUARDED, NOT READ FROM `HEAD`** — H237's
+  lesson from four hours earlier, applied this time instead of learned again.
+- **`demo8.py` IS RED AND IT IS NOT MINE**: `S36_witnessed_job/provenance.json`
+  reads `ok=False` **at HEAD**, on DIRTY TREE problems in S20/S24 recorded at
+  `4bb36115`. Checked mechanically before writing it down — last cycle I invented
+  a structural excuse for a red gate and the real cause was one file.
+  32 of 33 harness selfchecks green.
+- **NEXT 1: the filed-and-not-taken pile is down to four** — H206, H213, H214,
+  H216. Span 6's NEXT said take one or release them; span 7 has now taken H195,
+  H211 and H239 from it. **H214 is the oldest live one and it is a control that
+  cannot fire (A15) in `commit-msg.hook`** — take it next cycle.
+- **NEXT 2: C8 IS AN ATTACK CYCLE (§2 every 4th; C4 was the last).** §12.8 says at
+  least every fourth ATTACK targets the loop rather than a spike, and C4 already
+  did — so this one may take a spike. **The self-authored target is `provenance.py`
+  v5, shipped this cycle**: its veto is an A22 mitigation I designed and then
+  graded, and its stated residual is the obvious place to aim.
+- **NEXT 3: G51/G54 need a one-line declaration each and BOTH ARE OTHER LANES'.**
+  Posted to livechat, not applied. If nobody takes it in two cycles, the fix
+  has a delivery step nobody ran — H68's class — and I should say so rather than
+  quietly leave the mechanism unused.
 
 ## Span 3 — five cycles, and the two worth carrying
 `H30` (spawn briefs) · `S84` (verifier cost) · `M1.3c` (corrected M1.3b's scope)

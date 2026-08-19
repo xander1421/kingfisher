@@ -76,6 +76,54 @@ FALSE-GREEN direction (`[ -f "$p" ] || continue` silently drops every untracked
 directory -- 117 files in 15 directories at the time of writing, including the
 `H86_stranded_cost` spike itself). It is ATOM-3's module and was being written to
 two minutes before this edit, so it is livechat's, not mine (H19/H66).
+
+v5, 2026-08-19 (H239). DEFECT REMOVED: A HASHED ARTIFACT CARRYING A WALL CLOCK
+MAKES AN HONEST REPRODUCTION INDISTINGUISHABLE FROM A REGRESSION, AND THAT IS
+AIMED AT THE ONE ASSET THIS MISSION HAS -- a result is trusted because anyone can
+re-run it and compare bytes. AGENT-3's statement of it is better than mine and is
+kept verbatim: *when a hashed artifact carries a wall clock, "did it reproduce"
+and "does it hash the same" are different questions and only one of them is about
+the science* -- a reproduction answers the first and `recheck` only ever asks the
+second. MEASURED, TWO SPIKES, TWO INDEPENDENT FORCED RECOMPUTES: G51's
+`bayesian_lift.json` reproduced every arm, control, seed and split and differed in
+`elapsed_sec` alone (382.32 vs 367.91); G54's `slice_gated.json` is 303 leaf
+fields of which EXACTLY ONE differs, `elapsed_sec` 628.72 vs 886.92 -- and G54 has
+no cache path at all (corpus re-read, split rebuilt leak=0, 1,410 rules re-mined,
+628.7 s). `recheck` v1 reported DRIFTED for both.
+THE FIX IS A SECOND HASH, NOT A WEAKER ONE. `sha256` is untouched and still
+covers every byte; `repro_sha256` covers the artifact with the DECLARED leaves
+removed, and the removed leaves are recorded IN THE CLEAR beside it
+(`repro_excluded`), which is D2 rule 2 -- "anything stripped before hashing is
+named in the record". Nothing is hidden and no published number moves.
+THE EXCLUSION IS DECLARED AND THEN VETOED; IT IS NOT INFERRED FROM THE NAME.
+Inferring it is the whole trap: `elapsed_sec` (incidental) and `wall_us_citable`
+(the measurement) are the same shape to a grep (A30), and H86's `wall_citable`,
+S84's `wall_us_citable` and H203's `w9_falsifier_wallclock_term` ARE the science
+of their spikes -- a detector built on the name would demand three real results be
+deleted. So a spike names the leaf, and `_repro_veto` REFUSES the exclusion when
+that leaf is LOAD-BEARING, by two arms measured over the spike itself rather than
+over a pattern: (1) the leaf NAME is cited by the record's own certification --
+controls, falsifiers, note -- or by the spike's prose; (2) the leaf VALUE is cited
+in either. Arm 2 exists because arm 1 alone got it wrong: measured across five
+spikes, arm 1 under word-boundary matching ALLOWED H86's `wall_s`, which is
+H86's entire measurement, and the substring form that caught it also produced a
+false positive from `wall_us_citable` shadowing `wall_us`. Two of five verdicts
+flipped on that choice alone. Arm 2 catches `wall_s` on its published value and
+does not depend on the name at all.
+WHY A DECLARATION AND NOT AN AUTOMATIC RULE -- the exposure is A22 and it is
+stated rather than left to be discovered: a spike declaring which of its own
+fields do not count is a party supplying the input to a check applied to itself.
+The veto is what makes that survivable, and the veto is a GATE, not an ORACLE: it
+answers "may this be excluded", never "is this incidental". Its residual is
+therefore real and is not papered over -- A LEAF THAT IS LOAD-BEARING BUT CITED
+NOWHERE, in neither the certification nor the prose nor by value, WILL BE
+ALLOWED. `H86.wall_citable` is exactly that shape and is allowed today. Nothing
+excludes it because H86 declares nothing, and the default is that NOTHING is
+excluded: every record already on disk keeps a `repro_sha256` equal to its
+`sha256` and no verdict anywhere moves.
+Check: `python3 spikes/H239_wallclock_reproduction/probe.py`, two-sided -- an
+honest re-run must stop reading DRIFTED and a change to any one of G54's other
+302 leaf fields must still read DRIFTED.
 """
 import hashlib, json, os, re, subprocess, sys, time
 
@@ -507,14 +555,152 @@ def _resolve_artifact(a, spike_dir):
     return {'declared': a, 'resolved': here, 'note': ''}
 
 
+
+# ---- H239: the REPRODUCTION hash, and the veto that guards its declaration ----
+# `sha256` answers "does it hash the same". `repro_sha256` answers "did it
+# reproduce". They are different questions; only the second is about the science.
+
+def json_leaves(o, p=''):
+    """Every scalar leaf of a JSON value as (dotted-path, value)."""
+    if isinstance(o, dict):
+        for k, v in o.items():
+            yield from json_leaves(v, f'{p}.{k}')
+    elif isinstance(o, list):
+        for i, v in enumerate(o):
+            yield from json_leaves(v, f'{p}[{i}]')
+    else:
+        yield p, o
+
+
+def _leaf_drop(o, path):
+    """Return `o` with the leaf at `path` removed. Unknown path -> unchanged."""
+    import copy
+    toks = re.findall(r'\.([^.\[]+)|\[(\d+)\]', path)
+    if not toks:
+        return o
+    out = copy.deepcopy(o)
+    cur = out
+    for i, (key, idx) in enumerate(toks):
+        last = (i == len(toks) - 1)
+        try:
+            if key:
+                if not isinstance(cur, dict) or key not in cur:
+                    return out
+                if last:
+                    del cur[key]
+                else:
+                    cur = cur[key]
+            else:
+                j = int(idx)
+                if not isinstance(cur, list) or j >= len(cur):
+                    return out
+                if last:
+                    del cur[j]
+                else:
+                    cur = cur[j]
+        except (KeyError, IndexError, TypeError):
+            return out
+    return out
+
+
+def _citation_haystack(spike_dir, prov):
+    """What this spike has PUBLISHED: its own certification, and its prose.
+
+    Deliberately not the whole repo. A leaf is load-bearing when the spike that
+    wrote it leans on it; scanning the tree would make every four-digit number
+    load-bearing somewhere and the veto would refuse everything.
+    """
+    cert = json.dumps({k: prov.get(k) for k in
+                       ('controls', 'falsifiers', 'falsifiers_fired', 'note')},
+                      default=str)
+    prose = []
+    try:
+        for f in sorted(os.listdir(spike_dir)):
+            if f.endswith('.md') and os.path.isfile(os.path.join(spike_dir, f)):
+                with open(os.path.join(spike_dir, f), errors='replace') as fh:
+                    prose.append(fh.read())
+    except OSError:
+        pass
+    return cert + '\n'.join(prose)
+
+
+def _repro_veto(path, value, hay):
+    """May this leaf be excluded from the reproduction hash? -> reason or ''.
+
+    A GATE, NOT AN ORACLE. It answers "may this be excluded", never "is this
+    incidental" -- see the v5 block. Two arms, because arm 1 alone is a grep on
+    the name and `elapsed_sec` / `wall_us_citable` are the same shape to a grep.
+    """
+    leaf = re.split(r'[.\[]', path.lstrip('.'))[0] if path else ''
+    leaf = path.rsplit('.', 1)[-1].split('[')[0] if path else ''
+    if leaf and re.search(r'(?<![A-Za-z0-9_])' + re.escape(leaf) +
+                          r'(?![A-Za-z0-9_])', hay):
+        return (f'{path!r} may not be excluded from the reproduction hash: its '
+                f'NAME {leaf!r} is cited by this spike\'s own certification or '
+                f'prose, so it is load-bearing on a published claim')
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        forms = {str(value)}
+        if isinstance(value, float):
+            forms |= {f'{value:.{d}f}' for d in (1, 2, 3, 4)}
+        for f in forms:
+            if re.search(r'(?<![0-9.])' + re.escape(f) + r'(?![0-9])', hay):
+                return (f'{path!r} may not be excluded from the reproduction '
+                        f'hash: its VALUE {f} is cited by this spike\'s own '
+                        f'certification or prose, so it is load-bearing on a '
+                        f'published claim')
+    return ''
+
+
+def reproduction_hash(artifact_path, excludes, hay):
+    """-> (repro_sha256, [{'path','value'}], [problem, ...]).
+
+    `excludes` empty -> repro_sha256 IS the byte sha256, which is why every
+    record already on disk keeps its meaning under this change.
+    """
+    if not excludes:
+        return sha256_file(artifact_path), [], []
+    try:
+        with open(artifact_path) as f:
+            doc = json.load(f)
+    except (OSError, ValueError) as e:
+        return None, [], [f'REPRO: {artifact_path} declares reproduction '
+                          f'exclusions but is not readable JSON ({e}); the '
+                          f'reproduction hash is not computed']
+    leaves = dict(json_leaves(doc))
+    kept, dropped, problems = doc, [], []
+    for p in excludes:
+        if p not in leaves:
+            problems.append(f'REPRO: {p!r} is declared excluded from '
+                            f'{os.path.basename(artifact_path)} but is not a '
+                            f'leaf of it -- a declaration that matches nothing '
+                            f'reads as satisfied (12.4)')
+            continue
+        why = _repro_veto(p, leaves[p], hay)
+        if why:
+            problems.append('REPRO: ' + why)
+            continue
+        kept = _leaf_drop(kept, p)
+        dropped.append({'path': p, 'value': leaves[p]})
+    if problems:
+        return None, dropped, problems
+    blob = json.dumps(kept, sort_keys=True, separators=(',', ':')).encode()
+    return hashlib.sha256(blob).hexdigest(), dropped, []
+
+
 def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
            allow_dirty=False, note='', no_deps_reason='',
-           record_name='provenance.json'):
+           record_name='provenance.json', reproduction_excludes=None):
     """Write `record_name` next to the spike. Returns (ok, provenance).
 
     ok is False when a dependency tree is dirty without acknowledgement, or a
     declared positive control did not fire. A caller that ignores `ok` and
     publishes anyway is doing the thing this module exists to stop.
+
+    H239 `reproduction_excludes` -> {artifact_name: ['.elapsed_sec', ...]}. Leaf
+    paths whose value is a fact about THIS EXECUTION rather than about the
+    computation, excluded from `repro_sha256` and recorded in the clear. Each is
+    vetoed against the spike's own certification and prose; a load-bearing leaf
+    is REFUSED, not quietly excluded.
     """
     resolved = [_resolve_artifact(a, spike_dir) for a in artifacts]
     prov = {
@@ -539,6 +725,27 @@ def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     }
     prov['no_deps_reason'] = no_deps_reason
     problems = []
+
+    # H239. Computed AFTER `prov` is built because the veto reads this record's
+    # own controls and falsifiers -- the question "is this leaf load-bearing" is
+    # asked of the certification being written, not of a pattern.
+    _rx = dict(reproduction_excludes or {})
+    _hay = _citation_haystack(spike_dir, prov)
+    for _a in prov['artifacts']:
+        _ex = _rx.get(_a['path']) or _rx.get(os.path.basename(_a['resolved'])) \
+            or _rx.get(_a['resolved']) or []
+        _h, _dropped, _probs = reproduction_hash(_a['resolved'], _ex, _hay)
+        _a['repro_sha256'] = _h
+        _a['repro_excluded'] = _dropped
+        problems.extend(_probs)
+    for _name in _rx:
+        if not any(_name in (a['path'], a['resolved'],
+                             os.path.basename(a['resolved']))
+                   for a in prov['artifacts']):
+            problems.append(
+                f'REPRO: reproduction_excludes names {_name!r}, which is not a '
+                f'recorded artifact of this spike -- a declaration aimed at '
+                f'nothing reads as satisfied (12.4)')
     # H211: an artifact that resolved ambiguously, or only outside the spike, is
     # a problem and not a footnote -- the whole point is that the wrong file can
     # be hashed correctly.

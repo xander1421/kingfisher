@@ -44,16 +44,41 @@ WHAT IT CANNOT SEE, so nobody reads a green run as more than it is:
   * a drifted artifact whose *content* is equivalent — a comment-only edit reads
     identically to a rewritten algorithm here;
   * whether the recorded numbers were ever right. This is a byte check.
+
+v2, 2026-08-19 (H239). DEFECT REMOVED: THIS MODULE COULD NOT TELL "THE RESULT
+CHANGED" FROM "SOMEONE REPRODUCED IT", AND IT SAID `DRIFTED` FOR BOTH. Two spikes
+were forced-recomputed by a live lane and both reproduced: G51's `bayesian_lift.json`
+matched on every arm, control, seed and split and differed in `elapsed_sec` alone;
+G54's `slice_gated.json` is 303 leaf fields of which EXACTLY ONE differs,
+`elapsed_sec` 628.72 vs 886.92, with no cache path anywhere in the spike. v1
+called both DRIFTED. That is aimed at the one asset this mission has -- a result
+is trusted because anyone can re-run it and compare bytes -- because a field that
+cannot be re-run makes the comparison always fail.
+FIXED BY READING A SECOND HASH, NOT BY WEAKENING THE FIRST. The byte compare is
+unchanged and runs first. Only when it fails does this consult `repro_sha256`,
+which `provenance` v5 recorded over the artifact with its DECLARED leaves removed;
+if the disk file agrees once those same leaves are removed, the status is
+REPRODUCED and the moved fields are printed with their old and new values.
+A record with no declared exclusions has `repro_sha256 == sha256`, so it can
+only ever reach REPRODUCED by being byte-identical -- i.e. this is inert for
+every record already on disk, which is the point.
+IT IS NOT A WEAKER GATE (5). REPRODUCED requires the whole artifact minus the
+named leaves to hash identically, so a change to ANY other field still reads
+DRIFTED -- asserted on 302 real mutations of G54's own artifact in
+`spikes/H239_wallclock_reproduction/probe.py`.
 """
 import hashlib
 import json
 import os
 import sys
 
-VERSION = 1
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import provenance as _prov   # noqa: E402  (json_leaves / _leaf_drop, one source)
 
-OK, DRIFTED, MISSING, UNREADABLE, NO_ARTIFACTS = (
-    "OK", "DRIFTED", "MISSING", "UNREADABLE", "NO_ARTIFACTS")
+VERSION = 2
+
+OK, DRIFTED, MISSING, UNREADABLE, NO_ARTIFACTS, REPRODUCED = (
+    "OK", "DRIFTED", "MISSING", "UNREADABLE", "NO_ARTIFACTS", "REPRODUCED")
 
 
 def _sha256(path):
@@ -123,11 +148,16 @@ def check_record(rec_path):
             continue
         actual = _sha256(path)
         if actual != recorded:
-            rows.append((DRIFTED, path,
-                         f"recorded {recorded[:16]}… "
-                         f"({a.get('bytes')} B), disk {actual[:16]}… "
-                         f"({os.path.getsize(path)} B)"))
-            if worst not in (UNREADABLE, MISSING):
+            # H239. The byte compare has already failed. Ask the OTHER question
+            # before answering: is this a change, or a reproduction? Only a
+            # record that DECLARED exclusions can answer, and for every record
+            # without them repro_sha256 == sha256, so this branch cannot fire.
+            st, why = _reproduction_verdict(a, path, actual, recorded)
+            rows.append((st, path, why))
+            if st == REPRODUCED:
+                if worst == OK:
+                    worst = REPRODUCED
+            elif worst not in (UNREADABLE, MISSING):
                 worst = DRIFTED
         else:
             rows.append((OK, path, ""))
@@ -135,12 +165,52 @@ def check_record(rec_path):
             "artifacts": rows}
 
 
+def _reproduction_verdict(a, path, actual, recorded):
+    """DRIFTED unless the declared-excluded leaves are the ONLY difference.
+
+    Returns (status, why). Refuses in every ambiguous direction: a record with
+    no `repro_sha256`, an unreadable artifact, a declared leaf that has vanished
+    -- all DRIFTED, because the safe answer to "did this reproduce" is no.
+    """
+    drift = (f"recorded {recorded[:16]}… ({a.get('bytes')} B), "
+             f"disk {actual[:16]}… ({os.path.getsize(path)} B)")
+    rec_repro = a.get("repro_sha256")
+    excluded = a.get("repro_excluded") or []
+    if not rec_repro or not excluded:
+        return DRIFTED, drift
+    try:
+        with open(path) as f:
+            doc = json.load(f)
+    except (OSError, ValueError):
+        return DRIFTED, drift + " (declares reproduction exclusions but is not readable JSON)"
+    leaves = dict(_prov.json_leaves(doc))
+    kept, moved = doc, []
+    for e in excluded:
+        p = e.get("path")
+        if p not in leaves:
+            return DRIFTED, drift + f" (declared-excluded leaf {p!r} is gone from the artifact)"
+        moved.append(f"{p} {e.get('value')!r} -> {leaves[p]!r}")
+        kept = _prov._leaf_drop(kept, p)
+    blob = json.dumps(kept, sort_keys=True, separators=(",", ":")).encode()
+    if hashlib.sha256(blob).hexdigest() != rec_repro:
+        return DRIFTED, drift + " (differs beyond its declared reproduction exclusions)"
+    return REPRODUCED, ("byte hash differs and NOTHING ELSE DOES: " +
+                        "; ".join(moved))
+
+
 def report(results, out=sys.stdout):
-    bad = [r for r in results if r["status"] not in (OK,)]
+    bad = [r for r in results if r["status"] not in (OK, REPRODUCED)]
+    repro = [r for r in results if r["status"] == REPRODUCED]
     green = [r for r in results if r["status"] == OK]
     print(f"recheck v{VERSION} — {len(results)} provenance record(s) re-hashed "
           f"against the tree", file=out)
-    print(f"  {len(green)} still describe it, {len(bad)} do not\n", file=out)
+    print(f"  {len(green)} still describe it, {len(bad)} do not, "
+          f"{len(repro)} REPRODUCED\n", file=out)
+    for r in repro:
+        print(f"  {REPRODUCED:<12} {'ok=%s' % r['ok']:<8} {r['record']}", file=out)
+        for st, path, why in r["artifacts"]:
+            if st == REPRODUCED:
+                print(f"      {st:<10} {path}\n                 {why}", file=out)
     for r in bad:
         claims = ("ok=%s" % r["ok"]) if r["ok"] is not None else "ok=?"
         flag = "  <-- CLAIMS ok=true" if r["ok"] is True else ""
