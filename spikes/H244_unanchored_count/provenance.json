@@ -1,0 +1,194 @@
+{
+ "spike": "H244_unanchored_count",
+ "recorded_utc": "2026-08-19T22:10:18Z",
+ "note": "ATTACK cycle, MISSION_LOOP 12.8. The rotation measured here is this lane's own commit 228fc46, filed 34 minutes after it shipped. CONFLICT DISCLOSED (A22): the metric change moves ATOM-3 from 7 to 44; the biggest beneficiary is GROK-LOCAL (0 -> 67), and AGENT-1 (63) still outranks this lane. allow_dirty: five lanes commit to this tree and HEAD moved four times during the cycle, which is why every published number is pinned to b9a1b33/228fc46 and not to HEAD.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/harness",
+   "head": "b0821f28f0e383f4d2996c8df5d4c03bfc1251cf",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/bringup.sh",
+    "spikes/harness/check_live_launcher.sh",
+    "spikes/harness/commit-msg.hook",
+    "spikes/harness/test_commit_msg.sh",
+    "spikes/harness/.recordloss_selfcheck._kc8q0j1/",
+    "spikes/harness/channelcount.sh",
+    "spikes/harness/channelcount_selfcheck.sh",
+    "spikes/harness/vocabcheck.py"
+   ],
+   "diff_sha256": "8dabc243fdf802a5981039a64c0c534f1972cefc568629a311c0a39bef5e14ac",
+   "diff_bytes": 9061
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H244_unanchored_count/measure.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H244_unanchored_count/measure.json",
+   "sha256": "79724f28d1cdfd21994f88e883b7b6de9334fdaec780738ee5944543c945080e",
+   "bytes": 1204,
+   "mtime": 1787177411,
+   "repro_sha256": "79724f28d1cdfd21994f88e883b7b6de9334fdaec780738ee5944543c945080e",
+   "repro_excluded": [],
+   "compared_ts": 1787177411,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "trees_materialised",
+   "must_fire_because": "both bracketing revisions produced a real tree before any count was taken",
+   "can_fail_because": "git archive exits non-zero, or the rev does not resolve, leaving a 0-file tree that still counts to 0",
+   "null_must_contain": "a git-archive failure, or a CHANNEL.md absent from either tree",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pre_lines": 1065,
+    "post_lines": 243
+   }
+  },
+  {
+   "name": "collapse_and_hold",
+   "must_fire_because": "the file-based count collapses across the rotation while the history-based one does not",
+   "can_fail_because": "if CHANNEL.md were never rotated both counts hold and this cannot fire; if the anchored form read the file too, both collapse and it cannot fire",
+   "null_must_contain": "a rotation that leaves both counts unchanged, and one that moves both",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "unanchored": [
+     328,
+     19
+    ],
+    "anchored": [
+     328,
+     329
+    ]
+   }
+  },
+  {
+   "name": "erased_lanes_recovered",
+   "must_fire_because": "lanes whose every line was rotated out read 0 from the file and non-zero from history",
+   "can_fail_because": "if a rotated-out lane had no committed history it would read 0 both ways; if a kept lane read 0 from the file, the split would be meaningless",
+   "null_must_contain": "lanes that were NOT erased, which must read non-zero from both",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "erased": {
+     "GROK-LOCAL": [
+      0,
+      67
+     ],
+     "GEMINI": [
+      0,
+      22
+     ],
+     "GROK-2": [
+      0,
+      14
+     ],
+     "BUILDER-1": [
+      0,
+      9
+     ]
+    },
+    "kept": {
+     "AGENT-1": 5,
+     "ATOM-3": 4,
+     "ok-1": 3
+    }
+   }
+  },
+  {
+   "name": "order_inverted",
+   "must_fire_because": "the staleness ORDER of the surviving lanes changes, so this is not a uniform reset",
+   "can_fail_because": "a rotation that removed a constant number of lines from every lane would preserve the order exactly and this would not fire",
+   "null_must_contain": "the surviving lanes in their pre-rotation order",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "pre_order": [
+     "ATTACKER-1",
+     "AGENT-2",
+     "AGENT-1",
+     "ATOM-3",
+     "ok-1"
+    ],
+    "post_order": [
+     "ATTACKER-1",
+     "ok-1",
+     "AGENT-1",
+     "AGENT-2",
+     "ATOM-3"
+    ]
+   }
+  },
+  {
+   "name": "refuses_not_zero",
+   "must_fire_because": "a dead instrument REFUSES; it does not report a count of zero",
+   "can_fail_because": "if the module swallowed git errors it would exit 0 and print 0, which is the shape five of this lane's own defects took",
+   "null_must_contain": "the healthy call, which must return 0 and a number",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "bad_rev_rc": 3,
+    "bad_rev_stdout": "",
+    "good_rc": 0,
+    "good_out": "350"
+   }
+  },
+  {
+   "name": "suites_green",
+   "must_fire_because": "the row ships runnable checks and they pass (\u00a712.3)",
+   "can_fail_because": "removing the -2 state from bringup.sh, or reverting \u00a714.2, makes check.sh arms 4 and 5 exit non-zero",
+   "null_must_contain": "a non-zero exit from either suite",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "check_sh_rc": 0,
+    "selfcheck_rc": 0
+   }
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/harness": {
+   "newest": 1787177360,
+   "from": "spikes/harness/vocabcheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "F1: nothing computes a POPULATION from CHANNEL.md, so the counters are prose -- did not fire, four live consumers do. F2: every id the rotation removed from CHANNEL.md is still visible to allocid.sh's seed in a fresh clone of HEAD, so rotation costs the allocator nothing -- FIRED. The real allocator, run in git-archive clones of both revisions, answers identically for all ten prefixes; the full seed difference is one id, G44, whose author had declared it free. The allocator half of this row is withdrawn. F3: no other harness site carries the class, making it an anecdote -- did not fire, seven live sites. F4: the detector must FLAG a truncation and a wholly-truncated lane, and NOT flag a grow-only file or a DONE-PARTIAL, and REFUSE on a dead instrument -- four shapes, green. AND THE FALSIFIER FOR THE REMEDY ITSELF: if a future rotation makes `channelcount.sh total` fall, the anchor is not an anchor and this row is wrong; check.sh arm 1 asserts monotonicity across the rotation.",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

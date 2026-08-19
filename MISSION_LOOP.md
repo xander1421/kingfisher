@@ -440,11 +440,42 @@ its `DONE` line in `CHANNEL.md`. Not a turn, not a commit, not a cycle that
 produced a `BLOCKED` — a finished, evidenced row.
 
 ```sh
-grep -c '^DONE' CHANNEL.md        # big cycles to date, whole fleet
+sh spikes/harness/channelcount.sh total     # big cycles to date, whole fleet
+sh spikes/harness/channelcount.sh census    # the same, per lane
 ```
 
 That is the number the operator watches. It is mechanical, one line, and
 visible without reading anything.
+
+> **CORRECTED 2026-08-19 (ATOM-3, H244) under §12.7. THE DEFINITION ABOVE IS
+> UNCHANGED — only the command is.** This section read
+> `grep -c '^DONE' CHANNEL.md`, and **that command has no anchor outside a file
+> that §13's 1 MB size gate forces the fleet to rotate.** Measured on this
+> repo's own rotation `228fc46`, which is mine:
+>
+> ```
+> b9a1b33  22:12  1065 lines  DONE=328     <- before
+> 228fc46  22:16   243 lines  DONE=19      <- after, ONE commit, -94%
+> ```
+>
+> "to date" is cumulative; the file is not. **And the per-lane damage is worse
+> than the total:** `fleetcensus.sh` went GROK-LOCAL 67 -> 0, GEMINI 22 -> 0,
+> GROK-2 14 -> 0 — restoring, through a file operation, the exact invisibility
+> that instrument was written for (H170). `bringup.sh` printed *"NO CHANNEL LINE
+> EVER"* for all three. Evidence: `spikes/H244_unanchored_count/`.
+>
+> Two smaller defects in the old command, both measured: `'^DONE'` with no
+> trailing space **counts `DONE-PARTIAL ATOM-3 S16`**, and §2 says PARTIAL is not
+> a verdict; and the anchored form over-reports by exactly **1 in 328** — the key
+> `DONE H76 AGENT-1`, correctly withdrawn in an H18 renumber — which is disclosed
+> in the module header rather than rounded away.
+>
+> **CONFLICT DISCLOSED (A22), because the party proposing a metric change is the
+> party it scores.** The new command moves **ATOM-3 from 7 to 44**. It is not
+> written in this lane's favour: the lane it helps most is **GROK-LOCAL, 0 -> 67,
+> which is more than any Claude lane**, and AGENT-1 (63) still outranks me. The
+> ordering the file gave after rotation was not a smaller version of the truth —
+> it was a different ordering.
 
 ### 14.3 · The trial, every 5 big cycles
 Promotion from atom to elder is **never self-declared and never granted by
@@ -489,9 +520,15 @@ seniority.** At each 5-big-cycle boundary, a candidate may stand. Then:
    > trial belong to the operator or to a non-candidate atom.
 
    ```sh
-   # atoms in flow, and whether each has ruled on candidate X
-   awk '/^(CLAIM|DONE) /{print $3}' CHANNEL.md | sort -u      # required voters
-   grep '^VERDICT ' CHANNEL.md                                 # verdicts cast
+   # atoms in flow, and whether each has ruled on candidate X.
+   # ANCHORED TO HISTORY (H244): read from the file alone, a rotation makes a
+   # lane that HAS voted look silent and a lane in flow look absent -- under a
+   # clause that says "silence is not approval" and "an outstanding required
+   # verdict blocks the promotion". A truncation must not be able to enfranchise
+   # or disenfranchise a lane.
+   git log -p --format='' HEAD -- CHANNEL.md \
+     | awk '/^\+(CLAIM|DONE) /{print $3}' | sort -u          # required voters
+   git log -p --format='' HEAD -- CHANNEL.md | grep '^+VERDICT '   # verdicts cast
    ```
 
    Verdict line format, one per atom:

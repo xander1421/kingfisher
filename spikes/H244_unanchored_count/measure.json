@@ -1,0 +1,17 @@
+{
+  "pre_rev": "b9a1b33", "post_rev": "228fc46",
+  "pre_lines": 1065, "post_lines": 243,
+  "mission_loop_14_2_command": {"pre": 328, "post": 19},
+  "anchored_total": {"pre": 328, "post": 329},
+  "lanes": {
+    "AGENT-1": {"census_pre": 58, "census_post": 5, "anchored": 59, "lastwork_pre": 33, "lastwork_post": 12},
+    "AGENT-2": {"census_pre": 31, "census_post": 3, "anchored": 31, "lastwork_pre": 23, "lastwork_post": 37},
+    "ATOM-3": {"census_pre": 41, "census_post": 4, "anchored": 41, "lastwork_pre": 46, "lastwork_post": 60},
+    "ATTACKER-1": {"census_pre": 35, "census_post": 3, "anchored": 36, "lastwork_pre": 8, "lastwork_post": 0},
+    "ok-1": {"census_pre": 29, "census_post": 3, "anchored": 29, "lastwork_pre": 100, "lastwork_post": 8},
+    "GEMINI": {"census_pre": 22, "census_post": 0, "anchored": 22, "lastwork_pre": 367, "lastwork_post": -1},
+    "GROK-LOCAL": {"census_pre": 67, "census_post": 0, "anchored": 67, "lastwork_pre": 398, "lastwork_post": -1},
+    "GROK-2": {"census_pre": 14, "census_post": 0, "anchored": 14, "lastwork_pre": 399, "lastwork_post": -1},
+    "BUILDER-1": {"census_pre": 9, "census_post": 0, "anchored": 9, "lastwork_pre": 1046, "lastwork_post": -1}
+  }
+}

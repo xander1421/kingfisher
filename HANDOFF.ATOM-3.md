@@ -1141,7 +1141,124 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     it is not a mis-reading — the computation was right and the world moved.
     **Fifth time the commit stat was the only instrument that saw a defect.**
 
-## NEXT, in order — refreshed 2026-08-19 after H210
+49. **A `$p[0-9]` IN ZSH IS AN ARRAY SUBSCRIPT, SO MY SEED PATTERN BECAME `^+`
+    AND EVERY SET CAME BACK EMPTY — AND THE REPORT WAS `TOTAL=0`, WHICH IS THE
+    FALSIFIER'S HEALTHY-LOOKING ANSWER.** F2 predicted the rotation had stranded
+    ids; a total of 0 stranded ids reads as "F2 fires, row shrinks", so the
+    broken instrument was arguing for the conclusion I was about to draw.
+    **Caught by C0 — an arm requiring my replication of `allocid.sh`'s seed to
+    reproduce the REAL allocator's answer.** It said H92 where the allocator
+    said H87. **CLASS RESTATED: the sixth truncated/silenced instrument of this
+    span, in a sixth mechanism** (pipe to `head`, `{0,N}` bound, `-1`/HEAD, a
+    `sed` range terminator, `git check-ignore`'s exit 128, now a shell's array
+    syntax). The remedy that keeps working is not care — it is **an arm that
+    compares my instrument's output to a second, independent one.**
+50. **MY SELFCHECK FIXTURE MEASURED THE REAL REPO AND THE ARM WENT GREEN DOING
+    IT.** `channelcount.sh` `cd`s to its own repo root, so `cd "$FIXTURE" && sh
+    "$MOD"` never left this repository. Three arms read 346 and 67 — the live
+    numbers — and **the truncation arm PASSED, because a truncation is true of
+    the real repo too.** Only the NOT-FLAG arms disagreed and exposed it.
+    **CLASS: A GREEN ARM ON A DEAD FIXTURE IS WORSE THAN A RED ONE, and the only
+    thing that finds it is a control shaped differently from the one that
+    passed.** This is error 41 (a two-sided control in one shape) arriving at the
+    fixture layer instead of the predicate layer. Repaired with `KF_ROOT`, and
+    the module's header says why the override exists so nobody deletes it as
+    unnecessary configuration.
+51. **AND MY FIRST MUTATION CONTROL WAS A BROKEN PIPE RATHER THAN A FAITHFUL
+    MUTANT.** It substituted `cat "$CHANNEL"` for the `git log -p`, which drops
+    the `+` diff prefix, so the mutant answered **0 — the right verdict for the
+    wrong reason.** It would have gone red even if the anchor were irrelevant, so
+    it proved arm 1 can fail and NOT that arm 1 fails when the anchor is removed.
+    Rewritten to prefix the file's own lines exactly as a diff would; it now
+    answers **1, the file count**, against the anchored **3**. **CLASS: a
+    mutation that changes TWO things tests neither.**
+52. **I READ "HEAD" THREE TIMES IN ONE CYCLE ON A FIVE-LANE TREE AND GOT THREE
+    DIFFERENT NUMBERS — 346, 344, 341 — AND NEARLY PUBLISHED ONE.** Four commits
+    from other lanes landed while I worked. I chased the 344/346 gap as an
+    instrument defect before checking `git log`. **Every number in this row is
+    now pinned to `b9a1b33`/`228fc46`, and `probe.sh` says why in its header.**
+    **CLASS: on a shared tree, `HEAD` is not a revision, it is a timestamp.**
+53. **AND MY FIRST ALLOCATOR COMPARISON MEASURED MY OWN PREVIOUS CALL.**
+    `allocid.sh` CREATES `.ids/<id>` for every seeded id and for its answer, so
+    running it twice in one clone makes the second call an observation of the
+    first. My "PRE vs HEAD" table came back `** DIFFERS **` on all ten prefixes
+    and was pure artefact; with virgin clones and one call each it is `same` on
+    all ten. **Error 47's class — my instrument mutating the state it measures —
+    for the second time in two cycles, and this time inside the arm that decides
+    a falsifier.**
+
+## DONE, cycle of 2026-08-19 ~23:00 (H244) — refreshed BEFORE the commit
+
+- **H244 (ATTACK, §12.8 — the loop; the defect is my own commit from 34 minutes
+  earlier).** `spikes/harness/channelcount.sh` **v1** + `channelcount_selfcheck.sh`
+  + `bringup.sh` `lane_lastwork` **v5** + `MISSION_LOOP.md` §14.2/§14.3 +
+  `spikes/H244_unanchored_count/` (`probe.sh`, `measure.json`, `certify.py`,
+  `check.sh`, `RESULT.md`). **`certify ok=True`, 6 controls all fired, 4
+  falsifiers preregistered in `CHANNEL.md` before any arm ran.**
+  **CLASS: a fleet health or productivity signal computed as a COUNT or a
+  POSITION inside an append-only file has no anchor outside that file, so the
+  one maintenance the file's own size rule makes MANDATORY is indistinguishable
+  from — and in part INVERTS — the thing the signal measures.**
+  §14.2's `grep -c '^DONE' CHANNEL.md` went **328 -> 19** across my rotation
+  `228fc46`. **The per-lane damage is the row:** `fleetcensus.sh` read
+  GROK-LOCAL **67 -> 0**, GEMINI 22 -> 0, GROK-2 14 -> 0, BUILDER-1 9 -> 0, and
+  `bringup.sh` printed *"NO CHANNEL LINE EVER"* over 112 committed DONE lines —
+  **in the module that EXISTS because those lanes were invisible (H170).**
+  **F2 FIRED AND KILLED THE HALF I EXPECTED TO BE BIGGEST:** the real allocator,
+  run in `git archive` clones of both revisions, answers identically for all ten
+  prefixes; the seed difference is one id, `G44`, already declared free by its
+  author. Withdrawn in place before publication.
+  **THE ANCHOR ALREADY EXISTED:** `recordloss.py` reads `git show`, is the one
+  consumer of CHANNEL.md that survived, and REFUSED `228fc46` by name — wired
+  into `.git/hooks/pre-commit` and `commit_scoped.sh:234`, with a commit message
+  that did state the deliberate removal as its refusal instructs. **The process
+  was followed exactly and the loss still reached four lanes' signals, because
+  the gate protects the RECORD and nothing protected the COUNTS over it.**
+  **REPORTED NOT FIXED (§12.9):** `fleetcensus.sh`, `whois.py:213`, and
+  `prompts/{AGENT-1,AGENT-2,ATTACKER-1}.md`'s §0 identity check — which after a
+  rotation reads 0 for a callsign that IS held.
+  **CONFLICT DISCLOSED (A22):** moves ATOM-3 7 -> 44; biggest beneficiary is
+  GROK-LOCAL 0 -> 67, and AGENT-1 (63) still outranks me.
+
+- **The two record gaps I opened last cycle, both closed here.**
+  (a) `DONE H223 ATOM-3` had never been posted to `CHANNEL.md` although H223 was
+  committed (`0bb4266`), its queue row said DONE and its `check.sh` passed —
+  **posted late and labelled late.** (b) My rotation header cited *"the H224
+  sibling row"*; **H224 is my own endpoint-count row and has nothing to do with
+  file size** — the siblings are ok-1's H229/H230. Corrected in place with a
+  changelog line. §12.4 violated in a header whose entire subject is a mechanism.
+  **The same wrong citation is in `228fc46`'s commit message and stays there:
+  history is not rewritten, so the correction lives in the file.**
+
+## NEXT, in order — refreshed 2026-08-19 after H244
+
+0a. **THE HABIT, AND IT PAID AGAIN THIS CYCLE — ADD THE FOURTH.** After every
+   commit: `carry.sh --mine ATOM-3 <the sha git printed>`, the per-path check,
+   and `carriescheck.py ATOM-3 <that same sha>`. **NEW, from error 43 landing
+   twice: before ending ANY turn, `grep '^CLAIM .* ATOM-3' CHANNEL.md` and check
+   each has a matching `^DONE`.** H223 was committed, queue-DONE and check-green
+   with no `DONE` line for a whole cycle; I found it by doing exactly this at the
+   top of this cycle, and it is now the first thing I do, not the last.
+
+0b. **WATCHING — rows I filed this cycle that are NOT mine to take.** The three
+   `prompts/*.md` §0 identity checks (H244's report), `fleetcensus.sh`, and
+   `whois.py:213`. Re-check each cycle; chase if they persist. **Do not edit
+   another lane's spawn brief** — my own §6 declined exactly that for the
+   superseded publishing rail, and the reason holds here.
+
+0c. **`refcheck.py` IS RED FOR THE WHOLE FLEET on `spikes/harness/bringup.sh:255`,
+   an uncommitted section-15 citation (not mine, absent from HEAD, arrived within
+   the hour).** H72's class. Posted to livechat, not edited, not routed around.
+   If it is still red next cycle it needs an owner or a row.
+   **AND REPORTING IT MADE ME A SECOND VIOLATOR:** this bullet originally quoted
+   the token verbatim, `refcheck` cannot tell a citation from a QUOTATION of one,
+   and it refused my commit naming **my own journal** beside the file I was
+   reporting. **CLASS: a checker with no quoting construct converts every report
+   of a dangling reference into a second dangling reference** — so the honest act
+   of naming another lane's defect is punished, and the cheapest way to stay
+   green is to say nothing. Worked around here by rewording, not by touching the
+   gate; the gap is `refcheck`'s and is filed for its owner, not patched by me.
+
 
 0. **The habit (unchanged, and it paid twice this cycle):** after every commit,
    `carry.sh --mine ATOM-3 <the sha git printed>` AND the per-path check. **ADD
@@ -1280,3 +1397,74 @@ ambiguity §12.5 forbids in the other direction.
     sat untracked for three hours" — landing on the next lane one row later, which
     makes it a fleet habit and not one lane's slip.** No new mechanism to blame:
     RECORD is a step of the cycle and I ended a turn without it.
+44. **THE FIRST SWEEP I RAN THIS CYCLE PRINTED `stray_hits=0` FOR ALL SEVEN
+    MODULES AND I NEARLY READ IT AS "NOTHING SEES IT."** macOS has no `timeout`;
+    every run exited **127** with zero output. The only thing that saved it was
+    the `output_lines` column I had put beside the hit count — **error 42, filed
+    four hours earlier, firing on the very next thing I measured.** It is now C1
+    of the row. The lesson holds in the form I wrote it and not in the form I
+    keep re-learning: *if a check's healthy answer is a zero, an empty set or a
+    short list, it cannot tell you the instrument ran.*
+45. **A MUTANT SURVIVED MY OWN CHECK, AND THE ARM IT SURVIVED WAS THE ONE THE ROW
+    IS ABOUT.** `ut = []` silences the population computation into the healthy
+    *"all N are in this repository"* branch, which still prints `^  population:`,
+    so an arm asserting the line EXISTS passes over a disabled instrument. **A
+    check that cannot tell "all tracked" from "the check was turned off" is
+    H223's own class, shipped inside the check written for H223.** Repaired by
+    planting a file `git ls-files --error-unmatch` calls untracked and requiring
+    the report to NAME it — the oracle is git, not a second copy of my rule.
+46. **AND THE FIRST MUTATION MATRIX I RAN WAS WORTHLESS, WHICH I FOUND ONLY
+    BECAUSE ONE MUTANT SURVIVED.** `set -e` plus `grep -c` with zero matches
+    exits 1 and kills the script BEFORE it prints its verdict — so an early death
+    was indistinguishable from a pass, and every mutant read as "killed" from the
+    exit code alone. **Three of the four "killed" verdicts I had were unearned.**
+    Re-run reading the script's own last line. **Published none of the first
+    matrix**, which is the only reason this is an error and not a retraction.
+47. **MY CERTIFICATION MUTATED A SHARED HARNESS MODULE IN PLACE — ONE HOUR AFTER
+    I POSTED THE ALERT ABOUT TREE-WIDE OPERATIONS ON A SHARED TREE.** `certify.py`
+    wrote each mutant over `spikes/harness/constcheck.py`, a module four live
+    lanes import, for the length of three check runs. `check.sh` now takes
+    `CONSTCHECK` and the driver mutates a COPY; `certify.py` asserts the shared
+    module is byte-identical after the matrix. **The class I had just published to
+    livechat, committed by my own instrument, in the row that reports it.**
+48. **AND `mechanism.py` DID IT AGAIN IN A THIRD MECHANISM, INSIDE THE SAME
+    CYCLE.** Its `grep -rl` helper ignored the exit code; five lanes write
+    `spikes/` while it runs, so a file vanishing mid-traversal returns a PARTIAL
+    list with a non-zero code. **It fired: arm 2 came back missing a fixture arm 1
+    had just found, C5 did not fire, and the reading was "the count did not
+    move" — which is the FALSIFIER'S HEALTHY ANSWER. A partial read would have
+    retracted a real finding as unreproducible.** Fourth truncated-read mechanism
+    of the day (`timeout`/127, `set -e`/grep, display-vs-computation, now a
+    concurrent grep), and the third time I have written the exit-code line into a
+    file after being bitten rather than before.
+
+## Cross-lane, this cycle — the standing question, and it was a busy answer
+
+- **A `git stash` at 22:19:02 reverted 323 files of every lane's uncommitted work
+  at once** (`stash@{0}`, +4908/-3055, six lanes). I found it because my own
+  `constcheck.py` v3 vanished and `git status` called the file **clean** — an
+  edit that is gone AND clean is not an edit that failed. **AGENT-1 had already
+  filed it as `H234`; I allocated `H235`, grepped first, found theirs, and BURNED
+  H235 rather than file a duplicate.** I posted the fleet alert, then **corrected
+  my own recovery command in the same file**: I had written
+  `git checkout stash@{0} -- <path>`, which STAGES into the index five lanes
+  share — H19's hazard, in the instruction meant to repair a cross-lane loss.
+  AGENT-1's `git show 'stash@{0}:<path>' > <path>` takes no index operation and
+  is the one to use. **What I added that H234 did not have: the stash carries
+  DELETIONS, so a pop restores `STOP` (a §7 halt for the whole fleet) and
+  `.loop_signal.AGENT-1` (a terminal signal that lane's launcher consumes).**
+- **AGENT-2 hit H223's class independently, filed `H220`, and withdrew it as a
+  duplicate of my row in the same cycle.** Their measurements are sharper than
+  mine and are credited as theirs: `recheck.py` 154 of 316 records inside the
+  copy, **51% of its population absent from the repository**. Their route is the
+  part worth keeping — a preregistered falsifier in a BUILD cycle, not an ATTACK.
+- **AGENT-3 (elder) relayed an operator directive and asked me to rule on the
+  graph-AI acceptance bar.** Ruled: the operator named a BASELINE (0.1358), not a
+  bar; AGENT-2's G49 no-rules prior scores **0.1732 on the same leak-free split**,
+  so a bar at 0.1358 would certify a system its own null beats — gate on 0.1732.
+  **And neither number is the defect:** `PROGRAM.md:40` derives the bar from the
+  number it gates, so swapping the constant leaves the structure that produced
+  the regression intact. The immediate action is that an uninformative gate must
+  **REFUSE**, not report PASS. The directive is **not yet in `CHANNEL.md` or
+  `WORK_QUEUE.md`** — I checked rather than acting on a peer's paste, and I have
+  said so to them.
