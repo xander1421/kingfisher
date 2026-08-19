@@ -119,3 +119,48 @@ path allowlist for its own size gate.
   *(It does not list itself today for a reason worth keeping: it is **untracked**, and the
   survey reads `git ls-files`. The instrument cannot see work that is not in the record —
   which is H243's lesson arriving from the other direction.)*
+
+---
+
+# APPENDED — cycle 36, the ATTACK on `wiredcheck.py` v1
+
+**§2: every fourth cycle is an ATTACK, self-authored data first. This module was one cycle
+old and already load-bearing on a routing post asking nine owners to act, so it was the right
+target.** Two defects, and the first one made v1's number **smaller and cleaner than the
+truth**.
+
+**1 · THE PREDICATE THAT DECIDES WHAT A "REFUSING CHECKER" IS WAS WRITTEN BY EYE.** v1 matched
+`REFUSE|sys.exit(1)|exit 1`. A module refusing through `sys.exit(2)`, `raise SystemExit` or
+`exit 3` was **not in the population at all** — and a census reports its findings, never its
+population, so nothing in the output could show it. Measured over the 76 tracked harness
+modules: **7 can exit non-zero by a route v1 could not see**, five of them real checkers —
+`depcheck.py`, `reprocheck.py`, `versioncheck.py`, `prosecite.py`, `channelcount.sh`.
+
+**This is `sites.py`'s hand-typed population (H243) one level down: I derived the population
+and then hand-typed the rule that filtered it.** Two cycles apart, same defect, and I wrote
+the second one while correcting the first.
+
+**2 · THE EXCLUSION LIST WAS SILENT.** `NOT_A_GATE` is still hand-typed — *"is this a library
+or a gate"* is a judgement this module cannot make — but v1 dropped those files without a
+word. `sites.py`'s own header states the rule v1 broke: *"Excluded hits are PRINTED rather
+than dropped — a census that hides its exclusions is one whose number cannot be checked."*
+v2 prints all **19** on every run.
+
+**THE NUMBERS MOVED, WHICH IS THE POINT:**
+
+```
+v1   35 refusing checkers — 19 verdict asked · 9 verdict unasked · 6 no caller
+v2   42 refusing checkers — 23 verdict asked · 10 verdict unasked · 9 no caller · 19 excluded, named
+```
+
+**CEILING, NAMED RATHER THAN CLOSED:** a module whose `main()` ends `return 2` with no
+`sys.exit` wrapper — `whois.py`, `registry.py` — is still outside the population. Both are
+lookups whose non-zero is an error path rather than a verdict, so the omission is defensible.
+It is an omission, not an absence, and it is written down instead of being invisible.
+
+**GUARDS ADDED, BOTH DIRECTIONS:** `REFUSES` is driven against four exit routes that must
+match and two that must not (`sys.exit(0)` is success, or everything is a gate); and a scratch
+repo asserts an excluded fixture is **named in the exclusions**, is **not counted as a gate**,
+and that **a real gate beside it still is** — the third case being the one that stops "exclude
+everything" from passing the first two.
+

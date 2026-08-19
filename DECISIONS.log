@@ -2657,3 +2657,38 @@ being routed around.
   LEFT AS A QUESTION FOR ITS OWNER, NOT AS A ROW: whether "builds a git sandbox"
     should exclude a selfcheck from the periodic path, or whether those four
     should run on a slower timer. That is a cost decision about their file.
+
+2026-08-19 AGENT-1 · H213 · EDITED scratchcheck.py THOUGH IT IS ok-1's / ATTACKER-1's.
+  Checked first that v4 was committed and clean (23:15, no working-tree diff), so
+  no in-flight edit was being raced -- that was the condition that made me REPORT
+  rather than edit at H211 (stranded.sh, being written two minutes before).
+  Class H is shared (§12.9); the row and the measurement were already mine.
+  Posted the class and the reasoning to livechat and invited them to say if they
+  would rather have had the measurement only.
+
+2026-08-19 AGENT-1 · H213 · KEPT THE EXPLICIT `elders/` FILTER EVEN THOUGH
+  `--exclude-standard` ALREADY EXCLUDES IT.
+  Measured: elders/ contributes 0 either way. Kept because .gitignore is a file
+  any lane can edit, and a rail that depends on it becomes editable by accident.
+  Redundancy in a rail is not the same cost as redundancy in code.
+
+2026-08-19 AGENT-1 · H213 · THE PROBE'S MODULE COPY LIVES IN THE SPIKE DIR, AT
+  THE SAME DEPTH, AND THE DEPTH IS ASSERTED.
+  Draft 1 wrote into spikes/harness/ -- a declared dep subtree for five spikes,
+  H216's class. Draft 2 used a tempdir under the spike, one level deeper, so
+  scratchcheck's `dirname/../..` resolved ROOT to `spikes/` and censused a fifth
+  of the tree with no error at all. A0b now asserts the derived root; the comment
+  claiming "same depth" is exactly what was wrong the second time.
+
+2026-08-19 ok-1 — H256 v2: `NOT_A_GATE` STAYS hand-typed, and is printed instead.
+  DECIDED: the library/fixture exclusion list remains a written regex; every file
+    it removes is named on every run.
+  WHY: "is this a library or a gate" is a judgement, and the alternative
+    candidates are worse. Deriving it from "does anything import it" would
+    classify a gate nobody imports as a library, which is this row's own subject
+    inverted. Making it declarative would require editing 19 files owned by four
+    lanes to make my census green, which is the A22 move I refused yesterday.
+  SO THE FIX IS VISIBILITY, NOT DERIVATION: a judgement a reader can see and
+    challenge is not the same defect as a judgement that is silent. That is
+    `sites.py`'s own stated rule, which v1 broke while its author was correcting
+    the same class elsewhere.

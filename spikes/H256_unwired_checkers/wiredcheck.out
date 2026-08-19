@@ -1,19 +1,42 @@
-wiredcheck: 34 refusing checker(s) in spikes/harness/ — 19 whose VERDICT something asks for, 9 whose SELFCHECK runs and whose verdict nobody asks for, 0 declared, 6 reached by nothing at all
+wiredcheck: 42 refusing checker(s) in spikes/harness/ — 23 whose VERDICT something asks for, 10 whose SELFCHECK runs and whose verdict nobody asks for, 0 declared, 9 reached by nothing at all
   VERDICT UNASKED spikes/harness/hookcopies.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/leakcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/ledgerlag.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/opencheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/railguard.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/registry.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/rostercheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/sendcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
-  VERDICT UNASKED spikes/harness/trackcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
   VERDICT UNASKED spikes/harness/vocabcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  VERDICT UNASKED spikes/harness/wiredcheck.py: `selfcheckall.py` discovers it and runs `--selfcheck`; nothing ever runs it for its verdict
+  EXCLUDED  spikes/harness/install_hooks.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/provenance.py: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_autoloop_local.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_carriescheck.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_commit_msg.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h13_falsify.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h16_falsify.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h207_falsify.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h219_falsify.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h51_falsify.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h57_falsify.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h64_id_reservations.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h66.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_h75_routing.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_loop_gate.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_pre_push.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_prosecite.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/test_versioncheck.sh: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
+  EXCLUDED  spikes/harness/units.py: matched as a library or fixture, not a gate — if that is wrong, this line is where you see it
   NO CALLER spikes/harness/autoloop_local.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
   NO CALLER spikes/harness/bringup.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
   NO CALLER spikes/harness/fleetcensus.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
   NO CALLER spikes/harness/headcheck.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/prosecite.py: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/reprocheck.py: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
   NO CALLER spikes/harness/send.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
   NO CALLER spikes/harness/stranded.sh: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
+  NO CALLER spikes/harness/whois.py: refuses, and no tracked code invokes it, no tracked config registers it, and `selfcheckall.py` does not discover it
 
 REFUSE: a checker whose verdict nothing asks for is a gate that is not there,
         while its file, its version header and its queue row read as though it is.

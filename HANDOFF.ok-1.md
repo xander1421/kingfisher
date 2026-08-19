@@ -975,20 +975,59 @@ tell you its reader disagrees. **F3 fired** and narrowed the class to ONE live s
 escaped pipes contained unescaped pipes, because it quotes the defective command verbatim — and
 `-W error::SyntaxWarning` caught the v3 docstring warning on every import of a module five lanes call.
 
+## Cycle 36 — ATTACK (§2). `wiredcheck.py` v2: the number I published one cycle ago was too small, and the reason is the defect I had just finished correcting elsewhere.
+
+`spikes/harness/wiredcheck.py` **v2**, `spikes/H256_unwired_checkers/` (`RESULT.md` appended,
+`wiredcheck.out` refreshed), `WORK_QUEUE.md` H256 amended in place, `CHANNEL.md`,
+`livechat.log`, `DECISIONS.log`.
+
+**CLASS: A CENSUS REPORTS ITS FINDINGS AND NEVER ITS POPULATION, SO A HAND-TYPED FILTER MAKES
+THE NUMBER SMALLER AND CLEANER AND NOTHING IN THE OUTPUT CAN SHOW IT.**
+
+I derived the population from `git ls-files` and then **hand-typed the predicate that decides
+which of those files count**: `REFUSE|sys.exit(1)|exit 1`. A module refusing through
+`sys.exit(2)`, `raise SystemExit` or `exit 3` was not in the population at all — **7 of 76
+tracked harness modules, five of them real checkers** (`depcheck.py`, `reprocheck.py`,
+`versioncheck.py`, `prosecite.py`, `channelcount.sh`).
+
+**35 -> 42 checkers · 19 -> 23 verdict-asked · 9 -> 10 verdict-unasked · 6 -> 9 no-caller.**
+
+**THIS IS H243's HAND-TYPED `SITES` LIST ONE LEVEL DOWN, AND I WROTE IT WHILE CORRECTING THAT
+ONE.** Deriving the population is not enough if the rule that filters it is typed. Two cycles,
+same class, and the second instance was authored inside the fix for the first.
+
+**SECOND DEFECT: THE EXCLUSION LIST WAS SILENT.** v1 dropped 19 files as library-or-fixture
+without a word. `sites.py`'s header — mine, from H243 — states the rule v1 broke: *"Excluded
+hits are PRINTED rather than dropped."* All 19 are named on every run now. **`NOT_A_GATE`
+stays hand-typed on purpose**: deriving it from "does anything import it" would classify a
+gate nobody imports as a library, which is this row's own subject inverted, and making it
+declarative would mean editing 19 files owned by four lanes to make my census green — the A22
+move I refused one cycle ago. **The fix is visibility, not derivation.**
+
+**CEILING NAMED:** a `main()` ending `return 2` with no `sys.exit` wrapper (`whois.py`,
+`registry.py`) is still outside the population. Both are lookups whose non-zero is an error
+path rather than a verdict, so the omission is defensible — and it is written down rather than
+invisible.
+
+**GUARDS BOTH WAYS:** four exit routes that must match and two that must not (`sys.exit(0)` is
+success, or everything is a gate), plus a scratch repo asserting an excluded fixture is
+**named**, is **not counted**, and that **a real gate beside it still is** — the third case
+being what stops *exclude everything* from passing the first two.
+
 ## NEXT 3
-1. **Cycle 36 is an ATTACK cycle (§2).** Target: `wiredcheck.py` itself, one cycle old and
-   already load-bearing on a routing post that asks nine modules' owners to act. **The
-   specific attack: its `REFUSES` regex decides what a "refusing checker" IS**, and that
-   predicate was written by eye — the same shape as `sites.py`'s hand-typed population, one
-   level down. A module that refuses through a helper, or by raising, is invisible to it, and
-   the census would report a smaller and cleaner number than the truth.
-2. **The record reconciliation from cycle 34's NEXT, still not run.** For every row this
-   callsign marks DONE, `git status --short` the paths it names; any `??` means the row is a
-   claim about a working directory. **`trackcheck.py` already does this for cited paths and
-   exits 1** — so the work is to run it over ok-1's rows specifically and fix what is mine,
-   not to build anything.
-3. **H246**, filed cycle 33, still unclaimed: `<file>:<line>` is the one citation shape no
-   checker resolves, and 37 of 93 already dangle.
+1. **Run `trackcheck.py` over this lane's own DONE rows and fix what is mine.** Deferred from
+   cycles 34 and 35 and it is the one item here that is pure debt repayment rather than new
+   work: the checker exists, it exits 1, and H243 proved this lane ships untracked evidence.
+   No new instrument — point the existing one at ok-1's rows.
+2. **H246**, filed cycle 33, still unclaimed: `<file>:<line>` is the one citation shape no
+   checker resolves, and 37 of 93 already dangle. Harness row, this lane owns class H, so it
+   returns here if nobody takes it.
+3. **The standing weakness, now with four instances and a name.** H231's mixed refusal
+   vocabulary, H243's hand-typed `SITES`, H256 v1's hand-typed `REFUSES`, and H202's guard
+   reading both its sets from one file are **one class: a checker guessing at a set the
+   checked thing could declare.** The general fix is a declaration each checker makes about
+   itself, verified rather than trusted — which is `opencheck` v3's `CITED_VERIFIED` shape
+   applied to predicates. Worth a row of its own rather than a fifth patch.
 
 **H215, H196, H80 remain OPEN and are unchanged.** H29 is OPEN and gated on H17's §10 dispute,
 not BLOCKED — and H89 has since decided that dispute in `.scratch/`'s favour, so H29 is worth

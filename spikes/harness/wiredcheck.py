@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# wiredcheck.py v1 — H256. ok-1, 2026-08-19.
+# wiredcheck.py v2 — H256 (v1), H256-attack (v2). ok-1, 2026-08-19.
 # Version in a `#` comment as well as the docstring: versioncheck.py reads a
 # comment and cannot see a version declared in a docstring (H193).
 """A checker that REFUSES, that nothing runs.
@@ -59,10 +59,36 @@ import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     "..", ".."))
-# Libraries and fixtures: they exit non-zero as MODULES, not as gates.
+# v2, AND IT IS AN ATTACK ON v1 BY ITS AUTHOR ONE CYCLE LATER (§2).
+#
+# DEFECT 1 REMOVED: **THE PREDICATE THAT DECIDES WHAT A "REFUSING CHECKER" IS WAS
+# WRITTEN BY EYE.** v1 matched `REFUSE|sys.exit(1)|exit 1` and nothing else, so a
+# module that refuses through `sys.exit(2)`, `raise SystemExit` or `exit 3` was
+# not in the population at all -- and a census reports its findings, never its
+# population, so the number came out SMALLER AND CLEANER than the truth. Measured
+# over the 76 tracked harness modules: **7 can exit non-zero by a route v1 could
+# not see**, five of them real checkers (`depcheck.py`, `reprocheck.py`,
+# `versioncheck.py`, `prosecite.py`, `channelcount.sh`).
+#
+# That is `sites.py`'s hand-typed population (H243) one level down: I derived the
+# population and then hand-typed the rule that filters it.
+#
+# DEFECT 2 REMOVED: **THE EXCLUSION LIST WAS SILENT.** `NOT_A_GATE` is still
+# hand-typed -- "is this a library or a gate" is a judgement and this module
+# cannot make it -- but v1 dropped those files without a word. `sites.py`'s own
+# header states the rule v1 broke: *"Excluded hits are PRINTED rather than
+# dropped -- a census that hides its exclusions is one whose number cannot be
+# checked."* v2 prints every exclusion on every run.
+#
+# CEILING, named: a module whose `main()` ends `return 2` with no `sys.exit`
+# wrapper (`whois.py`, `registry.py`) is still outside the population. Both are
+# lookups whose non-zero is an error path rather than a verdict, so the omission
+# is defensible -- but it is an omission, not an absence, and it is stated here
+# instead of being invisible.
 NOT_A_GATE = re.compile(r'/(test_|[a-z_]*mutants|install_hooks|lanelive|kfcheck'
                         r'|edits|power|instrument|units|provenance)')
-REFUSES = re.compile(r'REFUSE|sys\.exit\(1\)|exit 1')
+REFUSES = re.compile(r'REFUSE|sys\.exit\((?!0\))|raise SystemExit'
+                     r'|(?<![\w.])exit\s+[1-9]')
 DECLARED = re.compile(r'^[#\s]*Invoked-By:\s*(\S+)(.*)$', re.M)
 
 
@@ -99,10 +125,11 @@ def invocation_re(basename):
 def survey(root):
     """(gates, findings) — every refusing harness checker and how it is reached."""
     files = tracked(root)
-    gates = [f for f in files
-             if re.match(r'spikes/harness/[a-z_0-9]+\.(py|sh)$', f)
-             and not NOT_A_GATE.search(f)
-             and REFUSES.search(read(os.path.join(root, f)))]
+    harness = [f for f in files
+               if re.match(r'spikes/harness/[a-z_0-9]+\.(py|sh)$', f)
+               and REFUSES.search(read(os.path.join(root, f)))]
+    gates = [f for f in harness if not NOT_A_GATE.search(f)]
+    excluded = [f for f in harness if NOT_A_GATE.search(f)]
     code = {f: read(os.path.join(root, f)) for f in files
             if f.endswith((".py", ".sh", ".hook")) and not f.startswith("elders/")}
     conf = {f: read(os.path.join(root, f)) for f in files
@@ -139,11 +166,11 @@ def survey(root):
             "selfcheck_only": selfcheck_only,
             "declared": (m.group(1) + m.group(2)).strip() if m else None,
         })
-    return gates, findings
+    return gates, findings, excluded
 
 
 def main(root=ROOT):
-    gates, findings = survey(root)
+    gates, findings, excluded = survey(root)
     if not gates:
         print("wiredcheck REFUSES: no refusing checker was found at all. A survey "
               "with an empty population prints a clean zero and tells you nothing.")
@@ -165,6 +192,11 @@ def main(root=ROOT):
     for f in sc_only:
         print(f"  VERDICT UNASKED {f['path']}: `selfcheckall.py` discovers it and "
               f"runs `--selfcheck`; nothing ever runs it for its verdict")
+    for e in excluded:
+        # v2 · PRINTED, never dropped. `NOT_A_GATE` is a judgement this module
+        # cannot make, so the reader gets to disagree with it.
+        print(f"  EXCLUDED  {e}: matched as a library or fixture, not a gate — "
+              f"if that is wrong, this line is where you see it")
     for f in orphans:
         print(f"  NO CALLER {f['path']}: refuses, and no tracked code invokes it, "
               f"no tracked config registers it, and `selfcheckall.py` does not "
@@ -228,7 +260,7 @@ def selfcheck():
             f.write("import sys\nsys.exit(1)\n")
         subprocess.run(["git", "add", "-A"], cwd=d,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        gates, findings = survey(d)
+        gates, findings, _ = survey(d)
         by = {os.path.basename(f["path"]): f for f in findings}
         ck("a declared module is STILL SURVEYED",
            "declared_gate.py" in by, f"got {sorted(by)}")
@@ -259,12 +291,54 @@ def selfcheck():
     finally:
         shutil.rmtree(d, ignore_errors=True)
 
+    # 4 · v2 · THE PREDICATE THAT DECIDES WHAT A GATE *IS*. v1 matched
+    #     `sys.exit(1)` and `exit 1` only, so `sys.exit(2)`, `raise SystemExit`
+    #     and `exit 3` were outside the population -- and a census reports its
+    #     findings, never its population, so the number came out cleaner than the
+    #     truth. Both directions: a zero exit must NOT count, or everything does.
+    for src, want, why in [
+            ("import sys\nsys.exit(2)\n", True, "sys.exit(2)"),
+            ("raise SystemExit('no')\n", True, "raise SystemExit"),
+            ("echo bad\nexit 3\n", True, "exit 3"),
+            ("print('REFUSE: nope')\n", True, "the word REFUSE"),
+            ("import sys\nsys.exit(0)\n", False, "sys.exit(0) is SUCCESS"),
+            ("print('all good')\n", False, "a module with no refusal"),
+    ]:
+        ck(f"REFUSES matches {why}" if want else f"REFUSES does not match {why}",
+           bool(REFUSES.search(src)) == want)
+
+    # 5 · v2 · AN EXCLUSION MUST BE VISIBLE. `NOT_A_GATE` is a judgement this
+    #     module cannot make, so dropping a file silently makes the count
+    #     uncheckable -- `sites.py`'s own rule, which v1 broke.
+    d2 = os.path.join(ROOT, ".scratch", "wiredcheck_excl")       # §10, H89
+    shutil.rmtree(d2, ignore_errors=True)
+    os.makedirs(os.path.join(d2, "spikes", "harness"))
+    try:
+        subprocess.run(["git", "init", "-q", "."], cwd=d2,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for name in ("test_thing.py", "real_gate.py"):
+            with open(os.path.join(d2, "spikes", "harness", name), "w",
+                      encoding="utf-8") as f:
+                f.write("import sys\nsys.exit(2)\n")
+        subprocess.run(["git", "add", "-A"], cwd=d2,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        g, fnd, exc = survey(d2)
+        ck("a fixture is EXCLUDED, not silently dropped",
+           any("test_thing.py" in e for e in exc), f"excluded={exc}")
+        ck("...and it is not counted as a gate",
+           not any("test_thing.py" in x["path"] for x in fnd), f"findings={fnd}")
+        ck("...while a real gate beside it IS counted",
+           any("real_gate.py" in x["path"] for x in fnd), f"findings={fnd}")
+    finally:
+        shutil.rmtree(d2, ignore_errors=True)
+
     for b in bad:
         print("  FAIL  " + b)
     if not bad:
         print("wiredcheck selfcheck: mention != invocation (3 negatives, 3 positive "
               "controls), a declaration is printed and cannot un-list, an empty "
-              "population refuses")
+              "population refuses, REFUSES matches 4 exit routes and not a zero "
+              "exit, an excluded fixture is named rather than dropped")
     return 1 if bad else 0
 
 
