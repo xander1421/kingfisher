@@ -1,0 +1,104 @@
+{
+ "spike": "W10_marginal_witness",
+ "recorded_utc": "2026-08-19T15:23:14Z",
+ "note": "BORDERLINE, not clean. Drift 4.67pp against a 5.0pp bar I set myself, and directional (82.47 -> 87.14). The marginal median is much better than the cumulative metric but it is NOT proven size-independent.",
+ "repos": [
+  {
+   "path": ".",
+   "head": "e3df07cab9d5b205fe8560ab201da355831b4c44",
+   "clean": false,
+   "dirty_files": [
+    "spikes/W10_marginal_witness/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness",
+   "head": "e3df07cab9d5b205fe8560ab201da355831b4c44",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  ".": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "marginal.json",
+   "sha256": "b3620664b88b28eeb442cb3601ab19ae883035c5a297672fbdf911c87cd3306c",
+   "bytes": 303,
+   "mtime": 1787152994,
+   "compared_ts": 1787152994,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "cumulative-and-marginal-disagree",
+   "must_fire_because": "if both statistics gave the same number the cumulative one would not be hiding anything and this spike would be pointless",
+   "can_fail_because": "they differ by 10.15pp; had they matched, the claim that the reported metric misrepresents steady state would be refuted",
+   "null_must_contain": "cumulative and marginal median must differ materially",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "cumulative=75.37",
+    "marginal=85.52"
+   ]
+  },
+  {
+   "name": "halves-drift-is-the-honest-check",
+   "must_fire_because": "a replacement statistic that ALSO drifts with corpus size is the same defect one step slower, so the check must be able to reject my own proposal",
+   "can_fail_because": "it very nearly DID reject it: 4.67pp against a 5.0pp bar I chose myself. A pass this close to an arbitrary threshold is not a clean result and is reported as borderline, not as size-independence",
+   "null_must_contain": "first-half vs second-half marginal medians",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "first=82.47",
+    "second=87.14",
+    "drift=4.67"
+   ]
+  }
+ ],
+ "falsifiers": [],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  ".": {
+   "newest": 1787152968,
+   "from": "spikes/W10_marginal_witness/marginal.py"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/W6_incremental_witness": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [
+  "DIRTY TREE . at e3df07ca: 1 modified. The build is NOT e3df07ca."
+ ],
+ "ok": false,
+ "falsifier": "the marginal statistic is size-independent: its median does not drift between the first and second half of the corpus"
+}

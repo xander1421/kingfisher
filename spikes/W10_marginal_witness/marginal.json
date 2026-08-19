@@ -1,0 +1,13 @@
+{
+ "epochs": 66,
+ "epochs_scored": 66,
+ "cumulative_pct": 75.37,
+ "marginal_median_pct": 85.52,
+ "marginal_median_first_half": 82.47,
+ "marginal_median_second_half": 87.14,
+ "marginal_min_pct": -614.66,
+ "marginal_max_pct": 98.65,
+ "worst_epoch": 1,
+ "halves_drift_pp": 4.67,
+ "size_independent": true
+}
