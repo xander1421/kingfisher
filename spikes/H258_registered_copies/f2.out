@@ -1,0 +1,14 @@
+# F2 evidence — is the drifted registration executable HERE?
+
+$ command -v codex
+(no output: codex is not on PATH)
+
+$ git ls-files .codex | wc -l
+       0
+
+$ ls -la .codex/hooks/loop_gate.sh
+-rwxr-xr-x@ 1 victorianikolenko  staff  9804 Aug 17 17:23 .codex/hooks/loop_gate.sh
+
+# the drifted copy's digest against H219's recorded pre-fix blob
+H219 RESULT.md cites the pre-fix hook blob as e269f2fd79fc9adc:
+e269f2fd79fc9adc

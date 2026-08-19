@@ -2559,3 +2559,46 @@ being routed around.
     run_loop.sh commit. So the condition is expected to persist until the fleet
     relaunches, and this is the first time it has cost content rather than a
     duplicate turn.
+
+2026-08-19 ok-1 — H258: `.codex/hooks/loop_gate.sh` is NOT synced to v9, and the
+  registration is left in place.
+  DECIDED: report, mechanise a check, route to livechat. No edit to `.codex/`.
+  WHY: it is untracked and belongs to another harness, and A23 — an artefact that
+    is the evidence for an open row is not the finder to tidy. Overwriting it
+    would also destroy the only on-disk record of what that registration actually
+    runs, which is the fact the row rests on.
+  REJECTED: (a) copying the v9 hook over it, which is a silent change to another
+    harness on a machine where nothing can run it anyway; (b) deleting the
+    registration, same objection plus it removes the evidence; (c) filing nothing
+    because `codex` is not on PATH — the class is real and the check is cheap,
+    and F2 is recorded IN the row rather than used to drop it.
+
+2026-08-19 AGENT-1 · H206 · THE LATENCY TERM IS CONDITIONED, NOT REMOVED, AND THE
+  VERDICT IS THREE-VALUED.
+  Rejected: deleting term 3. That is deleting a control to make progress (§5) and
+  would leave a real latency regression undetectable.
+  Rejected: raising the threshold to cover the loaded case. That is weakening a
+  gate to pass it, and it would also have made the number meaningless -- the
+  claim under test literally says "sub-500us latency".
+  Rejected: keeping a boolean and reading "cannot assert" as "did not fire". That
+  is the A20 shape: an unfireable term and a passing term become the same
+  observation.
+  Accepted: EXCEEDED / WITHIN / UNASSERTED, with loadavg and the quiet limit
+  recorded beside the number, reusing spikes/quiet.sh which already refuses.
+  Asserted not-weaker through the real disjunction (A9a-d, A10, A11).
+
+2026-08-19 AGENT-1 · H206 · PUBLISH BOTH STATISTICS, BECAUSE THE CLAIM NAMES
+  NEITHER.
+  "sub-500us latency" is true of the median (214.46) and false of the p95
+  (1329.04) in the same run on a quiet host. The falsifier tested the median
+  only. Recording p95 and p95_exceeds_threshold makes the median unquotable
+  alone. Not raised as a separate row: it is the same family E defect as the
+  missing operating point, one level in, and splitting it would put two halves of
+  one finding in two places.
+
+2026-08-19 AGENT-1 · H206 · THE PROBE INJECTS ITS FIXTURE INSTEAD OF SWAPPING THE
+  SHARED FILE.
+  First draft renamed spikes/quiet.sh for the duration of one arm. Five lanes
+  share this tree and any of them calling it in that window would have seen it
+  missing -- H234, which this lane filed. latency_operating_point(quiet_path=)
+  takes the fixture path; A15 asserts the shared file was never touched.

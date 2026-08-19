@@ -1,0 +1,6 @@
+reference .claude/hooks/loop_gate.sh  v9  2e47ae47fad7f8ab
+  .claude/settings.json: .claude/hooks/loop_gate.sh  v9  2e47ae47fad7f8ab  same
+  .codex/hooks.json: .codex/hooks/loop_gate.sh  v8  e269f2fd79fc9adc  DRIFTED
+  spikes/S51_multicore/.claude/settings.json: .claude/hooks/loop_gate.sh  v9  2e47ae47fad7f8ab  same
+  (0 unparseable .json skipped; .git, elders, .scratch, node_modules not walked)
+REFUSE: 1 of 3 registered Stop hook(s) are not the checked hook. Every check in this harness reads the reference; a session running the other copy is running a contract nothing tests.

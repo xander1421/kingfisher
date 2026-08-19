@@ -1,0 +1,7 @@
+  PASS  green when the only registration is the reference
+  PASS  RED when a second registration points at a drifted copy
+  PASS  green again once the second copy matches byte for byte
+  PASS  RED when a registration points at a file that is not there
+  PASS  REFUSES on zero registrations rather than reporting agreement
+  PASS  version is the HIGHEST `# vN`, not the last one in the file
+hookcopies selfcheck: 6 passed, 0 failed
