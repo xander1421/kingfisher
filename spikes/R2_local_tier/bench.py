@@ -59,7 +59,8 @@ def run(model, prompt, n_predict=220):
     t0 = time.time()
     p = subprocess.run(
         [LLAMA, '-m', model, '-p', prompt, '-n', str(n_predict),
-         '-no-cnv', '--no-warmup', '-st', '--temp', '0'],
+         '-no-cnv', '--no-warmup', '-st', '--temp', '0',
+         '-ngl', os.environ.get('KF_NGL', '99')],
         capture_output=True, text=True, timeout=600)
     out = p.stdout
     # llama-cli echoes the prompt; strip it so a pass cannot come from the
