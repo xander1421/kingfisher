@@ -47,8 +47,37 @@ HEADER = re.compile(r"^#\s*(\S+?)\s+v(\d+)\b")
 BLOCK = re.compile(r"^#\s*={0,6}\s*v(\d+)[,\s]")
 
 EXTS = (".sh", ".py", ".hook")
+# `cat > x <<'F'` ... `F` — a heredoc's CONTENT is data, not this file's comments.
+HEREDOC_OPEN = re.compile(r"<<-?\s*[\"']?([A-Za-z_][A-Za-z0-9_]*)[\"']?")
 HEAD_LINES = 8          # a header lives at the top or it is not a header
 SCAN_LINES = 600
+
+
+def strip_heredocs(lines):
+    """Blank out heredoc BODIES.
+
+    Earned immediately: v1 flagged its own `test_versioncheck.sh` at "header v1,
+    newest block v4" because the suite's FIXTURES contain lines like
+    `# ==== v4, H997 ====` inside `cat > f <<'F'` blocks. A checker that reads
+    another file's data as its own metadata is family B -- the instrument
+    reporting fiction -- and excluding test files instead would have been
+    weakening a gate to pass it.
+    """
+    out, term = [], None
+    for ln in lines:
+        if term is None:
+            m = HEREDOC_OPEN.search(ln)
+            # only treat as a heredoc opener on a line that is not itself a comment
+            if m and not ln.lstrip().startswith("#"):
+                term = m.group(1)
+                out.append(ln)
+                continue
+            out.append(ln)
+        else:
+            if ln.strip() == term:
+                term = None
+            out.append("")          # heredoc body is data, not metadata
+    return out
 
 
 def scan(root: str = None):
@@ -68,6 +97,7 @@ def scan(root: str = None):
                     lines = f.read().splitlines()[:SCAN_LINES]
             except OSError:
                 continue
+            lines = strip_heredocs(lines)
             stem = fn.split(".")[0]
             hdr = None
             for ln in lines[:HEAD_LINES]:

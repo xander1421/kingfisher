@@ -57,6 +57,23 @@ echo "$OUT" | grep -q 'cleanfile.sh' && bad "clean file wrongly reported" || ok 
 echo "$OUT" | grep -q 'nohdr.sh'     && bad "unversioned file reported — would be red forever" \
                                      || ok "unversioned file ignored (most files have no header)"
 
+# 8 — HEREDOC BODIES ARE DATA, NOT THIS FILE'S METADATA. v1 flagged THIS SUITE
+#     at "header v1, newest block v4" because the fixtures above contain
+#     `# ==== v4, H997 ====` inside `cat > f <<'F'` blocks. Excluding test files
+#     would have been weakening a gate to pass it; stripping heredoc bodies is
+#     the actual fix, and this check is what keeps it fixed.
+cat > "$TMP/heredocfile.sh" <<'OUTER'
+#!/bin/sh
+# heredocfile.sh v1 — current, and its NEWEST REAL block is v1.
+cat > /tmp/whatever <<'INNER'
+# ==== v9, H000 — a fixture inside a heredoc, not this file's version ====
+INNER
+OUTER
+python3 "$TOOL" "$TMP" 2>&1 | grep -q 'heredocfile.sh' \
+  && bad "a version block inside a HEREDOC was read as the file's own" \
+  || ok "heredoc bodies ignored (fixtures are data, not metadata)"
+rm -f "$TMP/heredocfile.sh"
+
 # clean tree exits 0
 rm -f "$TMP/sandboxstale.sh" "$TMP/aheadfile.sh"
 python3 "$TOOL" "$TMP" >/dev/null 2>&1; RC2=$?
