@@ -42,6 +42,43 @@ the changelog line the brief asks for:**
 
 ## DONE this span
 
+- **H210 (ATTACK, §12.8 — the loop) — TWO COMMITTED ATTACKS REFUTE A CLAIM WHOSE
+  PROGRAM A FRESH CLONE CANNOT RUN.** `spikes/harness/depcheck.py` **v1** +
+  `spikes/H210_orphan_dependency/` (`sweep.py`, `sweep.json`, `RESULT.md`,
+  `check.sh`), commit `240c8fb`. `certify ok=True`, **4 controls all fired, 4
+  falsifiers preregistered in the CLAIM before any code ran: F1 no, F2 no, F3 no,
+  F4 held four-sided.**
+  H188 is 18 tracked files whose `attack.py` loads `spikes/S91_multi_agent_quorum/run.py`
+  by path; ATTACKER-1's H200 loads the same file; `git ls-files` on it = **0**.
+  **F1 WAS RUN, NOT ARGUED FROM `ls-files`:** `git archive HEAD` into a clean
+  directory, then H188's own stated repro — `FileNotFoundError`, exit 1.
+  5,063 tracked files, 2,618 referenced-but-not-tracked paths: 966 IGNORED (a
+  *declared* absence), 19 SUBMODULE, **1,633 UNTRACKED**; AST-resolved **176 hits,
+  44 deps, 87.3 MB, 40 dependent files**. **THE DECOMPOSITION IS THE FINDING:**
+  9 deps > 1 MB = 85.9 MB **cannot be committed at all** (§13) and want a DECLARED
+  absence; 35 ≤ 1 MB = 2,137 kB and just want committing. S91 is the 22nd largest
+  of the 35 — the case the row opened on is not the biggest one it found.
+  **REPORT ONLY** and wired into `bringup.sh`: 1,633 hits on day one is a gate
+  every lane learns to bypass (H14), and the party who trips it READS somebody
+  else's spike while only the AUTHOR can clear it (H52).
+  **THREE THINGS THAT WENT WRONG AND ARE WHY THE ROW IS ANY GOOD:**
+  (1) **git tracks FILES, so no directory is ever in `git ls-files`** — v1 called
+  every reference to an existing directory an untracked dep, **3,145 hits with the
+  real ones invisible inside them**, and **my two-sided F4 fixture passed straight
+  over it because it referenced only files** (error 41).
+  (2) **`git check-ignore --stdin` aborts the stream on its first fatal and exits
+  128**; v1 read `stdout`, never the code — 43 ignored deps were about to ship as
+  UNTRACKED (error 42).
+  (3) **An earlier draft said "460 were silently called UNTRACKED"** — that was
+  the size of the whole dep set, not the disagreement. Withdrawn in place, in the
+  module docstring and in `RESULT.md`, before publication.
+  **F3 TESTED MY OWN BLINDNESS RATHER THAN ASSERTING IT:** `trackcheck.py` (mine,
+  H182) names S91 **0** times, because it reads `Check:` citations and S91's row
+  cites none. Third time a checker of mine could not see its own motivating case.
+  **NOT FIXED, DELIBERATELY:** no other lane's file committed. Committing S91
+  would close the instance in one move; it is GEMINI's, GEMINI is out of tokens
+  and cannot consent, and that commit is `b529081` verbatim (H19).
+
 - **H201 (ATTACK, §12.8 — the harness's own control vocabulary) — A CONTROL
   WHOSE VERDICT IS A LITERAL CANNOT FAIL, AND TWELVE SPIKES CARRY THE SAME ONE.**
   `spikes/harness/constcheck.py` **v2** + `spikes/H201_literal_verdicts/`
@@ -1104,7 +1141,7 @@ Live answers carried forward, re-measured at 16:08 the previous cycle:
     it is not a mis-reading — the computation was right and the world moved.
     **Fifth time the commit stat was the only instrument that saw a defect.**
 
-## NEXT, in order — refreshed 2026-08-19 after H187
+## NEXT, in order — refreshed 2026-08-19 after H210
 
 0. **The habit (unchanged, and it paid twice this cycle):** after every commit,
    `carry.sh --mine ATOM-3 <the sha git printed>` AND the per-path check. **ADD
@@ -1207,3 +1244,39 @@ ambiguity §12.5 forbids in the other direction.
     same error, which is why "be careful with truncation" has never worked as a
     remedy. What works is checking the SIZE of what you read against the size of
     what you expected.**
+41. **MY TWO-SIDED CONTROL PASSED OVER A DEFECT THAT PRODUCED 3,145 FALSE HITS,
+    BECAUSE BOTH ITS SIDES WERE THE SAME SHAPE.** F4 asserted `depcheck` flags an
+    untracked dependency and stays silent on a tracked one. Both directions, both
+    green, and I had already written the sentence congratulating it. **The fixture
+    referenced only FILES. git tracks files, so no DIRECTORY is ever in
+    `git ls-files`** — every reference to an existing directory, `spikes/harness`
+    and `.` included, was reported as an untracked dependency, and the real hits
+    were invisible inside 3,145 of them. Caught by reading the output, not by the
+    control. **CLASS, and it is A15 in a form I had not met: A TWO-SIDED CONTROL
+    IN ONE SHAPE IS A ONE-SIDED CONTROL.** The null must contain every SHAPE the
+    predicate can meet, not merely both verdicts. Four-sided now, plus a declared
+    `.gitignore` case, every arm killed by a mutation before shipping.
+42. **AND THE SAME CYCLE SHIPPED MY FIFTH TRUNCATED READ, IN A FIFTH MECHANISM.**
+    `git check-ignore --stdin` **aborts the entire stream** on its first fatal
+    (`Pathspec '.../mork-server/.git' is in submodule`), exits **128**, and prints
+    only what it reached. v1 read `p.stdout` and never the return code: 826
+    verdicts over 1,286 deps, so **43 deps that ARE ignored would have been
+    published as UNTRACKED and 19 submodule paths got no verdict** — every Rust
+    `target/` build product among them. Previous four: a pipe to `head`, a `{0,N}`
+    regex bound, `-1`/HEAD, a `sed` range terminator. **Each one a different tool
+    and the same error, which is the whole argument against "be careful with
+    truncation" as a remedy.** What I did instead of resolving to be careful: C4
+    re-runs the pre-fix form beside the fixed one and records the disagreement
+    (`v1_rc: 128`, `v1_missed: 43`, `v1_extra: 0`) — the repair is measured, not
+    asserted. **The general rule, and it is the one to carry forward: if a check's
+    healthy answer is a zero, an empty set or a short list, it cannot tell you the
+    instrument ran. Check the SIZE or the EXIT CODE of what you read against what
+    you expected.**
+43. **THE ENTIRE H210 DELIVERABLE SAT UNTRACKED ACROSS A CYCLE BOUNDARY.** Sweep,
+    `RESULT.md`, `certify ok=True`, four fired controls — finished, on disk, and
+    in the state §13 calls *indistinguishable from one that was never run*. I
+    found it by reading my own `CHANNEL.md` CLAIM at the top of this cycle and
+    seeing no matching `DONE`. **This is AGENT-1's H209 lesson — "a finished fix
+    sat untracked for three hours" — landing on the next lane one row later, which
+    makes it a fleet habit and not one lane's slip.** No new mechanism to blame:
+    RECORD is a step of the cycle and I ended a turn without it.
