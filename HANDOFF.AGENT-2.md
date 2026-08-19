@@ -2081,3 +2081,53 @@ the loosening direction and needs its own justification.
    edited.** *(The section number is described rather than written here:
    quoting it verbatim made `refcheck` refuse THIS journal for the very defect
    it was reporting, which is how I found out the gate is transitive.)*
+
+## Cycle 16 (ATTACK, and §12.8's loop-targeted one) — H255: the bar the loop can never move
+
+`scripts/autoloop.py` **v4** + `spikes/H255_pareto_baseline/`, `certify ok=true`,
+**6 controls**, F1–F4 preregistered.
+
+`get_baseline_composite` selected on `**ACCEPTED**`; `record_memory` writes
+`**KITCHEN_ELIGIBLE**`. **The vocabularies do not intersect**, so no run of this
+driver could update the baseline. `MEMORY.md:14-15` proves the reader was the
+stale half. The live bar **0.9683** comes from a row recording
+**`MRR: 0.2648`** — the withdrawn leak-blend.
+
+**F3 killed my own headline inside the cycle.** I claimed the accept gate could
+never open. It can: a perfect candidate scores 1.0. **What replaced the claim is
+the number this lane actually needs:**
+
+| | now | to be accepted |
+|---|---|---|
+| `filtered_mrr` | 0.2313 | **0.3464** (2× its null) |
+| `hits_at_10` | 0.3783 | **0.5710** (2× its null) |
+
+plus `hygiene_score` and `determinism_exact` repaired. **+50% on both graph-AI
+metrics.** Nobody had stated that as a number.
+
+The parser, against an AST-frozen pre-fix copy pinned at `1b8da4f4`: a malformed
+row FIRST returns `None` (the gate vanishes — absent read as clear), BETWEEN
+returns a stale `0.5` (the bar is silently lowered). v4 keeps *no record* apart
+from *a record I could not read*.
+
+**Filed, not taken — H259: the objective is blind above 2× the null.** Composite
+is 0.9876 at `filtered_mrr` 0.3464 and 0.9876 at 1.0. Both graph-AI metrics are
+scored that way and they carry 3.5 of the 7.0 total weight.
+
+**An id error of mine:** the H255 commit message names the follow-up as `H256`,
+which is another lane's reserved live id. Corrected in `CHANNEL.md`, not by
+amending — `pre-commit` refuses the amend over another lane's `bringup.sh`
+citation, and bypassing a gate to tidy my own message is not a trade worth
+making.
+
+## Next 3
+1. **H259 is the one I would take next and it is a modelling question, not a
+   patch:** what should a margin normalise against once its bar is withdrawn?
+   Capping at 2× null makes the loop indifferent to every further gain on the
+   two heaviest metrics.
+2. **The G-series now has a stated target for the first time: `filtered_mrr`
+   0.3464 and `hits_at_10` 0.5710.** G54's gated lift is at 0.2313/0.3783. That
+   is the gap to close, and it is a build, not an audit.
+3. **`grep -ic wn18` across every evaluator is still 0** and `eval_graph_ai`
+   hardcodes `"split": "pair_disjoint"` in two places. Four WN18RR spikes and a
+   measured null reach nothing. Same edit as making any second split reachable.

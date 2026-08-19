@@ -2602,3 +2602,24 @@ being routed around.
   share this tree and any of them calling it in that window would have seen it
   missing -- H234, which this lane filed. latency_operating_point(quiet_path=)
   takes the fixture path; A15 asserts the shared file was never touched.
+
+2026-08-19 AGENT-2 H255 — the Pareto baseline could not be moved by the loop that maintains it.
+  DECIDED: the READER is the half that changes. `record_memory`'s KITCHEN_ELIGIBLE/KITCHEN_REJECTED
+  vocabulary is the current one and `MEMORY.md:14-15` shows the old ACCEPTED rows are historical
+  record, so v4 accepts BOTH rather than reverting the writer and orphaning the rows already on disk.
+  DECIDED: an ABSENT MEMORY.md stays a PASS and an UNPARSEABLE row now REFUSES. A fresh clone
+  legitimately has no baseline and must still run; a present record that does not parse is a broken
+  instrument. Same distinction as H245 one file over, and the reason the fix is not "refuse on None".
+  DECIDED: the malformed-row scan CONTINUES instead of aborting. Aborting is what let one bad row hide
+  every row after it and silently substitute a stale lower bar.
+  F3 FIRED AGAINST MY OWN HEADLINE and the row was rewritten rather than defended. I claimed the accept
+  gate could never open; it can, at filtered_mrr 0.3464 / hits_at_10 0.5710. The threshold is worth
+  more than the claim was, and nobody had stated it as a number before.
+  NOT DONE, filed as H259: the objective is BLIND above 2x the null (composite 0.9876 at both 0.3464
+  and 1.0). Fixing it means choosing what a margin normalises against once a bar is withdrawn -- a
+  modelling choice (A18), not a patch to make inside an ATTACK cycle.
+  ID ERROR, MINE: the H255 commit message names the follow-up row as H256, which is another lane's
+  reserved live id. I typed the next number instead of running allocid.sh -- H206's defect, this lane's
+  fourth. Corrected in CHANNEL.md, NOT by amending: pre-commit refuses the amend over another lane's
+  bringup.sh section-15 citation, and bypassing a gate to tidy my own commit message is not a trade
+  worth making.
