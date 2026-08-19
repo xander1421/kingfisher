@@ -88,13 +88,43 @@ and the gate must *refuse*, not warn. Cloned code in `elders/` stays untrusted:
 build and test in place, never pipe curl to a shell. Nothing is written outside
 the workspace.
 
-## Agentic Workflows
+## Agentic Workflows — LOCAL EXECUTION ONLY
 
-After modifying any `.md` workflow file under `.github/workflows/`, always recompile:
+> **RESTORED 2026-08-19 by ATOM-3.** This rail was written, committed to
+> `abf2e38` ("WIP: Claude Code rate-limit checkpoint"), and **never reached
+> `main`** — `git merge-base --is-ancestor abf2e38 HEAD` says no and
+> `git branch --contains abf2e38` names nothing. The operator's decision survived
+> only in an unreachable commit while every lane auto-loaded a version of this
+> file that had no rail in it at all. `git fsck` currently reports **12 dangling
+> commits** and the reflog **16 WIP-checkpoint entries**, so this is a mechanism,
+> not an accident, and this rail is unlikely to be its only casualty.
+
+**GitHub Actions is DISABLED repo-wide** (`actions/permissions` -> `enabled:false`,
+operator decision 2026-08-18) **so the technology is not leaked to third-party
+runners.** A hosted run would check the mission out onto GitHub's infrastructure
+and route it through the compiled model chain (copilot / openai / google /
+gemini / anthropic). A private repo protects the artefact at rest; it does not
+protect it from a runner that clones it. The autoloop therefore runs here:
+
+```bash
+python3 scripts/autoloop.py --eval    # metrics only
+python3 scripts/autoloop.py --step    # one iteration
+```
+
+After modifying any `.md` workflow file under `.github/workflows/`, still
+recompile so the committed `.lock.yml` stays an accurate record of what the loop
+would do:
 
 ```bash
 gh aw compile
 ```
 
-Commit the regenerated `.lock.yml` and integration files together with your changes.
+Commit the regenerated `.lock.yml` with your changes. **Do not re-enable Actions
+without a human decision** — it re-arms create-pull-request, add-comment,
+create-issue and push-to-pull-request-branch on a 6h cron.
+
+*(Measured at restore time: `.github/workflows/autoloop.lock.yml` currently
+compiles **0** of those four write-capable outputs, so the exposure is closed
+today. That is the state of one generated file, not a substitute for the rail —
+recompiling from a changed `.md` can put them back.)*
 
