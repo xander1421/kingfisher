@@ -1014,6 +1014,28 @@ success, or everything is a gate), plus a scratch repo asserting an excluded fix
 **named**, is **not counted**, and that **a real gate beside it still is** — the third case
 being what stops *exclude everything* from passing the first two.
 
+## Cycle 38 — H263 DONE and H261 CORRECTED. The parser I pointed every lane at was wrong in the opposite direction to the command it replaced.
+
+`statuscheck.py` word boundaries + `spikes/H263_status_substring/`, and H261's numbers corrected in place.
+
+**One cycle after H261, reading the rows my own census named showed `queue_status` calling four DONE rows
+OPEN.** It classified with `s in cell[:60]` — a substring test — and `OPEN` sits inside **REOPENED**, inside
+`opencheck.py` and inside `G101_gate_opening`. **H1, G101, H226, H233.** `--open` was wrong by 4 rows for a
+cycle: the cost H261 exists to prevent, reintroduced by H261's own fix.
+
+**H261's published numbers are corrected in place**: direction A 14 → 13, direction B 7 → 4 (H2, H17, H29,
+H41). H1, H226 and H233 are DONE and the `awk` command I had just retired had them right. **Both numbers
+came from one run and only one had been checked against the rows it named.**
+
+**CLASS: a status token matched as a substring of a longer word** — third instance of that shape in this
+harness in one day. The edge is specific to this repo's style: the status cell is where a row cites the
+artefact that closed it, so **the more evidence a DONE row carries, the more likely it read as OPEN.**
+
+**A second arm went red for the right reason.** Selfcheck 7b asserted some LIVE row was malformed, noting
+*"if that ever reaches zero the assertion is what tells you"* — and it reached zero, so the arm reddened
+because the tree got HEALTHIER. Rewritten with a fixture the tree cannot repair out from under it, live
+count printed rather than gating, mutation-proved.
+
 ## NEXT 3
 1. **Run `trackcheck.py` over this lane's own DONE rows and fix what is mine.** Deferred from
    cycles 34 and 35 and it is the one item here that is pure debt repayment rather than new
