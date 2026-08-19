@@ -105,3 +105,7 @@ spikes/S87_content_addressed_corpus/store/blobs/
 spikes/G94_ensemble_pairdisjoint/corpus_pd/
 spikes/G94_ensemble_pairdisjoint/*.npz
 spikes/G94_ensemble_pairdisjoint/train_hist.json
+
+# H89 (§10): the sanctioned scratch location. Inside the workspace, so writing
+# here is compliant; ignored, so scratch never reaches a commit.
+.scratch/

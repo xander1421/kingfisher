@@ -1,0 +1,63 @@
+{
+  "C0_files_scanned": 423,
+  "F1": {
+    "fires": false,
+    "live_worst": [
+      "bringup.sh:439 mkpath $HOME/Library/LaunchAgents",
+      "spikes/H120_orphan_quorum/bringup.before_h120.sh:334 mkpath $HOME/Library/LaunchAgents",
+      "spikes/H88_sentinel_branch/bringup.before_h88.sh:213 mkpath $HOME/Library/LaunchAgents"
+    ],
+    "non_mktemp_writes": 6,
+    "source_write_positions": 16
+  },
+  "F2": {
+    "device_path_hits": 0,
+    "fires": false,
+    "total_hits": 16
+  },
+  "F3": {
+    "fires": false,
+    "flagged_by_scan": true,
+    "planted_file_was_never_executed": true,
+    "refused_by_hook": true
+  },
+  "F4": {
+    "fires": false,
+    "predicted_in_claim": 1,
+    "recorded_instances": 8,
+    "visible_to_a_source_scan": 1,
+    "which": [
+      "/tmp/_cm.$$"
+    ]
+  },
+  "F5": {
+    "converted_site": "spikes/harness/test_carriescheck.sh:22",
+    "fires": false,
+    "rc": 0,
+    "site_now_scans_clean": true,
+    "suite_result": "10 passed, 0 failed"
+  },
+  "census": [
+    "bringup.sh:439: mkpath $HOME/Library/LaunchAgents",
+    "spikes/H120_orphan_quorum/bringup.before_h120.sh:334: mkpath $HOME/Library/LaunchAgents",
+    "spikes/H126_discarded_reason/sweep.sh:17: redirect /tmp/h126.all",
+    "spikes/H126_discarded_reason/sweep.sh:32: redirect /tmp/h126.short",
+    "spikes/H88_sentinel_branch/bringup.before_h88.sh:213: mkpath $HOME/Library/LaunchAgents",
+    "spikes/S81_fuel_branch/probe.sh:30: mktemp $TMPDIR (no template)",
+    "spikes/harness/allocid.sh:141: mktemp $TMPDIR (no template)",
+    "spikes/harness/install_hooks.sh:99: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_commit_msg.sh:7: redirect /tmp/_cm.$$",
+    "spikes/harness/test_h13_falsify.sh:21: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_h16_falsify.sh:19: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_h57_falsify.sh:34: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_loop_gate.sh:98: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_prosecite.sh:18: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_prosecite.sh:68: mktemp $TMPDIR (no template)",
+    "spikes/harness/test_versioncheck.sh:19: mktemp $TMPDIR (no template)"
+  ],
+  "census_by_kind": {
+    "mkpath": 3,
+    "mktemp": 10,
+    "redirect": 3
+  }
+}

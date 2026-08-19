@@ -9,6 +9,17 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/victorianikolenko/kingfisher/spikes/harness/scratchcheck.py --hook"
+          }
+        ]
+      }
     ]
   }
 }

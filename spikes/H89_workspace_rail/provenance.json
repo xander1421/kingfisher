@@ -1,0 +1,225 @@
+{
+ "spike": "H89_workspace_rail",
+ "recorded_utc": "2026-08-19T16:28:19Z",
+ "note": "H89 \u2014 \u00a710 had no mechanism. ATTACKER-1, 2026-08-19.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "9ae3da9fbea5bd5310262592195f133a15cf8c86",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/test_carriescheck.sh",
+    "spikes/harness/test_loop_gate.sh",
+    "spikes/harness/fleetcensus.sh",
+    "spikes/harness/scratchcheck.py",
+    "spikes/harness/stalecheck.py"
+   ],
+   "diff_sha256": "3e5a493e9b1ff536c490a40fc1a62a5f32c6042d19a5e78acf75153835bb0f6f",
+   "diff_bytes": 15258
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H89_workspace_rail/falsifiers.json",
+   "sha256": "d822a32a4a2807416cbe75b643049968dfcb6c96143f91080d256b1822ce6d59",
+   "bytes": 2265,
+   "mtime": 1787156899,
+   "compared_ts": 1787156899,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H89_workspace_rail/planted_writer.sh",
+   "sha256": "fd520ff253918dcd8ea002c1792622624552be07d1c36ebcd75660705d02a464",
+   "bytes": 95,
+   "mtime": 1787156899,
+   "compared_ts": 1787156899,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "gate_refuses_and_permits",
+   "must_fire_because": "a gate that only ever returns one verdict is not a gate",
+   "can_fail_because": "if the permitted case also exited 2, or the refused case exited 0, these two values would be equal",
+   "null_must_contain": "the PERMITTED arm must be capable of returning 2 -- it is the same function, the same JSON shape and the same code path, differing only in the path string",
+   "fired": true,
+   "detail": "exit 2 on `echo x > /tmp/y`; exit 0 on `echo x > out/y`",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    2,
+    0
+   ]
+  },
+  {
+   "name": "reads_are_not_writes",
+   "must_fire_because": "the row is about writes; flagging reads would refuse the measurement",
+   "can_fail_because": "drop the write-position restriction and 7 of 9 negatives refuse -- that is mutation M2, run in --selfcheck",
+   "null_must_contain": "the read arm must be CAPABLE of returning a hit -- mutation M2 makes 7 of these same 9 commands refuse, so the zeroes are a measured negative and not an unreachable branch",
+   "fired": true,
+   "detail": "9 real read/mention commands: 0 flagged under the shipped rules, 9 under mutation M2",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "mutation_controls_land_and_go_red",
+   "must_fire_because": "a check that cannot fail against its own defect is not evidence",
+   "can_fail_because": "if either mutation left every control green the mutation never reached the code under test",
+   "null_must_contain": "the UNMUTATED module must be capable of going red -- it did, three times, while this classifier was being narrowed (the XML case, the awk -F case, C4/M2 restore)",
+   "fired": true,
+   "detail": "--selfcheck: scratchcheck: 34 passed, 0 FAILED; M1 widened allowlist silences the positives, M2 dropped write-position breaks 7 negatives",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    31,
+    0
+   ]
+  },
+  {
+   "name": "hook_is_live_in_a_running_session",
+   "must_fire_because": "H1: a registered hook that no session reads is inert and reads as coverage",
+   "can_fail_because": "if the write had SUCCEEDED, or the file existed afterwards, the hook would be registered and inert",
+   "null_must_contain": "the hook must be capable of PERMITTING in the same session -- `echo ok > .scratch/liveness.txt` ran and the file exists, so a blanket refusal is excluded",
+   "fired": true,
+   "detail": "mid-session, no restart: `echo ... > /tmp/h89_liveness_probe.txt` was refused and `ls` confirms the file was never created",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "PreToolUse:Bash hook error, \u00a710 REFUSED",
+    "file absent afterwards"
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1",
+   "must_fire_because": null,
+   "can_fail_because": "every out-of-workspace path in committed harness source is READ-ONLY",
+   "null_must_contain": "the scan must be capable of returning ZERO write positions -- it returns 0 on spikes/harness/test_carriescheck.sh after the F5 conversion",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"fires\": false, \"live_worst\": [\"bringup.sh:439 mkpath $HOME/Library/LaunchAgents\", \"spikes/H120_orphan_quorum/bringup.before_h120.sh:334 mkpath $HOME/Library/LaunchAgents\", \"spikes/H88_sentinel_branch/bringup.before_h88.sh:213 mkpath $HOME/Library/LaunchAgents\"], \"non_mktemp_writes\": 6, \"source_write_positions\": 16}"
+   ],
+   "refutes": "the source half of H89 is a non-finding and the row narrows to agent actions",
+   "fires_when": "every out-of-workspace path in committed harness source is READ-ONLY",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2",
+   "must_fire_because": null,
+   "can_fail_because": ">50% of detector hits are Android device paths \u00a710 permits",
+   "null_must_contain": "47 /data/local/tmp paths exist tree-wide, so a wider scope WOULD have produced them; the 0 here is a property of the scope, not of the regex",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"device_path_hits\": 0, \"fires\": false, \"total_hits\": 16}"
+   ],
+   "refutes": "the detector measures the wrong predicate and no number ships",
+   "fires_when": ">50% of detector hits are Android device paths \u00a710 permits",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3",
+   "must_fire_because": null,
+   "can_fail_because": "a PLANTED out-of-workspace writer is NOT flagged",
+   "null_must_contain": "both mouths must be capable of MISSING the plant -- mutation M1 widens the allowlist and both do miss it",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"fires\": false, \"flagged_by_scan\": true, \"planted_file_was_never_executed\": true, \"refused_by_hook\": true}"
+   ],
+   "refutes": "the detector is inert and nothing ships",
+   "fires_when": "a PLANTED out-of-workspace writer is NOT flagged",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4",
+   "must_fire_because": null,
+   "can_fail_because": "a source-level scan flags >=4 of the 8 recorded instances",
+   "null_must_contain": "the scan is capable of flagging far more than 4 -- it reports 17 write positions overall, so the ceiling of 1 is a fact about the RECORD and not about the scanner",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"fires\": false, \"predicted_in_claim\": 1, \"recorded_instances\": 8, \"visible_to_a_source_scan\": 1, \"which\": [\"/tmp/_cm.$$\"]}"
+   ],
+   "refutes": "H89's own preregistered source-scan remedy is SUFFICIENT and the tool-layer gate is unjustified scope creep",
+   "fires_when": "a source-level scan flags >=4 of the 8 recorded instances",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F5",
+   "must_fire_because": null,
+   "can_fail_because": "the sanctioned location cannot serve a real converted site",
+   "null_must_contain": "the suite must be capable of FAILING -- it prints and counts failures, and did so on three intermediate forms of this classifier",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"converted_site\": \"spikes/harness/test_carriescheck.sh:22\", \"fires\": false, \"rc\": 0, \"site_now_scans_clean\": true, \"suite_result\": \"10 passed, 0 failed\"}"
+   ],
+   "refutes": "the gate would be always-red and I ship REPORT-ONLY instead",
+   "fires_when": "the sanctioned location cannot serve a real converted site",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787156848,
+   "from": "spikes/harness/scratchcheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if a source-level scan had flagged >=4 of the 8 recorded \u00a710 instances, H89's own preregistered remedy would have been sufficient and the tool-layer gate unjustified scope creep (F4). It flagged 1, the number predicted in the CLAIM before running.",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}

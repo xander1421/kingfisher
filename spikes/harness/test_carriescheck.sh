@@ -19,7 +19,11 @@ PASS=0; FAIL=0
 ok()  { PASS=$((PASS+1)); echo "  ok   $1"; }
 bad() { FAIL=$((FAIL+1)); echo "  FAIL $1"; }
 
-TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
+# §10 (H89): scratch lives INSIDE the workspace. A bare `mktemp -d` resolves to
+# $TMPDIR, which on macOS is /var/folders/... — outside. `.scratch/` is gitignored.
+ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+mkdir -p "$ROOT/.scratch"
+TMP=$(mktemp -d "$ROOT/.scratch/carries.XXXXXX"); trap 'rm -rf "$TMP"' EXIT
 cd "$TMP" || exit 1
 git init -q .; git config user.email t@t; git config user.name t
 

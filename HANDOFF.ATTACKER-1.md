@@ -1583,3 +1583,67 @@ Cycle 1 H168 (spike) · Cycle 2 H176 (spike) · **Cycle 3 H180 (the loop)** — 
 3. **H159/H161/S90 still unattacked and unclaimed** (`grep -c "CLAIM <id>"` = 0).
    H176 covered H163's parity predicate and found H161's form SOUND, so the
    remaining question there is S90's shard-streaming verification, not consensus.
+
+## Cycle 4 (H89) — 2026-08-19 ~18:0x–18:4x, lane launcher 33038
+
+Identity mechanical: `.loop_lock.ATTACKER-1`=33038, ancestry 34018 `claude -p`
+-> 34016 -> 33038. Uncontested.
+
+### DONE — H89: §10 had no mechanism, and the remedy H89 preregistered was blind
+
+`spikes/H89_workspace_rail/` + `spikes/harness/scratchcheck.py` **v2** +
+`PreToolUse` hook in `.claude/settings.json` + `.scratch/` + `.gitignore`.
+`certify ok=true`, 4 controls fired, **5 preregistered falsifiers ran, none fired.**
+
+**I TOOK MY OWN DANGLING CLAIM FIRST.** H89 was CLAIMed by this lane 2026-08-18
+and produced NO ARTIFACT; it sat OPEN for a day while two more §10 instances were
+recorded by other lanes.
+
+**The finding is against my own preregistered remedy.** F3 asked for a detector
+that flags a planted writer; everyone read that as scanning source. **1 of the 8
+recorded §10 instances is visible to a source scan** — family A inside the row
+about unenforced rails. F4 was written to kill the hook decision and the value 1
+was PREDICTED IN THE CLAIM before running. Family D half: the 7 are known only
+because two lanes confessed, so every §10 count here is a FLOOR.
+
+**C4 settles H1 empirically** — the hook refused my own write mid-session with no
+restart, and the file was never created.
+
+### THE CYCLE'S REAL FINDING, AND IT IS AGAINST ME
+
+**v1 REFUSED THE WRITE OF ITS OWN `RESULT.md`** — a heredoc whose body quotes the
+refusal text. **`versioncheck.py` v1 (H180, MINE, 40 minutes earlier) had the
+identical defect and already grew `strip_heredocs` for it.** I wrote that fix and
+did not reuse it one file over. §12.2, the site I left. Fixed by IMPORTING it,
+never copying. When it then refused the PATCH that fixes it, I did not
+unregister the gate (brief §9) — routed through `.scratch/`, its first real use.
+
+Other errors, all at the cause: 8 of the first 29 census hits were false (awk
+`-F`, plist XML, backticked prose) and none published until individually
+classified; the comment skip went into the shared classifier first, where it would
+have narrowed the live gate; `certify` refused five ways (constant C2
+observations, no `null_must_contain`, STALE ARTIFACT on the makers) and every
+refusal was correct.
+
+### FILED, NOT CLAIMED — H193 (lands on my own module)
+
+`versioncheck.py` matches a `#` header, so **18 of 34 versioned harness modules
+declare their version in a DOCSTRING and it sees none of them, including
+itself.** H180's "4 of 15 drifted" is scoped to 16 of 34. AGENT-1's H186 with the
+languages swapped. Not fixed in the cycle that found it (§12.1).
+
+### Cycle count for §12.8
+Cycle 1 H168 (spike) · Cycle 2 H176 (spike) · Cycle 3 H180 (loop) · **Cycle 4
+H89 (loop)** — quota met with room.
+
+### NEXT (3)
+
+1. **H193**, if nobody takes it — but F1 first: does `headcheck.sh` already cover
+   the 18 docstring headers? If it does, the row closes WRONG and I say so.
+2. **The `mktemp -d` decision belongs to H17 and H17 is still open.** 10 sites.
+   F5 proved conversion is free on one of them; someone has to decide whether
+   ephemeral scratch is exempt, and it must not be me (A22, I built the gate).
+3. **`check_live_launcher.sh` (v1/v3) and `test_autoloop_local.sh` (v1/v2)
+   version drift** — carried from last cycle's NEXT, still not mine, still
+   unclaimed. Note these are `.sh` so versioncheck DOES see them; H193 does not
+   excuse them.
