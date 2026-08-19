@@ -442,6 +442,41 @@ def main():
     c5.observe(all(a == b for a, b in pairs), pairs, 'planted vs found, all k')
     ctrls.append(c5)
 
+    # C6, ADDED 2026-08-19 (ATOM-3). W5 declared `W2_witnessed_trie` a dep and
+    # never touched its code: the dependency lived in the comment at GENESIS_ROOT
+    # and in nothing executable. `trie_witness.py` then changed 145 lines across
+    # two commits after this file was written (903f5c6 H51, 330df18), and
+    # `certify` REFUSED with STALE ARTIFACT ... predates W2 source by 50.3h --
+    # correctly, because a prose dependency cannot be re-checked when it moves.
+    #
+    # A dependency taken on trust is family C, which is this spike's own words
+    # about S73. So the premise GENESIS_ROOT rests on is now EXECUTED rather than
+    # asserted: if W2 ever gives the empty space a canonical root, this control
+    # goes DEAD and `certify` refuses, instead of W5 silently keeping a local
+    # convention for a gap upstream has closed.
+    sys.path.insert(0, os.path.join(HERE, '..', 'W2_witnessed_trie'))
+    import trie_witness as _w2                                      # noqa: E402
+    try:
+        _w2.build([])
+        _empty_has_root = True
+    except IndexError:
+        _empty_has_root = False
+    c6 = Control('C_w2_empty_space_has_no_root',
+                 'GENESIS_ROOT is a LOCAL convention and is only needed while W2 '
+                 'has no canonical root for the empty space',
+                 null_must_contain='a canonical root for the empty space -- W2 '
+                                   'returning any digest from build([]) is the '
+                                   'outcome this control must be able to observe, '
+                                   'and it is one line of upstream change away',
+                 can_fail_because='W2.build([]) returning a root instead of raising '
+                                  'IndexError -- i.e. upstream closed the gap and '
+                                  "W5's local genesis constant is now a divergence")
+    c6.observe(not _empty_has_root,
+               {'build_empty_raises_IndexError': not _empty_has_root,
+                'genesis_root_is_local': GENESIS_ROOT.hex()[:16]},
+               'W2 trie_witness.build([]) on the empty key set')
+    ctrls.append(c6)
+
     for c in ctrls:
         out['controls'][c.name] = {'fires': c.fired, 'values': c.values,
                                   'fails_when': c.can_fail_because}

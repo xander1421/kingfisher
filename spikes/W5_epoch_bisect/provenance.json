@@ -1,11 +1,11 @@
 {
  "spike": "W5_epoch_bisect",
- "recorded_utc": "2026-08-17T15:41:36Z",
+ "recorded_utc": "2026-08-19T16:01:20Z",
  "note": "bisection over S73 space state only; interpreter-step bisection is OUT of scope (S68 RED, blocked upstream on hyperon Issue 3)",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../S73_epoch_commitment",
-   "head": "ea3341243069d1c706bac84e94885652bc7a2f17",
+   "head": "29aee62cc9928033a1f086c19da26170d0697ad1",
    "clean": true,
    "dirty_files": [],
    "diff_sha256": null,
@@ -13,14 +13,11 @@
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie",
-   "head": "ea3341243069d1c706bac84e94885652bc7a2f17",
-   "clean": false,
-   "dirty_files": [
-    "spikes/W2_witnessed_trie/trie_witness.py",
-    "spikes/W2_witnessed_trie/witness.json"
-   ],
-   "diff_sha256": "3dc1f5b0ab42930a88608811cc24b2000783425071a7a814d157bd81edb912af",
-   "diff_bytes": 7471
+   "head": "29aee62cc9928033a1f086c19da26170d0697ad1",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   }
  ],
  "manifests": {
@@ -38,19 +35,19 @@
  "artifacts": [
   {
    "path": "epoch_bisect.py",
-   "sha256": "f80be740069d40970248229211a99327870f9b5dcf10506eed203d303fc104cd",
-   "bytes": 23693,
-   "mtime": 1786971094,
-   "compared_ts": 1786971422,
-   "compared_clock": "last-commit"
+   "sha256": "084e9f876ac3dda3e8065326b568b2117fae08f9c955caa5de666b466623c625",
+   "bytes": 25845,
+   "mtime": 1787155280,
+   "compared_ts": 1787155280,
+   "compared_clock": "mtime"
   },
   {
    "path": "result.json",
-   "sha256": "4c37b5543be92c355f893a059f8a5c292ec1481f4df98205ab65f324124a1fc4",
-   "bytes": 3594,
-   "mtime": 1786981296,
-   "compared_ts": 1786971422,
-   "compared_clock": "regenerated (mtime >= newest source mtime)"
+   "sha256": "348390e6c61a7614ebc9b99ae5618d7cefbec89c1fc46bf44e773c1c6eebb76a",
+   "bytes": 3928,
+   "mtime": 1787155280,
+   "compared_ts": 1787155280,
+   "compared_clock": "mtime"
   }
  ],
  "missing_artifacts": [],
@@ -60,14 +57,7 @@
   "python": "3.14.6",
   "uname": "Darwin 25.4.0 arm64"
  },
- "device": {
-  "ro.build.fingerprint": "samsung/pa3qxxx/pa3q:16/BP4A.251205.006/S938BXXSBCZG3_OXMBCZG3:user/release-keys",
-  "ro.build.id": "BP4A.251205.006",
-  "ro.product.model": "SM-S938B",
-  "ro.build.version.sdk": "36",
-  "ro.board.platform": "sun",
-  "abi": "arm64-v8a"
- },
+ "device": null,
  "controls": [
   {
    "name": "C_state_root_cannot_separate_histories",
@@ -227,6 +217,20 @@
      15
     ]
    ]
+  },
+  {
+   "name": "C_w2_empty_space_has_no_root",
+   "must_fire_because": "GENESIS_ROOT is a LOCAL convention and is only needed while W2 has no canonical root for the empty space",
+   "can_fail_because": "W2.build([]) returning a root instead of raising IndexError -- i.e. upstream closed the gap and W5's local genesis constant is now a divergence",
+   "null_must_contain": "a canonical root for the empty space -- W2 returning any digest from build([]) is the outcome this control must be able to observe, and it is one line of upstream change away",
+   "fired": true,
+   "detail": "W2 trie_witness.build([]) on the empty key set",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "build_empty_raises_IndexError": true,
+    "genesis_root_is_local": "5a426f9884b637b5"
+   }
   }
  ],
  "falsifiers": [],
@@ -238,15 +242,12 @@
    "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie": {
-   "newest": 1786977076,
-   "from": "spikes/W2_witnessed_trie/witness.json"
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "STALE ARTIFACT epoch_bisect.py predates W2_witnessed_trie source by 1.6h (newest source: spikes/W2_witnessed_trie/witness.json; artifact clock: last-commit). It cannot have been built from the tree recorded here.",
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/W5_epoch_bisect/../W2_witnessed_trie at ea334124: 2 modified. The build is NOT ea334124."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "if the referee must execute more than one epoch, or rounds exceed ceil(log2 N), bisection saves nothing over re-execution and the dispute path is decorative",
  "carried_from_previous_record": [
   "falsifier",

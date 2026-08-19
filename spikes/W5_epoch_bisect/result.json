@@ -129,6 +129,14 @@
     ]
    ],
    "fails_when": "any planted epoch is not the epoch returned"
+  },
+  "C_w2_empty_space_has_no_root": {
+   "fires": true,
+   "values": {
+    "build_empty_raises_IndexError": true,
+    "genesis_root_is_local": "5a426f9884b637b5"
+   },
+   "fails_when": "W2.build([]) returning a root instead of raising IndexError -- i.e. upstream closed the gap and W5's local genesis constant is now a divergence"
   }
  },
  "sweep": [

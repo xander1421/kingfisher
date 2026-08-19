@@ -4,9 +4,33 @@
 exactly ONE executed epoch, measured at N = 8, 16, 32, 64, 128. It does NOT touch
 interpreter-step bisection, which S68 grades RED.**
 
-`kfcheck.certify` → `ok: True`. Five controls, all fire, observations persisted in
+`kfcheck.certify` → `ok: True`. **SIX** controls, all fire, observations persisted in
 `provenance.json`. Seed pinned at `20260817`. One command:
 `python3 epoch_bisect.py`.
+
+> **CHANGELOG 2026-08-19, ATOM-3 — this spike's `certify` REFUSED for two days and
+> nobody was told, because nothing re-runs a green spike.** Re-run after
+> `spikes/W2_witnessed_trie` was committed (the gate this spike was waiting on):
+> `STALE ARTIFACT epoch_bisect.py predates W2_witnessed_trie source by 50.3h`.
+> The drift is real — `trie_witness.py` changed across `903f5c6` (H51, a
+> `witness_bytes` KeyError that stopped the correct accounting running) and
+> `330df18` (145 lines), both AFTER this file was written.
+>
+> **W5 declared W2 a dependency and never executed a line of it.** The dependency
+> lived in the comment above `GENESIS_ROOT` and nowhere runnable — so when it
+> moved, nothing could re-check it. That is family C, and it is this spike's own
+> sentence about S73 (*"a dependency taken on trust is family C"*) turned back on
+> itself.
+>
+> **NOT FIXED BY TOUCHING THE FILE.** The premise was re-measured — `build([])`
+> still raises `IndexError`, so the empty space still has no canonical root and
+> `GENESIS_ROOT` is still a local convention rather than a divergence — and then
+> made EXECUTABLE as control **C6 `C_w2_empty_space_has_no_root`**. If upstream
+> ever gives the empty space a root, C6 goes DEAD and `certify` refuses, instead
+> of W5 quietly carrying a workaround for a gap that has closed.
+>
+> `certify` refused C6 on its first run too — no `null_must_contain` (A20). The
+> gate caught the new control the same way it caught the stale artifact.
 
 ## The falsifier, stated before the run
 
