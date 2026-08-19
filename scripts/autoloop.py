@@ -132,8 +132,34 @@ def evaluate_suite(config):
                 print(f"     [NULL BASELINE VIOLATION] {m_name} = {val} > null_baseline {null_base}", file=sys.stderr)
                 passed_invariants = False
 
-        # Normalize score contribution
-        if direction == "maximize":
+        # Normalize score contribution.
+        #
+        # A WITHDRAWN TARGET IS A LEGITIMATE STATE AND THIS CRASHED ON IT.
+        # When the operator withdrew the graph-AI floors, `filtered_mrr` and
+        # `hits_at_10` were set to `target: null` / `min_acceptable: null` --
+        # both bars were derived from the leaky 0.2648/0.3929 and neither could
+        # honestly be kept. The next `--eval` died with
+        #   TypeError: '>' not supported between instances of 'NoneType' and 'float'
+        # at `target > null_base`. **A loop that crashes returns no verdict at
+        # all, which is strictly worse than a gate that is merely wrong**: the
+        # wrong gate at least says PASS or FAIL, and a traceback says neither
+        # while looking like an infrastructure fault rather than a withdrawn bar.
+        #
+        # A metric with no target still REPORTS and still carries weight; it
+        # simply contributes nothing that pretends to measure progress toward a
+        # bar nobody has set. Scored against its null instead when one exists,
+        # which is the only honest anchor left, and 0.0 when it does not.
+        if target is None:
+            if null_base is not None and null_base > 0:
+                # progress is a MARGIN OVER THE NULL, capped -- never a fraction
+                # of a target that does not exist.
+                if direction == "maximize":
+                    norm_val = min(1.0, max(0.0, (val - null_base) / null_base))
+                else:
+                    norm_val = min(1.0, max(0.0, (null_base - val) / null_base))
+            else:
+                norm_val = 0.0
+        elif direction == "maximize":
             # If null baseline is set, normalize progress between [null_baseline, target]
             if null_base is not None and target > null_base:
                 effective_val = max(0.0, val - null_base)
