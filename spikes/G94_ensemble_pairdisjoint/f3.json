@@ -1,0 +1,18 @@
+{
+ "arms": {
+  "distmult": 0.24224628158335496,
+  "g51": 0.25032561931900943,
+  "prior": 0.2027325360830309
+ },
+ "oracle_selector": 0.34250008316217767,
+ "best_single": 0.25065642290527496,
+ "gain": 0.09184366025690271,
+ "null_mean": 0.23124837763433306,
+ "null_max": 0.2603046520122916,
+ "ge": 0,
+ "draws": 200,
+ "p": 0.004975124378109453,
+ "f3_fired": false,
+ "seed": 12648430,
+ "note": "test-selected oracle ceiling, not an achievable score"
+}

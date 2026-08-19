@@ -1,0 +1,298 @@
+{
+ "spike": "G94_ensemble_pairdisjoint",
+ "recorded_utc": "2026-08-19T17:02:42Z",
+ "note": "G76: DistMult filtered all-entity on official FB15k-237 with G72 min_epoch=10. G66 0.2195 was epoch-1. No literature MRR.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd",
+   "head": "591deea7be1a1d200bf0235f09f3a9a5a248cf41",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring",
+   "head": "591deea7be1a1d200bf0235f09f3a9a5a248cf41",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G59_official_split",
+   "head": "591deea7be1a1d200bf0235f09f3a9a5a248cf41",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity",
+   "head": "591deea7be1a1d200bf0235f09f3a9a5a248cf41",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/distmult.py",
+   "sha256": "e71484d637a69e71aaaabdecccc5c6c316cf9a3fce4f1cca73bf392b2efa30a2",
+   "bytes": 23060,
+   "mtime": 1787158893,
+   "compared_ts": 1787158893,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/distmult.json",
+   "sha256": "cede97954a176af1a38e493a3d6664fa44f0b7977df25027f20294b985976332",
+   "bytes": 7093,
+   "mtime": 1787158962,
+   "compared_ts": 1787158962,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": {
+  "ro.build.fingerprint": "google/sdk_gphone64_arm64/emu64a:16/BP41.250822.007/14042983:user/release-keys",
+  "ro.build.id": "BP41.250822.007",
+  "ro.product.model": "sdk_gphone64_arm64",
+  "ro.build.version.sdk": "36",
+  "ro.board.platform": "",
+  "abi": "arm64-v8a"
+ },
+ "controls": [
+  {
+   "name": "C1_test_n",
+   "must_fire_because": "official test is 20466",
+   "can_fail_because": "wrong test.txt",
+   "null_must_contain": "n!=20466",
+   "fired": false,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n": 46518,
+    "expected": 20466,
+    "ok": false
+   }
+  },
+  {
+   "name": "C2_leak",
+   "must_fire_because": "official leak is 0",
+   "can_fail_because": "wrong split",
+   "null_must_contain": "leak>0",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leak": 0,
+    "ok": true
+   }
+  },
+  {
+   "name": "C3_nent",
+   "must_fire_because": "14541 entities",
+   "can_fail_because": "pack_ids over train only",
+   "null_must_contain": "nent!=14541",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "nent": 14541,
+    "expected": 14541,
+    "ok": true
+   }
+  },
+  {
+   "name": "C4_field_order",
+   "must_fire_because": "(p,s,o); 237 relations",
+   "can_fail_because": "(s,p,o) swap",
+   "null_must_contain": "max_p>=npred",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ok": true,
+    "declared_order": "p,s,o",
+    "npred": 237,
+    "nent": 14541,
+    "max_p": 236,
+    "max_s": 14540,
+    "max_o": 14540
+   }
+  },
+  {
+   "name": "C5_min_epoch",
+   "must_fire_because": "best_epoch >= 10",
+   "can_fail_because": "G66 epoch-1 trap",
+   "null_must_contain": "best_epoch<10",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "best_epoch": 10,
+    "min_epoch": 10,
+    "ok": true
+   }
+  },
+  {
+   "name": "C6_prior_identity",
+   "must_fire_because": "prior 0.2334",
+   "can_fail_because": "score_split drift",
+   "null_must_contain": "prior!=0.2334",
+   "fired": false,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "prior": 0.1999,
+    "ref": 0.2334,
+    "ok": false
+   }
+  },
+  {
+   "name": "C7_literature_compare",
+   "must_fire_because": "no RotatE excerpt",
+   "can_fail_because": "invented literature MRR",
+   "null_must_contain": "a literature MRR",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "value": "unavailable",
+    "ok": true
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_distmult_does_not_beat_g51",
+   "must_fire_because": null,
+   "can_fail_because": "distmult - g51 < 0.005",
+   "null_must_contain": "a signed delta vs G51, including a loss",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "distmult_mrr": 0.2422,
+    "g51_mrr": 0.2473,
+    "delta": -0.0051,
+    "bar": 0.005,
+    "fired": true,
+    "fires_when": "distmult - g51 < 0.005"
+   },
+   "refutes": "that DistMult min_epoch=10 is a +0.005 lift over G51",
+   "fires_when": "distmult - g51 < 0.005",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_distmult_below_official_prior",
+   "must_fire_because": null,
+   "can_fail_because": "distmult < 0.2334",
+   "null_must_contain": "an MRR on either side of the official prior 0.2334",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "distmult_mrr": 0.2422,
+    "prior_bar": 0.2334,
+    "prior_observed": 0.1999,
+    "fired": false,
+    "fires_when": "distmult < 0.2334"
+   },
+   "refutes": "that the latent arm is a working DistMult",
+   "fires_when": "distmult < 0.2334",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_distmult_below_complex",
+   "must_fire_because": null,
+   "can_fail_because": "distmult < 0.2755",
+   "null_must_contain": "DistMult on either side of 0.2755",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "distmult_mrr": 0.2422,
+    "complex_ref": 0.2755,
+    "delta": -0.0333,
+    "fired": true,
+    "fires_when": "distmult < 0.2755"
+   },
+   "refutes": "that DistMult under this protocol matches ComplEx 0.2755",
+   "fires_when": "distmult < 0.2755",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_distmult_does_not_beat_g51",
+  "F3_distmult_below_complex"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd": {
+   "newest": 0,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G51_bayesian_lift_scoring": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G59_official_split": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G72_complex_all_entity": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [
+  "CONTROL C1_test_n DID NOT FIRE -- run is VOID, not negative. (official test is 20466)",
+  "CONTROL C6_prior_identity DID NOT FIRE -- run is VOID, not negative. (prior 0.2334)"
+ ],
+ "ok": false,
+ "falsifier": "DistMult min_epoch=10 does not beat G51 by +0.005, OR DistMult < 0.2334, OR DistMult < ComplEx 0.2755",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
+}

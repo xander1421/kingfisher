@@ -1,0 +1,44 @@
+[G94] arm=distmult module=distmult corpus=/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd
+official n train=217081 valid=46517 test=46518 npred=237 nent=14541
+field_order_ok=True leak=0
+training DistMult (unfiltered 1-N, AdaGrad, dim=64, min_epoch=10, patience=8) ...
+  first-batch nll=19.1697 (uniform~19.1695) ||E||=60.366
+  epoch 1/40 nll=14.6313 14.9s valid_mrr=0.2403 eligible=False
+  epoch 2/40 nll=10.0188 14.7s eligible=False
+  epoch 3/40 nll=8.7852 14.8s eligible=False
+  epoch 4/40 nll=8.1125 14.9s eligible=False
+  epoch 5/40 nll=7.6930 14.8s valid_mrr=0.2522 eligible=False
+  epoch 6/40 nll=7.3993 15.2s eligible=False
+  epoch 7/40 nll=7.1807 14.8s eligible=False
+  epoch 8/40 nll=7.0117 14.2s eligible=False
+  epoch 9/40 nll=6.8746 13.9s eligible=False
+  epoch 10/40 nll=6.7628 13.3s valid_mrr=0.2444 BEST eligible=True
+  epoch 11/40 nll=6.6686 13.1s valid_mrr=0.2439 eligible=True
+  epoch 12/40 nll=6.5888 13.0s valid_mrr=0.2416 eligible=True
+  epoch 13/40 nll=6.5180 13.3s valid_mrr=0.2402 eligible=True
+  epoch 14/40 nll=6.4584 13.1s valid_mrr=0.2388 eligible=True
+  epoch 15/40 nll=6.4050 13.0s valid_mrr=0.2380 eligible=True
+  epoch 16/40 nll=6.3579 13.4s valid_mrr=0.2362 eligible=True
+  epoch 17/40 nll=6.3158 13.2s valid_mrr=0.2349 eligible=True
+  epoch 18/40 nll=6.2778 13.3s valid_mrr=0.2345 eligible=True
+  patience 8 after best_epoch=10 (min_epoch=10); stop
+trained DistMult in 251.9s best_epoch=10 valid_sample_mrr=0.2444
+ranking DistMult ALL entities (filtered) on official TEST ...
+DistMult MRR=0.2422 H@10=0.4219 in 1.4s
+scoring prior + G51 under support−∞ ...
+loaded 2201 rules (G72)
+prior=0.1999 G51=0.2473 in 57.5s
+
+=== G76 DistMult min_epoch=10 ===
+  prior    0.1999
+  G51      0.2473
+  DistMult 0.2422 H@10=0.4219 best_epoch=10 (G66 was 0.2195 epoch-1)
+  Δ vs G51 -0.0051  Δ vs ComplEx -0.0333
+  F1=True F2=False F3=True
+  tail=0.3173 head=0.1672
+elapsed 311.5s
+
+D6 certify ok=False
+  PROBLEM: CONTROL C1_test_n DID NOT FIRE -- run is VOID, not negative. (official test is 20466)
+  PROBLEM: CONTROL C6_prior_identity DID NOT FIRE -- run is VOID, not negative. (prior 0.2334)
+[G94] distmult finished rc=1 in 312s

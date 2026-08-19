@@ -117,3 +117,63 @@ stdout where it reads as a same-run comparison.
   train+valid+test, 310,116 triples / 248,611 groups / 1.247 per group, against
   G48's train-only 272,115 / 212,110 / 1.283). Internally consistent; not
   interchangeable with G54's 0.2313.
+
+---
+
+## 6 · F3 — the selector null. It does NOT fire, and it took three nulls to ask.
+
+```
+arms on the pair-disjoint split (93,036 queries, 474 routing keys)
+  distmult 0.242246   g51 0.250326   prior 0.202733
+
+per-key selector, chosen on half A and scored on half B   0.342500
+best single arm on the SAME half B                        0.250656
+gain                                                      +0.091844
+
+NULL — each key assigned a RANDOM arm, half-A evidence discarded, 200 draws
+  mean 0.231248  sd 0.011002  min 0.195714  max 0.260305
+  >= real: 0/200      p = 0.0050 (the floor at 200 draws)
+```
+
+**F3 does not fire.** Random per-key assignment never reaches evidence-based
+selection — not in 200 draws, and the real value sits far outside the null's
+range. So the +0.0918 is carried by the half-A evidence being informative about
+half B, not by the mere freedom to choose among K arms.
+
+That answers the AGENT-2 lane's objection in the direction that favours the
+method, which is why the null had to be built carefully — and it was not, twice.
+
+### The two dead nulls, kept because both looked decisive
+
+**v1 permuted the rows of R per key, then took argmax over all of them.** argmax
+picks the best arm regardless of index, so the permutation was a no-op. Result:
+null mean == real == 0.347511, **sd exactly 0.000000, 200/200 >= real**. It
+printed *"F3 FIRES"* with maximum confidence.
+
+**v2 split the queries and permuted the A-evidence before argmax.** Also a
+no-op, and provably: `perm[k][argmax(ev[perm[k]])] == argmax(ev)`. Permuting a
+vector, taking argmax, and mapping the winner back through the same permutation
+is the identity. sd rose from 0.000000 to **0.000026** — tie-breaking noise —
+and it still reported *"F3 FIRES"*, 144/200, p=0.72.
+
+**Two different no-op randomisations both produced a confident FIRES.** The tell
+in each was the variance, not the p-value: a randomisation the statistic is
+invariant under has no spread. The check is not *"did I shuffle something"* but
+*"can the shuffle change the answer"*.
+
+v3 removes the **evidence** instead of relabelling it — each key picks an arm
+uniformly at random rather than by half-A reciprocal rank. That asks the actual
+question, and its sd is 0.011, three orders of magnitude above v2's.
+
+### What §6 does NOT show
+
+- **0.342500 is not comparable to the 0.2313 scoreboard.** It is a half-B score
+  under per-key selection, on my split materialisation, with 474 keys over
+  93,036 queries (~98 scored queries per key per half). It is not an
+  official-protocol MRR and must not be quoted as one.
+- **Three arms, not five.** ComplEx and RotatE on this split are still unrun, and
+  more arms means more selector freedom — the null would need re-running at K=5.
+- **Selection on half A is still selection on test data.** It is honest about the
+  half it scores, but a valid-selected version is the deployable one and is
+  untested here.
+- F3 not firing does not certify anything: C1 and C6 still refuse (§3).

@@ -6,3 +6,13 @@ place would (a) load distmult_emb.npz trained on the OFFICIAL split, since
 the cache is a fixed path and not keyed on the corpus, and (b) overwrite it
 with pair-disjoint embeddings that G76's next run would silently pick up.
 The code is byte-identical and the hash above is the check, not the claim.
+
+DIVERGENCE, recorded rather than left implicit:
+  original  sha256 b9e8bed3c0a0307d4f39207f524847e1fbeaa54f39330c50a4651286b64bc652
+  this copy sha256 0d449b06ba52d378680aa3fba0fb0d37125fbad464077764d60bab2f52f6aad5
+The copy now differs by ONE addition after json.dump(res): it also writes
+ranks_pd.npz with per-query ranks for dm/prior/g51 plus their direction arrays.
+Nothing above that line is touched, so every number the trainer produces is
+still produced by the original code path. The addition exists because the mix
+and its F3 selector null need per-query ranks, and recomputing the scoring
+instead is how two supposedly identical pipelines drift apart.

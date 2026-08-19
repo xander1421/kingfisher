@@ -1,0 +1,24 @@
+[G94] arm=distmult module=distmult corpus=/Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/corpus_pd
+official n train=217081 valid=46517 test=46518 npred=237 nent=14541
+field_order_ok=True leak=0
+loaded DistMult embeddings /Users/victorianikolenko/kingfisher/spikes/G94_ensemble_pairdisjoint/distmult_emb.npz best_epoch=10 valid_sample_mrr=0.2444
+ranking DistMult ALL entities (filtered) on official TEST ...
+DistMult MRR=0.2422 H@10=0.4219 in 1.3s
+scoring prior + G51 under support−∞ ...
+loaded 2201 rules (local)
+prior=0.1999 G51=0.2473 in 60.3s
+[G94] wrote ranks_pd.npz  dm=93036 prior=93036 g51=93036
+
+=== G76 DistMult min_epoch=10 ===
+  prior    0.1999
+  G51      0.2473
+  DistMult 0.2422 H@10=0.4219 best_epoch=10 (G66 was 0.2195 epoch-1)
+  Δ vs G51 -0.0051  Δ vs ComplEx -0.0333
+  F1=True F2=False F3=True
+  tail=0.3173 head=0.1672
+elapsed 62.3s
+
+D6 certify ok=False
+  PROBLEM: CONTROL C1_test_n DID NOT FIRE -- run is VOID, not negative. (official test is 20466)
+  PROBLEM: CONTROL C6_prior_identity DID NOT FIRE -- run is VOID, not negative. (prior 0.2334)
+[G94] distmult finished rc=1 in 63s

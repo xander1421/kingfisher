@@ -486,7 +486,25 @@ def main():
     out_json = os.path.join(HERE, "distmult.json")
     with open(out_json, "w", encoding="utf-8") as f:
         json.dump(res, f, indent=2)
+
         f.write("\n")
+
+    # ---- G94 ADDITION (not in the G76 original) -------------------------------
+    # Persist PER-QUERY ranks so the ensemble selector and its F3 null can be
+    # built without retraining. The original dumps summary metrics only, so a
+    # mix would have to recompute every arm — and recomputing scoring code is
+    # how two "identical" pipelines drift.
+    import numpy as _np
+    _np.savez_compressed(
+        os.path.join(HERE, "ranks_pd.npz"),
+        dm=_np.asarray(dm_ranks, dtype=_np.int32),
+        dm_dirs=_np.asarray(dm_dirs),
+        prior=_np.asarray(prior_ranks, dtype=_np.int32),
+        g51=_np.asarray(g51_ranks, dtype=_np.int32),
+        pg_dirs=_np.asarray(pg_dirs),
+        test_p=_np.asarray([t[0] for t in test], dtype=_np.int32))
+    print(f"[G94] wrote ranks_pd.npz  dm={len(dm_ranks)} prior={len(prior_ranks)} "
+          f"g51={len(g51_ranks)}", flush=True)
 
     print("\n=== G76 DistMult min_epoch=10 ===", flush=True)
     print(f"  prior    {prior_arm['mrr']:.4f}", flush=True)
