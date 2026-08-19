@@ -20,6 +20,19 @@ AGENT-2         # 3 commits
 ATTACKER-1      # 16 commits, 3 livechat posts
 ATOM-3          # elder candidate: does not row, reviews across lanes (MISSION_LOOP 14.1)
 ok-1            # harness lane, owns class H. See RE-ADDED note below.
+GEMINI-1        # cross-vendor review. NOT a Claude lane. run_loop.sh dispatches
+                # ANTIGRAVITY-*|GEMINI-* to the `gemini` CLI and GROK-* to `grok`.
+                # NAME NOTE (operator, 2026-08-19): Google ships this as
+                # ANTIGRAVITY while the executable on PATH is `gemini`. Both
+                # prefixes work, so nobody is wrong for using either word.
+                # BLOCKED ON CREDENTIALS, not on wiring:
+                #   gemini -> no auth method set (GEMINI_API_KEY /
+                #             GOOGLE_GENAI_USE_VERTEXAI / GOOGLE_GENAI_USE_GCA)
+                #   grok   -> HTTP 402, Grok Build usage balance exhausted
+                # run_loop.sh probes a non-claude CLI once at launch and refuses
+                # with the vendor's own message, because `command -v` passing is
+                # not the same as the lane working -- GEMINI-1 was reported
+                # LAUNCHED with no process and no log until that probe existed.
 
 # CORRECTED 2026-08-17. This file previously listed `ok-1` as the fourth lane,
 # citing the operator ("should be total 4 now"), and recorded ATOM-3 as
@@ -70,3 +83,27 @@ ok-1            # harness lane, owns class H. See RE-ADDED note below.
 # real work is a different question from a fixture that escaped.
 #
 # Charter for every lane, including this one: MISSION.md.
+
+# GEMINI-1 ADDED 2026-08-19, operator: "establish quorum with all the agents gemini
+# and claude". Two reasons, and the second was discovered the same day.
+#
+# 1. CORRELATED REVIEWERS. Every other lane is Claude. This repo's own finding is
+#    that replication catches disagreement and never a shared bug — a second TARGET
+#    is not a second IMPLEMENTATION. Five lanes on one model is one implementation
+#    with five targets, and nobody had named it. NOTE it is a HYPOTHESIS: ATOM-3's
+#    attempt to measure it died to its own shuffle control and is withdrawn.
+#
+# 2. ONE VENDOR IS ONE POINT OF FAILURE, measured. On 2026-08-19 a single weekly
+#    cap took all five lanes down simultaneously — "You've hit your weekly limit",
+#    every lane, every ~10 minutes, ZERO COMMITS IN TWELVE HOURS. That is not a
+#    correlated-priors argument, it is an availability one, and it is the reason
+#    the fleet had no working lane at all that morning.
+#
+# LAUNCH: `CALLSIGN=GEMINI-1 ./run_loop.sh`. run_loop.sh dispatches on the callsign
+# PREFIX rather than a new roster column, because a schema change would need
+# rostercheck.py, send.sh and bringup.sh to move together — H38's class.
+#
+# BLOCKED ON A HUMAN: the gemini CLI (0.55.1, installed) has no auth configured.
+# It needs GEMINI_API_KEY, or GOOGLE_GENAI_USE_VERTEXAI with a project, in the
+# environment or in ~/.gemini/settings.json. Credentials are §10 territory and an
+# operator action; no lane sets them.

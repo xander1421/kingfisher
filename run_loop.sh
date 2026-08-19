@@ -387,18 +387,67 @@ while [ ! -f STOP ] && [ ! -f "STOP.${CALLSIGN}" ]; do
   rm -f ".loop_blocks.${CALLSIGN}" "$EXIT_MARK" ".loop_signal.${CALLSIGN}"
   date +%s > "$BEAT"
   started=$(date +%s)
+  # H121: generation the watchdog is bound to. Invalidated when the turn
+  # ends so a surviving dog cannot reap the next turn. Written before the
+  # child is spawned so a crash mid-spawn still has a bound.
+  printf '%s\n' "$started" > ".loop_turn_gen.${CALLSIGN}"
 
   # The prompt MUST keep the literal "You are ${CALLSIGN}." prefix — the watchdog
   # below targets the turn with pkill -f on exactly that string, so that it can
   # never match the other lane or a human's interactive session.
-  ( claude -p "You are ${CALLSIGN}. Read CLAUDE.md, then MISSION_LOOP.md, then HANDOFF.md if present, then run cycles per the loop contract.
+# VENDOR DISPATCH (2026-08-19, ATOM-3). The launcher hardcoded `claude -p`, so a
+# non-Claude lane could not be launched at all -- and that mattered the day a
+# single vendor's WEEKLY CAP took all five lanes down simultaneously
+# ("You've hit your weekly limit", every lane, every ~10 minutes, zero commits in
+# 12 hours). A fleet whose every lane depends on one vendor has one point of
+# failure, which is the same shared-bug argument this repo makes about devices:
+# a second TARGET is not a second IMPLEMENTATION.
+#
+# Derived from the callsign PREFIX rather than a new roster column, because
+# roster.txt is parsed by rostercheck.py, send.sh and bringup.sh and a schema
+# change would need all four to move together -- H38's class. A prefix needs none
+# of them to change.
+# NAMES CORRECTED 2026-08-19 (operator: "gemini is antigravity"). Google's agent
+# is shipped as ANTIGRAVITY but the executable on PATH is `gemini`, so the
+# product name and the binary name differ. Both prefixes map to the same CLI
+# rather than picking one and being wrong for whoever uses the other word --
+# a callsign is how a human addresses a lane, and it should match what they
+# call the thing.
+case "$CALLSIGN" in
+  ANTIGRAVITY-*|GEMINI-*) LANE_CLI=gemini ;;
+  GROK-*)                 LANE_CLI=grok ;;
+  *)                      LANE_CLI=claude ;;
+esac
+command -v "$LANE_CLI" >/dev/null || { echo "run_loop.sh: $LANE_CLI not on PATH for lane $CALLSIGN"; exit 1; }
+
+# ON PATH IS NOT USABLE. Both alternate vendors resolve and then refuse:
+#   gemini -> "Please set an Auth method in ~/.gemini/settings.json or specify
+#             GEMINI_API_KEY / GOOGLE_GENAI_USE_VERTEXAI / GOOGLE_GENAI_USE_GCA"
+#   grok   -> HTTP 402 "Grok Build usage balance exhausted"
+# GEMINI-1 was reported LAUNCHED by bringup.sh with no process and no log
+# because `command -v` passed and the CLI died on its first call. A launcher
+# that checks a binary EXISTS and calls that a working lane is the same defect
+# as a supervisor reporting "3 launched" with 0 running. One cheap probe, once,
+# so the failure names itself at launch instead of looking like a dead lane.
+if [ "$LANE_CLI" != claude ]; then
+  _probe=$("$LANE_CLI" -p 'reply with the single word READY' 2>&1 | head -3)
+  case "$_probe" in
+    *READY*) : ;;
+    *) echo "run_loop.sh: $LANE_CLI is on PATH but NOT USABLE for $CALLSIGN:"
+       echo "  $_probe"
+       echo "  Fix the vendor credential, then relaunch. Not a lane fault."
+       exit 1 ;;
+  esac
+fi
+
+  ( "$LANE_CLI" -p "You are ${CALLSIGN}. Read CLAUDE.md, then MISSION_LOOP.md, then HANDOFF.md if present, then run cycles per the loop contract.
 
 The harness evolves with the codebase (MISSION_LOOP §12). It is the instrument that runs every other instrument, and it had never been attacked before 2026-08-17 — it was carrying an inert Stop hook, a launcher whose supervision had never been exercised, and re-entry that depended on remembering one call per turn. So: a harness defect is a class-H WORK_QUEUE row, not a fix you make in passing. Fix the CLASS and not the site — name the defect class in one line, grep the whole harness for it, and post the class to livechat.log so the other lane greps its own tree. Resolve every reference to a section, spec or file mechanically rather than by eye. Any harness component you touch keeps a runnable check that fails when it breaks, and gains a version bump with a rationale block naming the defect removed. At least every fourth ATTACK cycle targets the loop itself rather than a spike.
 
 A wrong number gets retracted by the next cycle. A dead lane has no next cycle.
 $([ -f "$BRIEF_FILE" ] && printf '\n--- your spawn brief, %s ---\n' "$BRIEF_FILE" && cat "$BRIEF_FILE")
 $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on these before selecting a queue item; reply over the session bus (fleet/registry.tsv maps callsign to socket) or with spikes/harness/send.sh ---\n' && cat "$INBOX")" \
-      --dangerously-skip-permissions 2>&1 | tee -a "$LOG" ) &
+      $([ "$LANE_CLI" = claude ] && echo --dangerously-skip-permissions) 2>&1 | tee -a "$LOG" ) &
   # Archived AFTER the prompt is built, so a crash before the turn starts cannot
   # silently eat mail: the file is only moved once its contents are in the prompt.
   if [ -s "$INBOX" ]; then
@@ -409,13 +458,21 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
   # Watchdog: convert a hang into a crash, which the loop below already handles.
   # pkill is matched on the callsign in the prompt so it cannot touch the other
   # lane or a human's interactive session.
+  # H121: do NOT gate on kill -0 "$turn". $turn is the pipeline handle; when the
+  # supervisor dies that pid is gone while the `You are CALLSIGN.` grandchild
+  # is reparented to init and lives. A dog that checks the pipeline then skips
+  # is how MAX_TURN bound nothing (measured: 105 min turns against a 60 min cap).
+  # disown so a process-group kill of the wrapper does not take the dog with it.
+  # Generation file so an old dog cannot reap a later supervisor's turn.
   ( sleep "$MAX_TURN"
-    if kill -0 "$turn" 2>/dev/null; then
+    now=$(cat ".loop_turn_gen.${CALLSIGN}" 2>/dev/null || true)
+    if [ "$now" = "$started" ]; then
       echo "[run_loop] ${CALLSIGN} turn exceeded ${MAX_TURN}s, terminating" | tee -a "$LOG"
       pkill -f "You are ${CALLSIGN}\." 2>/dev/null
       kill -TERM "$turn" 2>/dev/null
     fi ) &
   dog=$!
+  disown "$dog" 2>/dev/null || disown 2>/dev/null || true
   # 11. THE HEARTBEAT MARKED A TURN BOUNDARY, NOT A LIVE PROCESS (v8, 2026-08-17,
   #     H48, ATTACKER-1). Renumbered 10 -> 11 by `grep -nE '^# [0-9]+\.'` and not by
   #     eye: AGENT-1's roster block took 10 in v7 while this was being written,
@@ -442,6 +499,7 @@ $([ -s "$INBOX" ] && printf '\n--- UNREAD MESSAGES addressed to you. Act on thes
   ( while kill -0 "$turn" 2>/dev/null; do date +%s > "$BEAT"; sleep "$BEAT_EVERY"; done ) &
   beater=$!
   wait "$turn" 2>/dev/null
+  printf 'ended-%s\n' "$started" > ".loop_turn_gen.${CALLSIGN}"
   kill -TERM "$dog" 2>/dev/null          # turn finished first: cancel the watchdog
   kill -TERM "$beater" 2>/dev/null       # and stop beating for a turn that ended
   elapsed=$(( $(date +%s) - started ))
