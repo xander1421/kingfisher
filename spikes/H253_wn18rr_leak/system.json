@@ -1,0 +1,265 @@
+{
+ "arms": {
+  "clean": {
+   "hits1": 0.020118,
+   "hits10": 0.062807,
+   "model_choices": {
+    "complex": 134,
+    "rotate": 3942
+   },
+   "mrr": 0.033284,
+   "n": 2038,
+   "n_queries": 4076
+  },
+  "full": {
+   "hits1": 0.348596,
+   "hits10": 0.387843,
+   "model_choices": {
+    "complex": 218,
+    "rotate": 6050
+   },
+   "mrr": 0.361118,
+   "n": 3134,
+   "n_queries": 6268
+  },
+  "leaked": {
+   "hits1": 0.959398,
+   "hits10": 0.992245,
+   "model_choices": {
+    "complex": 84,
+    "rotate": 2108
+   },
+   "mrr": 0.97072,
+   "n": 1096,
+   "n_queries": 2192
+  }
+ },
+ "elapsed_sec": 307.38,
+ "g92_published_mrr": 0.3611,
+ "margin_clean": -0.005016,
+ "margin_full": 0.335518,
+ "multiple_clean": 0.87,
+ "multiple_full": 14.11,
+ "nulls_from_probe_null_py": {
+  "clean": 0.0383,
+  "full": 0.0256,
+  "leaked": 0.0018
+ },
+ "per_relation_mrr": {
+  "clean": {
+   "_also_see": {
+    "mrr": 0.490511,
+    "n_queries": 34,
+    "routed_to": "complex"
+   },
+   "_derivationally_related_form": {
+    "mrr": 0.000627,
+    "n_queries": 126,
+    "routed_to": "rotate"
+   },
+   "_has_part": {
+    "mrr": 0.012004,
+    "n_queries": 342,
+    "routed_to": "rotate"
+   },
+   "_hypernym": {
+    "mrr": 0.011629,
+    "n_queries": 2498,
+    "routed_to": "rotate"
+   },
+   "_instance_hypernym": {
+    "mrr": 0.079919,
+    "n_queries": 244,
+    "routed_to": "rotate"
+   },
+   "_member_meronym": {
+    "mrr": 0.040369,
+    "n_queries": 502,
+    "routed_to": "rotate"
+   },
+   "_member_of_domain_region": {
+    "mrr": 0.260791,
+    "n_queries": 52,
+    "routed_to": "complex"
+   },
+   "_member_of_domain_usage": {
+    "mrr": 0.567361,
+    "n_queries": 48,
+    "routed_to": "complex"
+   },
+   "_synset_domain_topic_of": {
+    "mrr": 0.022785,
+    "n_queries": 228,
+    "routed_to": "rotate"
+   },
+   "_verb_group": {
+    "mrr": 0.000262,
+    "n_queries": 2,
+    "routed_to": "rotate"
+   }
+  },
+  "full": {
+   "_also_see": {
+    "mrr": 0.533128,
+    "n_queries": 112,
+    "routed_to": "complex"
+   },
+   "_derivationally_related_form": {
+    "mrr": 0.939388,
+    "n_queries": 2148,
+    "routed_to": "rotate"
+   },
+   "_has_part": {
+    "mrr": 0.011936,
+    "n_queries": 344,
+    "routed_to": "rotate"
+   },
+   "_hypernym": {
+    "mrr": 0.011611,
+    "n_queries": 2502,
+    "routed_to": "rotate"
+   },
+   "_instance_hypernym": {
+    "mrr": 0.079919,
+    "n_queries": 244,
+    "routed_to": "rotate"
+   },
+   "_member_meronym": {
+    "mrr": 0.040054,
+    "n_queries": 506,
+    "routed_to": "rotate"
+   },
+   "_member_of_domain_region": {
+    "mrr": 0.260791,
+    "n_queries": 52,
+    "routed_to": "complex"
+   },
+   "_member_of_domain_usage": {
+    "mrr": 0.567361,
+    "n_queries": 48,
+    "routed_to": "complex"
+   },
+   "_similar_to": {
+    "mrr": 0.888889,
+    "n_queries": 6,
+    "routed_to": "complex"
+   },
+   "_synset_domain_topic_of": {
+    "mrr": 0.022785,
+    "n_queries": 228,
+    "routed_to": "rotate"
+   },
+   "_verb_group": {
+    "mrr": 0.791295,
+    "n_queries": 78,
+    "routed_to": "rotate"
+   }
+  },
+  "leaked": {
+   "_also_see": {
+    "mrr": 0.551705,
+    "n_queries": 78,
+    "routed_to": "complex"
+   },
+   "_derivationally_related_form": {
+    "mrr": 0.997887,
+    "n_queries": 2022,
+    "routed_to": "rotate"
+   },
+   "_has_part": {
+    "mrr": 0.000236,
+    "n_queries": 2,
+    "routed_to": "rotate"
+   },
+   "_hypernym": {
+    "mrr": 0.000314,
+    "n_queries": 4,
+    "routed_to": "rotate"
+   },
+   "_member_meronym": {
+    "mrr": 0.000488,
+    "n_queries": 4,
+    "routed_to": "rotate"
+   },
+   "_similar_to": {
+    "mrr": 0.888889,
+    "n_queries": 6,
+    "routed_to": "complex"
+   },
+   "_verb_group": {
+    "mrr": 0.812112,
+    "n_queries": 76,
+    "routed_to": "rotate"
+   }
+  }
+ },
+ "relation_leak_composition": {
+  "_also_see": {
+   "clean": 17,
+   "leak_pct": 69.6,
+   "leaked": 39,
+   "routed_to": "complex"
+  },
+  "_derivationally_related_form": {
+   "clean": 63,
+   "leak_pct": 94.1,
+   "leaked": 1011,
+   "routed_to": "rotate"
+  },
+  "_has_part": {
+   "clean": 171,
+   "leak_pct": 0.6,
+   "leaked": 1,
+   "routed_to": "rotate"
+  },
+  "_hypernym": {
+   "clean": 1249,
+   "leak_pct": 0.2,
+   "leaked": 2,
+   "routed_to": "rotate"
+  },
+  "_instance_hypernym": {
+   "clean": 122,
+   "leak_pct": 0.0,
+   "leaked": 0,
+   "routed_to": "rotate"
+  },
+  "_member_meronym": {
+   "clean": 251,
+   "leak_pct": 0.8,
+   "leaked": 2,
+   "routed_to": "rotate"
+  },
+  "_member_of_domain_region": {
+   "clean": 26,
+   "leak_pct": 0.0,
+   "leaked": 0,
+   "routed_to": "complex"
+  },
+  "_member_of_domain_usage": {
+   "clean": 24,
+   "leak_pct": 0.0,
+   "leaked": 0,
+   "routed_to": "complex"
+  },
+  "_similar_to": {
+   "clean": 0,
+   "leak_pct": 100.0,
+   "leaked": 3,
+   "routed_to": "complex"
+  },
+  "_synset_domain_topic_of": {
+   "clean": 114,
+   "leak_pct": 0.0,
+   "leaked": 0,
+   "routed_to": "rotate"
+  },
+  "_verb_group": {
+   "clean": 1,
+   "leak_pct": 97.4,
+   "leaked": 38,
+   "routed_to": "rotate"
+  }
+ },
+ "reproduces_g92": true
+}

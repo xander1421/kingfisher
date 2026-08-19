@@ -1,0 +1,236 @@
+{
+ "spike": "H253_wn18rr_leak",
+ "recorded_utc": "2026-08-19T22:29:50Z",
+ "note": "H253: WN18RR official split carries 34.97% same-pair leakage -- more than the 30.01% FB15k-237 shuffle this fleet refused to gate on -- and G92's entire margin over the null lives inside it.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G105_wn18rr_frequency_null",
+   "head": "2e5928d1d4d5eb20c7981e16132bb8ce7221f644",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G105_wn18rr_frequency_null/null_wn.json"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid",
+   "head": "2e5928d1d4d5eb20c7981e16132bb8ce7221f644",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes/G105_wn18rr_frequency_null": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H253_wn18rr_leak/result.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H253_wn18rr_leak/result.json",
+   "sha256": "6dc4018aeb6350cb76792bbeedd7417dafa4a278af9836f7bf27bd6912c57a1c",
+   "bytes": 10161,
+   "mtime": 1787178590,
+   "repro_sha256": "6dc4018aeb6350cb76792bbeedd7417dafa4a278af9836f7bf27bd6912c57a1c",
+   "repro_excluded": [],
+   "compared_ts": 1787178590,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H253_wn18rr_leak/null.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H253_wn18rr_leak/null.json",
+   "sha256": "3203c2d5dc5f029169b45b267a665aed76a54580e0d20184485a8ff362bfe7d9",
+   "bytes": 451,
+   "mtime": 1787178283,
+   "repro_sha256": "3203c2d5dc5f029169b45b267a665aed76a54580e0d20184485a8ff362bfe7d9",
+   "repro_excluded": [],
+   "compared_ts": 1787178283,
+   "compared_clock": "mtime"
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H253_wn18rr_leak/system.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/H253_wn18rr_leak/system.json",
+   "sha256": "062056a562c9cce3ca139f4f613a8fd51d3f5bcd2fa5fe4b7806327c19f4dfd2",
+   "bytes": 4929,
+   "mtime": 1787178590,
+   "repro_sha256": "062056a562c9cce3ca139f4f613a8fd51d3f5bcd2fa5fe4b7806327c19f4dfd2",
+   "repro_excluded": [],
+   "compared_ts": 1787178590,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_both_published_numbers_reproduce",
+   "must_fire_because": "G92's 0.3611 and G105's 0.0256 are both re-derived here from their own code, so this attack drove the instruments under test rather than retyped copies of them (family C)",
+   "can_fail_because": "either fails to reproduce, meaning a different model",
+   "null_must_contain": "does not reproduce",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "null_here": 0.0256,
+    "g105": 0.0256,
+    "sys_here": 0.361118,
+    "g92": 0.3611
+   }
+  },
+  {
+   "name": "C2_partition_is_exhaustive_and_disjoint",
+   "must_fire_because": "every number below is one subset arithmetic error away from meaningless: leaked + clean must equal the test set, and their query counts must equal 6,268",
+   "can_fail_because": "the subsets do not sum to n_test or 2 * n_test",
+   "null_must_contain": "sum mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaked": 1096,
+    "clean": 2038,
+    "n_test": 3134,
+    "queries": 6268
+   }
+  },
+  {
+   "name": "C3_the_partition_is_not_inert",
+   "must_fire_because": "a partition that scored the same on both halves would make every comparison here vacuous",
+   "can_fail_because": "leaked and clean MRRs are within 0.01",
+   "null_must_contain": "no difference",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "leaked": 0.97072,
+    "clean": 0.033284
+   }
+  },
+  {
+   "name": "C4_the_null_can_move",
+   "must_fire_because": "F1 claims the null does NOT move when the leak is deleted from train. That is only evidence if it CAN move: restricting the population moves it +0.0127 while the deletion moves it 0.0000",
+   "can_fail_because": "the null is constant across populations too, in which case F1 is unfalsifiable (A15)",
+   "null_must_contain": "null is constant",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "population_change": 0.0127,
+    "leak_deletion": 0.0
+   }
+  },
+  {
+   "name": "C5_subsetting_itself_does_not_move_scores",
+   "must_fire_because": "_hypernym is 0.2% leaked and 40% of the test set. If the act of subsetting moved scores, it would move too. full 0.0116 vs clean 0.0116 -- so the leaked/clean gap is the leak and not the slicing",
+   "can_fail_because": "_hypernym moves materially between full and clean",
+   "null_must_contain": "moved",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "_hypernym_full": 0.011611,
+    "_hypernym_clean": 0.011629,
+    "leak_pct": 0.2
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_wn18rr_null_is_blind_to_the_leak_too",
+   "must_fire_because": null,
+   "can_fail_because": "deleting every leak-creating edge from train moves the null far less than a population change does",
+   "null_must_contain": "the null moved",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "delta_leak_deleted_from_train": 0.0,
+    "train_edges_removed": 1105,
+    "delta_population_change": 0.0127
+   },
+   "refutes": "that G105's 0.0256 might itself be leak-inflated",
+   "fires_when": "deleting every leak-creating edge from train moves the null far less than a population change does",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_the_margin_lives_in_the_leaked_subset",
+   "must_fire_because": null,
+   "can_fail_because": "the multiple over the null on the NON-leaked triples falls below 1.0, i.e. the null wins there",
+   "null_must_contain": "clean subset still beats the null",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "multiple_full": 14.11,
+    "multiple_clean": 0.87,
+    "margin_full": 0.335518,
+    "margin_clean": -0.005016
+   },
+   "refutes": "G105's 14.1x as evidence the system works on WN18RR",
+   "fires_when": "the multiple over the null on the NON-leaked triples falls below 1.0, i.e. the null wins there",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_the_leak_is_spread_rather_than_concentrated",
+   "must_fire_because": null,
+   "can_fail_because": "one relation supplies more than 80% of the leaked triples",
+   "null_must_contain": "spread across relations",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "relation": "_derivationally_related_form",
+    "leaked_triples": 1011,
+    "of_total_leaked": 1096,
+    "share": 0.9224,
+    "mrr_leaked": 0.997887,
+    "mrr_clean": 0.000627
+   },
+   "refutes": "that a single relation explains it, which would make the finding a number with no mechanism",
+   "fires_when": "one relation supplies more than 80% of the leaked triples",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_wn18rr_null_is_blind_to_the_leak_too",
+  "F2_the_margin_lives_in_the_leaked_subset",
+  "F3_the_leak_is_spread_rather_than_concentrated"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes/G105_wn18rr_frequency_null": {
+   "newest": 1787175886,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G92_wn18rr_hybrid": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the non-leaked subset still beating the null, or the null moving when every leak-creating edge is deleted from train, or _hypernym moving between the full and clean arms"
+}

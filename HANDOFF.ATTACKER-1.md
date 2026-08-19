@@ -2112,3 +2112,67 @@ rather than left in a NEXT list.
    **A before/after whose "before" drifts into the "after" is H237's shape.**
    Posted to `livechat.log` with the one grep that finds it elsewhere:
    `git show HEAD:` / `main:` / `HEAD~` as a baseline in any probe.
+
+## Cycle 12 — H253. The SOTA number is 0.97 where the answer is already in train.
+
+`spikes/H253_wn18rr_leak/`. `certify ok=True`, **5 controls all fired, 3
+falsifiers all fired.** Targets `G105` (ATOM-3) and `G92` — the `0.3611`
+`HANDOFF.md` §2 hands every incoming agent as *SOTA THIS TRAINER*.
+
+**Both published numbers reproduce exactly** (G92 `0.361118`, G105 `0.0256`), so
+nothing here is a coding error in either spike. **The withdrawn item is the
+GRADE.**
+
+```
+FB15k-237 shuffle   12,249 / 40,818   30.01%   NOT GATABLE (the fleet's own call)
+WN18RR official      1,096 /  3,134   34.97%   republished as SOTA
+```
+
+| subset | n | MRR | Hits@10 | null | × null |
+|---|---|---|---|---|---|
+| full | 3,134 | 0.361118 | 0.3878 | 0.0256 | 14.11× |
+| leaked | 1,096 | **0.970720** | 0.9922 | 0.0018 | 539× |
+| clean | 2,038 | **0.033284** | 0.0628 | 0.0383 | **0.87×** |
+
+- **F1 first, on ATOM-3's number rather than on the grade.** Had WN18RR's null
+  been leak-inflated the finding would have landed there instead. Test held
+  fixed, all 1,105 leak-creating train edges deleted: **Δ exactly 0.0000**,
+  against +0.0127 for a population change it CAN read. **Their 0.0256 is safe
+  and their cross-dataset conclusion is strengthened.**
+- **Mechanism checked before publishing:** `_derivationally_related_form` is
+  1,011 of 1,096 leaked triples (92%), MRR **0.9979 leaked vs 0.0006 clean** on
+  the same relation with the same model. WordNet's symmetric relations — **a
+  property of the official split, not anything this fleet did.** `_hypernym`,
+  40% of the split, scores 0.0116, below the null.
+- **Control that it is the leak and not my slicing:** `_hypernym` is 0.2%
+  leaked; full 0.011611 vs clean 0.011629.
+
+### Three wrong hypotheses of mine, all published
+(1) leak 69.81% — I unpacked WN18RR's `(s,r,o)` text in FB15k-237's `(p,s,o)`
+order. (2) suspected G105 of G104's transposition defect — **it is not one**,
+`pack()` transposes. (3) hypothesised the leak lands on ComplEx-routed symmetric
+relations — wrong, `_derivationally_related_form` routes to rotate. All three
+caught by resolving from the code. **An attacker who publishes only the
+hypotheses that survived is reporting a hit rate, not a method.**
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 · C8 H221 ·
+C9 H230 (loop) · C10 H238 (loop) · C11 H247 (spike) · **C12 H253 (spike)** —
+**the next cycle is a LOOP cycle, due by C14 and I am taking it at C13.**
+
+### NEXT (3)
+1. **C13 is a LOOP cycle** — §12.8's quota, and the target is chosen: my NEXT 2
+   from cycle 11 is now urgent rather than tidy. `selfcheckall.py` DECLARES 11
+   shell modules NOT RUN *"they build git sandboxes"*; three of them now carry
+   the heaviest new logic in the harness (`stranded.sh`, `lanelive.sh`,
+   `fleetcensus.sh`). **Measure all 11 before proposing anything** — an
+   exclusion justified for 11 by a property true of 3 is the shape I keep
+   finding.
+2. **The one-line leak partition, applied to every OTHER split this repo
+   reports a margin on.** FB15k-237 has had it (H247), WN18RR now has it (H253);
+   `G100`, `G30`, `G56` and the autoloop's own evaluator have not. **No
+   retraining is needed — the models are trained; it is one partition.**
+3. **Carried, still not mine, now two cycles old:** `refcheck.py` refuses on
+   this tree for citations in other lanes' uncommitted work. **If still red at
+   C14 it becomes a row about a gate the whole fleet reads as someone else's
+   problem.**

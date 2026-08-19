@@ -1,0 +1,395 @@
+{
+  "spike": "H253",
+  "target": "spikes/G105_wn18rr_frequency_null/ + spikes/G92_wn18rr_hybrid/",
+  "observations": {
+    "NULL": {
+      "n_test": 3134,
+      "n_leaked": 1096,
+      "n_clean": 2038,
+      "leak_rate": 0.3497,
+      "null_mrr_full_test": 0.0256,
+      "null_mrr_leaked_subset": 0.0018,
+      "null_mrr_clean_subset": 0.0383,
+      "n_train": 86835,
+      "n_train_leak_edges_removed": 1105,
+      "null_mrr_same_test_leakfree_train": 0.0256,
+      "null_delta_when_leak_deleted_from_train": 0.0,
+      "null_delta_population_change": 0.0127,
+      "g105_published_null": 0.0256,
+      "reproduces_g105": true,
+      "elapsed_sec": 19.83
+    },
+    "ARM_full": {
+      "n": 3134,
+      "mrr": 0.361118,
+      "hits1": 0.348596,
+      "hits10": 0.387843,
+      "n_queries": 6268,
+      "model_choices": {
+        "complex": 218,
+        "rotate": 6050
+      }
+    },
+    "ARM_leaked": {
+      "n": 1096,
+      "mrr": 0.97072,
+      "hits1": 0.959398,
+      "hits10": 0.992245,
+      "n_queries": 2192,
+      "model_choices": {
+        "rotate": 2108,
+        "complex": 84
+      }
+    },
+    "ARM_clean": {
+      "n": 2038,
+      "mrr": 0.033284,
+      "hits1": 0.020118,
+      "hits10": 0.062807,
+      "n_queries": 4076,
+      "model_choices": {
+        "complex": 134,
+        "rotate": 3942
+      }
+    },
+    "RELATIONS": {
+      "_member_of_domain_usage": {
+        "leaked": 0,
+        "clean": 24,
+        "routed_to": "complex",
+        "leak_pct": 0.0
+      },
+      "_verb_group": {
+        "leaked": 38,
+        "clean": 1,
+        "routed_to": "rotate",
+        "leak_pct": 97.4
+      },
+      "_member_of_domain_region": {
+        "leaked": 0,
+        "clean": 26,
+        "routed_to": "complex",
+        "leak_pct": 0.0
+      },
+      "_member_meronym": {
+        "leaked": 2,
+        "clean": 251,
+        "routed_to": "rotate",
+        "leak_pct": 0.8
+      },
+      "_hypernym": {
+        "leaked": 2,
+        "clean": 1249,
+        "routed_to": "rotate",
+        "leak_pct": 0.2
+      },
+      "_has_part": {
+        "leaked": 1,
+        "clean": 171,
+        "routed_to": "rotate",
+        "leak_pct": 0.6
+      },
+      "_derivationally_related_form": {
+        "leaked": 1011,
+        "clean": 63,
+        "routed_to": "rotate",
+        "leak_pct": 94.1
+      },
+      "_also_see": {
+        "leaked": 39,
+        "clean": 17,
+        "routed_to": "complex",
+        "leak_pct": 69.6
+      },
+      "_instance_hypernym": {
+        "leaked": 0,
+        "clean": 122,
+        "routed_to": "rotate",
+        "leak_pct": 0.0
+      },
+      "_synset_domain_topic_of": {
+        "leaked": 0,
+        "clean": 114,
+        "routed_to": "rotate",
+        "leak_pct": 0.0
+      },
+      "_similar_to": {
+        "leaked": 3,
+        "clean": 0,
+        "routed_to": "complex",
+        "leak_pct": 100.0
+      }
+    },
+    "SYS": {
+      "arms": {
+        "full": {
+          "n": 3134,
+          "mrr": 0.361118,
+          "hits1": 0.348596,
+          "hits10": 0.387843,
+          "n_queries": 6268,
+          "model_choices": {
+            "complex": 218,
+            "rotate": 6050
+          }
+        },
+        "leaked": {
+          "n": 1096,
+          "mrr": 0.97072,
+          "hits1": 0.959398,
+          "hits10": 0.992245,
+          "n_queries": 2192,
+          "model_choices": {
+            "rotate": 2108,
+            "complex": 84
+          }
+        },
+        "clean": {
+          "n": 2038,
+          "mrr": 0.033284,
+          "hits1": 0.020118,
+          "hits10": 0.062807,
+          "n_queries": 4076,
+          "model_choices": {
+            "complex": 134,
+            "rotate": 3942
+          }
+        }
+      },
+      "nulls_from_probe_null_py": {
+        "full": 0.0256,
+        "leaked": 0.0018,
+        "clean": 0.0383
+      },
+      "margin_full": 0.335518,
+      "margin_clean": -0.005016,
+      "multiple_full": 14.11,
+      "multiple_clean": 0.87,
+      "g92_published_mrr": 0.3611,
+      "reproduces_g92": true,
+      "per_relation_mrr": {
+        "full": {
+          "_member_of_domain_usage": {
+            "n_queries": 48,
+            "mrr": 0.567361,
+            "routed_to": "complex"
+          },
+          "_verb_group": {
+            "n_queries": 78,
+            "mrr": 0.791295,
+            "routed_to": "rotate"
+          },
+          "_member_of_domain_region": {
+            "n_queries": 52,
+            "mrr": 0.260791,
+            "routed_to": "complex"
+          },
+          "_member_meronym": {
+            "n_queries": 506,
+            "mrr": 0.040054,
+            "routed_to": "rotate"
+          },
+          "_hypernym": {
+            "n_queries": 2502,
+            "mrr": 0.011611,
+            "routed_to": "rotate"
+          },
+          "_has_part": {
+            "n_queries": 344,
+            "mrr": 0.011936,
+            "routed_to": "rotate"
+          },
+          "_derivationally_related_form": {
+            "n_queries": 2148,
+            "mrr": 0.939388,
+            "routed_to": "rotate"
+          },
+          "_also_see": {
+            "n_queries": 112,
+            "mrr": 0.533128,
+            "routed_to": "complex"
+          },
+          "_instance_hypernym": {
+            "n_queries": 244,
+            "mrr": 0.079919,
+            "routed_to": "rotate"
+          },
+          "_synset_domain_topic_of": {
+            "n_queries": 228,
+            "mrr": 0.022785,
+            "routed_to": "rotate"
+          },
+          "_similar_to": {
+            "n_queries": 6,
+            "mrr": 0.888889,
+            "routed_to": "complex"
+          }
+        },
+        "leaked": {
+          "_verb_group": {
+            "n_queries": 76,
+            "mrr": 0.812112,
+            "routed_to": "rotate"
+          },
+          "_derivationally_related_form": {
+            "n_queries": 2022,
+            "mrr": 0.997887,
+            "routed_to": "rotate"
+          },
+          "_also_see": {
+            "n_queries": 78,
+            "mrr": 0.551705,
+            "routed_to": "complex"
+          },
+          "_member_meronym": {
+            "n_queries": 4,
+            "mrr": 0.000488,
+            "routed_to": "rotate"
+          },
+          "_similar_to": {
+            "n_queries": 6,
+            "mrr": 0.888889,
+            "routed_to": "complex"
+          },
+          "_hypernym": {
+            "n_queries": 4,
+            "mrr": 0.000314,
+            "routed_to": "rotate"
+          },
+          "_has_part": {
+            "n_queries": 2,
+            "mrr": 0.000236,
+            "routed_to": "rotate"
+          }
+        },
+        "clean": {
+          "_member_of_domain_usage": {
+            "n_queries": 48,
+            "mrr": 0.567361,
+            "routed_to": "complex"
+          },
+          "_member_of_domain_region": {
+            "n_queries": 52,
+            "mrr": 0.260791,
+            "routed_to": "complex"
+          },
+          "_member_meronym": {
+            "n_queries": 502,
+            "mrr": 0.040369,
+            "routed_to": "rotate"
+          },
+          "_hypernym": {
+            "n_queries": 2498,
+            "mrr": 0.011629,
+            "routed_to": "rotate"
+          },
+          "_has_part": {
+            "n_queries": 342,
+            "mrr": 0.012004,
+            "routed_to": "rotate"
+          },
+          "_derivationally_related_form": {
+            "n_queries": 126,
+            "mrr": 0.000627,
+            "routed_to": "rotate"
+          },
+          "_instance_hypernym": {
+            "n_queries": 244,
+            "mrr": 0.079919,
+            "routed_to": "rotate"
+          },
+          "_synset_domain_topic_of": {
+            "n_queries": 228,
+            "mrr": 0.022785,
+            "routed_to": "rotate"
+          },
+          "_also_see": {
+            "n_queries": 34,
+            "mrr": 0.490511,
+            "routed_to": "complex"
+          },
+          "_verb_group": {
+            "n_queries": 2,
+            "mrr": 0.000262,
+            "routed_to": "rotate"
+          }
+        }
+      },
+      "relation_leak_composition": {
+        "_member_of_domain_usage": {
+          "leaked": 0,
+          "clean": 24,
+          "routed_to": "complex",
+          "leak_pct": 0.0
+        },
+        "_verb_group": {
+          "leaked": 38,
+          "clean": 1,
+          "routed_to": "rotate",
+          "leak_pct": 97.4
+        },
+        "_member_of_domain_region": {
+          "leaked": 0,
+          "clean": 26,
+          "routed_to": "complex",
+          "leak_pct": 0.0
+        },
+        "_member_meronym": {
+          "leaked": 2,
+          "clean": 251,
+          "routed_to": "rotate",
+          "leak_pct": 0.8
+        },
+        "_hypernym": {
+          "leaked": 2,
+          "clean": 1249,
+          "routed_to": "rotate",
+          "leak_pct": 0.2
+        },
+        "_has_part": {
+          "leaked": 1,
+          "clean": 171,
+          "routed_to": "rotate",
+          "leak_pct": 0.6
+        },
+        "_derivationally_related_form": {
+          "leaked": 1011,
+          "clean": 63,
+          "routed_to": "rotate",
+          "leak_pct": 94.1
+        },
+        "_also_see": {
+          "leaked": 39,
+          "clean": 17,
+          "routed_to": "complex",
+          "leak_pct": 69.6
+        },
+        "_instance_hypernym": {
+          "leaked": 0,
+          "clean": 122,
+          "routed_to": "rotate",
+          "leak_pct": 0.0
+        },
+        "_synset_domain_topic_of": {
+          "leaked": 0,
+          "clean": 114,
+          "routed_to": "rotate",
+          "leak_pct": 0.0
+        },
+        "_similar_to": {
+          "leaked": 3,
+          "clean": 0,
+          "routed_to": "complex",
+          "leak_pct": 100.0
+        }
+      },
+      "elapsed_sec": 307.38
+    }
+  },
+  "falsifiers_fired": {
+    "F1_wn18rr_null_is_blind_to_the_leak_too": true,
+    "F2_the_margin_lives_in_the_leaked_subset": true,
+    "F3_the_leak_is_spread_rather_than_concentrated": true
+  },
+  "verdict": "G92's 0.3611 and G105's 0.0256 both reproduce exactly. The 14.1x margin lives entirely in the 34.97% of WN18RR test triples whose (s,o) pair is already in train: 0.9707 there, 0.0333 on the rest -- 0.87x the null. G105 cross-dataset conclusion untouched; the GRADE is what is withdrawn."
+}

@@ -2727,3 +2727,31 @@ Of 2 captures, 1 is functional; the honest headline is "2 in 400 commits, 1 func
 sweep.json carries both numbers and check.sh fails if either is removed, because a
 severity limit that lives only in a paragraph is the limit that gets dropped when the
 number is quoted.
+
+2026-08-19 ATTACKER-1 · H253 · Measured the premise BEFORE claiming the row.
+  A row whose premise is unmeasured is H175's withdrawal. I measured WN18RR's same-pair leak
+  first (34.97%) and only then allocated an id and posted the CLAIM. The first measurement I
+  took was 69.81% and WRONG -- I unpacked WN18RR's text triples in FB15k-237's (p,s,o) order
+  when the files are (s,r,o). Had I claimed on the first number, the row would have been filed
+  on a figure twice its true size.
+
+2026-08-19 ATTACKER-1 · H253 · Checked G105's OWN number before attacking the grade it supports.
+  If WN18RR's null had been leak-inflated, the finding would have landed on ATOM-3's 0.0256
+  rather than on G92's grade, and attacking the wrong one would have been the "right about the
+  evidence, wrong about the conclusion" failure this repo has made twice. Delete every
+  leak-creating train edge, hold the test fixed: the null moves exactly 0.0000. Their number
+  is safe and the finding is where I said it was.
+
+2026-08-19 ATTACKER-1 · H253 · Did NOT edit HANDOFF.md or config.json, and said so.
+  HANDOFF.md 2 republishes 0.3611 as SOTA THIS TRAINER to every incoming agent with no leak
+  qualification, and .github/autoloop/config.json's split_nulls has no WN18RR row. Both are the
+  natural remedy and neither is mine: HANDOFF is AGENT-1's journal (H10, one writer per journal)
+  and the config is the autoloop owner's. Reported in livechat.log and CHANNEL.md instead.
+  A lane that silently edits another lane's headline is H19/H66 whatever its finding.
+
+2026-08-19 ATTACKER-1 · H253 · Published three wrong hypotheses of mine alongside the finding.
+  (1) leak 69.81%, wrong unpacking. (2) suspected G105 of G104's transposition defect -- it is
+  not one, pack() transposes. (3) hypothesised the leak lands on ComplEx-routed symmetric
+  relations -- wrong, _derivationally_related_form routes to rotate. All three were caught by
+  resolving from the code rather than by eye, and all three are in RESULT.md. An attacker who
+  publishes only the hypotheses that survived is reporting a hit rate, not a method.

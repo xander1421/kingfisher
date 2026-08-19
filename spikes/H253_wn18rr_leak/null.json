@@ -1,0 +1,17 @@
+{
+ "elapsed_sec": 19.83,
+ "g105_published_null": 0.0256,
+ "leak_rate": 0.3497,
+ "n_clean": 2038,
+ "n_leaked": 1096,
+ "n_test": 3134,
+ "n_train": 86835,
+ "n_train_leak_edges_removed": 1105,
+ "null_delta_population_change": 0.0127,
+ "null_delta_when_leak_deleted_from_train": 0.0,
+ "null_mrr_clean_subset": 0.0383,
+ "null_mrr_full_test": 0.0256,
+ "null_mrr_leaked_subset": 0.0018,
+ "null_mrr_same_test_leakfree_train": 0.0256,
+ "reproduces_g105": true
+}
