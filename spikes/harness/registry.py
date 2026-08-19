@@ -216,12 +216,26 @@ def merge(existing: dict, derived: dict) -> tuple:
             merged = dict(prior)
             if row.get("lane_pid", "-") not in ("", "-"):
                 merged["lane_pid"] = row["lane_pid"]
-            merged["evidence"] = f"{prior.get('evidence','')} + {row['evidence']}".strip(" +")
+            # H181b: IDEMPOTENCE. This appended unconditionally, so every run
+            # re-appended the same lock cite and the evidence field grew without
+            # bound — `pid-alive + pid-alive + ...`. A writer meant to be re-run
+            # must be safe to re-run; found by READING the output of the run that
+            # published it, which is the only way this class is ever caught.
+            merged["evidence"] = _join_evidence(prior.get("evidence", ""), row["evidence"])
             rows[cs] = merged
             kept.append(cs)
         else:
             rows[cs] = row
     return rows, kept
+
+
+def _join_evidence(prior: str, new: str) -> str:
+    """Append only cites not already present, so re-running is a no-op (H181b)."""
+    parts = [p.strip() for p in prior.split(" + ") if p.strip()]
+    for cand in [c.strip() for c in new.split(" + ") if c.strip()]:
+        if cand not in parts:
+            parts.append(cand)
+    return " + ".join(parts)
 
 
 def render(rows: dict, stamp: str) -> str:
@@ -371,6 +385,16 @@ def selfcheck() -> int:
         ck(rows2["LANE-B"]["address"] == "/tmp/sock",
            "F2 its address is not overwritten by a weaker source")
         ck("LANE-B" in kept, "F2 the preservation is REPORTED, not silent")
+
+        # H181b — a writer meant to be re-run must be safe to re-run. This grew
+        # the evidence field by one duplicate cite per run until it was read.
+        p2, rows_a, _ = _build_in(tmp)
+        p2.write_text(render(rows_a, "fixture"))
+        _, rows_b, _ = _build_in(tmp)
+        p2.write_text(render(rows_b, "fixture"))
+        _, rows_c, _ = _build_in(tmp)
+        ck(rows_b["LANE-B"]["evidence"] == rows_c["LANE-B"]["evidence"],
+           f"H181b re-running is idempotent (got {rows_c['LANE-B']['evidence']!r})")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
