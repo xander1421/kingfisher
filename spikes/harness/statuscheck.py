@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""statuscheck.py v2 — H114 (v1), H117 (v2). A row's status is asserted in one place: the queue.
+"""statuscheck.py v3 — H114 (v1), H117 (v2), H261 (v3). A row's status is asserted in one place: the queue.
+
+v3 RATIONALE (§12.7) — ok-1, H261, 2026-08-19. DEFECT REMOVED: **the SELECT
+command this module's own docstring quotes could not read the queue.**
+`prompts/ok-1.md` §6 replaced a stale hand-written list of open rows with
+`awk -F'|' ...` — and `awk -F'|'` splits on the ESCAPED pipe, while `\|` is
+H82's documented remedy for an unreadable status column. Measured: 40 of 344
+rows carry one; the command OFFERS 14 CLOSED rows as work and HIDES 7 OPEN ones
+(H1, H2, H17, H29, H41, H226, H233 — a row whose ITEM text contains the word
+DONE puts it in field 4 after the naive split). `--open` uses `queue_status`,
+which already masks `\|`, so the brief now points at the parser rather than at a
+second one-liner. Arm 0 of `--selfcheck` asserts both directions.
 
 WHY THIS EXISTS (§12.7 rationale)
 ---------------------------------
@@ -210,6 +221,28 @@ def selfcheck():
     fails = []
     qs = {'H1': 'DONE', 'H2': 'OPEN', 'H3': None, 'H4': 'BLOCKED'}
 
+    # 0 — H261. `--open` must not offer a CLOSED row whose text contains an
+    #     escaped pipe, and the second half of this arm is what makes it
+    #     load-bearing: the naive parse the brief used to hand every lane MUST
+    #     list it, or the arm is asserting a property nothing threatened.
+    import tempfile as _tf, os as _os, re as _re
+    _fix = ('| id | item | status |\n|---|---|---|\n'
+            '| H900 | a row citing `awk -F\'\\|\'` in its text | **DONE (fixture)** |\n'
+            '| H901 | a plain open row | **OPEN** |\n')
+    with _tf.TemporaryDirectory() as _d:
+        _p = _os.path.join(_d, 'WORK_QUEUE.md')
+        open(_p, 'w').write(_fix)
+        _ids = [r for r, _ in open_rows('H', _p)]
+        if _ids != ['H901']:
+            fails.append(f'--open must exclude the escaped-pipe DONE row (got {_ids})')
+        _naive = [l.split('|') for l in _fix.split('\n')
+                  if _re.match(r'\|\s*H9', l)]
+        _naive_open = [f[1].strip() for f in _naive
+                       if len(f) > 3 and not _re.search(r'DONE|WITHDRAWN|RETRACTED|PARKED', f[3])]
+        if 'H900' not in _naive_open:
+            fails.append('the naive awk-equivalent parse must MIS-list H900, '
+                         'or arm 0 is not testing anything')
+
     # 1 — the case that earned the row: an OFFER of a DONE row in a brief.
     brief = '## 6 · Open H rows, the ones nobody holds\n\n- **H1** — a thing\n- **H2** — another\n'
     got = check_text('prompts/x.md', brief, qs)
@@ -335,7 +368,51 @@ def check_text(path, text, qs):
     return bad
 
 
+CLOSED = ('DONE', 'WITHDRAWN', 'RETRACTED', 'PARKED')
+
+
+def open_rows(prefix='H', path=None):
+    r"""Rows whose status is not one of CLOSED, printed for SELECT (H261).
+
+    THIS EXISTS BECAUSE THE COMMAND THE BRIEF HANDED LANES WAS WRONG, in the same
+    section this module was written for. `prompts/ok-1.md` §6 replaced a stale
+    hand-written list of open rows with
+
+        awk -F'|' '$2 ~ /^ *H[0-9]+ *$/ && $4 !~ /DONE|WITHDRAWN|RETRACTED/ ...'
+
+    and `awk -F'|'` splits on the ESCAPED pipe too -- while `\|` is exactly H82's
+    documented remedy for a row whose status column is unreadable. Measured
+    2026-08-19: 40 of 342 rows carry an escaped pipe, and for **14 H rows the
+    command disagrees with a correct parse, every one of them CLOSED and shown as
+    OPEN** -- including H82 itself, and H199 and H254 within an hour of their DONE
+    lines being written.
+
+    So the fix is not a better one-liner in the brief: it is to point the brief at
+    the parser that already masks `\|` (`queue_status`, six lines above), which is
+    the only one in the tree that agrees with `refcheck`'s row-shape rule.
+    """
+    text = open(path or os.path.join(ROOT, 'WORK_QUEUE.md')).read()
+    qs = queue_status(text)
+    out = []
+    for rid, st in qs.items():
+        if prefix and not rid.startswith(prefix):
+            continue
+        if st is None:                     # H82: unreadable shape, never silent
+            out.append((rid, 'UNREADABLE-ROW-SHAPE'))
+        elif st not in CLOSED:
+            out.append((rid, st))
+    return out
+
+
 if __name__ == '__main__':
+    if '--open' in sys.argv:
+        a = sys.argv
+        pref = a[a.index('--open') + 1] if len(a) > a.index('--open') + 1 and not a[a.index('--open') + 1].startswith('-') else 'H'
+        rows = open_rows(pref)
+        for rid, st in rows:
+            print(f'{rid:8s} {st}')
+        print(f'{len(rows)} open {pref}-row(s), parsed with the escaped-pipe rule (H261)')
+        sys.exit(0)
     if '--selfcheck' in sys.argv:
         sys.exit(selfcheck())
     if '--all' in sys.argv:

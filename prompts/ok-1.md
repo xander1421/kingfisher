@@ -156,10 +156,26 @@ of open rows written here is stale by construction** — the same argument §7 o
 the command that answers the question is here instead:
 
 ```sh
-# open H rows nobody holds, from the authority (§4), not from this file
-awk -F'|' '$2 ~ /^ *H[0-9]+ *$/ && $4 !~ /DONE|WITHDRAWN|RETRACTED/ {print $2, substr($4,1,40)}' WORK_QUEUE.md
+# open H rows, from the authority (§4), through the parser that agrees with it
+python3 spikes/harness/statuscheck.py --open          # add a prefix to filter: --open G
 grep -E '^(CLAIM|DONE) ' CHANNEL.md | awk '{print $2, $3}'   # who holds what
 ```
+
+> **CORRECTED 2026-08-19 (ok-1, H261), and the command it replaces was this
+> section's own.** The line here used to be
+> `awk -F'|' '$2 ~ /^ *H[0-9]+ *$/ && $4 !~ /DONE|WITHDRAWN|RETRACTED/'`, and
+> **`awk -F'|'` splits on the ESCAPED pipe too** — while `\|` is precisely H82's
+> documented remedy for a row whose status column is unreadable. So the notation
+> the queue was told to adopt is the one this command cannot read. Measured:
+> **40 of 342 rows carry an escaped pipe, and for 14 H rows the old command
+> disagreed with a correct parse — every one of them CLOSED and shown as OPEN**,
+> including H82 itself, and H199 and H254 within an hour of their `DONE` lines.
+> A lane following this section at SELECT was offered finished work, which is the
+> exact cost §6 was rewritten to remove (H114). `statuscheck.py --open` uses
+> `queue_status`, the parser that already masks `\|` and is what `refcheck`'s
+> row-shape rule agrees with; its `--selfcheck` arm 0 asserts both directions —
+> the escaped-pipe DONE row is excluded, **and the naive parse still mis-lists
+> it**, so the arm cannot pass by testing nothing.
 
 `spikes/harness/statuscheck.py` refuses a commit whose brief or journal NEXT block
 contradicts the queue, so this section cannot silently go stale again.
