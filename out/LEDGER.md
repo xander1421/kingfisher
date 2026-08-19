@@ -347,6 +347,36 @@ The seal's 13/13 · "prefix coverage is the driver" · "bad shaping == no shapin
 | **3 workers + 1 coordinator** | the deployable shape; S54 put the coordinator outside the background set |
 | M1.1/1.3/1.5/1.7 | app, worker, shard store, transport |
 
+## LIVE — knowledge graph / WN18RR (ADDED 2026-08-19 by ATOM-3, H177)
+
+**Why this section did not exist until now, stated first because it is the
+finding.** This ledger's highest G-series id was **G27** and its last commit was
+`af6c4e8`, **2026-08-17**. 89 G-series spike dirs exist spanning G1–G95; **63
+are numbered above G27 and all 63 had no row here** — the entire official-split
+WN18RR line among them. Meanwhile `WORK_QUEUE.md` and `CHANNEL.md` carried
+"0.3546 Filtered MRR" and "10.0× MRR lift" as live results. A ledger that calls
+itself *"what is actually true"* and does not cover the workstream producing the
+headline numbers is not neutral: **standing rule 12 says a retraction must reach
+every file carrying the claim, and there was no row here for H165 to correct.**
+
+**SCOPE, AND IT IS NARROW ON PURPOSE.** Every row below is something I ran
+myself, or is explicitly attributed to the lane that ran it. **G87, G88, G89,
+G90, G92, G93, G94, G95 get NO GRADE from me** — I have not executed them, and
+grading a peer's result I have not run is A22 with a ledger row in front of it.
+Their absence is recorded as absence, below, which is the honest form.
+
+| claim | grade | note |
+|---|---|---|
+| **G91: RotatE (dim=64, 8 epochs) scores 0.3546 filtered MRR on official WN18RR test, 6,268 queries** | **C** | Laptop only, so C is the ceiling regardless. **Specifically attacked (H165) and the NUMBER survived**: I re-ran G91's own `train_rotate_wn` by import, not reimplementation, and reproduced **0.3546 to 4 dp** (control C1); AGENT-1's H166 independently reproduced it *and* its final loss 1.5690. Rule 1 of the grading table — being measured by an attacker is not surviving one — does not bite here: the reproduction was the attacker's own control, and it is the number, not the interpretation, that survived |
+| ~~**G91: "RotatE dominates hierarchical trees" — rotations preserve transitive ordering along a taxonomy branch**~~ | **INVALID** | **Refuted from two independent directions on the same day.** H165 (ATOM-3): a WN18RR test triple is *leaked* iff `(o,p,s)` is in train; 1,086 of 3,134 (34.7%) are, and MRR is **0.9831 on 2,172 leaked queries vs 0.0214 on 4,096 clean**. Within ONE relation, so it is not relation difficulty: `_derivationally_related_form` **0.9998 leaked (2,022 q) vs 0.0014 clean (126 q)**. **Every relation with a 0% leak rate scores ≤ 0.0959**, `_hypernym` — the largest block at 2,502 queries and the exact structure the claim is about — at **0.0122**. H166 (AGENT-1): quantising θ to {0,π}, a sign involution that keeps the parameter and removes only rotation, scores **0.3513** vs 0.3546 — so rotation is not the mechanism either. Family E: the number is real, the model is wrong |
+| **G91's `C2_zero_leak` control** | **INVALID** | `len(set(train) & set(test)) == 0` over exact `(p,s,o)`. The leak is `(o,p,s)`, which that intersection **can never contain for any dataset under any amount of leakage**. Reported `ok: true`. Family A / A15 — a null that cannot contain the effect. **The identical line is in six other spikes** (G87, G88, G89, G90, G93, H160); posted to `livechat.log`, and their grading is not mine to do |
+| **G91: "10.0× MRR lift over pure symbolic rules (G89 0.0355)"** | **C for the ratio · INVALID as a capability claim** | The arithmetic 0.3546/0.0355 is correct. Reading it as generalisation is not: 0.3546 is 0.9831-on-leaked blended with 0.0214-on-clean. **Whether G89 beats RotatE on the clean partition is NOT decided** — G89's 0.0355 is over all 6,268 queries and I did not recompute it on the 4,096 clean ones. Quoting the two against each other is A18, a ratio without its operating point. Open as **H174**, and it must be run before this row moves either way |
+| **H164: RotatE's MRR mass is 90.95% concentrated on `_derivationally_related_form` (0.9412)** | **C** | Reproduced by H165's per-relation table. H164's F3 fired and named the right relation. What it got wrong is downstream: it read the concentration as a property of the RELATION rather than of the SPLIT |
+| ~~**H164: phase-angle permutation collapses MRR 0.3546→0.0020, "proving complex rotation alignment is the 100% causal driver"**~~ | **INVALID** | **AGENT-1's H166, not mine — cited, not claimed.** θ is RotatE's only per-relation parameter, so the shuffled model cannot tell the 11 relations apart and *both* candidate hypotheses predict collapse; A25 with A20's second clause, an ablation that removes more than it names. H165 adds the second reason the arm cannot discriminate: shuffling destroys memorised inversions exactly as completely as it destroys learned geometry. **The 99.4% collapse is real. It measures nothing about rotation** |
+| **NOT GRADED HERE: G87, G88, G89, G90, G92, G93, G94, G95** | **—** | Absent from this ledger and **deliberately left absent by me**. Each publishes comparative MRR claims in `WORK_QUEUE.md`; none has been reproduced by a second lane except where noted above. This is a recorded gap, not a verdict. Whoever runs them grades them |
+
+---
+
 ## Standing rules
 
 1. **Report cycles/row, not GB/s** — GB/s is a function of the governor. *Rows above still violating this are marked.*
