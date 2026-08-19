@@ -1,0 +1,288 @@
+{
+ "spike": "G108_margin_scoreboard",
+ "recorded_utc": "2026-08-19T22:40:46Z",
+ "note": "G108: every G-series arm as a margin over its own split's null, grouped by (split, candidate set) and refusing to rank across groups.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes",
+   "head": "9688632370a6c54fec32975591875c1ff9c76539",
+   "clean": false,
+   "dirty_files": [
+    "spikes/G104_null_in_the_loop/null_in_the_loop.json",
+    "spikes/G104_null_in_the_loop/provenance.json",
+    "spikes/H213_census_scope/result.json",
+    "spikes/H245_evaluator_refusal_vs_crash/provenance.json",
+    "spikes/H245_evaluator_refusal_vs_crash/refusal_vs_crash.json",
+    "spikes/H250_veto_timing_and_paths/result.json",
+    "spikes/H251_third_state/provenance.json",
+    "spikes/H251_third_state/third_state.json",
+    "spikes/H255_pareto_baseline/pareto_baseline.json",
+    "spikes/H255_pareto_baseline/provenance.json",
+    "spikes/H259_headroom_normaliser/headroom.json",
+    "spikes/H259_headroom_normaliser/provenance.json",
+    "spikes/H262_spec_comparability/provenance.json",
+    "spikes/H262_spec_comparability/spec_comparability.json",
+    "spikes/M1_8_quorum3/run/store/index.db",
+    "spikes/G105_wn18rr_frequency_null/null_wn.json",
+    "spikes/G105_wn18rr_frequency_null/provenance.json",
+    "spikes/G107_wn18rr_leakfree/leakfree_wn.json",
+    "spikes/G108_margin_scoreboard/",
+    "spikes/G75_complex_gate/complex_emb.npz",
+    "spikes/G76_distmult_min10/distmult_emb.npz",
+    "spikes/G79_rotate_all_entity/rotate_emb.npz",
+    "spikes/G93_transitive_wn18rr/",
+    "spikes/G93_wn18rr_hybrid/",
+    "spikes/G97_minn_sweep/",
+    "spikes/G98_pairdisjoint_null/complex_emb_pd.npz",
+    "spikes/G98_pairdisjoint_null/rotate_emb_pd.npz",
+    "spikes/H179_generation_death/pg_sandbox/",
+    "spikes/H179_generation_death/sandbox/",
+    "spikes/H185_launcher_generation/sandbox/",
+    "spikes/H236_retirement_undone/sandbox/",
+    "spikes/H237_cache_certifies_itself/result.json",
+    "spikes/H267_extension_is_not_a_decision/",
+    "spikes/R2_local_tier/bench_nemotron-3.json",
+    "spikes/S91_multi_agent_quorum/",
+    "spikes/devsweep.json",
+    "spikes/harness/attribcheck.py"
+   ],
+   "diff_sha256": "30bf33243d3efaf7f3d577bd1150812e94c64f508d7aeeeb09aebbeb7e8e530b",
+   "diff_bytes": 18889
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/spikes": {
+   "files": 37,
+   "combined_sha256": "a7c88716db7473dc",
+   "per_file": {
+    "S60_bisect_commit/Cargo.toml": "e95fc2310c44fa69",
+    "S60_bisect_commit/Cargo.lock": "929a3c84e1810ada",
+    "S67_ecan_fixedpoint/Cargo.toml": "3447bec8c66c4b9f",
+    "S67_ecan_fixedpoint/Cargo.lock": "4f783fc9687aa867",
+    "G21_null_rust/Cargo.toml": "dcc646da49c7cea7",
+    "G21_null_rust/Cargo.lock": "84a84470e460d426",
+    "S75_pathmap_check/pmprobe/Cargo.toml": "984aaa490dd254b2",
+    "S75_pathmap_check/pmprobe/Cargo.lock": "2c8b3430ea9f3b0d",
+    "harness/.selfcheckall_demo_tmp/tmp4dop7pxr/Cargo.toml": "852456117ae94cf4",
+    "S15_android_device/fuelrun_min/Cargo.toml": "b20de2ed83f51568",
+    "S15_android_device/fuelrun_min/Cargo.lock": "a595eb798763a0d8",
+    "S15_android_device/fuelrun/Cargo.toml": "9c9aebdeb2a87331",
+    "S15_android_device/fuelrun/Cargo.lock": "ca244c5f568625fd",
+    "S14_mork_server/mork-server/Cargo.toml": "478c8314d29d7d38",
+    "S14_mork_server/mork-server/frontend/Cargo.toml": "97296cbc43b220a9",
+    "S14_mork_server/mork-server/experiments/morkl_interpreter/Cargo.toml": "d356bcb3d90b8428",
+    "S14_mork_server/mork-server/experiments/symbol_mapping/naive_map/Cargo.toml": "ff148dc0dec3e1d2",
+    "S14_mork_server/mork-server/experiments/symbol_mapping/bucket_map/Cargo.toml": "2f11a3258f0e81ae",
+    "S14_mork_server/mork-server/experiments/symbol_mapping/bucket_map_dependant_tests/Cargo.toml": "ce2cf660c17cc036",
+    "S14_mork_server/mork-server/experiments/expr/bytestring/Cargo.toml": "09f45cab6e55d3ec",
+    "S14_mork_server/mork-server/experiments/expr/array/Cargo.toml": "56c96937784da94d",
+    "S14_mork_server/mork-server/experiments/expr/dyck/Cargo.toml": "909af9cd7b895fa2",
+    "S14_mork_server/mork-server/experiments/expr/dyck/Cargo.lock": "545554e0da24bf2b",
+    "S14_mork_server/mork-server/server/Cargo.toml": "f1f4b8f8f26f9aac",
+    "S14_mork_server/mork-server/benchmarks/oeis/Cargo.toml": "1eebc15bf0b5ad15",
+    "S14_mork_server/mork-server/benchmarks/logic-query/Cargo.toml": "b9c84aba4b302239",
+    "S14_mork_server/mork-server/benchmarks/aunt-kg/Cargo.toml": "444511ba55a9fcea",
+    "S14_mork_server/mork-server/benchmarks/parmap/Cargo.toml": "f2ec62c224eed0ea",
+    "S14_mork_server/mork-server/benchmarks/simple_partest/Cargo.toml": "c968d048f5043e8b",
+    "S14_mork_server/mork-server/benchmarks/fizzbuzz/Cargo.toml": "74a27b49d09c08ca",
+    "S14_mork_server/mork-server/kernel/Cargo.toml": "c898837629a2e445",
+    "S55_mork_inproc/Cargo.toml": "4ed84b93b635e222",
+    "S55_mork_inproc/Cargo.lock": "bf46248fbccd0a97",
+    "S56_mork_amortise/Cargo.toml": "a05f5f56821962b4",
+    "S56_mork_amortise/Cargo.lock": "1eb1baeb28969732",
+    "S77_proof_bytes/pmproof/Cargo.toml": "ec572471f4ee8911",
+    "S77_proof_bytes/pmproof/Cargo.lock": "71ae4815710bd364"
+   }
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G108_margin_scoreboard/scoreboard.json",
+   "resolved": "/Users/victorianikolenko/kingfisher/spikes/G108_margin_scoreboard/scoreboard.json",
+   "sha256": "f0299aaa8e35fad31b4e3c7075d45dc21dee1629666a319751d6cd315e40d0c8",
+   "bytes": 60781,
+   "mtime": 1787179246,
+   "repro_sha256": "f0299aaa8e35fad31b4e3c7075d45dc21dee1629666a319751d6cd315e40d0c8",
+   "repro_excluded": [],
+   "compared_ts": 1787179246,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_more_than_one_GROUP_exists",
+   "must_fire_because": "if every arm shared one split and one candidate set there would be nothing to refuse and no reason for the row",
+   "can_fail_because": "all arms fall in a single group",
+   "null_must_contain": "the group keys and their sizes",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_groups": 2,
+    "groups": {
+     "pair_disjoint | train_support_of_p (same as G51)": 2,
+     "official_fb15k237 | all 14541 entities, filtered train+valid+tes": 21
+    }
+   }
+  },
+  {
+   "name": "C2_the_two_numbers_that_started_this_are_in_DIFFERENT_groups",
+   "must_fire_because": "my error was ranking them against each other. If they turn out to share a group, the correction is wrong and the original reading stands",
+   "can_fail_because": "G54's and G75's headlines share a (split, candidate set) group",
+   "null_must_contain": "both arms' split and candidate set",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "G54_headline": {
+     "arm": "C_dev_gated",
+     "mrr": 0.2313,
+     "split": "pair_disjoint",
+     "candidates": null,
+     "placed_on_the_scoreboard": false,
+     "refused_because": "the spike declares no candidate_set, so its MRR has no protocol and cannot be compared with any other arm -- guessing one would be supplying the input to my own comparison"
+    },
+    "G75_headline": {
+     "arm": "F_dir_select",
+     "mrr": 0.3034,
+     "split": "official_fb15k237",
+     "candidates": "all 14541 entities, filtered train+valid+test",
+     "placed_on_the_scoreboard": true
+    },
+    "same_slot": false
+   }
+  },
+  {
+   "name": "C3_every_ranked_arm_has_a_MEASURED_null_on_its_own_split",
+   "must_fire_because": "ranking an arm whose split has no null is the exact thing bar_rule forbids; the refusal list must absorb them",
+   "can_fail_because": "a ranked arm carries no null",
+   "null_must_contain": "the count ranked and the count refused",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "ranked": 23,
+    "refused": 106
+   }
+  },
+  {
+   "name": "C4_the_refusal_path_actually_FIRES",
+   "must_fire_because": "a scoreboard that refuses nothing has not been tested as a filter -- it would rank whatever it was handed",
+   "can_fail_because": "nothing is refused, so the filter is unproven",
+   "null_must_contain": "the refusal reasons and their counts",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_refused": 106,
+    "reasons": [
+     "the spike declares no candidate_set, so its MRR has no proto",
+     "the spike declares no split this scoreboard can resolve, so "
+    ]
+   }
+  },
+  {
+   "name": "C5_a_declared_split_disagreeing_with_its_own_n_test_is_caught",
+   "must_fire_because": "a split label is a claim about which triples were scored; n_test is the observable that can contradict it",
+   "can_fail_because": "no artifact disagrees, in which case this is a clean bill and not a finding",
+   "null_must_contain": "every disagreement found, or that there are none",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "n_mislabelled": 1,
+    "mislabelled": [
+     {
+      "artifact": "spikes/G94_ensemble_pairdisjoint/distmult.json",
+      "claims": "official_fb15k237",
+      "n_test": 46518,
+      "expected": 20466
+     }
+    ]
+   }
+  },
+  {
+   "name": "C6_the_arm_the_LOOP_SCORES_is_itself_unplaceable",
+   "must_fire_because": "the sharpest form of the row. G54's headline is what `--eval` publishes as filtered_mrr, and it declares no candidate_set -- so the number the loop maximises cannot be compared with anything, including its own successors",
+   "can_fail_because": "G54 declares a candidate set after all, in which case it lands on the board and this is an ordinary ranking row",
+   "null_must_contain": "what G54 declares and why it was refused",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "the_arm_eval_scores": "G54_slice_gated_lift C_dev_gated mrr 0.2313",
+    "declares_candidate_set": null,
+    "refused_because": "the spike declares no candidate_set, so its MRR has no protocol and cannot be compared with any other arm -- guessing one would be supplying the input to my own comparison",
+    "consequence": "the number the loop maximises cannot be placed beside any other arm in its own series"
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F2_the_arms_are_incomparable_even_after_pairing_with_nulls",
+   "must_fire_because": null,
+   "can_fail_because": "more than one candidate set appears among the ranked arms",
+   "null_must_contain": "the candidate sets found",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "candidate_sets": [
+     "all 14541 entities, filtered train+valid+test",
+     "train_support_of_p (same as G51)"
+    ]
+   },
+   "refutes": "that one ranked list across the G-series is possible",
+   "fires_when": "more than one candidate set appears among the ranked arms",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_an_arm_is_ranked_without_a_null_on_its_split",
+   "must_fire_because": null,
+   "can_fail_because": "any ranked arm lacks a measured null",
+   "null_must_contain": "the offending arms",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "ranked_without_null": []
+   },
+   "refutes": "that the scoreboard is trustworthy at all",
+   "fires_when": "any ranked arm lacks a measured null",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [
+  "F2_the_arms_are_incomparable_even_after_pairing_with_nulls"
+ ],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/spikes": {
+   "newest": 1787179246,
+   "from": "spikes/G108_margin_scoreboard/probe.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "the ranked arms turn out to share one split AND one candidate set, making a single cross-series ranking valid after all",
+ "carried_from_previous_record": [
+  "falsifier",
+  "carried_from_previous_record"
+ ]
+}
