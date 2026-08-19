@@ -3,24 +3,23 @@ A1 · turn loop is lines 448-676; $LOCK reads inside it: 2
   PASS  fixture thief is indistinguishable from a launcher to ps
   PASS  the launcher under test runs turns at all
   PASS    and it recorded itself as the holder
-A2 · turns before steal        2, after 8s        2; lock now 39770 (the thief)
+A2 · turns before steal        2, after 8s        2; lock now 50608 (the thief)
   PASS  a launcher that has lost the lock stops producing turns
   PASS    and says which pid holds the callsign now
-spikes/H232_two_lanes_one_lock/probe.sh: line 92: 39770 Terminated: 15          bash fake/run_loop.sh
+spikes/H232_two_lanes_one_lock/probe.sh: line 92: 50608 Terminated: 15          bash fake/run_loop.sh
   PASS  the L233 launcher is producing turns before its lock is touched
   PASS  a lane whose lock was DELETED keeps running
   PASS    and takes its own lock back
   PASS  a lock naming a live NON-launcher does not retire the lane
-spikes/H232_two_lanes_one_lock/probe.sh: line 118: 40701 Terminated: 15          sleep 30
+spikes/H232_two_lanes_one_lock/probe.sh: line 118: 51207 Terminated: 15          sleep 30
 A3 · live fleet, callsign -> launcher roots / lock
     callsign       roots with a turn in flight    lock
     AGENT-1        [3218]                         3218
     AGENT-2        [3358]                         3358
     ATOM-3         [3533]                         3533
     ATTACKER-1     [15094]                        15094
-    FUSE-1         [23528]                        None   <-- HOLDER IS NOT ONE OF THEM
     GEMINI-1       []                             4999
-    ok-1           [3619, 56520]                  56520   <-- TWO LANES ON ONE CALLSIGN
+    ok-1           [56520, 56618]                 56520   <-- TWO LANES ON ONE CALLSIGN
     callsigns with more than one live root: 1
 
 probe: 9 passed, 0 failed

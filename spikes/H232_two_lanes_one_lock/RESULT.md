@@ -107,6 +107,21 @@ running, and the contract's authority decides which one goes: **the lock names
 can consume the other's exit (§12.6, and `run_loop.sh`'s own refusal text says so),
 so a halt signal written by the duplicate could have killed the survivor instead.
 
+## The probe over-reports, and it did so against its own author
+
+Minutes after the duplicate was retired, A3 printed **`ok-1 [56520, 56618]`** — two
+roots again. `56618` was the retired tree's in-flight **turn subshell**, reparented
+to init when its launcher died: `ppid 1` is not the predicate *"a launcher loop"*,
+and no process attribute separates them. What separates them is whether a NEXT turn
+appears, which a snapshot cannot see. The caveat is now in the probe beside the
+table, and it does not weaken the finding: at 22:20 both roots had a live launcher
+loop — each had spawned the turn it was running, and 56520 has spawned more since —
+and the lock column is what arbitrates.
+
+The same run caught **suite litter**: `FUSE-1`, a fixture launcher from the hung
+pre-H241 run, was still alive with no lock ten minutes after that run was killed.
+Reaped by hand.
+
 ## Reproduce
 
 ```sh

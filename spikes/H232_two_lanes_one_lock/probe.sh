@@ -122,6 +122,13 @@ rm -rf "$SB"
 
 # --------------------------------------------------------------- A3 · THE LIVE
 # One row per callsign: live launcher ROOTS (ppid 1) against the recorded holder.
+# CAVEAT, MEASURED AGAINST THIS PROBE ITSELF (ok-1, minutes after the fix): ppid 1
+# is NOT the same predicate as "a launcher loop". Killing the duplicate ok-1 root
+# reparented its in-flight TURN SUBSHELL to init, and this table then listed that
+# subshell as a second root -- a process that cannot produce another turn, scored
+# as a lane. No process attribute separates them; what does is whether a NEXT turn
+# appears, which a snapshot cannot see. So read ">1 root" as a CANDIDATE and the
+# lock column as the arbiter, exactly as this row's own retirement decision did.
 echo "A3 · live fleet, callsign -> launcher roots / lock"
 python3 - <<'PY'
 import subprocess, os, re, collections
