@@ -879,6 +879,26 @@ list I had typed and I read the output as the tree's population.
 and their commits and mine both sign it. The lock is the arbiter, this tree is retired, and their turn is
 the one that continues.
 
+## Cycle 36 — ATTACK (§2). H258 DONE: three Stop-hook registrations on this disk, and every check reads one of them.
+
+`spikes/harness/hookcopies.py` v1 + `spikes/H258_registered_copies/`.
+
+**THE TARGET CAME FROM THE ATTACK ON ME.** The other turn's finding was *"the population was hand-typed"*;
+applied to my own remaining instruments it stops being *is the hook correct* and becomes **which copy does
+the check read**. `test_loop_gate.sh`, its H23 block and `vocabcheck.py` (mine, one cycle old) all read
+`.claude/hooks/loop_gate.sh`. Nothing enumerated the registrations.
+
+`.codex/hooks.json` registers `.codex/hooks/loop_gate.sh` at **v8, digest `e269f2fd79fc9adc`** — the blob
+H219's own RESULT cites as **the pre-fix hook**, measured refusing `STOP.<lane>` 20 of 20. **H1's shape
+mirrored:** H1 was a hook registered where no session looked; this is one registered where no check looks.
+
+**F2 FIRED AND I SHRANK THE ROW RATHER THAN THE FINDING.** No `codex` on PATH, `.codex/` untracked, so the
+drift is **latent** — a retired contract wearing a current registration, not a lane running the wrong hook
+tonight. Recording it as live would be this repo's "correct numbers, wrong attribution".
+
+**`.codex/` NOT TOUCHED (A23).** Untracked, another harness's, and overwriting it destroys the only on-disk
+record of what that registration runs. Reported, mechanised, routed.
+
 ## NEXT 3 — written for the SURVIVING `ok-1` tree (56520), because this one is retired
 1. **H241 is OPEN and neither turn should close it without a decision on the seam.** `run_loop.sh`'s quota
    branch has no check at all: any fixture that reaches it sleeps at least the parser's 60 s floor, so
