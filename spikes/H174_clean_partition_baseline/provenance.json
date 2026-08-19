@@ -1,0 +1,184 @@
+{
+ "spike": "H174_clean_partition_baseline",
+ "recorded_utc": "2026-08-19T15:45:44Z",
+ "note": "H174: G89 vs RotatE at ONE operating point \u2014 the non-leaked partition.",
+ "repos": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/corpus/wn18rr",
+   "head": "d37603392c7dddc90eda635d68847bfaac00d3e2",
+   "clean": false,
+   "dirty_files": [
+    "corpus/wn18rr/"
+   ],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/G89_wn18rr_symbolic_mining",
+   "head": "d37603392c7dddc90eda635d68847bfaac00d3e2",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  },
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H165_rotate_symmetry_leak",
+   "head": "d37603392c7dddc90eda635d68847bfaac00d3e2",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
+  }
+ ],
+ "manifests": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G89_wn18rr_symbolic_mining": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H165_rotate_symmetry_leak": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H174_clean_partition_baseline/result.json",
+   "sha256": "777693c3d16d6adfc6a601e10ea2fc0d38fdbbde69e8191d014270179a7cb9bb",
+   "bytes": 1456,
+   "mtime": 1787154344,
+   "compared_ts": 1787154344,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C1_reproduces_G89",
+   "must_fire_because": "ARM-FULL must land on G89's own published MRR or nothing here is about G89",
+   "can_fail_because": "a different MRR, i.e. G89 is not deterministic and neither of its numbers can be attacked or defended",
+   "null_must_contain": "ARM-FULL != published",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "arm_full": 0.0355,
+    "g89_published": 0.0355
+   }
+  },
+  {
+   "name": "C2_same_partition_as_H165",
+   "must_fire_because": "the clean split must be H165's exact partition: 2,048 triples / 4,096 queries",
+   "can_fail_because": "a different leak definition or an off-by-one, which would make the two systems' clean numbers incomparable",
+   "null_must_contain": "partition size mismatch",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "clean_triples": 2048,
+    "clean_queries": 4096,
+    "h165_clean_queries": 4096
+   }
+  },
+  {
+   "name": "C3_full_split_evaluated",
+   "must_fire_because": "ARM-FULL covers all 6,268 queries",
+   "can_fail_because": "a truncated test list",
+   "null_must_contain": "query count != 6268",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "full_queries": 6268
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_rotate_still_wins_on_clean",
+   "must_fire_because": null,
+   "can_fail_because": "G89-on-clean < RotatE-on-clean (0.0214)",
+   "null_must_contain": "G89 clean below RotatE clean",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "g89_clean": 0.0511,
+    "rotate_clean": 0.0214
+   },
+   "refutes": "that G91's 10.0x lift inverts once the leaked triples are removed",
+   "fires_when": "G89-on-clean < RotatE-on-clean (0.0214)",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2_run_is_void",
+   "must_fire_because": null,
+   "can_fail_because": "ARM-FULL does not reproduce G89's published MRR to 4 dp",
+   "null_must_contain": "ARM-FULL != published",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "arm_full": 0.0355,
+    "g89_published": 0.0355
+   },
+   "refutes": "that this run measured G89 at all",
+   "fires_when": "ARM-FULL does not reproduce G89's published MRR to 4 dp",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3_partition_mismatch",
+   "must_fire_because": null,
+   "can_fail_because": "clean split is not 2,048 triples / 4,096 queries",
+   "null_must_contain": "partition size mismatch",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "clean_triples": 2048,
+    "clean_queries": 4096
+   },
+   "refutes": "that this is H165's partition",
+   "fires_when": "clean split is not 2,048 triples / 4,096 queries",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "/Users/victorianikolenko/kingfisher/corpus/wn18rr": {
+   "newest": 1787149850,
+   "from": "corpus/wn18rr/SOURCE.txt"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/G89_wn18rr_symbolic_mining": {
+   "newest": 1787152328,
+   "from": "<HEAD commit>"
+  },
+  "/Users/victorianikolenko/kingfisher/spikes/H165_rotate_symmetry_leak": {
+   "newest": 1787153845,
+   "from": "<HEAD commit>"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if G89 scores below RotatE on the clean partition, G91's lift claim survives in weakened form and this attack is withdrawn"
+}

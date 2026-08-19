@@ -1,0 +1,58 @@
+{
+  "spike": "H174",
+  "settles": "the operating-point question H165 left open (A18)",
+  "timestamp": "2026-08-19 16:45:44",
+  "elapsed_sec": 6.87,
+  "partition": {
+    "definition": "clean iff (o,p,s) NOT in train.txt",
+    "clean_triples": 2048,
+    "clean_queries": 4096
+  },
+  "arm_full": {
+    "mrr": 0.0355,
+    "hits1": 0.0233,
+    "hits3": 0.0362,
+    "hits10": 0.0578,
+    "n_queries": 6268
+  },
+  "arm_clean": {
+    "mrr": 0.0511,
+    "hits1": 0.0352,
+    "hits3": 0.0508,
+    "hits10": 0.0823,
+    "n_queries": 4096
+  },
+  "comparands_read_from_disk": {
+    "g89_published_mrr": 0.0355,
+    "rotate_full_mrr": 0.3546,
+    "rotate_clean_mrr": 0.0214
+  },
+  "verdict_on_clean": {
+    "g89_symbolic": 0.0511,
+    "rotate_g91": 0.0214,
+    "g89_over_rotate": 2.3879
+  },
+  "tie_convention_note": "G89 mid-ranks (1+greater+equal//2, frequency-prior backoff at score 0); G91 is optimistic. H165 measured RotatE's optimistic and pessimistic MRR as identical (0.3546, 30 ties in 6,268 q), so the asymmetry cannot flatter RotatE. G89's mid-rank can only cost G89.",
+  "controls": {
+    "C1_reproduces_G89": {
+      "ok": true
+    },
+    "C2_same_partition_as_H165": {
+      "ok": true
+    },
+    "C3_full_split_evaluated": {
+      "ok": true
+    }
+  },
+  "falsifiers": {
+    "F1_rotate_still_wins_on_clean": {
+      "fired": false
+    },
+    "F2_run_is_void": {
+      "fired": false
+    },
+    "F3_partition_mismatch": {
+      "fired": false
+    }
+  }
+}
