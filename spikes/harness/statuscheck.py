@@ -329,7 +329,18 @@ def selfcheck():
     #        Everything above drives `check_text`; `pre-commit` runs `gate()`,
     #        and H117 found a fleet-stop living in exactly that gap.
     import tempfile, shutil, subprocess
-    root = tempfile.mkdtemp(prefix='.statuscheck_selfcheck.', dir=HERE)
+    # H216: THE WORKSPACE, YES — BUT NOT INSIDE A DECLARED DEP SUBTREE.
+    # `dir=HERE` put this fixture root inside `spikes/harness`, which ten spikes
+    # name in `deps=[...]`. A fixture that outlives its process — and
+    # `shutil.rmtree` in a `finally` never runs for a KILLED one — then reads as
+    # a dirty dependency tree and turns every one of those spikes red on a
+    # condition none of them caused. One such directory sat here for hours.
+    # `.scratch/` is gitignored (`.gitignore:111`), so it is inside the
+    # workspace for §10 and outside every dep subtree for D6. The comment above
+    # was right about the rail and wrong about the location.
+    _scratch = os.path.join(os.path.dirname(os.path.dirname(HERE)), '.scratch')
+    os.makedirs(_scratch, exist_ok=True)
+    root = tempfile.mkdtemp(prefix='.statuscheck_selfcheck.', dir=_scratch)
     t = os.path.join(root, 'repo')
     os.makedirs(t)
     try:

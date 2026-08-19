@@ -1,0 +1,44 @@
+{
+  "arms": [
+    {
+      "detail": "[]",
+      "name": "A1 no harness module seeds a fixture root with `dir=HERE` \u2014 the CLASS, checked over the whole directory rather than the two sites I knew about",
+      "pass": true
+    },
+    {
+      "detail": "['recordloss.py', 'statuscheck.py'] at eef507d",
+      "name": "A2 PRE-FIX both modules DID seed inside the dep subtree \u2014 if this arm ever goes quiet the pin is wrong, not the tree",
+      "pass": true
+    },
+    {
+      "detail": "25 spike(s)",
+      "name": "A3 spikes DO record `spikes/harness` as a dependency \u2014 the blast radius is not zero (the row's own F1), counted from the RECORDS and not from a path grep that reads 57",
+      "pass": true
+    },
+    {
+      "detail": ".gitignore:111:.scratch/\t.scratch/x",
+      "name": "A4 `.scratch/` is gitignored, so a fixture that outlives its process is invisible to `git status` as well as outside the dep subtree",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "A5 no self-check debris remains in `spikes/harness`",
+      "pass": true
+    },
+    {
+      "detail": "0 new entr(ies): []",
+      "name": "A6 running BOTH self-checks for real adds nothing to `spikes/harness` \u2014 the proxy arms above are only evidence for this one",
+      "pass": true
+    },
+    {
+      "detail": "[]",
+      "name": "A7 ...and they clean up after themselves in `.scratch/` on a normal exit (a KILLED one still cannot, which is why the LOCATION is the fix and not better cleanup)",
+      "pass": true
+    }
+  ],
+  "checks_fail": 0,
+  "checks_pass": 7,
+  "pin_prefix": "eef507d",
+  "row": "H216",
+  "spikes_declaring_dep": 25
+}
