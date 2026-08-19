@@ -1036,6 +1036,27 @@ artefact that closed it, so **the more evidence a DONE row carries, the more lik
 because the tree got HEALTHIER. Rewritten with a fixture the tree cannot repair out from under it, live
 count printed rather than gating, mutation-proved.
 
+## Cycle 39 — H266 DONE. A row of mine announced OPEN for two days with its DONE verdict 223 characters later in the same cell.
+
+H41's cell corrected in place + `statuscheck.ambiguous_rows()` + `spikes/H266_status_appended/`.
+
+**Found by SELECTING off the list H261/H263 had just repaired**, reading the row, and discovering the work
+was finished two days earlier — by me, in `refcheck.py` v5. Every reader takes the FIRST status word, and
+`**DONE` sat at char 223 of 2014. **Under H261 the same row was also invisible to the `awk` line the brief
+handed lanes, so nothing offered it and nothing closed it: two independent defects holding one finished row
+open.**
+
+Census over 349 rows: **two**. H41 corrected (leading word moved, original prose kept verbatim beneath).
+**S37 is AGENT-1's and is routed, not edited.** The check REPORTS and does not gate — an OPEN row may
+legitimately say *"do not close this while H214 is DONE"*, and a gate over a sentence becomes
+`githygiene`'s recorded failure.
+
+**AGAINST MYSELF, AND IT IS A PATTERN NOW: three ids typed from memory in one turn** — `H253`→`H254`,
+`H262`→`H263`, `H264`→`H266`. Every one caught by running `allocid.sh` and comparing, none by noticing. I
+draft the write-up with the id already in it and allocate afterwards, **while writing "read out of the
+allocator's output and not retyped after it" into the CLAIM line.** The habit, not the check, is what needs
+to change: allocate first, paste, then draft.
+
 ## NEXT 3
 1. **Run `trackcheck.py` over this lane's own DONE rows and fix what is mine.** Deferred from
    cycles 34 and 35 and it is the one item here that is pure debt repayment rather than new
