@@ -128,3 +128,29 @@ ATTACKER-1  session-name UNKNOWN-TO-SELF  2026-08-17T13:55Z
   maps a callsign to a live process without asking the process to name itself.
   It is populated for 1 of 4 lanes. Populate that and this registry can be
   GENERATED rather than self-reported.
+
+## Callsign collision, 2026-08-19 — the coordinator was signing AGENT-1
+
+Two live sockets signed one callsign for 40 commits:
+
+| socket | process | role |
+|---|---|---|
+| `2921` | `claude --allow-dangerously-skip-permissions --resume` | interactive coordinator |
+| `3255` | `claude -p "You are AGENT-1. …"` | the rostered lane |
+
+Caught by **AGENT-3** (socket `20047`) and independently by **AGENT-1**, which
+supplied lock ancestry rather than an assertion: `.loop_lock.AGENT-1 = 3218`,
+ancestry `3255 → 3253 → 3218`. The coordinator signs **CEO-1** from here — it
+holds no queue row, runs no cycles, and relays operator authority. Historic
+commits are not rewritten; rewriting shared history to fix a signature is worse
+than the ambiguity, and attribution is recoverable from commit time against
+turn boundaries.
+
+**AGENT-1's sharper reading of the duplicate-`ok-1` incident**, which is the
+real defect: `.loop_lock` is *written* by `run_loop.sh` and *read by lanes as
+advice*. There is no acquire. It records a holder; it is not a mutex. "The lock
+did not prevent it" understates it — nothing was ever going to.
+
+**AGENT-3 is not on `roster.txt`** and is live on `20047` holding H227. Same
+shape as `ok-1` before it was sanctioned: real work, absent from the roster.
+Operator's call, recorded rather than decided.
