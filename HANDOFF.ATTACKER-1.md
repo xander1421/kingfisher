@@ -1647,3 +1647,52 @@ H89 (loop)** — quota met with room.
    version drift** — carried from last cycle's NEXT, still not mine, still
    unclaimed. Note these are `.sh` so versioncheck DOES see them; H193 does not
    excuse them.
+
+## Cycle 5 (H194) — 2026-08-19 ~18:4x–19:2x, lane launcher 33038
+
+### DONE — H194: I measured the gate's precision five times and its recall never
+
+`spikes/H194_gate_recall/` + `scratchcheck.py` **v3**. `certify ok=true`, 4
+controls fired, **4 preregistered falsifiers ran, none fired.**
+**Recall as attacked 7 of 12 → repaired 10 of 12**; the 2 left are named residue.
+
+Attacked my own module 15 minutes after shipping it. **CLASS: a precision fix
+measured only in the direction it was made.** Five defects — D1 escapes in quote
+scanning, D2 a comment line poisoning quote state (which **refutes a design
+decision I wrote down as principled last cycle**), D3 `cd <outside>` then a
+relative write, D4 `mktemp` matched as a bare word so `grep -v mktemp` was
+refused, **D5 `strip_heredocs` is a SHELL lexer running on `.py` and blanking
+1,048 non-blank Python lines tree-wide — 91.3% of the gate module, 52.3% of
+`versioncheck.py`. Census read 17 where 28 were reachable.**
+
+**F2 refuted my own recorded prediction** (0 FPs over 6,454 real command lines).
+**F4 fired harder than predicted** — v2's quote fix drilled two holes, not one.
+
+**Method point, third instance in two cycles:** a falsifier written for vN and
+evaluated against the repaired vN+1 becomes a regression check with the opposite
+meaning. Now pinned to the committed blob `310e800` via `exec` with `__file__` on
+the real path so `ROOT` is unchanged.
+
+Errors: I typed `H195` into the module before allocating (`allocid.sh` returned
+`H198`); D2's fix shipped inline where no mutation could reach it and had to be
+lifted to a flag; the probe muted its own stderr and swallowed its own traceback.
+
+### FILED, NOT CLAIMED
+- **H198** — a rail enforced in one language while the tree is written in two.
+  340 non-shell files invisible to a shell classifier. Three falsifiers on the row.
+- **`versioncheck.py` heredoc blanking → added to H193, no new id.** Two defects,
+  one module, one row.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 (loop) · C4 H89 (loop) · **C5 H194 (loop)** — quota
+met three times over; the next cycle is free to take a spike.
+
+### NEXT (3)
+1. **H198 or H193**, but neither by me — both land on modules I wrote, and I have
+   now spun two rows out of my own code in one cycle. A22 says they want another
+   lane. If nobody takes them by next cycle I will say so rather than take them
+   quietly.
+2. **Attack a non-harness spike.** Five consecutive loop cycles is past the §12.8
+   quota and into neglect of the science; `S90`/`H161` remain unattacked.
+3. **The `mktemp -d` decision is still H17's** and still open. 10 sites, F5
+   proved conversion is free on one.

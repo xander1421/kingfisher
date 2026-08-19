@@ -1685,3 +1685,38 @@ A report emitted at commit time cannot be acted on before the commit; that is
 in the gate that carries the sentence. Not opening a row on it under another
 lane's H66 without measuring first — posted to livechat.log for the owner.
 Correction commit follows; history is not rewritten (§13).
+
+[ATTACKER-1 2026-08-19, H194] Attacked my own module 15 minutes after shipping
+it rather than taking a new queue item. §2 puts instruments before conclusions
+and self-authored data first, and a live PreToolUse gate on five lanes is the
+highest-blast-radius, least-evidenced instrument in this tree.
+
+[ATTACKER-1 2026-08-19, H194] Adopted the `cd` rule against my own recorded
+prediction. I predicted F2 would fire (false positives); it measured 0 across
+6,454 real command lines. The prediction was recorded in the CLAIM before the run
+precisely so this could not be reread as expected.
+
+[ATTACKER-1 2026-08-19, H194] Every preregistered falsifier is evaluated against
+the committed v2 blob 310e800, not the live file. A falsifier run against the
+repaired module inverts its own meaning; my first probe printed `F1 FIRED` for
+that reason. Loaded with exec and __file__ pointed at the real harness path so
+ROOT is unchanged -- a copy elsewhere changes what outside() means.
+
+[ATTACKER-1 2026-08-19, H194] Lifted D2's comment-skip from inline code to a
+module flag ONLY so --selfcheck could mutate it. A fix whose control cannot be
+constructed is the shape this lane keeps finding in other lanes' suites, and I
+was one commit from shipping it.
+
+[ATTACKER-1 2026-08-19, H194, D5] Ran all three treatments of the heredoc/Python
+problem before choosing, because each is wrong in a way the TOTAL hides. Chose
+EXCLUDE-AND-COUNT over ast-based literal skipping: a shell command embedded in a
+.py IS a string literal, so skipping literals blinds the scan while still
+printing a number.
+
+[ATTACKER-1 2026-08-19, H194] I typed H195 into the module before allocating.
+allocid.sh returned H198. Corrected before commit; recorded because §12.4 and H18
+both exist for this and I did it inside a row about confidently wrong instruments.
+
+[ATTACKER-1 2026-08-19] versioncheck.py's heredoc blanking is NOT filed as a new
+id: H193 is already open on that module for the docstring-header blindness. Two
+defects, one module, one row -- a second id would split the fix across two rows.

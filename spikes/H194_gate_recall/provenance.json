@@ -1,0 +1,179 @@
+{
+ "spike": "H194_gate_recall",
+ "recorded_utc": "2026-08-19T16:44:33Z",
+ "note": "H194 \u2014 recall of the \u00a710 gate, never measured. ATTACKER-1, 2026-08-19.",
+ "repos": [
+  {
+   "path": "spikes/harness",
+   "head": "8f02703f6eaf85ba04233616bd56674b40f3e363",
+   "clean": false,
+   "dirty_files": [
+    "spikes/harness/scratchcheck.py",
+    "spikes/harness/fleetcensus.sh"
+   ],
+   "diff_sha256": "8ed2116ce3da647390c7284dd9eaa36e5b3c0e9a7dc46dc28a2e699f55c1d757",
+   "diff_bytes": 18262
+  }
+ ],
+ "manifests": {
+  "spikes/harness": {
+   "files": 0,
+   "combined_sha256": "44136fa355b3678a",
+   "per_file": {}
+  }
+ },
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H194_gate_recall/falsifiers.json",
+   "sha256": "091e18afa2752e01c99fbd1f94bcd76c239bb5a70f7e0364c1248d70c62efcdb",
+   "bytes": 2674,
+   "mtime": 1787157873,
+   "compared_ts": 1787157873,
+   "compared_clock": "mtime"
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+  "cargo_ndk": "cargo-ndk 4.1.2",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "recall_moved_7_to_10_of_12",
+   "must_fire_because": "the row claims a recall defect; if recall did not move, nothing was fixed",
+   "can_fail_because": "if any of the three repaired cases still returned clean through the live hook, the count stays at 7 or 8",
+   "null_must_contain": "v3 must be capable of scoring 7 like v2 \u2014 the two run the same 12 cases through the same hook contract, and 9 of the 12 are verdict-identical between them",
+   "fired": true,
+   "detail": "measured on the committed v2 blob 310e800 and on v3; the 2 still missed are the residue v2 already named",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    "7 of 12",
+    "10 of 12"
+   ]
+  },
+  {
+   "name": "no_existing_verdict_changed",
+   "must_fire_because": "a repair must not quietly reclassify cases that were already settled",
+   "can_fail_because": "any of the 23 v2 controls flipping verdict under v3 lands in `verdict_changed_on` and this goes red",
+   "null_must_contain": "v2's own control set must be capable of DISAGREEING with v3 \u2014 it disagrees on the three repaired cases by construction, which is why those are excluded from this arm and counted in C1 instead",
+   "fired": true,
+   "detail": "23 controls rechecked, 0 changed",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    23,
+    0
+   ]
+  },
+  {
+   "name": "per_fix_mutation_lands_and_isolates",
+   "must_fire_because": "a fix whose control cannot be constructed is not evidence the fix works",
+   "can_fail_because": "D2 first shipped INLINE, where no mutation could reach it; it was lifted to a module flag precisely so this control could exist at all",
+   "null_must_contain": "each mutation must leave the OTHER cases green \u2014 asserted explicitly in --selfcheck, so a mutation that reddened everything would fail its own arm",
+   "fired": true,
+   "detail": "--selfcheck: scratchcheck: 50 passed, 0 FAILED; M3 reverts D1, M4 reverts D2, M5 reverts D3, each taking only its own case red",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    50,
+    0
+   ]
+  },
+  {
+   "name": "census_measured_in_both_directions",
+   "must_fire_because": "H194's whole charge is a precision fix measured only in the direction it was made; this artifact must not repeat it",
+   "can_fail_because": "a census that returned the same total under all three treatments would be measuring nothing",
+   "null_must_contain": "the census must be capable of moving in EITHER direction under these changes \u2014 it went 16 -> 24 when the shell lexer stopped blanking Python, then 24 -> 17 when Python was excluded and counted",
+   "fired": true,
+   "detail": "with a shell lexer applied to Python (blanking 1,048 non-blank lines); without it (7 new rows, all this module's own fixtures and docstring prose); and with Python EXCLUDED AND COUNTED. scratchcheck --scan: 17 write position(s) outside the workspace in 98 shell file(s)\n  NOT SCANNED: 340 non-shell file(s). This is a SHELL classifier; Python writes (`open(p,'w')`, `tempfile.mkdtemp()`, `os.makedirs`) are invisible to it and are filed as H198. Counted here so absent cannot be mistaken for clean (H186).",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": [
+    16,
+    24,
+    17
+   ]
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1",
+   "must_fire_because": null,
+   "can_fail_because": "the three unnamed misses do NOT reproduce through the live hook contract",
+   "null_must_contain": "the hook must be capable of refusing these \u2014 it refuses 7 of the same 12 cases in the same run, so a blanket permit is excluded",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"fires\": false, \"hook_agrees_with_helper\": true, \"measured_on\": \"310e800\", \"unnamed_caught_by_v2_hook\": {\"cd_then_relative\": false, \"comment_apostrophe\": false, \"escaped_quote\": false}}"
+   ],
+   "refutes": "I am attacking a function and not the gate, and the row is withdrawn",
+   "fires_when": "the three unnamed misses do NOT reproduce through the live hook contract",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F2",
+   "must_fire_because": null,
+   "can_fail_because": "covering `cd` costs a false positive on this repo's own real commands",
+   "null_must_contain": "the corpus must be capable of producing a hit \u2014 6,454 real command lines, and the same rule fires on the constructed case immediately",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"cd_rule_hits_in_negative_controls\": [], \"cd_rule_hits_in_tracked_source\": [], \"corpus_command_lines\": 6667, \"fires\": false, \"predicted_in_claim\": \"F2 DOES fire on cd\"}"
+   ],
+   "refutes": "`cd` is documented residue like the variable case, NOT a rule, because a gate that refuses honest traffic gets bypassed",
+   "fires_when": "covering `cd` costs a false positive on this repo's own real commands",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F3",
+   "must_fire_because": null,
+   "can_fail_because": "the repaired `_in_quotes` changes the verdict on any existing check",
+   "null_must_contain": "v2's controls must be capable of flipping \u2014 they flip on the three repaired cases, which is why those are measured separately",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"fires\": false, \"v2_controls_rechecked_under_v3\": 23, \"verdict_changed_on\": []}"
+   ],
+   "refutes": "the fix is a behaviour change, not a repair, and each changed case ships only if re-justified individually",
+   "fires_when": "the repaired `_in_quotes` changes the verdict on any existing check",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  },
+  {
+   "name": "F4",
+   "must_fire_because": null,
+   "can_fail_because": "v2 without quote-awareness misses at least as many of the 12 as v2 with it",
+   "null_must_contain": "the neutralisation must be capable of changing nothing \u2014 asserted in probe.py, which refuses the run if pre == post",
+   "fired": false,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": [
+    "{\"drilled_by_the_fix\": [\"escaped_quote\", \"comment_apostrophe\"], \"fires\": false, \"measured_on\": \"310e800\", \"predicted_in_claim\": \"F4 does NOT fire; v1 catches escaped_quote\", \"v2_misses_WITHOUT_quote_awareness\": 3, \"v2_misses_WITH_quote_awareness\": 5}"
+   ],
+   "refutes": "\"my fix drilled the hole\" is FALSE, the trade never happened, and I withdraw that sentence from the record whatever the fix turns out to be",
+   "fires_when": "v2 without quote-awareness misses at least as many of the 12 as v2 with it",
+   "verdict": "survived \u2014 the falsifier did not fire"
+  }
+ ],
+ "falsifiers_fired": [],
+ "no_deps_reason": null,
+ "source_mtimes": {
+  "spikes/harness": {
+   "newest": 1787157832,
+   "from": "spikes/harness/scratchcheck.py"
+  }
+ },
+ "problems": [],
+ "ok": true,
+ "falsifier": "if the three unnamed misses had not reproduced through the live hook contract on the committed v2 blob (F1), I would have been attacking a helper function rather than the gate and the row would be withdrawn. They reproduced, 3 of 3."
+}

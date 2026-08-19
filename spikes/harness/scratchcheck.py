@@ -1,5 +1,39 @@
 #!/usr/bin/env python3
-# scratchcheck.py v2 — H89. ATTACKER-1, 2026-08-19.
+# scratchcheck.py v3 — H89 (v1, v2), H194 (v3). ATTACKER-1, 2026-08-19.
+# ==== v3 ====
+# H194, AND IT IS AN ATTACK ON v2 BY ITS OWN AUTHOR FIFTEEN MINUTES AFTER
+# SHIPPING IT. DEFECT CLASS REMOVED: A PRECISION FIX MEASURED ONLY IN THE
+# DIRECTION IT WAS MADE. v2 was five rounds of false-positive work (census
+# 29->16, every removal individually verified) and NOT ONE round constructed a
+# write the gate SHOULD catch and does not. Recall was never measured. Measured
+# now over 12 constructed commands: v2 caught 7 of 12.
+#   D1 · `_in_quotes` ignored BACKSLASH ESCAPES, so a `\"` inside a double-quoted
+#        string desynced quote state and a following redirect read as quoted --
+#        MISSED WRITE. Now escape-aware, and single quotes take no escapes,
+#        which is what the shell does.
+#   D2 · A COMMENT LINE IN A MULTI-LINE COMMAND poisoned quote state for every
+#        line after it (`# don't` opens a span that never closes). v2 put the
+#        comment skip in `scan_source` ONLY, on my written reasoning that "a
+#        comment cannot reach the hook, which is handed a whole command". THAT
+#        REASONING WAS WRONG: a multi-line Bash command carries comment lines and
+#        they reach the hook. Running it is what showed that; reading it back
+#        three times did not.
+#   D3 · `cd <outside> && <relative write>` was invisible. Not residue I had
+#        named -- a plain, natural way to write outside the tree.
+#   D4 · `mktemp` matched as a bare WORD, so any command merely MENTIONING it
+#        was refused -- `grep -v mktemp scan.out` is a read. Pre-existing since
+#        v1 and found the only way it could be: the gate refused my own command
+#        while I was investigating its own census. Now command-position only.
+#        Note what this says about D1-D3's evidence: recall was measured on 12
+#        CONSTRUCTED commands and precision on source lines plus nine
+#        hand-written negatives, and NEITHER corpus contained the commands this
+#        lane actually types. Both numbers are floors.
+# D1 AND D2 WERE DRILLED BY v2's OWN QUOTE-AWARENESS FIX: neutralise
+# `_in_quotes` and the misses drop 5 -> 3. The fix that removed a false positive
+# introduced two false negatives, and only one direction was ever measured.
+# D3's rule was measured BEFORE adoption against 6,454 real command lines from
+# the tracked tree plus every negative control: ZERO false positives. That
+# REFUTES my own recorded prediction that it would cost some.
 # ==== v2 ====
 # THIS HEADER IS DUPLICATED AS A `#` COMMENT ON PURPOSE, and the reason is a
 # defect found by trying to bump this file's version: `versioncheck.py` matches
@@ -10,7 +44,7 @@
 # ITSELF. Filed as H193 with the measurement; NOT fixed here, because fixing the
 # site while naming the class is what §12.1 forbids. These two lines make THIS
 # file's bump checkable now; they are not the remedy.
-"""scratchcheck.py v2 — H89 (v1 and v2, ATTACKER-1, 2026-08-19).
+"""scratchcheck.py v3 — H89 (v1, v2), H194 (v3). ATTACKER-1, 2026-08-19.
 
 ==== v2, H89 — THE GATE REFUSED THE WRITE OF ITS OWN RESULT.md ==============
 D1 · A HEREDOC BODY IS DATA, NOT COMMANDS. v1 was handed the whole Bash command
@@ -177,7 +211,27 @@ LAST_ARG_WRITERS = re.compile(r'\b(?:cp|mv|rsync|ln|install)\b((?:\s+[^\s;|&<>]+
 # /var/folders/... — outside. Three sites in this tree already pass a template
 # under the workspace (`test_h75_routing.sh`, `test_h66.sh`, `fleetcensus.sh`),
 # so the compliant form is not hypothetical: it is in use here, unremarked.
-MKTEMP = re.compile(r'\bmktemp\b([^;|&]*)')
+# D4 (v3, H194). `mktemp` must be in COMMAND POSITION. The rule used to be a
+# bare word match, so ANY command merely MENTIONING the word was refused --
+# `grep -v mktemp scan.out` is a read and was rejected as a write. Found by the
+# gate refusing my own investigation of its own census, which is precisely what
+# C2 ("reads are not writes") exists to prevent, at the one rule C2's corpus
+# never covered. PRE-EXISTING SINCE v1, not introduced by v3: the precision
+# corpus was source lines plus nine hand-written negatives, and not one of them
+# mentioned the word as an argument. That is H194's own thesis one level down --
+# a corpus that does not contain the commands anyone actually types.
+MKTEMP = re.compile(r'(?:^|[;&|`(]|\$\()\s*mktemp\b([^;|&]*)')
+# D3 (v3, H194): a directory change out of the workspace, and any write operator.
+# Split into two patterns rather than one, because the `cd` target and the write
+# are in different clauses and a single regex spanning them would be unreadable
+# and would silently depend on their order.
+# Lifted to a module flag ONLY so `--selfcheck` can mutate it. v3's first form
+# had the comment drop inline, which meant NO mutation could reach it -- and a
+# fix whose control cannot be constructed is the shape this lane keeps finding
+# in other lanes' suites.
+_DROP_COMMENTS = True
+CD_OUT = re.compile(r'(?:^|[;&|]|\s)cd\s+' + _P)
+WRITE_OP = re.compile(r'(?:>>?[^&]|\btee\b|\bcp\b|\bmv\b|\btouch\b|\bmkdir\b|\bof=)')
 
 
 def outside(path):
@@ -218,9 +272,17 @@ def _in_quotes(cmd):
     spans for every rule would delete a true positive to remove a false one.
     Operator position is quote-sensitive; argument position is not.
     """
-    inside, q = [False] * len(cmd), None
+    inside, q, esc = [False] * len(cmd), None, False
     for i, c in enumerate(cmd):
-        if q is None and c in '"\'':
+        if esc:
+            esc = False
+        elif c == chr(92) and q != chr(39):
+            # A backslash escapes the next character -- EXCEPT inside single
+            # quotes, where the shell gives it no special meaning. v2 ignored
+            # escapes entirely, so a doubled-quote inside a double-quoted string
+            # desynced the state and every redirect after it read as quoted.
+            esc = True
+        elif q is None and c in '"' + chr(39):
             q = c
         elif q == c:
             q = None
@@ -228,10 +290,25 @@ def _in_quotes(cmd):
     return inside
 
 
+_in_quotes_real = _in_quotes
+
+
 def write_targets(cmd):
     """[(kind, path)] for every out-of-workspace WRITE position in `cmd`."""
     if chr(10) in cmd:
-        cmd = chr(10).join(strip_heredocs(cmd.split(chr(10))))
+        lines = strip_heredocs(cmd.split(chr(10)))
+        # D2 (v3, H194). DROP WHOLE-COMMENT LINES BEFORE ANY CLASSIFICATION.
+        # v2 did this in `scan_source` alone and I wrote down why: "a comment
+        # cannot reach the hook, which is handed a whole command." A multi-line
+        # Bash command carries comment lines and they DO reach the hook, and an
+        # apostrophe in one (`# don't`) opened a quote span that never closed,
+        # so every redirect below it read as quoted and was missed. The
+        # reasoning was wrong, not the placement -- so the skip belongs in BOTH,
+        # and `scan_source` keeps its own for the separate reason that it never
+        # sees a hook payload at all.
+        if _DROP_COMMENTS:
+            lines = [l for l in lines if not l.lstrip().startswith('#')]
+        cmd = chr(10).join(lines)
     hits = []
     quoted = _in_quotes(cmd)
     for name, rx, gi in WRITE_POSITIONS:
@@ -251,6 +328,17 @@ def write_targets(cmd):
             hits.append(('mktemp', '$TMPDIR (no template)'))
         elif outside(tmpl[0]):
             hits.append(('mktemp', tmpl[0].strip('\'"')))
+    # D3 (v3, H194). `cd <outside> && <relative write>`. Needs WHOLE-COMMAND
+    # context, so it cannot be a WRITE_POSITIONS entry: the path that lands
+    # outside never appears in the command at all. Adopted only after measuring
+    # it against 6,454 real command lines from the tracked tree and every
+    # negative control -- ZERO false positives, which REFUTED my prediction that
+    # it would cost some and is the only reason it is a rule rather than a
+    # documented limitation.
+    m = CD_OUT.search(cmd)
+    if m and outside(m.group(1)) and WRITE_OP.search(cmd):
+        hits.append(('cd-then-write', m.group(1).strip(chr(39) + '"')))
+
     # dedupe, order-preserving
     seen, out = set(), []
     for h in hits:
@@ -261,14 +349,62 @@ def write_targets(cmd):
 
 
 def scan_source(paths):
-    """The source half. [(file, lineno, kind, path)] over tracked-ish files."""
-    found = []
+    """The source half, SHELL ONLY. [(file, lineno, kind, path)].
+
+    Returns `(rows, skipped)` via `scan_source_counted`; this name keeps the
+    plain list for callers that only want rows.
+    """
+    return scan_source_counted(paths)[0]
+
+
+def scan_source_counted(paths):
+    found, skipped = [], []
     for p in paths:
+        if not p.endswith(('.sh', '.hook')):
+            skipped.append(p)
+            continue
         try:
             with open(p, errors='replace') as f:
                 # Whole file, then heredoc bodies blanked, THEN line by line.
                 # Reading line by line cannot see the heredoc a line sits in,
                 # which is how the plist XML in bringup.sh was read as a redirect.
+                # D5 (v3, H194). THE STRIPPER IS A SHELL LEXER AND ONLY SHELL
+                # GETS IT -- and the same is true of the classifier above it,
+                # which is why `--scan` now takes only `.sh`/`.hook` and SAYS SO.
+                # Working through it in order, because both wrong answers look
+                # right from the total:
+                #   * stripping heredocs from `.py` blanked 1,048 non-blank
+                #     Python lines tree-wide (91.3% of THIS file, 95.9% of
+                #     `recordloss.py`), because a PROSE MENTION of `<<'EOF'` in a
+                #     docstring opens a heredoc that never closes. Census read 17
+                #     where 28 positions were reachable;
+                #   * NOT stripping them surfaced 7 rows, every one of them this
+                #     module's own docstring prose and FIXTURE LISTS -- which is
+                #     `versioncheck.py` v1 flagging its own test suite, the
+                #     defect `strip_heredocs` was written for;
+                #   * skipping Python string literals via `ast` would work and is
+                #     wrong: a shell command embedded in a `.py` IS a string
+                #     literal, so it would blind the scan to Python entirely
+                #     while still reporting a number.
+                # The instrument is a SHELL classifier. On a `.py` it can only
+                # ever find shell embedded in strings, and in this tree that is
+                # fixtures. So Python is EXCLUDED AND COUNTED IN THE OUTPUT
+                # rather than silently mis-scanned -- H186's distinction, that a
+                # thing absent from a sweep's own "N excluded" line cannot be
+                # told from a thing that is not there. WHAT THIS DOES NOT COVER,
+                # named rather than left implied: `open(p,'w')`,
+                # `tempfile.mkdtemp()` and `os.makedirs` in Python are invisible
+                # to any shell classifier, filed as H198. Python has no heredocs, so on a `.py` the pattern
+                # `<<-?\s*['\"]?(\w+)` matches a PROSE MENTION of one inside a
+                # docstring and blanks every line to the end of file. MEASURED
+                # over the tracked tree: 1,048 non-blank Python lines blanked,
+                # including 91.3% of THIS FILE (triggered by my own v2 rationale
+                # block describing the heredoc defect) and 95.9% of
+                # `recordloss.py`. The census read 17 while 28 write positions
+                # were reachable -- an under-report that looks exactly like
+                # compliance. Same class as D2 and as `versioncheck.py`'s own
+                # origin defect: a lexer for one language applied to another
+                # deletes content, and the checker reports clean over the hole.
                 lines = strip_heredocs(f.read().split(chr(10)))
                 for i, line in enumerate(lines, 1):
                     # SKIPPED HERE AND NOT IN `write_targets`, DELIBERATELY.
@@ -292,7 +428,7 @@ def scan_source(paths):
                         found.append((p, i, kind, tgt))
         except (IsADirectoryError, FileNotFoundError, PermissionError):
             continue
-    return found
+    return found, skipped
 
 
 REFUSAL = """§10 REFUSED: this writes outside the workspace.
@@ -351,6 +487,13 @@ POSITIVE = [
     ('T=$(mktemp -d)', 'ten sites in spikes/harness/'),
     ('echo hi | tee /tmp/out.txt', 'tee position'),
     ('dd if=/dev/zero of=/tmp/blob bs=1', 'dd of= position'),
+    # H194 (v3). THE THREE v2 MISSED. Each is a write §10 forbids that the gate
+    # returned clean on, measured through the live hook and not only through
+    # this function. D1 and D2 were drilled by v2's own quote-awareness fix.
+    ('echo "a' + chr(92) + '"b" > /tmp/x', 'H194 D1 — backslash-escaped quote desynced quote state'),
+    ("# note: don't forget" + chr(10) + 'echo x > /tmp/y',
+     'H194 D2 — an apostrophe in a COMMENT line poisoned every line below it'),
+    ('cd /tmp && echo x > y', 'H194 D3 — cwd change makes a relative write land outside'),
 ]
 NEGATIVE = [
     # C3. These MENTION an out-of-workspace path and write nothing. The commands
@@ -365,6 +508,16 @@ NEGATIVE = [
     ('echo done > "$ROOT/out/x.txt"', 'inside the workspace'),
     ('python3 x.py --out /dev/null', 'allowlisted'),
     ('adb shell "cat /data/local/tmp/fuelrun"', 'device path, H89 F2'),
+    # D4 (H194). Real commands from this cycle that the gate refused as writes.
+    ('python3 scratchcheck.py --scan | grep -v mktemp', 'H194 D4 — my own command, refused'),
+    ('grep -rn "mktemp -d" spikes/harness/', 'H194 D4 — mktemp inside a search pattern'),
+    ('echo "use mktemp under .scratch" >> notes.md', 'H194 D4 — the word in in-workspace prose'),
+    # H194 (v3). The `cd` rule must not fire without a write, or it becomes a
+    # ban on changing directory. Measured at 0 false positives over 6,454 real
+    # command lines; these keep the narrowness that made that true.
+    ('cd /tmp && ls -la', 'H194 — cd to a read, no write operator'),
+    ('cd /tmp && grep -r pattern .', 'H194 — cd to a search'),
+    ('cd "$ROOT" && echo x > out/y', 'H194 — cd INSIDE the workspace, then write'),
     # The eight false positives the FIRST form of this classifier reported over
     # the tracked tree. Real lines, cited by file, kept so the precision fix
     # cannot regress into the widening it looks like.
@@ -443,6 +596,46 @@ def selfcheck():
     WRITE_POSITIONS = saved_pos
     t(not any(write_targets(c) for c, _ in NEGATIVE), 'C4/M2 restored')
 
+    # C7 · MUTATION FOR EACH v3 FIX (H194). Every one reverts a specific defect
+    # and must take THAT defect's case red and leave the others alone -- a single
+    # mutation that reddens everything proves only that the module runs.
+    global _DROP_COMMENTS, CD_OUT
+    esc_case = 'echo "a' + chr(92) + '"b" > /tmp/x'
+    cmt_case = "# note: don't forget" + chr(10) + 'echo x > /tmp/y'
+    cd_case = 'cd /tmp && echo x > y'
+
+    # M3 · D1 reverted: quote scanning without escape awareness, which is exactly
+    # what the committed v2 blob does.
+    def _v2_in_quotes(cmd):
+        inside, q = [False] * len(cmd), None
+        for i, c in enumerate(cmd):
+            if q is None and c in '"' + chr(39):
+                q = c
+            elif q == c:
+                q = None
+            inside[i] = q is not None
+        return inside
+    g = globals()
+    g['_in_quotes'] = _v2_in_quotes
+    t(not write_targets(esc_case), 'C7/M3 D1 reverted -> escaped-quote write goes MISSED')
+    t(bool(write_targets(cd_case)), 'C7/M3 leaves the cd case alone')
+    g['_in_quotes'] = _in_quotes_real
+
+    # M4 · D2 reverted: comment lines no longer dropped.
+    _DROP_COMMENTS = False
+    t(not write_targets(cmt_case), 'C7/M4 D2 reverted -> comment-apostrophe write goes MISSED')
+    _DROP_COMMENTS = True
+    t(bool(write_targets(cmt_case)), 'C7/M4 restored')
+
+    # M5 · D3 reverted: the cd rule cannot match.
+    saved_cd = CD_OUT
+    CD_OUT = re.compile(r'(?!x)x')
+    t(not write_targets(cd_case), 'C7/M5 D3 reverted -> cd-then-write goes MISSED')
+    t(bool(write_targets(esc_case)), 'C7/M5 leaves the escaped-quote case alone')
+    CD_OUT = saved_cd
+    t(bool(write_targets(cd_case)) and bool(write_targets(cmt_case))
+      and bool(write_targets(esc_case)), 'C7 all three restored')
+
     # C5 · the sanctioned location must itself pass. A gate whose own remedy is
     # refused is the always-red gate H14/H52/H73 were each bypassed for.
     t(not write_targets('echo x > %s/tmp.txt' % SCRATCH),
@@ -476,11 +669,17 @@ if __name__ == '__main__':
                 capture_output=True, text=True).stdout.split()
                 if not t.startswith('elders/')]
             targets = [os.path.join(ROOT, t) for t in targets]
-        rows = scan_source(targets)
+        rows, skipped = scan_source_counted(targets)
         for fpath, ln, kind, tgt in rows:
             print('%s:%d: %-11s %s' % (os.path.relpath(fpath, ROOT), ln, kind, tgt))
-        print('scratchcheck --scan: %d write position(s) outside the workspace'
-              % len(rows))
+        print('scratchcheck --scan: %d write position(s) outside the workspace '
+              'in %d shell file(s)' % (len(rows), len(targets) - len(skipped)))
+        if skipped:
+            print('  NOT SCANNED: %d non-shell file(s). This is a SHELL '
+                  'classifier; Python writes (`open(p,%sw%s)`, '
+                  '`tempfile.mkdtemp()`, `os.makedirs`) are invisible to it and '
+                  'are filed as H198. Counted here so absent cannot be mistaken '
+                  'for clean (H186).' % (len(skipped), chr(39), chr(39)))
         sys.exit(0)
     print(__doc__)
     sys.exit(0)

@@ -1,0 +1,111 @@
+{
+  "F1": {
+    "fires": false,
+    "hook_agrees_with_helper": true,
+    "measured_on": "310e800",
+    "unnamed_caught_by_v2_hook": {
+      "cd_then_relative": false,
+      "comment_apostrophe": false,
+      "escaped_quote": false
+    }
+  },
+  "F2": {
+    "cd_rule_hits_in_negative_controls": [],
+    "cd_rule_hits_in_tracked_source": [],
+    "corpus_command_lines": 6667,
+    "fires": false,
+    "predicted_in_claim": "F2 DOES fire on cd"
+  },
+  "F3": {
+    "fires": false,
+    "v2_controls_rechecked_under_v3": 23,
+    "verdict_changed_on": []
+  },
+  "F4": {
+    "drilled_by_the_fix": [
+      "escaped_quote",
+      "comment_apostrophe"
+    ],
+    "fires": false,
+    "measured_on": "310e800",
+    "predicted_in_claim": "F4 does NOT fire; v1 catches escaped_quote",
+    "v2_misses_WITHOUT_quote_awareness": 3,
+    "v2_misses_WITH_quote_awareness": 5
+  },
+  "cases": {
+    "apostrophe_in_dquotes": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "bash_amp_redirect": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "braced_tmpdir": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "cd_then_relative": {
+      "caught_by_v2": false,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "unnamed"
+    },
+    "comment_apostrophe": {
+      "caught_by_v2": false,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "unnamed"
+    },
+    "escaped_quote": {
+      "caught_by_v2": false,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "unnamed"
+    },
+    "interpreter": {
+      "caught_by_v2": false,
+      "caught_by_v3": false,
+      "expected_caught": true,
+      "kind": "named residue"
+    },
+    "no_space_redirect": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "quoted_abs": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "single_quoted_abs": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "stderr_redirect": {
+      "caught_by_v2": true,
+      "caught_by_v3": true,
+      "expected_caught": true,
+      "kind": "covered"
+    },
+    "via_variable": {
+      "caught_by_v2": false,
+      "caught_by_v3": false,
+      "expected_caught": true,
+      "kind": "named residue"
+    }
+  },
+  "recall_v2_as_attacked": "7 of 12",
+  "recall_v3": "10 of 12"
+}
