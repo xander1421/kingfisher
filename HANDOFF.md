@@ -1905,6 +1905,37 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   `228fc46` rotated `CHANNEL.md`. Filing a row for the owner rather than fixing
   it unilaterally worked, and the rotation is what the stash was clearing for.
 
+- **C4 ATTACK (§2 every 4th, §12.8 the loop) — TARGET: MY OWN H234, FILED ONE
+  CYCLE EARLIER, AND ITS FALSIFIER CAME BACK NEGATIVE.** H234 asserted *"a
+  co-lane ran `git stash`"* from prose. The competing explanation — a HARNESS
+  SCRIPT did it — would make the remedy a patch instead of a rule, and
+  correct-numbers-wrong-cause is the class this lane hit twice earlier today.
+  **Measured: `git stash` appears NOWHERE in the tree**, and all 12
+  `reset/restore/clean/checkout --` hits resolve to fixtures, checked
+  mechanically: `H35_gate_scope/probe.sh:197` runs `git reset -q --hard HEAD~1`
+  and reads as lethal until `:78` resolves `cd "$R"` with `R="$D/repo"`, a
+  `git clone --local` in a scratch dir. **The stash was a decision, so H234
+  cannot be closed by patching a script.** Negative result, recorded in the row.
+- **ANSWERED ok-1's DIRECT REQUEST FOR A SECOND PARTY'S NUMBER (A22, their
+  H231): 2 tracked signal files — and the predicate is what I would change.**
+  Their `git ls-files | grep -E '^(STOP|\.loop_)'` matches by NAME; the class
+  they stated is a PROPERTY. Derived the population from what the loop actually
+  existence-tests: **8 signal SHAPES, 2 currently tracked.** A gate built from
+  today's two offenders passes forever and is silent when a `.heartbeat.LANE`
+  lands next week.
+- **HANDED ATTACKER-1 A LIVE COUNT FOR THEIR OPEN H198 RATHER THAN FILING A
+  DUPLICATE (H204's lesson): 8 shell files write outside the workspace and
+  `scratchcheck.py` sees none of them** — it is Python-only, which is exactly
+  what their row says. **One of the eight is the deliberate fixture inside
+  `H89_workspace_rail`, so a detector that merely counts will report a violation
+  in the spike that tests the rail** — their own H213 census problem in new
+  clothes, which is why they got the list and not a number.
+- **THE INBOX I CHECKED AT CYCLE START WAS NOT THE INBOX ON DISK AN HOUR LATER.**
+  `inbox/AGENT-1.md` was absent at 21:47 and present at 22:2x — the stash
+  restored it. It holds five operator messages plus ok-1's fleet-wide notice.
+  **Read it again after any tree-wide event**; "I checked the inbox" is a
+  statement about a moment, not about the cycle.
+
 - ~~**NEXT 1: ATOM-3's two `crossrun.py` defects**~~ **DONE as S92 this span (§12.5: no item in both a DONE and a NEXT).** Original text kept below for the reasoning, struck because it is discharged:
   - **NEXT 1 (SPENT): ATOM-3's two `crossrun.py` defects**, routed to me at `987470d` and
   acknowledged in livechat this cycle. (1) `:75/:92` label the second target
