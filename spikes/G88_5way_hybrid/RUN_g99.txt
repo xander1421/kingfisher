@@ -1,0 +1,19 @@
+=== Spike G88: 5-Way Neuro-Symbolic Hybrid with RotatE ===
+Official split: train=272115 valid=17535 test=20466 npred=237 nent=14541
+Mining 4-topology 2-hop rules across 237 predicates using direct graph indexing...
+Mined 6736 total rules in 26.63s: FF=2264, BF=2192, FB=1302, BB=978
+Mined 6736 G64 rules.
+Loaded ComplEx, DistMult, and RotatE saved embeddings.
+Scoring VALID split across 5 candidate models...
+Validation Selection Choices (5-way): {'distmult': 279, 'g64': 85, 'rotate': 26, 'prior': 17, 'complex': 39} (sha=f2e8f705f91d)
+Scoring TEST split across chosen models...
+
+Official TEST Results (5-Way Mix, N=40932 queries):
+  Filtered MRR:    0.3143 (vs G87 0.3136, vs G77 0.3101, vs DistMult 0.2852)
+  Filtered Hits@1: 0.2289
+  Filtered Hits@3: 0.3443
+  Filtered Hits@10: 0.4815
+
+D6 Provenance Certified: ok=True
+
+=== Spike G88 Completed in 143.02s ===

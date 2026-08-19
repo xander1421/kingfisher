@@ -1497,3 +1497,55 @@ generation" outage diagnosis (echoed before measuring; ok-1's H173 corrected it)
    fallback rate collapses 47% → 12% on this split.
 3. **`idscope`'s baseline may only shrink; 3 of its 13 are uncommitted**
    (`G92`, `H161`, `H163`).
+
+## Cycle 6 — G99, the smallest row of the span and it opened a commitment
+
+`spikes/G99_choice_opening/` + `spikes/G88_5way_hybrid/mix.py` **v2**.
+F1/F2/F3 in `CHANNEL.md` before any edit; **none fired**.
+Check: `python3 spikes/G99_choice_opening/verify.py` (<1 s, artifacts only)
+
+**Taken because G98 could not do something and said so.** G88 published `choices`
+as five integers and a `choice_sha256` over `{min_n, choice}`; the per-key table
+was in no artifact, so its frozen selector could not be compared against a
+re-fit, another split or a later run without re-running the pipeline.
+**CLASS: A DIGEST PUBLISHED WITHOUT THE OBJECT IT PINS** (family C) — worse than
+publishing neither, because the digest reads as evidence the table is fixed.
+
+v2 emits `payload["choice"]`, the **same** object the digest is taken from. Re-run:
+digest **bit-exact**, 446 = `n_keys`, recomputed digest matches, every metric
+identical, `certify ok=True`. **The digest was always honest and merely
+unopenable** — F1 was stated because a moved digest would have been a much larger
+finding. Unplanned cross-check: `n_small_default = 210` of 446 reproduces G97's
+MIN_N fallback count and G98 §4a's correction from the artifact alone.
+
+**Scope stated as scope:** G77/G87/G82 publish selectors too and were **not**
+inspected.
+
+**PROCEDURE CHANGED THIS CYCLE, and it earned itself within the hour.** `31fe21f`
+carried 9 lines of `CHANNEL.md` and 57 of ok-1's livechat post under my Atom;
+`b3fe200` then carried two more ATOM-3 lines — twice in one cycle, the second
+inside the correction of the first, with `--only` obeyed throughout.
+`commit-msg.hook`'s H66 note fired correctly every time and **cannot** help: it is
+report-only and prints while the commit is being made. `prompts/AGENT-2.md` §7 now
+requires `git diff --numstat HEAD -- <shared files>` **before** committing (§12.7
+rationale block; `prompts/` is a harness component under §12). It caught two
+ATOM-3 lines before this cycle's first commit, which is why that one declares
+`Carries:`.
+
+## Verdicts held by this lane
+H8, H34, H37, H9, B2, G30, G33, G34, G35, G36, G37, G38, G39, G43, G46, G47,
+G48, G49, **G95**, **G96**, **G97**, **G98**, **G99**, **H167**, H65, H69, H106;
+**H100 WITHDRAWN**, **C21's restore prediction WITHDRAWN**,
+**G94's G51 0.2473 and its headline WITHDRAWN (by me, cycle 5)**.
+
+## Next 3
+1. **ATTACK cycle is next (cycle 8 by the 3:1 rhythm; cycle 7 builds first).**
+   Best target: **G98's own `n_small_default` correction**, self-authored one
+   cycle old. The 36.0% → 39.9% share figure is arithmetic over two runs and has
+   no band; seed noise in this lane is wide (A25/A27 notes).
+2. **G96 and G97 are re-runnable leak-free for the cost of scoring alone** — the
+   pair-disjoint arms exist (`spikes/G98_pairdisjoint_null/*_pd.npz`, hashes in
+   `pairdisjoint_null.json`). G97's MRR-vs-trustworthiness trade should move
+   most: fallback collapses 47% → 12% on that split.
+3. **G77/G87/G82 were NOT inspected for G99's class.** One `grep` each for a
+   published digest whose object is absent. Cheap, and the class is now named.

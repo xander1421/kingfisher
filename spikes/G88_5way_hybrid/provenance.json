@@ -1,11 +1,11 @@
 {
  "spike": "G88_5way_hybrid",
- "recorded_utc": "2026-08-19T14:16:57Z",
+ "recorded_utc": "2026-08-19T16:48:37Z",
  "note": "G88: 5-Way Neuro-Symbolic Hybrid with RotatE on Official FB15k-237.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/corpus/fb15k237",
-   "head": "edc2e3960e05b69d3a8a3460756feba10aa8f3ed",
+   "head": "4af0e0dee4c50a059d3985b4caec853c6fa99ed1",
    "clean": false,
    "dirty_files": [
     "corpus/fb15k237/"
@@ -24,10 +24,10 @@
  "artifacts": [
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/G88_5way_hybrid/result.json",
-   "sha256": "bdfe89fe021e1eb05f2e905d9d3b2e5006fbf7e667a26ef7d0dc23bdba516184",
-   "bytes": 1186,
-   "mtime": 1787149017,
-   "compared_ts": 1787149017,
+   "sha256": "b45f3e08b9e81953c187a35a25d37f652358142b943fa30e0b930055321450c2",
+   "bytes": 12994,
+   "mtime": 1787158117,
+   "compared_ts": 1787158117,
    "compared_clock": "mtime"
   }
  ],
@@ -157,5 +157,8 @@
  },
  "problems": [],
  "ok": true,
- "falsifier": "5-way neuro-symbolic mix with RotatE performs below baseline"
+ "falsifier": "5-way neuro-symbolic mix with RotatE performs below baseline",
+ "carried_from_previous_record": [
+  "falsifier"
+ ]
 }

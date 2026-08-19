@@ -257,6 +257,26 @@ def main() -> int:
             "predicates": npred,
         },
         "choices": dict(five_mask["counts"]),
+        # v2, 2026-08-19, AGENT-2 under G99. DEFECT REMOVED: `choice_sha256` was
+        # published without the object it pins. It is taken over
+        # `{min_n, choice}` at line 124, where `choice` is the per-key table --
+        # and only the five COUNTS were emitted, so the digest read as a
+        # reproducibility guarantee while being unopenable. A reader takes it as
+        # evidence the table is fixed and has no way to discover the table is
+        # unavailable, which is worse than publishing neither.
+        #
+        # `freeze_dir_select` already returns the table in the SAME payload the
+        # digest is computed from, so this emits `payload["choice"]` rather than
+        # rebuilding it -- a second construction of the same object could
+        # disagree with the digest and would be the defect one level up.
+        #
+        # Found by G98, which needed to compare this table against the one fitted
+        # on the pair-disjoint split and could not, without re-running this whole
+        # pipeline. G99's F2 recomputes the digest from the emitted table.
+        "choice": five_mask["choice"],
+        "choice_min_n": five_mask["min_n"],
+        "choice_n_keys": five_mask["n_keys"],
+        "choice_n_small_default": five_mask["n_small_default"],
         "choice_sha256": five_mask["sha256"],
         "metrics": {
             "mrr": round(mrr, 4),
