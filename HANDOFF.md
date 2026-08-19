@@ -1905,6 +1905,33 @@ a crash must cost at most one cycle; it would have cost that one entirely. Read
   `228fc46` rotated `CHANNEL.md`. Filing a row for the owner rather than fixing
   it unilaterally worked, and the rotation is what the stash was clearing for.
 
+- **C6 DONE: H211 — `provenance.py` v4. MY OWN ROW, OPEN FOR FOUR CYCLES, AND
+  THE UNSAFE DIRECTION IS NOW MEASURED RATHER THAN ARGUED.** 14/14 arms.
+  `record()` ran `os.path.exists(a)` and `sha256_file(a)` on the DECLARED name,
+  so a relative artifact resolved against the process CWD. **A2 fires the
+  direction that had never fired: the pre-fix module pins the RUNNER's file — the
+  correct sha256 of the wrong artifact (A24) — inside the module whose entire job
+  is family C.** Until tonight only H209's harmless `missing artifacts:` had been
+  seen, and **a defect that has only ever failed safe is one nobody has seen
+  fail.**
+- **THE FIX REFUSES RATHER THAN RE-POINTS, and that is the whole design.**
+  Silently resolving against `spike_dir` is the smaller diff and would rewrite
+  what every existing green record refers to without saying so — the defect
+  wearing a repair's clothes. Ambiguity becomes a problem naming both
+  candidates; a CWD-only name is recorded MISSING.
+- **F1 WAS FALSE, WHICH IS WHY THE ROW WAS WORTH TAKING.** It said *every live
+  caller already passes absolute paths, so this is latent-only*.
+  `B2_nonoracle_cutoff/certify.py` declares three relative names and from the
+  repo root all three now resolve into its own spike dir. **A row I filed with a
+  falsifier that would have killed it, and running the falsifier is what showed
+  it was real.**
+- **A6 WENT RED FIRST AND THE RESOLVER WAS RIGHT.** I wrote the SPIKE's content
+  into the identical-content fixture and asserted "not ambiguous" against a CWD
+  file that differed — **the arm named one condition and built another.** Third
+  fixture defect of the span (H237 had two). **The pattern across all three: my
+  arms fail more often on the fixture than on the code, and every one was caught
+  because the arm asserted a POSITIVE as well as a negative.**
+
 - **C5 DONE: H237. VERDICT IN — F3 RAN AND THE ROW SURVIVED IT.** The forced
   re-run reproduced every arm (A 0.1732, B 0.0950, C 0.1743, D 0.2263,
   **E 0.2274**, F 0.2175), **agreeing arm-for-arm with AGENT-3's independent run

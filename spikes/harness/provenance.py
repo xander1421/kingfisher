@@ -48,6 +48,27 @@ bypass a refused lane reaches for is dropping `artifacts=`, which voids the whol
 A24 staleness path, and `allow_dirty=True` does NOT suppress it (measured on the
 run that found this). Fixed by expanding a porcelain-named directory into its
 files and RE-APPLYING in Python the exclusions the pathspec could not deliver.
+
+v4, 2026-08-19 (H211). DEFECT REMOVED: THIS MODULE RESOLVED THE ARTIFACT IT WAS
+PINNING AGAINST THE PROCESS CWD RATHER THAN AGAINST THE SPIKE IT WAS HANDED.
+`os.path.exists(a)` and `sha256_file(a)` ran on the DECLARED name, so
+`certify(spike_dir=HERE, artifacts=['result.json'])` asked about
+`$CWD/result.json` and never about `HERE/result.json` -- the same call correct or
+void depending on where the runner stood, and silent in both directions.
+MEASURED: run from the repo root, H209's certify reported
+`missing artifacts: ['result.json']` while the file sat in the spike dir. That is
+the SAFE direction and the only reason this was ever seen. THE UNSAFE DIRECTION
+IS THE SAME LINE: had any file named `result.json` existed at the repo root it
+would have been found, hashed and recorded as that spike's artifact -- the
+correct sha256 of the WRONG file (A24), inside the module whose entire job is
+family C. Fixed in `_resolve_artifact`, which REFUSES rather than re-points: a
+relative name resolves against `spike_dir`; if a DIFFERENT file of that name also
+sits at the CWD the spike's copy is pinned AND the ambiguity becomes a problem;
+if the name exists ONLY at the CWD the artifact is recorded MISSING rather than
+pinning a file the spike does not own. Silently resolving against `spike_dir`
+would have rewritten what existing green records refer to without saying so,
+which is this defect wearing a repair's clothes. `artifacts[].resolved` is new
+and `artifacts[].path` still carries the declared name, so a reader sees both.
 `demo()` builds an untracked subdirectory of two files and asserts the earlier one
 is not stale against the later one's directory bump.
 NOT FIXED HERE, REPORTED INSTEAD: `stranded.sh:145` carries the same class in the
@@ -435,6 +456,57 @@ class RecordCollision(Exception):
     """
 
 
+def _resolve_artifact(a, spike_dir):
+    """H211: resolve a declared artifact against the SPIKE, never the CWD.
+
+    -> {'declared', 'resolved', 'note'}. `note` is non-empty exactly when the
+    caller could have been handed a different file than they meant.
+
+    ==== WHY (§12.7 rationale) =============================================
+    DEFECT REMOVED: `record()` CALLED `os.path.exists(a)` AND `sha256_file(a)`
+    ON THE DECLARED NAME, SO A RELATIVE ARTIFACT RESOLVED AGAINST THE PROCESS
+    CWD. `certify(spike_dir=HERE, artifacts=['result.json'])` asked about
+    `$CWD/result.json` and never about `HERE/result.json`, which makes the same
+    call correct or void depending on where the runner stood.
+
+    BOTH DIRECTIONS ARE SILENT AND ONLY ONE HAS FIRED. Run from the repo root,
+    H209's certify reported `missing artifacts: ['result.json']` while the file
+    sat in the spike dir -- the SAFE direction, and the one that made this
+    visible. **Had any file named `result.json` existed at the repo root it
+    would have been found, hashed, and recorded as that spike's artifact: the
+    correct sha256 of the wrong file.** That is A24, inside the module whose
+    entire job is family C.
+
+    IT REFUSES RATHER THAN RE-POINTING. The obvious fix -- silently resolve
+    against `spike_dir` -- would rewrite what an existing green record refers to
+    without saying so, which is the same defect wearing a repair's clothes. So
+    when both candidates exist and differ, this pins the spike's copy AND
+    records why; when only the CWD copy exists, it records the artifact MISSING
+    rather than pinning a file the spike does not own.
+
+    Check: python3 spikes/H211_artifact_resolution/probe.py
+    """
+    if os.path.isabs(a):
+        return {'declared': a, 'resolved': a, 'note': ''}
+    here = os.path.abspath(os.path.join(spike_dir, a))
+    cwd = os.path.abspath(a)
+    if os.path.exists(here):
+        if os.path.exists(cwd) and cwd != here and \
+                sha256_file(here) != sha256_file(cwd):
+            return {'declared': a, 'resolved': here,
+                    'note': (f'{a!r} is ambiguous: it names a DIFFERENT file in '
+                             f'the spike ({here}) and at the process CWD '
+                             f'({cwd}). Pinned the spike\'s. Declare an '
+                             f'absolute path to remove the ambiguity.')}
+        return {'declared': a, 'resolved': here, 'note': ''}
+    if os.path.exists(cwd):
+        return {'declared': a, 'resolved': here,
+                'note': (f'{a!r} does not exist in the spike ({here}) but does '
+                         f'at the process CWD ({cwd}). Recorded MISSING rather '
+                         f'than pinning a file this spike does not own.')}
+    return {'declared': a, 'resolved': here, 'note': ''}
+
+
 def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
            allow_dirty=False, note='', no_deps_reason='',
            record_name='provenance.json'):
@@ -444,17 +516,20 @@ def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     declared positive control did not fire. A caller that ignores `ok` and
     publishes anyway is doing the thing this module exists to stop.
     """
+    resolved = [_resolve_artifact(a, spike_dir) for a in artifacts]
     prov = {
         'spike': os.path.basename(os.path.abspath(spike_dir)),
         'recorded_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
         'note': note,
         'repos': [repo_state(d) for d in deps],
         'manifests': {d: manifest_state(d) for d in deps},
-        'artifacts': [{'path': a, 'sha256': sha256_file(a),
-                       'bytes': os.path.getsize(a),
-                       'mtime': int(os.path.getmtime(a))}
-                      for a in artifacts if os.path.exists(a)],
-        'missing_artifacts': [a for a in artifacts if not os.path.exists(a)],
+        'artifacts': [{'path': r['declared'], 'resolved': r['resolved'],
+                       'sha256': sha256_file(r['resolved']),
+                       'bytes': os.path.getsize(r['resolved']),
+                       'mtime': int(os.path.getmtime(r['resolved']))}
+                      for r in resolved if os.path.exists(r['resolved'])],
+        'missing_artifacts': [r['declared'] for r in resolved
+                              if not os.path.exists(r['resolved'])],
         'toolchain': toolchain(),
         'device': device(),
         'controls': [c.as_dict() for c in controls],
@@ -464,6 +539,12 @@ def record(spike_dir, deps=(), artifacts=(), controls=(), falsifiers=(),
     }
     prov['no_deps_reason'] = no_deps_reason
     problems = []
+    # H211: an artifact that resolved ambiguously, or only outside the spike, is
+    # a problem and not a footnote -- the whole point is that the wrong file can
+    # be hashed correctly.
+    for r in resolved:
+        if r['note']:
+            problems.append('ARTIFACT: ' + r['note'])
 
     # D6 E1/E2 HOLE, closed 2026-08-17. `deps=()` skipped the staleness AND the
     # dirty-tree loops below entirely, so a spike that declared no dependency

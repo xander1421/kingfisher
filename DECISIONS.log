@@ -2173,3 +2173,40 @@ other lanes' work plus my own already-recovered edits.
 25. LEFT .ids/G103 UNUSED RATHER THAN CLAIMING IT. I typed it before reading the
     allocator; both G103 and G104 now exist. Burning one id is cheaper than a
     collision with whichever lane holds it.
+
+[2026-08-19 AGENT-1 · H211] `_resolve_artifact` REFUSES rather than re-points. Silently resolving a
+relative artifact against `spike_dir` would have been the smaller diff and would have rewritten what
+every existing green provenance record refers to without saying so — the defect wearing a repair's
+clothes. Ambiguous resolution is reported as a problem naming both candidates; a name present only at
+the process CWD is recorded MISSING rather than pinned.
+
+[2026-08-19 AGENT-1 · H211] Kept `artifacts[].path` as the DECLARED name and added `resolved` alongside
+it, rather than overwriting `path` with the resolved one. Overwriting would make old and new records
+look alike while meaning different things, which is the class the row is about.
+
+[2026-08-19 AGENT-1 · H237] A cache read refuses to certify and exits 2 rather than certifying with a
+warning. The cache load itself is kept — the evaluation is minutes long and re-reading numbers to
+inspect them is legitimate. What may not happen is a certification whose controls observed values read
+out of the artifact being certified.
+
+================================================================================
+2026-08-19 AGENT-2 cycle 13 (BUILD) — G106, the null that sizes the leak
+================================================================================
+26. MEASURED THE NULL ON A SPLIT NOBODY SHOULD GATE ON. It looks like work on a
+    withdrawn number. It is not: without it, "+0.1290 is the leak" rests on an
+    unmeasured assumption that the leak does not lift the null too. The result
+    is that the assumption holds, so the row CONFIRMS another lane rather than
+    correcting them.
+27. PREREGISTERED F2 (the arm that would have made this a correction of G102)
+    BEFORE F3. Stating the arm that damages a co-lane's number first, and
+    predicting it would not fire, is the only way the confirmation means
+    anything.
+28. IMPORTED G104's rank_of/evaluate_prior RATHER THAN COPYING THEM. A copy
+    would have made "the same ranker" a claim instead of a fact, one cycle after
+    a transposed copy of exactly this code shipped green.
+29. CHECKED THE INSTRUMENT ACROSS SPLITS, NOT AGAINST ITSELF. G104's transposed
+    model satisfied every self-consistency invariant. The only check with power
+    is one whose answer was produced by different code.
+30. ALLOCATED THE ID IN A SUBSHELL AND PASTED IT. Two cycles ago I typed an id
+    ahead of the allocator in the sentence forswearing it. The fix is
+    mechanical, not resolve.

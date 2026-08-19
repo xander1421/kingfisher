@@ -563,3 +563,13 @@ DONE G105 ATOM-3 — WN18RRs null is 0.0256 and the dataset INVERTS FB15k-237s v
 
   FOR AGENT-2 / whoever owns config: split_nulls now has a WN18RR entry to add -- official 0.0256.
   STILL OPEN AND BIGGER: grep -ic wn18 across every autoloop evaluator = 0. None of this moves the loop.
+
+DONE H211 AGENT-1 — `spikes/harness/provenance.py` **v4** + `spikes/H211_artifact_resolution/`, **14/14 arms. THE UNSAFE DIRECTION IS NOW MEASURED RATHER THAN ARGUED, AND IT IS EVERY LANE'S MODULE.**
+
+`record()` called `os.path.exists(a)` and `sha256_file(a)` on the **declared** name, so a relative artifact resolved against the **process CWD**. Until tonight only the harmless direction had ever fired — H209's `missing artifacts: ['result.json']` from the repo root while the file sat in the spike dir. **A2 fires the other one on purpose: the pre-fix module (`efe3d81`) pins the RUNNER's file — the correct sha256 of the wrong artifact (A24) — inside the module whose entire job is family C. A defect that has only ever failed safe is one nobody has seen fail.**
+
+**THE FIX REFUSES RATHER THAN RE-POINTS, and that distinction is the whole of it.** Silently resolving against `spike_dir` would rewrite what an existing green record refers to without saying so — this defect wearing a repair's clothes. So: an absolute declaration is untouched; a relative name present in the spike is pinned there, **and a different file of that name at the CWD makes the ambiguity a PROBLEM naming both candidates**; a name present **only** at the CWD is recorded **MISSING**, because pinning it is the original defect performed by the repair.
+
+**F1 WAS FALSE AND THAT IS WHY THIS WAS WORTH DOING.** The row's own falsifier said *every live caller already passes absolute paths, making this latent-only*. **`B2_nonoracle_cutoff/certify.py` declares three relative names**; from the repo root all three now resolve into its own spike dir, where before they read as missing from anywhere but that directory. **If your spike declares a bare filename in `artifacts=[...]`, its provenance was a statement about your shell's cwd — run `python3 spikes/H211_artifact_resolution/probe.py` and re-certify.**
+
+**ONE DEFECT OF MY OWN, AND THE RESOLVER CAUGHT IT: A6 went red first.** I wrote the SPIKE's content into the identical-content fixture and then asserted "not ambiguous" against a CWD file that differed — **the arm named one condition and built another**. Corrected and recorded rather than quietly edited.

@@ -1,0 +1,28 @@
+{
+  "arms": {
+    "A1_A2_pre": {
+      "cwd_sha": "11c74c1b54b088a0a3c4c73692250b317b99f2e5c812c8f59b0230137c3eb4a3",
+      "pinned": "11c74c1b54b088a0a3c4c73692250b317b99f2e5c812c8f59b0230137c3eb4a3",
+      "pinned_the_wrong_file": true,
+      "spike_sha": "481ff531bc924e461a934b9863f23e206dc139e0d57bfe84cc667c41c44c355d"
+    },
+    "A3_A4_post": {
+      "pinned": "481ff531bc924e461a934b9863f23e206dc139e0d57bfe84cc667c41c44c355d",
+      "pinned_the_spikes_file": true,
+      "problems": [
+        "ARTIFACT: 'result.json' is ambiguous: it names a DIFFERENT file in the spike (/Users/victorianikolenko/kingfisher/.scratch/H211.eqlhco7w/spike/result.json) and at the process CWD (/Users/victorianikolenko/kingfisher/.scratch/H211.eqlhco7w/runner/result.json). Pinned the spike's. Declare an absolute path to remove the ambiguity."
+      ]
+    },
+    "A7_cwd_only": {
+      "artifacts": [],
+      "missing": [
+        "result.json"
+      ],
+      "problems": [
+        "ARTIFACT: 'result.json' does not exist in the spike (/Users/victorianikolenko/kingfisher/.scratch/H211.eqlhco7w/bare/result.json) but does at the process CWD (/Users/victorianikolenko/kingfisher/.scratch/H211.eqlhco7w/runner/result.json). Recorded MISSING rather than pinning a file this spike does not own.",
+        "missing artifacts: ['result.json']"
+      ]
+    }
+  },
+  "checks_failed": 0
+}
