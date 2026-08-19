@@ -1,0 +1,118 @@
+{
+ "spike": "H230_gate_reads_the_index",
+ "recorded_utc": "2026-08-19T21:15:32Z",
+ "note": "H230: the size gate reads the INDEX while commit_scoped.sh commits the WORKING TREE with --only",
+ "repos": [],
+ "manifests": {},
+ "artifacts": [
+  {
+   "path": "/Users/victorianikolenko/kingfisher/spikes/H230_gate_reads_the_index/result.json",
+   "sha256": "c63a58eb85c42114e6f8941ab9740c1355f657957666f04fdc8c16594491171e",
+   "bytes": 740,
+   "mtime": 1787174132
+  }
+ ],
+ "missing_artifacts": [],
+ "toolchain": {
+  "rustc": "<error: [Errno 2] No such file or directory: 'rustc'>",
+  "cargo_ndk": "<error: [Errno 2] No such file or directory: 'cargo'>",
+  "python": "3.14.6",
+  "uname": "Darwin 25.4.0 arm64"
+ },
+ "device": null,
+ "controls": [
+  {
+   "name": "C0_gate_discriminates",
+   "must_fire_because": "same repo, same file: a small staged append is green and a >1 MiB one is red, so the size gate has two reachable states",
+   "can_fail_because": "the gate is always red or always green",
+   "null_must_contain": "one reachable state",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "rc_small_staged": 0,
+    "rc_big_staged": 1
+   }
+  },
+  {
+   "name": "C1_only_ignores_the_index",
+   "must_fire_because": "`git commit --only` landed a line that was never staged, so the premise that the commit path skips the index is observed and not read off a man page",
+   "can_fail_because": "--only takes the index after all",
+   "null_must_contain": "premise wrong",
+   "fired": true,
+   "detail": "",
+   "kind": "control",
+   "constant_observations": false,
+   "observations": {
+    "worktree_only_line_in_commit": 1
+   }
+  }
+ ],
+ "falsifiers": [
+  {
+   "name": "F1_staged_oversize_refused",
+   "must_fire_because": null,
+   "can_fail_because": "a staged >1 MiB file is refused",
+   "null_must_contain": "not refused",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "staged": true,
+    "rc": 1,
+    "actionable": true
+   },
+   "refutes": "that H229's direction is imaginary",
+   "fires_when": "a staged >1 MiB file is refused",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F2_unstaged_oversize_lands",
+   "must_fire_because": null,
+   "can_fail_because": "the gate is green and `--only` lands >1 MiB anyway",
+   "null_must_contain": "gate saw it",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "staged": false,
+    "rc": 0,
+    "says_nothing_staged": true,
+    "landed_bytes": 1126405,
+    "over_1MiB": true
+   },
+   "refutes": "that the size gate covers the path that commits",
+   "fires_when": "the gate is green and `--only` lands >1 MiB anyway",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  },
+  {
+   "name": "F3_foreign_add_flips_my_verdict",
+   "must_fire_because": null,
+   "can_fail_because": "another party's `git add` flips rc 0 -> 1",
+   "null_must_contain": "verdict unchanged",
+   "fired": true,
+   "detail": "",
+   "kind": "falsifier",
+   "constant_observations": false,
+   "observations": {
+    "rc_before_foreign_add": 0,
+    "rc_after_foreign_add": 1
+   },
+   "refutes": "that my verdict depends only on my own work",
+   "fires_when": "another party's `git add` flips rc 0 -> 1",
+   "verdict": "REFUTED \u2014 the falsifier fired"
+  }
+ ],
+ "falsifiers_fired": [
+  "F1_staged_oversize_refused",
+  "F2_unstaged_oversize_lands",
+  "F3_foreign_add_flips_my_verdict"
+ ],
+ "no_deps_reason": "every arm builds its own scratch repo from a copy of githygiene.py; nothing outside this spike is read at run time",
+ "problems": [],
+ "ok": true,
+ "falsifier": "a staged >1 MiB file passing, or an unstaged one being refused, or `--only` declining to commit a line that was never staged"
+}

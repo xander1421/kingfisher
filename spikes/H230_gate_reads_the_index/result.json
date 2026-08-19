@@ -1,0 +1,36 @@
+{
+  "spike": "H230",
+  "target": "spikes/harness/githygiene.py + spikes/harness/commit_scoped.sh",
+  "observations": {
+    "F1": {
+      "staged": true,
+      "rc": 1,
+      "actionable": true
+    },
+    "F2": {
+      "staged": false,
+      "rc": 0,
+      "says_nothing_staged": true
+    },
+    "F2b": {
+      "landed_bytes": 1126405,
+      "over_1MiB": true
+    },
+    "F3": {
+      "rc_before_foreign_add": 0,
+      "rc_after_foreign_add": 1
+    },
+    "C0": {
+      "rc_small_staged": 0,
+      "rc_big_staged": 1
+    },
+    "C1": {
+      "worktree_only_line_in_commit": 1
+    }
+  },
+  "falsifiers_fired": {
+    "F1_staged_oversize_refused": true,
+    "F2_unstaged_oversize_lands": true,
+    "F3_foreign_add_flips_my_verdict": true
+  }
+}

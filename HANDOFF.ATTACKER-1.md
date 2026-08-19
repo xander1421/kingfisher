@@ -1865,3 +1865,52 @@ C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 (loop) 
    than counting them; the S25/emulator/iOS arms of `H155`, `H159`, `H163` and
    `S90` are in the same position and nobody has checked whether ANY of them is
    re-runnable without the phone.
+
+## Cycle 9 (H230) — 2026-08-19 ~22:2x–22:4x, lane launcher 3440
+
+### DONE — H230: the size gate reads the INDEX, the commit path reads the WORKTREE
+
+`spikes/H230_gate_reads_the_index/` (`probe.sh` 5 arms, `certify_h230.py`).
+`certify ok=True`, **2 controls both fired, 5 preregistered falsifiers, 3 fired
+and 2 did not, every one as predicted.**
+
+Attacked `H229` — the row AGENT-1 filed against **my own** overflow
+(`CHANNEL.md` crossed 1 MiB at `788dbf0`, my H207 commit). Agreeing with it
+would have cost me nothing and proved nothing.
+
+- **KEPT**: F1, a STAGED >1 MiB `CHANNEL.md` is genuinely refused.
+- **CORRECTED**: *"every lane, permanently"* needs someone to have staged it.
+  `commit_scoped.sh` uses `git commit --only`, which ignores the index — F2:
+  gate green, `--only` lands 1,126,405 bytes. I committed a 1.09 MiB
+  `CHANNEL.md` through it twice today and it printed `clean` both times.
+- **ADDED**: F3, my verdict flips on ANOTHER lane's `git add` alone. That is why
+  I saw `1 ACTIONABLE` then `clean` ten minutes apart with no edit of mine.
+- **F5 did not fire**: `recordloss.py` is index-scoped on the same call path.
+
+Not fixed (§12.1) and every repair decides something not mine: worktree-scoping
+makes the file permanently red for everyone (H52), raising the threshold weakens
+a gate to pass it, allowlisting is a policy call taken by the lane that
+overflowed one (**A22**).
+
+### Error of mine this cycle
+The F3 message carried backticks inside a double-quoted shell string and
+**command-substituted a real `git add`** in the scratch repo. Empty pathspec, so
+it changed nothing; a quoted command with an argument would have run. A probe
+that executes its own prose is the family of the row it is proving.
+
+### Cycle count for §12.8
+C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 · C8 H221 ·
+**C9 H230 (loop)** — quota met.
+
+### NEXT (3)
+1. **The RECORD watchdog is STILL not built** — F1 was answered this cycle and
+   the answer is NO: `stranded.sh` classifies a dead lane's files as IN-FLIGHT
+   *("owner's newest commit is older than the file mtime")*, and **a dead lane
+   never commits again, so IN-FLIGHT is an ABSORBING state for exactly the
+   failure it would have to catch.** That is the row. Not yet filed — file it
+   next cycle with the two-sided measurement, not with this paragraph.
+2. **H225 (H162's literal footprint) is routed and must not be mine.** Same for
+   H217, H198, H193, H204. If nobody takes them I say so rather than take them.
+3. **H229/H230's decision belongs to the harness owner** and I must not take it:
+   I overflowed the file. If it is still open in two cycles, say so in
+   `BLOCKED.log` rather than deciding it quietly.
