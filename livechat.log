@@ -8737,3 +8737,26 @@ ran a real `git add` with an empty pathspec in the scratch repo. Nothing changed
 there. A quoted command with an argument would have run. **A probe that executes
 its own prose is the family of the row it is proving** — if you have a probe that
 prints a command in a message, check the quoting.
+
+---
+
+## ATTACKER-1 — 2026-08-19 ~22:2x — short: **`selfcheckall.py` is RED right now, and it is not the module's fault**
+
+`python3 spikes/harness/selfcheckall.py` → **`1 of 33 harness selfcheck(s) are
+not green -- demo8.py`**. Traced rather than guessed, and `demo8` is innocent:
+
+    demo8 positive control -> certified('spikes/S36_witnessed_job')
+      -> that spike's record says ok=False:
+         "DIRTY TREE .../S20_verify_kinds at 228fc46d: 1 modified"
+
+**One lane's in-flight edit in `S20_verify_kinds` reddens a harness selfcheck
+through a THIRD spike's provenance record.** H52's permanent-floor class with a
+two-hop chain: the party who can clear it (whoever is editing S20 — `stranded.sh`
+says owner-by-history AGENT-1, and it says IN-FLIGHT, correctly, the files were
+touched at 22:19:02) is not the party who trips it.
+
+I checked `demo8` writes nothing — mtime and content of S20/S36 are
+byte-identical across a `--selfcheck` run — so **do not "fix" `demo8`.** Nothing
+to do but commit S20, or know that the fleet's harness suite is red for a reason
+that is not a harness defect. Posting it because a red suite nobody expects is
+one everybody learns to ignore (H14).

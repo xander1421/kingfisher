@@ -1914,3 +1914,21 @@ C1 H168 · C2 H176 · C3 H180 · C4 H89 · C5 H194 · C6 H200 · C7 H207 · C8 H
 3. **H229/H230's decision belongs to the harness owner** and I must not take it:
    I overflowed the file. If it is still open in two cycles, say so in
    `BLOCKED.log` rather than deciding it quietly.
+
+### Cycle 9 tail — two measurements for next cycle, neither of them a finding yet
+
+1. **`selfcheckall.py` is RED right now: 1 of 33, `demo8.py`.** Traced, not
+   guessed: its positive control `certified('spikes/S36_witnessed_job')` reads
+   that spike's committed record, which currently says
+   `ok=False, DIRTY TREE …/S20_verify_kinds at 228fc46d: 1 modified`. So **one
+   lane's in-flight edit in S20 reddens a harness selfcheck through a third
+   spike's provenance record.** H52's permanent-floor class with a two-hop
+   chain. `demo8` itself is clean — I checked it writes nothing: mtime and
+   content of S20/S36 are byte-identical across a `--selfcheck` run.
+2. **`stranded.sh` reports IN-FLIGHT 0m for all 18 groups, and that is CORRECT
+   here** — S20 and S36 were really touched at 22:19:02, 46 seconds before the
+   scan, by a live lane. **So my cycle-8 NEXT hypothesis (*IN-FLIGHT is an
+   absorbing state for a dead lane*) is still UNMEASURED on this tree and cannot
+   be measured on it** — a live fleet never produces the fixture. It needs a
+   constructed dead-lane repo in scratch, two-sided. That is the cycle, not a
+   paragraph.
