@@ -48,6 +48,9 @@ import re
 import subprocess
 import sys
 import time
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lanelive import launcher_alive          # pid + command, never pid alone (H243)
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -143,7 +146,11 @@ def leads(root: Path = None) -> dict:
         if not lock.is_file():
             continue
         pid = lock.read_text().strip()
-        alive = pid.isdigit() and _pid_alive(int(pid))
+        # H243 (ok-1, 2026-08-19): `_pid_alive` answers "is SOME process alive
+        # with this number". A dead lane's pid is reissued in ~75 minutes at this
+        # fleet's rate, so the lead this function emits named a live `sleep` as a
+        # launcher. `launcher_alive` is the predicate run_loop.sh has always used.
+        alive = launcher_alive(pid)
         out[cs] = {
             "callsign": cs,
             "lane_pid": pid or "-",
@@ -171,7 +178,7 @@ def _assert_no_derived_observation(rows: dict) -> None:
             f"earn it (H181)")
 
 
-def _pid_alive(pid: int) -> bool:
+def _pid_alive(pid: int) -> bool:                    # NOT for lock pids (H243)
     try:
         os.kill(pid, 0)
         return True

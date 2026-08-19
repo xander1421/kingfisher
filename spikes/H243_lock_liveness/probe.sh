@@ -25,6 +25,12 @@ python3 "$(dirname "$0")/sites.py" "$ROOT"
 # -------------------------------------------------------------- A2 · DECISION
 # The supervisor, driven end to end in a sandbox. `--check` starts nothing.
 mkdir -p "$SB/prompts" "$SB/fake"
+# The supervisor sources spikes/harness/lanelive.sh relative to its own dir, so
+# the sandbox needs it too -- and the first run without it read DOWN for EVERY
+# arm, which is what the missing-predicate guard added in the same cycle now
+# turns into a refusal instead of a uniform wrong answer.
+mkdir -p "$SB/spikes/harness"
+cp "$ROOT/spikes/harness/lanelive.sh" "$SB/spikes/harness/lanelive.sh"
 cp "$ROOT/bringup.sh" "$SB/bringup.sh"
 printf 'PROBE-1\n' > "$SB/roster.txt"
 printf '# scratch brief\n' > "$SB/prompts/PROBE-1.md"

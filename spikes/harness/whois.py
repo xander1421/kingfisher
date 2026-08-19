@@ -73,6 +73,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lanelive import launcher_alive          # pid + command, never pid alone (H243)
+
 ROOT = subprocess.run(["git", "rev-parse", "--show-toplevel"],
                       capture_output=True, text=True).stdout.strip() or "."
 
@@ -201,8 +204,9 @@ def main():
     for f in sorted(locks):
         cs = f[len(".loop_lock."):]
         held = from_lock(cs)
-        alive = held and subprocess.run(
-            ["ps", "-p", held], capture_output=True).returncode == 0
+        # H243: `ps -p` alone says a process exists, not that it is a LAUNCHER,
+        # and this line printed "live" for a lock naming any recycled pid.
+        alive = launcher_alive(held)
         print(f"   {cs:<14} launcher pid {held or '?'}"
               f"  {'live' if alive else 'STALE — holder is gone'}")
 

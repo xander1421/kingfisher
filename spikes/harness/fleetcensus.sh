@@ -24,6 +24,15 @@
 # census keyed on either one alone reports the other as absent.
 set -u
 cd "$(cd "$(dirname "$0")/../.." && pwd)"
+# REFUSE, don't continue, if the predicate is missing. Without this guard a
+# partial checkout leaves `launcher_alive` undefined, every lane reads DOWN, and
+# this supervisor RELAUNCHES all of them onto held callsigns -- the exact defect
+# the lock exists to prevent, caused by the fix for it. A missing check must not
+# read as an answer (CLAUDE.md: certify refuses, it does not warn).
+. spikes/harness/lanelive.sh 2>/dev/null || true
+command -v launcher_alive >/dev/null || {
+  echo "$(basename "$0"): spikes/harness/lanelive.sh is missing or did not define launcher_alive (H243)" >&2
+  exit 1; }
 
 # --selfcheck — AND IT PLANTS, because a matcher that finds NOTHING satisfies
 # every "no false positives" test ever written. That is not hypothetical here:
@@ -113,7 +122,10 @@ for cs in $(printf '%s\n%s\n' "$declared" "$signed" | sort -u); do
   # a check reading presence as health, inside the tool written to catch that
   # class. The pid is now probed.
   lp=$(cat ".loop_lock.$cs" 2>/dev/null)
-  if [ -n "$lp" ] && kill -0 "$lp" 2>/dev/null; then k=yes
+  # H243: a pid is not an identity. This census already records that PRESENCE is
+  # not liveness; the same argument one step further is that LIVENESS is not
+  # IDENTITY. It scored a lock naming a live `sleep` as CONSTITUTED (measured).
+  if [ -n "$lp" ] && launcher_alive "$lp"; then k=yes
   elif [ -n "$lp" ]; then k=stale
   else k=NO; fi
   # DECLARED-DARK is the state the old census could not represent: work in the

@@ -58,6 +58,15 @@
 #     LaunchAgent, because cron died with the reboot and does not self-restore.
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# REFUSE, don't continue, if the predicate is missing. Without this guard a
+# partial checkout leaves `launcher_alive` undefined, every lane reads DOWN, and
+# this supervisor RELAUNCHES all of them onto held callsigns -- the exact defect
+# the lock exists to prevent, caused by the fix for it. A missing check must not
+# read as an answer (CLAUDE.md: certify refuses, it does not warn).
+. spikes/harness/lanelive.sh 2>/dev/null || true
+command -v launcher_alive >/dev/null || {
+  echo "$(basename "$0"): spikes/harness/lanelive.sh is missing or did not define launcher_alive (H243)" >&2
+  exit 1; }
 
 ROSTER_FILE="roster.txt"
 # v2 (H6, ATOM-3, 2026-08-17). This was 2100 (35 min), "H6's threshold, same
@@ -127,7 +136,25 @@ lane_lock_pid() {
   local f=".loop_lock.${1}" p
   [ -f "$f" ] || return 1
   p=$(tr -dc '0-9' < "$f")
-  [ -n "$p" ] && kill -0 "$p" 2>/dev/null && printf '%s\n' "$p"
+  # H243 (ok-1, 2026-08-19): `kill -0` alone asks "is SOME process alive with
+  # this number". A dead lane's pid is reissued in ~75 minutes here, and this
+  # function decides MISSING -- so a false ALIVE keeps a dead lane out of the
+  # relaunch set forever. Measured: `--check` reported UP off a lock naming a
+  # live `sleep`. Same predicate run_loop.sh has always used at acquire.
+  [ -n "$p" ] && launcher_alive "$p" && printf '%s\n' "$p"
+}
+
+lane_retirement() {   # H236: the §7 exit a supervisor must not undo
+  # NOT §7's vocabulary, and the difference is the whole of this function.
+  # `run_loop.sh:557` ENDS a lane on LOOP-DONE|LOOP-HALT and CONTINUES on
+  # LOOP-IDLE (sleep 600) and LOOP-FUSE (span cap, sleep 5). So the set that
+  # means "this lane exited on purpose" is the launcher's `break` branch and
+  # nothing else -- a marker outside it belongs to a lane that died of
+  # something else and must still be started. Pinned against run_loop.sh by
+  # test_loop_gate.sh section 15, because this set lives in three files.
+  local x
+  x=$(tr -d '[:space:]' < ".loop_exit.${1}" 2>/dev/null) || return 0
+  case "$x" in LOOP-DONE|LOOP-HALT) printf '%s\n' "$x" ;; esac
 }
 
 beat_age() {
@@ -300,6 +327,29 @@ lane_launch_record() {             # called ONLY where this file actually launch
 # outage H56 measured would have read `no DONE 86m` on all five lanes while
 # every other signal read 5/5, which is the whole point: a human or a lane
 # reading the census sees it, and nothing gets relaunched into a quota wall.
+# v5 (H244, ATOM-3, 2026-08-19). THE DEFECT REMOVED: **THIS FUNCTION REPORTED
+# "NO CHANNEL LINE EVER -- nothing observed of this lane" FOR THREE LANES WITH
+# 103 COMMITTED DONE LINES BETWEEN THEM**, four minutes after `228fc46` rotated
+# CHANNEL.md at the 1 MB size gate. Measured pre/post that one commit
+# (`spikes/H244_unanchored_count/`): GROK-LOCAL 398 lines back -> -1, GEMINI
+# 367 -> -1, GROK-2 399 -> -1, i.e. from "working" to "never existed". And the
+# survivors did not merely shrink, they REORDERED -- ATOM-3 46 -> 1 and ok-1
+# 100 -> 53 read FRESHER while AGENT-1 33 -> 60 read staler. A reset is legible
+# as a reset; a reshuffle reads as news.
+#
+# CLASS: a health signal computed as a POSITION inside an append-only file has
+# no anchor outside that file, so the rotation §13's size gate makes mandatory
+# is indistinguishable from -- here, inverts -- the thing the signal measures.
+# **This is exactly the 5/5 lie v4 exists to end, arriving through the file
+# rather than through the roster** (H170: "six callsigns with 101 DONE lines
+# between them were invisible").
+#
+# THE FIX IS A THIRD STATE, NOT A BIGGER GREP. "Not in the current file" and
+# "never worked" are different facts and were being printed as one. -1 now
+# means only what it says; -2 means the lane's work predates the current file.
+# The distance itself is NOT reconstructed across the rotation: line positions
+# in a truncated file are not comparable to positions in its predecessor, and
+# manufacturing a number there is the fiction the original comment refuses.
 lane_lastwork() {
   local l=$1 n
   # The lane's own most recent CLAIM/DONE/NOTE line, by POSITION in an
@@ -309,7 +359,17 @@ lane_lastwork() {
   [ -f CHANNEL.md ] || { echo -1; return; }
   n=$(grep -nE "^(CLAIM|DONE|NOTE|CORRECTION|ATTACK|EVIDENCE|STATUS|RENUMBERED|WITHDRAWN) [^ ]+ ${l}\b" CHANNEL.md \
         | tail -1 | cut -d: -f1)
-  [ -n "$n" ] || { echo -1; return; }
+  if [ -z "$n" ]; then
+    # ANCHORED FALLBACK, the same anchor `recordloss.py` already uses and the
+    # only consumer of CHANNEL.md that survived the rotation: ask git whether
+    # this lane ever had a line, instead of asking the file that no longer has
+    # one. Silence from git here is a real absence; silence from the file is not.
+    if git log -p --format='' HEAD -- CHANNEL.md 2>/dev/null \
+         | grep -qE "^\+(CLAIM|DONE|NOTE|CORRECTION|ATTACK|EVIDENCE|STATUS|RENUMBERED|WITHDRAWN) [^ ]+ ${l}\b"; then
+      echo -2; return                      # worked, but before the current file
+    fi
+    echo -1; return                        # genuinely never observed
+  fi
   echo $(( $(wc -l < CHANNEL.md) - n ))
 }
 
@@ -620,7 +680,13 @@ for lane in "${ROSTER[@]}"; do
         stale\ *)     set -- $(lane_launcher "$lane")
                       lnote=" LAUNCHER STALE -- started with ${2}, tree has ${3}; picks up the fix at its next relaunch" ;;
       esac
-      if [ "$w" -lt 0 ]; then
+      if [ "$w" = -2 ]; then
+        # H244: this lane HAS worked; its lines predate the current CHANNEL.md.
+        # Printing that as "nothing observed" is what a rotation turned three
+        # lanes into, so the count comes from history and is named as such.
+        printf '  %-12s UP   pid %-7s (%s) turn age %ss, last CHANNEL line PREDATES THE CURRENT FILE (rotated) -- %s DONE in history%s%s\n' \
+          "$lane" "$pid" "$src" "$age" "$(sh spikes/harness/channelcount.sh lane "$lane" 2>/dev/null || echo '?')" "$fnote" "$lnote"
+      elif [ "$w" -lt 0 ]; then
         printf '  %-12s UP   pid %-7s (%s) turn age %ss, NO CHANNEL LINE EVER -- nothing observed of this lane%s%s\n' \
           "$lane" "$pid" "$src" "$age" "$fnote" "$lnote"
       else
@@ -634,6 +700,20 @@ for lane in "${ROSTER[@]}"; do
     # relaunch into a halted fleet. Not added to MISSING: nothing should restore it.
     printf '  %-12s HALTED  (%s present -- retired on purpose, not a fault)\n' \
       "$lane" "$([ -f "STOP.$lane" ] && echo "STOP.$lane" || echo STOP)"
+  elif [ -n "$(lane_retirement "$lane")" ]; then
+    # RETIRED IS NOT DOWN, and this is the HALTED branch's other spelling (H236).
+    # MEASURED, `spikes/H236_retirement_undone/probe.before.out`: a lane whose
+    # `.loop_exit` read LOOP-DONE was classified DOWN, had that marker DELETED as
+    # stale debris by the start loop below, and was relaunched -- so the exit
+    # MISSION_LOOP §7 calls the only legal ending was undone within one census,
+    # and the only record that it happened was removed on the way past. §7 says
+    # nothing else ends the loop; nothing kept it ended. The comment four lines
+    # up already had the class -- "a lane retired on purpose and a lane that died
+    # are the same observation to ps" -- and read only STOP, which is §12.2, the
+    # site and not the class, inside the branch that names it.
+    printf '  %-12s RETIRED  (.loop_exit.%s = %s -- exited under MISSION_LOOP §7, not a fault)\n' \
+      "$lane" "$lane" "$(lane_retirement "$lane")"
+    printf '               nothing restores it. To bring it back: rm .loop_exit.%s\n' "$lane"
   else
     nlaunch=$(lane_launches "$lane")
     if [ "$nlaunch" -ge "$FLAP_MAX" ]; then
