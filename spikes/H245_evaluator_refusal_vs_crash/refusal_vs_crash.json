@@ -1,5 +1,5 @@
 {
- "elapsed_sec": 0.38,
+ "elapsed_sec": 0.33,
  "end_to_end": {
   "errors": [
    "hygiene: Exit 1: evaluator REFUSED, and its payload was complete -- t"

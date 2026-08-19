@@ -1,25 +1,21 @@
 {
  "spike": "H245_evaluator_refusal_vs_crash",
- "recorded_utc": "2026-08-19T21:56:52Z",
+ "recorded_utc": "2026-08-19T22:01:10Z",
  "note": "H245: the loop's runner returned on the exit code before parsing the payload, so a REFUSAL and a CRASH were one event and the loop reported `could not be checked` over a metric it checked.",
  "repos": [
   {
    "path": "/Users/victorianikolenko/kingfisher/scripts",
-   "head": "6799738b61096c6d7d8734dffc138c6efec10e2b",
-   "clean": false,
-   "dirty_files": [
-    "scripts/autoloop.py"
-   ],
-   "diff_sha256": "a274982d223e7cc35851c07054971ca967f9ef1131e9092a84a921fc10036649",
-   "diff_bytes": 5736
+   "head": "a09e58b70bb1d6325d03e63ee1525727357c8439",
+   "clean": true,
+   "dirty_files": [],
+   "diff_sha256": null,
+   "diff_bytes": 0
   },
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures",
-   "head": "6799738b61096c6d7d8734dffc138c6efec10e2b",
-   "clean": false,
-   "dirty_files": [
-    "spikes/H245_evaluator_refusal_vs_crash/fixtures/"
-   ],
+   "head": "a09e58b70bb1d6325d03e63ee1525727357c8439",
+   "clean": true,
+   "dirty_files": [],
    "diff_sha256": null,
    "diff_bytes": 0
   }
@@ -40,12 +36,12 @@
   {
    "path": "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/refusal_vs_crash.json",
    "resolved": "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/refusal_vs_crash.json",
-   "sha256": "f0195333eb51f544a124f53c3681219ee8ad949aa70117f4bc62a3016d943f92",
+   "sha256": "beefcf942def2332f1b272c933534198cf59e27289951b185fc2fe67045416f9",
    "bytes": 2856,
-   "mtime": 1787176612,
-   "repro_sha256": "f0195333eb51f544a124f53c3681219ee8ad949aa70117f4bc62a3016d943f92",
+   "mtime": 1787176870,
+   "repro_sha256": "beefcf942def2332f1b272c933534198cf59e27289951b185fc2fe67045416f9",
    "repro_excluded": [],
-   "compared_ts": 1787176612,
+   "compared_ts": 1787176870,
    "compared_clock": "mtime"
   }
  ],
@@ -209,19 +205,16 @@
  "no_deps_reason": null,
  "source_mtimes": {
   "/Users/victorianikolenko/kingfisher/scripts": {
-   "newest": 1787176598,
-   "from": "scripts/autoloop.py"
+   "newest": 1787176866,
+   "from": "<HEAD commit>"
   },
   "/Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures": {
-   "newest": 1787176411,
-   "from": "spikes/H245_evaluator_refusal_vs_crash/fixtures/ev_json_list.py"
+   "newest": 1787176866,
+   "from": "<HEAD commit>"
   }
  },
- "problems": [
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/scripts at 6799738b: 1 modified. The build is NOT 6799738b.",
-  "DIRTY TREE /Users/victorianikolenko/kingfisher/spikes/H245_evaluator_refusal_vs_crash/fixtures at 6799738b: 1 modified. The build is NOT 6799738b."
- ],
- "ok": false,
+ "problems": [],
+ "ok": true,
  "falsifier": "the pinned pre-fix runner turns out to keep the refusal payload (no defect), OR the live runner keeps a payload for a shape that carries no measurement (the mirror collapse)",
  "carried_from_previous_record": [
   "falsifier",
