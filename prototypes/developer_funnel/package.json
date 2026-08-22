@@ -1,0 +1,156 @@
+{
+  "name": "metta-vscode",
+  "displayName": "MeTTa Language Support",
+  "description": "VS Code extension for MeTTa language support including syntax highlighting, linting, and debugging",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:metta",
+    "onCommand:metta.startDebug",
+    "onCommand:metta.estimateFuel"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "metta",
+        "aliases": ["MeTTa", "metta"],
+        "extensions": [".metta", ".mtt"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "metta",
+        "scopeName": "source.metta",
+        "path": "./syntaxes/metta.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "metta",
+        "path": "./snippets/metta.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "metta.startDebug",
+        "title": "Start MeTTa Debugger"
+      },
+      {
+        "command": "metta.estimateFuel",
+        "title": "Estimate Fuel Cost"
+      },
+      {
+        "command": "metta.runTest",
+        "title": "Run MeTTa Tests"
+      },
+      {
+        "command": "metta.formatDocument",
+        "title": "Format MeTTa Document"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "metta.estimateFuel",
+          "group": "metta",
+          "when": "editorTextFocus && editorLangId == metta"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "metta.runTest",
+          "group": "metta",
+          "when": "explorerResourceIsFile && explorerResourceLangId == metta"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "metta.startDebug",
+          "when": "editorTextFocus && editorLangId == metta"
+        },
+        {
+          "command": "metta.estimateFuel",
+          "when": "editorTextFocus && editorLangId == metta"
+        },
+        {
+          "command": "metta.runTest",
+          "when": "editorTextFocus && editorLangId == metta"
+        },
+        {
+          "command": "metta.formatDocument",
+          "when": "editorTextFocus && editorLangId == metta"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "MeTTa",
+      "properties": {
+        "metta.executablePath": {
+          "type": "string",
+          "default": "metta",
+          "description": "Path to the MeTTa executable"
+        },
+        "metta.formatOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Format MeTTa code on save"
+        },
+        "metta.lintOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Lint MeTTa code on save"
+        },
+        "metta.fuelWarningThreshold": {
+          "type": "number",
+          "default": 1000,
+          "description": "Warn if estimated fuel exceeds this threshold"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "@types/vscode": "^1.75.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.0",
+    "eslint": "^8.19.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^7.0.0",
+    "vscode-languageserver": "^7.0.0",
+    "vscode-languageserver-textdocument": "^1.0.8"
+  },
+  "keywords": [
+    "metta",
+    "hypergraph",
+    "blockchain",
+    "smart-contracts"
+  ],
+  "author": "SingularityNET",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SingularityNET/hyperon-experimental"
+  },
+  "bugs": {
+    "url": "https://github.com/SingularityNET/hyperon-experimental/issues"
+  },
+  "homepage": "https://github.com/SingularityNET/hyperon-experimental#readme"
+}

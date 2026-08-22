@@ -1,0 +1,310 @@
+{
+  "scopeName": "source.metta",
+  "name": "MeTTa",
+  "fileTypes": [".metta", ".mtt"],
+  "uuid": "com.singularitynet.metta",
+  
+  "patterns": [
+    {
+      "match": "\\(;[^\\n]*)",
+      "name": "comment.line.semicolon.metta"
+    },
+    {
+      "match": "\\[;[^\\]]*\\]",
+      "name": "comment.block.metta"
+    },
+    
+    // Strings
+    {
+      "match": "\"([^\\\"]|\\\\.)*\"",
+      "name": "string.quoted.double.metta"
+    },
+    
+    // Numbers
+    {
+      "match": "\\b0[xX][0-9a-fA-F]+\\b",
+      "name": "constant.numeric.hex.metta"
+    },
+    {
+      "match": "\\b[0-9]+\\b",
+      "name": "constant.numeric.decimal.metta"
+    },
+    {
+      "match": "\\b[0-9]+\\.[0-9]+\\b",
+      "name": "constant.numeric.float.metta"
+    },
+    
+    // Booleans
+    {
+      "match": "\\btrue\\b",
+      "name": "constant.language.boolean.true.metta"
+    },
+    {
+      "match": "\\bfalse\\b",
+      "name": "constant.language.boolean.false.metta"
+    },
+    {
+      "match": "\\bnil\\b",
+      "name": "constant.language.null.metta"
+    },
+    
+    // Keywords
+    {
+      "match": "\\bdef\\b",
+      "name": "keyword.control.def.metta"
+    },
+    {
+      "match": "\\blambda\\b",
+      "name": "keyword.control.lambda.metta"
+    },
+    {
+      "match": "\\bif\\b",
+      "name": "keyword.control.conditional.if.metta"
+    },
+    {
+      "match": "\\bunless\\b",
+      "name": "keyword.control.conditional.unless.metta"
+    },
+    {
+      "match": "\\bwhen\\b",
+      "name": "keyword.control.conditional.when.metta"
+    },
+    {
+      "match": "\\bcond\\b",
+      "name": "keyword.control.conditional.cond.metta"
+    },
+    {
+      "match": "\\bdo\\b",
+      "name": "keyword.control.loop.do.metta"
+    },
+    {
+      "match": "\\bwhile\\b",
+      "name": "keyword.control.loop.while.metta"
+    },
+    {
+      "match": "\\bloop\\b",
+      "name": "keyword.control.loop.loop.metta"
+    },
+    {
+      "match": "\\bfor\\b",
+      "name": "keyword.control.loop.for.metta"
+    },
+    {
+      "match": "\\breturn\\b",
+      "name": "keyword.control.return.metta"
+    },
+    {
+      "match": "\\bbreak\\b",
+      "name": "keyword.control.break.metta"
+    },
+    {
+      "match": "\\bcontinue\\b",
+      "name": "keyword.control.continue.metta"
+    },
+    
+    // Special forms
+    {
+      "match": "\\blet\\b",
+      "name": "keyword.other.let.metta"
+    },
+    {
+      "match": "\\bset!\\b",
+      "name": "keyword.other.set.metta"
+    },
+    {
+      "match": "\\bmatch\\b",
+      "name": "keyword.other.match.metta"
+    },
+    {
+      "match": "\\bunify\\b",
+      "name": "keyword.other.unify.metta"
+    },
+    {
+      "match": "\\bquery\\b",
+      "name": "keyword.other.query.metta"
+    },
+    {
+      "match": "\\band\\b",
+      "name": "keyword.operator.logical.and.metta"
+    },
+    {
+      "match": "\\bor\\b",
+      "name": "keyword.operator.logical.or.metta"
+    },
+    {
+      "match": "\\bnot\\b",
+      "name": "keyword.operator.logical.not.metta"
+    },
+    {
+      "match": "\\bassert\\b",
+      "name": "keyword.other.assert.metta"
+    },
+    {
+      "match": "\\berror\\b",
+      "name": "keyword.other.error.metta"
+    },
+    
+    // Type keywords
+    {
+      "match": "\\bState\\b",
+      "name": "storage.type.state.metta"
+    },
+    {
+      "match": "\\bType\\b",
+      "name": "storage.type.type.metta"
+    },
+    {
+      "match": "\\bNumber\\b",
+      "name": "storage.type.number.metta"
+    },
+    {
+      "match": "\\bString\\b",
+      "name": "storage.type.string.metta"
+    },
+    {
+      "match": "\\bBool\\b",
+      "name": "storage.type.bool.metta"
+    },
+    {
+      "match": "\\bAddress\\b",
+      "name": "storage.type.address.metta"
+    },
+    {
+      "match": "\\bBytes\\b",
+      "name": "storage.type.bytes.metta"
+    },
+    {
+      "match": "\\bList\\b",
+      "name": "storage.type.list.metta"
+    },
+    {
+      "match": "\\bHashMap\\b",
+      "name": "storage.type.hashmap.metta"
+    },
+    {
+      "match": "\\bAtom\\b",
+      "name": "storage.type.atom.metta"
+    },
+    {
+      "match": "\\bSymbol\\b",
+      "name": "storage.type.symbol.metta"
+    },
+    
+    // Operators
+    {
+      "match": "\\+",
+      "name": "keyword.operator.arithmetic.add.metta"
+    },
+    {
+      "match": "\\-",
+      "name": "keyword.operator.arithmetic.subtract.metta"
+    },
+    {
+      "match": "\\*",
+      "name": "keyword.operator.arithmetic.multiply.metta"
+    },
+    {
+      "match": "\\/",
+      "name": "keyword.operator.arithmetic.divide.metta"
+    },
+    {
+      "match": "\\%",
+      "name": "keyword.operator.arithmetic.modulo.metta"
+    },
+    {
+      "match": "\\=",
+      "name": "keyword.operator.comparison.eq.metta"
+    },
+    {
+      "match": "\\!=",
+      "name": "keyword.operator.comparison.ne.metta"
+    },
+    {
+      "match": "\\>",
+      "name": "keyword.operator.comparison.gt.metta"
+    },
+    {
+      "match": "\\<",
+      "name": "keyword.operator.comparison.lt.metta"
+    },
+    {
+      "match": "\\>=",
+      "name": "keyword.operator.comparison.ge.metta"
+    },
+    {
+      "match": "\\<=",
+      "name": "keyword.operator.comparison.le.metta"
+    },
+    
+    // Punctuation
+    {
+      "match": "\\(",
+      "name": "punctuation.definition.bracket.round.open.metta"
+    },
+    {
+      "match": "\\)",
+      "name": "punctuation.definition.bracket.round.close.metta"
+    },
+    {
+      "match": "\\[",
+      "name": "punctuation.definition.bracket.square.open.metta"
+    },
+    {
+      "match": "\\]",
+      "name": "punctuation.definition.bracket.square.close.metta"
+    },
+    {
+      "match": "\\{",
+      "name": "punctuation.definition.bracket.curly.open.metta"
+    },
+    {
+      "match": "\\}",
+      "name": "punctuation.definition.bracket.curly.close.metta"
+    },
+    
+    // Variables and functions
+    {
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b",
+      "name": "variable.other.metta"
+    }
+  ],
+  
+  "repository": {
+    "def": {
+      "name": "keyword.control.def.metta",
+      "begin": "\\bdef\\b",
+      "end": "\\b(?!\\w)",
+      "patterns": [
+        {
+          "include": "source.metta"
+        }
+      ]
+    },
+    "lambda": {
+      "name": "keyword.control.lambda.metta",
+      "begin": "\\blambda\\b",
+      "end": "\\b(?!\\w)",
+      "patterns": [
+        {
+          "include": "source.metta"
+        }
+      ]
+    },
+    "string": {
+      "name": "string.quoted.double.metta",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.metta"
+        }
+      ]
+    },
+    "comment": {
+      "name": "comment.line.semicolon.metta",
+      "begin": ";",
+      "end": "$"
+    }
+  }
+}
